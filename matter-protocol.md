@@ -2,7 +2,7 @@
 title: Matter (protocol)
 description: Matter (protocol)
 published: true
-date: 2025-11-07T09:45:10.474Z
+date: 2025-11-07T09:45:12.319Z
 tags: 
 editor: markdown
 dateCreated: 2025-11-07T09:45:10.474Z
