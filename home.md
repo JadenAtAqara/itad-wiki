@@ -2,13 +2,13 @@
 title: Aqara Studio Guide
 description: Aqara Studio Guide
 published: true
-date: 2025-11-08T03:14:38.306Z
+date: 2025-11-08T03:34:04.986Z
 tags: studio
 editor: markdown
 dateCreated: 2025-11-06T14:14:32.926Z
 ---
 
-# Aqara Studio Guide
+[home](/home)# Aqara Studio Guide
 
 ## System Overview
 
