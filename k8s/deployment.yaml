@@ -29,7 +29,7 @@ spec:
         app: aqara-wiki
     spec:
       containers:
-      - image: harbor.aqaramaster.com/aqaramaster/aqara-wiki:__IMAGE_TAG__
+      - image: __IMAGE_TAG__
         imagePullPolicy: Always
         livenessProbe:
           failureThreshold: 5
