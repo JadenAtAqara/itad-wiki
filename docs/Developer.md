@@ -1,13 +1,3 @@
----
-title: Developer
-description: 
-published: true
-date: 2025-11-06T14:16:02.065Z
-tags: 
-editor: markdown
-dateCreated: 2025-11-06T14:16:00.441Z
----
-
 # Aqara Developer Platform
 
 Aqara Developer Platform is an open cooperation platform of Lumi United Technology Co.,Ltd for IoT software and hardware products. Relying on safe and stable IoT cloud services, on the basis of rich device connections, it is deeply integrated with the industry to provide developers with complete hardware products or intelligent solutions for scene applications, work with developers to create an IoT experience with the ultimate user experience.

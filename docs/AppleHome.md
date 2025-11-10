@@ -1,13 +1,3 @@
----
-title: Untitled Page
-description: 
-published: true
-date: 2025-11-06T14:16:50.225Z
-tags: 
-editor: markdown
-dateCreated: 2025-11-06T14:16:48.616Z
----
-
 # Apple Home
 
 Connecting to Apple Home ecosystem.

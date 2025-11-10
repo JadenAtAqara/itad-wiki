@@ -1,14 +1,4 @@
----
-title: Aqara Studio Guide
-description: Aqara Studio Guide
-published: true
-date: 2025-11-08T03:34:11.862Z
-tags: studio
-editor: markdown
-dateCreated: 2025-11-06T14:14:32.926Z
----
-
-[home](/home)# Aqara Studio Guide
+# Aqara Studio Guide
 
 ## System Overview
 
