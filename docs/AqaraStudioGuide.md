@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # Aqara Studio Guide
 
 ## System Overview
