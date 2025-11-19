@@ -32,12 +32,12 @@ const config: Config = {
   // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
-    locales: ['en','zh-CN', 'ja'],
+    locales: ['en','zh', 'ja'],
     path: 'i18n',
     localeConfigs: {
       en: { label: 'English', direction: 'ltr', path: 'en', htmlLang: 'en-US' },
-      'zh-CN': { label: '简体中文', direction: 'ltr', path: 'zh', htmlLang: 'zh-Hans'},
-      ja: { label: '日本語', direction: 'ltr', path: 'jp', htmlLang: 'ja'}
+      zh: { label: '简体中文', direction: 'ltr', path: 'zh', htmlLang: 'zh-Hans'},
+      ja: { label: '日本語', direction: 'ltr', path: 'ja', htmlLang: 'ja'}
     }
   },
 
@@ -99,6 +99,10 @@ const config: Config = {
           label: 'GitHub',
           position: 'right',
         },
+	{
+	  type: 'localeDropdown',
+          position: 'right', // 放右边
+	}
       ],
     },
     footer: {
