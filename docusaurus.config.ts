@@ -51,6 +51,12 @@ const config: Config = {
           editUrl:
             'https://github.com/lumigit/itad-wiki/edit/main/',
 	  includeCurrentVersion: false,
+	  versions: {
+            'v1.0.3': {
+              label: 'v1.0.3 (Current)',
+              // path: '/', // options
+            },
+	   },
         },
         blog: {
           showReadingTime: true,
