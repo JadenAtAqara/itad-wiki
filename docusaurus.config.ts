@@ -15,7 +15,7 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'http://10.10.20.134/',
+  url: 'https://dev-wiki.aqara.com',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -23,7 +23,7 @@ const config: Config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'aqara', // Usually your GitHub org/user name.
-  projectName: 'wiki', // Usually your repo name.
+  projectName: 'developers', // Usually your repo name.
 
   onBrokenLinks: 'throw',
 
@@ -32,12 +32,11 @@ const config: Config = {
   // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
-    locales: ['en','zh', 'ja'],
+    locales: ['en','zh'],
     path: 'i18n',
     localeConfigs: {
       en: { label: 'English', direction: 'ltr', path: 'en', htmlLang: 'en-US' },
       zh: { label: '简体中文', direction: 'ltr', path: 'zh', htmlLang: 'zh-Hans'},
-      ja: { label: '日本語', direction: 'ltr', path: 'ja', htmlLang: 'ja'}
     }
   },
 
@@ -50,7 +49,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/lumigit/itad-wiki',
+            'https://github.com/lumigit/itad-wiki/edit/main/',
         },
         blog: {
           showReadingTime: true,
@@ -61,7 +60,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/lumigit/itad-wiki',
+            'https://github.com/lumigit/itad-wiki/edit/main/',
           // Useful options to enforce blogging best practices
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
@@ -74,25 +73,47 @@ const config: Config = {
     ],
   ],
 
+  // Add local search plugin
+  plugins: [
+    [
+      '@easyops-cn/docusaurus-search-local',
+      {
+        hashed: true,
+        language: ['en', 'zh'],
+      },
+    ],
+  ],
+
   themeConfig: {
-    // Replace with your project's social card
+
     image: 'img/docusaurus-social-card.jpg',
     colorMode: {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: 'Aqara Docs',
+      title: 'Aqara Developers',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'Aqara Wiki',
         src: 'img/logo.svg',
       },
       items: [
+	{
+	  label: "Docs",
+	  position: "left",
+	  items:[
+	    {label: "Aqara Studio", to: "docs/AqaraStudioGuide"},
+	    {label: "Aqara Developer", to: "docs/Developer"},
+	    {label: "Tutorial", to: "docs/intro"},
+	  ]
+	},
+/*
         {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
           label: 'Tutorial',
         },
+*/
         {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/lumigit/itad-wiki',
@@ -101,7 +122,7 @@ const config: Config = {
         },
 	{
 	  type: 'localeDropdown',
-          position: 'right', // 放右边
+          position: 'right', 
 	}
       ],
     },

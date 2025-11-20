@@ -18,5 +18,17 @@
   "item.label.GitHub": {
     "message": "GitHub",
     "description": "Navbar item with label GitHub"
+  },
+  "item.label.Docs": {
+    "message": "文档",
+    "description": "Navbar item with label Docs"
+  },
+  "item.label.Aqara Studio": {
+    "message": "Aqara Studio",
+    "description": "Navbar item with label Aqara Studio"
+  },
+  "item.label.Aqara Developer": {
+    "message": "Aqara 开发者平台",
+    "description": "Navbar item with label Aqara Developer"
   }
 }
