@@ -50,6 +50,7 @@ const config: Config = {
           // Remove this to remove the "edit this page" links.
           editUrl:
             'https://github.com/lumigit/itad-wiki/edit/main/',
+	  includeCurrentVersion: false,
         },
         blog: {
           showReadingTime: true,
@@ -123,7 +124,12 @@ const config: Config = {
 	{
 	  type: 'localeDropdown',
           position: 'right', 
-	}
+	},
+	{
+          type: 'docsVersionDropdown', 
+          position: 'left',
+        },
+
       ],
     },
     footer: {
