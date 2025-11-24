@@ -135,6 +135,10 @@ const config: Config = {
           type: 'docsVersionDropdown', 
           position: 'left',
         },
+	{
+          type: 'search',
+          position: 'left', // search to left
+        },
 
       ],
     },
