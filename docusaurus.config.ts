@@ -52,8 +52,8 @@ const config: Config = {
             'https://github.com/lumigit/itad-wiki/edit/main/',
 	  includeCurrentVersion: false,
 	  versions: {
-            'v1.0.3': {
-              label: 'v1.0.3 (Current)',
+            'Beta': {
+              label: 'Bata (Current)',
               // path: '/', // options
             },
 	   },
@@ -112,10 +112,7 @@ const config: Config = {
 	  position: "left",
 	  items:[
 	    {label: "Aqara Studio", to: "docs/AqaraStudioGuide"},
-	    {label: "Aqara Developer", to: "docs/Developer"},
-	    {label: "Tutorial", to: "docs/intro"},
-	    {label: "Add Device", to: "docs/AddDevice/AqaraHomeApp"},
-	  ]
+	  ],
 	},
 /*
         {
