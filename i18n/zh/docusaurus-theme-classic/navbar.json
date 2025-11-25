@@ -26,14 +26,5 @@
   "item.label.Aqara Studio": {
     "message": "Aqara Studio",
     "description": "Navbar item with label Aqara Studio"
-  },
-  "item.label.Aqara Developer": {
-    "message": "Aqara 开发者平台",
-    "description": "Navbar item with label Aqara Developer"
-  },
-  "item.label.Add Device": {
-    "message": "设备配网",
-    "description": "Navbar item with label Add Devices"
   }
-
 }
