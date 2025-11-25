@@ -50,6 +50,11 @@ const sidebars: SidebarsConfig = {
         ],
       },
   ],
+  addDeviceSidebar: [
+    "AddDevice/AqaraHomeApp",
+    "AddDevice/ImplementationTool",
+    "AddDevice/AppSDK",
+  ],
 };
 
 export default sidebars;

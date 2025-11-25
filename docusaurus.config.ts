@@ -58,12 +58,14 @@ const config: Config = {
             },
 	   },
         },
+	/*
         blog: {
           showReadingTime: true,
           feedOptions: {
             type: ['rss', 'atom'],
             xslt: true,
           },
+	 
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
@@ -73,6 +75,7 @@ const config: Config = {
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
         },
+        */
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -111,6 +114,7 @@ const config: Config = {
 	    {label: "Aqara Studio", to: "docs/AqaraStudioGuide"},
 	    {label: "Aqara Developer", to: "docs/Developer"},
 	    {label: "Tutorial", to: "docs/intro"},
+	    {label: "Add Device", to: "docs/AddDevice/AqaraHomeApp"},
 	  ]
 	},
 /*
@@ -121,7 +125,9 @@ const config: Config = {
           label: 'Tutorial',
         },
 */
+/*
         {to: '/blog', label: 'Blog', position: 'left'},
+*/
         {
           href: 'https://github.com/lumigit/itad-wiki',
           label: 'GitHub',
@@ -174,10 +180,12 @@ const config: Config = {
         {
           title: 'More',
           items: [
+/*
             {
               label: 'Blog',
               to: '/blog',
             },
+*/
             {
               label: 'GitHub',
               href: 'https://github.com/lumigit/itad-wiki',
