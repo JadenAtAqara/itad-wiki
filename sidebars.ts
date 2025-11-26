@@ -66,6 +66,14 @@ const sidebars: SidebarsConfig = {
         "aqara-studio/overview/release-notes",
       ],
     },
+    {
+        "type": "category",
+        "label": "OnlyChinese",
+        "items": [
+            "Developer",
+        ],
+    },
+
   ],
 
 };

@@ -6,6 +6,10 @@
   "sidebar.aqaraStudioSidebar.category.Overview": {
     "message": "概览",
     "description": "The label for category 'Overview' in sidebar 'aqaraStudioSidebar'"
+  },
+  "sidebar.aqaraStudioSidebar.category.OnlyChinese": {
+    "message": "开发者文档",
+    "description": "The label for category 'OnlyChinese' in sidebar 'aqaraStudioSidebar'"
   }
 
 }
