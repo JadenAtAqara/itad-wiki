@@ -111,7 +111,7 @@ const config: Config = {
 	  label: "Docs",
 	  position: "left",
 	  items:[
-	    {label: "Aqara Studio", to: "versioned_docs/version-Beta/aqara-studio/overview/introduction"},
+	    {label: "Aqara Studio", to: "docs/aqara-studio/overview/introduction"},
 	  ],
 	},
 /*
@@ -158,7 +158,7 @@ const config: Config = {
           items: [
             {
               label: 'Tutorial',
-              to: 'versioned_docs/version-Beta/aqara-studio/overview/introduction',
+              to: 'docs/aqara-studio/overview/introduction',
             },
           ],
         },
