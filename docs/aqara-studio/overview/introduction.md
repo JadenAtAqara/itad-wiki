@@ -36,8 +36,7 @@ Aqara Studio 采用了分布式与集中式相结合的系统架构设计，能�
 - **多层级分布式组网**：多层分布式网络配置可根据项目的规模和复杂度进行定制化部署。
 - **云、边、端融合部署**：Aqara Studio 能在云端与边缘端，提供提供统一的管理的集成方案，确保数据处理和传输的高效性和安全性。
 - **满足多样化需求**：在大型园区、智能楼宇以及家庭环境中，Aqara Studio 可在不同的网络环境下，实现从基础连接到高级数据分析的各种应用场景需求。
-
-![](../img/4-distributed-architecture.png)
+![分布式架构](https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/4-distributed-architecture.png)
 
 ### 优势
 
