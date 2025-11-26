@@ -10,5 +10,3 @@
 4. 单击Certificate的Click upload，将下载的License证书文件上传；
 5. 上传完成后，单击刷新证书即可查看证书的基本信息。
 
-![license](../img/license.png)
-
