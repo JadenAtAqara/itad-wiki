@@ -9,6 +9,13 @@
         "aqara-studio/overview/comparison", 
         "aqara-studio/overview/release-notes"
       ]
+    },
+    {
+        "type": "category",
+        "label": "OnlyChinese", 
+        "items": [
+            "Developer"
+        ]
     }
   ]
 }
