@@ -55,6 +55,19 @@ const sidebars: SidebarsConfig = {
     "AddDevice/ImplementationTool",
     "AddDevice/AppSDK",
   ],
+  aqaraStudioSidebar: [
+    {
+      type: "category",
+      label: "Overview",
+      items: [
+        "aqara-studio/overview/introduction",
+        "aqara-studio/overview/glossary",
+        "aqara-studio/overview/comparison",
+        "aqara-studio/overview/release-notes",
+      ],
+    },
+  ],
+
 };
 
 export default sidebars;
