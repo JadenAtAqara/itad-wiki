@@ -11,15 +11,15 @@ Aqara Studio提供灵活的可视化自动化配置能力，支持用户通过�
 ## 创建自动化
 
 1. 根据您当前的页面，选择以下方式进入自动逻辑页面：
-   - 如果当前页面是**首页**：在 **引导导航** 下单击 **自动逻辑**。
-      <img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/autologic-entrance1.png" alt="" style="width: 80%;" />
-   - 如果当前页面是**其他功能页面**：单击页面左上角菜单按钮，在菜单中选择 **系统 > 自动逻辑**。
-      <img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/autologic-entrance2.png" alt="" style="width: 40%;" />
+    - 如果当前页面是**首页**：在 **引导导航** 下单击 **自动逻辑**。
+      <img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/autologic-entrance1.png" alt="" style={{width: '80%'}} />
+    - 如果当前页面是**其他功能页面**：单击页面左上角菜单按钮，在菜单中选择 **系统 > 自动逻辑**。
+      <img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/autologic-entrance2.png" alt="" style={{width: '40%'}} />
 2. 在左侧导航栏的右下方，单击“+”，即可添加一个`自动化`文件夹。
 3. 右键点击该文件夹，选择`重命名`，即可修改自动化的名称。
 4. 双击该文件夹，进入编辑页面；
 
-   <img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/automation-autologic.png" alt="" style="width: 80%;" />
+    <img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/automation-autologic.png" alt="" style={{width: '80%'}} />
 
 ## 界面介绍
 
@@ -40,7 +40,7 @@ Aqara Studio提供灵活的可视化自动化配置能力，支持用户通过�
 
 #### 顶部菜单栏
 
-<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/automation-topbar.png" style="width: 80%" />
+<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/automation-topbar.png" style={{width: '80%'}} />
 
 顶部菜单栏支持以下操作：
 - 缩放画布。
@@ -51,7 +51,7 @@ Aqara Studio提供灵活的可视化自动化配置能力，支持用户通过�
 
 #### 侧边栏
 
-<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/automation-topbar.png" alt="自动化侧边栏示意图" style="max-width: 40%;" />
+<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/automation-topbar.png" alt="自动化侧边栏示意图" style={{maxWidth: '40%'}} />
 
 - 控制器：展示系统支持的所有功能逻辑块库；
 - 组件库：待补充；
@@ -65,4 +65,4 @@ Aqara Studio提供灵活的可视化自动化配置能力，支持用户通过�
 2. 右侧编辑栏：输出（out）节点属性框（Action）；以有人开灯为例，在输出节点位置配置开灯的设备属性信息，单击右侧空白框的铅笔图标，弹框中按照同一方式选中灯的开关属性，配置后在面板右侧即可查看到开关灯的属性信息；
 3. 中央画布：可拖拽功能逻辑块到画布中，进行逻辑块配置；将功能模块的输入（in）与输出（out）属性连接起来，即可构建自动化数据链路。
 
-<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/autologic-add.png" alt="" style="width: 80%"  />
+<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/autologic-add.png" alt="" style={{width: '80%'}} />

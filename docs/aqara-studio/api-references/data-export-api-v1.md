@@ -1,0 +1,832 @@
+# 数据转出 API v1
+
+Aqara 提供数据转出 API v1 接口，帮助您访问 Studio 系统的设备数据并开展二次开发。
+
+接口支持设备数据的查询与订阅、设备控制、设备增删事件通知及场景列表查询。
+
+## 通信协议
+
+Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#webssocket-请求-url) 两种通信协议。
+
+### 请求说明
+
+#### HTTP 请求 URL
+
+**请求方法**：POST   
+**请求 URL 格式**：`http://局域网内网IP/open/api/v1`
+
+#### WebsSocket 请求 URL
+
+**请求 URL 格式**：`ws://局域网内网IP/open/ws`
+
+建立连接后，可通过发送/接收 JSON 消息与服务器进行实时通信。
+
+#### 请求头（Header）
+
+| 参数 | 类型 | 是否必须 | 说明 |
+| ------------- | ------ | -------- | ------------------------------------------------------------ |
+| Authorization | String | HTTP 和 WebSocket 必须 | 授权 Token，用于用户身份验证。<br />格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio 获取的 Token 字符串（若从 Aqara Studio 获取的令牌已带 Bearer 前缀，请直接使用，无需重复添加）。如需了解获取方式，请参考 [开发者指南 - 获取必要信息](./../developer-guide.md#获取必要信息) 中对 Token 的说明。 |
+| Content-Type  | String | 仅适用 HTTP | 默认为`application/json`。  |
+
+## 查询设备 ID 列表
+
+分页查询 Studio 系统中的设备信息，支持按类型筛选、分页及排序。
+
+### 请求参数
+
+| 参数 | 类型 | 是否必须 | 说明 |
+|------|------|----------|------|
+| type | String | 是 | 请求的消息类型，必须为 `GetDeviceInfoRequest`。 |
+| version | String | 是 | 请求接口版本号，必须为 `v1`。 |
+| msgId | String | 是 | 由您定义的请求 ID。 |
+| data | Object | 是 | 请求数据。 |
+| data.types | Array of String | 否 | 设备类型列表。如需了解可用字符串，请参考 [设备类型说明](./device-type.md)。 |
+| data.orderBy | String | 否 | 排序规则，支持以下字符串：<ul><li><code>createTime asc</code>：按照设备添加时间正序排列。</li><li><code>createTime desc</code>：按照设备添加时间倒序排列。</li></ul> |
+| data.pageNum | Number | 否 | 页码。从 1 开始，若小于 1，则视为 1。 |
+| data.pageSize | Number | 否 | 每页包含的设备 ID 数量，取值范围为 (0, 200]。 |
+
+### 请求示例
+
+以下为 `GetDeviceInfoRequest` 的请求体示例：
+
+```json
+{
+    "type": "GetDeviceInfoRequest",
+    "version": "v1",
+    "msgId": "get_devices_1751609244328",
+    "data":{
+        "types": ["Light"],
+		"orderBy": "createTime desc",
+        "pageNum": 1,
+        "pageSize": 100
+    }
+}
+```
+
+### 响应参数
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| type | String | 响应的消息类型，固定为 `GetDeviceInfoResponse`。 |
+| version | String | 响应版本号，与请求接口版本号一致。 |
+| msgId | String | 您发起请求时传入的 `msgId`。 |
+| message | String | 请求结果描述。 |
+| code | Number | 请求是否成功。0 表示成功，非 0 表示失败。 |
+| data | Object | 响应数据。 |
+| data.totalCount | Number | 设备总数。 |
+| data.pageSize | Number | 每页大小。 |
+| data.pageNum | Number | 页码。 |
+| data.data | Array of Object | 数据列表。 |
+| data.data[].deviceId | String | 设备 ID。 |
+| data.data[].types | Array of String | 设备类型。字符串含义请参考 [设备类型说明](./device-type.md)。 |
+| data.data[].deviceName | String | 设备名称。 |
+| data.data[].createTime | Number | 设备添加时间的 Unix 时间戳（毫秒）。 |
+| data.data[].state |Boolean | 设备在线状态：<ul><li>false：离线。</li><li>true：在线。</li></ul> |
+
+### 响应示例
+
+以下为 `GetDeviceInfoResponse` 的响应示例：
+
+```json
+{
+    "type": "GetDeviceInfoResponse",
+    "version": "v1",
+    "msgId": "get_devices_1751609244328",
+    "code": 0,
+	"message": "",
+    "data":{
+        "totalCount": 1,
+        "pageSize": 100,
+        "pageNum": 1,
+        "data":[
+            {
+                "deviceId": "xxx",
+                "types": ["Light"],
+                "deviceName": "xxx",
+			    "createTime":1758549173093,
+			    "state": true
+            }
+        ]
+    }
+}
+```
+
+## 查询设备的 spec 配置
+
+根据设备 ID 查询其 spec 配置。
+
+### 请求参数
+
+| 参数 | 类型 | 是否必须 | 说明 |
+|------|------|----------|------|
+| type | String | 是 | 请求的消息类型，必须为 `GetDevicesRequest`。 |
+| version | String | 是 | 请求接口版本号，必须为 `v1`。 |
+| msgId | String | 是 | 由您定义的请求 ID。 |
+| data | Object | 是 | 请求数据。 |
+| data.deviceIds | Array of String | 否 | 将 [设备 ID 列表查询结果](#查询设备-id-列表) 传入此列表，作为设备的 spec 配置的查询目标。当此列表为空时，表示查询所有设备的 spec 配置。 |
+
+### 请求参数示例
+
+以下为 `GetDevicesRequest` 的请求体示例：
+
+```json
+{
+    "type": "GetDevicesRequest",
+	"version": "v1",
+    "msgId": "get_devices_1751609244328",
+    "data":{
+        "deviceIds": ["57190441014857"]
+    }  
+}
+```
+
+### 响应数据
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| type | String | 响应的消息类型，固定为 `GetDevicesResponse`。 |
+| version | String | 响应版本号，与请求接口版本号一致。 |
+| msgId | String | 您发起请求时传入的 `msgId`。 |
+| code | Number | 请求是否成功，0 表示成功，非 0 表示失败。 |
+| message | String | 请求结果描述。 |
+| data | Array of Object | 设备列表。 |
+| data[].deviceId | String | 设备 ID。 |
+| data[].name | String | 设备名称。 |
+| data[].types | Array of String | 设备类型列表。字符串含义请参考 [设备类型说明](./device-type.md)。 |
+| data[].endpoints | Array of Object | 端点列表。 |
+| data[].endpoints[].endpointId | Number | 端点 ID。 |
+| data[].endpoints[].endpointName | String | 端点名称。 |
+| data[].endpoints[].endpointTypes | Array of String | 端点类型列表。 |
+| data[].endpoints[].functions | Array of Object | 功能列表。 |
+| data[].endpoints[].functions[].functionCode | String | 功能代码。 |
+| data[].endpoints[].functions[].traits | Array of Object | 功能点列表。 |
+| data[].endpoints[].functions[].traits[].traitCode | String | 功能点代码，对应设备支持的具体功能。请参阅 [功能点代码](./trait-codes.md)，了解该功能点详情包括含义、类型（如数值、布尔、枚举等）、是否可读/可写/可上报等。 |
+| data[].endpoints[].functions[].traits[].attribute | Object | 功能点属性。 |
+| data[].endpoints[].functions[].traits[].attribute.type | String | 功能点属性的类型。 |
+| data[].endpoints[].functions[].traits[].attribute.format | String | 功能点属性的具体类型。 |
+| data[].endpoints[].functions[].traits[].attribute.readable | Boolean | 是否可读。 |
+| data[].endpoints[].functions[].traits[].attribute.writable | Boolean | 是否可写。 |
+| data[].endpoints[].functions[].traits[].attribute.subscribable | Boolean | 是否可订阅。 |
+| data[].endpoints[].functions[].traits[].attribute.enums | Array of Object | 枚举值列表。仅当 attribute.type 为 `ENUM` 时，此字段有意义。 |
+| data[].endpoints[].functions[].traits[].attribute.enums[].key | String | 枚举键。 |
+| data[].endpoints[].functions[].traits[].attribute.enums[].value | String | 枚举值。 |
+| data[].endpoints[].functions[].traits[].attribute.min | Number | 最小值。仅当 attribute.type 为 `NUMBER` 时，此字段有意义。 |
+| data[].endpoints[].functions[].traits[].attribute.max | Number | 最大值。仅当 attribute.type 为 `NUMBER` 时，此字段有意义。 |
+| data[].endpoints[].functions[].traits[].attribute.unit | String | 单位。仅当 attribute.type 为 `NUMBER` 时，此字段有意义。 |
+| data[].endpoints[].functions[].traits[].value | Any | 功能点的当前值。根据 `attribute.type` 的值，此字段的类型可能是 Number、String 或 Boolean。 |
+| data[].endpoints[].functions[].traits[].time | Number | 功能点值上报时间的 Unix 时间戳（毫秒）。 |
+
+#### 查阅设备类型和功能点代码
+
+- 响应中的 `data[].types`，表示设备支持的类型列表，请参考 [设备类型](./device-type.md) 了解字符串相关含义。
+- 响应中的 `data[].endpoints[].functions[].traits[].traitCode`，表示功能点代码，对应设备支持的具体功能，请参阅 [功能点代码](./trait-codes.md)，了解该功能点详情包括含义、类型（如数值、布尔、枚举等）、是否可读/可写/可上报等。
+
+### 响应数据示例
+
+以下为 `GetDevicesResponse` 的响应示例：
+
+```json
+{
+    "type": "GetDevicesResponse",
+    "version": "v1",
+    "msgId": "get_devices_1751609244328",
+    "code": 0,
+    "message": null,
+    "data": [
+        {
+            "deviceId": "57190441014857",
+            "name": "Touch Screen Switch Panel S1 Pro",
+            "types": [
+                "Speaker"
+            ],
+            "endpoints": [
+                {
+                    "endpointId": 0,
+                    "endpointName": "DeviceObject",
+                    "endpointTypes": [
+                        "Root"
+                    ]
+                },
+                {
+                    "endpointId": 3,
+                    "endpointName": "Multi-stateOutputObject",
+                    "endpointTypes": [
+                        "Speaker"
+                    ],
+                    "functions": [
+                        {
+                            "functionCode": "MediaPlayback",
+                            "endpointId": 3,
+                            "traits": [
+                                {
+                                    "traitCode": "TargetPlaybackState",
+                                    "attribute": {
+                                        "type": "ENUM",
+                                        "format": "Uint8",
+                                        "readable": true,
+                                        "writable": true,
+                                        "subscribable": true,
+                                        "enums": [
+                                            {
+                                                "key": "Play",
+                                                "value": "0"
+                                            },
+                                            {
+                                                "key": "Pause",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "key": "Stop",
+                                                "value": "2"
+                                            },
+                                            {
+                                                "key": "StartOver",
+                                                "value": "3"
+                                            },
+                                            {
+                                                "key": "FastForward",
+                                                "value": "4"
+                                            },
+                                            {
+                                                "key": "Rewind",
+                                                "value": "5"
+                                            },
+                                            {
+                                                "key": "Previous",
+                                                "value": "6"
+                                            },
+                                            {
+                                                "key": "Next",
+                                                "value": "7"
+                                            },
+                                            {
+                                                "key": "PlaySpecificList",
+                                                "value": "8"
+                                            }
+                                        ]
+                                    },
+                                    "value": "0",
+                                    "time": 1761295151845
+                                },
+                                {
+                                    "traitCode": "MediaInformation",
+                                    "attribute": {
+                                        "type": "STRING",
+                                        "format": "String",
+                                        "readable": true,
+                                        "writable": false,
+                                        "subscribable": true
+                                    },
+                                    "value": "",
+                                    "time": null
+                                }
+                            ]
+                        },
+                        {
+                            "functionCode": "Speaker",
+                            "endpointId": 3,
+                            "traits": [
+                                {
+                                    "traitCode": "Mute",
+                                    "attribute": {
+                                        "type": "BOOLEAN",
+                                        "format": "Bool",
+                                        "readable": true,
+                                        "writable": true,
+                                        "subscribable": true
+                                    },
+                                    "value": false,
+                                    "time": 1761295151843
+                                },
+                                {
+                                    "traitCode": "Volume",
+                                    "attribute": {
+                                        "type": "NUMBER",
+                                        "format": "Float",
+                                        "readable": true,
+                                        "writable": true,
+                                        "subscribable": true,
+                                        "min": 0.0,
+                                        "max": 100.0,
+                                        "unit": "%"
+                                    },
+                                    "value": 0.0,
+                                    "time": 1761295151847
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        } 
+    ]
+}
+```
+
+
+## 控制设备
+
+当您 [获取设备的 spec 配置](#查询设备的-spec-配置) 后，传入与待控制的功能点（trait）相关的字段，调用此接口即可控制设备。
+
+### 请求参数
+
+| 参数 | 类型 | 是否必须 | 说明 |
+|------|------|----------|------|
+| type | String | 是 | 请求的消息类型，必须为 `ExecuteTraitRequest`。 |
+| version | String | 是 | 请求接口版本号，必须为 `v1`。 |
+| msgId | String | 是 | 由您定义的请求 ID。 |
+| data | Array of Object | 是 | 请求数据。 |
+| data[].deviceId | String | 是 | 传入待控制设备的 ID。 |
+| data[].endpointId | Number | 是 | 传入目标端点 ID。 |
+| data[].functionCode | String | 是 | 传入功能代码。 |
+| data[].traitCode | String | 是 | 传入 `writable` 为 `true` 的功能点代码。 |
+| data[].value | Any | 是 | 传入此功能点支持的值。 |
+
+### 请求参数示例
+
+以下为 `ExecuteTraitRequest` 的请求体示例：
+
+```json
+{
+    "type" : "ExecuteTraitRequest",
+    "version" : "v1",
+    "msgId" : "get_devices_1751609244328",
+    "data":[{
+        "deviceId": "14a0bxx",
+        "endpointId": 0,
+        "functionCode": "Output",
+        "traitCode": "OnOff",
+        "value": true
+    }]
+}
+```
+
+### 响应数据
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| type | String | 响应的消息类型，固定为 `ExecuteTraitResponse`。 |
+| version | String | 响应版本号，与请求接口版本号一致。 |
+| msgId | String | 您发起请求时传入的 `msgId`。 |
+| code | Number | 控制结果状态码：<ul><li>0：成功控制至少一个功能点。</li><li>非 0：所有功能点控制均失败。</li></ul> |
+| message | String | 请求结果描述信息。 |
+| data | Array of Object | 设备控制结果列表。 |
+| data[].deviceId | String | 设备 ID。 |
+| data[].endpointId | Number | 端点 ID。 |
+| data[].functionCode | String | 功能代码。 |
+| data[].traitCode | String | 功能点代码。 |
+| data[].code | Number | 是否成功控制功能点，0 表示成功，非 0 表示失败。 |
+
+### 响应数据示例
+
+以下为 `ExecuteTraitResponse` 的响应示例：
+
+```json
+{
+    "type": "ExecuteTraitResponse",
+    "version": "v1",
+    "msgId": "get_devices_1751609244328",
+    "code": 0,
+    "message": null,
+    "data": [
+        {
+            "deviceId": "virtual2.35330452174472",
+            "endpointId": 2,
+            "functionCode": "FanControl",
+            "traitCode": "RockSetting",
+            "code": 0
+        }
+    ]
+}
+```
+
+## 查询设备的最新功能点值
+
+批量查询设备的最新功能点（trait）值。
+
+### 请求参数
+
+以下为 `GetTraitValueRequest` 的请求体示例：
+
+| 参数 | 类型 | 是否必须 | 说明 |
+|------|------|------|
+| type | String | 是 | 请求的消息类型，必须为 `GetTraitValueRequest`。 |
+| version | String | 是 | 请求接口版本号，必须为 `v1`。 |
+| msgId | String | 是 | 由您自定义的请求 ID，用于标识本次请求。 |
+| data | Array of Object | 是 | 请求数据，每个对象指定一个查询目标。 |
+| data[].deviceId | String | 是 | 查询目标设备的 ID。 |
+| data[].endpointId | Number | 是 | 端点 ID，指定要查询的设备端点。 |
+| data[].functionCode | String | 是 | 功能代码，指定要查询的功能。 |
+| data[].traitCodes | Array of String | 是 | 功能点代码列表，指定要查询的功能点。 |
+
+### 请求参数示例
+
+以下为 `GetTraitValueRequest` 的请求体示例：
+
+```json
+{
+    "type" : "GetTraitValueRequest",
+    "version" : "v1",
+    "msgId" : "get_devices_1751609244328",
+    "data":[{
+        "deviceId": "57190441014857",
+        "endpointId": 3,
+        "functionCode": "MediaPlayback",
+        "traitCodes": ["TargetPlaybackState"]
+    }]
+
+}
+```
+
+### 响应数据
+
+| 参数 | 类型 | 说明 |
+|---|---|---|
+| type | String | 响应消息类型，固定为 `GetTraitValueResponse`。 |
+| version | String | 响应版本号，与请求接口版本号一致。 |
+| msgId | String | 您发起请求时传入的 `msgId`。 |
+| code | Number | 请求是否成功，0 表示成功，非 0 表示失败。 |
+| message | String | 请求结果描述。 |
+| data | Array of Object | 响应数据列表。 |
+| data[].deviceId | String | 设备 ID。 |
+| data[].endpointId | Number | 端点 ID。 |
+| data[].functionCode | String | 功能代码。 |
+| data[].traitCode | String | 功能点代码。 |
+| data[].value | Any | 特征的当前值。类型与功能点有关，可能为 Boolean、Number 或 String。 |
+| data[].time | Number | 当前值上报时间的 Unix 时间戳（毫秒）。 |
+
+### 响应数据示例
+
+以下为 `GetTraitValueResponse` 的响应示例：
+
+```json
+{
+    "type": "GetTraitValueResponse",
+    "version": "v1",
+    "msgId": "get_devices_1751609244328",
+    "code": 0,
+    "message": null,
+    "data": [
+        {
+            "deviceId": "57190441014857",
+            "endpointId": 3,
+            "functionCode": "MediaPlayback",
+            "traitCode": "TargetPlaybackState",
+            "value": "0",
+            "time": 1761308409323
+        }
+    ]
+}
+```
+
+## 订阅多个功能点变化
+
+该接口用于订阅设备数据的实时变化。当设备的功能点的值变化时，Studio 会通过此接口主动向您推送最新的数据。
+
+通过订阅，您无需频繁轮询即可及时获取设备状态变化，提高通信效率与实时性。
+
+### 请求参数
+
+| 参数 | 类型 | 是否必须 | 说明 |
+| -- | -- | -- | -- |
+| type | String | 是 | 请求的消息类型，必须为 `SubscribeTraitValueRequest`。 |
+| version | String | 是 | 请求接口版本号，必须为 `v1`。 |
+| msgId | String | 是 | 由您自定义的请求 ID。 |
+| data | Array of Object | 是 | 请求数据。 |
+| data[].deviceId | String | 是 | 要订阅的设备 ID。 |
+| data[].endpointId | Number | 是 | 端点 ID。 |
+| data[].functionCode | String | 是 | 功能代码。 |
+| data[].traitCodes | Array of String | 是 | 功能点代码列表。 |
+
+### 请求参数示例
+
+以下为 `SubscribeTraitValueRequest` 的请求体示例：
+
+```json
+{
+    "type" : "SubscribeTraitValueRequest",
+    "version" : "v1",
+    "msgId" : "get_devices_1751609244328",
+    "data":[{
+        "deviceId": "57190441014857",
+        "endpointId": 3,
+        "functionCode": "MediaPlayback",
+        "traitCodes": ["TargetPlaybackState"]
+    }]
+}
+```
+
+### 订阅操作响应
+
+#### 响应数据
+
+| 参数 | 类型 | 是否必须 | 说明 |
+| -- | -- | -- | -- |
+| type | String | 是 | 响应消息类型，固定为 `TraitValueUpdate`。 |
+| version | String | 是 | 响应的接口版本号，与请求一致。 |
+| msgId | String | 是 | 与请求对应的唯一标识。 |
+| code | Number | 是 | 请求处理结果，0 表示订阅成功，非 0 表示订阅失败。 |
+| message | String | 否 | 响应结果描述信息。 |
+
+#### 响应数据示例
+
+以下为订阅成功后的 `TraitValueUpdate` 响应示例：
+
+```json
+{
+    "type": "TraitValueUpdate",
+	"version": "v1",
+	"msgId": "get_devices_1751609244328",
+	"code": 0,
+	"message": ""
+}
+```
+
+### 推送设备变化
+
+当设备的功能点值发生变化后，Studio 会实时向您推送变化详情。
+
+#### 推送数据结构
+
+| 参数 | 类型 | 是否必须 | 说明 |
+|---|---|---|---|
+| type | String | 是 | 响应消息类型，固定为 `TraitValueUpdate`。 |
+| version | String | 是 | 响应的接口版本号，与请求一致。 |
+| msgId | String | 是 | 与请求对应的唯一标识。 |
+| data | Array of Object | 是 | 数据对象数组。 |
+| data[].deviceId | String | 是 | 设备 ID。 |
+| data[].endpointId | Number | 是 | 端点 ID。 |
+| data[].functionCode | String | 是 | 功能代码。 |
+| data[].traitCode | String | 是 | 功能点代码。 |
+| data[].value | Any | 是 | 功能点的值。值的类型根与功能点有关，可能为 Number、String、Boolean。 |
+| data[].time | Number | 是 | 功能点的值的上报时间的 Unix 时间戳（毫秒）。 |
+
+### 推送数据示例
+
+当订阅的功能点值变化后，`TraitValueUpdate` 响应如下所示：
+
+```json
+{
+    "type": "TraitValueUpdate",
+	"version": "v1",
+	"msgId": "get_devices_1751609244328",
+    "data":[{
+        "deviceId": "57190441014857",
+        "endpointId": 3,
+        "functionCode": "MediaPlayback",
+		"traitCode": "TargetPlaybackState",
+        "value": "0",
+        "time": 1754469720110   
+    }]
+}
+```
+
+## 取消订阅功能点变化
+
+当您不再需要实时了解设备的功能点值，调用本接口取消订阅。
+
+### 请求参数
+
+| 参数 | 类型 | 是否必须 | 说明 |
+|------|------|----------|------|
+| type | String | 是 | 请求的消息类型，必须为 `UnsubscribeTraitValueRequest`。 |
+| version | String | 是 | 请求接口版本号，必须为 `v1`。 |
+| msgId | String | 是 | 由您自定义的请求 ID。 |
+| data | Array of Object | 是 | 请求数据。 |
+| data[].deviceId | String | 是 | 要订阅的设备 ID。 |
+| data[].endpointId | Number | 是 | 端点 ID。 |
+| data[].functionCode | String | 是 | 功能代码。 |
+| data[].traitCodes | Array of String | 是 | 功能点代码列表。 |
+
+### 请求参数示例
+
+以下为 `UnsubscribeTraitValueRequest` 的请求体示例：
+
+```json
+{
+    "type" : "UnsubscribeTraitValueRequest",
+    "version" : "v1",
+    "msgId" : "get_devices_1751609244328",
+    "data": [{
+        "deviceId": "57190441014857",
+        "endpointId": 3,
+        "functionCode": "MediaPlayback",
+        "traitCodes": ["TargetPlaybackState"]
+    }]
+}
+```
+
+### 响应数据
+
+| 参数    | 类型    | 说明                      |
+|---------|---------|---------------------------|
+| type    | String  | 响应的消息类型，固定为 `UnsubscribeTraitValueResponse`。|
+| version | String | 是 | 响应的接口版本号，与请求一致。 |
+| msgId | String | 是 | 与请求对应的唯一标识。 |
+| code | Number | 是 | 请求处理结果，0 表示取消成功，非 0 表示取消失败。 |
+| message | String | 否 | 响应结果描述信息。 |
+
+
+### 响应数据示例
+
+以下为 `UnsubscribeTraitValueResponse` 的响应示例：
+
+```json
+{
+    "type": "UnsubscribeTraitValueResponse",
+    "version": "v1",
+    "msgId": "0806",
+    "code": 0,
+	"message": ""
+}
+```
+
+## 订阅所有功能点变化
+
+订阅多个设备的所有功能点变化。
+
+### 请求参数
+
+| 参数 | 类型 | 是否必须 | 说明 |
+| -- | -- | -- | -- |
+| type | String | 是 | 请求的消息类型，必须为 `SubscribeAllRequest`。 |
+| version | String | 是 | 请求接口版本号，必须为 `v1`。 |
+| msgId | String | 是 | 由您自定义的请求 ID。 |
+| data | Array of String | 否 | 需要订阅的设备 ID 列表，若为空则表示订阅所有设备。 |
+
+> **说明**
+> 
+> 订阅所有设备与订阅特定设备互斥，不能同时存在。若本次调用接口时，data 不为空，但上一次 data 为空，则系统会取消原先的“订阅所有设备”，仅保留对指定设备的订阅。反之亦然。
+
+### 请求参数示例
+
+以下为 `SubscribeAllRequest` 的请求体示例：
+
+```json
+{
+    "type": "SubscribeAllRequest",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": ["deviceId"]
+}
+```
+
+### 响应数据
+
+| 参数    | 类型    | 是否必须 | 说明                 |
+| ------- | ------- | -------- | -------------------- |
+| type    | String  | 是       | 响应的消息类型，固定为 `SubscribeAllResponse`。|
+| version | String  | 是       | 响应接口版本号，必须为 `v1`。|
+| msgId   | String  | 是       | 与请求对应的唯一标识。|
+| code    | Number  | 是       | 请求处理结果，0 表示订阅成功，非 0 表示失败。|
+| message | String  | 否       | 响应结果描述信息。   |
+
+### 响应数据示例
+
+以下为 `SubscribeAllResponse` 的响应示例：
+
+```json
+{
+    "type": "SubscribeAllResponse",
+	"version": "v1",
+	"msgId": "1751609244328",
+	"code": 0,
+	"message": ""
+}
+```
+
+## 取消订阅所有功能点变化
+
+取消订阅多个设备的所有功能点变化。
+
+### 请求参数
+
+| 参数 | 类型 | 是否必须 | 说明 |
+| ------- | ------- | -------- | -------------------- |
+| type | String | 是 | 请求的消息类型，固定为 `UnsubscribeAllRequest`。 |
+| version | String | 是 | 请求接口版本号，必须为 `v1`。 |
+| msgId | String | 是 | 由您自定义的请求 ID。 |
+| data | Array of String | 否 | 需要取消订阅的设备 ID 列表，若为空则表示取消订阅所有设备。 |
+
+> **说明**
+>
+> - 若当前已订阅“所有设备”，则取消订阅时 data 不为空（即按特定设备取消订阅）无效，只有 data 为空（取消所有设备订阅）才会生效；
+> - 若当前已按“特定设备”订阅，则取消订阅时 data 为空（即取消所有设备订阅）有效，可以直接取消原有的特定设备订阅。
+
+### 请求参数示例
+
+以下为 `UnsubscribeAllRequest` 的请求体示例：
+
+```json
+{
+    "type": "UnsubscribeAllRequest",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": []
+}
+```
+
+### 响应数据
+
+| 参数    | 类型    | 是否必须 | 说明 |
+|---------|---------|----------|------|
+| type    | String  | 是       | 响应消息类型，固定为 `UnsubscribeAllResponse`。 |
+| version | String  | 是       | 响应的接口版本号，与请求一致。 |
+| msgId   | String  | 是       | 与请求对应的唯一标识。 |
+| code    | Number  | 是       | 请求处理结果，0 表示取消成功，非 0 表示失败。|
+| message | String  | 否       | 响应结果描述信息。 |
+
+### 响应数据示例
+
+以下为 `UnsubscribeAllResponse` 的响应示例：
+
+```json
+{
+    "type": "UnsubscribeAllResponse",
+	"version": "v1",
+	"msgId": "1751609244328",
+	"code": 0,
+	"message": ""
+}
+```
+
+## 对象事件消息推送（设备添加移除）  
+
+当您 [订阅了某个功能点变化](#订阅多个功能点变化) 或 [订阅了某个设备的所有功能点变化](#订阅所有功能点变化) 后，Studio 会实时向您推送以下事件：
+- 设备添加。
+- 设备删除。
+
+### 响应数据
+
+| 参数 | 类型 | 说明 |
+| - | - | - |
+| type | String | 响应消息类型，固定为 `objectEvent`。 |
+| version | String | 响应接口版本号，与请求一致。 |
+| msgId | String | 与请求对应的唯一标识。 |
+| data | Object | 事件数据对象。 |
+| data.eventType | String | 事件类型：<ul><li>`DEVICE_ADDED`：设备添加</li><li>`DEVICE_REMOVED`：设备删除。</li></ul> |
+| data.objectId | String | 对象 ID（当前为设备 ID）。 |
+| data.time | Number | 事件发生时间的 Unix 时间戳（毫秒）。 |
+| data.data | Object | 事件相关详细数据，详情请参见 [data.data 字段说明](#datadata-字段说明)  |
+
+#### data.data 字段说明
+
+以下为 eventType==DEVICE_ADDED 或 DEVICE_REMOVED 时 data.data 的数据结构： 
+
+| 参数 | 类型 | 说明 |
+| -- | -- | -- |
+| deviceId | String | 设备 ID。 |
+| name | String | 设备名称。 |
+| types | Array of String | 设备类型列表。字符串含义请参考 [设备类型说明](./device-type.md)。 |
+| endpointIds | Array of Number | 端点 ID 列表。 |
+
+### 响应数据示例
+
+以下为 `objectEvent` 的响应示例：
+
+```json
+{
+    "type": "objectEvent",
+	"version": "v1",
+	"msgId": "123456",
+    "data":{
+		"eventType": "DEVICE_ADDED",
+        "objectId": "14d3b91",
+		"time": 1754469720110,
+		"data": {
+			"deviceId": "14d3b91",
+			"name": "",
+			"types": ["Light"],
+			"endpointIds": [0,2,3]
+		}
+    }
+}
+```
+
+## 错误处理
+
+当你发起 API 请求后，如果收到如下的错误响应，不要灰心，这其实是帮助你排查问题的重要线索。
+
+以下通过一个示例，快速教你如何理解和修复问题：
+
+```json
+{
+    "type": "ErrorMessage",
+    "version": "v1",
+    "msgId": "UNKNOWN",
+    "code": 1000,
+    "message": "Message parsing failed: Unexpected JSON token at offset 0: Serializer for subclass 'GetDeviceInfo' is not found in the polymorphic scope of 'WebSocketMessageRequest' at path: $\nCheck if class with serial name 'GetDeviceInfo' exists and serializer is registered in a corresponding SerializersModule.\nTo be registered automatically, class 'GetDeviceInfo' has to be '@Serializable', and the base class 'WebSocketMessageRequest' has to be sealed and '@Serializable'.\nJSON input: {\n    \"type\": \"GetDeviceInfo\",....."
+}
+```
+
+1. **关注 `type` 字段**
+
+    首先，查看返回结果中的 **`type`** 字段。所有失败的请求，其值均为 **`ErrorMessage`**。
+
+2. **核查 `msgId` 字段**
+
+    如果请求格式有误，**`msgId`** 字段通常为 **`UNKNOWN`**，说明服务器未能识别有效的请求 ID。
+
+3. **仔细阅读 `message` 字段获取详情**
+
+    **`message`** 字段会提供详细的错误信息，通常包含最关键的排查线索，如参数缺失、数据类型错误等。请认真阅读该内容，明确需要调整和修正的具体问题。
