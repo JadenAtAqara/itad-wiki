@@ -1,0 +1,114 @@
+# 配置示例
+
+## 可视化数据流配置
+
+- 用户可通过**拖拽连接**功能模块的输入（in）与输出（out）属性，构建自动化数据链路。
+
+- 示例配置：
+  - 将逻辑判断模块A的`out`属性连接到设备控制模块B的`inA`属性，再将模块B的`out`属性传递至模块C的`in16`属性，形成级联控制。
+  
+- 支持实时预览数据流向与逻辑关系，确保配置准确性。
+
+## 触发条件Trigger常用场景配置
+
+### 定时触发
+
+
+#### **定时组件： CurrentTime（当前时间） 、DateFormat（时间组件）。**
+
+组合逻辑：把当前时间转换成数值，再做个相等的运算，当等于某个值时，去执行某个动作，如：中午12点关灯，可组合成1200等于1200时，执行关灯动作。
+
+**示例：**定时12点的时候，关灯。
+
+**触发条件：**
+
+1. 在左侧控制器菜单中，将CurrentTime、NumericConst、DateFormat和Equal功能块拖拽到画布中；
+2. 双击DateFormat功能块将显示详细页面，或者直接双击Format参数，将Format的值改为“时:分”格式，即HH:mm；
+3. 双击NumericConst功能块的输出Out节点，将value设置为1200；
+4. 将CurrentTime的输出Out节点连线到DateFormat的Time参数，再将DateFormat的输出Out连线到Equal功能块的InA，将NumericConst的输出Out连线到Equal功能块的InB，即代表取当前时间的时分数值，若等于1200，即触发；
+
+**执行动作：**
+
+1. 单击右侧空白编辑框的铅笔图标，弹框中按目录选择Communication-coap-灯设备名称-Points-4.1.85开关状态，单击ok，可查看选中的属性信息，单击确定即可在面板右侧查看到该设备属性信息；
+2. 将Equal功能块的输出Out节点连接到灯开关的输入In节点，即代表触发后执行关灯操作。
+
+<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/autologic-ex1.png" alt="定时12点关灯自动化配置示意图" style="width: 80%;" />
+
+### 单一条件触发
+
+**示例1：** 当检测到有人的时候触发。
+
+1. 单击左侧空白框的铅笔图标，弹框中按目录选择Communication-coap-人体相关设备名称-Points-有人无人状态，单击ok，可查看选中的属性信息，单击确定；
+2. 在左侧控制器菜单中，将NumericConst和Equal功能块拖拽到画布中，将NumericConst的输出Out节点设置为1，将人体传感器的输出Out节点连线到Equal的输入InA，将NumericConst的输出Out节点连线到Equal的输入InB；
+3. 由于人体传感器只会上报有人，所以只需要取True的值即可，因此需要将Equal功能块的True值输出，双击Equal功能块黄色区域可查看详细配置页面，在True参数的标志/Flags列，单击编辑操作，勾选显示/exhibition，单击OK，即可在画布面板看到True参数显示；
+
+<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/autologic-ex2.png" alt="单一条件触发有人时的自动化配置示意图" style="width: 80%;" />
+
+**示例2：**当温度高于28度时触发。
+
+<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/autologic-ex4.png" alt="当温度高于28度时的自动化配置示意图" style="width: 80%;" />
+
+### 满足任一条件和同时满足多条件触发
+
+#### 组件：AND（与）、OR（或）
+
+**示例1：**当灯关着，且，检测到有人的时候触发。
+
+1. 按照单一条件分别配置有人和灯关着的触发条件；
+2. 在左侧控制器菜单中，将AND功能块拖拽到画布中，分别将有人的触发条件连线到AND功能块的输入InA，灯关着的触发条件连线到AND功能块的输入InB；
+3. 由于灯关着是状态属性，值变化不会触发该自动化，因此要增加一步设置，即双击AND功能块的黄色区域可查看详细配置页面，在InB参数的标志/Flags列，单击编辑操作，取消勾选改变时执行/executeOnChange，单击OK即可。
+
+<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/autologic-ex3.png" alt="多条件同时满足触发的自动化配置示意图" style="width: 80%;" />
+
+**示例2：**当温度高于28度，或，检测到有人的时候触发。
+
+<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/autologic-ex5.png" alt="多条件任一满足触发的自动化配置示意图" style="width: 80%;" />
+
+### 执行动作Action常用场景配置
+
+### 延时执行
+
+#### 延时组件： DelayEvent。
+
+**示例：**当检测到有人的时候，延时1分钟开灯。
+
+**触发条件：**参考单一条件触发示例配置。
+
+**执行动作：**
+
+1. 在左侧控制器菜单中，将DelayEvent功能块拖拽到画布中，双击DelayTime参数，设置为1分钟；
+2. 单击右侧空白编辑框的铅笔图标，弹框中按目录选择Communication-coap-灯设备名称-Points-4.1.85开关状态，单击ok，可查看选中的属性信息，单击确定；再双击In16参数Vaule设置为True；
+3. 将Equal功能块的True节点同时连线到DelayEvent功能块的输入In节点和DelayTime节点，表示触发成功后进入延时状态，延时时间1分钟；
+4. 再将DelayEvent功能块的DelayEvent节点连接到灯开关的输入In节点，即代表延时1分钟后执行开灯操作。
+
+<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/autologic-ex2.png" alt="单一条件触发有人时的自动化配置示意图" style="width: 80%;" />
+
+### Toggle（取反）执行
+
+#### 组件：OR（非）
+
+**示例1：**单击无线开关，左键开关取反，即单击左键开关打开，再单击左键开关关闭。
+
+1. 单击左侧空白编辑框的铅笔图标，弹框中按目录选择Communication-coap-无线开关设备名称-Points-13.1.85开关状态，单击ok；
+2. 在左侧控制器菜单中，将NumericConst和Equal功能块拖拽到画布中，将NumericConst的输出Out节点设置为1（单击），将无线开关的输出Out节点连线到Equal的输入InA，将NumericConst的输出Out节点连线到Equal的输入InB；
+3. 由于无线开关我们只需要单击事件触发，所以需要取Equal的True值，双击Equal功能块黄色区域可查看详细配置页面，在True参数的标志/Flags列，单击编辑操作，勾选显示/exhibition，单击OK，即可在画布面板看到True参数显示；
+4. 再单击左侧空白编辑框的铅笔图标，弹框中按目录选择Communication-coap-左键开关设备名称-Points-4.1.85开关状态，单击ok；
+5. 在左侧控制器菜单中，将Not功能块拖拽到画布中，双击Not功能块黄色区域可查看详细配置页面，在Execute参数的标志/Flags列，单击编辑操作，勾选显示/exhibition，单击OK，即可在画布面板看到Execute参数显示；
+6. 将左侧无线开关的输出Out节点连接到Not功能块的输入In节点，再将Equal功能块的True节点连接到Not功能块的Execute节点；
+7. 由于灯的开关状态不触发该自动化，因此要增加一步设置，即双击Not功能块的黄色区域可查看详细配置页面，在In参数的标志/Flags列，单击编辑操作，取消勾选改变时执行/executeOnChange，单击OK；再将Proxy Ext参数的Type值改为control:ContinueProxyExt，单击OK；
+8. 再将Not功能块的输出Out节点连接到右侧左键开关的输入In节点。
+
+<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/autologic-ex6.png" alt="无线开关取反自动化配置示意图" style="width: 80%;" />
+
+### 场景执行
+
+#### 组件：KitBatchSet（批量设置）
+
+**示例：**灯光全关。
+
+1. 单击右侧空白编辑框的铅笔图标，弹框中在目录Communication-coap下，依次选择灯设备名称-Points-开关状态属性，单击ok，即可查看到所有选中的设备属性信息，单击确定；
+2. 在左侧控制器菜单中，将KitBatchSet功能块拖拽到画布中，将输出OutA节点连接到所有灯的输入In节点即可；
+3. 右键单击KitBatchSet功能块，选择rename可重命名；
+4. 双击KitBatchSet功能块的Action参数，单击OK，即代表执行场景。
+
+<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/autologic-ex7.png" alt="批量设置场景自动化配置示意图" style="width: 80%;" />

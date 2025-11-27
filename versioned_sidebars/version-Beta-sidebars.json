@@ -10,12 +10,67 @@
         "aqara-studio/overview/release-notes"
       ]
     },
+    "aqara-studio/deployment-requirements",
     {
-        "type": "category",
-        "label": "OnlyChinese", 
-        "items": [
-            "Developer"
-        ]
-    }
+      "type": "category",
+      "label": "User",
+      "items": [
+        "aqara-studio/user",
+        "aqara-studio/license-management"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "System",
+      "items": [
+        {
+          "type": "category",
+          "label": "Device Integration",
+          "items": [
+            "aqara-studio/device-integration/aqara",
+            "aqara-studio/device-integration/ha",
+            "aqara-studio/device-integration/modbus-tcp",
+            "aqara-studio/device-integration/bacnet",
+            "aqara-studio/device-integration/knx-ip"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Automation",
+          "items": [
+            "aqara-studio/automation-configuration/automation-configuration",
+            "aqara-studio/automation-configuration/examples"
+          ]
+        },
+        "aqara-studio/graph-dashboard",
+        "aqara-studio/space"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "General",
+      "items": [
+        "aqara-studio/alarm-management",
+        "aqara-studio/log-management"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Developer",
+      "items": [
+        "aqara-studio/developer-guide",
+        "aqara-studio/api-references/data-export-api-v1",
+        "aqara-studio/api-references/device-type",
+        "aqara-studio/api-references/trait-codes"
+      ]      
+    },
+    {
+      "type": "category",
+      "label": "Settings",
+      "items": [
+        "aqara-studio/backup-and-restore"
+      ]      
+    },
+    "aqara-studio/search"
   ]
 }

@@ -1,0 +1,164 @@
+# 功能点代码一览
+
+下表汇总了 Aqara 支持的全部功能点代码（trait code）：
+
+> 说明
+> 
+> 下表仅展示各功能点代码（trait code）的基本信息，包括类型、可读写、可上报等。若需了解每个 trait 的详细定义（如取值范围、枚举说明等），请通过接口 [GetDevicesRequest](./data-export-api-v1.md#查询设备的-spec-配置) 获取完整的配置信息。
+
+| trait_code | trait_name | 功能类型 | 单位 | 可读 | 可写 | 可上报 |
+|---|---|---|---|---|---|---|
+| CODetected | 一氧化碳检测状态 | boolean |  | ✔ | ✘ | ✔ |
+| ExpressedState | 报警器状态 | enum |  | ✔ | ✘ | ✔ |
+| WindSetting | 风类型 | enum |  | ✔ | ✔ | ✔ |
+| AirflowDirection | 风向 | enum |  | ✔ | ✔ | ✔ |
+| FanSpeed | 风速 | number | % | ✔ | ✔ | ✔ |
+| AirQuality | 空气质量等级 | enum |  | ✔ | ✘ | ✔ |
+| BooleanState | 布尔状态 | boolean |  | ✔ | ✘ | ✔ |
+| MatterVendorID | Matter Vendor ID | string |  | ✔ | ✘ | ✔ |
+| FreshAirMode | 新风模式 | enum |  | ✔ | ✔ | ✔ |
+| InvertedRotationAngle | 倒置旋转角度 | number | ° | ✘ | ✘ | ✔ |
+| ConnectionStatus | 连接状态 | enum |  | ✔ | ✘ | ✔ |
+| ScreenBrightness | 屏幕亮度 | number | % | ✔ | ✔ | ✔ |
+| TemperatureUIDisplayMode | 温度用户界面显示模式 | enum |  | ✔ | ✔ | ✔ |
+| BatReplacementNeeded | 是否需要更换电池 | boolean |  | ✔ | ✘ | ✔ |
+| BatQuantity | 电池数量 | number |  | ✔ | ✘ | ✔ |
+| Rechargeable | 是否可充电 | boolean |  | ✔ | ✘ | ✔ |
+| CircuitCurrent | 电路电流 | number | A | ✔ | ✘ | ✔ |
+| P2PCaptureEnabled | 是否支持P2P抓图 | boolean |  | ✔ | ✔ | ✔ |
+| MotorOperationStatus | 电机运行状态 | enum |  | ✔ | ✘ | ✔ |
+| MotorDirectionReversed | 电机方向反转 | boolean |  | ✔ | ✔ | ✔ |
+| MotorControllability | 电机是否可控制 | boolean |  | ✔ | ✘ | ✔ |
+| CurrentValveState | 当前阀门状态 | enum |  | ✔ | ✘ | ✔ |
+| Condition | 滤芯剩余寿命 | number | % | ✔ | ✘ | ✔ |
+| ChangeIndication | 滤芯寿命状态 | enum |  | ✔ | ✘ | ✔ |
+| FilterType | 滤芯类型 | enum |  | ✔ | ✘ | ✔ |
+| OperationalState | 设备状态 | enum |  | ✔ | ✘ | ✔ |
+| CurrentFlow | 当前流量 | number | m³/h | ✔ | ✘ | ✔ |
+| CurrentMode | 当前模式 | enum |  | ✔ | ✘ | ✔ |
+| ChangeToModeResponse | 模式切换反馈 | enum |  | ✔ | ✘ | ✔ |
+| VacuumOperationalState | 扫地机器人状态 | enum |  | ✔ | ✘ | ✔ |
+| RefrigeratorAlarm | 冰箱报警 | other |  | ✔ | ✘ | ✔ |
+| EvseState | 充电枪状态 | enum |  | ✔ | ✘ | ✔ |
+| EvseSupplyState | 充电桩状态 | enum |  | ✔ | ✘ | ✔ |
+| ChargingEnabledUntil | 允许继续充电时间 | number | A | ✔ | ✘ | ✔ |
+| MaxChargeCurrent | 最大电流 | number | A | ✔ | ✘ | ✔ |
+| BatteryCapacity | 电池容量 | number |  | ✔ | ✘ | ✔ |
+| MinChargeCurrent | 最小电流 | number | A | ✔ | ✘ | ✔ |
+| SetTemperature | 设置温度 | number | °C | ✔ | ✔ | ✔ |
+| SetTemperatureLevel | 设置温度等级 | number |  | ✔ | ✔ | ✔ |
+| MediaInput | 播放源 | enum |  | ✔ | ✔ | ✔ |
+| SetBack | 温度浮动 | number | °C | ✔ | ✔ | ✔ |
+| OpenAngle | 开合角度 | number |  | ✔ | ✘ | ✔ |
+| BSSID | BSSID | string |  | ✔ | ✘ | ✔ |
+| CurrentTemperatureCalibration | 温度补偿 | number | °C | ✔ | ✔ | ✔ |
+| HeaterCoolerButtonEvent | 温控按键事件 | enum |  | ✔ | ✘ | ✔ |
+| HeaterCoolerPolarity | 温控器极性设置 | enum |  | ✔ | ✔ | ✔ |
+| SelfCheck | 报警器自检 | boolean |  | ✔ | ✔ | ✔ |
+| FirmwareRevision | 固件版本 | string |  | ✔ | ✘ | ✔ |
+| SerialNumber | 序列号 | string |  | ✔ | ✘ | ✔ |
+| VendorName | 厂商名 | string |  | ✔ | ✘ | ✔ |
+| VendorID | 厂商ID | string |  | ✔ | ✘ | ✔ |
+| ProductName | 产品名称 | string |  | ✔ | ✘ | ✔ |
+| Reachable | 连接状态 | boolean |  | ✔ | ✘ | ✔ |
+| HardwareVersion | 硬件版本 | string |  | ✔ | ✘ | ✔ |
+| Mac | Mac地址 | string |  | ✔ | ✘ | ✔ |
+| DeviceID | 设备ID | string |  | ✔ | ✘ | ✔ |
+| EndpointName | 设备或卡片名称 | string |  | ✔ | ✔ | ✔ |
+| OnOff | 开关状态 | boolean |  | ✔ | ✔ | ✔ |
+| CurrentLevel | 当前等级 | number | % | ✔ | ✔ | ✔ |
+| CurrentX | X值 | number |  | ✔ | ✔ | ✔ |
+| CurrentY | Y值 | number |  | ✔ | ✔ | ✔ |
+| ColorTemperature | 色温值 | number |  | ✔ | ✔ | ✔ |
+| ButtonEvent | 按钮事件 | enum |  | ✘ | ✘ | ✔ |
+| CameraActiveStatus | 摄像头休眠状态 | boolean |  | ✔ | ✔ | ✔ |
+| CurrentPositionPercentage | 当前位置百分比 | number | % | ✔ | ✘ | ✔ |
+| TargetPositionPercentage | 目标位置百分比 | number | % | ✘ | ✔ | ✔ |
+| IRType | 红外类型 | enum |  | ✔ | ✔ | ✔ |
+| IRBrand | 红外品牌 | number |  | ✔ | ✔ | ✔ |
+| CurrentVoltage | 电压值 | number | V | ✔ | ✘ | ✔ |
+| CurrentPower | 功率值 | number | W | ✔ | ✘ | ✔ |
+| CumulativeEnergyConsumption | 累计耗电量 | number | W·h | ✔ | ✘ | ✔ |
+| HeaterCoolerMode | 制热制冷模式 | enum |  | ✔ | ✔ | ✔ |
+| HeatingTemperature | 制热温度 | number | °C | ✔ | ✔ | ✔ |
+| CoolingTemperature | 制冷温度 | number | °C | ✔ | ✔ | ✔ |
+| FanMode | 风扇模式 | enum |  | ✔ | ✔ | ✔ |
+| RockSetting | 摆风 | enum |  | ✔ | ✔ | ✔ |
+| CurrentHumidity | 湿度 | number | % | ✔ | ✘ | ✔ |
+| CurrentPlaybackState | 播放状态 | enum |  | ✔ | ✘ | ✔ |
+| PlaybackDuration | 时长 | number | ms | ✔ | ✘ | ✔ |
+| SampledPosition | 播放进度 | number | ms | ✔ | ✘ | ✔ |
+| PlaybackMode | 播放模式 | enum |  | ✔ | ✔ | ✔ |
+| MediaInformation | 媒体信息 | string |  | ✔ | ✘ | ✔ |
+| Volume | 音量 | number | % | ✔ | ✔ | ✔ |
+| Mute | 静音 | boolean |  | ✔ | ✔ | ✔ |
+| LockState | 锁状态 | enum |  | ✔ | ✘ | ✔ |
+| DoorState | 门状态 | enum |  | ✔ | ✘ | ✔ |
+| IRKey | 红外指令 | enum |  | ✘ | ✔ | ✘ |
+| BatPercentRemaining | 电量百分比 | number | % | ✔ | ✘ | ✔ |
+| SweeperState | 扫地状态 | enum |  | ✔ | ✘ | ✔ |
+| VOCDensity | VOC浓度 | number | ppb | ✔ | ✘ | ✔ |
+| VOCQuality | VOC等级 | enum |  | ✔ | ✘ | ✔ |
+| CurrentPressure | 压力 | number | kPa | ✔ | ✘ | ✔ |
+| PM2.5Density | PM2.5浓度 | number | ug/m³ | ✔ | ✘ | ✔ |
+| PM2.5Level | PM2.5等级 | enum |  | ✔ | ✘ | ✔ |
+| PM1.0Density | PM1.0浓度 | number | ug/m³ | ✔ | ✘ | ✔ |
+| PM10Density | PM10浓度 | number | ug/m³ | ✔ | ✘ | ✔ |
+| CO2Density | CO2浓度 | number | ppm | ✔ | ✘ | ✔ |
+| CO2Level | CO2等级 | enum |  | ✔ | ✘ | ✔ |
+| CurrentIlluminance | 光照度 | number | lux | ✔ | ✘ | ✔ |
+| ContactSensorState | 接触状态 | boolean |  | ✔ | ✘ | ✔ |
+| SmokeDensity | 烟雾浓度 | number | OBS%/FT | ✔ | ✘ | ✔ |
+| SmokeDetected | 烟雾检测状态 | boolean |  | ✔ | ✘ | ✔ |
+| GasDensity | 气体浓度 | number | %LEL | ✔ | ✘ | ✔ |
+| GasDetected | 气体检测状态 | boolean |  | ✔ | ✘ | ✔ |
+| SleepState | 睡眠状态 | enum |  | ✔ | ✘ | ✔ |
+| SleepQuality | 睡眠质量 | number |  | ✔ | ✘ | ✔ |
+| OnBed | 在床状态 | boolean |  | ✔ | ✘ | ✔ |
+| SleepStage | 睡眠阶段 | enum |  | ✔ | ✘ | ✔ |
+| LeakState | 泄漏状态 | boolean |  | ✔ | ✘ | ✔ |
+| Occupancy | 存在状态 | boolean |  | ✔ | ✘ | ✔ |
+| OccupancySensorType | 存在传感类型 | enum |  | ✔ | ✘ | ✔ |
+| MotionDetected | 移动侦测 | enum |  | ✘ | ✘ | ✔ |
+| RotationAngle | 旋转角度 | number |  | ✘ | ✘ | ✔ |
+| RotationDirection | 旋转方向 | enum |  | ✘ | ✘ | ✔ |
+| RotationEvent | 旋转事件 | enum |  | ✘ | ✘ | ✔ |
+| CubeEvent | 魔方事件 | enum |  | ✘ | ✘ | ✔ |
+| VibrationEvent | 动静贴事件 | enum |  | ✘ | ✘ | ✔ |
+| SmokeDensitydB | 烟雾浓度dB | number | dB/m | ✔ | ✘ | ✔ |
+| CurrentR | 红色值 | number |  | ✔ | ✔ | ✔ |
+| CurrentG | 绿色值 | number |  | ✔ | ✔ | ✔ |
+| CurrentB | 蓝色值 | number |  | ✔ | ✔ | ✔ |
+| EndpointArrayDynamic | 节点动态数组 | other |  | ✔ | ✘ | ✔ |
+| Feed | 喂食 | enum |  | ✔ | ✘ | ✔ |
+| AttitudeDetected | 姿态检测 | enum |  | ✔ | ✘ | ✔ |
+| TargetPlaybackState | 目标播放状态 | enum |  | ✔ | ✔ | ✔ |
+| EnableRemoteControl | 远程控制使能 | boolean |  | ✔ | ✔ | ✔ |
+| HardwareVersionString | 硬件版本号（字符串类型） | string |  | ✔ | ✘ | ✔ |
+| FirmwareRevisionString | 固件版本号（字符串类型） | string |  | ✔ | ✘ | ✔ |
+| ProductID | 产品ID | number |  | ✔ | ✘ | ✔ |
+| RemoteUnlock | 远程解锁--绿米私有 | boolean |  | ✔ | ✔ | ✔ |
+| MinPINCodeLength | 最小PINCode长度 | number |  | ✔ | ✘ | ✔ |
+| MinRFIDCodeLength | 最小RFID长度 | number |  | ✔ | ✘ | ✔ |
+| OperatingMode | 操作模式 | enum |  | ✔ | ✘ | ✔ |
+| ActuatorEnabled | 执行器启用 | boolean |  | ✔ | ✘ | ✔ |
+| ReverseIdentify | 反向识别 | number |  | ✘ | ✘ | ✔ |
+| Hue | Hue | number | ° | ✔ | ✔ | ✔ |
+| Saturation | 饱和度 | number | % | ✔ | ✔ | ✔ |
+| MinHeatCoolDeadBand | 制冷制热温度最小死区 | number | °C | ✔ | ✔ | ✔ |
+| Channel | 无线信道 | number |  | ✔ | ✘ | ✔ |
+| ExtendedPANID | 网络ExtendedPANID | number |  | ✔ | ✘ | ✔ |
+| WindowCoveringMotorsBinding | 窗帘电机绑定为统一总控 | boolean |  | ✔ | ✔ | ✔ |
+| CurrentRotationAngle | 窗帘的当前旋转角度 | number | ° | ✔ | ✔ | ✔ |
+| TargetRotationAngle | 窗帘的目标旋转角度 | number | ° | ✔ | ✔ | ✔ |
+| CurrentGarageDoorState | 当前（车库）门状态 | enum |  | ✔ | ✘ | ✔ |
+| TargetGarageDoorState | 目标（车库）门状态 | enum |  | ✔ | ✔ | ✔ |
+| HoldRotationAngle | 按住旋转角度 | number | ° | ✘ | ✘ | ✔ |
+| ModeCount | 模式数量 | number |  | ✔ | ✘ | ✔ |
+| PlaybackSampledPosition | 当前媒体播放位置 | number | ms | ✔ | ✔ | ✔ |
+| SelectedMediaOutputSource | 当前播放输出源 | enum |  | ✔ | ✔ | ✔ |
+| LockOperation | 门锁操作（事件）上报 | other |  | ✘ | ✘ | ✔ |
+| DoorLockAlarm | 门锁报警（事件）上报 | other |  | ✘ | ✘ | ✔ |
+| LockUserChange | 门锁用户变更上报 | other |  | ✘ | ✘ | ✔ |
+| ModelValue | 模型值 | string |  | ✔ | ✘ | ✔ |
+

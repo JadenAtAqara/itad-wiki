@@ -7,9 +7,32 @@
     "message": "概览",
     "description": "The label for category 'Overview' in sidebar 'aqaraStudioSidebar'"
   },
-  "sidebar.aqaraStudioSidebar.category.OnlyChinese": {
-    "message": "开发者文档",
-    "description": "The label for category 'OnlyChinese' in sidebar 'aqaraStudioSidebar'"
+  "sidebar.aqaraStudioSidebar.category.User": {
+    "message": "用户",
+    "description": "The label for category 'User' in sidebar 'aqaraStudioSidebar'"
+  },
+  "sidebar.aqaraStudioSidebar.category.System": {
+    "message": "系统功能",
+    "description": "The label for category 'System' in sidebar 'aqaraStudioSidebar'"
+  },
+  "sidebar.aqaraStudioSidebar.category.System.Device Integration": {
+    "message": "设备接入",
+    "description": "The label for category 'Device Integration' in sidebar 'aqaraStudioSidebar'"
+  },    
+  "sidebar.aqaraStudioSidebar.category.System.Automation": {
+    "message": "自动化",
+    "description": "The label for category 'Automation' in sidebar 'aqaraStudioSidebar'"
+  },
+  "sidebar.aqaraStudioSidebar.category.General": {
+    "message": "通用功能",
+    "description": "The label for category 'General' in sidebar 'aqaraStudioSidebar'"
+  },
+  "sidebar.aqaraStudioSidebar.category.Developer": {
+    "message": "开发者",
+    "description": "The label for category 'Developer' in sidebar 'aqaraStudioSidebar'"
+  },
+  "sidebar.aqaraStudioSidebar.category.Settings": {
+    "message": "设置",
+    "description": "The label for category 'Settings' in sidebar 'aqaraStudioSidebar'"
   }
-
 }

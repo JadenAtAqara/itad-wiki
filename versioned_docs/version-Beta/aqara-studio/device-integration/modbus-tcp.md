@@ -1,0 +1,96 @@
+# Modbus TCP 接入
+
+## ModBus TCP 协议接入配置说明
+
+### 协议配置
+
+1. 进入Communication页面，在左侧导航栏的右下方，单击“+”；
+2. 在Library栏，将ModbusTcpNetwork拖拽到左侧导航栏；
+
+### 添加设备配置
+
+1. 右键单击ModbusTcpNetwork文件夹，单击“Add”，将ModbusTcpDevice拖拽到左侧导航栏；
+2. 双击ModbusTcpDevice文件夹，在右侧页面的右上角单击双向箭头图标，选择baseConfig；
+3. 展开“Private”，按需要填写配置。
+
+| 参数                         | 说明                                                         |
+| ---------------------------- | ------------------------------------------------------------ |
+| Ip Address                   | 设备的网络IP地址                                             |
+| Port                         | Modbus TCP通信端口                                           |
+| Device Address               | 设备地址                                                     |
+| Socket Status                | Socket 连接状态                                              |
+| Override Network             | 网络覆盖                                                     |
+| Float Byte Order             | 浮点数字节顺序                                               |
+| Long Byte Order              | 长整型字节顺序                                               |
+| Use Force Multiple Coil      | 用于批量设置多个线圈(Coil)状态                               |
+| Use Preset Multiple Register | 用于批量写入多个保持寄存器                                   |
+| Address Format               | 地址格式：Hex（十六进制）、Decimal（十进制）、Modbus         |
+| Address                      | 地址                                                         |
+| Ping Address Data Type       | 寄存器数据类型：<br />Integertype（整数型）、Longtype（长型）、Floattype（浮点型）、Signedinteger（有符号整型）、Unsignedlong（无符号长整型） |
+| Ping Address Reg Type        | 寄存器地址类型：Holding、Input                               |
+| Poll Frequency               | 轮询频率                                                     |
+
+<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/modbusTcpDevice.png" alt="modbusTcpDevice" style="width: 80%;" />
+
+### 添加点配置
+
+1. 双击展开ModbusTcpDevice文件夹，右键单击Points文件夹，选择添加；
+2. 选择任一需要的数据类型拖拽到左侧导航栏，后缀为Writable的即可写，后缀为Point的即可读；
+3. 双击该文件夹，在右侧页面的右上角单击双向箭头图标，选择baseConfig；
+4. 展开“Private”，按需要填写配置。
+
+<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/modbusTcpPoint.png" alt="modbusTcpPoint" style="width: 80%;" />
+
+## ModBus Serial（RTU/Assic）协议接入配置说明
+
+### 协议配置
+
+1. 进入Communication页面，在左侧导航栏的右下方，单击“+”；
+2. 在Library栏，将ModbusSerialNetwork拖拽到左侧导航栏；
+3. 双击ModbusSerialNetwork文件夹，在右侧页面的右上角单击双向箭头图标，选择baseConfig；
+4. 展开“Private”，按需要填写配置。
+
+| 参数              | 说明                                                         |
+| ----------------- | ------------------------------------------------------------ |
+| Modbus Data Mode  | Modbus通信模式：Ascli（文本编码）、Rtu（二进制编码）         |
+| Status            | 通信状态：未开启、故障、宕机、告警中、过期、挂起、未设置、告警未确认 |
+| Port Name         | 端口名称                                                     |
+| Baud Rate         | 通信速率（比特率，单位：bps）                                |
+| Data Bits         | 每个字节的数据位数                                           |
+| Stop Bits         | 定义数据包结束标志的位数                                     |
+| Parity            | 奇偶校验位，用于错误检测。<br />None（无校验）、Odd（奇校验）、Even（偶校验）、Mark、Space。 |
+| Flow Control Mode | 控制数据流（防止缓冲区溢出）<br />RTS/CTS：硬件流控，XON/XOFF：软件流控 |
+
+<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/modbusSerialNetwork.png" alt="modbusSerialNetwork" style="width: 80%;" />
+
+### 添加设备配置
+
+1. 右键单击ModbusSerialNetwork文件夹，将ModbusSerialDevice拖拽到左侧导航栏；
+2. 双击ModbusSerialDevice文件夹，在右侧页面的右上角单击双向箭头图标，选择baseConfig；
+3. 展开“Private”，按需要填写配置。
+
+| 参数                         | 说明                                                         |
+| ---------------------------- | ------------------------------------------------------------ |
+| Device Address               | 设备地址                                                     |
+| Modbus Data Mode             | Modbus通信模式：Ascli（文本编码）、Rtu（二进制编码）、Usenetworkdatamode |
+| Override Network             | 网络覆盖                                                     |
+| Float Byte Order             | 浮点数字节顺序                                               |
+| Long Byte Order              | 长整型字节顺序                                               |
+| Use Force Multiple Coil      | 用于批量设置多个线圈(Coil)状态                               |
+| Use Preset Multiple Register | 用于批量写入多个保持寄存器                                   |
+| Address Format               | 地址格式：Hex（十六进制）、Decimal（十进制）、Modbus         |
+| Address                      | 地址                                                         |
+| Ping Address Data Type       | 寄存器数据类型：<br />Integertype（整数型）、Longtype（长型）、Floattype（浮点型）、Signedinteger（有符号整型）、Unsignedlong（无符号长整型） |
+| Poll Frequency               | 轮询频率                                                     |
+
+<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/modbusSerialDevice.png" alt="modbusSerialDevice" style="width: 80%;" />
+
+### 添加点配置
+
+1. 双击展开ModbusSerialNetwork文件夹，右键单击Points文件夹，选择添加；
+2. 选择任一需要的数据类型拖拽到左侧导航栏，后缀为Writable的即可写，后缀为Point的即可读；
+3. 双击该文件夹，在右侧页面的右上角单击双向箭头图标，选择baseConfig；
+4. 展开“Private”，按需要填写配置。
+5. 
+<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/modbusSerialPointBool.png" alt="modbusSerialPointBool" style="width: 80%;" />
+
