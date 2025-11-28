@@ -25,13 +25,24 @@ Aqara Studio 支持两种 Aqara 设备接入方式，具体选择依据其是否
 
 1. 请联系 Aqara 技术支持，获取并安装 Aqara Studio Tool App（目前仅支持 Android）。
 2. 启动 App，填写所需的网络登录信息：
-   - **BaseUrl**：Aqara Studio 的访问地址（如： http://10.10.24.83:8080）
-   - **FastLinkUrl**：Aqara Studio 所在设备的 IP 或域名（如： http://10.10.24.83）
+   - **BaseUrl**：Aqara Studio 的访问地址。
+   - **FastLinkUrl**：Aqara Studio 所在设备的 IP 或域名，详情请查看 [如何获取 FastLinkUrl](#如何获取-fastlinkurl)。
 3. 登录成功后，选择“网关入口”，并根据页面提示添加 Aqara 网关。
-4. 网关添加完成后，连续按下该网关按钮 3 次，进入子设备入网模式（如需了解各设备入网流程，请参考设备说明书或在 Aqara Home App 查询）。
+4. 网关添加完成后，连续按下该网关按钮 3 次，进入子设备入网模式。
+   :::tip
+
+   如需了解各设备入网流程，请参考设备说明书或在 Aqara Home App 查询。
+   
+   :::
 5. 待子设备入网成功后，设备信息会自动显示在右侧侧边栏的 `Aqara` 目录中，无需手动添加测点，Aqara Studio 会自动识别。
 
+#### 如何获取 FastLinkUrl
 
+1. 双击 Aqara 文件夹，进入 **配置** 标签页，展开 **基础配置**。
+2. 查看`Name Srv Address`是否为空：
+   - 是：**基础配置** 下的 `Ip Address` 为 FastLinkUrl。
+   - 否：该地址为为 FastLinkUrl。
+ 
 ### 设备控制（待更新）
 1. 在左侧导航栏，依次双击展开CoapNetwork文件夹-选择任一设备-Points文件夹；
 2. 双击选择任一需要控制的资源点值，在BASIC页面，Out为输出，即资源当前值，可读，In为输入，即控制值，可写；
