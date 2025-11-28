@@ -40,7 +40,7 @@ Aqara Studio 采用了分布式与集中式相结合的系统架构设计，能�
 
 ![分布式架构](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/4-distributed-architecture.png)
 
-### 优势
+## 优势
 
 - **高可用性**：可将服务分别部署应用到到多个节点，即便出现单点故障，系统仍能正常运行。
 - **可扩展性**：可根据业务需求，动态调整服务任务在服务器的部署，适应不同的应用场景。
