@@ -1,8 +1,8 @@
 # Aqara 设备接入
 
 Aqara Studio 支持两种 Aqara 设备接入方式，具体选择依据其是否搭载于 Aqara 网关：
-- 是：请参阅 [通过 Aqara Cloud 接入](#通过-aqara-cloud-接入)
-- 否：请参阅 [通过五元组信息接入](#通过五元组信息接入)
+- 是：请参阅 [通过 Aqara Cloud 接入](#通过-aqara-cloud-接入)。
+- 否：请参阅 [通过五元组信息接入](#通过五元组信息接入)。
 
 ## 通过 Aqara Cloud 接入
 
