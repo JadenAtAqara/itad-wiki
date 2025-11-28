@@ -22,7 +22,7 @@
    | Control Port Number | 控制端口号，KNX/IP 网关的通信端口，默认为3671 |
    | Friendly Name       | 自定义设备描述，便于管理                      |
 
-<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/knxDevice.png" alt="knxDevice" style={{width: '80%'}} />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/knxDevice.png" alt="knxDevice" style={{width: '80%'}} />
 
 ## 添加点配置
 
@@ -42,4 +42,4 @@
    | Poll Frequency     | 轮询频率                                  |
    | Write Only         | 是否启用只写模式                          |
 
-<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/knxPoint.png" alt="knxPoint" style={{width: '80%'}} />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/knxPoint.png" alt="knxPoint" style={{width: '80%'}} />

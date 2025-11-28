@@ -64,7 +64,7 @@
 | Number Of APDU Retries          | 超时后的重试次数                                             |
 | Database Revision               | 数据库修订                                                   |
 
-<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/bacnetDevice.png" alt="bacnetDevice" style={{width: '80%'}} />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/bacnetDevice.png" alt="bacnetDevice" style={{width: '80%'}} />
 
 ## 点自发现与配置
 
@@ -82,4 +82,4 @@
    | Property Array Index | 属性数据索引 |
    | Data Type            | 数据类型     |
 
-<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/bacnetPoint.png" alt="bacnetPoint" style={{width: '80%'}} />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/bacnetPoint.png" alt="bacnetPoint" style={{width: '80%'}} />
