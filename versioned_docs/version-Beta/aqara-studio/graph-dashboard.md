@@ -9,7 +9,7 @@
 2. 在Library栏，将Graph拖拽到左侧导航栏；
 3. 双击Graph文件夹，进入编辑页面。
 
-   <img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/graph-view.png" />
+   <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/graph-view.png" />
 
 Graph 视图主要分为四个模块:
 - 顶部：视图操作、保存、视图模板列表；
@@ -19,7 +19,7 @@ Graph 视图主要分为四个模块:
 
 ## Graph顶部配置
 
-<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/graph-top.png" />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/graph-top.png" />
 
 1. 选中组态置顶。
 2. 选中组态置底。
@@ -44,7 +44,7 @@ Graph 视图主要分为四个模块:
 
 ## Graph画布配置
 
-<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/graph-middle.png" />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/graph-middle.png" />
 
 1. 画布缩略图显示，单击选中拖拽虚线框部分，画布会同步移动。
 2. 画布缩放滑条，控制画布放大或缩放。
@@ -95,7 +95,7 @@ Graph 视图主要分为四个模块:
 
   配置页面样式，包括页面类型、画板尺寸、背景颜色、背景图片和预览态效果。
 
-  <img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/graph-right-page.png" />
+  <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/graph-right-page.png" />
 
 - ### 组态配置
 
@@ -107,6 +107,6 @@ Graph 视图主要分为四个模块:
   - 动画：组态动画效果配置。
   - 脚本：组态通用脚本配置。
   
-  ![](https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/graph-right-com.png)
+  ![](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/graph-right-com.png)
   
   

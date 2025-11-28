@@ -15,11 +15,11 @@
     "message": "系统功能",
     "description": "The label for category 'System' in sidebar 'aqaraStudioSidebar'"
   },
-  "sidebar.aqaraStudioSidebar.category.System.category.Device Integration": {
+  "sidebar.aqaraStudioSidebar.category.Device Integration": {
     "message": "设备接入",
     "description": "The label for category 'Device Integration' in sidebar 'aqaraStudioSidebar'"
   },    
-  "sidebar.aqaraStudioSidebar.category.System.category.Automation": {
+  "sidebar.aqaraStudioSidebar.category.Automation": {
     "message": "自动化",
     "description": "The label for category 'Automation' in sidebar 'aqaraStudioSidebar'"
   },

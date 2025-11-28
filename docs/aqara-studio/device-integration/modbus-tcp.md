@@ -30,7 +30,7 @@
 | Ping Address Reg Type        | 寄存器地址类型：Holding、Input                               |
 | Poll Frequency               | 轮询频率                                                     |
 
-<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/modbusTcpDevice.png" alt="modbusTcpDevice" style="width: 80%;" />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/modbusTcpDevice.png" alt="modbusTcpDevice" style="width: 80%;" />
 
 ### 添加点配置
 
@@ -39,7 +39,7 @@
 3. 双击该文件夹，在右侧页面的右上角单击双向箭头图标，选择baseConfig；
 4. 展开“Private”，按需要填写配置。
 
-<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/modbusTcpPoint.png" alt="modbusTcpPoint" style="width: 80%;" />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/modbusTcpPoint.png" alt="modbusTcpPoint" style="width: 80%;" />
 
 ## ModBus Serial（RTU/Assic）协议接入配置说明
 
@@ -61,7 +61,7 @@
 | Parity            | 奇偶校验位，用于错误检测。<br />None（无校验）、Odd（奇校验）、Even（偶校验）、Mark、Space。 |
 | Flow Control Mode | 控制数据流（防止缓冲区溢出）<br />RTS/CTS：硬件流控，XON/XOFF：软件流控 |
 
-<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/modbusSerialNetwork.png" alt="modbusSerialNetwork" style="width: 80%;" />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/modbusSerialNetwork.png" alt="modbusSerialNetwork" style="width: 80%;" />
 
 ### 添加设备配置
 
@@ -83,7 +83,7 @@
 | Ping Address Data Type       | 寄存器数据类型：<br />Integertype（整数型）、Longtype（长型）、Floattype（浮点型）、Signedinteger（有符号整型）、Unsignedlong（无符号长整型） |
 | Poll Frequency               | 轮询频率                                                     |
 
-<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/modbusSerialDevice.png" alt="modbusSerialDevice" style="width: 80%;" />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/modbusSerialDevice.png" alt="modbusSerialDevice" style="width: 80%;" />
 
 ### 添加点配置
 
@@ -92,5 +92,5 @@
 3. 双击该文件夹，在右侧页面的右上角单击双向箭头图标，选择baseConfig；
 4. 展开“Private”，按需要填写配置。
 5. 
-<img src="https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/modbusSerialPointBool.png" alt="modbusSerialPointBool" style="width: 80%;" />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/modbusSerialPointBool.png" alt="modbusSerialPointBool" style="width: 80%;" />
 
