@@ -34,6 +34,7 @@
             "aqara-studio/device-integration/knx-ip"
           ]
         },
+        "aqara-studio/device-control",
         {
           "type": "category",
           "label": "Automation",
