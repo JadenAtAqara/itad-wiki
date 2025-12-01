@@ -25,7 +25,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#webssocket-
 
 | 参数 | 类型 | 是否必须 | 说明 |
 | ------------- | ------ | -------- | ------------------------------------------------------------ |
-| Authorization | String | HTTP 和 WebSocket 必须 | 授权 Token，用于用户身份验证。<br />格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio 获取的 Token 字符串（若从 Aqara Studio 获取的令牌已带 Bearer 前缀，请直接使用，无需重复添加）。如需了解获取方式，请参考 [开发者指南 - 获取必要信息](./../developer-guide.md#获取必要信息) 中对 Token 的说明。 |
+| Authorization | String | HTTP 和 WebSocket 必须 | 授权 Token，用于用户身份验证。<br />格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio 获取的 Token 字符串（若从 Aqara Studio 获取的令牌已带 Bearer 前缀，请直接使用，无需重复添加）。如需了解获取方式，请参考 [开发者指南 - 获取必要信息](./../developer-guide.mdx#获取必要信息) 中对 Token 的说明。 |
 | Content-Type  | String | 仅适用 HTTP | 默认为`application/json`。  |
 
 ## 查询设备 ID 列表
@@ -40,7 +40,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#webssocket-
 | version | String | 是 | 请求接口版本号，必须为 `v1`。 |
 | msgId | String | 是 | 由您定义的请求 ID。 |
 | data | Object | 是 | 请求数据。 |
-| data.types | Array of String | 否 | 设备类型列表。如需了解可用字符串，请参考 [设备类型说明](./device-type.md)。 |
+| data.types | Array of String | 否 | 设备类型列表。如需了解可用字符串，请参考 [设备类型说明](./device-type.mdx)。 |
 | data.orderBy | String | 否 | 排序规则，支持以下字符串：<ul><li><code>createTime asc</code>：按照设备添加时间正序排列。</li><li><code>createTime desc</code>：按照设备添加时间倒序排列。</li></ul> |
 | data.pageNum | Number | 否 | 页码。从 1 开始，若小于 1，则视为 1。 |
 | data.pageSize | Number | 否 | 每页包含的设备 ID 数量，取值范围为 (0, 200]。 |
@@ -78,7 +78,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#webssocket-
 | data.pageNum | Number | 页码。 |
 | data.data | Array of Object | 数据列表。 |
 | data.data[].deviceId | String | 设备 ID。 |
-| data.data[].types | Array of String | 设备类型。字符串含义请参考 [设备类型说明](./device-type.md)。 |
+| data.data[].types | Array of String | 设备类型。字符串含义请参考 [设备类型说明](./device-type.mdx)。 |
 | data.data[].deviceName | String | 设备名称。 |
 | data.data[].createTime | Number | 设备添加时间的 Unix 时间戳（毫秒）。 |
 | data.data[].state |Boolean | 设备在线状态：<ul><li>false：离线。</li><li>true：在线。</li></ul> |
@@ -152,7 +152,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#webssocket-
 | data | Array of Object | 设备列表。 |
 | data[].deviceId | String | 设备 ID。 |
 | data[].name | String | 设备名称。 |
-| data[].types | Array of String | 设备类型列表。字符串含义请参考 [设备类型说明](./device-type.md)。 |
+| data[].types | Array of String | 设备类型列表。字符串含义请参考 [设备类型说明](./device-type.mdx)。 |
 | data[].endpoints | Array of Object | 端点列表。 |
 | data[].endpoints[].endpointId | Number | 端点 ID。 |
 | data[].endpoints[].endpointName | String | 端点名称。 |
@@ -160,7 +160,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#webssocket-
 | data[].endpoints[].functions | Array of Object | 功能列表。 |
 | data[].endpoints[].functions[].functionCode | String | 功能代码。 |
 | data[].endpoints[].functions[].traits | Array of Object | 功能点列表。 |
-| data[].endpoints[].functions[].traits[].traitCode | String | 功能点代码，对应设备支持的具体功能。请参阅 [功能点代码](./trait-codes.md)，了解该功能点详情包括含义、类型（如数值、布尔、枚举等）、是否可读/可写/可上报等。 |
+| data[].endpoints[].functions[].traits[].traitCode | String | 功能点代码，对应设备支持的具体功能。请参阅 [功能点代码](./trait-codes.mdx)，了解该功能点详情包括含义、类型（如数值、布尔、枚举等）、是否可读/可写/可上报等。 |
 | data[].endpoints[].functions[].traits[].attribute | Object | 功能点属性。 |
 | data[].endpoints[].functions[].traits[].attribute.type | String | 功能点属性的类型。 |
 | data[].endpoints[].functions[].traits[].attribute.format | String | 功能点属性的具体类型。 |
@@ -178,8 +178,8 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#webssocket-
 
 #### 查阅设备类型和功能点代码
 
-- 响应中的 `data[].types`，表示设备支持的类型列表，请参考 [设备类型](./device-type.md) 了解字符串相关含义。
-- 响应中的 `data[].endpoints[].functions[].traits[].traitCode`，表示功能点代码，对应设备支持的具体功能，请参阅 [功能点代码](./trait-codes.md)，了解该功能点详情包括含义、类型（如数值、布尔、枚举等）、是否可读/可写/可上报等。
+- 响应中的 `data[].types`，表示设备支持的类型列表，请参考 [设备类型](./device-type.mdx) 了解字符串相关含义。
+- 响应中的 `data[].endpoints[].functions[].traits[].traitCode`，表示功能点代码，对应设备支持的具体功能，请参阅 [功能点代码](./trait-codes.mdx)，了解该功能点详情包括含义、类型（如数值、布尔、枚举等）、是否可读/可写/可上报等。
 
 ### 响应数据示例
 
@@ -777,7 +777,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#webssocket-
 | -- | -- | -- |
 | deviceId | String | 设备 ID。 |
 | name | String | 设备名称。 |
-| types | Array of String | 设备类型列表。字符串含义请参考 [设备类型说明](./device-type.md)。 |
+| types | Array of String | 设备类型列表。字符串含义请参考 [设备类型说明](./device-type.mdx)。 |
 | endpointIds | Array of Number | 端点 ID 列表。 |
 
 ### 响应数据示例
