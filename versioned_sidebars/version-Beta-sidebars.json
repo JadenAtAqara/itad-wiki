@@ -28,7 +28,7 @@
           "label": "Device Integration",
           "items": [
             "aqara-studio/device-integration/aqara",
-            "aqara-studio/device-integration/ha",
+            "aqara-studio/device-integration/home-assistant",
             "aqara-studio/device-integration/modbus-tcp",
             "aqara-studio/device-integration/bacnet",
             "aqara-studio/device-integration/knx-ip"
