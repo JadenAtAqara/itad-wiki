@@ -1,95 +1,222 @@
 # Modbus TCP 接入
 
-## ModBus TCP 协议接入配置说明
+## 前提条件
 
-### 协议配置
+在开始之前，请确保：
+- 您的 Modbus TCP 设备、Aqara 网关和电脑处于同一局域网中。
+- 您的 Modbus TCP 设备已完成 Modbus TCP 相关配置。如何配置，请参考产品说明书或咨询设备厂商技术支持。
 
-1. 进入Communication页面，在左侧导航栏的右下方，单击“+”；
-2. 在Library栏，将ModbusTcpNetwork拖拽到左侧导航栏；
+## 添加 Modbus TCP 设备
 
-### 添加设备配置
+1. 在首页点击进入**通信**页面。
+2. 在侧边栏单击“+”按钮，在弹窗中选择 `Modbus TCP`，以添加 `Modbus TCP` 文件夹。
+3. 右键单击 `Modbus TCP` 文件夹，选择**新增**，此时你可以看到该目录下出现一个 `Modbus TCP 设备` 文件夹。
+4. 双击该文件夹，在**概览**选项卡，你可以修改该设备的`显示名称`。
+5. 切换至**配置**选项卡，展开**设备配置**，填写如下参数：
 
-1. 右键单击ModbusTcpNetwork文件夹，单击“Add”，将ModbusTcpDevice拖拽到左侧导航栏；
-2. 双击ModbusTcpDevice文件夹，在右侧页面的右上角单击双向箭头图标，选择baseConfig；
-3. 展开“Private”，按需要填写配置。
+    | 参数名称 | 是否必填 | 说明 |
+    | --- | --- | --- |
+    | 设备地址 | ✘ | 此设备从站地址（单位标识符），范围 0~255。 |
+    | IP地址 | ✔ | 此设备的 IP 地址。 |
+    | 端口 | ✔ | Modbus TCP 通信端口，默认 502。 |
+6. 展开**高级配置**，填写如下参数：
 
-| 参数                         | 说明                                                         |
-| ---------------------------- | ------------------------------------------------------------ |
-| Ip Address                   | 设备的网络IP地址                                             |
-| Port                         | Modbus TCP通信端口                                           |
-| Device Address               | 设备地址                                                     |
-| Socket Status                | Socket 连接状态                                              |
-| Override Network             | 网络覆盖                                                     |
-| Float Byte Order             | 浮点数字节顺序                                               |
-| Long Byte Order              | 长整型字节顺序                                               |
-| Use Force Multiple Coil      | 用于批量设置多个线圈(Coil)状态                               |
-| Use Preset Multiple Register | 用于批量写入多个保持寄存器                                   |
-| Address Format               | 地址格式：Hex（十六进制）、Decimal（十进制）、Modbus         |
-| Address                      | 地址                                                         |
-| Ping Address Data Type       | 寄存器数据类型：<br />Integertype（整数型）、Longtype（长型）、Floattype（浮点型）、Signedinteger（有符号整型）、Unsignedlong（无符号长整型） |
-| Ping Address Reg Type        | 寄存器地址类型：Holding、Input                               |
-| Poll Frequency               | 轮询频率                                                     |
+    <table>
+    <thead>
+        <tr>
+        <th colspan="2">参数</th>
+        <th>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+        <td colspan="2">接收处理模式</td>
+        <td>接收数据处理模式，支持以下值：<ul><li><strong>Byte</strong>：字节流模式。</li><li><strong>Packet</strong>：报文模式。</li></ul></td>
+        </tr>  
+        <tr>
+        <td colspan="2">是否启用批量写入线圈指令</td>
+        <td>是否使用 "Force Multiple Coils" 指令写多个线圈（对应 Modbus 协议中的功能码 15）。</td>
+        </tr>
+        <tr>
+        <td colspan="2">是否启用批量写入寄存器指令</td>
+        <td>是否使用 "Preset Multiple Registers" 指令写多个保持寄存器（对应 Modbus 协议中的功能码 16）。</td>
+        </tr>
+        <tr>
+        <td colspan="2">浮点数字节序</td>
+        <td>32 位浮点数的读写顺序，仅支持<code>Order1032</code>与<code>Order3210</code>。</td>
+        </tr>
+        <tr>
+        <td colspan="2">长整型字节序</td>
+        <td>64 位长整型字节顺序，仅支持<code>Order1032</code>与<code>Order3210</code>。</td>
+        </tr>
+        <tr>
+        <td rowspan="2">输入寄存器偏移地址</td>
+        <td>地址格式</td>
+        <td>输入寄存器（对应 Modbus 协议中的功能码 04：Read Input Registers）偏移地址的格式，支持选项如下：<ul><li>十六进制</li><li>十进制</li><li>标准Modbus地址</li></ul>如果您不了解什么是偏移地址，请参考下文 <a href="#什么是偏移地址">什么是偏移地址</a>。</td>
+        </tr>
+        <tr>
+        <td>地址</td>
+        <td>偏移地址。</td>
+        </tr>
+        <tr>
+        <td rowspan="2">保持寄存器偏移地址</td>
+        <td>地址格式</td>
+        <td>保存寄存器（对应 Modbus 协议中的功能码 03：Read Holding Registers）偏移地址的格式，支持格式与"输入寄存器偏移地址"相同。</td>
+        </tr>
+        <tr>
+        <td>地址</td>
+        <td>偏移地址。</td>
+        </tr>
+        <tr>
+        <td rowspan="2">线圈状态偏移地址</td>
+        <td>地址格式</td>
+        <td>线圈状态（对应 Modbus 协议中的功能码 01：Read Coils）偏移地址的格式，支持格式与"输入寄存器偏移地址"相同。</td>
+        </tr>
+        <tr>
+        <td>地址</td>
+        <td>偏移地址。</td>
+        </tr>
+        <tr>
+        <td rowspan="2">离散输入偏移地址</td>
+        <td>地址格式</td>
+        <td>离散输入（对应 Modbus 协议中的功能码 02：Discrete Inputs）偏移地址的格式，支持格式与"输入寄存器偏移地址"相同。</td>
+        </tr>
+        <tr>
+        <td>地址</td>
+        <td>偏移地址。</td>
+        </tr>
+        <tr>
+        <td colspan="2">启用/禁用该设备</td>
+        <td>注意：禁用后该设备将不可用。</td>
+        </tr>  
+    </tbody>
+    </table>
+7. 切换至`点添加`选项卡，在`类型选择`区域单击 + 
+8. 单击**类型选择**区域中的**+**按钮，新增测点。单击该点，即可设置其类型和点位配置。完成后，单击**确定**。
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/modbusTcpDevice.png" alt="modbusTcpDevice" style={{width: '80%'}} />
+   <table>
+     <colgroup>
+       <col />
+       <col />
+       <col />
+       <col />
+     </colgroup>
+     <thead>
+       <tr>
+         <th>参数名称</th>
+         <th>是否必填</th>
+         <th>参数说明</th>
+         <th>配置示例</th>
+       </tr>
+     </thead>
+     <tbody>
+       <tr>
+         <td>测点名称</td>
+         <td>✔</td>
+         <td>您自定义的测点名称。</td>
+         <td>-</td>
+       </tr>
+       <tr>
+         <td>Object Type</td>
+         <td>✘</td>
+         <td>无需修改，使用默认值即可。</td>
+         <td></td>
+       </tr>
+       <tr>
+         <td>状态类型</td>
+         <td>布尔型点必填</td>
+         <td>
+           <p>当点位为<strong>布尔型</strong>时选择，支持以下：</p>
+           <ul>
+             <li><strong>线圈</strong></li>
+             <li><strong>输入</strong></li>
+           </ul>
+         </td>
+         <td>线圈</td>
+       </tr>
+       <tr>
+         <td>寄存器类型</td>
+         <td>数值型点必填</td>
+         <td>
+           <p>当点位为<strong>数值型</strong>时选择，支持以下：</p>
+           <ul>
+             <li><strong>保持</strong></li>
+             <li><strong>输入</strong></li>
+           </ul>
+         </td>
+         <td>保持</td>
+       </tr>
+       <tr>
+         <td>数据类型</td>
+         <td>数值型点必填</td>
+         <td>
+           <p>当点位为<strong>数值型</strong>时选择，支持以下：</p>
+           <ul>
+             <li>整数类型</li>
+             <li>长整型</li>
+             <li>浮点类型</li>
+             <li>有符号整数</li>
+             <li>无符号长整型</li>
+           </ul>
+         </td>
+         <td>整数类型</td>
+       </tr>
+       <tr>
+         <td>轮询频率</td>
+         <td>✘</td>
+         <td>
+           <p>支持以下选项：</p>
+           <ul>
+             <li><strong>快速</strong>：高频轮询（适用于关键控制）</li>
+             <li><strong>正常</strong>：常规频率</li>
+             <li><strong>慢速</strong>：低频轮询（适用于非实时状态）</li>
+           </ul>
+         </td>
+         <td>正常</td>
+       </tr>
+       <tr>
+         <td>地址格式</td>
+         <td>✔</td>
+         <td>
+           <p>地址格式类型，支持以下：</p>
+           <ul>
+             <li><strong>十六进制</strong>：如 0x0013。</li>
+             <li><strong>十进制</strong>：如 19。</li>
+             <li><strong>标准Modbus地址</strong>：如 00001、10001。</li>
+           </ul>
+         </td>
+         <td>十进制</td>
+       </tr>
+       <tr>
+         <td>地址</td>
+         <td>✔</td>
+         <td>
+           <p>传入的值 = 实际地址 - 您上文设置的偏移地址</p>
+         </td>
+         <td>0</td>
+       </tr>
+       <tr>
+         <td>设备类型</td>
+         <td>✔</td>
+         <td>点位所属的设备类型。此字段在您将 Modbus TCP 设备接入 Aqara Home 时作展示用途。</td>
+         <td>-</td>
+       </tr>
+     </tbody>
+   </table>
 
-### 添加点配置
 
-1. 双击展开ModbusTcpDevice文件夹，右键单击Points文件夹，选择添加；
-2. 选择任一需要的数据类型拖拽到左侧导航栏，后缀为Writable的即可写，后缀为Point的即可读；
-3. 双击该文件夹，在右侧页面的右上角单击双向箭头图标，选择baseConfig；
-4. 展开“Private”，按需要填写配置。
+### 什么是偏移地址？
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/modbusTcpPoint.png" alt="modbusTcpPoint" style={{width: '80%'}} />
+在 Modbus 协议中，设备中的数据（如寄存器、线圈）都有一个编号地址，用来读取或写入。
 
-## ModBus Serial（RTU/Assic）协议接入配置说明
+但由于 Modbus 报文中使用的是从 0 开始的内部地址，而用户看到的地址通常是从 1、30001、40001 等逻辑地址开始的，所以 Aqara Studio Connect 需要一个“偏移地址”来进行自动转换。
 
-### 协议配置
+例如，某个测点的真实地址是 40001（保持寄存器）。如果你在设置 Modbus TCP 设备时将“保持寄存器偏移地址”设置为 40000，那么，在为这个设备添加点时，你只需要填写数据地址为 1，Aqara Studio Connect 就会自动加上偏移量，计算为：
 
-1. 进入Communication页面，在左侧导航栏的右下方，单击“+”；
-2. 在Library栏，将ModbusSerialNetwork拖拽到左侧导航栏；
-3. 双击ModbusSerialNetwork文件夹，在右侧页面的右上角单击双向箭头图标，选择baseConfig；
-4. 展开“Private”，按需要填写配置。
+最终读取地址 = 偏移地址 + 数据地址 = 40000 + 1 = 40001
 
-| 参数              | 说明                                                         |
-| ----------------- | ------------------------------------------------------------ |
-| Modbus Data Mode  | Modbus通信模式：Ascli（文本编码）、Rtu（二进制编码）         |
-| Status            | 通信状态：未开启、故障、宕机、告警中、过期、挂起、未设置、告警未确认 |
-| Port Name         | 端口名称                                                     |
-| Baud Rate         | 通信速率（比特率，单位：bps）                                |
-| Data Bits         | 每个字节的数据位数                                           |
-| Stop Bits         | 定义数据包结束标志的位数                                     |
-| Parity            | 奇偶校验位，用于错误检测。<br />None（无校验）、Odd（奇校验）、Even（偶校验）、Mark、Space。 |
-| Flow Control Mode | 控制数据流（防止缓冲区溢出）<br />RTS/CTS：硬件流控，XON/XOFF：软件流控 |
+这使得用户在配置多个点位时，只需填写相对地址（如 1、2、3），无需每次都写完整 Modbus 地址，既方便又统一。
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/modbusSerialNetwork.png" alt="modbusSerialNetwork" style={{width: '80%'}} />
+## 下一步
 
-### 添加设备配置
-
-1. 右键单击ModbusSerialNetwork文件夹，将ModbusSerialDevice拖拽到左侧导航栏；
-2. 双击ModbusSerialDevice文件夹，在右侧页面的右上角单击双向箭头图标，选择baseConfig；
-3. 展开“Private”，按需要填写配置。
-
-| 参数                         | 说明                                                         |
-| ---------------------------- | ------------------------------------------------------------ |
-| Device Address               | 设备地址                                                     |
-| Modbus Data Mode             | Modbus通信模式：Ascli（文本编码）、Rtu（二进制编码）、Usenetworkdatamode |
-| Override Network             | 网络覆盖                                                     |
-| Float Byte Order             | 浮点数字节顺序                                               |
-| Long Byte Order              | 长整型字节顺序                                               |
-| Use Force Multiple Coil      | 用于批量设置多个线圈(Coil)状态                               |
-| Use Preset Multiple Register | 用于批量写入多个保持寄存器                                   |
-| Address Format               | 地址格式：Hex（十六进制）、Decimal（十进制）、Modbus         |
-| Address                      | 地址                                                         |
-| Ping Address Data Type       | 寄存器数据类型：<br />Integertype（整数型）、Longtype（长型）、Floattype（浮点型）、Signedinteger（有符号整型）、Unsignedlong（无符号长整型） |
-| Poll Frequency               | 轮询频率                                                     |
-
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/modbusSerialDevice.png" alt="modbusSerialDevice" style={{width: '80%'}} />
-
-### 添加点配置
-
-1. 双击展开ModbusSerialNetwork文件夹，右键单击Points文件夹，选择添加；
-2. 选择任一需要的数据类型拖拽到左侧导航栏，后缀为Writable的即可写，后缀为Point的即可读；
-3. 双击该文件夹，在右侧页面的右上角单击双向箭头图标，选择baseConfig；
-4. 展开“Private”，按需要填写配置。
-5. 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/modbusSerialPointBool.png" alt="modbusSerialPointBool" style={{width: '80%'}} />
+接下来，您可以直接 [查看该设备的详情和控制该设备](./../device-management/basic-information.mdx)，还可以利用该设备 [编排自动化逻辑](./../automation-configuration/automation-configuration.mdx) 了。
