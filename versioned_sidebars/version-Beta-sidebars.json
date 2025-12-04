@@ -34,7 +34,18 @@
             "aqara-studio/device-integration/knx-ip"
           ]
         },
-        "aqara-studio/device-control",
+        {
+          "type": "category",
+          "label": "Device Management",
+          "items": [
+            "aqara-studio/device-management/basic-information",
+            "aqara-studio/device-management/point-information",
+            "aqara-studio/device-management/alarms",
+            "aqara-studio/device-management/history",
+            "aqara-studio/device-management/tags",
+            "aqara-studio/device-management/references"
+          ]
+        },
         {
           "type": "category",
           "label": "Automation",

@@ -19,6 +19,10 @@
     "message": "设备接入",
     "description": "The label for category 'Device Integration' in sidebar 'aqaraStudioSidebar'"
   },    
+  "sidebar.aqaraStudioSidebar.category.Device Management": {
+    "message": "设备管理",
+    "description": "The label for category 'Device Management' in sidebar 'aqaraStudioSidebar'"
+  },   
   "sidebar.aqaraStudioSidebar.category.Automation": {
     "message": "自动化",
     "description": "The label for category 'Automation' in sidebar 'aqaraStudioSidebar'"
