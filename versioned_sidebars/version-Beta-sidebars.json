@@ -10,13 +10,12 @@
         "aqara-studio/overview/release-notes"
       ]
     },
-    "aqara-studio/deployment-requirements",
+    "aqara-studio/quick-start",
     {
       "type": "category",
       "label": "User",
       "items": [
-        "aqara-studio/user",
-        "aqara-studio/license-management"
+        "aqara-studio/user"
       ]
     },
     {
@@ -26,6 +25,11 @@
         {
           "type": "category",
           "label": "Device Integration",
+          "link": {
+            "type": "generated-index",
+            "keywords": ["device-integration"]
+          },
+          "collapsed": false,
           "items": [
             "aqara-studio/device-integration/aqara",
             "aqara-studio/device-integration/home-assistant",
@@ -35,16 +39,21 @@
           ]
         },
         {
-          "type": "category",
-          "label": "Device Management",
-          "items": [
-            "aqara-studio/device-management/basic-information",
-            "aqara-studio/device-management/point-information",
-            "aqara-studio/device-management/alarms",
-            "aqara-studio/device-management/history",
-            "aqara-studio/device-management/tags",
-            "aqara-studio/device-management/references"
-          ]
+            "type": "category",
+            "label": "Device Management",
+            "link": {
+              "type": "generated-index",
+              "keywords": ["device-management"]
+            },
+            "collapsed": false,
+            "items": [
+              "aqara-studio/device-management/basic-information",
+              "aqara-studio/device-management/point-information",
+              "aqara-studio/device-management/alarms",
+              "aqara-studio/device-management/history",
+              "aqara-studio/device-management/tags",
+              "aqara-studio/device-management/references"
+            ]
         },
         {
           "type": "category",
