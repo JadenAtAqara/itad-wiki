@@ -13,7 +13,7 @@
     "aqara-studio/quick-start",
     {
       "type": "category",
-      "label": "User",
+      "label": "User Permissions",
       "items": [
         "aqara-studio/user"
       ]
