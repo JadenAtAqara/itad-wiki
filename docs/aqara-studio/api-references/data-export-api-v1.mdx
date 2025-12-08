@@ -756,7 +756,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 - 设备添加。
 - 设备删除。
 - 设备增加了端点。
-- 设备增加了端点。
+- 设备删除了端点。
 - 设备功能点的属性（最小值、最大值、单位等）更新。
 
 ### 响应数据
@@ -793,7 +793,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 
 ##### DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
 
-:::note
+:::tip
 
 若事件为 `DEVICE_TRAIT_ATTRIBUTE_UPDATE`，建议重新调用 `GetDevicesRequest` 接口 [查询设备配置](#查询设备的-spec-配置)。
 
