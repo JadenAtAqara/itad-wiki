@@ -27,6 +27,10 @@
     "message": "自动化",
     "description": "The label for category 'Automation' in sidebar 'aqaraStudioSidebar'"
   },
+  "sidebar.aqaraStudioSidebar.category.Blocks": {
+    "message": "逻辑块",
+    "description": "The label for category 'Blocks' in sidebar 'aqaraStudioSidebar'"
+  },
   "sidebar.aqaraStudioSidebar.category.General": {
     "message": "通用功能",
     "description": "The label for category 'General' in sidebar 'aqaraStudioSidebar'"

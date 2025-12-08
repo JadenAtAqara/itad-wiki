@@ -58,8 +58,33 @@
         {
           "type": "category",
           "label": "Automation",
+          "link": {
+              "type": "doc",
+              "id": "aqara-studio/automation-configuration/automation-configuration"
+          },
           "items": [
-            "aqara-studio/automation-configuration/automation-configuration",
+            {
+              "type": "category",
+              "label": "Blocks",
+              "link": {
+                "type": "generated-index",
+                "keywords": ["blocks"]
+              },
+              "collapsed": true,
+              "items": [
+                "aqara-studio/automation-configuration/blocks/control-points",
+                "aqara-studio/automation-configuration/blocks/variables-blocks",
+                "aqara-studio/automation-configuration/blocks/logic-blocks",
+                "aqara-studio/automation-configuration/blocks/math-blocks",
+                "aqara-studio/automation-configuration/blocks/timer-blocks",
+                "aqara-studio/automation-configuration/blocks/select-blocks",
+                "aqara-studio/automation-configuration/blocks/hvac-blocks",
+                "aqara-studio/automation-configuration/blocks/latches-blocks",
+                "aqara-studio/automation-configuration/blocks/other-blocks",
+                "aqara-studio/automation-configuration/blocks/string-blocks",
+                "aqara-studio/automation-configuration/blocks/script-blocks"
+              ]
+            },
             "aqara-studio/automation-configuration/examples"
           ]
         },
