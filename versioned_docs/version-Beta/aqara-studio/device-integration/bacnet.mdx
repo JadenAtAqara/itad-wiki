@@ -1,85 +1,248 @@
 # BACnet 设备接入
 
-## 协议配置
+## 前提条件
 
-1. 进入Communication页面，在左侧导航栏的右下方，单击“+”；
-2. 在Library栏，将BacnetNetwork拖拽到左侧导航栏；
-3. 双击BacnetNetwork，单击双向箭头图标，选择baseConfig；
-4. 展开“Private”，按需要填写配置。
+在开始之前，根据您的设备情况，确保以下网络条件满足：
+- 对于 BACnet/IP 设备：BACnet/IP 设备、Aqara 网关与电脑处于同一局域网。
+- 对于 BACnet MS/TP 设备：BACnet MS/TP 设备已连接 BACRouter，且 BACRouter、Aqara 网关与电脑处于同一局域网。
 
-| 参数                     | 说明                                                         |
-| ------------------------ | ------------------------------------------------------------ |
-| Ip Address               | IP地址                                                       |
-| Udp Port                 | 端口                                                         |
-| Ip Device Type           | **Standard**（标准设备）：通用BACnet设备（如控制器、服务器、客户端等），使用UDP端口 47808（默认）。 <br />**Foreigndevice**（外部设备）：非本地子网设备，需通过BBMD注册以实现跨子网通信。 <br />**BBMD**（BACnet Broadcast Management Device）：用于跨子网广播转发（需配置BBMD表和Foreign Device注册）。 |
-| Bbmd Ip Address          | BBMD的IP地址                                                 |
-| Bbmd Udp Port            | BBMD的端口，通常为47808                                      |
-| Object Id                | 设备ID，值唯一                                               |
-| Max APDU Length Accepted | 设备可接收的最大APDU长度                                     |
-| Segmentation Supported   | 是否支持报文分段<br />**SEGMENTED_BOTH**：设备**完全支持分段**（可发送和接收分段报文）。 <br />**SEGMENTED_TRANSMIT**：设备可以**发送分段报文**，但**不能接收分段报文**（较少使用）。 <br />**SEGMENTED_RECEIVE**：设备可以**接收分段报文**，但**不能发送分段报文**（较少使用）。 <br />**NO_SEGMENTATION**：设备**不支持**任何分段（默认值）。只能发送/接收不超过APDU最大长度的报文。 |
-| Apdu Segment Timeout     | 分段传输中等待单个分段ACK的超时时间                          |
-| Apdu Timeout             | 等待完整APDU响应的超时时间（非分段通信）                     |
-| Character Set            | 字符串编码格式                                               |
+## 添加 BACnet 设备
 
+1. 在首页点击进入**通信**页面。
+2. 在侧边栏单击“+”按钮，在弹窗中选择 `BACnet IP`，以添加 `BACnet IP` 文件夹。
+3. 双击 `BACnet IP` 文件夹，进入 BACnet IP 协议管理界面。
+4. 进入`配置`选项卡，您需要配置该协议的以下参数：
 
+   相关参数如下表所示：
 
-## 设备自发现与配置
+    <table>
+        <colgroup>
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+        </colgroup>
+        <thead>
+            <tr>
+                <th>类别</th>
+                <th>参数</th>
+                <th>是否必填</th>
+                <th>说明</th>
+                <th>配置示例</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="4">基础配置</td>
+                <td>网络号</td>
+                <td>✔</td>
+                <td>用于标识逻辑子网，请确保唯一。取值范围：[0, 65535]。<ul><li>0：本地网络</li><li>65535：广播网络</li></ul></td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>UDP端口</td>
+                <td>✔</td>
+                <td>BACnet/IP 通信使用的 UDP 端口号，默认端口为：47808（即 0xBAC0）。</td>
+                <td>47808</td>
+            </tr>
+            <tr>
+                <td>本机IP地址</td>
+                <td>✘</td>
+                <td>指定本机的IP地址，用于BACnet/IP 设备在 IP 网络中的地址；格式：xxx.xxx.xxx.xxx（如：192.168.1.100）；默认使用：0.0.0.0 表示系统自动分配。</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>设备实例号</td>
+                <td>✔</td>
+                <td>BACnet 设备在 BACnet 网络中的唯一标识符；范围为 [0, 4194303]。</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td rowspan="3">工作模式配置</td>
+                <td>BACnet/IP设备工作模式</td>
+                <td>✘</td>
+                <td>支持以下选项：<ul><li><strong>标准设备(Standard)</strong>：通用 BACnet 设备（如控制器、服务器、客户端等），使用 UDP 端口 47808（默认）。</li><li><strong>外部设备(Foreign Device)</strong>：非本地子网设备，需通过 BBMD 注册以实现跨子网通信。</li><li><strong>广播管理设备(BBDM)</strong>：即 BACnet Broadcast Management Device，用于管理外部设备注册，转发广播消息，维护广播分发表。</li></ul></td>
+                <td>标准设备(Standard)</td>
+            </tr>
+            <tr>
+                <td>BBMD UDP端口</td>
+                <td>✘</td>
+                <td>BBMD 服务监听端口，默认端口为：47808。当 BACnet/IP设备工作模式为<code>外部设备</code>或<code>广播管理设备</code>时，必填。</td>
+                <td>47808</td>
+            </tr>
+            <tr>
+                <td>BBDM IP地址</td>
+                <td>✘</td>
+                <td>BBMD 的 IP 地址，是外部设备注册的目标地址，用于跨子网广播。当 BACnet/IP设备工作模式为<code>外部设备</code>或<code>广播管理设备</code>时，必填。</td>
+                <td>null</td>
+            </tr>
+            <tr>
+                <td rowspan="6">高级配置</td>
+                <td>可接收的最大APDU长度（单位：字节）</td>
+                <td>✘</td>
+                <td>支持的最大 APDU（Application Protocol Data Unit，应用层协议数据单元）数据长度，单位为字节，建议不大于 1476。</td>
+                <td>1076</td>
+            </tr>
+            <tr>
+                <td>是否支持报文分段</td>
+                <td>✘</td>
+                <td>可选支持项如下：<strong>支持收发分段（默认）</strong>：设备支持发送和接收分段的 APDU 报文；<strong>仅发送分段</strong>：设备支持发送分段报文，但不支持接收分段报文；<strong>仅接收分段</strong>：设备不支持发送分段报文，但可接收分段报文；<strong>不支持分段</strong>：设备不支持发送或接收分段报文，仅支持长度不超过最大 APDU 限制的完整报文。</td>
+                <td>支持收发分段</td>
+            </tr>
+            <tr>
+                <td>APDU 分段超时时间</td>
+                <td>✘</td>
+                <td>在分段传输 APDU 时，等待单个分段确认（Segment ACK）的超时时间，默认值为 2000ms。</td>
+                <td>2s</td>
+            </tr>
+            <tr>
+                <td>APDU 响应超时时间</td>
+                <td>✘</td>
+                <td>仅在传输未分段的完整 APDU 时生效，表示等待响应报文（如 ACK 或 Error）的超时时间，默认值为 30000ms。</td>
+                <td>30s</td>
+            </tr>
+            <tr>
+                <td>字符编码集</td>
+                <td>✘</td>
+                <td>使用的字符编码集，用于确保设备间文本信息的正确编码与解码。支持选项：ISO_10646_UTF8、IBM_MICROSOFT_DBCS、JIS_X0208、ISO_10646_UCS4、ISO_10646_UCS2、ISO_8859_1、UNKNOWN。</td>
+                <td>ISO_10646_UTF8</td>
+            </tr>
+            <tr>
+                <td>启用/禁用该网络</td>
+                <td>✘</td>
+                <td>注意：禁用后该网络下的设备将不可用。</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
 
-1. 双击BacnetNetwork，在右侧页面单击“Discover Settings”，根据需要进行设置；
+3. （可选）单击“发现设置”按钮，即可设置设备发现规则。
 
-2. 单击“Discovering”，将自动发现局域网内的Bacnet协议设备；
+    即可设置如下设备发现的规则字段：
 
-3. 勾选需要添加的设备，单击“+”进行添加；
+    <table>
+        <thead>
+            <tr>
+                <th>字段名称</th>
+                <th>描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>查找设备实例号&ge;</td>
+                <td>查找大于或等于此值的设备实例号。最小值为 0。</td>
+            </tr>
+            <tr>
+                <td>查找设备实例号&le;</td>
+                <td>查找小于或等于此值的设备实例号。最大值为 4194302。</td>
+            </tr>
+            <tr>
+                <td>网络号筛选配置</td>
+                <td>控制发现哪些网络号下的设备，如 <code>1,2,3,4</code>，默认为 <code>all</code>。</td>
+            </tr>
+            <tr>
+                <td>等待响应时间</td>
+                <td>发现过程持续时长，单位为 s。<br /><strong>说明：</strong>如果扫描失败或未扫描到部分设备，可根据当前网络情况，调整此字段。</td>
+            </tr>
+        </tbody>
+    </table>
+   
+4. 单击“发现”按钮，Aqara Studio 即开始扫描网络发现设备。   
 
-4. 添加完成，在左侧菜单栏的BacnetNetwork树下可找到添加的设备；
+    :::note
+    如果本系统没有发现您的 BACnet 设备，您也可以 [手动添加该设备](#如何处理-aqara-studio-无法发现-bacnet-设备的问题)。
+    :::
 
-5. 双击任一设备，在右侧页面的右上角单击双向箭头图标，选择baseConfig；
+5. 勾选需要添加的设备，单击中间 **+** 按钮，即可新增 BACnet 设备。
 
-6. 展开“Private”，按需要填写配置。
+6. 在左侧侧边栏双击您新增的设备，进入设备配置页面。在`点发现`选项卡单击`发现`按钮。Aqara Studio 即开始扫描发现该设备的测点。 
 
-| 参数                            | 说明                                                         |
-| ------------------------------- | ------------------------------------------------------------ |
-| Address Type                    | 地址类型：unknown、ethernet、ip、mstp、sc                    |
-| Network Number                  | 网络编号                                                     |
-| Mac Address                     | Mac地址                                                      |
-| Poll Frequency                  | 轮询频率                                                     |
-| Status                          | 设备状态：未开启、故障、宕机、告警中、过期、挂起、未设置、告警未确认 |
-| Fault Cause                     | 故障原因                                                     |
-| Object Id                       | 设备id                                                       |
-| Object Name                     | 设备名称                                                     |
-| Object Type                     | 设备类型                                                     |
-| System Status                   | 系统状态                                                     |
-| Vendor Name                     | 厂商名称                                                     |
-| Vendor Identifier               | 厂商ID（由BACnet国际分配）                                   |
-| Model Name                      | 模型名称                                                     |
-| Firmware Revision               | 固件修订                                                     |
-| Application Software Version    | 应用软件版本                                                 |
-| Protocol Version                | 协议版本                                                     |
-| Protocol Revision               | 协议修订                                                     |
-| Protocol Services Supported     | 支持哪些BACnet服务                                           |
-| Protocol Object Types Supported | 支持哪些BACnet对象类型                                       |
-| Max APDU Length Accepted        | 设备可接收的最大APDU长度                                     |
-| Segmentation Supported          | 是否支持报文分段<br />**SEGMENTED_BOTH**：设备**完全支持分段**（可发送和接收分段报文）。 <br />**SEGMENTED_TRANSMIT**：设备可以**发送分段报文**，但**不能接收分段报文**（较少使用）。 <br />**SEGMENTED_RECEIVE**：设备可以**接收分段报文**，但**不能发送分段报文**（较少使用）。 <br />**NO_SEGMENTATION**：设备**不支持**任何分段（默认值）。只能发送/接收不超过APDU最大长度的报文。 |
-| Apdu Timeout                    | 等待完整APDU响应的超时时间（非分段通信）                     |
-| Number Of APDU Retries          | 超时后的重试次数                                             |
-| Database Revision               | 数据库修订                                                   |
+    > **说明**
+    >
+    > 如果本系统没有发现你需要的测点，您也可以 [手动添加该测点](#如何处理-aqara-studio-无法发现-bacnet-测点的问题)。
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/bacnetDevice.png" alt="bacnetDevice" style={{width: '80%'}} />
+7. 您可以根据是否需要调整已发现的点，通过以下方式添加点：   
+    - 不需要调整：直接勾选需要的点，单击中间“蓝色加号”，即可完成添加。   
+    - 需要调整：双击该点，在“添加点位”弹窗即可修改该点信息。   
 
-## 点自发现与配置
+        具体参数说明如下表所示：   
+        <table>
+            <thead>
+                <tr>
+                    <th>参数</th>
+                    <th>是否必填</th>
+                    <th>说明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>点名称</td>
+                    <td>✔</td>
+                    <td>您可自定义此测点的名称。</td>
+                </tr>
+                <tr>
+                    <td>Aqara 对象类型</td>
+                    <td>✘</td>
+                    <td>Aqara 定义的测点对象类型。</td>
+                </tr>
+                <tr>
+                    <td>对象类型</td>
+                    <td>✘</td>
+                    <td>BACnet 定义的测点对象类型。</td>
+                </tr>
+                <tr>
+                    <td>对象实例号</td>
+                    <td>✔</td>
+                    <td>此测点的对象实例号。取值范围：[0, 4194303]。</td>
+                </tr>
+                <tr>
+                    <td>描述</td>
+                    <td>✘</td>
+                    <td>描述。</td>
+                </tr>
+            </tbody>
+        </table>
 
-1. 依次双击设备-Points；
-2. 单击“Discovering”，将自动发现Bacnet协议设备的点；
-3. 双击已发现的点，可根据设备说明书修改点的信息，如名称、类型等；
-4. 勾选需要添加的点，单击“+”进行添加；
-5. 添加完成，在左侧菜单栏的Points文件夹下可找到添加的点；
-6. 双击任一点，在右侧页面的右上角单击双向箭头图标，选择baseConfig；
-7. 展开“Private”，按需要填写配置：
-   | 参数                 | 说明         |
-   | -------------------- | ------------ |
-   | Object Id            | 对象id       |
-   | Property Id          | 属性id       |
-   | Property Array Index | 属性数据索引 |
-   | Data Type            | 数据类型     |
+## 下一步
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/bacnetPoint.png" alt="bacnetPoint" style={{width: '80%'}} />
+接下来，您可以直接 [查看该设备的详情和控制该设备](./../device-management/basic-information.mdx)，还可以利用该设备 [编排自动化逻辑](./../automation-configuration/automation-configuration.mdx) 了。
+
+## 常见问题
+
+### 如何处理 Aqara Studio 无法发现 BACnet 设备的问题
+
+若 Aqara Studio 未发现您的 BACnet 设备，单击“添加自定义”，在“添加设备”弹窗中传入设备的各项参数，完成手动添加设备。
+
+具体参数说明如下表所示：
+
+| 参数 | 是否必填 | 说明 | 配置示例 |
+| ---- | ------ | ---- | ------- |
+| 设备名称 | ✔ | 您自定义的 BACnet 设备名称。 |  |
+| 设备实例号 | ✔ | BACnet 设备在 BACnet 网络中的唯一标识符；范围为 [0, 4194303]。 | 1 |
+| 可接收的最大APDU长度（单位：字节） | ✘ | 支持的最大 APDU（Application Protocol Data Unit，应用层协议数据单元）数据长度，单位为字节，建议不大于 1476。 | 1076 |
+| 是否支持报文分段 | ✘ | 可选支持项如下：<ul><li>支持收发分段（默认）：设备支持发送和接收分段的 APDU 报文；</li><li>仅发送分段：设备支持发送分段报文，但不支持接收分段报文；</li><li>仅接收分段：设备不支持发送分段报文，但可接收分段报文；</li><li>不支持分段：设备不支持发送或接收分段报文，仅支持长度不超过最大 APDU 限制的完整报文。</li></ul> | 支持收发分段 |
+| 供应商ID | ✘ | 设备厂商的唯一标识符，参考 BACnet 委员会的 [Assigned Vendor IDs](https://bacnet.org/assigned-vendor-ids/)。 | 66 |
+| 地址类型 | ✘ | 指定 MAC 地址的格式和协议类型：<ul><li>UNKNOWN：未知类型；</li><li>ETHERNET：以太网 MAC 地址，6 字节，格式：AA:BB:CC:DD:EE:FF；</li><li>IP：IP 地址，4-6 字节，格式：192.168.1.1:47808）；</li><li>MSTP：MS/TP 地址，1 字节，主从令牌传递；</li><li>SC：安全连接地址，6 字节，WebSocket</li></ul> | - |
+| 网络号 | ✔ | 用于标识逻辑子网，请确保唯一。取值范围：[0, 65535]。0：本地网络；65535：广播网络 | 1 |
+| MAC地址 | ✘ | 设备的 MAC 地址。 | - |
+| 编码 | ✘ | 使用的字符编码集，用于确保设备间文本信息的正确编码与解码。支持选项：<ul><li>ISO_10646_UTF8</li><li>IBM_MICROSOFT_DBCS</li><li>JIS_X0208</li><li>ISO_10646_UCS4</li><li>ISO_10646_UCS2</li><li>ISO_8859_1</li><li>UNKNOWN</li></ul> | ISO_10646_UTF8 |
+| 供应商名称 | ✘ | 设备厂商名称。 | - |
+| 型号名称 | ✘ | 设备型号。 | - |
+| 协议修订版本 | ✘ | 请传入 BACnet 协议中 `Protocol_Revision` 属性值。 | - |
+| 固件版本 | ✘ | 请传入 BACnet 协议中 `Firmware_Revision` 属性值。 | - |
+| 应用软件版本 | ✘ | 请传入 BACnet 协议中 `Application_Software_Version` 属性值。 | - |
+
+### 如何处理 Aqara Studio 无法发现 BACnet 测点的问题
+
+若 Aqara Studio 未发现您需要的测点，请在“添加点”的页面单击“手动添加”，在“添加点”弹窗中传入点的各项参数，完成手动添加点。
+
+具体参数说明如下表所示：
+
+| 参数 | 是否必填 | 说明 |
+| ---- | ------ | ---- |
+| 点名称 | ✔ | 您可自定义此测点的名称。 |
+| Aqara 对象类型 | ✘ | Aqara 定义的测点对象类型。 |
+| 对象类型 | ✔ | BACnet 定义的测点对象类型。 |
+| 对象实例号 | ✘ | 此测点的对象实例号。取值范围：[0, 4194303]。 |
+| 描述 | ✘ | 描述 |

@@ -409,7 +409,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 以下为 `GetTraitValueRequest` 的请求体示例：
 
 | 参数 | 类型 | 是否必须 | 说明 |
-|------|------|------|
+|------|------|---------|------|
 | type | String | 是 | 请求的消息类型，必须为 `GetTraitValueRequest`。 |
 | version | String | 是 | 请求接口版本号，必须为 `v1`。 |
 | msgId | String | 是 | 由您自定义的请求 ID，用于标识本次请求。 |
@@ -750,7 +750,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 }
 ```
 
-## 对象事件消息推送（设备添加移除）  
+## 对象事件消息推送
 
 当您 [订阅了某个功能点变化](#订阅多个功能点变化) 或 [订阅了某个设备的所有功能点变化](#订阅所有功能点变化) 后，Studio 会实时向您推送以下事件：
 - 设备添加。
