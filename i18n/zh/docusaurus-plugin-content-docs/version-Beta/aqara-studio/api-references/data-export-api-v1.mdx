@@ -755,9 +755,9 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 当您 [订阅了某个功能点变化](#订阅多个功能点变化) 或 [订阅了某个设备的所有功能点变化](#订阅所有功能点变化) 后，Studio 会实时向您推送以下事件：
 - 设备添加。
 - 设备删除。
-- （仅适用于非 Aqara 设备）设备增加了端点。
-- （仅适用于非 Aqara 设备）设备增加了端点。
-- （仅适用于非 Aqara 设备）设备功能点的属性（最小值、最大值、单位等）更新。
+- 设备增加了端点。
+- 设备增加了端点。
+- 设备功能点的属性（最小值、最大值、单位等）更新。
 
 ### 响应数据
 
@@ -767,7 +767,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | version | String | 响应接口版本号，与请求一致。 |
 | msgId | String | 与请求对应的唯一标识。 |
 | data | Object | 事件数据对象。 |
-| data.eventType | String | 事件类型：<ul><li>`DEVICE_ADDED`：设备添加</li><li>`DEVICE_REMOVED`：设备删除。</li><li>`DEVICE_ENDPOINT_ADDED`：（仅适用于非 Aqara 设备）设备增加了端点。</li><li>`DEVICE_ENDPOINT_REMOVED`：（仅适用于非 Aqara 设备）设备删除了端点。</li><li>`DEVICE_TRAIT_ATTRIBUTE_UPDATE`：（仅适用于非 Aqara 设备）设备功能点的属性（最小值、最大值、单位等）更新。</li></ul> |
+| data.eventType | String | 事件类型：<ul><li>`DEVICE_ADDED`：设备添加</li><li>`DEVICE_REMOVED`：设备删除。</li><li>`DEVICE_ENDPOINT_ADDED`：设备增加了端点。</li><li>`DEVICE_ENDPOINT_REMOVED`：设备删除了端点。</li><li>`DEVICE_TRAIT_ATTRIBUTE_UPDATE`：设备功能点的属性（最小值、最大值、单位等）更新。</li></ul> |
 | data.objectId | String | 对象 ID（当前为设备 ID）。 |
 | data.time | Number | 事件发生时间的 Unix 时间戳（毫秒）。 |
 | data.data | Object | 事件相关详细数据，详情请参见 [data.data 字段说明](#datadata-字段说明)  |
@@ -793,7 +793,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 
 ##### DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
 
-:::说明
+:::note
 
 若事件为 `DEVICE_TRAIT_ATTRIBUTE_UPDATE`，建议重新调用 `GetDevicesRequest` 接口 [查询设备配置](#查询设备的-spec-配置)。
 
