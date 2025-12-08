@@ -7,8 +7,8 @@
     "message": "概览",
     "description": "The label for category 'Overview' in sidebar 'aqaraStudioSidebar'"
   },
-  "sidebar.aqaraStudioSidebar.category.User": {
-    "message": "用户",
+  "sidebar.aqaraStudioSidebar.category.User Permissions": {
+    "message": "用户权限",
     "description": "The label for category 'User' in sidebar 'aqaraStudioSidebar'"
   },
   "sidebar.aqaraStudioSidebar.category.System": {

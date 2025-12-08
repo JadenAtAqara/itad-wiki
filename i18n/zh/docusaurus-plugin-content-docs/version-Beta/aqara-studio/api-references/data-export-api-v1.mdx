@@ -764,14 +764,22 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | version | String | 响应接口版本号，与请求一致。 |
 | msgId | String | 与请求对应的唯一标识。 |
 | data | Object | 事件数据对象。 |
-| data.eventType | String | 事件类型：<ul><li>`DEVICE_ADDED`：设备添加</li><li>`DEVICE_REMOVED`：设备删除。</li></ul> |
+| data.eventType | String | 事件类型：<ul><li>`DEVICE_ADDED`：设备添加</li><li>`DEVICE_REMOVED`：设备删除。</li><li>`DEVICE_ENDPOINT_ADDED`：（仅适用于非 Aqara 设备）设备增加了端点。</li><li>`DEVICE_ENDPOINT_REMOVED`：（仅适用于非 Aqara 设备）设备删除了端点。</li><li>`DEVICE_TRAIT_ATTRIBUTE_UPDATE`：（仅适用于非 Aqara 设备）设备功能点的属性（最小值、最大值、单位等）更新</li></ul> |
 | data.objectId | String | 对象 ID（当前为设备 ID）。 |
 | data.time | Number | 事件发生时间的 Unix 时间戳（毫秒）。 |
 | data.data | Object | 事件相关详细数据，详情请参见 [data.data 字段说明](#datadata-字段说明)  |
 
 #### data.data 字段说明
 
-以下为 eventType==DEVICE_ADDED 或 DEVICE_REMOVED 时 data.data 的数据结构： 
+根据事件类型，`data.data` 有所不同 
+
+##### 非 DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
+
+以下数据结构适用于当 `eventType` 为以下事件时：
+- `DEVICE_ADDED`
+- `DEVICE_REMOVED`
+- `DEVICE_ENDPOINT_ADDED`
+- `DEVICE_ENDPOINT_REMOVED`
 
 | 参数 | 类型 | 说明 |
 | -- | -- | -- |
@@ -780,7 +788,33 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | types | Array of String | 设备类型列表。字符串含义请参考 [设备类型说明](./device-type.mdx)。 |
 | endpointIds | Array of Number | 端点 ID 列表。 |
 
+##### DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
+
+:::说明
+若事件为 `DEVICE_TRAIT_ATTRIBUTE_UPDATE`，建议重新调用 `GetDevicesRequest` 接口 [查询设备配置](#查询设备的-spec-配置)。
+:::
+
+| 参数 | 类型 | 描述 |
+|------|------|------|
+| data.data.deviceId | String | 设备ID。 |
+| data.data.endpointId | Integer | 端点 ID。 |
+| data.data.functionCode | String | 功能代码。 |
+| data.data.traitCode | String | 功能点代码。 |
+| data.data.newValue | Object | 最新配置。 |
+| data.data.newValue.endpointId | Integer | 端点 ID。 |
+| data.data.newValue.functionCode | String | 功能代码。 |
+| data.data.newValue.traitCode | String | 功能点代码。 |
+| data.data.newValue.min | Number | 最小值。 |
+| data.data.newValue.max | Number | 最大值。 |
+| data.data.newValue.unit | String | 单位。 |
+| data.data.newValue.step | Number | 步长。 |
+| data.data.oldValue | Object | 原配置，结构与 `newValue` 保持一致。 |
+
 ### 响应数据示例
+
+以下展示适用于不同事件的响应数据示例
+
+#### 非 DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
 
 以下为 `objectEvent` 的响应示例：
 
@@ -800,6 +834,49 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 			"endpointIds": [0,2,3]
 		}
     }
+}
+```
+
+#### DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
+
+以下为 `objectEvent` 的响应示例：
+
+```json
+{
+    "type": "objectEvent",
+    "version": "v1",
+    "msgId": "1765163175639",
+    "data": {
+        "eventType": "DEVICE_TRAIT_ATTRIBUTE_UPDATE",
+        "objectId": "xxxxxxx",
+        "time": 1765163175603,
+        "data": {
+            "deviceId": "virtual.14247766413772",
+            "endpointId": 2,
+            "functionCode": "LevelControl",
+			"traitCode": "CurrentLevel",
+            "newValue": {
+                "endpointId": 2,
+                "functionCode": "LevelControl",
+                "max": 100.0,
+                "min": 1.0,
+                "step": null,
+                "traitCode": "CurrentLevel",
+                "unit": "%"
+            },
+            "oldValue": {
+                "endpointId": 2,
+                "functionCode": "LevelControl",
+                "max": 100.0,
+                "min": 1.0,
+                "step": 1.0,
+                "traitCode": "CurrentLevel",
+                "unit": "%"
+            }
+        }
+    },
+    "code": 0,
+    "message": null
 }
 ```
 
