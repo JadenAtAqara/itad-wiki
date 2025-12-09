@@ -8,20 +8,20 @@ Aqara 提供数据转出 API v1 接口，帮助您访问 Studio 系统的设备�
 
 Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-请求-url) 两种通信协议。
 
-### 请求说明
+#### 请求说明
 
-#### HTTP 请求 URL
+##### HTTP 请求 URL
 
 **请求方法**：POST   
 **请求 URL 格式**：`http://局域网内网IP/open/api/v1`
 
-#### WebSocket 请求 URL
+##### WebSocket 请求 URL
 
 **请求 URL 格式**：`ws://局域网内网IP/open/ws`
 
 建立连接后，可通过发送/接收 JSON 消息与服务器进行实时通信。
 
-#### 请求头（Header）
+##### 请求头（Header）
 
 | 参数 | 类型 | 是否必须 | 说明 |
 | ------------- | ------ | -------- | ------------------------------------------------------------ |
@@ -32,7 +32,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 
 分页查询 Studio 系统中的设备信息，支持按类型筛选、分页及排序。
 
-### 请求参数
+#### 请求参数
 
 | 参数 | 类型 | 是否必须 | 说明 |
 |------|------|----------|------|
@@ -45,7 +45,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data.pageNum | Number | 否 | 页码。从 1 开始，若小于 1，则视为 1。 |
 | data.pageSize | Number | 否 | 每页包含的设备 ID 数量，取值范围为 (0, 200]。 |
 
-### 请求示例
+#### 请求示例
 
 以下为 `GetDeviceInfoRequest` 的请求体示例：
 
@@ -63,7 +63,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 }
 ```
 
-### 响应参数
+#### 响应参数
 
 | 参数 | 类型 | 说明 |
 |------|------|------|
@@ -83,7 +83,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data.data[].createTime | Number | 设备添加时间的 Unix 时间戳（毫秒）。 |
 | data.data[].state |Boolean | 设备在线状态：<ul><li>false：离线。</li><li>true：在线。</li></ul> |
 
-### 响应示例
+#### 响应示例
 
 以下为 `GetDeviceInfoResponse` 的响应示例：
 
@@ -115,7 +115,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 
 根据设备 ID 查询其 spec 配置。
 
-### 请求参数
+#### 请求参数
 
 | 参数 | 类型 | 是否必须 | 说明 |
 |------|------|----------|------|
@@ -125,7 +125,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data | Object | 是 | 请求数据。 |
 | data.deviceIds | Array of String | 否 | 将 [设备 ID 列表查询结果](#查询设备-id-列表) 传入此列表，作为设备的 spec 配置的查询目标。当此列表为空时，表示查询所有设备的 spec 配置。 |
 
-### 请求参数示例
+#### 请求参数示例
 
 以下为 `GetDevicesRequest` 的请求体示例：
 
@@ -140,7 +140,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 }
 ```
 
-### 响应数据
+#### 响应数据
 
 | 参数 | 类型 | 说明 |
 |------|------|------|
@@ -176,12 +176,12 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data[].endpoints[].functions[].traits[].value | Any | 功能点的当前值。根据 `attribute.type` 的值，此字段的类型可能是 Number、String 或 Boolean。 |
 | data[].endpoints[].functions[].traits[].time | Number | 功能点值上报时间的 Unix 时间戳（毫秒）。 |
 
-#### 查阅设备类型和功能点代码
+##### 查阅设备类型和功能点代码
 
 - 响应中的 `data[].types`，表示设备支持的类型列表，请参考 [设备类型](./device-type.mdx) 了解字符串相关含义。
 - 响应中的 `data[].endpoints[].functions[].traits[].traitCode`，表示功能点代码，对应设备支持的具体功能，请参阅 [功能点代码](./trait-codes.mdx)，了解该功能点详情包括含义、类型（如数值、布尔、枚举等）、是否可读/可写/可上报等。
 
-### 响应数据示例
+#### 响应数据示例
 
 以下为 `GetDevicesResponse` 的响应示例：
 
@@ -328,7 +328,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 
 当您 [获取设备的 spec 配置](#查询设备的-spec-配置) 后，传入与待控制的功能点（trait）相关的字段，调用此接口即可控制设备。
 
-### 请求参数
+#### 请求参数
 
 | 参数 | 类型 | 是否必须 | 说明 |
 |------|------|----------|------|
@@ -342,7 +342,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data[].traitCode | String | 是 | 传入 `writable` 为 `true` 的功能点代码。 |
 | data[].value | Any | 是 | 传入此功能点支持的值。 |
 
-### 请求参数示例
+#### 请求参数示例
 
 以下为 `ExecuteTraitRequest` 的请求体示例：
 
@@ -361,7 +361,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 }
 ```
 
-### 响应数据
+#### 响应数据
 
 | 参数 | 类型 | 说明 |
 |------|------|------|
@@ -377,7 +377,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data[].traitCode | String | 功能点代码。 |
 | data[].code | Number | 是否成功控制功能点，0 表示成功，非 0 表示失败。 |
 
-### 响应数据示例
+#### 响应数据示例
 
 以下为 `ExecuteTraitResponse` 的响应示例：
 
@@ -404,7 +404,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 
 批量查询设备的最新功能点（trait）值。
 
-### 请求参数
+#### 请求参数
 
 以下为 `GetTraitValueRequest` 的请求体示例：
 
@@ -419,7 +419,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data[].functionCode | String | 是 | 功能代码，指定要查询的功能。 |
 | data[].traitCodes | Array of String | 是 | 功能点代码列表，指定要查询的功能点。 |
 
-### 请求参数示例
+#### 请求参数示例
 
 以下为 `GetTraitValueRequest` 的请求体示例：
 
@@ -438,7 +438,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 }
 ```
 
-### 响应数据
+#### 响应数据
 
 | 参数 | 类型 | 说明 |
 |---|---|---|
@@ -455,7 +455,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data[].value | Any | 特征的当前值。类型与功能点有关，可能为 Boolean、Number 或 String。 |
 | data[].time | Number | 当前值上报时间的 Unix 时间戳（毫秒）。 |
 
-### 响应数据示例
+#### 响应数据示例
 
 以下为 `GetTraitValueResponse` 的响应示例：
 
@@ -485,7 +485,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 
 通过订阅，您无需频繁轮询即可及时获取设备状态变化，提高通信效率与实时性。
 
-### 请求参数
+#### 请求参数
 
 | 参数 | 类型 | 是否必须 | 说明 |
 | -- | -- | -- | -- |
@@ -498,7 +498,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data[].functionCode | String | 是 | 功能代码。 |
 | data[].traitCodes | Array of String | 是 | 功能点代码列表。 |
 
-### 请求参数示例
+#### 请求参数示例
 
 以下为 `SubscribeTraitValueRequest` 的请求体示例：
 
@@ -516,9 +516,9 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 }
 ```
 
-### 订阅操作响应
+#### 订阅操作响应
 
-#### 响应数据
+##### 响应数据
 
 | 参数 | 类型 | 是否必须 | 说明 |
 | -- | -- | -- | -- |
@@ -528,7 +528,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | code | Number | 是 | 请求处理结果，0 表示订阅成功，非 0 表示订阅失败。 |
 | message | String | 否 | 响应结果描述信息。 |
 
-#### 响应数据示例
+##### 响应数据示例
 
 以下为订阅成功后的 `TraitValueUpdate` 响应示例：
 
@@ -542,11 +542,11 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 }
 ```
 
-### 推送设备变化
+#### 推送设备变化
 
 当设备的功能点值发生变化后，Studio 会实时向您推送变化详情。
 
-#### 推送数据结构
+##### 推送数据结构
 
 | 参数 | 类型 | 是否必须 | 说明 |
 |---|---|---|---|
@@ -561,7 +561,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data[].value | Any | 是 | 功能点的值。值的类型根与功能点有关，可能为 Number、String、Boolean。 |
 | data[].time | Number | 是 | 功能点的值的上报时间的 Unix 时间戳（毫秒）。 |
 
-### 推送数据示例
+##### 推送数据示例
 
 当订阅的功能点值变化后，`TraitValueUpdate` 响应如下所示：
 
@@ -585,7 +585,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 
 当您不再需要实时了解设备的功能点值，调用本接口取消订阅。
 
-### 请求参数
+#### 请求参数
 
 | 参数 | 类型 | 是否必须 | 说明 |
 |------|------|----------|------|
@@ -598,7 +598,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data[].functionCode | String | 是 | 功能代码。 |
 | data[].traitCodes | Array of String | 是 | 功能点代码列表。 |
 
-### 请求参数示例
+#### 请求参数示例
 
 以下为 `UnsubscribeTraitValueRequest` 的请求体示例：
 
@@ -616,7 +616,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 }
 ```
 
-### 响应数据
+#### 响应数据
 
 | 参数    | 类型    | 说明                      |
 |---------|---------|---------------------------|
@@ -627,7 +627,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | message | String | 否 | 响应结果描述信息。 |
 
 
-### 响应数据示例
+#### 响应数据示例
 
 以下为 `UnsubscribeTraitValueResponse` 的响应示例：
 
@@ -645,7 +645,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 
 订阅多个设备的所有功能点变化。
 
-### 请求参数
+#### 请求参数
 
 | 参数 | 类型 | 是否必须 | 说明 |
 | -- | -- | -- | -- |
@@ -658,7 +658,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 > 
 > 订阅所有设备与订阅特定设备互斥，不能同时存在。若本次调用接口时，data 不为空，但上一次 data 为空，则系统会取消原先的“订阅所有设备”，仅保留对指定设备的订阅。反之亦然。
 
-### 请求参数示例
+#### 请求参数示例
 
 以下为 `SubscribeAllRequest` 的请求体示例：
 
@@ -671,7 +671,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 }
 ```
 
-### 响应数据
+#### 响应数据
 
 | 参数    | 类型    | 是否必须 | 说明                 |
 | ------- | ------- | -------- | -------------------- |
@@ -681,7 +681,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | code    | Number  | 是       | 请求处理结果，0 表示订阅成功，非 0 表示失败。|
 | message | String  | 否       | 响应结果描述信息。   |
 
-### 响应数据示例
+#### 响应数据示例
 
 以下为 `SubscribeAllResponse` 的响应示例：
 
@@ -699,7 +699,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 
 取消订阅多个设备的所有功能点变化。
 
-### 请求参数
+#### 请求参数
 
 | 参数 | 类型 | 是否必须 | 说明 |
 | ------- | ------- | -------- | -------------------- |
@@ -713,7 +713,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 > - 若当前已订阅“所有设备”，则取消订阅时 data 不为空（即按特定设备取消订阅）无效，只有 data 为空（取消所有设备订阅）才会生效；
 > - 若当前已按“特定设备”订阅，则取消订阅时 data 为空（即取消所有设备订阅）有效，可以直接取消原有的特定设备订阅。
 
-### 请求参数示例
+#### 请求参数示例
 
 以下为 `UnsubscribeAllRequest` 的请求体示例：
 
@@ -726,7 +726,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 }
 ```
 
-### 响应数据
+#### 响应数据
 
 | 参数    | 类型    | 是否必须 | 说明 |
 |---------|---------|----------|------|
@@ -736,7 +736,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | code    | Number  | 是       | 请求处理结果，0 表示取消成功，非 0 表示失败。|
 | message | String  | 否       | 响应结果描述信息。 |
 
-### 响应数据示例
+#### 响应数据示例
 
 以下为 `UnsubscribeAllResponse` 的响应示例：
 
@@ -759,7 +759,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 - 设备删除了端点。
 - 设备功能点的属性（最小值、最大值、单位等）更新。
 
-### 响应数据
+#### 响应数据
 
 | 参数 | 类型 | 说明 |
 | - | - | - |
@@ -772,11 +772,11 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data.time | Number | 事件发生时间的 Unix 时间戳（毫秒）。 |
 | data.data | Object | 事件相关详细数据，详情请参见 [data.data 字段说明](#datadata-字段说明)  |
 
-#### data.data 字段说明
+##### data.data 字段说明
 
 根据事件类型，`data.data` 有所不同 
 
-##### 非 DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
+###### 非 DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
 
 以下数据结构适用于当 `eventType` 为以下事件时：
 - `DEVICE_ADDED`
@@ -791,7 +791,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | types | Array of String | 设备类型列表。字符串含义请参考 [设备类型说明](./device-type.mdx)。 |
 | endpointIds | Array of Number | 端点 ID 列表。 |
 
-##### DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
+###### DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
 
 :::tip
 
@@ -815,11 +815,11 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data.data.newValue.step | Number | 步长。 |
 | data.data.oldValue | Object | 原配置，结构与 `newValue` 保持一致。 |
 
-### 响应数据示例
+#### 响应数据示例
 
 以下展示适用于不同事件的响应数据示例
 
-#### 非 DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
+###### 非 DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
 
 以下为 `objectEvent` 的响应示例：
 
@@ -842,7 +842,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 }
 ```
 
-#### DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
+###### DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
 
 以下为 `objectEvent` 的响应示例：
 

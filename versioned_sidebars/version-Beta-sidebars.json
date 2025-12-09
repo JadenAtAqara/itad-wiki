@@ -89,7 +89,8 @@
           ]
         },
         "aqara-studio/graph-dashboard",
-        "aqara-studio/space"
+        "aqara-studio/space",
+        "aqara-studio/energy-management-system"
       ]
     },
     {
