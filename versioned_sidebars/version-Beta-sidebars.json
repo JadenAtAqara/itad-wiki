@@ -115,7 +115,9 @@
       "type": "category",
       "label": "Settings",
       "items": [
-        "aqara-studio/backup-and-restore"
+        "aqara-studio/backup-and-restore",
+        "aqara-studio/remote-access",
+        "aqara-studio/cloud"
       ]      
     },
     "aqara-studio/search"
