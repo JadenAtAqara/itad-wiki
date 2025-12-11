@@ -78,8 +78,6 @@
                 "aqara-studio/automation-configuration/blocks/math-blocks",
                 "aqara-studio/automation-configuration/blocks/timer-blocks",
                 "aqara-studio/automation-configuration/blocks/select-blocks",
-                "aqara-studio/automation-configuration/blocks/hvac-blocks",
-                "aqara-studio/automation-configuration/blocks/latches-blocks",
                 "aqara-studio/automation-configuration/blocks/other-blocks",
                 "aqara-studio/automation-configuration/blocks/string-blocks",
                 "aqara-studio/automation-configuration/blocks/script-blocks"
