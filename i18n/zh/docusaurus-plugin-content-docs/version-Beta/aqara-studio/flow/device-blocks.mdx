@@ -1,0 +1,154 @@
+# 设备
+
+> **说明**
+>
+> 截图与实际界面可能有所不同，请以实际为准。
+
+## 概述
+
+作为智能空间的核心，设备是连接“感知”与“响应”的桥梁，没有设备，就没有“智能”的落地。在 Aqara Studio，您可以通过设备类卡片，以 “当-且-就” 的逻辑，实现对 [监听设备事件和状态](#当)、[实时获取设备状态](#且) 与 [控制设备](#就)，构建灵活的自动化流程。
+
+设备类包含的卡片如图所示：
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-DeviceCategory.png" alt="设备类卡片概览" style={{ width: '80%' }} />   
+> **说明**
+>
+> 由于设备类卡片依赖于具体设备的能力，不同设备可能仅支持部分卡片。
+
+## 当
+
+### 功能
+
+使用此卡片，可在设备发生事件（如开关被按下、接收语音指令）或进入状态（如环境数据变化、门窗开启）时触发后续操作。
+
+### 组成
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-EventBlockIntro.png" alt="当卡片介绍" style={{ width: '80%' }} />   
+此卡片为**单点输出型**，作为您后续自动化操作的触发器。您可以根据设备支持的情况，配置监听事件或状态，卡片内的配置参数不同，说明如下：
+
+| 连接点或参数 | 是否必选 | 说明 |
+| -- | -- | -- |
+| 目标事件 | ✔ | 当您监听**事件**时，在此处设置目标事件，如大于、小于、等于、增加等。  |
+| 目标数值 | ✔ | 当您监听**事件**时，在此处设置比较目标数值。 |
+| 目标状态 | ✔ | 当您监听**状态**时，在此处设置目标状态。  |
+| 输出点 | ✔ | 连接待触发的行为。 |
+
+### 使用步骤
+
+#### 监听 1 个事件或状态
+
+1. 选择该卡片后，系统将弹出设备选择窗口，您可以查看目标设备支持的事件和状态。勾选一个所需项后，您可以在画布任意位置会添加对应的监听卡片，开始实时监听相关内容。
+
+   <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-AddDeviceStatsListener.png" alt="添加事件状态监听" style={{ width: '80%' }} />   
+2. 通过更改卡片内的属性设置监听，并在卡片右侧连接待触发的行为。
+
+   <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-StateSample.png" alt="监听状态示意" style={{ width: '80%' }} />   
+#### 监听多种事件和状态
+
+以下说明如何同时监听多个设备的事件和状态，当**任一**事件或状态发生时，就能触发后续流程。
+
+1. 在选择“当”按钮旁的“批量”按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-SelectBulk.png" alt="选择批量" style={{ width: '80%' }} />   
+2. 选择您需要监听的设备，点击“下一步”。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-WhenSelection.png" alt="选择设备" style={{ width: '80%' }} />   
+3. 展开设备，点击“+”按钮，添加您需要监听的事件或状态。添加完成，点击“确定”。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-WhenBlockBulkAddPoints.png" alt="添加点位" style={{ width: '80%' }} />   
+4. 为这个批量监听设置场景名称。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-NameBulkWhenCard.png" alt="设置场景名称" style={{ width: '80%' }} />   
+5. 在画布任意处单击即可添加该批量监听卡片，如下图所示：
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-BulkWhenCard.png" alt="设置场景名称" style={{ width: '80%' }} />   
+## 且
+
+### 功能
+
+当您需要判断某个设备是否处于特定状态（如开关是否开启），并根据“满足”或“不满足”的结果分别执行不同的操作时，可使用此卡片。
+
+### 组成
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-GetCurrentStateIntro.png" alt="且卡片组成" style={{ width: '80%' }} />   
+此卡片为**多点型**，拥有 1 个配置参数、1 个输入点和 2 个输出点，它根据查询结果将流程导向不同的路径。说明如下：
+
+| 连接点 / 参数 | 是否必选 | 说明 |
+| 输入点 | ✔ | 接收一个触发行为，该行为发生时，将执行一次状态查询。 |
+| 目标状态 | ✔ | 指定要查询的目标状态，例如“开启”或“关闭”。 |
+| 满足（输出点） / 不满足（输出点） | 至少二选一 | **满足**：当设备状态与目标状态一致时执行的操作。<br />**不满足**：当设备状态与目标状态不一致时执行的操作。 |
+
+### 使用步骤
+
+#### 判断 1 个状态
+
+1. 选择该卡片后，系统将弹出设备选择窗口，您可在列表中勾选目标设备及其状态，随后在画布任意位置添加对应的状态判断卡片。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-GetCurrentState.png" alt="选择需要获取当前状态的设备" style={{ width: '80%' }} />   
+2. 将触发本次状态查询的卡片连接到此卡片的输入点。在卡片内部设置您要查询的目标状态。最后，根据查询结果连接两个不同的后续操作：一个用于设备状态与目标状态相符的情况，另一个用于不相符的情况。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-GetCurrentStatusSteps.png" alt="设置且卡片" style={{ width: '80%' }} />   
+#### 判断多个状态
+
+以下说明如何同时判断多个状态，能触发后续流程。
+
+1. 在选择“且”按钮旁的“批量”按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-SelectConditionBulk.png" alt="选择批量" style={{ width: '80%' }} />   
+2. 选择待判断状态的设备，点击“下一步”。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-ConditionBulkSelection.png" alt="选择设备" style={{ width: '80%' }} />   
+3. 选择“满足任一条件”或“满足全部条件”，展开设备，点击“+”按钮，添加您需要判断的状态。添加完成，点击“确定”。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-ConditionBlockBulkAddPoints.png" alt="添加点位" style={{ width: '80%' }} />   
+4. 为这个批量判断设置场景名称。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-NameBulkConditionCard.png" alt="设置场景名称" style={{ width: '80%' }} />   
+5. 在画布任意处单击即可添加该批量判断卡片，如下图所示：
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-BulkConditionCard.png" alt="设置场景名称" style={{ width: '80%' }} />   
+## 就
+
+### 功能
+
+当您需要让设备执行某个具体动作（如开关灯、调节亮度或色温）时，可使用此卡片。
+
+### 组成
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-DeviceControlIntro.png" alt="就卡片组成" style={{ width: '80%' }} />   
+此卡片为**单点输入型**，作为您自动化操作的结尾，说明如下：
+
+| 连接点或参数 | 是否必选 | 说明 |
+| -- | -- | -- |
+| 输入点 | ✔ | 连接触发设备操作的行为。  |
+| 设备参数 | ✔ | 设置您想修改的设备参数，例如开关状态、制冷温度、色温等。  |
+
+### 使用步骤
+
+#### 执行 1 个行为
+
+1. 选择该卡片后，系统将弹出设备选择窗口，您可在列表中勾选目标设备及目标动作，随后在画布任意位置添加对应的动作卡片。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-SelectDeviceDoAction.png" alt="选择需要执行动作的设备" style={{ width: '80%' }} />   
+2. 将触发本次设备操作的卡片连接到此卡片的输入点。然后，在卡片内部设置您要修改的设备参数。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-DoActionSample.png" alt="修改卡片上的值" style={{ width: '80%' }} />   
+#### 执行多个行为
+
+以下说明如何添加多个行为。
+
+1. 在选择“且”按钮旁的“批量”按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-SelectActionBulk.png" alt="选择批量" style={{ width: '80%' }} />   
+2. 选择待执行行为的设备，点击“下一步”。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-ActionBulkSelection.png" alt="选择设备" style={{ width: '80%' }} />   
+3. 展开设备，点击“+”按钮，添加您需要执行的行为。添加完成，点击“确定”。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-ActionBlockBulkAddPoints.png" alt="添加点位" style={{ width: '80%' }} />   
+4. 为这个批量操作设置场景名称。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-NameBulkActionCard.png" alt="设置场景名称" style={{ width: '80%' }} />   
+5. 在画布任意处单击即可添加该批量操作卡片，如下图所示：
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DeviceBlock-ActionConditionCard.png" alt="设置场景名称" style={{ width: '80%' }} />   

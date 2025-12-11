@@ -60,30 +60,61 @@
           "label": "Automation",
           "link": {
               "type": "doc",
-              "id": "aqara-studio/automation-configuration/automation-configuration"
+              "id": "aqara-studio/automation"
           },
           "items": [
-            {
-              "type": "category",
-              "label": "Blocks",
-              "link": {
-                "type": "generated-index",
-                "keywords": ["blocks"]
+              "aqara-studio/ifttt", 
+              {
+                "type": "category",
+                "label": "Flow",
+                "link": {
+                    "type": "doc",
+                    "id": "aqara-studio/flow/flow-introduction"
+                },
+                "collapsed": true,
+                "items": [
+                    "aqara-studio/flow/device-blocks",
+                    "aqara-studio/flow/timer-blocks",
+                    "aqara-studio/flow/process-blocks",
+                    "aqara-studio/flow/logic-blocks",
+                    "aqara-studio/flow/variables-blocks",
+                    "aqara-studio/flow/other-blocks",
+                    "aqara-studio/flow/data-conversion",
+                    "aqara-studio/flow/examples"
+                ]
               },
-              "collapsed": true,
-              "items": [
-                "aqara-studio/automation-configuration/blocks/control-points",
-                "aqara-studio/automation-configuration/blocks/variables-blocks",
-                "aqara-studio/automation-configuration/blocks/logic-blocks",
-                "aqara-studio/automation-configuration/blocks/math-blocks",
-                "aqara-studio/automation-configuration/blocks/timer-blocks",
-                "aqara-studio/automation-configuration/blocks/select-blocks",
-                "aqara-studio/automation-configuration/blocks/other-blocks",
-                "aqara-studio/automation-configuration/blocks/string-blocks",
-                "aqara-studio/automation-configuration/blocks/script-blocks"
-              ]
-            },
-            "aqara-studio/automation-configuration/examples"
+              {
+                "type": "category",
+                "label": "Logic",
+                "link": {
+                    "type": "doc",
+                    "id": "aqara-studio/logic/logic-introduction"
+                },
+                "collapsed": true,
+                "items": [
+                    {
+                    "type": "category",
+                    "label": "Blocks",
+                    "link": {
+                        "type": "generated-index",
+                        "keywords": ["blocks"]
+                    },
+                    "collapsed": true,
+                    "items": [
+                        "aqara-studio/logic/blocks/control-points",
+                        "aqara-studio/logic/blocks/variables-blocks",
+                        "aqara-studio/logic/blocks/logic-blocks",
+                        "aqara-studio/logic/blocks/math-blocks",
+                        "aqara-studio/logic/blocks/timer-blocks",
+                        "aqara-studio/logic/blocks/select-blocks",
+                        "aqara-studio/logic/blocks/other-blocks",
+                        "aqara-studio/logic/blocks/string-blocks",
+                        "aqara-studio/logic/blocks/script-blocks"
+                    ]
+                    },
+                    "aqara-studio/logic/examples"
+                ]
+              }
           ]
         },
         "aqara-studio/graph-dashboard",

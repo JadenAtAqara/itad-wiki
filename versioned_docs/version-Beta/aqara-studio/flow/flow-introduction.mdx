@@ -1,0 +1,72 @@
+# Advanced Flow
+
+With flexible visual configuration, you can use various blocks to build data flow logic. This helps you quickly create automation flows for different scenarios. It also makes it easy to achieve smart control of IoT devices.
+
+## Create an Automation
+
+To learn how to create an advanced flow, please see [Automation - Create an Automation](./../automation.mdx#create-an-automation).
+
+Then, you can add and connect different [blocks](#blocks) on the canvas. Build device interaction logic for your specific needs.
+
+## Blocks
+
+In Aqara Studio, blocks serve as the "information hub" and "control center" of automation. They transform complex backend automation logic (such as "turn on the light when someone is present and the room is dark") into clear, visual device states and one-click scene switches, making invisible automation intuitive and controllable.
+
+### Components
+
+Each block can consists of the following elements:
+
+| Component | Description |
+| -- | -- |
+| Input point | If a block has an input point, it can be triggered or receive data.          |
+| Parameter  | Used to set the state to monitor, the action to perform, or other settings. |
+| Output point | If a block has an output point, it can trigger other steps or output data.   |
+
+#### Connection Point Types
+
+In Aqara Studio, both input and output point can be either circles or triangles, each representing a different meaning:
+
+<table>
+  <thead>
+    <tr>
+      <th>Symbol</th>
+      <th>Name</th>
+      <th>Function</th>
+      <th>How to Trigger</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>●</td>
+      <td>Data Flow Node</td>
+      <td>It transfers data between blocks</td>
+      <td>By default, it triggers the execution of function blocks. Data changes or arrivals drive the block to run.</td>
+      <td>
+        Connect the temperature value from a temperature sensor’s 
+        <a href="./flow/variables-blocks.mdx#point-data">Point Data</a> block 
+        to a <a href="./flow/other-blocks.mdx#math">Math</a> block. Each time the sensor detects a new temperature, this value is automatically passed through this node to the Math block, triggering a calculation.
+      </td>
+    </tr>
+    <tr>
+      <td>▷</td>
+      <td>Event Flow Node</td>
+      <td>It represents an instant signal or action.</td>
+      <td>When an event occurs, it notifies the function block to start executing.</td>
+      <td>A button click (event flow) triggers a switch block.</td>
+    </tr>
+  </tbody>
+</table>
+
+Aqara recommends keeping the connection types consistent when linking blocks, i.e., circle to circle, triangle to triangle.
+
+### Categories
+
+To learn more about each type of blocks, what they do, and how to use them, check out the following guides:
+
+- [Device Blocks](./../flow/device-blocks.mdx)
+- [Timer Blocks](./../flow/timer-blocks.mdx)
+- [Process Blocks](./../flow/process-blocks.mdx)
+- [Logic Blocks](./../flow/logic-blocks.mdx)
+- [Variables Blocks](./../flow/variables-blocks.mdx)
+- [Other Blocks](./../flow/other-blocks.mdx)

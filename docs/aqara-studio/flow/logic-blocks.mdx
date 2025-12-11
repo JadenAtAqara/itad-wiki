@@ -1,0 +1,143 @@
+# Logic Blocks
+
+> **Note**
+>
+> Screenshots in this guide may look slightly different from what you see on your device. Please follow the actual interface for reference.
+
+## Overview
+
+In automation scenario configuration, if you want to determine whether to execute a step based on the combination results of multiple conditions, you need to use logic blocks, including: [AND](#and), [OR](#or), [NOT](#not), and [Logical Operations](#logic).
+
+The logic category includes the following blocks:
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LogicBlock-Total.png" alt="Logic blocks overview" style={{width: '80%'}} />  
+
+## AND
+
+### Feature
+
+Use the **AND** block when you need **all** selected device boolean states to meet the conditions before triggering a step.
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LogicBlock-AndIntro.png" alt="AND block components" style={{width: '80%'}} />  
+
+This is **multi-point block**, containing 2 input points (default), 1 output point, and 1 add button:
+
+| Connection Point or Button | Required | Description |
+| -- | -- | -- |
+| Input point A | ✔ | It connects 1 boolean [Point Data](./variables-blocks.mdx#point-data). |
+| Input point B | ✔ | It connects 1 boolean [Point Data](./variables-blocks.mdx#point-data). |
+| Add Button | ✘ | It adds more input points to connect more [Point Data](./variables-blocks.mdx#point-data). |
+| Output Point | ✔ | It connects to the step to be triggered when all conditions are met. |
+
+### How to Use
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LogicBlock-And.png" alt="AND block example" style={{width: '80%'}} />  
+
+Here's how to use the `AND` block:
+1. Connect 2 boolean `Point Data` blocks to the left side of the block.
+2. Connect to `Action` blocks on the right side of the block. As long as all boolean `Point Data` blocks are `true`, this step will be triggered.
+
+> **Note**
+>
+> The `AND` block usage steps described in this section do not include time restrictions. If you need to add validity periods for state changes, please refer to the timer blocks [State Duration - Control Devices Based on Logical Operation Results](./timer-blocks.mdx#control-devices-based-on-logical-operation-results).
+
+## OR
+
+### Feature
+
+Use the **OR** block when you need to trigger a step when **some** of the selected device boolean states meet the conditions.
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LogicBlock-OrIntro.png" alt="OR block components" style={{width: '80%'}} />  
+
+This block is **multi-point type**, supporting 2 input points and 1 output point by default, with 1 add button inside the block:
+
+| Connection Point | Required | Description |
+| -- | -- | -- |
+| Input point A | ✔ | It connects 1 boolean [Point Data](./variables-blocks.mdx#point-data). |
+| Input point B | ✔ | It connects 1 boolean [Point Data](./variables-blocks.mdx#point-data). |
+| Add Button | ✘ | It adds more input points to connect more [Point Data](./variables-blocks.mdx#point-data). |
+| Output Point | ✔ | It connects to the step to be triggered when all conditions are met. |
+
+### How to Use
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LogicBlock-Or.png" alt="OR block example" style={{width: '80%'}} />  
+
+Here's how to use the `OR` block:
+1. Connect 2 boolean `Point Data` blocks to the left side of the block.
+2. Connect to the `Action` block on the right side of the block. Only 1 boolean `Point Data` needs to be `true` to trigger this step.
+
+> **Note**
+>
+> The `OR` block usage steps described in this section do not include time restrictions. If you need to add validity periods for state changes, please refer to the timer blocks [State Duration - Control Devices Based on Logical Operation Results](./timer-blocks.mdx#control-devices-based-on-logical-operation-results).
+
+## NOT
+
+### Feature
+
+Use the **NOT** block when you need to use the opposite value of a boolean state to control another state.
+This block will invert the boolean value of the input state and output it to the target state. For example:
+- Switch state is true → outputs false, light turns off.
+- Switch state is false → outputs true, light turns on.
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LogicBlock-NotIntro.png" alt="NOT block components" style={{width: '80%'}} />  
+
+This is a **dual-point block** that requires no additional parameters:
+
+| Connection point | Required | Description |
+| -- | -- | -- |
+| Input Point | ✔ | It connects a boolean [Point Data](./variables-blocks.mdx#point-data) to pass a boolean value to this block. |
+| Output Point | ✔ | It connects a boolean [Point Data](./variables-blocks.mdx#point-data) to receive the opposite boolean value of the input data. |
+
+### How to Use
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LogicBlock-Not.png" alt="NOT block example" style={{width: '80%'}} />  
+
+Here's how to use the `NOT` block:
+1. Connect a boolean `Point Data` block to the left side of the block to get the boolean value of that variable.
+2. Connect a boolean `Point Data` block to the right side of the block to receive the opposite boolean value, thus controlling the device.
+
+## Logic
+
+### Feature
+
+Use the **Logic** block when you need to **compare two values** to decide whether to execute an automation step.
+
+This block supports the following comparison methods:
+* Greater than
+* Less than
+* Equal to
+* Greater than or equal to
+* Less than or equal to
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LogicBlock-ComparisonIntro.png" alt="Logical operations block introduction" style={{width: '80%'}} />  
+
+This is **multi-point block** with 1 configurable parameter:
+
+| Connection Point or Parameter | Required | Description |
+| -- | -- | -- |
+| In A (Input Point) | ✔ | Input  A, the value to be compared. It can connect to 1 numeric [Point Data](./variables-blocks.mdx#point-data) or [Numeric Variable](./variables-blocks.mdx#numeric-variables). |
+| In B (Input Point) | ✔ | Input B, the reference value, can connect to 1 numeric [Point Data](./variables-blocks.mdx#point-data) or [Numeric Variable](./variables-blocks.mdx#numeric-variables). |
+| Function | ✔ | <strong>Select comparison method</strong>:<ul><li><strong>Greater than</strong>: Input A &gt; Input B</li><li><strong>Less than</strong>: In A &lt; Input B</li><li><strong>Equal to</strong>: Input A = Input B</li><li><strong>Greater than or equal to</strong>: Input A &ge; Input B</li><li><strong>Less than or equal to</strong>: Input A &le; Input B</li></ul> |
+| True (Output Point) | One of the two required | It connects to the step executed when the condition is true. |
+| False (Output Point) | One of the two required | It connects to the step executed when the condition is false. |
+| Output (Output Point) | ✘ | It outputs the comparison result. |
+
+### How to Use
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LogicBlock-Comparison.png" alt="Logical operations example" style={{width: '80%'}} />  
+
+Here's how to use the `Logic` block:
+    
+1. Connect two **numeric parameters** (Input A and Input B) to the left side of the block.
+2. Select a comparison method in the block (such as "Greater than").
+3. Connect the steps to be executed when **judged as true** or **judged as false** to the right side of the block.
+4. Connect a [Boolean Variable](./variables-blocks.mdx#boolean-variables) block to the right side of the block to get the comparison result. This point can also connect to other blocks, such as [AND](./logic-blocks.mdx#and) and [OR](./logic-blocks.mdx#or) blocks.
+

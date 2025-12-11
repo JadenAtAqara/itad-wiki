@@ -1,0 +1,118 @@
+# Other Blocks
+
+> **Note**
+>
+> Screenshots in this guide may look slightly different from what you see on your device. Please follow the actual interface for reference.
+
+## Overview
+
+Aqara Studio offers more than basic functions like device control, scheduling, logic, and variables. It also provides **Other Blocks** that make your automation workflows more flexible and expressive. 
+
+This category includes [JavaScript](#javascript), [Math](#math), and [String Concat](#string-concat). These blocks support advanced scenarios like custom conditions, dynamic value calculations, and formatted text generation. They help you achieve greater precision and customization in automation. With these blocks, you can move beyond basic logic and design more powerful workflows.
+
+The other category includes the following blocks:
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/OtherBlock-Total.png" alt="Other blocks overview" style={{width: '80%'}} />  
+
+## JavaScript
+
+### Feature
+
+Use this block to customize the processing of **string**, **numeric**, and **boolean** variables. 
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/OtherBlock-ScriptIntro.png" alt="JavaScript components" style={{width: '80%'}} />  
+
+| Connection point / Operation | Required | Description |
+| -- | -- | -- |
+| **Input Point**  | ✔ | Add multiple parameter definitions in the script to create multiple input points on the block’s right side. Input points can connect to string, numeric, or boolean blocks (supports **local variables**, **global variables**, and **point data**). |
+| **Right-click** | ✔ | Right-click the block to open the script editor. |
+| **Output Point** | ✔ | Connects to a variable block to record script results, or to other blocks that receive data. |
+
+### How to Use
+
+Here's how to use the `JavaScript`:
+
+1. Right-click the block, select "Script edit" to enter the "Script Editor".
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/OtherBlock-EditScript.png" alt="Select script edit" style={{width: '80%'}} />  
+
+2. Click the **+** button, select 1 parameter type from the dropdown list, and define your parameter name in the "Edit name" popup to add 1 parameter button.
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/OtherBlock-SelectAType.png" alt="Select parameter type" style={{width: '80%'}} />  
+
+    At this point, you can see that 1 new variable has been automatically added within the `function`. Based on this, you can start writing your own script.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/OtherBlock-DoubleClickAddedParameter.png" alt="Double-click parameter button" style={{width: '80%'}} />  
+
+3. After completing script editing, click the **Confirm** button.
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/OtherBlock-WriteCodes.png" alt="Custom code" style={{width: '80%'}} />  
+
+4. At this point, you can see that 1 input point has been added on the left side of the block. 
+
+    Connect it to a [Point Data](./variables-blocks.mdx#point-data) block or other blocks that can provide values as an input parameter.
+   
+    Connect 1 variable block on the right side of the block (must match the `return` type) to record the script results.
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/OtherBlock-ScriptFlow.png" alt="JavaScript workflow" style={{width: '80%'}} />  
+
+## Math
+
+### Feature
+
+If you want to calculate certain values in automation, you can use the "Math" block.
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/OtherBlock-ExpressionIntro.png" alt="Math block introduction" style={{width: '80%'}} />  
+
+This block is **multi-point type** with 1 configurable parameter:
+
+| Connection Point or Parameter | Required | Description |
+| -- | -- | -- |
+| In A (Input Point) | ✔ | Input A. The first number. |
+| In B (Input Point) | ✔ | Input B. The second number. |
+| Mathematical Expression | ✔ | Select mathematical expression:<ul><li>Add: In A + In B</li><li>Subtract: In A - In B</li><li>Multiply: In A * In B</li><li>Divide: In A / In B</li><li>Modulus: In A mod In B </li><li>Pow: In A<sup>In B</sup></li><li>Bit AND: In A ∧ In B</li><li>Bit OR: In A ∨ In B</li><li>Bit Xor: In A ⊕ In B</li></ul> |
+| Output Point | ✔ | Connect to 1 numeric variable block to record calculation result, or to other blocks that receive number. |
+
+### How to Use
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/OtherBlock-Expression.png" alt="Math example" style={{width: '80%'}} />  
+
+The above image demonstrates subtracting 2 from the outdoor thermometer reading as the indoor air conditioner's set temperature.
+
+Here's how to use the `Math` block:
+1. Connect In A and In B to the left side of the block respectively. In A and In B can be **Point Data** blocks, **Global Numeric Variable** blocks, **Numeric Variable** blocks, or other blocks that can provide numeric values.
+2. Select a mathematical expression within the block.
+3. Connect 1 block that can accept numeric values to the right side of the block.
+
+## String Concat
+
+### Feature
+
+If you want to combine multiple texts or variables into a complete text string, you can use the "String Concat" block.
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/OtherBlock-TextConcatIntro.png" alt="String Concat block components" style={{width: '80%'}} />  
+
+This block is **multi-point type**, supporting 2 input points and 1 output point by default, with 1 add button:
+
+| Connection Point | Required | Description |
+| -- | -- | -- |
+| Input Point 1 | ✔ | Connects any variable block as the text to be concatenated. |
+| Input Point 2 | ✔ | Connects any variable block as the text to be concatenated. |
+| Add Button | ✘ | Adds more input points to connect more text. |
+| Output Point | ✔ | Connects to 1 [string variable](./variables-blocks.mdx#string-variables) block for concatenation results. |
+
+
+### How to Use
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/OtherBlock-TextConcat.png" alt="String Concat example" style={{width: '80%'}} />  
+
+Here's how to use the `String Concat` block:
+1. Connect the variable blocks you want to concatenate (supports string, numeric, boolean, etc.) to the input points on the left side of the block.
+2. Connect 1 `string variable` block to the right side of the block to record the concatenation results.
+

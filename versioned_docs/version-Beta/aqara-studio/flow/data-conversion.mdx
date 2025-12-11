@@ -1,0 +1,242 @@
+# Data Conversion
+
+> **Note**
+>
+> Screenshots in this guide may look slightly different from what you see on your device. Please follow the actual interface for reference.
+
+## Overview
+
+When two blocks are connected but their output and input data types don't match, **Aqara Studio automatically inserts a data conversion block**. With this feature, you can easily define the final form of data in your automation workflow without any additional operations. For example, converting the number `1` to the string `"1.0"`, or mapping the boolean value `false` to a more intuitive string like "Device is offline".
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-Overview.png" alt="Data conversion illustration" style={{width: '80%'}} />   
+
+This flexible data conversion capability allows you to seamlessly perform [mathematical calculations](./other-blocks.mdx#math), [logical operations](./logic-blocks.mdx), and [text concatenation](./other-blocks.mdx#string-concat), while connecting various [point data](./variables-blocks.mdx#point-data) blocks. This enables raw data to naturally integrate into various logic, helping you to freely customize your workflows.
+
+This document explains the conversion rules for different parameter types.
+
+## Boolean to Other Types
+
+### Boolean to Enumeration
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-BooleantoEnumeration.png" alt="Boolean to enumeration" style={{width: '80%'}} />   
+
+To convert from a boolean value to an enumeration value, you need to set the mapping rule in the `Data Conversion` block:
+
+- Truthy Value: Select the target enumeration value when the input is `true`.
+- Falsy Value: Select the target enumeration value when the input is `false`.
+
+### Boolean to Number
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-BooleantoNumber.png" alt="Boolean to number" style={{width: '80%'}} />   
+
+To convert from a boolean value to a number, you need to set the mapping rule in the `Data Conversion` block:
+
+- Truthy Value: Set the target number when the input is `true`.
+- Falsy Value: Select the target number when the input is `false`.
+
+### Boolean to String
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-BooleanToString.png" alt="Boolean to string" style={{width: '80%'}} />   
+
+To convert from a boolean value to a string, you need to set the mapping rule in the `Data Conversion` block:
+
+- Truthy Value: Select the target string when the input is `true`.
+- Falsy Value: Select the target string when the input is `false`.
+
+## Enumeration to Other Types
+
+### Enumeration to Boolean
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-EnumerationtoBoolean.png" alt="Enumeration to boolean" style={{width: '80%'}} />   
+
+You need to specify an enumeration value as `false` to complete the conversion:
+- Falsy Value: If the input enumeration value matches the configured value, the output is `false`. Otherwise, the output is `true`.
+
+### Enumeration to Number
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-EnumerationtoNumber.png" alt="Enumeration to number" style={{width: '80%'}} />   
+
+When an enumeration block is connected to a number block, the number block directly obtains the numerical value of the input enumeration. For example, an enumeration value with index 0 corresponds to the number 0.
+
+### Enumeration to String
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-EnumerationtoString.png" alt="Enumeration to string" style={{width: '80%'}} />   
+
+When an enumeration block is connected to a string block, the string block directly obtains the name of the input enumeration value. As shown in the figure, the string variable directly displays the device's current mode, which is "Low".
+
+## Number to Other Types
+
+### Number to Boolean
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-NumbertoBoolean.png" alt="Number to boolean" style={{width: '80%'}} />   
+
+You need to specify an number as `false` to complete the conversion:
+- Falsy Value: If the input number matches the configured number, the output is `false`. Otherwise, the output is `true`.
+
+### Number to Enumeration
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-NumbertoEnumeration.png" alt="Number to enumeration" style={{width: '80%'}} />   
+
+When a number block is connected to an enumeration block, the input number is converted to the corresponding enumeration value based on preset mapping relationships. For example, the number 0 corresponds to the enumeration value with index 0.
+
+### Number to String
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-NumberToString.png" alt="Number to string" style={{width: '80%'}} />   
+
+When a number block is connected to a string block, you need to specify a "format" string. This format determines whether the final string includes decimal places, thousands separators, or other symbols.
+
+#### Basic Format Symbols
+
+<table>
+  <thead>
+    <tr>
+      <th>Symbol</th>
+      <th>Meaning</th>
+      <th>Example Pattern</th>
+      <th>Number (Before)</th>
+      <th>String (After)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="2"><code>0</code></td>
+      <td rowspan="2">Digit placeholder. Pads with zeros if there are not enough digits.</td>
+      <td rowspan="2"><code>000</code></td>
+      <td>123</td>
+      <td><code>123</code></td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><code>005</code></td>
+    </tr>
+    <tr>
+      <td rowspan="2"><code>#</code></td>
+      <td rowspan="2">Digit placeholder. Shows digits only if present (no zero padding).</td>
+      <td rowspan="2"><code>###</code></td>
+      <td>123</td>
+      <td><code>123</code></td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><code>5</code></td>
+    </tr>
+    <tr>
+      <td><code>.</code></td>
+      <td>Decimal point separator.</td>
+      <td><code>0.00</code></td>
+      <td>3.14159</td>
+      <td><code>3.14</code></td>
+    </tr>
+    <tr>
+      <td><code>,</code></td>
+      <td>Thousands separator.</td>
+      <td><code>#,###</code></td>
+      <td>1234</td>
+      <td><code>1,234</code></td>
+    </tr>
+    <tr>
+      <td><code>%</code></td>
+      <td>Converts the number to a percentage.</td>
+      <td><code>0%</code></td>
+      <td>0.15</td>
+      <td><code>15%</code></td>
+    </tr>
+    <tr>
+      <td><code>E</code></td>
+      <td>Scientific notation format.</td>
+      <td><code>0.00E00</code></td>
+      <td>1234</td>
+      <td><code>1.23E03</code></td>
+    </tr>
+  </tbody>
+</table>
+
+#### Examples
+
+##### Basic Number
+
+| Format | Description | Number (Before) | String (After) |
+| -- | -- | -- | -- |
+| `0` | Integer | 123.7 | `124` |
+| `0.0` | One decimal place | 123.7 | `123.7` |
+| `0.00` | Two decimal places | 123.7 | `123.70` |
+| `0.000` | Three decimal places | 123.7 | `123.700` |
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-BasicNumber.png" alt="Basic number format example" style={{width: '80%'}} />   
+
+
+##### Flexible Decimal Places
+
+<table>
+  <tr>
+    <th>Format</th><th>Description</th><th>Number (Before)</th><th>String (After)</th>
+  </tr>
+  <tr>
+    <td><code>#</code></td><td>Rounds to integer (no zero padding)</td><td>123.7</td><td><code>124</code></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><code>#.#</code></td><td rowspan="2">Formats with up to 1 decimal</td><td>123.7</td><td><code>123.7</code></td>
+  </tr>
+  <tr>
+    <td>123.0</td><td><code>123</code></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><code>#.##</code></td><td rowspan="2">Formats with up to 2 decimals</td><td>123.7</td><td><code>123.7</code></td>
+  </tr>
+  <tr>
+    <td>123.00</td><td><code>123</code></td>
+  </tr>
+</table>
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-FlexibleDigit.png" alt="Flexible digit example" style={{width: '80%'}} />   
+
+##### Thousands Separator
+
+| Format | Description | Number (Before) | String (After) |
+| -- | -- | -- | -- |
+| `#,###` | Thousands separator | 1234 | `1,234` |
+| `#,###.00` | Thousands separator + 2 decimals | 1234.5 | `1,234.50` |
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-ThousandPlace.png" alt="Thousand Place example" style={{width: '80%'}} />   
+
+##### Percentage
+
+| Format | Description | Number (Before) | String (After) |
+| -- | -- | -- | -- |
+| `0%` | Percentage | 0.15 | `15%` |
+| `0.0%` | One decimal percentage | 0.15 | `15.0%` |
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-Percentage.png" alt="Percentage Example" style={{width: '80%'}} />   
+
+##### Scientific Notation
+
+| Format | Description | Number (Before) | String (After) |
+| --- | --- | --- | --- |
+| `0.00E00` | Scientific notation | 1234 | `1.23E03` |
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-ScientificNotation.png" alt="Scientific notation example" style={{width: '80%'}} />   
+
+##### Currency Format
+
+| Format | Description | Number (Before) | String (After) |
+| --- | --- | --- | --- |
+| `¥#,###.00` | Chinese Yuan format | 1234.5 | `¥1,234.50` |
+| `$#,###.00` | US Dollar format | 1234.5 | `$1,234.50` |
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-Currency.png" alt="Currency example" style={{width: '80%'}} />   
+
+## String to Other Types
+
+### String to Boolean
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-StringToBoolean.png" alt="String to boolean" style={{width: '80%'}} />   
+
+To convert from a string to a boolean value, you need to set the mapping rule in the `Data Conversion` block:
+- Falsy Value: Specify which input value should output `false`. 
+- Truthy Value: Specify which input value should output `true`.
+
+### String to Number
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DataConversion-StringToNumber.png" alt="String to number" style={{width: '80%'}} />   
+
+You simply need to connect a **numeric string** block to a number block, and the system will automatically convert it to a number type without any additional configuration.

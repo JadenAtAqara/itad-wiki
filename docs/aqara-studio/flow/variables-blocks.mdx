@@ -1,0 +1,203 @@
+# Variables Blocks
+
+> **Note**
+>
+> Screenshots in this guide may look slightly different from what you see on your device. Please follow the actual interface for reference.
+
+## Overview
+
+In automation logic, variables are essential for flexibility and scalability. With Aqara Studio, you can not only [assign live device data as variables](#point-data), but also define custom variables of multiple types: [Boolean](#boolean-variables), [String](#string-variables), and [Numeric](#numeric-variables).
+
+These variables enable data storage and [calculations](./other-blocks.mdx#math), [comparisons](./logic-blocks.mdx#logic), [text concatenation](./other-blocks.mdx#string-concat), and even advanced [custom data-processing scripts](./other-blocks.mdx#javascript).
+
+The variables category includes the following blocks:
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/VariableBlock-Total.png" alt="Variables blocks overview" style={{width: '80%'}} />   
+
+## Point Data
+
+### Feature
+
+Use the Point Data block to save real-time data collected by devices (such as temperature, humidity, brightness, switch status) as variables.
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/VariableBlock-DeviceData.png" alt="Point Data block components" style={{width: '80%'}} />   
+
+This is a **dual-point** block:
+
+| Connection point/Parameter | Required | Description |
+| -- | -- | -- |
+| Input Point | ✘ | It is used to control devices. It can connect to other `Point Data` blocks, [Math](./other-blocks.mdx#math), [Logic](./logic-blocks.mdx#logic), [String Concat](./other-blocks.mdx#string-concat), or [JavaScript](./other-blocks.mdx#javascript) blocks. It obtains their values to update its own value. |
+| Output Point | ✘ | It outputs real-time data. It Can connect to other `Point Data` blocks, [Math](./other-blocks.mdx#math), [Logic](./logic-blocks.mdx#logic), [String Concat](./other-blocks.mdx#string-concat), or [JavaScript](./other-blocks.mdx#javascript) blocks. |
+
+### How to Use
+
+Here's how to use the `Point Data` block:
+
+1. After selecting the block, a device selection window appears. You can view all available local device variables of the target device. Check the items you need to add listener blocks anywhere on the canvas and start listening in real time.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/VariableBlock-SelectDeviceData.png" alt="Select local device variables" style={{width: '80%'}} />   
+
+2. Connect value-providing blocks to the left side of the block, **or** connect value-consuming blocks to the right, such as `Point Data`, `Math`, `Logic`, `Numeric Variables`, `String Concat`, or `JavaScript` blocks.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/VariableBlock-DeviceDataConnection.png" alt="Connect other value-required blocks" style={{width: '80%'}} />   
+
+## Boolean Variables
+
+### Feature
+
+Use this block to create a **local boolean variable** when you need to define a boolean value, or store and pass boolean data during a flow.
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/VariableBlock-BooleanCardIntro.png" alt="Boolean Variables block introduction" style={{width: '80%'}} />   
+
+This is a **dual-point block** with 1 parameter:
+
+| Connection point / Parameter | Required | Description |
+| - | - | - |
+| Input point | ✘ | It receives Boolean variables, and supports connection to the [JavaScript](./other-blocks.mdx#javascript) block only. |
+| Value | ✘ | Its meaning depends on input and output connections: <ul><li>When the input point connects to a `JavaScript` block, this field shows the boolean value output by the script.</li><li>When the output point connects to a `JavaScript` block, you can set this value manually as a script parameter.</li></ul> |
+| Output point | ✘ | It outputs a boolean value, and supports connection to the [JavaScript](./other-blocks.mdx#javascript) block only. |
+
+> **Note**
+>
+> The input point, boolean value, and output point are all optional. Connect or configure them based on your actual logic needs.
+
+### How to Use
+
+Here's how to use the `Boolean Variables` block: 
+
+#### Use as a script parameter
+
+1. Define a boolean value in the `Boolean Variables` block.
+2. Connect a `JavaScript` block to the right side.
+
+#### Record script result
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/VariableBlock-BooleanBlockUsage.png" alt="Use boolean block to record script result" style={{width: '80%'}} />   
+
+1. Configure a `JavaScript` block to process input data and output a boolean value.
+2. Connect a `Boolean Variables` block after the script block. After execution, the boolean value in the card displays the result.
+
+## Numeric Variables
+
+### Feature
+
+Use this block to create a **local numeric variable** when you need to define a number, or to store and pass numeric data in a flow.
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/VariableBlock-NumberIntro.png" alt="Numeric Variables block introduction" style={{width: '80%'}} />   
+
+This is a **dual-point block** with 1 parameter:
+
+| Connection point / Parameter | Required | Description |
+| - | - | - |
+| Input Point | ✘ | It receives a numeric value, and supports connections to [Math](./other-blocks.mdx#math) and [JavaScript](./other-blocks.mdx#javascript). |
+| Value | ✘ | Its meaning depends on input and output connections: <ul><li>When the input point connects to `Math` or `JavaScript`, this field displays the calculation result or script result.</li><li>When the output point connects to `Math`, `Logic`, or `JavaScript`, set this value manually as a parameter.</li></ul> |
+| Output Point | ✘ | It outputs your defined number, and supports connections to [Math](./other-blocks.mdx#math), [Logic](./logic-blocks.mdx#logic), and [JavaScript](./other-blocks.mdx#javascript). |
+
+> **Note**
+>
+> The input point, number value, and output point are all optional. Connect or configure them based on your actual logic needs.
+
+### How to Use
+
+Depending on your need, you can use the `Numeric Variables` block as follows:
+
+#### Use as parameters for Math, Logic, or JavaScript
+
+1. Use the `Numeric Variables` block to define a number.
+2. Connect a `Math`, `Logic`, or `JavaScript` block to the right side.
+
+#### Record script result
+
+1. Configure a `JavaScript` block to process input data and output a number.
+2. Connect a `Numeric Variables` block after the script block. After execution, the number in the card shows the result.
+
+#### Record Math or Logic results
+
+1. Connect a `Math` block or `Logic` block to the left side to receive its result.
+
+## String Variables
+
+### Feature
+
+Use this block to create a **local string variable** when you need to define a string, or to store and pass string data in a flow.
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/VariableBlock-StringIntro.png" alt="String Variables block introduction" style={{width: '80%'}} />   
+
+This is a **dual-point block** with 1 parameter:
+
+| Connection point / Parameter | Required | Description |
+| - | - | - |
+| Input Point | ✘ | It receives string content, and supports connections to [JavaScript](./other-blocks.mdx#javascript) and [String Concat](./other-blocks.mdx#string-concat). |
+| Value | ✘ | Its meaning depends on input and output connections: <ul><li>When the input point connects to `JavaScript`, this field displays the string content output by the script.</li><li>When the output point connects to `JavaScript` or `String Concat`, set this value manually as a script parameter or part of concatenation.</li></ul> |
+| Output Point | ✘ | It oputputs a string, and supports connections to [JavaScript](./other-blocks.mdx#javascript) or [String Concat](./other-blocks.mdx#string-concat). |
+
+> **Note**
+>
+> The input point, string content, and output point are all optional. Connect or configure them based on your actual logic needs.
+
+### How to Use
+
+Depending on your need, you can use the `String Variables` block as follows:
+
+#### Use as a script parameter or part of concatenation
+
+1. Use the `String Variables` block to define a string.
+2. Connect a `JavaScript` or `String Concat` block to the right side.
+
+#### Record script result
+
+1. Configure a `JavaScript` block to process input data and output a string.
+2. Connect a `String Variables` block after the script block. After execution, the string in the card shows the result.
+
+#### Record concatenation result
+
+1. Connect a String Concat block to the left side to receive its result.
+
+## Global Variable
+
+Variables created by blocks like [Boolean Variables](#boolean-variables), [Numeric Variables](#numeric-variables), and [String Variables](#string-variables) are local by default and only available within the current automation flow.
+
+If you need to reuse variables across multiple automation flows, use global variables.
+
+### Set Global Variables
+
+You can set global variables in two ways:
+- [Convert an existing local variable](#convert-an-existing-local-variable)
+- [Create a global variable](#create-a-global-variable)
+
+#### Convert an existing local variable
+
+Right-click an existing variable block and select **Set as global variable** to convert it into a global variable definition block.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/VariableBlock-SetGlobalVariable.png" alt="Right-click an existing variable block" style={{width: '80%'}} />   
+
+#### Create a global variable
+
+1. Click **Global variable** at the top of the canvas and select **New Variable** in the dialog.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/VariableBlock-CreateNewGlobal.png" alt="Create a new global variable" style={{width: '80%'}} />   
+
+2. In the dialog, set the variable type, name, and value. Then click **Confirm**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/VariableBlock-CreationDialogue.png" alt="Set global variable" style={{width: '80%'}} />   
+
+3. After confirming, place the variable block anywhere on the canvas. It serves as the definition of the global variable and can be referenced by other flows.
+
+### Use Global Variables
+
+1. Click Global Variables at the top of the canvas and select the variable you need in the dialog.
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/VariableBlock-SelectAddedVariable.png" alt="Select the added global variable" style={{width: '80%'}} />   
+
+2. Click anywhere on the canvas to create the global variable block. This block is a **single-output block** Based on its type, connect it to other blocks as described in the relevant sections above.
+
+3. Click anywhere on the canvas to create the global variable block. This is a **dual-point block**. It can receive new values or output its current value. Depending on the variable type, connect it to other blocks as described in the relevant sections above.
+
+   <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/VariableBlock-GlobalVariableIntro.png" alt="Add the selected global variable" style={{width: '80%'}} />   

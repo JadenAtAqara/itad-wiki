@@ -1,0 +1,218 @@
+# 时间
+
+> **说明**
+>
+> 截图与实际界面可能有所不同，请以实际为准。
+
+## 概述
+
+通过时间类卡片，您可以在自动化流程中精确控制设备行为的触发时机。  
+
+支持的场景包括：在 [特定时间点](#定时触发) 或 [时间段](#时间范围) 触发操作、[延迟执行下一步](#延时执行)、[将瞬时状态转换为带持续时间的区间](#状态持续)，或 [根据多个行为按序完成后才触发特定行为](#事件时序触发)。
+
+时间类包含的卡片如下图所示：
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-Total.png" alt="事件类卡片概览" style={{ width: '80%' }} />   
+## 定时触发
+
+### 功能
+
+如需规定某个行为在具体的某个时刻发生，可以使用此卡片。
+
+### 组成
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-FixedTimeCardIntro.png" alt="设置定时触发的卡片" style={{ width: '80%' }} />   
+此卡片为**单点输出型卡片**，拥有 3 个配置参数，说明如下：
+
+<table>
+  <thead>
+    <tr>
+      <th>参数或连接点</th>
+      <th>是否必选</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>触发行为的日子</td>
+      <td>✔</td>
+      <td>支持选择每周周几触发行为。</td>
+    </tr>
+    <tr>
+      <td>时间类型</td>
+      <td>✔</td>
+      <td>支持<code>指定时刻</code>、<code>日出</code>、<code>日落</code>。</td>
+    </tr>
+    <tr>
+      <td>时间</td>
+      <td>✔</td>
+      <td>根据“时间类型”的值而变：<ul><li>当<code>时间类型</code>为<code>指定时刻</code>时，此参数为 24 小时值的绝对时间点；</li><li>当<code>时间类型</code>为<code>日出</code>或<code>日落</code>时，此参数为相对时间点（如15分钟前）。</li></ul></td>
+    </tr>
+    <tr>
+      <td>输出点</td>
+      <td>✔</td>
+      <td>连接待触发的行为。</td>
+    </tr>
+  </tbody>
+</table>
+
+### 使用步骤
+
+`定时触发`卡片的使用步骤说明如下：
+1. 选择触发行为的日子（每周周几，可多选）。
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-SelectDate.png" alt="选择一周的某几天" style={{ width: '80%' }} />   
+2. 设定时间类型。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-SelectTimeType.png" alt="选择时间类型" style={{ width: '80%' }} />   
+    > **说明**
+    >
+    > 选择日出或日落时，请输入您家庭的经纬度，格式如下：
+    > - 北纬、东经 → 使用正数（如：北纬 35.0° → `35.0`）
+    > - 南纬、西经 → 使用负数（如：西经 120.0° → `-120.0`）
+    > <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-PassInLongitudeandLatitude.png" alt="传入家庭的经纬度" style={{ width: '80%' }} />   
+3. 设置时间。
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-SpecifyTime.png" alt="设置具体时间点" style={{ width: '80%' }} />   
+4. 在卡片右侧，连接待触发的行为。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-ConnectionToFixedTimeAction.png" alt="连接待触发的行为" style={{ width: '80%' }} />   
+## 时间范围
+
+### 功能
+
+使用此卡片，您可以实现这样的逻辑：仅当前置行为在制定时间段内发生，后续动作才会发生。
+
+### 组成
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-TimeWindowIntro.png" style={{ width: '80%' }} />   
+此卡片为**双点**卡片，拥有 3 个配置参数，说明如下：
+
+| 连接点或参数 | 是否必选 | 说明 |
+| -- | -- | -- |
+| 输入点 | ✔ | 连接需要监听的 [当](./../flow/device-blocks.mdx#当) 卡片。 |
+| 触发行为的日子 | ✔ | 选择此逻辑有效的日子，可多选。 |
+| 开始时间 | ✔ | 开始时间，为 24 小时值的绝对时间点。  |
+| 结束时间 | ✔ | 结束时间，为 24 小时值的绝对时间点。 |
+| 输出点 | ✔ | 连接待触发的行为。 |
+
+### 使用步骤
+
+`时间范围`卡片的使用步骤说明如下：
+
+1. 选择每周周几（可多选）触发行为。
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-SelectDateforTimePeriod.png" alt="选择每周周几触发行为" style={{ width: '80%' }} />   
+2. 设置时间范围。
+   > **说明**
+   >
+   > 时间范围选择 00:00:00-00:00:00 时，表示此逻辑全天生效。	
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-SetTimeRange.png" alt="设置时间范围" style={{ width: '80%' }} />   
+3. 在卡片左侧连接需要监听的 `当` 卡片，表示只有这个行为在卡片指定的日子和时间内被触发时，才可以触发下一个行为。  
+   <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-EventConnectedToTimeWindow.png" alt="连接一个当卡片" style={{ width: '80%' }} />   
+4. 在卡片右侧，连接待触发的行为，如 `就` 卡片。
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-ConnectionToActionForTimeWindow.png" alt="连接待触发的行为" style={{ width: '80%' }} />   
+## 延时执行
+
+### 功能
+
+当您希望在前一个行为完成后，延迟一段时间再触发下一个行为时，可用此卡片将两者连接，实现延时效果。
+
+### 组成
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-DelayBlockIntro.png" alt="延迟卡片的介绍" style={{ width: '80%' }} />   
+此卡片为**双点**卡片，拥有 1 个配置参数，说明如下：
+
+| 连接点或参数 | 是否必选 | 说明 |
+| -- | -- | -- |
+| 输入点 | ✔ | 连接前一个行为。 |
+| 延时时长 | ✔ | 延时时长，支持秒、分钟或小时为单位。 |
+| 输出点 | ✔ | 连接被延迟触发的行为。 |
+
+### 使用步骤
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-Delay.png" alt="延时执行卡片" style={{ width: '80%' }} />   
+`延时执行`卡片的使用步骤说明如下：
+
+1. 在卡片左侧连接第一个行为。
+2. 在卡片右侧连接第二个行为。
+3. 设置延迟时长。
+
+## 状态持续
+
+### 功能
+
+“状态持续”卡片有两种主要用途：
+- 延时修改参数：   
+  在某个事件或状态发生后的指定时间内，自动修改设备的布尔型参数。
+- 延长瞬时状态：   
+  将原本瞬时的事件或状态转化为带有持续时间的区间，可用于对多个状态进行逻辑计算（与 / 或），并根据计算结果触发后续动作。
+
+### 组成
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-StateDurationIntro.png" style={{ width: '80%' }} />   
+此卡片为**双点**卡片，拥有 1 个配置参数，说明如下：
+
+| 连接点或参数 | 是否必选 | 说明 |
+| -- | -- | -- |
+| 输入点 | ✔ | 连接需要监听的状态（[当](./../flow/device-blocks.mdx#当) 卡片）。 |
+| 持续时长 | ✔ | 状态持续时长，支持秒、分钟或小时为单位。 |
+| 输出点 | ✔ | 根据用途，支持连接以下卡片：<ul><li>修改设备布尔参数：<a href="variables-blocks.mdx#赋值变量">赋值变量</a></li><li>逻辑运算：<a href="../flow/logic-blocks.mdx#与">与</a></li></ul> |
+
+### 使用方法
+
+#### 修改设备布尔值
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-StateDuration.png" alt="设备状态持续" style={{ width: '80%' }} />   
+上图展示了`状态持续`如何用于修改设备布尔值：
+- 在房间中安装了 2 个动静传感器，任一传感器检测到有人，`状态持续`卡片就会启动，并向灯泡开关状态卡片输出 `true`，灯泡随即开启。
+- 每次有传感器再次检测到有人，“有人状态”的持续时间会自动延长 10 分钟，灯泡持续保持开启。
+- 如果在这段时间内所有传感器都未再检测到有人，10 分钟倒计时结束后，状态持续卡片输出 `false`，灯泡自动关闭。
+
+具体步骤如下：
+1. 在状态持续卡片左侧连接`当`卡片（图中为 2 个动静传感器的存在状态卡片）。
+2. 设置状态持续时长（支持秒、分钟或小时为单位）。
+3. 在状态持续卡片右侧连接`布尔型赋值变量`卡片（图中为灯泡的开关变）。
+
+#### 根据逻辑运算结果控制设备
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-StateDurationAnd.png" alt="设备状态持续" style={{ width: '80%' }} />   
+上图展示了两种情况下，**Aqara Smart Dimmer Controller T1** 都会自动把亮度调到 30%：
+- 当 **Aqara Smart Dimmer Controller T1** 开启后 1 分钟内，**Aqara LED Light T1** 开启。
+- 当 **Aqara LED Light T1** 开启后 30 秒内，**Aqara Smart Dimmer Controller T1** 开启。
+
+具体步骤如下：
+1. 添加 2 条或更多“当-状态持续”逻辑。
+2. 将上述逻辑连接至`与`卡片。
+3. 将`与`卡片的输出点连接至 [就](./device-blocks.mdx#就) 卡片。
+
+
+## 事件时序触发
+
+### 功能
+
+如果您希望定义一系列事件在特定时间顺序内依次发生时，触发后续动作，可以使用此卡片。例如，在门锁解锁后的 10 秒内，如果室内传感器检测到有人，则触发开启空调。
+
+### 组成
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-SequenceBlockIntro.png" alt="时间时序触发组成" style={{ width: '80%' }} />   
+此卡片为**多点**卡片，拥有 1 个添加按钮和 1 个配置参数，说明如下：
+
+| 连接点或参数 | 是否必选 | 说明 |
+| -- | -- | -- |
+| 事件 1（输入点） | ✔ | 表示事件顺序为 1，以这个事件开始起计时，常连接 [当](./device-blocks.mdx#当) 卡片，可连接 [且](./device-blocks.mdx#且) |
+| 事件 2（输入点） | ✔ | 表示事件顺序为 2，连接 [当](./device-blocks.mdx#当) 卡片  |
+| 添加按钮 | ✘ | 用于添加更多输入点，以连接更多事件。 ｜
+| 间隔时长 | ✔ | 规定间隔时长，支持秒、分、时。 |
+| 满足（输出点） | ✔ | 连接 [就](./device-blocks.mdx#就) 卡片，作为后续触发行为。 |
+
+### 使用步骤
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-SequenceSteps.png" alt="事件时许触发示意" style={{ width: '80%' }} />   
+上图展示了当 Aqara LED Light T1 开启后 1 分钟内，Aqara Smart Dimmer Control 也开启，则将 Aqara Smart Dimmer Control 的亮度调整为 50。
+
+具体步骤：
+1. `事件顺序触发`卡片左侧输入点按序连接不同的`当`卡片（图中为 Aqara LED Light T1 和 Aqara Smart Dimmer Control 的开关状态卡片）。
+2. 设置间隔时长。
+3. `事件顺序触发`卡片右侧输出点连接`就`（图中为 Aqara Smart Dimmer Control 的亮度调整卡片）。
+

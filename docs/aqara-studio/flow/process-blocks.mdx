@@ -1,0 +1,169 @@
+# Process Blocks
+
+> **Note**
+>
+> Screenshots in this guide may look slightly different from what you see on your device. Please follow the actual interface for reference.
+
+## Overview
+
+Beyond the basic Event–Condition–Action flow, you can also use advanced flow controls such as [While](#while), [Count Limit](#count-limit), [Count Threshold](#count-threshold), and [Select](#select).
+
+The Process category includes the following blocks:
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/FlowBlock-Total.png" alt="Total process blocks" style={{width: '80%'}} />   
+
+## While
+
+### Feature
+
+Use this block when you want to repeat a step. It provides loop control so you can flexibly build timer-based loop automations.
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/FlowBlock-LoopIntro.png" alt="Loop block components" style={{width: '80%'}} />   
+
+This block is **dual-point type**, with **1 input point**, **1 output point** and **1 parameter**:
+
+
+| Connection point / Parameter | Required | Description |
+| -- | -- | -- |
+| Activate (input) | ✔ | It controls when the loop starts and stops.<br />The cards it connects depend on how you want to control the loop:<ul> <li><strong>Single Boolean Value:</strong> The same Boolean value starts and stops the loop. For example: “Door opens → start loop; Door closes → stop loop.” Connect this to the <a href="./variables-blocks.mdx#point-data">Point Data</a> card.</li> <li><strong>Two Separate Events:</strong> Two different events control the start and stop of the loop. For example: “Door opens → start loop; Window closes → stop loop.” Connect this to <a href="./device-blocks.mdx#event">Event</a> cards.</li> </ul> |
+| Interval | ✔ | It sets the wait time between each execution. Choose seconds, minutes, or hours. |
+| Fire (output) | ✔ | It connects the steps you want to repeat. |
+
+### How to Use
+
+Steps vary depending on how many boolean values control the loop.
+
+#### Single Boolean
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/FlowBlock-Loop.png" alt="Loop controlled by 1 boolean" style={{width: '80%'}} />   
+
+When one boolean controls the loop:
+
+1. On the left, connect a boolean `Point Data` block (for example, the on/off state of an Aqara LED Light T1). The device's real-time state will be passed to the `While` block to start or stop the loop.
+2. Set the interval, i.e., the time between each execution (seconds, minutes, or hours).
+3. On the right, connect the action to repeat.
+
+#### Two Seperate Events
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/FlowBlock-LoopWith2Booleans.png" alt="Loop control by 2 booleans" style={{width: '80%'}} />   
+
+When two seperate events control the loop:
+
+1. Add two different `When` blocks and connect both of their outputs to the While block's input. You will see a `Data Transfer` block appear between the `When` and `While` blocks. This lets you convert an event or state to a boolean and pass it to the While block.
+2. Specify which `When` block should convert to `true` (start the loop) and which should convert to `false` (stop the loop).
+3. Set the interval (seconds, minutes, or hours).
+4. On the right, connect the action to repeat.
+
+## Count Limit
+
+### Feature
+
+Use this block to set a maximum number of times an action can be triggered.
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/FlowBlock-ReachLimitIntro.png" alt="Count Limit block components" style={{width: '80%'}} />   
+
+This is **multiple-point block**, with *2 input points**, **1 output point** and **1 parameter**:
+
+| connection point or parameter | Required | Description |
+| -- | -- | -- |
+ | Reset (input) | ✔ | Resets the counter to zero when the connected step occurs. |
+| +1 (input) | ✔ | Increments the counter by one when the connected step occurs and triggers the output step. |
+| Count limit | ✔ | The maximum number of times the target step can be triggered. |
+| Output | ✔ | Connect the target step to trigger. |
+
+### How to Use
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/FlowBlock-TiggerCountLimit.png" alt="Count Limit" style={{width: '80%'}} />   
+
+1. Connect a step to the left-side **+1** point. Each time it occurs, the counter increases and the target action is triggered.
+2. Connect a step to the left-side **Reset input** to clear the counter.
+3. Configure the maximum number of times the target action can be triggered.
+4. On the right-side **Output**, connect the target action. It will only be triggered by the +1 input up to the set limit.
+
+## Count Threshold
+
+### Feature
+
+Use this block to trigger a step only after another step has occurred a specified number of times, reducing false triggers.
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/FlowBlock-TriggerAfterCountIntro.png" alt="Count Threshold block components" style={{width: '80%'}} />   
+
+This is a **multi-point block** with two inputs, one output, and one parameter:
+
+| Connection point / Parameter | Required | Description |
+| -- | -- | -- |
+| Reset (input) | ✔ | It resets the counter to zero when the connected step occurs. |
+| +1 (input) | ✔ | It starts or increments the count when the connected step occurs. |
+| Count target | ✔ | The count target; when reached, the target step will be triggered. |
+| Output | ✔ | Connect the target step to trigger. |
+
+### How to Use
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/FlowBlock-TiggerAfterCount.png" alt="Trigger after specified count" style={{width: '80%'}} />   
+
+Here's how to set up a `Count Threshold` block:
+1. Connect the step to count to the left-side **+1** point, and the step to reset the count to the **Reset** point.
+2. Set the **count target** inside the block.
+3. Connect the target action you want to trigger after the threshold is reached on the right-side output point.
+4. When the cumulative occurrences on the +1 input reach the target, the target step is triggered automatically.
+
+## Select
+
+### Feature
+
+Use this block when you want a device to perform different actions under different scenes/modes.
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/FlowBlock-ModeSwitch.png" alt="Select block components" style={{width: '80%'}} />   
+
+This is **multiple-point block**, with **2 input points**, **2 output points** and **1 add button**:
+
+<table>
+  <thead>
+    <tr>
+      <th>Connection point / Parameter</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Select (input)</td>
+      <td rowspan="2">Choose one of these</td>
+      <td>When connected to a numeric block, you can select the scene based on the number.</td>
+    </tr>
+    <tr>
+      <td>Next (input)</td>
+      <td>It connects an <a href="./device-blocks.mdx#event">Event</a> block. When that Event block occurs, it switches to the next scene.</td>
+    </tr>
+    <tr>
+      <td>Scene 1 (output)</td>
+      <td>✔</td>
+      <td>It connects <a href="./device-blocks.mdx#action">Action</a> blocks.</td>
+    </tr>
+    <tr>
+      <td>Scene 2 (output)</td>
+      <td>✔</td>
+      <td>It connects <a href="./device-blocks.mdx#action">Action</a> blocks.</td>
+    </tr>
+    <tr>
+      <td>Add button</td>
+      <td>✘</td>
+      <td>It can add more scenes to connect more actions.</td>
+    </tr>
+  </tbody>
+  </table>
+
+### How to Use
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/FlowBlock-ModeSwitchSteps.png" alt="Select steps" style={{width: '80%'}} />   
+
+Here's how to set up a `Select` block by using the `Next`:
+1. On the left-side `Next` input of the Select block, connect an `Event` block.
+2. On the right-side `Scene 1` and `Scene 2` outputs, connect different `Actions` blocks for different actions.
