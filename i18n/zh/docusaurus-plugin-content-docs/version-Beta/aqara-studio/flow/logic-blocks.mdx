@@ -1,0 +1,136 @@
+# 逻辑卡片
+
+> **说明**
+>
+> 截图与实际界面可能有所不同，请以实际为准。
+
+## 概述
+
+在自动化场景配置中，若您希望依据多个条件的组合结果来判断是否执行某个行为，则需要使用逻辑类卡片，包含：[与](#与)、[或](#或)、[状态取反](#状态取反)、[逻辑运算](#逻辑运算)。
+
+逻辑类包含的卡片如下图所示：
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LogicBlock-Total.png" alt="逻辑类卡片概览" style={{ width: '80%' }} />   
+## 与
+
+### 功能
+
+当您需要在所选设备的布尔状态**全部符合条件**时才触发某个行为，可使用“与”卡片。
+
+### 组成
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LogicBlock-AndIntro.png" alt="“与”卡片的组成" style={{ width: '80%' }} />   
+此卡片为**多点类型**，默认支持 2 个输入点和 1 个输出点，卡片内部拥有 1 个添加按钮，说明如下：
+
+
+| 连接点或按钮 | 是否必选 | 说明 |
+| -- | -- | -- |
+| 输入点 A | ✔ | 连接 1 个 布尔型的 [赋值变量](./variables-blocks.mdx#赋值变量)。  |
+| 输入点 B | ✔ | 连接 1 个 布尔型的 [赋值变量](./variables-blocks.mdx#赋值变量)。  |
+| 添加按钮 | ✘ | 可用于增加更多输入点，以连接更多的 [赋值变量](./variables-blocks.mdx#赋值变量)。 | 
+| 输出点 | ✔ | 连接所有条件都满足时将被执行的行为。 |
+
+### 使用步骤
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LogicBlock-And.png" alt="“与”卡片的示意" style={{ width: '80%' }} />   
+`与`卡片的使用步骤如下所示：
+1. 在卡片左侧分别连接 2 个布尔型 `赋值变量`。
+2. 在卡片右侧连接到待触发的 `就` 卡片。只要所有布尔型 `赋值变量` 为 `true`，就能触发此行为。
+
+> **说明**
+>
+> 本节中描述的 `与` 卡片使用步骤没有加入时效限制。如需加入状态变化的有效期，请参考时间类卡片的 [状态持续 - 根据逻辑运算结果控制设备](./timer-blocks.mdx#根据逻辑运算结果控制设备)。
+
+## 或
+
+### 功能
+
+当您需要在所选设备的布尔状态**部分符合条件**时就触发某个行为，可使用“或”卡片。
+
+### 组成
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LogicBlock-OrIntro.png" alt="或卡片的组成" style={{ width: '80%' }} />   
+此卡片为**多点类型**，默认支持 2 个输入点和 1 个输出点，卡片内部拥有 1 个添加按钮，说明如下：
+
+| 连接点 | 是否必选 | 说明 |
+| -- | -- | -- |
+| 输入点 A | ✔ | 连接 1 个 布尔型的 [赋值变量](./variables-blocks.mdx#赋值变量)。  |
+| 输入点 B | ✔ | 连接 1 个 布尔型的 [赋值变量](./variables-blocks.mdx#赋值变量)。  |
+| 添加按钮 | ✘ | 可用于增加更多输入点，以连接更多的 [赋值变量](./variables-blocks.mdx#赋值变量)。 | 
+| 输出点 | ✔ | 连接所有条件都满足时将被执行的行为。 |
+
+### 使用步骤
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LogicBlock-Or.png" alt="“或”卡片的示意" style={{ width: '80%' }} />   
+`或`卡片的使用步骤如下所示：
+1. 在卡片左侧分别连接 2 个布尔型 `赋值变量`。
+2. 在卡片右侧连接到待触发的 `就` 卡片。只需 1 个布尔型 `赋值变量` 为 `true`，就能触发此行为。
+
+> **说明**
+>
+> 本节中描述的 `或` 卡片使用步骤没有加入时效限制。如需加入状态变化的有效期，请参考时间类卡片的 [状态持续 - 根据逻辑运算结果控制设备](./timer-blocks.mdx#根据逻辑运算结果控制设备)。
+
+
+## 状态取反
+
+### 功能
+
+当您需要使用某个布尔型状态的相反值来控制另一个状态时，可使用“状态取反”卡片。
+该卡片会将输入状态的布尔值反转后输出，并传递给目标状态。例如：
+- 开关状态为 true → 输出 false，灯泡关闭。
+- 开关状态为 false → 输出 true，灯泡开启。
+
+### 组成
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LogicBlock-NotIntro.png" alt="状态取反的组成" style={{ width: '80%' }} />   
+此卡片为**双点卡片**，无需额外配置参数，说明如下：
+
+| 连接点 | 是否必选 | 说明 |
+| -- | -- | -- |
+| 输入点 | ✔ | 连接一个布尔型 [赋值变量](./variables-blocks.mdx#赋值变量)，用于向本卡片传递一个布尔值。 |
+| 输出点 | ✔ |连接一个布尔型 [赋值变量](./variables-blocks.mdx#赋值变量)，用于接收与输入数据相反的布尔值。 |
+
+### 使用步骤
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LogicBlock-Not.png" alt="状态取反的示意" style={{ width: '80%' }} />   
+`状态取反` 卡片的使用步骤如下所示：
+1. 在卡片左侧连接一个 `赋值变量` 卡片，用于获取该变量的布尔值
+2. 在卡片右侧连接一个 `赋值变量` 卡片，用于接收相反的布尔值，从而控制设备。
+
+## 逻辑运算
+
+### 功能
+
+当您需要**比较两个数值**以决定是否执行某个自动化行为时，可以使用“逻辑运算”卡片。
+
+该卡片支持以下比较方式：
+* 大于
+* 小于
+* 等于
+* 大于或等于
+* 小于或等于
+
+### 组成
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LogicBlock-ComparisonIntro.png" alt="比较数值卡片介绍" style={{ width: '80%' }} />   
+此卡片为**多点类型**，包含 1 个可配置参数，说明如下：
+
+| 连接点或参数 | 是否必选 | 说明 |
+| -- | -- | -- |
+| 参数 1（输入点） | ✔ | 传入被比较的数值，可连接 1 个数值型 [赋值变量](./variables-blocks.mdx#赋值变量) 或 [数值变量](./variables-blocks.mdx#数值变量)。  |
+| 参数 2（输入点） | ✔ | 传入作为参照的数值，可连接 1 个数值型 [赋值变量](./variables-blocks.mdx#赋值变量) 或 [数值变量](./variables-blocks.mdx#数值变量)。 |
+| 函数 | ✔ | <strong>选择比较方式</strong>：<ul><li><strong>大于</strong>：参数 1 &gt; 参数 2</li><li><strong>小于</strong>：参数 1 &lt; 参数 2</li><li><strong>等于</strong>：参数 1 = 参数 2</li><li><strong>大于或等于</strong>：参数 1 &ge; 参数 2</li><li><strong>小于或等于</strong>：参数 1 &le; 参数 2</li></ul>  |
+| 满足（输出点） | 二者必选其一 | 连接判断为真时执行的行为。|
+| 不满足（输出点） | 二者必选其一 | 连接判断为假时执行的行为。 |
+| 输出（输出点） | ✘ | 输出比较结果。 |
+
+### 使用步骤
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LogicBlock-Comparison.png" alt="比较数值" style={{ width: '80%' }} />   
+`逻辑运算` 卡片的使用步骤如下所示：
+    
+1. 在卡片左侧分别连接两个**数值参数**（参数 1 和参数 2）。
+2. 在卡片中选择所需的比较方式（如“大于”）。
+3. 在卡片右侧分别连接**判断为真**或**判断为假**时应执行的行为。
+4. 在卡片右侧连接一个 [布尔变量](./variables-blocks.mdx#布尔变量) 卡片，可以获取比较结果。此点也可以连接其他卡片，如 [与](./logic-blocks.mdx#与) 卡片和 [或](./logic-blocks.mdx#或) 卡片等。
+

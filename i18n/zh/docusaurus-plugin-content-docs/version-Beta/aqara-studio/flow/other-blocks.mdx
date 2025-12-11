@@ -1,0 +1,108 @@
+# 其他
+
+> **说明**
+>
+> 截图与实际界面可能有所不同，请以实际为准。
+
+## 概述
+
+在自动化流程编排中，除了获取设备状态、操控设备、设置时间、构建逻辑条件和操作变量等常规功能外，Aqara Studio 还提供了“其他类”卡片，用于扩展自动化逻辑的灵活性与表达能力。
+
+该类别支持 [脚本卡片](#脚本卡片)、[数值运算](#数值运算) 和 [文本拼接](#文本拼接)，适用于更复杂的处理场景，例如进行自定义判断、计算动态数值、或生成格式化文本信息，进一步提升自动化的精度与可定制性。
+
+通过这些卡片，您可以跳出基础逻辑框架，实现更加自由、高级的流程设计。
+
+其他类包含的卡片如下图所示：
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/OtherBlock-Total.png" alt="其他类卡片" style={{ width: '80%' }} />   
+## 脚本卡片
+
+### 功能
+
+如果您希望自定义对**字符串**、**数值**和**布尔**变量的处理，您可以使用“脚本卡片”，
+
+### 组成
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/OtherBlock-ScriptIntro.png" alt="脚本组成" style={{ width: '80%' }} />   
+此卡片为**多点类型**，说明如下：
+
+| 连接点或操作 | 是否必选 | 说明 |
+| -- | -- | -- |
+| 输入点 | ✔ | 通过在脚本中新增多个参数定义，您才可以在卡片右侧新增多个输入点。此输入点可连接字符串、数值和布尔卡片（支持**局部变量**、**全局变量**、**赋值变量**）。 |
+| 右键 | ✔  | 右键单击卡片，进入脚本编辑界面。 |
+| 输出点 | ✔ | 连接 1 个变量卡片，用于记录您的脚本结果。 |
+
+### 使用步骤
+
+`脚本卡片`的使用步骤如下：
+1. 右键单击卡片，选择“脚本编辑”，进入“脚本编辑器”界面。
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/OtherBlock-EditScript.png" alt="选择脚本编辑" style={{ width: '80%' }} />   
+2. 单击 **+** 按钮，在下拉列表选择 1 个参数类型，在“编辑名称”弹窗中中定义您的参数名称，以新增 1 个参数按钮。
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/OtherBlock-SelectAType.png" alt="选择参数类型" style={{ width: '80%' }} />   
+    此时，你可以看到在 `function` 内，已经自动添加了 1 个新的变量。基于此，您可以开始编写独属于您的脚本了。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/OtherBlock-DoubleClickAddedParameter.png" alt="双击参数按钮" style={{ width: '80%' }} />   
+3. 完成脚本编辑后，单击 **确定** 按钮。
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/OtherBlock-WriteCodes.png" alt="自定义代码" style={{ width: '80%' }} />   
+4. 此时，您可以看到在卡片左侧新增了 1 个输入点，将其与 1 个 [赋值变量](./variables-blocks.mdx#赋值变量) 卡片或其他可提供值的卡片相连，作为输入参数。
+   
+   在卡片右侧连接 1 个变量卡片（需与 `return` 的类型相符），用于记录脚本运行结果。
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/OtherBlock-ScriptFlow.png" alt="脚本卡片流程" style={{ width: '80%' }} />   
+## 数值运算
+
+### 功能
+
+如果您希望在自动化中对某些数值进行计算，可以使用“数值运算”卡片。
+
+### 组成
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/OtherBlock-ExpressionIntro.png" alt="数值运算卡片介绍" style={{ width: '80%' }} />   
+此卡片为**多点类型**，拥有 1 个可配置参数，说明如下：
+
+| 连接点或参数 | 是否必选 | 说明 |
+| -- | -- | -- |
+| 参数 1（输入点） | ✔ | 传入 1 个数值作为参数 1. |
+| 参数 2（输入点） | ✔ | 传入 1 个数值作为参数 2。 |
+| 选择数学表达式 | ✔ | 选择数学表达式：<ul><li>加：参数 1 + 参数 2</li><li>减：参数 1 - 参数 2</li><li>乘：参数 1 * 参数 2</li><li>除：参数 1 / 参数 2</li><li>取模：参数 1 mod 参数 2 </li><li>幂：参数 1<sup>参数 2</sup></li><li>按位与：参数 1 ∧ 参数 2</li><li>按位或：参数 1 ∨ 参数 2</li><li>按位异或：参数 1 ⊕ 参数 2</li></ul>  |
+| 输出点 | ✔ | 连接 1 个数值变量卡片，用于记录计算结果。 |
+
+### 使用步骤
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/OtherBlock-Expression.png" alt="数值运算" style={{ width: '80%' }} />   
+上图示例：把室外温度计的读数减 2，作为室内空调的设定温度。
+
+`数值运算`卡片的使用步骤如下：
+1. 在卡片左侧分别连接参数 1 和参数 2。参数 1 和参数 2 可以是**赋值变量**卡片、**全局数值变量**卡片、**数值变量**卡片等可以提供数值的卡片。
+2. 在卡片内选择需要的数学表达式。
+3. 在卡片右侧连接 1 个可以接受数值的卡片。
+
+## 文本拼接
+
+### 功能
+
+如果您希望将多个文本或变量组合成一个完整的文本字符串，可使用“文本拼接卡片”。
+
+### 组成
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/OtherBlock-TextConcatIntro.png" alt="或卡片的组成" style={{ width: '80%' }} />   
+此卡片为**多点类型**，默认支持 2 个输入点和 1 个输出点，并带有 1 个添加按钮，说明如下：
+
+| 连接点 | 是否必选 | 说明 |
+| -- | -- | -- |
+| 输入点 A | ✔ | 连接任意变量卡片，作为需要拼接的文本。  |
+| 输入点 B | ✔ | 连接任意变量卡片，作为需要拼接的文本。  |
+| 添加按钮 | ✘ | 可用于增加更多输入点，以连接更多文本。 | 
+| 输出点 | ✔ | 连接 1 个字符串常量卡片，用于拼接结果。 |
+
+
+### 使用步骤
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/OtherBlock-TextConcat.png" alt="拼贴文本" style={{ width: '80%' }} />   
+`文本拼接`卡片的使用步骤如下：
+1. 将您要拼接的变量卡片（支持字符串、数值、布尔等类型）连接到卡片左侧的各个输入点上。
+2. 在卡片右侧连接 1 个字符串常量卡片，用于记录拼接结果。
+

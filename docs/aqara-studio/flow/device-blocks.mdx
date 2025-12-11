@@ -1,0 +1,185 @@
+# Device Blocks
+
+> **Note**
+>
+> Screenshots in this guide may look slightly different from what you see on your device. Please follow the actual interface for reference.
+
+## Overview
+
+As the core of smart spaces, devices serve as the bridge connecting perception and response. Without devices, there would be no implementation of intelligence. In Aqara Studio, you can use device blocks to implement an "Event-Condition-Action" logic for [monitoring device events and states](#event), [real-time device status retrieval](#condition), and [device control](#action), building flexible automation workflows.
+
+The device category includes the following blocks:
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-DeviceCategory.png" alt="Device blocks overview" style={{width: '80%'}} />   
+
+> **Note**
+>
+> Since device blocks depend on specific device capabilities, different devices may only support certain blocks.
+
+## Event
+
+### Feature
+
+You can use this block to trigger subsequent operations when a device experiences an event (such as a button press or voice command reception) or enters a state (such as environmental data changes or door/window opening).
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-EventBlockIntro.png" alt="Event block introduction" style={{width: '80%'}} />   
+
+This block is **single-output type**, and serves as a trigger for your subsequent automation operations. You can configure event or state listener based on device support. The configuration parameters within the block vary as follows:
+
+| Connection Point or Parameter | Required | Description |
+| -- | -- | -- |
+| Target Event | ✔ | When monitoring **events**, set the target event here, such as greater than, less than, equal to, increase, etc. |
+| Target Value | ✔ | When monitoring **events**, set the comparison target value here. |
+| Target State | ✔ | When monitoring **states**, set the target state here. |
+| Output Point | ✔ | Connect to the following step. |
+
+### How to Use
+
+#### Monitor 1 Event or State
+
+1. After selecting this block, the system will pop up a device selection window where you can view the available events and states. 
+   
+   After checking 1 block, you can add the block anywhere on the canvas to start real-time monitoring.
+
+   <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-AddDeviceStatsListener.png" alt="Add event state monitoring" style={{width: '80%'}} />   
+
+2. Set up monitoring by changing the properties within the block and connect the following step on the right side of the block.
+
+   <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-StateSample.png" alt="State monitoring example" style={{width: '80%'}} />   
+
+#### Monitor Multiple Events and States
+
+The following explains how to simultaneously monitor multiple device events and states, triggering subsequent workflows when **any** event or state occurs.
+
+1. Click the "Bulk" button next to the "Event" button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-SelectBulk.png" alt="Select bulk" style={{width: '80%'}} />   
+
+2. Select the devices you need to monitor and click "Next step".
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-WhenSelection.png" alt="Select devices" style={{width: '80%'}} />   
+
+3. Expand the devices, click the **+** button to add the events or states you need to monitor. After adding, click **Confirm**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-WhenBlockBulkAddPoints.png" alt="Add points" style={{width: '80%'}} />   
+
+4. Set a scene name for this bulk monitoring.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-NameBulkWhenCard.png" alt="Set scenario name" style={{width: '80%'}} />   
+
+5. Click anywhere on the canvas to add this bulk monitoring block, as shown below:
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-BulkWhenCard.png" alt="Set scenario name" style={{width: '80%'}} />   
+
+## Condition
+
+### Feature
+
+You can use this block when you need to perform different operations based on the boolean result of determining whether a device is in a specific state (such as whether a switch is on).
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-GetCurrentStateIntro.png" alt="Condition block components" style={{width: '80%'}} />   
+
+This block is **multi-point type** with 1 configuration parameter, 1 input point, and 2 output points. It directs the workflow to different paths based on query results. Details are as follows:
+
+| Connection Point or Parameter | Required | Description |
+| -- | -- | -- |
+| Query (Input Point) | ✔ | Connect to the step that triggers this state query operation. |
+| Target State | ✔ | Set the specific state to query, such as "on", "off". |
+| True (Output Point) / False (Output Point) | At least one of the two is connected | **True**: it connects to steps to be executed when device state matches the target state; **False**: it connects to steps to be executed when device state does not match the target state. |
+
+### How to Use
+
+#### Check 1 State
+
+1. After selecting this block, the system will pop up a device selection window where you can check the target device and its state in the list, then add the block anywhere on the canvas.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-GetCurrentState.png" alt="Select device to get current state" style={{width: '80%'}} />   
+
+2. Connect the block that triggers this state query to the input point of this block. 
+   
+   Set the target state you want to query within the block. 
+   
+   Finally, connect two different subsequent operations based on query results: one for when device state matches the target state, and another for when it doesn't match.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-GetCurrentStatusSteps.png" alt="Set condition block" style={{width: '80%'}} />   
+
+#### Check Multiple States
+
+The following explains how to simultaneously check multiple states to trigger subsequent workflows.
+
+1. Click the "Bulk" button next to the "Condition" button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-SelectConditionBulk.png" alt="Select bulk" style={{width: '80%'}} />   
+
+2. Select the devices whose states need to be checked and click "Next step".
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-ConditionBulkSelection.png" alt="Select devices" style={{width: '80%'}} />   
+
+3. Choose "Satisfy any conditions" or "Satisfy all conditions", expand the devices, and click the "+" button to add the states you need to check. After adding, click "Confirm".
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-ConditionBlockBulkAddPoints.png" alt="Add points" style={{width: '80%'}} />   
+
+4. Set a scene name for this bulk check.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-NameBulkConditionCard.png" alt="Set scenario name" style={{width: '80%'}} />   
+
+5. Click anywhere on the canvas to add this bulk check block, as shown below:
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-BulkConditionCard.png" alt="Set scenario name" style={{width: '80%'}} />   
+
+## Action
+
+### Feature
+
+Use this block when you need to make a device perform a specific action (such as turning lights on/off, adjusting brightness or color temperature).
+
+### Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-DeviceControlIntro.png" alt="Action block components" style={{width: '80%'}} />   
+
+This block is **single-input type** and serves as the end of your automation operations. Details are as follows:
+
+| Connection Point or Parameter | Required | Description |
+| -- | -- | -- |
+| Input Point | ✔ | Connect to the behavior that triggers device operation. |
+| Device Parameters | ✔ | Set the device parameters you want to modify, such as switch state, cooling temperature, color temperature, etc. |
+
+### How to Use
+
+#### Perform 1 Action
+
+1. After selecting this block, the system will pop up a device selection window where you can check the target device and target action in the list, then add the corresponding action block anywhere on the canvas.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-SelectDeviceDoAction.png" alt="Select device to execute action" style={{width: '80%'}} />   
+
+2. Connect the block that triggers this device operation to the input point of this block. Then, set the device parameters you want to modify within the block.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-DoActionSample.png" alt="Modify values on block" style={{width: '80%'}} />   
+
+#### Perform Multiple Actions
+
+The following explains how to add multiple actions.
+
+1. Click the "Bulk" button next to the "Action" button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-SelectActionBulk.png" alt="Select bulk" style={{width: '80%'}} />   
+
+2. Select the devices that need to execute actions and click "Next".
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-ActionBulkSelection.png" alt="Select devices" style={{width: '80%'}} />   
+
+3. Expand the devices, click the "+" button to add the actions you need to execute. After adding, click "Confirm".
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-ActionBlockBulkAddPoints.png" alt="Add points" style={{width: '80%'}} />   
+
+4. Set a scene name for this bulk operation.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-NameBulkActionCard.png" alt="Set scenario name" style={{width: '80%'}} />   
+
+5. Click anywhere on the canvas to add this bulk operation block, as shown below:
+   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeviceBlock-ActionConditionCard.png" alt="Set scenario name" style={{width: '80%'}} />   

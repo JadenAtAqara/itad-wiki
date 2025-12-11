@@ -1,0 +1,224 @@
+# 数据转换
+
+> **说明**
+>
+> 截图与实际界面可能有所不同，请以实际为准。
+
+## 概述
+
+当两个卡片相连而输出与输入数据类型不一致时，**Aqara Studio 会自动插入数据转换卡片**。借助这一功能，您无需额外操作，就能在自动化流程中轻松定义数据的最终形态。例如，将数值 `1` 转换为文本 `"1.0"`，或将布尔值 `false` 映射为更直观的状态“设备已离线”。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-Overview.png" alt="数据转换示意" style={{ width: '80%' }} />   
+这种灵活的数据转换能力，让您可以无缝完成 [数学计算](./other-blocks.mdx#数值运算)、[逻辑判断](./logic-blocks.mdx) 和 [文本拼接](./other-blocks.mdx#文本拼接)，并打通各种 [赋值参数](./variables-blocks.mdx#赋值变量) 卡片，使原始数据自然融入业务逻辑，从而自由定制流程。
+
+本文将说明不同类型参数的转换规则。
+
+## 布尔值转其他
+
+### 布尔值转枚举
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-BooleantoEnumeration.png" alt="布尔值转枚举" style={{ width: '80%' }} />   
+为实现从布尔型到枚举型的转换，您需要在`数据转换`中明确设置二者间的映射关系：
+
+- 取 true 时的枚举值：选择当输入为 true 时应输出的枚举值。
+- 取 false 时的枚举值：选择当输入为 false 时应输出的枚举值。
+
+### 布尔值转数值
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-BooleantoNumber.png" alt="布尔值转数值" style={{ width: '80%' }} />   
+为实现从布尔型到数值型的转换，您需要在`数据转换`中明确设置二者间的映射关系：
+
+- 取 true 时的值：选择当输入为 true 时应输出的数值。
+- 取 false 时的值：选择当输入为 false 时应输出的数值。
+
+### 布尔值转字符串
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-BooleantoString.png" alt="布尔值转字符串" style={{ width: '80%' }} />   
+为实现从布尔型到字符串的转换，您需要在`数据转换`中明确设置二者间的映射关系：
+
+- 取 true 时的值：选择当输入为 true 时应输出的字符串。
+- 取 false 时的值：选择当输入为 false 时应输出的字符串。
+
+## 枚举转其他
+
+### 枚举转布尔值
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-EnumerationtoBoolean.png" alt="枚举转布尔值" style={{ width: '80%' }} />   
+通过指定一个特定枚举值作为 false 的映射来完成转换：
+- 取 false 时的值：输入枚举值等于此配置值时，输出 false。当输入数值为任何其他枚举值时，均输出 True。
+
+### 枚举转数值
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-EnumerationtoNumber.png" alt="枚举转数值" style={{ width: '80%' }} />   
+当枚举类卡片连接至数值类卡片时，数值类卡片会直接获取输入枚举值的数值，例如，序号为 0 的枚举值对应的数值为 0。
+
+### 枚举转字符串
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-EnumerationtoString.png" alt="枚举转字符串" style={{ width: '80%' }} />   
+当枚举类卡片连接至字符串类卡片时，字符串类卡片会直接获取输入枚举值的名称，如图所示，字符串变量直接展示了设备的当前模式，即 Low。
+
+## 数值转其他
+
+### 数值转布尔值
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-NumberToBoolean.png" alt="数值转布尔" style={{ width: '80%' }} />   
+通过指定一个特定值作为 false 的映射来完成转换：
+- 取 false 时的值：输入数值等于此配置值时，输出 false。当输入数值为任何其他值时，均输出 True。
+
+### 数值转枚举
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-NumbertoEnumeration.png" alt="数值转枚举" style={{ width: '80%' }} />   
+当数值类卡片连接至枚举类卡片时，输入数值将根据预设的映射关系转换为对应的枚举值。例如，数值 0 对应序号为 0 的枚举值。
+
+### 数值转字符串
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-NumberToString.png" alt="数值转字符串" style={{ width: '80%' }} />   
+当数值类卡片连接至字符串类卡片时，您需要指定一个“格式”字符串。该格式决定了最终字符串是否包含小数位、千位分隔符或其他符号。
+
+#### 基本格式符号说明
+
+<table>
+  <thead>
+    <tr>
+      <th>符号</th>
+      <th>说明</th>
+      <th>示例</th>
+      <th>转换前<br />（数字）</th>
+      <th>转换后<br />（字符串）</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="2"><code>0</code></td>
+      <td rowspan="2">数字，不足时补 0。</td>
+      <td rowspan="2"><code>000</code></td>
+      <td>123</td>
+      <td><code>123</code></td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><code>005</code></td>
+    </tr>
+    <tr>
+      <td rowspan="2"><code>#</code></td>
+      <td rowspan="2">数字，不足时不补 0。</td>
+      <td rowspan="2"><code>###</code></td>
+      <td>123</td>
+      <td><code>123</code></td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><code>5</code></td>
+    </tr>
+    <tr>
+      <td><code>.</code></td>
+      <td>小数点。</td>
+      <td><code>0.00</code></td>
+      <td>3.14159</td>
+      <td><code>3.14</code></td>
+    </tr>
+    <tr>
+      <td><code>,</code></td>
+      <td>千位分隔符。</td>
+      <td><code>#,###</code></td>
+      <td>1234</td>
+      <td><code>1,234</code></td>
+    </tr>
+    <tr>
+      <td><code>%</code></td>
+      <td>百分比。</td>
+      <td><code>0%</code></td>
+      <td>0.15</td>
+      <td><code>15%</code></td>
+    </tr>
+    <tr>
+      <td><code>E</code></td>
+      <td>科学计数法。</td>
+      <td><code>0.00E00</code></td>
+      <td>1234</td>
+      <td><code>1.23E03</code></td>
+    </tr>
+  </tbody>
+</table>
+
+
+#### 常用格式配置示例
+
+##### 基本数字格式
+
+| 格式 | 说明 | 转换前（数字） | 转换后（字符串） |
+| -- | -- | -- | -- |
+| `0` | 整数 | 123.7 | `124` |
+| `0.0` | 一位小数 | 123.7 | `123.7` |
+| `0.00` | 两位小数 | 123.7 | `123.70` |
+| `0.000` | 三位小数 | 123.7 | `123.700` |
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-BasicNumber.png" alt="基本数字格式示例" style={{ width: '80%' }} />   
+##### 灵活小数位
+
+<table>
+  <tr>
+    <th>格式</th><th>说明</th><th>转换前（数字）</th><th>转换后（字符串）</th>
+  </tr>
+  <tr>
+    <td><code>#</code></td><td>整数，自动四舍五入，无多余小数</td><td>123.7</td><td><code>124</code></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><code>#.#</code></td><td rowspan="2">最多一位小数，整数时不显示小数点</td><td>123.7</td><td><code>123.7</code></td>
+  </tr>
+  <tr>
+    <td>123.0</td><td><code>123</code></td>
+  </tr>
+  <tr>
+    <td rowspan="2"><code>#.##</code></td><td rowspan="2">最多两位小数，整数时不显示小数点</td><td>123.7</td><td><code>123.7</code></td>
+  </tr>
+  <tr>
+    <td>123.00</td><td><code>123</code></td>
+  </tr>
+</table>
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-FlexibleDigit.png" alt="灵活小数点示例" style={{ width: '80%' }} />   
+##### 千位分隔符
+
+| 格式 | 说明 | 转换前（数字） | 转换后（字符串） |
+| -- | -- | -- | -- |
+| `#,###` | 千位分隔符 | 1234 | `1,234` |
+| `#,###.00` | 千位分隔符+两位小数 | 1234.5 | `1,234.50` |
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-ThousandPlace.png" alt="千位分隔符示例" style={{ width: '80%' }} />   
+##### 百分比
+
+| 格式 | 说明 | 转换前（数字） | 转换后（字符串） |
+| -- | -- | -- | -- |
+| `0%` | 百分比 | 0.15 | `15%` |
+| `0.0%` | 一位小数百分比 | 0.15 | `15.0%` |
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-Percentage.png" alt="百分比示例" style={{ width: '80%' }} />   
+##### 科学计数法
+
+| 格式 | 说明 | 转换前（数字） | 转换后（字符串） |
+| -- | -- | -- | -- |
+| `0.00E00` | 科学计数法 | 1234 | `1.23E03` |
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-ScientificNotation.png" alt="科学计数法" style={{ width: '80%' }} />   
+##### 货币格式
+
+| 格式 | 说明 | 转换前（数字） | 转换后（字符串） |
+| -- | -- | -- | -- |
+| `¥#,###.00` | 人民币格式 | 1234.5 | `¥1,234.50` |
+| `$#,###.00` | 美元格式 | 1234.5 | `$1,234.50` |
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-Currency.png" alt="货币" style={{ width: '80%' }} />   
+## 字符串转其他
+
+### 字符串转布尔值
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-StringToBoolean.png" alt="字符串转布尔值" style={{ width: '80%' }} />   
+为实现从字符串到布尔值的转换，您需要在`数据转换`中明确设置二者间的映射关系：
+- 取 false 时的值：规定当输入为何值时，应输出 `false`。
+- 取 true 时的值：规定当输入为何值时，应输出 `true`。
+
+### 字符串转数值
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DataConversion-StringToNumber.png" alt="字符串转数值" style={{ width: '80%' }} />   
+您只需将**数字字符串**卡片与数值卡片相关联，系统便会自动将其转换为数值类型，无需任何额外配置。

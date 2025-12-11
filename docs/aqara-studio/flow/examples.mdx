@@ -1,0 +1,66 @@
+# Examples
+
+> **Note**
+>
+> Screenshots in this guide may look slightly different from what you see on your device. Please follow the actual interface for reference.
+
+This article shows you multiple common automation logic examples. The devices used in the examples are for demonstration purposes only. You can replace them with any smart devices that have the same functionality to achieve the same automation effects.
+
+## Turn off lights at 23:00 every day
+
+This logic will turn off the light bulb at 23:00 every night.
+
+1. Click the [Timer Trigger](./timer-blocks.mdx#time-trigger) button, select all 7 days of the week in the block to represent every day, choose `Specific Time`, and set the time to `23:00:00`.
+2. Click the [Action](./device-blocks.mdx#action) button, select 1 light bulb from the device list, and choose the `Switch` related block from the function block list.
+3. In the above `Action` block, set the light bulb to `On` and connect it to the output point of the `Timer Trigger` block.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LogicSample-TurnOffLight.png" alt="Turn off lights at 11 PM every night" style={{width: '80%'}} />   
+
+## Turn on air conditioner and set cooling mode when someone is in the room
+
+When someone is detected in the room, turn on the air conditioner and set it to cooling mode.
+
+1. Click the [Event](./device-blocks.mdx#event) button, select a motion sensor from the device list, and choose the `OnOff Sensor` related block from the function list to monitor whether someone is in the room.
+2. In the above `Event` block, configure the `OnOff Sensor` to `On`, indicating that when someone is detected in the room, the next operation will be triggered.
+3. Click the [Action](./device-blocks.mdx#action) button, select an air conditioner or air conditioner thermostat from the device list, and select both the `Switch` related block and the `Heating/Cooling Mode` related block from the function block list.
+4. In the above `Action` block, set the `Switch` to `On` and the `Heating/Cooling Mode` to `cool`, and connect both to the output point of the `Event` block.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LogicSample-TurnOnAirConditioner.png" alt="Turn on air conditioner" style={{width: '80%'}} />   
+
+## Automatically turn on lights when someone is in the room and it's dark
+
+This logic will simultaneously detect whether someone is in the room and whether the current lighting is insufficient, and will only automatically turn on the light bulb when both conditions are met.
+
+1. Click the [Event](./device-blocks.mdx#event) button, select a motion sensor, add a `Presence` block, and set the `OnOff Sensor` to `On` to detect whether someone is in the room.
+2. Click the `Event` button, select a light sensor, add an `Illuminance` block, and set the condition to `Illuminance less than 100 lux` to detect whether the room is dark.
+3. Select the [Condition](./device-blocks.mdx#condition) block in batch, choose the above motion sensor and light sensor, add query conditions "Presence Status is On" and "Illuminance reading less than 100 lux" respectively, and set to "Meet all conditions". Ensure that subsequent actions are triggered only when both "someone is present" and "insufficient lighting" conditions are met.
+4. Connect the above two `Event` blocks to the input points of the `Condition` block, so that a query will be triggered whenever someone is detected in the room or insufficient lighting is detected.
+5. Click the [Action](./device-blocks.mdx#action) button, select a light, add a `Switch` block, and set it to `On`.
+6. Connect the output point of the `Condition` block to the `Action` block to achieve the logic of automatically turning on the light when the `Condition` block query result is true.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LogicSample-TurnOnLight.png" alt="Turn on light when someone is present and room is dark" style={{width: '80%'}} />   
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LogicSample-MotionandIlluminance.png" alt="Someone in room and illuminance less than 100 lux" style={{width: '80%'}} />   
+
+## Automatically turn on lights when someone is in the corridor or it's dark
+
+When someone is detected in the corridor or it's dark, this logic will turn on the lights.
+
+1. Click the [Event](./device-blocks.mdx#event) button, select a motion sensor, add a `OnOff Sensor` block, and set the `OnOff Sensor` to `On` to detect whether someone is in the room.
+2. Click the `Event` button, select a light sensor, add an `Illuminance` block, and set the condition to `Illuminance less than 100 lux` to detect whether the room is dark.
+3. Click the [Action](./device-blocks.mdx#action) button, select a light, add a `Switch` block, and set it to `On`.
+4. Connect the above two `Event` blocks to the `Action` block respectively, indicating that the lights will be turned on when either event occurs.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LogicSample-CorridorLight.png" alt="Automatically turn on lights when someone is in corridor or it's dark" style={{width: '80%'}} />   
+
+## Turn on lights with 1-minute delay when someone is in the room
+
+When someone is detected in the room, this logic waits for 1 minute before turning on the lights.
+
+1. Click the [Event](./device-blocks.mdx#event) button, select a motion sensor from the device list, and choose the `OnOff Sensor` related block from the function list to monitor whether someone is in the room.
+2. In this `Event` block, configure the `OnOff Sensor` to `On`, indicating that when someone is detected in the room, the next operation will be triggered.
+3. Add 1 [Delay](./timer-blocks.mdx#delay) block, set the time to `1 minute`, and connect its input point to the above `Event` block.
+4. Click the [Action](./device-blocks.mdx#action) button, select a light bulb from the device list, and choose the `Switch` related block from the function block list.
+5. In the `Action` block, set the light bulb to `On` and connect it to the output point of the above `Delay` block.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LogicSample-Delay.png" alt="Delayed light turn-on" style={{width: '80%'}} />   
