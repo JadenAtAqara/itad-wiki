@@ -7,13 +7,9 @@
     "message": "概览",
     "description": "The label for category 'Overview' in sidebar 'aqaraStudioSidebar'"
   },
-  "sidebar.aqaraStudioSidebar.category.User Permissions": {
-    "message": "用户权限",
-    "description": "The label for category 'User' in sidebar 'aqaraStudioSidebar'"
-  },
-  "sidebar.aqaraStudioSidebar.category.System": {
-    "message": "系统功能",
-    "description": "The label for category 'System' in sidebar 'aqaraStudioSidebar'"
+  "sidebar.aqaraStudioSidebar.category.Building": {
+    "message": "构建",
+    "description": "The label for category ' Building' in sidebar 'aqaraStudioSidebar'"
   },
   "sidebar.aqaraStudioSidebar.category.Device Integration": {
     "message": "设备接入",
@@ -39,9 +35,13 @@
     "message": "逻辑块",
     "description": "The label for category 'Blocks' in sidebar 'aqaraStudioSidebar'"
   },
-  "sidebar.aqaraStudioSidebar.category.General": {
-    "message": "通用功能",
+  "sidebar.aqaraStudioSidebar.category.Operation": {
+    "message": "运维",
     "description": "The label for category 'General' in sidebar 'aqaraStudioSidebar'"
+  },
+  "sidebar.aqaraStudioSidebar.category.Management": {
+    "message": "管理",
+    "description": "The label for category 'Management' in sidebar 'aqaraStudioSidebar'"
   },
   "sidebar.aqaraStudioSidebar.category.Developer": {
     "message": "开发者",
