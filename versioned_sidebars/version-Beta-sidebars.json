@@ -39,7 +39,6 @@
                     "type": "generated-index",
                     "keywords": ["device-management"]
                   },
-                  "collapsed": false,
                   "items": [
                     "aqara-studio/device-management/basic-information",
                     "aqara-studio/device-management/point-information",
@@ -127,13 +126,13 @@
         "type": "category",
         "label": "Management",
         "items": [
-          "aqara-studio/user",  
+          "aqara-studio/user",
+          "aqara-studio/cloud",  
           "aqara-studio/backup-and-restore",
           {
             "type": "category",
             "label": "Settings",
             "items": [
-                "aqara-studio/cloud",
                 "aqara-studio/remote-access"
               ]
           }
