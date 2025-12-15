@@ -1,1 +1,49 @@
 # 自动化
+
+> **说明**
+>
+> 截图与实际界面可能有所不同，请以实际为准。
+
+## 概述
+
+自动化，是 Aqara Studio 提供的一项智能场景功能，可帮助您实现设备间的联动控制与自动响应。例如，当温控器检测到室温超过 30 度时，空调将自动开启。
+
+通过灵活的可视化配置能力，Aqara Studio 助您快速构建适用于多种场景的自动化流程，轻松实现物联网设备的智能控制与协同运行
+
+## 核心优势
+
+- **灵活编排**：模块化设计支持自由组合逻辑、数学与控制功能，适应多样化物联场景。
+- **直观操作**：图形化数据连接界面降低配置门槛，提升开发效率。
+- **实时生效**：配置完成后立即生效，无需重启设备或系统。
+
+## 支持模式
+
+Aqara Studio 支持您创建以下三种模式的自动化：
+<dl>
+  <dt><a href="./ifttt.mdx">标准 IFTTT（IF This Then That）</a></dt>
+  <dd>自动化标准配置采用“当-且-就”的数据结构，助您快速实现自动化配置。</dd>
+  <dt><a href="./flow/flow-introduction.mdx">高阶 Flow</a></dt>
+  <dd>通过灵活的可视化配置能力，您可以利用各类卡片组成数据流逻辑，快速构建适用于多种场景的自动化流程，轻松实现物联网设备的智能控制与协同运行。</dd>
+  <dt><a href="./logic/logic-introduction.mdx">Logic</a></dt>
+  <dd>【内容待定】</dd>
+</dl>
+
+## 前提条件
+
+在开始之前，请确认已在 Aqara Studio 添加设备，相关操作流程请参考各接入流程文档：
+- [Aqara Home](./device-integration/aqara.mdx)
+- [Home Assistant](./device-integration/home-assistant.mdx)）
+- [KNX/IP](./device-integration/knx-ip.mdx)
+- [BACnet IP](./device-integration/bacnet.mdx)
+- [Modbus TCP](./device-integration/modbus-tcp.mdx)
+
+## 新建自动化
+
+您可以通过以下步骤创建自动化：
+1. 在左侧导航栏单击“自动化”。
+2. 单击“新增”按钮，选择您需要的模式，即可进入对应模式的编辑页面。
+
+    有关各模式的组件介绍，请参考以下文档：
+    - [标准 IFTTT](./ifttt.mdx) 
+    - [高级 Flow](./flow/flow-introduction.mdx)
+    - [logic](./logic/logic-introduction.mdx)
