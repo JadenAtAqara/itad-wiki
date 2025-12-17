@@ -110,7 +110,18 @@
                     }
                 ]
               },
-            "aqara-studio/graph"
+              {
+                "type": "category",
+                "label": "Graph",
+                "link": {
+                    "type": "doc",
+                    "id": "aqara-studio/graph/graph-introduction"
+                },
+                "items": [
+                  "aqara-studio/graph/components",
+                  "aqara-studio/graph/assets"
+                ]
+            }
         ]       
     },
     {

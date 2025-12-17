@@ -35,6 +35,10 @@
     "message": "逻辑块",
     "description": "The label for category 'Blocks' in sidebar 'aqaraStudioSidebar'"
   },
+  "sidebar.aqaraStudioSidebar.category.Graph": {
+    "message": "可视化大屏",
+    "description": "The label for category 'Graph' in sidebar 'aqaraStudioSidebar'"
+  },
   "sidebar.aqaraStudioSidebar.category.Operation": {
     "message": "运维",
     "description": "The label for category 'General' in sidebar 'aqaraStudioSidebar'"
