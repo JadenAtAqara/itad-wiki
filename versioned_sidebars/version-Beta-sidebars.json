@@ -119,7 +119,8 @@
                 },
                 "items": [
                   "aqara-studio/graph/components",
-                  "aqara-studio/graph/assets"
+                  "aqara-studio/graph/assets",
+                  "aqara-studio/graph/common-properties"
                 ]
             }
         ]       
