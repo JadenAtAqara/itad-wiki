@@ -11,6 +11,7 @@
     {
         "type": "category",
         "label": "Building", 
+        "collapsed": false,
         "items": [
             "aqara-studio/space",
             {
@@ -124,6 +125,7 @@
     {
       "type": "category",
       "label": "Operation",
+      "collapsed": false,
       "items": [
         "aqara-studio/energy-management-system",
         "aqara-studio/alarm-management",
