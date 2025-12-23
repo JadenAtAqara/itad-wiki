@@ -4,10 +4,7 @@
       "type": "category",
       "label": "Overview",
       "items": [
-        "aqara-studio/overview/introduction", 
-        "aqara-studio/overview/glossary", 
-        "aqara-studio/overview/comparison", 
-        "aqara-studio/overview/release-notes"
+        "aqara-studio/overview/introduction"
       ]
     },
     "aqara-studio/quick-start",
@@ -159,7 +156,6 @@
         "aqara-studio/api-references/device-type",
         "aqara-studio/api-references/trait-codes"
       ]      
-    },
-    "aqara-studio/search"
+    }
   ]
 }
