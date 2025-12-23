@@ -4,10 +4,7 @@
       "type": "category",
       "label": "Overview",
       "items": [
-        "aqara-studio/overview/introduction", 
-        "aqara-studio/overview/glossary", 
-        "aqara-studio/overview/comparison", 
-        "aqara-studio/overview/release-notes"
+        "aqara-studio/overview/introduction"
       ]
     },
     "aqara-studio/quick-start",
@@ -43,7 +40,6 @@
                     "aqara-studio/device-management/basic-information",
                     "aqara-studio/device-management/point-information",
                     "aqara-studio/device-management/alarms",
-                    "aqara-studio/device-management/history",
                     "aqara-studio/device-management/tags",
                     "aqara-studio/device-management/references"
                   ]
@@ -159,7 +155,6 @@
         "aqara-studio/api-references/device-type",
         "aqara-studio/api-references/trait-codes"
       ]      
-    },
-    "aqara-studio/search"
+    }
   ]
 }
