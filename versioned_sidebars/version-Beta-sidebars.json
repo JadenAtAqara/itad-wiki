@@ -91,7 +91,6 @@
                           },
                           "collapsed": true,
                           "items": [
-                              "aqara-studio/logic/blocks/control-points",
                               "aqara-studio/logic/blocks/variables-blocks",
                               "aqara-studio/logic/blocks/logic-blocks",
                               "aqara-studio/logic/blocks/math-blocks",
