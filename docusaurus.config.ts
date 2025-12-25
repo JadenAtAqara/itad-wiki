@@ -55,7 +55,7 @@ const config: Config = {
 	  includeCurrentVersion: false,
 	  versions: {
             'Beta': {
-              label: 'Bata (Current)',
+              label: 'Beta (Current)',
               // path: '/', // options
             },
 	   },
