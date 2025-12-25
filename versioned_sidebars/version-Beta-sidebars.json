@@ -116,6 +116,7 @@
                 },
                 "items": [
                   "aqara-studio/graph/components",
+                  "aqara-studio/graph/component-categories",
                   "aqara-studio/graph/assets",
                   "aqara-studio/graph/common-properties"
                 ]
