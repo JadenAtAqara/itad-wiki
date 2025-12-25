@@ -21,7 +21,7 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="/docs/aqara-studio/overview/introduction">
-            Docusaurus Tutorial - 5min ⏱️
+            Aqara Docs  → 
           </Link>
         </div>
       </div>
