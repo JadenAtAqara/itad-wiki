@@ -360,5 +360,11 @@
   "theme.SearchPage.noResultsText": {
     "message": "没有找到任何文档",
     "description": "The paragraph for empty search result"
+  },
+  "homepage.buttonText": {
+    "message": "Aqara文档 →"
+  },
+  "homepage.layoutDescription": {
+    "message": "Description will go into a meta tag in <head />"
   }
 }

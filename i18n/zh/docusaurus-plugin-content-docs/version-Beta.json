@@ -1,7 +1,7 @@
 {
   "version.label": {
     "message": "Beta(CURRENT)",
-    "description": "The label for version current"
+    "description": "The label for version Beta"
   },
   "sidebar.aqaraStudioSidebar.category.Overview": {
     "message": "概览",
@@ -9,16 +9,16 @@
   },
   "sidebar.aqaraStudioSidebar.category.Building": {
     "message": "构建",
-    "description": "The label for category ' Building' in sidebar 'aqaraStudioSidebar'"
+    "description": "The label for category 'Building' in sidebar 'aqaraStudioSidebar'"
   },
   "sidebar.aqaraStudioSidebar.category.Device Integration": {
     "message": "设备接入",
     "description": "The label for category 'Device Integration' in sidebar 'aqaraStudioSidebar'"
-  },    
+  },
   "sidebar.aqaraStudioSidebar.category.Device Management": {
     "message": "设备管理",
     "description": "The label for category 'Device Management' in sidebar 'aqaraStudioSidebar'"
-  },   
+  },
   "sidebar.aqaraStudioSidebar.category.Automation": {
     "message": "自动化",
     "description": "The label for category 'Automation' in sidebar 'aqaraStudioSidebar'"
@@ -41,7 +41,7 @@
   },
   "sidebar.aqaraStudioSidebar.category.Operation": {
     "message": "运维",
-    "description": "The label for category 'General' in sidebar 'aqaraStudioSidebar'"
+    "description": "The label for category 'Operation' in sidebar 'aqaraStudioSidebar'"
   },
   "sidebar.aqaraStudioSidebar.category.Management": {
     "message": "管理",

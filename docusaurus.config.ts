@@ -130,8 +130,8 @@ const config: Config = {
         {to: '/blog', label: 'Blog', position: 'left'},
 */
         {
-          href: 'https://github.com/lumigit/itad-wiki',
-          label: 'GitHub',
+          href: 'https://builder.aqara.com',
+          label: 'Aqara Builder',
           position: 'right',
         },
 	{
