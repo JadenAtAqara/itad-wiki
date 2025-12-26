@@ -366,5 +366,11 @@
   },
   "homepage.layoutDescription": {
     "message": "Description will go into a meta tag in <head />"
+  },
+  "homepage.title": {
+    "message": "Aqara 开发者平台"
+  },
+  "homepage.tagline": {
+    "message": "连接万物，构建智慧生活"
   }
 }
