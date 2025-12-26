@@ -40,7 +40,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | version | String | 是 | 请求接口版本号，必须为 `v1`。 |
 | msgId | String | 是 | 由您定义的请求 ID。 |
 | data | Object | 是 | 请求数据。 |
-| data.types | Array of String | 否 | 设备类型列表。如需了解可用字符串，请参考 [设备类型说明](./device-type.mdx)。 |
+| data.deviceTypesList | Array of String | 否 | 设备类型列表。如需了解可用字符串，请参考 [设备类型说明](./device-type.mdx)。 |
 | data.orderBy | String | 否 | 排序规则，支持以下字符串：<ul><li><code>createTime asc</code>：按照设备添加时间正序排列。</li><li><code>createTime desc</code>：按照设备添加时间倒序排列。</li></ul> |
 | data.pageNum | Number | 否 | 页码。从 1 开始，若小于 1，则视为 1。 |
 | data.pageSize | Number | 否 | 每页包含的设备 ID 数量，取值范围为 (0, 200]。 |
@@ -55,7 +55,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
     "version": "v1",
     "msgId": "get_devices_1751609244328",
     "data":{
-        "types": ["Light"],
+        "deviceTypesList": ["Light"],
 		"orderBy": "createTime desc",
         "pageNum": 1,
         "pageSize": 100
@@ -78,7 +78,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data.pageNum | Number | 页码。 |
 | data.data | Array of Object | 数据列表。 |
 | data.data[].deviceId | String | 设备 ID。 |
-| data.data[].types | Array of String | 设备类型。字符串含义请参考 [设备类型说明](./device-type.mdx)。 |
+| data.data[].deviceTypesList | Array of String | 设备类型。字符串含义请参考 [设备类型说明](./device-type.mdx)。 |
 | data.data[].deviceName | String | 设备名称。 |
 | data.data[].createTime | Number | 设备添加时间的 Unix 时间戳（毫秒）。 |
 | data.data[].state |Boolean | 设备在线状态：<ul><li>false：离线。</li><li>true：在线。</li></ul> |
@@ -101,7 +101,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
         "data":[
             {
                 "deviceId": "xxx",
-                "types": ["Light"],
+                "deviceTypesList": ["Light"],
                 "deviceName": "xxx",
 			    "createTime":1758549173093,
 			    "state": true
@@ -152,34 +152,46 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data | Array of Object | 设备列表。 |
 | data[].deviceId | String | 设备 ID。 |
 | data[].name | String | 设备名称。 |
-| data[].types | Array of String | 设备类型列表。字符串含义请参考 [设备类型说明](./device-type.mdx)。 |
+| data[].deviceTypesList | Array of String | 设备类型列表。字符串含义请参考 [设备类型说明](./device-type.mdx)。 |
 | data[].endpoints | Array of Object | 端点列表。 |
 | data[].endpoints[].endpointId | Number | 端点 ID。 |
 | data[].endpoints[].endpointName | String | 端点名称。 |
-| data[].endpoints[].endpointTypes | Array of String | 端点类型列表。 |
+| data[].endpoints[].deviceType | String | 端点类型列表。 |
 | data[].endpoints[].functions | Array of Object | 功能列表。 |
 | data[].endpoints[].functions[].functionCode | String | 功能代码。 |
 | data[].endpoints[].functions[].traits | Array of Object | 功能点列表。 |
 | data[].endpoints[].functions[].traits[].traitCode | String | 功能点代码，对应设备支持的具体功能。请参阅 [功能点代码](./trait-codes.mdx)，了解该功能点详情包括含义、类型（如数值、布尔、枚举等）、是否可读/可写/可上报等。 |
-| data[].endpoints[].functions[].traits[].attribute | Object | 功能点属性。 |
-| data[].endpoints[].functions[].traits[].attribute.type | String | 功能点属性的类型。 |
-| data[].endpoints[].functions[].traits[].attribute.format | String | 功能点属性的具体类型。 |
-| data[].endpoints[].functions[].traits[].attribute.readable | Boolean | 是否可读。 |
-| data[].endpoints[].functions[].traits[].attribute.writable | Boolean | 是否可写。 |
-| data[].endpoints[].functions[].traits[].attribute.subscribable | Boolean | 是否可订阅。 |
-| data[].endpoints[].functions[].traits[].attribute.enums | Array of Object | 枚举值列表。仅当 attribute.type 为 `ENUM` 时，此字段有意义。 |
-| data[].endpoints[].functions[].traits[].attribute.enums[].key | String | 枚举键。 |
-| data[].endpoints[].functions[].traits[].attribute.enums[].value | String | 枚举值。 |
-| data[].endpoints[].functions[].traits[].attribute.min | Number | 最小值。仅当 attribute.type 为 `NUMBER` 时，此字段有意义。 |
-| data[].endpoints[].functions[].traits[].attribute.max | Number | 最大值。仅当 attribute.type 为 `NUMBER` 时，此字段有意义。 |
-| data[].endpoints[].functions[].traits[].attribute.unit | String | 单位。仅当 attribute.type 为 `NUMBER` 时，此字段有意义。 |
-| data[].endpoints[].functions[].traits[].value | Any | 功能点的当前值。根据 `attribute.type` 的值，此字段的类型可能是 Number、String 或 Boolean。 |
+| data[].endpoints[].functions[].traits[].parameter | Object | 功能点属性。 |
+| data[].endpoints[].functions[].traits[].parameter.type | String | 功能点属性的类型，字符串含义请参考 [功能点属性类型](#功能点属性类型)。 |
+| data[].endpoints[].functions[].traits[].parameter.readable | Boolean | 是否可读。 |
+| data[].endpoints[].functions[].traits[].parameter.writable | Boolean | 是否可写。 |
+| data[].endpoints[].functions[].traits[].parameter.subscribable | Boolean | 是否可订阅。 |
+| data[].endpoints[].functions[].traits[].parameter.supportedValues | Array of Object | 枚举值列表。仅当 parameter.type 为 `Enum` 时，此字段有意义。 |
+| data[].endpoints[].functions[].traits[].parameter.supportedValues[].key | String | 枚举键。 |
+| data[].endpoints[].functions[].traits[].parameter.supportedValues[].value | String | 枚举值。 |
+| data[].endpoints[].functions[].traits[].parameter.min | Number | 最小值。仅当 parameter.type 为 `Integer` 或 `Float` 时，此字段有意义。 |
+| data[].endpoints[].functions[].traits[].parameter.max | Number | 最大值。仅当 parameter.type 为 `Integer` 或 `Float` 时，此字段有意义。 |
+| data[].endpoints[].functions[].traits[].parameter.unit | String | 单位。仅当 parameter.type 为 `Integer` 或 `Float` 时，此字段有意义。 |
+| data[].endpoints[].functions[].traits[].value | Any | 功能点的当前值。类型与 `parameter.type` 的值保持一致。 |
 | data[].endpoints[].functions[].traits[].time | Number | 功能点值上报时间的 Unix 时间戳（毫秒）。 |
 
 ##### 查阅设备类型和功能点代码
 
-- 响应中的 `data[].types`，表示设备支持的类型列表，请参考 [设备类型](./device-type.mdx) 了解字符串相关含义。
+- 响应中的 `data[].deviceTypesList`，表示设备支持的类型列表，请参考 [设备类型](./device-type.mdx) 了解字符串相关含义。
 - 响应中的 `data[].endpoints[].functions[].traits[].traitCode`，表示功能点代码，对应设备支持的具体功能，请参阅 [功能点代码](./trait-codes.mdx)，了解该功能点详情包括含义、类型（如数值、布尔、枚举等）、是否可读/可写/可上报等。
+
+##### 功能点属性类型
+
+| 名称      | 类型      | 说明                                                         |
+|-----------|-----------|--------------------------------------------------------------|
+| Bool      | 布尔型    | 真或假（true/false）。                                        |
+| Integer   | 整型      | 整数类型。                                                    |
+| Float     | 浮点型    | 带小数的数字。                                                |
+| String    | 字符型    | 字符串。                                                      |
+| Struct    | 结构体    | 自定义结构数据，可以包含多种类型字段。                        |
+| Enum      | 枚举      | 枚举类型，定义有限个取值。                                    |
+| List[X]   | 链表      | 元素类型为 X 的链表，X 可为 Integer、Float、String、Struct、Enum。|
+| Data      | 数据块    | 16 进制字符串（Hex String），如 "0x01AB3F"。                  |
 
 #### 响应数据示例
 
@@ -196,23 +208,19 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
         {
             "deviceId": "57190441014857",
             "name": "Touch Screen Switch Panel S1 Pro",
-            "types": [
+            "deviceTypesList": [
                 "Speaker"
             ],
             "endpoints": [
                 {
                     "endpointId": 0,
                     "endpointName": "DeviceObject",
-                    "endpointTypes": [
-                        "Root"
-                    ]
+                    "deviceType": "Root"
                 },
                 {
                     "endpointId": 3,
                     "endpointName": "Multi-stateOutputObject",
-                    "endpointTypes": [
-                        "Speaker"
-                    ],
+                    "deviceType": "Speaker",
                     "functions": [
                         {
                             "functionCode": "MediaPlayback",
@@ -220,13 +228,12 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
                             "traits": [
                                 {
                                     "traitCode": "TargetPlaybackState",
-                                    "attribute": {
-                                        "type": "ENUM",
-                                        "format": "Uint8",
+                                    "parameter": {
+                                        "type": "Enum",
                                         "readable": true,
                                         "writable": true,
                                         "subscribable": true,
-                                        "enums": [
+                                        "supportedValue": [
                                             {
                                                 "key": "Play",
                                                 "value": "0"
@@ -270,9 +277,8 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
                                 },
                                 {
                                     "traitCode": "MediaInformation",
-                                    "attribute": {
+                                    "parameter": {
                                         "type": "STRING",
-                                        "format": "String",
                                         "readable": true,
                                         "writable": false,
                                         "subscribable": true
@@ -288,9 +294,8 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
                             "traits": [
                                 {
                                     "traitCode": "Mute",
-                                    "attribute": {
-                                        "type": "BOOLEAN",
-                                        "format": "Bool",
+                                    "parameter": {
+                                        "type": "Bool",
                                         "readable": true,
                                         "writable": true,
                                         "subscribable": true
@@ -300,9 +305,8 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
                                 },
                                 {
                                     "traitCode": "Volume",
-                                    "attribute": {
-                                        "type": "NUMBER",
-                                        "format": "Float",
+                                    "parameter": {
+                                        "type": "Float",
                                         "readable": true,
                                         "writable": true,
                                         "subscribable": true,
@@ -452,7 +456,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data[].endpointId | Number | 端点 ID。 |
 | data[].functionCode | String | 功能代码。 |
 | data[].traitCode | String | 功能点代码。 |
-| data[].value | Any | 特征的当前值。类型与功能点有关，可能为 Boolean、Number 或 String。 |
+| data[].value | Any | 特征的当前值。 |
 | data[].time | Number | 当前值上报时间的 Unix 时间戳（毫秒）。 |
 
 #### 响应数据示例
@@ -558,7 +562,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data[].endpointId | Number | 是 | 端点 ID。 |
 | data[].functionCode | String | 是 | 功能代码。 |
 | data[].traitCode | String | 是 | 功能点代码。 |
-| data[].value | Any | 是 | 功能点的值。值的类型根与功能点有关，可能为 Number、String、Boolean。 |
+| data[].value | Any | 是 | 功能点的值。值的类型与功能点的类型有关。 |
 | data[].time | Number | 是 | 功能点的值的上报时间的 Unix 时间戳（毫秒）。 |
 
 ##### 推送数据示例
@@ -767,7 +771,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | version | String | 响应接口版本号，与请求一致。 |
 | msgId | String | 与请求对应的唯一标识。 |
 | data | Object | 事件数据对象。 |
-| data.eventType | String | 事件类型：<ul><li>`DEVICE_ADDED`：设备添加</li><li>`DEVICE_REMOVED`：设备删除。</li><li>`DEVICE_ENDPOINT_ADDED`：设备增加了端点。</li><li>`DEVICE_ENDPOINT_REMOVED`：设备删除了端点。</li><li>`DEVICE_TRAIT_ATTRIBUTE_UPDATE`：设备功能点的属性（最小值、最大值、单位等）更新。</li></ul> |
+| data.eventType | String | 事件类型：<ul><li>`DEVICE_ADDED`：设备添加</li><li>`DEVICE_REMOVED`：设备删除。</li><li>`DEVICE_ENDPOINT_ADDED`：设备增加了端点。</li><li>`DEVICE_ENDPOINT_REMOVED`：设备删除了端点。</li><li>`DEVICE_TRAIT_PAREMETER_UPDATE`：设备功能点的属性（最小值、最大值、单位等）更新。</li></ul> |
 | data.objectId | String | 对象 ID（当前为设备 ID）。 |
 | data.time | Number | 事件发生时间的 Unix 时间戳（毫秒）。 |
 | data.data | Object | 事件相关详细数据，详情请参见 [data.data 字段说明](#datadata-字段说明)  |
@@ -776,7 +780,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 
 根据事件类型，`data.data` 有所不同 
 
-###### 非 DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
+###### 非 DEVICE_TRAIT_PARAMETER_UPDATE 事件
 
 以下数据结构适用于当 `eventType` 为以下事件时：
 - `DEVICE_ADDED`
@@ -788,14 +792,14 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | -- | -- | -- |
 | deviceId | String | 设备 ID。 |
 | name | String | 设备名称。 |
-| types | Array of String | 设备类型列表。字符串含义请参考 [设备类型说明](./device-type.mdx)。 |
+| deviceTypesList | Array of String | 设备类型列表。字符串含义请参考 [设备类型说明](./device-type.mdx)。 |
 | endpointIds | Array of Number | 端点 ID 列表。 |
 
-###### DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
+###### DEVICE_TRAIT_PARAMETER_UPDATE 事件
 
 :::tip
 
-若事件为 `DEVICE_TRAIT_ATTRIBUTE_UPDATE`，建议重新调用 `GetDevicesRequest` 接口 [查询设备配置](#查询设备的-spec-配置)。
+若事件为 `DEVICE_TRAIT_PARAMETER_UPDATE`，建议重新调用 `GetDevicesRequest` 接口 [查询设备配置](#查询设备的-spec-配置)。
 
 :::
 
@@ -819,7 +823,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 
 以下展示适用于不同事件的响应数据示例
 
-###### 非 DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
+###### 非 DEVICE_TRAIT_PARAMETER_UPDATE 事件
 
 以下为 `objectEvent` 的响应示例：
 
@@ -835,14 +839,14 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 		"data": {
 			"deviceId": "14d3b91",
 			"name": "",
-			"types": ["Light"],
+			"deviceTypesList": ["Light"],
 			"endpointIds": [0,2,3]
 		}
     }
 }
 ```
 
-###### DEVICE_TRAIT_ATTRIBUTE_UPDATE 事件
+###### DEVICE_TRAIT_PARAMETER_UPDATE 事件
 
 以下为 `objectEvent` 的响应示例：
 
@@ -852,7 +856,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
     "version": "v1",
     "msgId": "1765163175639",
     "data": {
-        "eventType": "DEVICE_TRAIT_ATTRIBUTE_UPDATE",
+        "eventType": "DEVICE_TRAIT_PARAMETER_UPDATE",
         "objectId": "xxxxxxx",
         "time": 1765163175603,
         "data": {
