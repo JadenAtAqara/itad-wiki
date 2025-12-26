@@ -7,8 +7,8 @@ import rehypeKatex from 'rehype-katex';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Aqara Developers',
-  tagline: 'Dinosaurs are cool',
+  title: 'Aqara Developers Platform',
+  tagline: 'Empowering Your Smart Home Innovation',
   favicon: 'img/favicon.png',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -24,8 +24,8 @@ const config: Config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'aqara', // Usually your GitHub org/user name.
-  projectName: 'developers', // Usually your repo name.
+  organizationName: 'Aqara', // Usually your GitHub org/user name.
+  projectName: 'aqara-developer-docs', // Usually your repo name.
 
   onBrokenLinks: 'throw',
 
@@ -161,7 +161,7 @@ const config: Config = {
           title: 'Docs',
           items: [
             {
-              label: 'Tutorial',
+              label: 'Getting Started',
               to: 'docs/aqara-studio/overview/introduction',
             },
           ],
@@ -170,28 +170,31 @@ const config: Config = {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
+              label: 'Developer Forum',
               href: 'https://forum.aqara.com',
             },
             {
               label: 'Discord',
-              href: 'https://discordapp.com/invite/aqara',
+              href: 'https://discord.gg/aqara',
             },
             {
-              label: 'X',
-              href: 'https://x.com/aqara',
+              label: 'X (formerly Twitter)',
+              href: 'https://x.com/AqaraSmarthome',
             },
           ],
         },
         {
-          title: 'More',
+          title: 'Corporate',
           items: [
-/*
+
             {
-              label: 'Blog',
-              to: '/blog',
+              label: 'Official Website',
+              href: 'https://www.aqara.com',
             },
-*/
+            {
+              label: 'Privacy Policy',
+              href: 'https://www.aqara.com/en/privacy_policy.html', // 建议加上合规链接
+            },
             {
               label: 'GitHub',
               href: 'https://github.com/lumigit/itad-wiki',
@@ -199,7 +202,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} aqara wiki, Inc. Built with Aqara.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Aqara. All Rights Reserved.`,
     },
     prism: {
       theme: prismThemes.github,
