@@ -36,7 +36,7 @@
     "description": "The label of footer link with label=GitHub linking to https://github.com/lumigit/itad-wiki"
   },
   "copyright": {
-    "message": "版权所有 © 2025 Aqara, Inc. 由 Aqara 构建。",
+    "message": "版权所有©2025 Aqara。保留所有权利。",
     "description": "The footer copyright"
   },
   "link.title.Corporate": {

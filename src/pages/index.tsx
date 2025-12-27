@@ -39,12 +39,12 @@ export default function Home(): ReactNode {
     <Layout
       title={
         translate({
-        message: `Hello from ${siteConfig.title}`,
+        message: `${siteConfig.title}`,
         id: 'homepage.layoutTitle'
         })    
       }
       description={translate({
-        message: "Description will go into a meta tag in <head />",
+        message: "Aqara Docs & Guides. Go from beginner to pro in no time.",
         id: 'homepage.layoutDescription'
       })}>
       <HomepageHeader />

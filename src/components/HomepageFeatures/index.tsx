@@ -1,40 +1,43 @@
 import type {ReactNode} from 'react';
 import clsx from 'clsx';
 import Heading from '@theme/Heading';
+
+import Translate from '@docusaurus/Translate';
+
 import styles from './styles.module.css';
 
 type FeatureItem = {
-  title: string;
+  title: ReactNode;
   Svg: React.ComponentType<React.ComponentProps<'svg'>>;
   description: ReactNode;
 };
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
+    title: <Translate id="homepage.features.knowledgeCenter.title">Developer Knowledge Center</Translate>,
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
-      <>
-        A minimalist learning experience helps you quickly master the usage of Aqara products, enabling personalized creation of your own smart space.
-      </>
+      <Translate id="homepage.features.knowledgeCenter.description">
+        The single source of truth. Always up-to-date API specs, SDK references, and tool guides.
+      </Translate>
     ),
   },
   {
-    title: 'Easy to Integrate',
+    title: <Translate id="homepage.features.docs.title">Clear, Comprehensive Docs</Translate>,
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
-      <>
-        Aqara Docs can guide users to build an open ecosystem and effortlessly integrate the capabilities of Aqara ecosystem products with other systems.
-      </>
+      <Translate id="homepage.features.docs.description">
+        From Quickstart to production-ready implementations, with real-world examples.
+      </Translate>
     ),
   },
   {
-    title: 'Easy to Troubleshoot',
+    title: <Translate id="homepage.features.partner.title">Your Evolving Learning Partner</Translate>,
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
-      <>
-        Aqara Docs makes it easy in problem identification and issue location, and provides relevant solutions, allowing you focus your energy back on creation.
-      </>
+      <Translate id="homepage.features.partner.description">
+        Release-aware content covering migrations, best practices, and troubleshooting.
+      </Translate>
     ),
   },
 ];

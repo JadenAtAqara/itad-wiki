@@ -365,12 +365,30 @@
     "message": "Aqara文档 →"
   },
   "homepage.layoutDescription": {
-    "message": "Description will go into a meta tag in <head />"
+    "message": "Aqara 文档 & 教程. 从入门到精通."
   },
   "homepage.title": {
-    "message": "Aqara 开发者平台"
+    "message": "文档中心"
   },
   "homepage.tagline": {
-    "message": "连接万物，构建智慧生活"
+    "message": "指南&教程。从入门到精通。"
+  },
+  "homepage.features.knowledgeCenter.title": {
+    "message": "权威知识库"
+  },
+  "homepage.features.knowledgeCenter.description": {
+    "message": "唯一可信源，提供实时更新的API规范、SDK参考与工具指南。"
+  },
+  "homepage.features.docs.title": {
+    "message": "完整学习路径"
+  },
+  "homepage.features.docs.description": {
+    "message": "从快速入门到生产部署，附真实场景示例。"
+  },
+  "homepage.features.partner.title": {
+    "message": "持续迭代支持"
+  },
+  "homepage.features.partner.description": {
+    "message": "涵盖迁移指南、最佳实践与故障排查，支撑从集成到优化的每一步。"
   }
 }
