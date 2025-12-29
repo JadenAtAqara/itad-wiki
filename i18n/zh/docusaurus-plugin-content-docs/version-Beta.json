@@ -7,9 +7,9 @@
     "message": "概览",
     "description": "The label for category 'Overview' in sidebar 'aqaraStudioSidebar'"
   },
-  "sidebar.aqaraStudioSidebar.category.Building": {
+  "sidebar.aqaraStudioSidebar.category.Build": {
     "message": "构建",
-    "description": "The label for category 'Building' in sidebar 'aqaraStudioSidebar'"
+    "description": "The label for category 'Build' in sidebar 'aqaraStudioSidebar'"
   },
   "sidebar.aqaraStudioSidebar.category.Device Integration": {
     "message": "设备接入",
