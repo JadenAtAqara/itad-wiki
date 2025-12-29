@@ -188,9 +188,9 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | Integer   | 整型      | 整数类型。                                                    |
 | Float     | 浮点型    | 带小数的数字。                                                |
 | String    | 字符型    | 字符串。                                                      |
-| Struct    | 结构体    | 自定义结构数据，可以包含多种类型字段。                        |
+| Struct    | 结构体    | Aqara 自定义的结构数据，形式为 JSON 字符串，可以包含多种类型字段。                        |
 | Enum      | 枚举      | 枚举类型，定义有限个取值。                                    |
-| List[X]   | 链表      | 元素类型为 X 的链表，X 可为 Integer、Float、String、Struct、Enum。|
+| List[X]   | 列表      | 元素类型为 X 的列表，形式为 JSON 字符串，X 可为 Integer、Float、String、Struct、Enum。|
 | Data      | 数据块    | 16 进制字符串（Hex String），如 "0x01AB3F"。                  |
 
 #### 响应数据示例
@@ -278,7 +278,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
                                 {
                                     "traitCode": "MediaInformation",
                                     "parameter": {
-                                        "type": "STRING",
+                                        "type": "String",
                                         "readable": true,
                                         "writable": false,
                                         "subscribable": true
@@ -379,7 +379,11 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data[].endpointId | Number | 端点 ID。 |
 | data[].functionCode | String | 功能代码。 |
 | data[].traitCode | String | 功能点代码。 |
-| data[].code | Number | 是否成功控制功能点，0 表示成功，非 0 表示失败。 |
+| data[].code | Number | 此 API 调用是否成功，0 表示成功，非 0 表示失败。 |
+
+:::tip
+`code` 为 `0` 仅表示接口调用成功，并不意味着设备状态已改变。请通过 [查询功能点的最新值](./data-export-api-v1.mdx#查询设备的最新功能点值) 确认是否已成功控制设备。
+::: 
 
 #### 响应数据示例
 
@@ -526,7 +530,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 
 | 参数 | 类型 | 是否必须 | 说明 |
 | -- | -- | -- | -- |
-| type | String | 是 | 响应消息类型，固定为 `TraitValueUpdate`。 |
+| type | String | 是 | 响应消息类型，固定为 `SubscribeTraitValueResponse`。 |
 | version | String | 是 | 响应的接口版本号，与请求一致。 |
 | msgId | String | 是 | 与请求对应的唯一标识。 |
 | code | Number | 是 | 请求处理结果，0 表示订阅成功，非 0 表示订阅失败。 |
@@ -534,11 +538,11 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 
 ##### 响应数据示例
 
-以下为订阅成功后的 `TraitValueUpdate` 响应示例：
+以下为订阅成功后的 `SubscribeTraitValueResponse` 响应示例：
 
 ```json
 {
-    "type": "TraitValueUpdate",
+    "type": "SubscribeTraitValueResponse",
 	"version": "v1",
 	"msgId": "get_devices_1751609244328",
 	"code": 0,
