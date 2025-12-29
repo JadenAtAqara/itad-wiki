@@ -10,7 +10,7 @@
     "aqara-studio/quick-start",
     {
         "type": "category",
-        "label": "Building", 
+        "label": "Build", 
         "collapsed": false,
         "items": [
             "aqara-studio/space",
