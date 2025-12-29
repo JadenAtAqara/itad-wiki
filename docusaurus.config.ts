@@ -7,8 +7,8 @@ import rehypeKatex from 'rehype-katex';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Aqara Developers Platform',
-  tagline: 'Empowering Your Smart Home Innovation',
+  title: 'Documentation Center',
+  tagline: 'Docs & Guides. Go from beginner to pro.',
   favicon: 'img/favicon.png',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -17,7 +17,7 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://dev-wiki.aqara.com',
+  url: 'https://docs.aqara.com',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -107,7 +107,7 @@ const config: Config = {
     navbar: {
       title: 'Aqara Developers',
       logo: {
-        alt: 'Aqara Wiki',
+        alt: 'Aqara Docs',
         src: 'img/logo.svg',
       },
       items: [
