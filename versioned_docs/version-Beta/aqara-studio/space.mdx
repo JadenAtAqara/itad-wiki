@@ -1,2 +1,54 @@
-# 空间模型
+# Space Management
 
+## Overview
+
+In smart home systems, space management is the foundation for efficient device organization and intelligent connections. By dividing and configuring spaces properly, you can accurately reflect the real physical environment. This also greatly improves the efficiency of device management and enhances the user experience.
+
+In Aqara Studio, you can define your home structure flexibly, set up different space areas, and link smart devices as needed. This creates a solid foundation for advanced functions such as automation, data analysis, and permission management. Good space management helps you build a smarter, more convenient, and safer living or office environment.
+
+## Create a Space
+
+When you enter the **Space** page from the left sidebar, you will see that Aqara Studio provides [space templates](#using-templates). You can quickly create a preset space layout by choosing a template, or [customize the space structure](#customizing-spaces) to fit your needs.
+
+### Use a Template
+
+1. Choose a template that fits your home.
+2. In the **Template** drawer, check the real areas in your home (such as living room, bedroom).
+3. Click **Create** and the space structure will be created automatically.
+4. In **Space**, click any space to [configure its parameters](#space-parameters).
+
+### Customize a Space
+
+1. Select **Custom Space**.
+2. In the **Custom Space** drawer, Aqara Studio will automatically add a parent space (New Item). You can [configure its parameters](#space-parameters) directly.
+3. To add a sub-space, select the parent space and click the **+** button.
+4. After finishing all space settings, click **Create** and your custom space structure will be set up.
+
+### Space Parameters
+
+| Parameter    | Description                                                  |
+|--------------|-------------------------------------------------------------|
+| Name         | (Required) The custom name for the space, easy to identify and manage. |
+| Tag         | You can assign multiple tags to this space.                  |
+| Type         | Set the usage type of this space (e.g., master bedroom, second bedroom, etc.). |
+| Area         | Actual area of the space in square meters; fill in according to your situation. |
+| Parent Space | The upper-level space to which this space belongs. Used to build a space hierarchy. |
+
+## Link Devices
+
+Linking devices to spaces helps you see at a glance where each device is located. It also makes it easier for unified management, device location, troubleshooting, and setting up smart scenarios.
+
+Here’s how to link devices:
+1. Click a space, then in its **Space Details**, click the **+** button.
+2. In the pop-up window, check one or more target devices and click **Confirm**.
+    :::tip
+    If you haven't added the required devices yet, click **Add new device** in the pop-up. The system will automatically switch to the **Device** page. You can refer to the [Device Integration](/docs/category/device-integration) docs and add devices before linking them.
+    :::
+3. Now the **Device Num** in the **Space Details** will update. The **Device Num** of the parent space will also get updated.
+4. Go to **Device** from the left sidebar. Open the **Basic Information** of the linked device. You can see its space information has been updated. If you want to change the linked space, click the edit icon in this section.
+
+## FAQ
+
+### Can one device be linked to multiple spaces?
+
+A device can be linked to only one space at a time.
