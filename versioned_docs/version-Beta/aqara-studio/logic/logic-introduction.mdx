@@ -1,30 +1,30 @@
 # Logic
 
-Aqara Studio提供灵活的可视化自动化配置能力，支持用户通过组合多种功能模块与数据流逻辑，快速实现物联网设备的智能化控制。
+Aqara Studio offers flexible visual tools for configuring automation. You can combine different modules and data flow logic to quickly achieve smart control of IoT devices.
 
-## 核心优势
+## Advantages
 
-- **灵活编排**：模块化设计支持自由组合逻辑、数学与控制功能，适应多样化物联场景。
-- **直观操作**：图形化数据连接界面降低配置门槛，提升开发效率。
-- **实时生效**：配置完成后立即生效，无需重启设备或系统。
+- **Flexible Composition**: The modular design lets you freely combine logic, math, and control functions to suit different IoT scenarios.
+- **Visualized Operation**: The graphical data connection interface is easy to use and helps improve development efficiency.
+- **Immediate Effect**: Your configuration takes effect right away. You don’t need to restart devices or the system.
 
-## 创建自动化
+## How to Create Automation
 
-1. 在首页点击**自动化**，进入自动化列表页。
-2. 点击**新建**，进入自动化编辑页面。
-3. 画布下方有滑块可以缩放视图，缩小时画布左右出现“铅笔”图标：左侧为输入点（监听事件或状态），右侧为输出点（触发设备动作）。
-   1. 点击“铅笔”进入设置页面。
-   2. 在弹出的窗口里，**单击**文件夹图标，即可展开文件夹选择协议和设备。展开设备文件夹，继续向下展开，直至无法继续展开，表示您找到了功能点，双击选择该功能点。支持多选，选好点击**确定**即可添加。
-4. 设置输入点和输出。你可以设置具体的值（数字、布尔或枚举等）。
-5. 配置完成后，将输入点的**输出**与输出点的**输入**连线，即可实现自动化逻辑。
-6. 完成所有配置和连线后，确认无误后，即可在画布上方**启用**此自动化。
+1. See [Automation - Create an Automation](./../automation.mdx#create-an-automation) to enter the logic editor.
+2. A slider at the bottom of the canvas allows you to zoom in or out. When you zoom out, "edit" icons appear on the left and right sides of the canvas. The left one is for adding input points (which listen for events or statuses). The right side is for adding output points (which trigger device actions).
+   1. Click one of the "edit" icons to see a popout.
+   2. In the popup, **click** the "edit" icon, and you will see a protocol tree. Expand a protocol folder by double-clicking the folder icon. Then, expand a device folder. Keep expanding the folders inside it until you reach the function points (you’ll know you’re there when you can’t expand further). 
+   3. Double-click the function point to select it. Multiple selection is supported. 
+   4. After choosing, click **Confirm** to add them.
+3. Connect the **output** of the input point to the **input** of the output point. This will let you create an automation logic.
+4. Once all configurations and connections are done and you have checked everything, you can **enable** the automation at the top of the canvas.
 
-:::tip
+   :::tip
+   The connection lines in automation are used for data flow. They transfer the output value from one node to the next node.
+   :::
 
-只有输入点可以触发后续动作，所以如果你希望行为 A 发生后再触发行为 B，除了在输出点设置行为 A，还需要在输入点监听行为 A，这样系统才能检测并执行后续行为。
+5. After you finish all configurations and connections, check everything carefully. Then, you can **enable** the automation at the top of the canvas.
 
-:::
+## Add Blocks
 
-## 添加逻辑块
-
-如果您希望能够为自动化逻辑添加更多修饰，您可以在其中加入多个逻辑块，相关说明请参考 [逻辑块](/docs/category/blocks)。
+To make your automation more flexible and complex, you can add multiple blocks. These blocks help you create conditions and process data. For more details, see [Blocks](/docs/category/blocks).
