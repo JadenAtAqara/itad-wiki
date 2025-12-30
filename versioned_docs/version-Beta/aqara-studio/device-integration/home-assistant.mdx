@@ -1,34 +1,33 @@
-# Home Assistant 生态集成
+# Home Assistant
 
-Aqara Studio 支持将 Home Assistant 生态的物联网设备接入。目前仅支持 [符合 Aqara 设备规范的功能类型](#支持的设备类型)。
+Aqara Studio supports connecting IoT devices from the Home Assistant ecosystem. Currently, only [device types that follow the Aqara device specification](#supported-device-types) are supported.
 
-## 前提条件
+## Prerequisites
 
-在开始之前，请确保：
-- Home Assistant 生态设备、电脑以及 Aqara Studio 已连接至同一局域网。
-- 已完成以下 Home Assistant 基础配置：
-  - Home Assistant 系统安装，详情请参考 Home Assistant 官网文档 [Installation](https://www.home-assistant.io/installation/)。
-  - Home Assistant 生态设备发现与集成，详情请参考 Home Assistant 官网文档 [Onboarding](https://www.home-assistant.io/getting-started/onboarding/)。
-  
+Before you begin, make sure that:
+- Your Home Assistant ecosystem devices, your computer, and Aqara Studio are all connected to the same local network.
+- You have completed the following Home Assistant basic setup:
+  - Home Assistant is installed. Refer to the official Home Assistant [Installation](https://www.home-assistant.io/installation/) guide for details.
+  - Devices in the Home Assistant ecosystem have been discovered and integrated. For details, see the [Onboarding](https://www.home-assistant.io/getting-started/onboarding/) documentation.
 
-## 获取 Home Assistant Token
+## How to Get a Home Assistant Token
 
-1. 在浏览器地址栏中输入访问此地址：`http://homeassistant.local:8123`（如果您修改过 Home Assistant 的端口号，请修改本地址的端口号后再访问），访问 Home Assistant 主页。
-2. 单击右下角您的账号，进入 profile 页面。
-3. 在 profile 页面，点击“安全”标签，找到“长期访问令牌”，单击“创造令牌”，即可生成 Home Assistant Token，用于在 Aqara Studio 上 [添加 Home Assistant 生态设备](#添加-home-assistant-生态设备)。
+1. In your web browser, visit: `http://homeassistant.local:8123`. (If you have changed the Home Assistant port, use your actual port here.)
+2. Click your account icon at the bottom right of the page to enter your profile.
+3. In your profile, click the "Security" tab. Find "Long-Lived Access Tokens" and click "Create Token". This will generate a Home Assistant token, which you will use to [add Home Assistant ecosystem devices](#add-home-assistant-ecosystem-devices) in Aqara Studio.
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HAIntegration-CreateHAToken.png" alt="创建 Home Assistant Token" />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HAIntegration-CreateHAToken.png" alt="Create Home Assistant Token" />
 
-## 添加 Home Assistant 生态设备
+## Add Home Assistant Ecosystem Devices
 
-1. 在左侧侧边栏点击进入**设备管理**页面。
-2. 在侧边栏单击“+”按钮，在弹窗中选择 `Home Assistant`，以添加 `Home Assistant` 文件夹。
-3. 双击 `Home Assistant` 文件夹，进入 Home Assistant 管理界面。
-4. 进入 **配置** 选项卡，展开 `基础配置`，输入 Home Assistant 系统的本地 IP 地址、端口和 [令牌](#获取-home-assistant-token)。
-5. 进入 `设备发现`选项卡，单击“发现”按钮，本系统即可自动发现 Home Assistant 中的设备。
-6. 勾选需要的设备、并点击“+”按钮，即可新增 Home Assistant 生态设备。
-   
-## 支持的设备类型
+1. On the left sidebar, click to enter the **Device** page.
+2. In the protocol directory on the left, click the "+" button. In the popup, select `Home Assistant` to add the `Home Assistant` folder.
+3. Double-click the `Home Assistant` folder to enter the Home Assistant management page.
+4. Go to the **Configuration** tab. In "Basic Configuration," type in the local IP address, port of your Home Assistant system, and the [token](#how-to-get-a-home-assistant-token).
+5. Go to the `Device Discovery` tab and click the "Discover" button. Aqara Studio will automatically find devices from your Home Assistant.
+6. Select the devices you need, then click the "+" button to add them.
+
+## Supported Device Types
 
 - Light
 - Media Player
@@ -43,13 +42,13 @@ Aqara Studio 支持将 Home Assistant 生态的物联网设备接入。目前仅
   - AirQualitySensor
   - TemperatureSensor
   - PressureSensor
-  - ParticulateMatterSensor (PM1，PM2.5，PM10)
+  - ParticulateMatterSensor (PM1, PM2.5, PM10)
   - IlluminanceSensor
   - HumiditySensor
   - NaturalGasAlarm
   - CO2Sensor
   - AtmosphericPressureSensor
 
-## 下一步
+## Next Steps
 
-接下来，您可以直接 [查看该设备的详情和控制该设备](./../device-management/basic-information.mdx)，还可以利用该设备 [编排自动化逻辑](./../automation.mdx) 了。
+Now, you can [view details and control the device](./../device-management/basic-information.mdx), or [use the device in automation](./../automation.mdx).

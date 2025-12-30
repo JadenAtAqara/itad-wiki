@@ -1,98 +1,100 @@
-# Modbus TCP 接入
+# Modbus TCP
 
-## 前提条件
+This guide explains how to connect Modbus TCP devices to Aqara Studio.
 
-在开始之前，请确保：
-- 您的 Modbus TCP 设备、Aqara 网关和电脑处于同一局域网中。
-- 您的 Modbus TCP 设备已完成 Modbus TCP 相关配置。如何配置，请参考产品说明书或咨询设备厂商技术支持。
+## Prerequisites
 
-## 添加 Modbus TCP 设备
+Before you begin, please make sure:
+- Your Modbus TCP device, Aqara Gateway, and your computer are all on the same local network.
+- Your Modbus TCP device is properly configured for Modbus TCP communication. Please refer to your product manual or contact your device manufacturer for support if needed.
 
-1. 在左侧侧边栏点击进入**设备管理**页面。
-2. 在侧边栏单击“+”按钮，在弹窗中选择 `Modbus TCP`，以添加 `Modbus TCP` 文件夹。
-3. 右键单击 `Modbus TCP` 文件夹，选择**新增**，此时你可以看到该目录下出现一个 `Modbus TCP 设备` 文件夹。
-4. 双击该文件夹，在**概览**选项卡，你可以修改该设备的`显示名称`。
-5. 切换至**配置**选项卡，展开**设备配置**，填写如下参数：
+## Add a Modbus TCP Device
 
-    | 参数名称 | 是否必填 | 说明 |
+1. Click the **Device** page in the left sidebar.
+2. In the protocol directory on the left, click the “+” button, select `Modbus TCP` in the popup to add a `Modbus TCP` folder.
+3. Right-click the `Modbus TCP` folder, and choose **Add**. You will see a new `Modbus TCP Device` folder appear under it.
+4. Double-click the new folder. In the **Essential** tab, you can modify the device’s **Display Name**.
+5. Switch to the **Configuration** tab, open **Device Configuration**, and fill in the following parameters:
+
+    | Parameter Name | Required | Description |
     | --- | --- | --- |
-    | 设备地址 | ✘ | 此设备从站地址（单位标识符），范围 0~255。 |
-    | IP地址 | ✔ | 此设备的 IP 地址。 |
-    | 端口 | ✔ | Modbus TCP 通信端口，默认 502。 |
-6. 展开**高级配置**，填写如下参数：
+    | Device Address | No | The slave device address (unit identifier), range 0~255. |
+    | IP Address | Yes | The IP address of this device. |
+    | Port | Yes | The Modbus TCP communication port, default is 502. |
+6. Expand **Advanced Configuration** and fill in the following parameters:
 
     <table>
     <thead>
         <tr>
-        <th colspan="2">参数</th>
-        <th>说明</th>
+        <th colspan="2">Parameter</th>
+        <th>Description</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-        <td colspan="2">接收处理模式</td>
-        <td>接收数据处理模式，支持以下值：<ul><li><strong>Byte</strong>：字节流模式。</li><li><strong>Packet</strong>：报文模式。</li></ul></td>
+        <td colspan="2">Rx Process Mode</td>
+        <td>Choose how received data is processed:<ul><li><strong>Byte</strong>: Byte stream mode.</li><li><strong>Packet</strong>: Packet mode.</li></ul></td>
         </tr>  
         <tr>
-        <td colspan="2">是否启用批量写入线圈指令</td>
-        <td>是否使用 "Force Multiple Coils" 指令写多个线圈（对应 Modbus 协议中的功能码 15）。</td>
+        <td colspan="2">Use Force MultIPle Coil</td>
+        <td>Whether to use the "Force Multiple Coils" command to write multiple coils (Modbus function code 15).</td>
         </tr>
         <tr>
-        <td colspan="2">是否启用批量写入寄存器指令</td>
-        <td>是否使用 "Preset Multiple Registers" 指令写多个保持寄存器（对应 Modbus 协议中的功能码 16）。</td>
+        <td colspan="2">Use Preset Multiple Register</td>
+        <td>Whether to use the "Preset Multiple Registers" command to write multiple holding registers (Modbus function code 16).</td>
         </tr>
         <tr>
-        <td colspan="2">浮点数字节序</td>
-        <td>32 位浮点数的读写顺序，仅支持<code>Order1032</code>与<code>Order3210</code>。</td>
+        <td colspan="2">Float Byte Order</td>
+        <td>The byte order used for 32-bit float values. Only <code>Order1032</code> and <code>Order3210</code> are supported.</td>
         </tr>
         <tr>
-        <td colspan="2">长整型字节序</td>
-        <td>64 位长整型字节顺序，仅支持<code>Order1032</code>与<code>Order3210</code>。</td>
+        <td colspan="2">Long Byte Order</td>
+        <td>The byte order for 64-bit long integer values. Only <code>Order1032</code> and <code>Order3210</code> are supported.</td>
         </tr>
         <tr>
-        <td rowspan="2">输入寄存器偏移地址</td>
-        <td>地址格式</td>
-        <td>输入寄存器（对应 Modbus 协议中的功能码 04：Read Input Registers）偏移地址的格式，支持选项如下：<ul><li>十六进制</li><li>十进制</li><li>标准Modbus地址</li></ul>如果您不了解什么是偏移地址，请参考下文 <a href="#什么是偏移地址">什么是偏移地址</a>。</td>
+        <td rowspan="2">Input Register Base Address</td>
+        <td>Address Format</td>
+        <td>The format of input register (Modbus function code 04: Read Input Registers) offset address. Supported options:<ul><li>Hexadecimal</li><li>Decimal</li><li>Standard Modbus Address</li></ul>If you are not sure what an offset address is, please see <a href="#what-is-an-offset-address">What is an Offset Address?</a> below.</td>
         </tr>
         <tr>
-        <td>地址</td>
-        <td>偏移地址。</td>
+        <td>Address</td>
+        <td>The offset address.</td>
         </tr>
         <tr>
-        <td rowspan="2">保持寄存器偏移地址</td>
-        <td>地址格式</td>
-        <td>保存寄存器（对应 Modbus 协议中的功能码 03：Read Holding Registers）偏移地址的格式，支持格式与"输入寄存器偏移地址"相同。</td>
+        <td rowspan="2">Holding Register Base Address</td>
+        <td>Address Format</td>
+        <td>The format of holding register (Modbus function code 03: Read Holding Registers) offset address. The supported formats are the same as those for Input Register Offset Address.</td>
         </tr>
         <tr>
-        <td>地址</td>
-        <td>偏移地址。</td>
+        <td>Address</td>
+        <td>The offset address.</td>
         </tr>
         <tr>
-        <td rowspan="2">线圈状态偏移地址</td>
-        <td>地址格式</td>
-        <td>线圈状态（对应 Modbus 协议中的功能码 01：Read Coils）偏移地址的格式，支持格式与"输入寄存器偏移地址"相同。</td>
+        <td rowspan="2">Coil Status Base Address</td>
+        <td>Address Format</td>
+        <td>The format of coil status (Modbus function code 01: Read Coils) offset address. Supported formats are the same as Input Register Offset Address.</td>
         </tr>
         <tr>
-        <td>地址</td>
-        <td>偏移地址。</td>
+        <td>Address</td>
+        <td>The offset address.</td>
         </tr>
         <tr>
-        <td rowspan="2">离散输入偏移地址</td>
-        <td>地址格式</td>
-        <td>离散输入（对应 Modbus 协议中的功能码 02：Discrete Inputs）偏移地址的格式，支持格式与"输入寄存器偏移地址"相同。</td>
+        <td rowspan="2">Input Status Base Address</td>
+        <td>Address Format</td>
+        <td>The format of discrete input (Modbus function code 02: Discrete Inputs) offset address. Supported formats are the same as Input Register Offset Address.</td>
         </tr>
         <tr>
-        <td>地址</td>
-        <td>偏移地址。</td>
+        <td>Address</td>
+        <td>The offset address.</td>
         </tr>
         <tr>
-        <td colspan="2">启用/禁用该设备</td>
-        <td>注意：禁用后该设备将不可用。</td>
+        <td colspan="2">Enable/Disable Device</td>
+        <td>Note: If disabled, this device will not be available.</td>
         </tr>  
     </tbody>
     </table>
-7. 切换至`点添加`选项卡，在`类型选择`区域单击 + 
-8. 单击**类型选择**区域中的**+**按钮，新增功能点。单击该点，即可设置其类型和点位配置。完成后，单击**确定**。
+7. Switch to the **Point Add** tab. Click the **+** button in the “Type selection” area.
+8. Click the new point to set its type and configure it. When finished, click **OK**.
 
    <table>
      <colgroup>
@@ -103,120 +105,120 @@
      </colgroup>
      <thead>
        <tr>
-         <th>参数名称</th>
-         <th>是否必填</th>
-         <th>参数说明</th>
-         <th>配置示例</th>
+         <th>Parameter Name</th>
+         <th>Required</th>
+         <th>Description</th>
+         <th>Example</th>
        </tr>
      </thead>
      <tbody>
        <tr>
-         <td>功能点名称</td>
-         <td>✔</td>
-         <td>您自定义的功能点名称。</td>
+         <td>Point Name</td>
+         <td>Yes</td>
+         <td>Your custom name for the point.</td>
          <td>-</td>
        </tr>
        <tr>
          <td>Object Type</td>
-         <td>✘</td>
-         <td>无需修改，使用默认值即可。</td>
+         <td>No</td>
+         <td>No need to modify; use the default value.</td>
          <td></td>
        </tr>
        <tr>
-         <td>状态类型</td>
-         <td>布尔型点必填</td>
+         <td>Status Type</td>
+         <td>Required for Boolean Point</td>
          <td>
-           <p>当点位为<strong>布尔型</strong>时选择，支持以下：</p>
+           <p>Choose when the point is <strong>Boolean</strong>. Supported options:</p>
            <ul>
-             <li><strong>线圈</strong></li>
-             <li><strong>输入</strong></li>
+             <li><strong>Coil</strong></li>
+             <li><strong>Input</strong></li>
            </ul>
          </td>
-         <td>线圈</td>
+         <td>Coil</td>
        </tr>
        <tr>
-         <td>寄存器类型</td>
-         <td>数值型点必填</td>
+         <td>Reg Type</td>
+         <td>Required for Numeric Point</td>
          <td>
-           <p>当点位为<strong>数值型</strong>时选择，支持以下：</p>
+           <p>Supported options:</p>
            <ul>
-             <li><strong>保持</strong></li>
-             <li><strong>输入</strong></li>
+             <li><strong>Holding</strong></li>
+             <li><strong>Input</strong></li>
            </ul>
          </td>
-         <td>保持</td>
+         <td>Holding</td>
        </tr>
        <tr>
-         <td>数据类型</td>
-         <td>数值型点必填</td>
+         <td>Data Type</td>
+         <td>Required for Numeric Point</td>
          <td>
-           <p>当点位为<strong>数值型</strong>时选择，支持以下：</p>
+           <p>Supported options:</p>
            <ul>
-             <li>整数类型</li>
-             <li>长整型</li>
-             <li>浮点类型</li>
-             <li>有符号整数</li>
-             <li>无符号长整型</li>
+             <li>Integer Type</li>
+             <li>Long Integer Type</li>
+             <li>Float Type</li>
+             <li>Signed Integer</li>
+             <li>Unsigned Long</li>
            </ul>
          </td>
-         <td>整数类型</td>
+         <td>Integer Type</td>
        </tr>
        <tr>
-         <td>轮询频率</td>
-         <td>✘</td>
+         <td>Poll Frequency</td>
+         <td>No</td>
          <td>
-           <p>支持以下选项：</p>
+           <p>Supported options:</p>
            <ul>
-             <li><strong>快速</strong>：高频轮询（适用于关键控制）</li>
-             <li><strong>正常</strong>：常规频率</li>
-             <li><strong>慢速</strong>：低频轮询（适用于非实时状态）</li>
+             <li><strong>Fast</strong>: High frequency polling (for key control)</li>
+             <li><strong>Normal</strong>: Standard frequency</li>
+             <li><strong>Slow</strong>: Low frequency polling (for non-real-time status)</li>
            </ul>
          </td>
-         <td>正常</td>
+         <td>Normal</td>
        </tr>
        <tr>
-         <td>地址格式</td>
-         <td>✔</td>
+         <td>Address Format</td>
+         <td>Yes</td>
          <td>
-           <p>地址格式类型，支持以下：</p>
+           <p>Type of address format. Supported options:</p>
            <ul>
-             <li><strong>十六进制</strong>：如 0x0013。</li>
-             <li><strong>十进制</strong>：如 19。</li>
-             <li><strong>标准Modbus地址</strong>：如 00001、10001。</li>
+             <li><strong>Hex</strong>: Hexadecimal, e.g., 0x0013.</li>
+             <li><strong>Decimal</strong>: e.g., 19.</li>
+             <li><strong>Modbus</strong>: Standard modbus address, e.g., 00001, 10001.</li>
            </ul>
          </td>
-         <td>十进制</td>
+         <td>Decimal</td>
        </tr>
        <tr>
-         <td>地址</td>
-         <td>✔</td>
+         <td>Address</td>
+         <td>Yes</td>
          <td>
-           <p>传入的值 = 实际地址 - 您上文设置的偏移地址</p>
+           <p>Input value = Actual address – The offset address you set above</p>
          </td>
          <td>0</td>
        </tr>
        <tr>
-         <td>设备类型</td>
-         <td>✔</td>
-         <td>点位所属的设备类型。此字段在您将 Modbus TCP 设备接入 Aqara Home 时作展示用途。</td>
+         <td>Device Type</td>
+         <td>Yes</td>
+         <td>The device type this point belongs to. This field is for display when you connect Modbus TCP devices to Aqara Home.</td>
          <td>-</td>
        </tr>
      </tbody>
    </table>
 
 
-### 什么是偏移地址？
+### What is an Offset Address?
 
-在 Modbus 协议中，设备中的数据（如寄存器、线圈）都有一个编号地址，用来读取或写入。
+In the Modbus protocol, each data item in the device (such as registers or coils) has a numbered address used for reading or writing.
 
-但由于 Modbus 报文中使用的是从 0 开始的内部地址，而用户看到的地址通常是从 1、30001、40001 等逻辑地址开始的，所以 Aqara Studio 需要一个“偏移地址”来进行自动转换。
+However, the addresses used in Modbus messages start from 0 internally, while users often see addresses starting from 1, 30001, 40001, and so on. Therefore, Aqara Studio asks for an “offset address” to help automatically convert these values.
 
-例如，某个功能点的真实地址是 40001（保持寄存器）。如果你在设置 Modbus TCP 设备时将“保持寄存器偏移地址”设置为 40000，那么，在为这个设备添加点时，你只需要填写数据地址为 1，Aqara Studio 就会自动加上偏移量，计算为：
+For example, imagine a point with a real address of 40001 (holding register). If you set the “Holding Register Offset Address” to 40000, then when you add this point, you only need to input a data address of 1. Aqara Studio will automatically add the offset and calculate:
 
-最终读取地址 = 偏移地址 + 数据地址 = 40000 + 1 = 40001
+Final read address = Offset address + Data address = 40000 + 1 = 40001
 
-这使得用户在配置多个点位时，只需填写相对地址（如 1、2、3），无需每次都写完整 Modbus 地址，既方便又统一。
+This helps you configure many points easily. Just use the relative address (like 1, 2, 3) instead of the full Modbus address each time. This is both simple and consistent.
 
-## 下一步
+## Next Steps
 
-接下来，您可以直接 [查看该设备的详情和控制该设备](./../device-management/basic-information.mdx)，还可以利用该设备 [编排自动化逻辑](./../automation.mdx) 了。
+Now, you can [view details and control the device](./../device-management/basic-information.mdx), or [use the device in automation](./../automation.mdx).
