@@ -1,21 +1,17 @@
 # KNX IP 设备接入
 
-本文说明如何将 KNX/IP。 设备接入 Aqara Studio。
+本文说明如何将 KNX/IP 设备接入 Aqara Studio。
 
 ## 前提条件
 
 在开始之前，请确保：
 - 已在 [ETS6](https://www.knx.org/knx-en/for-professionals/software/ets6/) 上添加了 KNX/IP 设备、为其添加组地址、获取其物理地址和 DPT 数据类型。如需了解相关教程，请阅读 KNX 协会的 [ETS6 Professional 官网文档](https://support.knx.org/hc/en-us/sections/4404423716242-ETS6-Professional)，或观看 [ETS for beginners 系列视频](https://www.youtube.com/playlist?list=PL9NWvz0cOjNOboCuten_R6gmMvKhhO3xZ)。 
-  > **说明**
-  >
-  > ETS6（Engineering Tool Software 6）是 [KNX 协会](https://www.knx.org/) 推出的官方工具，用于配置和调试 KNX 智能建筑系统。
-  > 通过 ETS6，您可以创建项目、导入设备、设置参数、分配地址，并将配置下载到实际设备中。ETS6 支持所有品牌的 KNX 认证产品，是实施智能家居和楼宇自动化不可或缺的软件平台。
 - 您的 Windows 电脑、KNX/IP 设备和 Aqara 网关处于同一局域网。
 
 ## 添加 KNX/IP 设备
 
 1. 在左侧侧边栏点击进入**设备管理**页面。
-2. 在左侧协议目录单击“+”按钮，在弹窗中选择 `KNX IP`，以添加 `KNX` 文件夹。
+2. 在左侧协议目录单击“+”按钮，在弹窗中选择 `KNX IP`，以添加 `KNX IP` 文件夹。
 3. 右键单击 `KNX IP` 文件夹，选择**增加**，此时你可以看到该目录下出现一个 `KNX IP 设备` 文件夹。
 4. 双击该文件夹，在**概览**选项卡，你可以修改该设备的`显示名称`。
 5. 切换至**配置**选项卡，展开**设备配置**，填写如下参数：
@@ -38,7 +34,7 @@
        </tr>
        <tr>
          <td>连接类型</td>
-         <td><strong>连接类型</strong>：选择您设备支持的连接模式：<ul><li><strong>隧道模式</strong>：适用于点对点连接（如下载程序、智能家居系统）。</li><li><strong>路由模式</strong>：组播连接（用于监控总线流量或组播方式控制）。</li></ul><strong>说明：</strong>如果您不清楚设备的连接类型，请阅读设备说明书，或咨询该设备厂商技术支持。</td>
+         <td>选择您设备支持的连接模式：<ul><li><strong>隧道模式</strong>：适用于点对点连接（如下载程序、智能家居系统）。</li><li><strong>路由模式</strong>：组播连接（用于监控总线流量或组播方式控制）。</li></ul><strong>说明：</strong>如果您不清楚设备的连接类型，请阅读设备说明书，或咨询该设备厂商技术支持。</td>
        </tr>
        <tr>
          <td>KNX 隧道 IP 地址</td>
