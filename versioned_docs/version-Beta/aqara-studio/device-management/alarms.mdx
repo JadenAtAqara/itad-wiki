@@ -1,1 +1,38 @@
-# 告警
+# Configurate Point Alarms
+
+In device management for smart home systems, Aqara Studio lets you flexibly configure and customize alarm rules for each function point. This ensures real-time monitoring of abnormal states and a fast response. This article explains how to set up different types of alarms, trigger conditions, and alarm messages for various types of data points. This will help you protect device safety and keep your system stable.
+
+## Alarm Configuration Steps
+
+1. Go to the **Device** page. In the device tree on the left, find the function point folder you want to view.
+2. Double-click this folder to switch to the function point's **Essential** tab.
+3. Find the **Alarm config** section and click the **+** button.
+4. In the popup, set the following parameters:
+
+    | Parameter         | Description                                                                                      |
+    |------------------|--------------------------------------------------------------------------------------------------|
+    | Source Name      | The custom name of the alarm.                                                                    |
+    | Alarm Value      | The value that triggers the alarm. For boolean function points, this is a single-choice parameter. For enum function points, you can select multiple values.  |
+    | Alarm Class       | Alarm level. Options include Normal, Urgent, Important, or you can set a custom type.            |
+    | Delay Time       | The system will only send an alarm to the user if the function point stays abnormal for this period. This helps to avoid false alarms caused by short fluctuations.  |
+    | Normal Delay Time| After the function point leaves the alarm state, it must stay normal for this period to be considered recovered. This prevents frequent reminders due to temporary changes. |
+    | To Off Normal Text | The message shown to the user when the alarm is triggered.                                        |
+    | To Normal Text | The message shown to the user after recovery.                                                     |
+
+    For numeric function points, there are also these parameters:
+
+    | Parameter         | Description                                                                 |
+    |-------------------|-----------------------------------------------------------------------------|
+    | Limit Enabled     | Choose to enable the lower limit, upper limit, or both.                      |
+    | Low Limit       | The lowest normal value allowed.                                             |
+    | High Limit       | The highest normal value allowed.                                            |
+    | Deadband         | A range centered on the upper or lower limit. Changes within ± this threshold will not cause a system response or output. This helps avoid chattering and false alarms. |
+
+    After setting the parameters, click Confirm. You will see a new card in the **Alarm config** section.
+5. Toggle the switch on the card to enable the alarm configuration.
+
+## FAQ
+
+### Why does Aqara Studio still send alarm reminders after I have acknowledged the alarm?
+
+If the function point value has not changed and still matches the alarm condition, Aqara Studio will keep reminding you about the alarm even if you acknowledge it manually. Only when the value returns to normal will the system stop sending alarm reminders.
