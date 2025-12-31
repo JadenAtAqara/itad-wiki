@@ -100,8 +100,7 @@
                               "aqara-studio/logic/blocks/string-blocks",
                               "aqara-studio/logic/blocks/script-blocks"
                           ]
-                          },
-                          "aqara-studio/logic/examples"
+                          }
                       ]
                     }
                 ]

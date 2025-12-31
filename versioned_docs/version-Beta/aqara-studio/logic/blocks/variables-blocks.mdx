@@ -1,1 +1,27 @@
-# 变量
+# Variables Blocks
+
+## Overview
+
+Variable logic blocks are used to define, store, and transfer data in automation flows. They are the foundation for building flexible and complex logic. With a variable block, you can:
+
+- **Define static values**: Directly set an initial value of type numeric, boolean, enum, or string for later logic use.
+- **Receive and store data**: Write outputs from other logic blocks into the variable, enabling data flow and temporary state storage. This helps make your logic clearer and easier to maintain.
+- **Assign and reference dynamically**: Variables can be assigned or referenced multiple times during automation runs. You can use them for conditions, calculations, device control, and more.
+
+Using variables flexibly gives your automations stronger data-processing power and better maintainability. For example, you may use a calculation block to get an intermediate result, store it in a variable, and then reference this variable in several places. This avoids repeated calculations and improves overall efficiency.
+
+## Supported Types
+
+Aqara Studio supports the following types of variables:
+- Boolean variables
+- Enum variables
+- Numeric variables
+- String variables
+
+## How to Use Variables
+
+After adding a variable block to the canvas, you can use it in two ways: assigning a value or receiving a value.
+- For assigning (manual setting and passing values):
+    1. Double-click the variable block. In the settings page, expand `Type`, set the `Value`, and click **Confirm**.
+    2. Connect the right node of the `Output` on the variable block to the left node of `Input` on the target block.
+- For receiving values (using outputs from other blocks): Directly connect the right node of `Output` on another logic block to the left node of `Input` on the variable block.
