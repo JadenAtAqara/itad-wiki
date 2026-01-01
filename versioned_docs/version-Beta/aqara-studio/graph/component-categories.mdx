@@ -1,518 +1,518 @@
-# 组件类型
+# Component Categories
 
-组件类型包含[设备](#设备)、[基础组件](#基础组件)、[控制](#控制)、[基础图表](#基础图表)、[表格](#表格)、[媒体](#媒体)和[其他](#其他)。
+Component categories include [device](#device), [basic component](#basic-component), [control](#control), [basic chart](#basic-chart), [table](#table), [media](#media), and [other](#other).
 
-下面将详细介绍各类组件的用途、使用方法及其各自特有的属性配置，帮助您根据实际需求灵活选择与应用。
+The following sections provide a detailed introduction to the usage, configuration, and unique property settings of each component category. This will help you select and use components flexibly according to your specific needs.
 
-## 设备
+## Device
 
-本节说明 Aqara Studio 提供的设备组件类型和添加设备组件后的必要配置流程。
+This section explains the types of device components available in Aqara Studio and the essential configuration.
 
-### 支持设备类型
+### Supported Device Types
 
-目前可供您使用的设备组件类型如下：
+The available device component types are:
+- Lamp
+- Air conditioner
+- Switch socket
+- Curtain
 
-- 灯
-- 空调
-- 开关插座
-- 窗帘
+### Configuration Process
 
-### 配置流程
+After adding a device component to the canvas, please follow the configuration steps below:
 
-当您将设备组件添加到画板上后，请参考以下流程完成配置：
+1. **(Required) Link a real device**  
+   Select the component, switch to the **Data** tab, find the **Data Configuration** section, and link this component to a real device.
 
-1. **（必选）关联真实设备**  
-   在组件被选中后，切换至**设备**选项卡，找到**数据配置**部分，将该组件与您实际拥有的设备进行关联。
+2. **(Optional) Customize display information**  
+   Still under the **Data** tab, go to the **Card Info** section to configure and adjust the device information shown on the interface. The main configuration items include:
 
-2. **（可选）自定义展示信息**  
-   仍在**设备**选项卡下，通过**卡片信息**部分，配置和修改需要在界面中显示的设备相关信息。主要配置项如下：
+   | Item         | Description                                                                                       |
+   |--------------|---------------------------------------------------------------------------------------------------|
+   | Device Name  | The name displayed on the interface. You can inherit the device’s original name (default) or customize it for easier identification and management. |
+   | Room         | Space where the device belongs. Automatically gets the actual room info (default), or customize as needed. |
+   | Status Info  | Real-time display of specific device statuses (such as switch, mode, etc.). You can hide this if not needed. |
 
-   | 配置项      | 说明                                                         |
-   |-----------|------------------------------------------------------------|
-   | 设备名称     | 展示于界面的设备名称，可选择继承设备原名（默认）或自定义，方便识别管理。   |
-   | 房间        | 设备归属空间，可自动获取实际房间信息（默认），也可按需自定义。             |
-   | 状态信息     | 实时展示设备的特定状态（如开关、模式等），如无需求可选择隐藏此项。   |
+3. **(Optional) Style customization**  
+   If the default style does not meet your requirements, go to the **Style** tab and customize in the **Card Configuration** section. Two configuration modes are supported:
 
-3. **（可选）样式个性化设置**  
-   若默认样式不符合需求，可前往**样式**选项卡，在**卡片配置**处进行自定义。支持两种配置模式：
+   - **Basic config:** Quickly modify the styles of main elements (such as `device icon`, `switch icon`, and `card font`) for all statuses with one click. This is simple and efficient for common scenarios.
+   - **Senior:** Customize the appearance for different device statuses (such as on, off, abnormal, etc.) separately, with more detailed property options (icons, font, background color, etc.), making it suitable for more complex or personalized visual designs.
 
-   - **基础模式**：可一键修改所有状态下的主要元素样式，如`设备图标`、`开关图标`和`字体`，简单高效，适合常见需求。
-   - **高阶模式**：可针对设备不同状态（如开启、关闭、异常等）分别定制外观，并开放更多细化属性（如各类图标、字体、背景色等），适用于更复杂或个性化的视觉呈现。
+By following these steps, you can flexibly configure and beautify device components based on your business needs, achieving both practicality and appealing visuals.
 
-通过以上步骤，您可以根据实际业务灵活配置并美化设备组件，使其兼具实用性与美观性。
+## Basic Component
 
-## 基础组件
+基础组件包括 [text](#text)、[shape](#shape)、[line segment](#line-segment)、[button](#button)和[border](#border)。您可针对这些组件灵活设置**样式**属性，实现个性化的视觉效果。
 
-基础组件包括 [文本](#文本)、[形状](#形状)、[线段](#线段)、[按钮](#按钮)和[边框](#边框)。您可针对这些组件灵活设置**样式**属性，实现个性化的视觉效果。
+### Text
 
-### 文本
+The text component has the following exclusive style settings, including basic style and text properties.
 
-文本组件具备以下专属样式配置，即基础样式和文本。
+The basic style properties are as follows:
 
-基础样式的属性如下：
+| Category    | Property          | Description                                                                                    |
+|-------------|-------------------|------------------------------------------------------------------------------------------------|
+| Font        | Font family       | You can change to the specified font.                                                          |
+|             | Font size         | Set the text size.                                                                             |
+|             | Font weight       | Select the font thickness.                                                                     |
+|             | Color             | Customize the font color.                                                                      |
+| Shadow      | X offset          | Controls the horizontal distance of the shadow. Range: [-36, 36]. Smaller values move left.    |
+|             | Y offset          | Controls the vertical distance of the shadow. Range: [-36, 36]. Smaller values move up.        |
+|             | Blur              | Range: [0, 36]. Larger values make the shadow more blurred.                                    |
+|             | Color             | Customize the color of the shadow.                                                             |
 
-| 分类       | 属性             | 说明                                                                                 |
-|------------|------------------|--------------------------------------------------------------------------------------|
-| 字体   | 字体族           | 可更换为指定字体。                                                                   |
-|            | 字号             | 设置文本尺寸。                                                                       |
-|            | 字重             | 选择字体粗细。                                                                       |
-|            | 颜色         | 自定义字体颜色。                                                                     |
-| 阴影   | X 轴偏移    | 控制阴影在水平方向上的距离，取值区间为 [-36, 36]，数值越小阴影越靠左。                 |
-|            | Y 轴偏移    | 控制阴影在垂直方向上的距离，取值区间为 [-36, 36]，数值越小阴影越靠上。                 |
-|            | 模糊度       | 范围 [0, 36]，数值越大阴影越模糊。                                                  |
-|            | 颜色         | 自定义阴影的颜色。                                                                 |
+The text properties are as follows:
 
-文本的属性如下：
-
-| 属性     | 说明                                                                                 |
-|----------|--------------------------------------------------------------------------------------|
-| 行高     | 建议设置为大于字体字号的数值，可防止多行文本重叠，保证可读性。                       |
-| 对齐方式 | 包括水平对齐（左对齐、居中对齐、右对齐）与垂直对齐（顶部对齐、居中对齐、底部对齐）。   |
-
-### 形状
-
-形状组件具备以下专属样式配置，即基础样式。
-
-| 分类   | 属性       | 说明                                                         |
-|--------|------------|--------------------------------------------------------------|
-| 填充   | 颜色       | 设置形状的背景填充色。                                       |
-| 描边   | 粗细       | 设置描边线条的宽度。                                         |
-|        | 颜色       | 设置描边线条的颜色。                                         |
-|        | 样式       | 可选描边为实线、虚线或点线。                                 |
-| 圆角   | -          | 控制形状的圆角半径，数值越大圆角越明显。                     |
-| 阴影   | 阴影类型   | 可选外阴影、内阴影等不同类型。           |
-|        | X 轴偏移       | 控制阴影在水平方向上的距离，取值区间为 [-36, 36]，数值越小阴影越靠左。               |
-|        | Y 轴偏移       | 控制阴影在垂直方向上的距离，取值区间为 [-36, 36]，数值越小阴影越靠上。              |
-|        | 模糊度     | 阴影的模糊范围，数值越大越模糊。                            |
-|        | spread     | 阴影四周的扩散距离。                    |
-|        | 颜色       | 设置阴影的颜色。                                             |
-
-### 线段
-
-线段组件具备以下专属样式配置，即基础样式。
-
-| 分类 | 属性   | 说明                                      |
-| -- | ---- | --------------------------------------- |
-| 描边 | 粗细   | 设置线段的宽度。                                |
-|    | 颜色   | 设置线段的颜色。                                |
-|    | 样式   | 可选线段为实线、虚线或点线。                          |
-| 圆角 | 圆角半径 | 控制线段两端的圆角弧度，数值越大圆角越明显。                  |
-| 阴影 | 所有属性 | 与 [形状](#形状) 的`阴影`属性完全一致，包括类型、偏移、模糊、扩散和颜色。 |
-
-### 按钮
-
-对于按钮，您需要先 [设置按钮需要执行的动作和展示的文本](#设置动作和文本)，随后再 [设置样式](#样式配置)。
-
-#### 设置动作和文本
-
-在画布上添加按钮组件后，请遵循以下步骤完成必要配置：
-1. 在**配置抽屉**切换至**动作**，设置点击该按钮后需要执行的动作，详情请参考 [# 组件与素材的通用属性 - 动作](./common-properties.mdx#动作)。
-2. 双击该按钮，编辑按钮上的文本。
-
-### 样式配置
-
-按钮组件具备以下专属样式配置，即基础样式和 Hover（悬停效果）。
-
-基础样式的属性如下：
-
-| 分类 | 属性 | 说明 |
-| - | - | - |
-| 填充 | 颜色 | 与 [形状](#形状) 的`填充`属性完全一致。 |
-| 描边 | 所有属性 | 与 [形状](#形状) 的`描边`属性完全一致，包括粗细、颜色和样式。 |
-| 圆角 | - | 与 [形状](#形状) 的`圆角`属性完全一致。 |
-| 阴影 | 所有属性 | 与 [形状](#形状) 的`阴影`属性完全一致，包括类型、偏移、模糊、扩散和颜色。 |
-| 字体 | 所有属性 | 与 [文本](#文本) 的`字体`属性完全一致，包括字体族、字号、字重和颜色。 |
-
-Hover 的属性如下：
-
-| 属性     | 说明                   |
-|----------|------------------------|
-| 颜色     | 悬停时按钮文字的颜色。   |
-| 背景色   | 悬停时按钮的填充色。     |
-| 边框颜色 | 悬停时按钮描边的颜色。   |
+| Property    | Description                                                                                |
+|-------------|-------------------------------------------------------------------------------------------|
+| Row height | It is recommended to set it greater than the font size to prevent overlap and ensure readability. |
+| Alignment   | Includes horizontal alignment (left, center, right) and vertical alignment (top, center, bottom). |
 
 
-### 边框
+### Shape
 
-边框组件具备以下专属样式配置，即基础样式和边框样式。
+The shape component provides the following style options as its basic style:
 
-基础样式的属性如下：
+| Category | Property   | Description                                                                   |
+|----------|------------|-------------------------------------------------------------------------------|
+| Fill     | Color      | Set the background fill color of the shape.                                   |
+| Stroke   | Thickness  | Set the width of the border line.                                             |
+|          | Color      | Set the color of the border line.                                             |
+|          | Style      | Choose border as solid, dashed, or dotted line.                               |
+| Rounded Corner   | -          | Set the corner radius of the shape. A higher value creates more rounded corners. |
+| Shadow   | Type       | Choose shadow type, such as outer or inner shadow.                            |
+|          | X offset   | Set the horizontal distance of the shadow. Range is [-36, 36]. Smaller values move the shadow to the left.  |
+|          | Y offset   | Set the vertical distance of the shadow. Range is [-36, 36]. Smaller values move the shadow upward.         |
+|          | Blur       | Set the blur range of the shadow. A larger value makes the shadow more blurred.|
+|          | Spread     | Set the spread distance of the shadow on all sides.                           |
+|          | Color      | Set the color of the shadow.                                                  |
 
-| 分类 | 属性 | 说明 |
-| - | - | - |
-| 填充 | 颜色 | 与 [形状](#形状) 的`填充`属性完全一致。 |
-| 描边 | 所有属性 | 与 [形状](#形状) 的`描边`属性完全一致，包括粗细、颜色和样式。 |
 
-边框样式的属性如下：
+### Line Segment
 
-| 属性   | 说明                                   |
-|--------|----------------------------------------|
-| 颜色   | 支持分别设置主、副边框颜色，实现边框不同区域的颜色区分。 |
-| 比例   | 可配置边框的比例。   |
-| 类型   | 选择边框样式。     |
+The line segment component includes the following exclusive style options, which are the basic styles.
 
-## 控制
+| Category | Property      | Description                                                                 |
+|----------|--------------|-----------------------------------------------------------------------------|
+| Stroke   | Thickness    | Set the width of the line segment.                                          |
+|          | Color        | Set the color of the line segment.                                          |
+|          | Style        | Choose the line segment to be solid, dashed, or dotted.                     |
+| Rounded Corner | Corner radius| Control the roundness of both ends of the segment. Higher values make it more rounded. |
+| Shadow   | All properties| The shadow properties are exactly the same as those of [shape](#shape), including type, offset, blur, spread, and color. |
 
-当 Aqara Studio 内置的设备组件无法满足您的特殊需求时，您可以通过添加控制组件，自定义实现与真实设备的数据交互。
+### Button
 
-本节将介绍控制组件的通用配置流程及各类控制组件的功能和专属属性，帮助您灵活构建定制化的设备控制界面。
+For buttons, you first need to [set the actio and the display text](#set-action-and-text), then [set the style](#configure-styles).
 
-### 为设备组件配置数据
+#### Set Action and Text
 
-1. 在画板中添加任意需要的控制组件，选中该组件，打开其**设置抽屉**。
-2. 切换到**数据**选项卡，将**类型**设置为`数据源`。
-3. 单击**更改数据源**，在弹窗中，左侧双击目标功能点数据文件夹，右侧勾选所需属性，最后点击**完成**进行绑定。
+After adding a button component to the canvas, follow these steps for the required configuration:
+1. In the **Configuration Drawer**, switch to the **Action** tab. Set the action that should be performed when the button is clicked. For more details, please refer to [Common Properties for Components and Assets - Action](./common-properties.mdx#action).
+2. Double-click the button to edit its display text.
 
-完成以上操作后，您的控制组件便已成功关联到真实设备的数据，可用于交互。
+#### Configure Styles
 
-### 布尔开关
+The button component has two exclusive style configs: the basic style and the hover effect.
 
-此组件用于切换设备的开/关状态。
+The properties for the basic style are:
 
-布尔开关组件由以下四种元素组成：图片、功能名称、开关和背景。
+| Category | Property    | Description                                                                                                     |
+| -        | -           | -                                                                                                              |
+| Fill     | Color       | Exactly the same as the `Fill` property of [Shape](#shape).                                                    |
+| Stroke   | All props   | Exactly the same as the `Stroke` property of [Shape](#shape), including thickness, color, and style.           |
+| Rounded Corner | -     | Exactly the same as the `Rounded Corner` property of [Shape](#shape).                                          |
+| Shadow   | All props   | Exactly the same as the `Shadow` property of [Shape](#shape), including type, offset, blur, spread, and color. |
+| Font     | All props   | Exactly the same as the `Font` property of [Text](#text), including font family, size, weight, and color.       |
 
-图片的属性如下：
+The properties for hover effect are:
 
-| 属性 | 说明 |
+| Property     | Description                                             |
+|--------------|--------------------------------------------------------|
+| Color        | The button text color when hovered.                    |
+| Background   | The fill color of the button when hovered.             |
+| Border Color | The border color of the button when hovered.           |
+
+
+### Border
+
+The border component has two exclusive style configurations: Basic style and Border style.
+
+The properties for the basic style are as follows:
+
+| Category | Property    | Description                                                                            |
+|----------|-------------|----------------------------------------------------------------------------------------|
+| Fill     | Color       | Exactly the same as the `Fill` property of [Shape](#shape).                            |
+| Stroke   | All props   | Exactly the same as the `Stroke` property of [Shape](#shape), including thickness, color, and style. |
+
+The properties for the border style are as follows:
+
+| Property | Description                                                                                  |
+|----------|---------------------------------------------------------------------------------------------|
+| Color    | You can set main and secondary border colors separately to distinguish different border areas. |
+| Ratio    | Configure the ratio of the border.                                                           |
+| Type     | Select the border style.                                                                     |
+
+## Control
+
+When the built-in device components in Aqara Studio cannot meet your special needs, you can add Control components to customize data interaction with real devices.
+
+This section introduces the general configuration steps for control components, as well as the features and unique properties of different types of control components. This will help you easily build a custom device control interface.
+
+### Configure Data for Control Components
+
+1. Add a control component to the canvas. Select the component and open its **Configuration Drawer**.
+2. Switch to the **Data** tab and set **Type** to `Data Source`.
+3. Click **Change Data Source**. In the pop-up window, double-click the target function point data folder on the left, check the required properties on the right, and then click **Confirm** to bind.
+
+After these steps, your control component will be successfully connected to real device data and ready for interaction.
+
+### Boolean Switch
+
+This component is used to switch the on/off state of a device.
+
+A boolean switch consists of four elements: Image, Function Name, Switch, and Background.
+
+The image properties are:
+
+| Property | Description |
 | - | - |
-| 图片 | 如果您不满意 Aqara Studio 提供的默认图标，您可以在此处选择 [您在素材库上传的图片或图标](./assets.mdx#上传图片和图标)。 |
-| 填充 | 当上述图片为 PNG 格式时，可以在此处配置图片的背景颜色。 |
-| 圆角 | 与 [形状](#形状) 的`圆角`属性完全一致。 |
-| 尺寸 | 在此处设置图片的宽与高。 |
+| Image | If you are not satisfied with the default icon provided by Aqara Studio, you can select [an image or icon you have uploaded to the material library](./assets.mdx#upload-images-and-icons) here. |
+| Fill | If the image is in PNG format, you can set the background color of the image here. |
+| Rounded Corner | This property is the same as the `Rounded Corner` property of [Shape](#shape). |
+| Size | Set the width and height of the image. |
 
-功能名称的属性如下：
+The function name properties are:
 
-| 属性   | 说明                          |
-| ------ | ----------------------------- |
-| 功能名称 | 设置组件展示的功能名称。        |
-| 颜色   | 设置功能名称文本的颜色。        |
-| 字体   | 可配置文本的字体族、字号和字重。 |
+| Property     | Description                           |
+| ------------ | ------------------------------------- |
+| Function Name| Set the displayed function name of the component. |
+| Color        | Set the color of the function name text. |
+| Font         | Configure the font family, size, and weight. |
 
-开关（Toggle 类型控件）的属性如下：
+The properties for the switch (toggle control) are:
 
-| 属性   | 说明                                           |
-| ------ | ---------------------------------------------- |
-| 尺寸   | 设置控件的整体尺寸。                          |
-| 开启颜色 | 设置控件开启状态下的填充颜色。                  |
-| 关闭颜色 | 设置控件关闭状态下的填充颜色。                  |
-| 滑块颜色 | 设置滑块部分的填充颜色。                        |
+| Property    | Description                                 |
+| ----------- | ------------------------------------------- |
+| Size        | Set the overall size of the control.        |
+| Open    | Set the fill color when the control is on.  |
+| Close    | Set the fill color when the control is off. |
+| Slider  | Set the fill color of the slider.        |
 
-背景的属性如下：
+The background properties are:
 
-| 分类 | 属性 | 说明 |
+| Category | Property | Description |
 | - | - | - |
-| 填充 | 颜色 | 与 [形状](#形状) 的`填充`属性完全一致。 |
-| 描边 | 所有属性 | 与 [形状](#形状) 的`描边`属性完全一致，包括粗细、颜色和样式。 |
-| 圆角 | - | 与 [形状](#形状) 的`圆角`属性完全一致。 |
+| Fill | Color | Same as the `Fill` property of [Shape](#shape). |
+| Rounded Corner | - | Same as the `Rounded Corner` property of [Shape](#shape). |
+| Stroke | All Props | Same as the `Stroke` property of [Shape](#shape), including thickness, color, and style. |
 
-### 布尔图片开关
+### Boolean Image Switch
 
-此组件通过图片进行状态切换，直观展示开/关。
+This component switches states using images, providing a clear visual representation of on/off.
 
-布尔开关组件由以下四种元素组成：功能名称、图片和背景。
+The Boolean Image Switch component consists of the following three elements: Function Name, Image, and Background.
 
-布尔图片开关组件的**功能名称**属性和**背景**属性与[布尔开关](#布尔开关)组件一致。
+The **Function Name** and **Background** properties of the Boolean Image Switch are the same as those in the [Boolean Switch](#boolean-switch) component.
 
-**图片**的属性如下：   
-| 属性 | 说明 |
-| - | - |
-| 开启图片 | 表示状态为`开启`的图片。如果您不满意 Aqara Studio 提供的默认图标，您可以在此处选择 [您在素材库上传的图片或图标](./assets.mdx#上传图片和图标)。 |
-| 开启关闭 | 表示状态为`关闭`的图片。如果您不满意 Aqara Studio 提供的默认图标，您可以在此处选择 [您在素材库上传的图片或图标](./assets.mdx#上传图片和图标)。 |
-| 尺寸 | 与 [布尔开关](#布尔开关) 的 `尺寸` 属性完全一致。  |
-| 圆角 | 与 [形状](#形状) 的`圆角`属性完全一致。 |
+The properties for **Image** are as follows:   
+| Property      | Description |
+| -             | - |
+| Open Image      | The image indicating the "on" state. If you are not satisfied with the default icon provided by Aqara Studio, you can select [an image or icon you have uploaded to the material library](./assets.mdx#upload-images-and-icons) here. |
+| Close Image     | The image indicating the "off" state. If you are not satisfied with the default icon provided by Aqara Studio, you can select [an image or icon you have uploaded to the material library](./assets.mdx#upload-images-and-icons) here. |
+| Size          | This property is exactly the same as the `Size` property of the [Boolean Switch](#boolean-switch). |
+| Rounded Corner| This property is the same as the `Rounded Corner` property of [Shape](#shape). |
 
+### String Value
 
-### 字符串值
+This component is used to display string-type data.
 
-此组件用于显示字符串型数据。
+A String Value component is composed of four elements: Image, Function Name, Parameter, and Background.
 
-字符串值组件由以下四种元素组成：图片、功能名称、参数和背景。
+The **Image**, **Function Name**, and **Background** properties of this component are the same as those of the [Boolean Switch](#boolean-switch) component.
 
-字符串组件的**图片**、**功能名称**与**背景**属性，均与[布尔开关](#布尔开关)组件保持一致。
+**Parameter** refers to the string value, and its properties are as follows:
+| Property        | Description                                             |
+| --------------  | ------------------------------------------------------ |
+| Color           | Set the text color of the string value.                |
+| Font            | Configure the font family, size, and weight.           |
+| Show Value      | Control whether the real-time string value is displayed in this component. |
 
-**参数**是指字符串值，属性如下：
-| 属性       | 说明                                                   |
-| ---------- | ------------------------------------------------------ |
-| 颜色       | 设置字符串值文本的颜色。                               |
-| 字体       | 可配置字体族、字号和字重。   |
-| 是否显示值 | 控制该组件是否显示字符串的实时值。                     |
+### Execute Auto Logic
 
-### 字符串动作
+This component is used to trigger "Logic" automation based on string values.
 
-此组件用于基于字符串值触发制定 Logic 类型自动化。
+The Execute Auto Logic component consists of three elements: Image, Function Name, and Background.
 
-字符串动作组件包含图片、功能名称和背景三个元素。
+The descriptions of the **Image**, **Function Name**, and **Background** properties in this component are the same as those of the [Boolean Switch](#boolean-switch) component.
 
-该组件的**图片**、**功能名称**与**背景**属性的说明，与[布尔开关](#布尔开关)组件一致。
+### Number Input
 
-### 数字输入
+This component allows users to input numbers manually for precise adjustment.
 
-此组件支持手动输入数字，实现精确调整。
+The Number Input component includes three elements: Image, Function Name, and Background.
 
-数字输入组件包含图片、功能名称和背景三个元素。
+The descriptions of the **Image**, **Function Name**, and **Background** properties in this component are the same as those of the [Boolean Switch](#boolean-switch) component.
 
-该组件的**图片**、**功能名称**与**背景**属性的说明，与[布尔开关](#布尔开关)组件一致。
+### Number Slider
 
-### 数字滑块
+This component allows users to adjust numbers by dragging a slider, making it suitable for continuous parameter control.
 
-此组件可通过拖动滑块调整数值，适用于连续型参数控制。
+The Number Slider component consists of five elements: Image, Function Name, Parameter, Slider Bar, and Background.
 
-数字滑块组件包含图片、功能名称、参数、滑动条和背景五个元素。
+The descriptions of the **Image**, **Function Name**, and **Background** properties in this component are the same as those of the [Boolean Switch](#boolean-switch) component.
 
-该组件的**图片**、**功能名称**与**背景**属性的说明，与[布尔开关](#布尔开关)组件一致。
+**Parameter** displays the current value of the `Slider Bar`:
 
-**参数**用于显示`滑条`的当前值：
+| Property      | Description                          |
+| ------------- | ------------------------------------ |
+| Text Color    | Set the text color of the value.     |
+| Font          | Configure font type, size, and weight. |
 
-| 属性     | 说明                           |
-| -------- | ------------------------------ |
-| 字体颜色  | 配置数值的文本颜色。             |
-| 字体     | 配置字体类型、大小、字重等。      |
+**Slider Bar** related properties:
 
-**滑动条**相关属性：
+| Property      | Description                                      |
+| ------------- | ------------------------------------------------ |
+| Slider bar color       | Set the color of the entire slider bar.          |
+| Slider Track         | Set the color of the track on the left side of the current value. |
 
-| 属性   | 说明                                    |
-| ------ | --------------------------------------- |
-| 滑条   | 设置整体滑动条的颜色。                  |
-| 滑槽   | 设置已滑过（当前值左侧）部分的颜色。    |
+### Number Card
 
-### 数字卡片
+This component displays numeric information in the form of a card.
 
-此组件以卡片形式展示数字信息。
+The Number Card component contains three elements: Number, Number Image, and Background.
 
-数字卡片组件包含数字、数字图片、和背景三个元素。
+The description of the **Background** property in this component is the same as that of the [Boolean Switch](#boolean-switch) component.
 
-该组件的**背景**属性的说明，与[布尔开关](#布尔开关)组件一致。
+**Number** related properties:
 
-**数字**相关属性：
+| Property      | Description                      |
+| ------------- | -------------------------------- |
+| Color         | Set the text color of the number. |
+| Font          | Configure font type, size, and weight. |
 
-| 属性     | 说明                           |
-| -------- | ------------------------------ |
-| 颜色  | 配置数字的文本颜色。             |
-| 字体     | 配置字体类型、大小、字重等。      |
+**Number Image** refers to the image behind each digit. If you don't want to use the default image provided by Aqara Studio, click the **+** button to select [an image or icon you have uploaded to the material library](./assets.mdx#upload-images-and-icons).
 
-**数字图片**是指每个数字背后的图片，如果您不希望使用 Aqara Studio 提供的默认图片，单击 **+** 按钮，即可选择 [您在素材库上传的图片或图标](./assets.mdx#上传图片和图标)。 
+### Number Increment/Decrement
 
-### 数字加减
+This component modifies the device value using plus and minus buttons, making operation easy.
 
-此组件通过加减按钮修改实际设备的数值，操作便捷。
+The Number Increment/Decrement component consists of four elements: Image, Function Name, Adjust, and Background.
 
-数字加减组件包含图片、功能名称、调节和背景四个元素。
+The descriptions of the **Image**, **Function Name**, and **Background** properties in this component are the same as those of the [Boolean Switch](#boolean-switch) component.
 
-该组件的**图片**、**功能名称**与**背景**属性的说明，与[布尔开关](#布尔开关)组件一致。
+**Adjust** displays the current value of the device and lets users change the value using plus and minus buttons. The configurable properties include:
 
-**调节**会显示设备当前数值，并允许用户通过增减按钮改变数值。其可配置属性包括：
+| Property      | Description                         |
+| ------------- | ----------------------------------- |
+| Size          | Set the overall width and height of this element. |
+| Font          | Configure the font family, size, and weight for the number. |
+| Font Color    | Set the text color of the value.     |
+| Button Background | Set the background color of this element. |
+| Stroke Color  | Set the border color of this element. |
 
-| 属性       | 说明               |
-| ---------- | ------------------ |
-| 尺寸       | 设置此元素的的整体宽度与高度。 |
-| 字体       | 配置数字的字体族、大小、字重等。 |
-| 字体颜色   | 配置数值文本颜色。     |
-| 按钮背景   | 设置此元素的背景颜色。 |
-| 描边颜色   | 设置此元素的描边颜色 |
+### Number Progress
 
-### 数字进度
+This component displays and sets the current device value in the form of a progress bar.
 
-此组件以进度条的形式展示并设置当前设备的数值。
+The Number Progress component consists of six elements: Parameter, Content Style, Button, Image, Function Name, and Background.
 
-数字进度组件包含参数、内容样式、按钮、图片、功能名称和背景六个元素。
+**Parameter** refers to the current device value. For details see [Number Slider](#number-slider).
 
-**参数**是指当前设备的数值，相关说明与 [数字滑块](#数字滑块) 组件一致。
+**Content Style** refers to the style of the progress bar. Related properties:
 
-**内容样式**是指进度条的样式，相关属性：
-| 属性         | 说明                   |
-| ------------ | ---------------------- |
-| 样式         | 设置整体的样式，支持线条、圆形和仪表盘等。        |
-| 滑条颜色     | 设置已滑过（当前值左侧）部分的颜色。     |
-| 轨道颜色     | 设置整体滑动条的颜色。               |
-| 粗细         | 设置进度条的宽度。      |
-| 半径         | 当样式为`圆形`或`仪表盘`时，通过此值修改它的大小。  |
-| 描边端点样式 | 设置进度条两端的样式。  |
+| Property         | Description                                                    |
+| ---------------- | ------------------------------------------------------------- |
+| Style            | Set the overall style. Supports line, circle, and dashboard.  |
+| Slider Color     | Set the color of the track on the left side of the current value. |
+| Track Color      | Set the color of the full slider bar.                       |
+| Thickness        | Set the width of the progress bar.                             |
+| Radius           | When in `Circle` or `Dashboard` style, adjust its size with this value. |
+| Stroke Endpoint Style | Set the style for both ends of the progress bar.               |
 
-**按钮**是指增减数值的两个按钮，相关属性如下：
+**Button** refers to the two buttons for increasing and decreasing values. Related properties:
 
-| 属性       | 说明                         |
-|------------|------------------------------|
-| 尺寸       | 按钮的宽和高。               |
-| 加-位置    | “+”按钮的位置。               |
-| 减-位置    | “-”按钮的位置。               |
-| 填充       | 按钮的填充颜色。              |
-| 圆角       | 按钮的圆角。                  |
-| 描边       | 按钮的粗细、颜色和类型。       |
-| 字号       | “+”和“-”的字号和颜色。        |
+| Property      | Description                      |
+| ------------- | -------------------------------- |
+| Size          | Width and height of the button.  |
+| Add Position      | Position of the "+" button.      |
+| Subtract Position     | Position of the "-" button.      |
+| Fill          | Fill color of the button.        |
+| Rounded Corner       | Corner radius of the button.     |
+| Border        | Border thickness, color, and type.|
+| Font Size     | Font size and color for "+" and "-". |
 
-### 枚举开关
+### Enum Switch
 
-此组件可用于通过点击按钮切换枚举，适用于枚举型数据。
+This component is used to switch between enumerated values by clicking buttons. It is suitable for enum-type data.
 
-枚举开关组件包含枚举值、图片、功能名称、按钮文本、按钮背景和背景六个元素。
+The Enum Switch component consists of six elements: Enum Value, Image, Function Name, Button Text, Button Background, and Background.
 
-该组件的**图片**、**功能名称**与**背景**属性的说明，与[布尔开关](#布尔开关)组件一致。
+The descriptions of the **Image**, **Function Name**, and **Background** properties in this component are the same as those of the [Boolean Switch](#boolean-switch) component.
 
-**枚举值**的数量和具体内容将自动根据已绑定的数据源生成，无需手动添加。您可通过拖拽方式灵活调整其显示顺序。
+**Enum Value** count and contents are automatically generated according to the bound data source. You do not need to add them manually. You can drag and drop to adjust the display order flexibly.
 
-**按钮文本**的相关属性：
-| 属性       | 说明                           |
-| ---------- | ------------------------------ |
-| 选中颜色   | 按钮被选中时文本的颜色。         |
-| 默认颜色   | 按钮未被选中时文本的颜色。     |
-| 字体       | 可设置字体族、字号和字重。           |
+**Button Text** related properties:
+| Property      | Description                          |
+| ------------- | ----------------------------------- |
+| Selected Color| Text color when the button is selected. |
+| Default Color | Text color when the button is not selected. |
+| Font          | Set the font family, size, and weight.      |
 
-**按钮背景**的相关属性： 
-| 属性       | 说明                           |
-| ---------- | ------------------------------ |
-| 选中颜色   | 按钮被选中时的背景颜色。         |
-| 默认颜色   | 按钮未被选中时的背景颜色。     |
+**Button Background** related properties:
+| Property      | Description                           |
+| ------------- | ------------------------------------- |
+| Selected Color| Background color when button is selected. |
+| Default Color | Background color when button is not selected. |
 
-### 枚举图片
+### Enum Image
 
-此组件通过图片直观展示当前选中的枚举项，仅显示被选中的枚举对应的图片，其它枚举项不会显示。
+This component visually displays the currently selected enum item using an image. Only the image belonging to the selected enum is shown; other items are not displayed.
 
-枚举图片组件包含枚举值、图片、文本和背景四个元素。
+The Enum Image component consists of four elements: Enum Value, Image, Text, and Background.
 
-该组件的**背景**属性的说明，与[布尔开关](#布尔开关)组件一致。
+The description of the **Background** property in this component is the same as that of the [Boolean Switch](#boolean-switch) component.
 
-**枚举值**的数量和内容会根据已绑定的数据源自动生成，无需手动添加。同时，您可修改每个枚举项的名称，更换对应的图片，以及拖动调整枚举项的位置。
+The **Enum Value** count and contents are automatically generated based on the bound data source. You do not have to add them manually. You can rename each enum item, change its image, and adjust its order by dragging.
 
-**图片**属性用于设置枚举项图片的显示效果，包括宽度、高度和圆角等参数。
+**Image** properties allow you to set how the enum item’s image appears, including width, height, and border radius.
 
-**文本**属性包含颜色、字体族、字号和字重。
+**Text** properties include color, font family, font size, and weight.
 
+### Enum Image Switch
 
-### 枚举图片开关
+You can switch enums by clicking different images on this component.
 
-您可以在此组件上点击不同的图片进行枚举切换。
+The Enum Image Switch component consists of four elements: Enum Value, Image, Text, and Background.
 
-枚举图片开关组件包含枚举值、图片、文本和背景四个元素。
+The description of the **Background** property in this component is the same as that of the [Boolean Switch](#boolean-switch) component.
 
-该组件的**背景**属性的说明，与[布尔开关](#布尔开关)组件一致。
+The descriptions of **Image** and **Text** properties in this component are the same as those in the [Enum Image](#enum-image) component.
 
-该组件的**图片**和**文本**属性的说明，与[枚举图片](#枚举图片)组件一致。
+The **Enum Value** count and contents are automatically generated according to the bound data source. You do not have to add them manually. You can rename each enum item, change the selected and unselected images, and drag and drop to adjust the display order.
 
-**枚举值**的数量和内容会根据已绑定的数据源自动生成，无需手动添加。同时，您可修改每个枚举项的名称，更换选中状态和未选中状态的图片，以及拖动调整枚举项的位置。
+### Enum Selection
 
-### 枚举选择
+This component supports switching enums using a dropdown list.
 
-此组件支持使用下拉列表切换枚举。
+The Enum Selection component consists of Enum Value, Text, and Background.
 
-枚举图片开关组件包含枚举值、文本和背景四个元素。
+The description of the **Background** property in this component is the same as that of the [Boolean Switch](#boolean-switch) component.
 
-该组件的**背景**属性的说明，与[布尔开关](#布尔开关)组件一致。
+The **Enum Value** count and contents are automatically generated based on the bound data source. You do not need to add them manually. You can also rename each enum item and drag to adjust their display order.
 
-**枚举值**的数量和内容会根据已绑定的数据源自动生成，无需手动添加。同时，您可修改每个枚举项的名称，以及拖动调整枚举项的位置。
+**Text** properties include default color, font family, font size, font weight, and text color when selected.
 
-**文本**属性包含默认颜色、字体族、字号、字重和被选中时的文本颜色。
+## Basic Chart
 
-## 基础图表
+Basic chart components are used to display data on the canvas in a clear and easy-to-understand way. This helps users quickly understand device status, trends, and important information at a glance. Aqara Studio supports many common chart types, such as line charts, bar charts, radar charts, dashboards, and pie charts. These meet various needs for data visualization in different scenarios. All chart components allow you to flexibly set styles, bind data sources, and enable real-time refresh. This helps you quickly build a personalized visual interface.
 
-基础图表组件用于将数据以直观、易读的方式呈现于画布中，帮助用户快速洞察设备状态、运行趋势和关键信息。Aqara Studio 支持多种常用图表类型，如折线图、柱状图、雷达图、仪表盘和饼图等，满足不同场景下的数据可视化需求。所有图表组件均支持灵活配置样式、数据源绑定和实时刷新，助力您高效搭建个性化的可视化界面。
+### Configure Data for Basic Charts
 
-### 为基础图表配置数据
+After adding a basic chart component, please follow these steps to configure real device data:
 
-添加基础图表组件后，请按照以下步骤配置真实设备数据：
+1. Select the chart component and switch to the **Data** tab in its **Settings Drawer**.
+2. Under **Data Source Type**, choose `ord data query (static-history)` and click **Add**. A new static-history data source will appear.
+3. Click the **Edit Data Source** button. In the pop-up window, double-click the data source you need and click **Confirm** to bind it.
+4. In the **Settings Drawer**, find **Cycle**. Choose the **Enum options** and set the data time range you want the chart to show (such as Today, 24 hours, or Yesterday).
 
-1. 选中图表组件，在其**设置抽屉**切换至**数据**选项卡，。
-2. 在**数据源类型**处选择`ord数据查询 (static-history)`，点击**添加**。此时会新增一个 static-history 数据源。
-3. 点击**编辑数据源**按钮，在弹窗内双击所需数据源并点击**确定**完成绑定。
-4. 在**设置抽屉**中找到**周期**，选择**枚举选项**，并设置希望图表展示的数据时间范围（如当天、24小时、昨日等）。
+If the default chart style does not fit your data well after configuration, you can adjust the appearance of the chart.
 
-配置完上述数据后，如果图表的默认外观不能很好地展示数据，你可以调整图表的样式。
+### Adjust Chart Styles
 
-### 调整图表样式
+You can adjust the appearance of the chart in the **Component Configuration** section of the **Style** tab. There are basic settings and advanced settings.
 
-您可以在**样式**选项卡的**组件配置**部分细致调整图表的外观，配置分为基础配置和高阶配置。
+Base config are the same for all chart types: you can set the font style for all text, as well as the font size for tooltips and legends.
 
-所有图表的基础配置是统一的：可以设置所有文字内容的字体样式，以及提示框和图例文字的字号。
+Advanced configs offer different options depending on the chart type, providing more detailed customization:
 
-高阶配置则会根据不同图表类型，提供针对性的配置选项：
+| Chart Category | Chart Types                                                                                                                                              | Advanced Configurable Items                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Line Chart     | <ul><li>Basic Line Chart</li><li>Area Line Chart</li><li>Step Line Chart</li><li>Dual-axis Line Chart</li></ul>                                          | <ul><li><b>Style</b>: Customize fonts for all text in the chart.</li><li><b>Title</b>: Set chart title, control its display, position, and font style.</li><li><b>Tooltip</b>: Configure the info box shown on hover/click, including trigger type and style.</li><li><b>Legend</b>: Show/hide the legend, adjust its font, position, and spacing.</li><li><b>Axes</b>: For X/Y axes, set visibility, type, unit, format, axis lines, and grid lines.</li><li><b>Zoom</b>: Enable area zooming for easier detail viewing.</li><li><b>Series</b>: Customize the name and style for each data series (like "Data1", "Data2"), keeping the same order as the Data tab.</li></ul> |
+| Dashboard          | Dashboard                                                                                                                                                    | <ul><li><b>Base config</b>: Adjust the size of the gauge and its position on the canvas.</li><li><b>Title</b>: Same as Line Chart.</li><li><b>Range</b>: Customize the gauge’s scale range and number of segments.</li><li><b>Pointer</b>: Adjust the length and position of the pointer.</li><li><b>Axis</b>: Set the width of the outer axis and styles for main/sub tick marks.</li><li><b>Label</b>: Control the display of main tick labels, their font, and relative position.</li><li><b>Current Value</b>: Set how the current value is shown, style its font, and adjust location.</li><li>Internal Title: Control the internal title’s display, font, content, and position inside the gauge.</li></ul>                                  |
+| Radar Chart    | Basic Radar Chart                                                                                                                                        | <ul><li><b>Title</b>, <b>Tooltip</b>, <b>Legend</b>: Same as Line Chart.</li><li><b>Radar</b>: Set the radar chart’s shape and number of segments.</li><li><b>Axis</b>: Configure styles for axes and grid lines.</li><li><b>Indicator</b>: Customize the name and max value for each indicator.</li><li><b>Series</b>: Same as Line Chart.</li></ul>                                                                                                                                                                                                                                                                                                                                         |
+| Bar Chart      | <ul><li>Basic Bar Chart</li><li>Stacked Column Chart</li></ul>                                                                                             | Configuration is exactly the same as Line Chart.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Horizontal Bar | <ul><li>Basic Horizontal Bar</li><li>Stacked Horizontal Bar</li></ul>                                                                                   | Configuration is exactly the same as Line Chart.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Scatter Chat   | Scatter Plot                                                                                                                                             | Configuration is exactly the same as Line Chart.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Pie Chart      | <ul><li>Basic Pie</li><li>Rose Chart</li><li>Ring Pie</li></ul>                                                                                          | <ul><li>Style, Title, Tooltip, Legend, and Series: All settings are the same as Line Chart.</li><li><b>Polar Axis</b>: Adjust pie chart size and position.</li></ul>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
-| 图表类别   | 图表类型         | 高阶可配置内容说明 |
-|------------|------------------|----------------|
-| 折线图     | <ul><li>基础折线图</li><li>折线面积图</li><li>阶梯折线图</li><li>双轴折线图</li></ul> | <ul><li><b>样式</b>：自定义全部文字的字体。</li><li><b>标题</b>：设置标题文字、显示与否、位置和字体样式。</li><li><b>提示框</b>：配置鼠标悬停/点击时的数据说明框，包括触发方式和样式。</li><li><b>图例</b>：开关图例显示，调整字体、位置与间距。</li><li><b>坐标轴</b>：X/Y 轴支持显示/隐藏、类型、单位、格式、轴线与网格线等设置。</li><li><b>缩放</b>：可开启区域缩放，方便查看细节。</li><li><b>系列</b>：为每个数据序列（如“数据1”、“数据2”等）定制名称与样式，顺序与数据选项卡一致。</li></ul>
-| 仪表盘     | 仪表盘           | <ul><li><b>配置</b>：调整仪表盘整体大小和画布位置。</li><li><b>标题</b>：同折线图。</li><li><b>范围</b>：自定义刻度条范围和分段数。</li><li><b>指针</b>：调整指针长度和位置。</li><li><b>轴</b>：设置外轴宽度、主/次刻度样式。</li><li><b>标签</b>：控制主刻度文本的显示、字体与相对位置。</li><li><b>值</b>：配置当前值显示、字体样式和位置。</li><li>内部标题：控制仪表内部标题的显示、字体、内容和位置。</li></ul>
-| 雷达图     | 基础雷达图       | <ul><li><b>标题</b>、<b>提示框</b>、<b>图例</b>：同折线图。</li><li><b>雷达图</b>：可设置雷达图的形状和分割数。</li><li><b>轴</b>：支持轴和网格样式设置。</li><li><b>指示器</b>：自定义每项指标的名称与最大值。</li><li><b>系列</b>：同折线图。</li></ul>
-| 柱状图     | <ul><li>基础柱状图</li><li>叠加柱状图</li></ul> | 配置方式与折线图完全一致。           |
-| 条形图     | <ul><li>基础条形图</li><li>叠加条形图</li></ul> | 配置方式与折线图完全一致。           |
-| 散点图     | 散点图           | 配置方式与折线图完全一致。 |
-| 饼图       | <ul><li>基础饼图</li><li>玫瑰图</li><li>环形图</li></ul> | <ul><li>样式、标题、提示框、图例和系列的配置与折线图一致。</li><li><b>极轴</b>：可调整饼图的大小和位置。</li></ul>          |
+## Table
 
-## 表格
+The table component helps display various device or business data on the canvas in a structured way. It is suitable for comparing information, showing batches of data, or viewing detailed data records. Aqara Studio provides both data tables and alarm tables. You can flexibly configure their content and style to efficiently manage and visualize data.
 
-表格组件用于在画布中以结构化形式展示各类设备或业务数据，适合用于信息对比、批量呈现、数据明细查看等场景。Aqara Studio 提供数据表格和告警表格，支持您灵活配置显示内容和样式，实现数据的高效管理和可视化。
+This section explains how to configure different types of table components so you can quickly build the data tables you need.
 
-本节将介绍各类表格组件的配置，帮助您根据实际业务需求快速完成数据表格的搭建。
+### Data Table
 
-### 数据表格
+The data table component is used to display static data. Follow these steps to configure it:
 
-数据表格组件可用于展示静态数据，具体配置步骤如下：
+1. Select the data table component to open the **Settings Drawer**, then switch to the **Data** tab.
+2. Edit `Custom table data`. In the popup, add or delete table rows and columns, and freely edit the content of each cell.
+3. When finished editing, click **Confirm**. You will see the table preview on the canvas in real time.
 
-1. 选中数据表格组件，进入**设备抽屉**，切换至**数据**选项卡。
-2. 在**类型**中选择`自定义`。
-3. 点击**自定义表格数据**按钮，在弹窗中添加或删除表格的行与列，自由编辑每个单元格的内容。
-4. 编辑完成后，点击**确认**，即可在画布上实时预览表格效果。
 
+### Alarm Table
 
-### 告警表格
+The alarm table component displays alarm data from Aqara Studio. You can use it immediately without extra setup or data binding. In this table, you can view alarm time, alarm ID, alarm source status, and more. This allows you to quickly check and monitor alarms, making it easy to locate and handle abnormal situations and improve system maintenance efficiency.
 
-告警表格组件是用于展示 Aqara Studio 告警数据的组件，即拖即用，无需额外配置或绑定数据，用户就能在这个表格查看告警时间、告警 ID、告警源状态等信息。用户可以直接查看和监控告警情况，便于快速定位和处理异常，提升系统运维效率。
+If you need to show more alarm details in the table (such as the user who acknowledged the alarm or the acknowledgment status), follow these steps:
 
-如需在表格中展示更多告警信息（如告警确认用户、确认状态等），请按以下步骤操作：
+1. Select the alarm table component and go to the **Settings Drawer**, then switch to the **Data** tab.
+2. Click the **Table configuration > Column configuration** button.
+3. In the popup, click **Add column**. At the bottom, a new row will appear. Now you can name the new column, select the data type as `Basic column`, and bind the required data source.
+4. After configuring, click Confirm. The new column will be added to the alarm table and bound to the data.
 
-1. 选中告警表格组件，进入**设备抽屉**，切换到**数据**选项卡。
-2. 点击**表格设置 > 列配置**的按钮。
-3. 在弹窗中点击**添加列**，底部会新增一行列信息。此时可为新列命名，选择数据类型为 `as.graph.base_column`，并绑定所需的数据源。
-4. 配置完成后，点击确定，即可成功为告警表格添加新列并绑定相应数据。
+### Common Table Settings
 
-### 通用表格配置
+Both data tables and alarm tables support the following data item settings in **Table Settings**:
 
-数据表格和告警表格的 **表格设置** 均支持以下数据项配置：
+| Property         | Description |
+| ---------------- | ----------- |
+| Filter data | Set filtering rules for different data. |
+| Function settings | Adjust interactivity, layout, and style of the table. |
+| Cycle           | Set the time range of the data shown in the table (such as Today, 24 hours, or Last 7 days). |
+| Limit            | Set the maximum number of rows displayed in the table. |
+| Sort            | Configure data to be shown in ascending or descending order. |
+| Automatically Refresh  Data    | Choose whether the table data auto refreshes at intervals. |
+| Refresh Interval | If auto refresh is enabled, define the refresh time interval. |
 
-| 属性             | 说明 |
-| ---------------- | ---- |
-| 过滤属性         | 针对不同的数据设置过滤规则。 |
-| 功能设置         | 调整表格的交互、布局和样式。 |
-| 周期             | 配置表格中所展示数据的时间范围（如：当天、24小时、最近7天等）。 |
-| 限制             | 设置表格最多展示的行数。            |
-| 排序             | 配置数据的升序或降序显示方式。      |
-| 自动刷新         | 是否定时自动刷新表格数据。          |
-| 刷新间隔         | 启用自动刷新后，定义刷新时间间隔。   |
+## Media
 
-## 媒体
+Media components let you display rich multimedia content on the big screen, mainly via the video player. You can embed external videos into the interface, supporting many popular video formats. This enhances the display and interactivity of your dashboard. You can flexibly set the video source as needed for different display scenarios.
 
-媒体组件用于在大屏中展示丰富的多媒体内容，目前主要包括视频播放器。通过媒体组件，您可以在界面中嵌入外部视频，支持多种主流视频格式，增强大屏的展示效果和互动性。配置时可灵活设置视频来源，以满足不同场景下的多媒体展示需求。
+### Video Player
 
-### 视频播放器
+This component supports playing **external video** on the big screen. To configure:
 
-该组件支持在大屏上播放**外部视频**，配置方式如下：
-1. 单击该组件，进入**设备抽屉**，切换到**数据**选项卡。
-2. 选择**类型**为`自定义`，在**自定义数据**传入外部视频的 URL（需符合以下要求）。
+1. Click the component, open the **Settings Drawer**, and switch to the **Data** tab.
+2. Set **Type** to `Custom`. In **Custom Data**, enter the external video’s URL (make sure the URL meets the requirements below).
    :::tip
-   视频 URL 需满足以下要求：   
-   - 可直接访问：URL 必须直接指向视频文件本身（仅支持 `.mp4`、`.flv` 和 `.m3u8` 格式），确保资源可通过公网直接获取，不支持视频网站如优酷、腾讯视频等的页面地址。
-   - 协议一致性：如大屏访问为 HTTPS，视频 URL 也需为 HTTPS，避免因协议不一致产生的混合内容问题。
-   - 跨域设置：如视频存储在第三方服务器，请确保已设置允许跨域访问（CORS），否则播放器可能无法正常播放视频。
-   - 播放流畅：建议视频文件大小适中、码率合理，以保障播放流畅，提升用户体验。
+   The video URL must meet these requirements:   
+   - Direct access: The URL must point directly to the video file itself (only `.mp4`, `.flv`, and `.m3u8` formats are supported). The video must be accessible on the public network. URLs for video sites (like Youku, Tencent Video, etc.) are not supported.
+   - Protocol consistency: If your dashboard is accessed via HTTPS, your video URL should also use HTTPS to avoid mixed content issues.
+   - CORS setting: If the video is stored on a third-party server, ensure cross-origin access (CORS) is allowed. Otherwise, the player may not play the video.
+   - Smooth playback: For a better user experience, make sure the video file is not too large and uses a reasonable bitrate.
    :::
-3. 切换到**样式**选项卡，根据视频资源的格式，设置与之匹配的**视频模式**，以确保视频能够正常播放和最佳显示效果。
+3. Switch to the **Style** tab, and set the **video mode** that matches the video format to ensure normal playback and the best display.
 
+## Other
 
-## 其他
+Besides the components mentioned above, Aqara Studio also provides some additional components to enhance the dashboard, including Dropdown and Timer.
 
-除了上述类型的组件外，Aqara Studio 还提供了一些用于丰富大屏功能的扩展组件，包含下拉框和时间器。
+### Dropdown
 
-### 下拉框
+The dropdown component provides a convenient dropdown menu for your screen. Users can choose different options to quickly jump to a specified external website. This enables flexible page linking and many extension scenarios.
 
-下拉框组件为大屏提供便捷的下拉菜单，用户可通过选择不同选项，实现跳转访问指定外部网页，灵活满足页面联动和多样化扩展需求。
+After adding a dropdown component, configure URLs as follows:
+1. Select the component. Open the **Settings Drawer** and switch to the **Data** tab.
+2. In **Tag configuration**, click the **+** button to add a new tab for the dropdown.
+3. Expand the new tab. You can customize its name, configure its URL, and select how to open the URL.
+4. If you want to add more options, repeat the above steps.
 
-添加下拉框组件后，按以下流程完成 URL 配置：
-1. 选中组件，进入**设备抽屉**，切换到**数据**选项卡。
-2. 在**标签配置**中点击**+**按钮，为下拉框新增一个选项卡。
-3. 展开该选项卡，可自定义名称、配置 URL，并选择 URL 打开方式。
-4. 如需添加更多选项卡，按上述步骤继续操作即可。
+### Timer
 
-### 时间器
+The timer component can show the current time on the screen in real time, making your data more timely and readable.
 
-时间器组件可用于在大屏上实时显示当前时间，增强信息的时效性和可读性。
+After adding the timer component, follow these steps to set the display format:
 
-添加时间器组件后，可按照如下步骤设置时间显示格式：
-1. 选中时间器组件，进入**设备抽屉**，切换至**样式**选项卡。
-2. 在**时间器 > 格式**处，选择您所需的时间格式（例如：`yyyy/mm/dd hh:mm`），满足不同展示需求。
+1. Select the timer component and go to the **Settings Drawer**, then switch to the **Style** tab.
+2. Under **Timer > Format**, select the date and time format you want (such as `yyyy/mm/dd hh:mm`), so you can match different display requirements.

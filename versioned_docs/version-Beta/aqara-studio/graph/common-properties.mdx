@@ -1,7 +1,126 @@
-# 组件与素材的通用属性
+# Common Properties of Components and Materials
 
-## 样式
+Each component and material includes the following common properties: [Style - Base setting](#style) and [Action](#action).
 
-## 数据
+### Style
 
-## 动作
+Once you select any component or material, a settings panel will pop up. In this panel, click the **Style** tab, then expand **Base setting**. You can flexibly adjust the following parameters: size, position, rotation angle, and opacity, to meet the needs of different scenarios.
+
+<table>
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Property</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="2">Size</td>
+      <td>Width</td>
+      <td>The width of the component.</td>
+    </tr>
+    <tr>
+      <td>Height</td>
+      <td>The height of the component.</td>
+    </tr>
+    <tr>
+      <td rowspan="2">Position</td>
+      <td>X</td>
+      <td>The distance from the left edge of the canvas. A larger value means further to the right.</td>
+    </tr>
+    <tr>
+      <td>Y</td>
+      <td>The distance from the top of the canvas. A larger value means a lower position.</td>
+    </tr>
+    <tr>
+      <td rowspan="2">Other</td>
+      <td>Rotation</td>
+      <td>The angle of rotation (0 ~ 360) around the center point.</td>
+    </tr>
+    <tr>
+      <td>Opacity</td>
+      <td>The opacity of the component. Larger values mean more opaque (range 0 ~ 100).</td>
+    </tr>
+  </tbody>
+</table>
+
+### Action
+
+After you select any component, a settings window will pop up. Click the **Action** tab to configure click interaction behaviors, which trigger popups, side drawers, or jump to pages and links.
+
+| Property            | Description   |
+|:--------------------|:---------------------------------------------------|
+| open view type      | <ul><li>iframe dialog</li><li>Drawer</li><li>Route</li><li>Open in current page</li><li>Open in new page</li></ul> |
+| Link Type           | <ul><li>Custom: Enter the link in the input box.</li><li>(Only available for views other than **drawer**) Studio: Choose a template in a popup.</li></ul>           |
+
+### When open view type is "drawer"
+
+If **open view type** is set to `drawer`, the following properties will appear:
+- In Studio, a new **template type** option will be available, with choices: `page`, `container template`.
+    - When `page` is selected, you need to pick a template from the popup.
+    - When `container template` is selected, you need to choose both a **container template** and a **template data source**.
+- New **drawer style** properties become available, including:
+
+    <table>
+    <thead>
+        <tr>
+        <th>Property</th>
+        <th>Sub-property</th>
+        <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+        <td>Preview</td>
+        <td></td>
+        <td>Whether to support drawer preview.</td>
+        </tr>
+        <tr>
+        <td>Direction</td>
+        <td></td>
+        <td>The direction from which the drawer appears.</td>
+        </tr>
+        <tr>
+        <td>Modal dialog</td>
+        <td></td>
+        <td>Whether it is a modal dialog.</td>
+        </tr>
+        <tr>
+        <td>Padding</td>
+        <td></td>
+        <td>Distance from the content area to the drawer edge.</td>
+        </tr>
+        <tr>
+        <td>Fill</td>
+        <td>Color</td>
+        <td>Background fill color of the drawer.</td>
+        </tr>
+        <tr>
+        <td rowspan="3">Stroke</td>
+        <td>Width</td>
+        <td>The width of the stroke line.</td>
+        </tr>
+        <tr>
+        <td>Color</td>
+        <td>The color of the stroke line.</td>
+        </tr>
+        <tr>
+        <td>Type</td>
+        <td>For example: solid line, dashed line, etc.</td>
+        </tr>
+        <tr>
+        <td rowspan="3">Shadow</td>
+        <td>Shadow type</td>
+        <td>For example: outer shadow, inner shadow. Details to be supplemented.</td>
+        </tr>
+        <tr>
+        <td>Parameter</td>
+        <td>e.g. X/Y offset, blur radius, spread, etc., can be represented as an array.</td>
+        </tr>
+        <tr>
+        <td>Color</td>
+        <td>Color of the shadow.</td>
+        </tr>
+    </tbody>
+    </table>

@@ -1,21 +1,45 @@
-# 素材库
+# Materials
 
-## 概述
+## Overview
 
-## 素材类型
+The Material Library is used to centrally manage and reuse images, icons, and components with custom styles. You can upload images, set components as material (Set widget material), and flexibly apply them on different pages. This greatly improves the efficiency of visual screen building.
 
-- 单组件素材（当用户更改了组件的样式后，就可以设置为素材）
-- 组合素材
-- 图片
-- 图标
+## Common Properties
 
-## 上传图片和图标
+All components and materials share the same properties. These include style (such as size, position, color, etc.) and action (such as click event configuration). For details, please refer to [Common Properties of Components and Materials](./common-properties.mdx).
 
-png，jpg，gif，大写不超过2M
+## Material Types
 
-## 设置为素材
+Aqara Studio Material Library supports the following types:
 
-只可以保留样式，数据需要额外添加。
+- **Single component material**: A single component with adjusted style saved as a material for future reuse.
+- **Composite material**: A combination of multiple components, images, or icons saved as a single material, making it easy to reuse complex UI quickly.
+- **Image**: Supported image formats include PNG, JPG, and GIF.
+- **Icon**: Supported icon formats include PNG, JPG, and GIF.
 
-- 设置为单组件素材
-- 设置为组合素材
+You can flexibly use each material type as needed to improve building efficiency.
+
+## Set Material
+
+Follow the steps below to set a component, image, or icon as material:
+
+- **Set single component material:**
+    1. On the canvas, right-click a component whose style is adjusted, and select **Set widget material** from the menu.
+    2. Open the **Material Library** in the right sidebar, and you will find the new material under the **Single component material** category.
+    
+    :::tip
+    When you set a component as material, Aqara Studio will only save the style attributes of the current component. Data binding needs to be configured separately afterwards.
+    :::
+
+- **Set composite material:**
+    1. Multi-select the components, images, or icons you want to combine on the canvas, and click the **Group** button in the top toolbar.
+    2. Right-click the combined group, select **Set widget material**, and it will be saved as composite material.
+    3. In the **Material Library** on the right sidebar, you can view the new composite material under the **Composite material** category.
+
+## Upload images and icons
+
+Aqara Studio supports uploading images in common formats like PNG, JPG, and GIF. The maximum size for a single file is 2MB.
+
+To upload:
+1. Open the **Material Library** in the right sidebar, and switch to the **Image** or **Icon** group.
+2. Click the upload button, select the images or icons you want to upload, and confirm to finish the upload. The uploaded files will automatically appear in the corresponding group.
