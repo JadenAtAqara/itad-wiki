@@ -1,37 +1,41 @@
 # Select Blocks
 
-#### 功能概述
+#### Introduction
 
-选择函数逻辑块可根据“选择”参数，从“输入A”、“输入B”、“输入C”等多个输入项中选取一个作为输出，并只能用于修改同一个功能点的值。常见应用场景包括：通过切换选择参数自动切换输出，便于场景下对同一设备参数如开关、模式或档位等进行动态调整，实现数据驱动和自动化控制，提升场景配置的灵活性与可维护性。
+A select block lets you choose one value to output from several options, such as "Input A", "Input B", or "Input C". Which input is chosen is determined by the "Select" parameter. You can only use this block to change the value of the same function point. 
 
-#### 参数说明
+A common use case is switching the output by changing the select parameter. This is handy for adjusting parameters like power, mode, or level for the same device in a scene, helping you build automations that are flexible and easy to maintain.
 
-- **输出**：将最终选中的输入值输出，通常用于设置或更新相应功能点的数值。
-- **输入A ~ 输入C**：在此可手动设置可选的不同的值，或在左侧连接常量或其他逻辑块输出，代表不同的选项。此处值的类型需与函数类型保持一致。
-- **选择**：左侧连接一个数值类型的功能点或变量，根据其值自动对应选取具体的输入。   
-    可输入值的含义：
-    - `1`：输出 `输入A` 的值。
-    - `2`：输出 `输入B` 的值，
-    - `3`：输出 `输入C` 的值。
-    - 依此类推。
+#### Attribute Description
 
-#### 函数类型
+The default attributes displayed on the block:
+- **Output**: This outputs the selected value. It is usually used to set or update the value of a specific function point.
+- **Input A ~ Input C**: You can manually set possible values here, or connect constants or outputs from other logic blocks from the left side. Each input represents a different option. The type of these values must match the type of the function.
+- **Select**: Connect a number-type function point or variable to the left side. The block will choose which input to output based on its value.
+    The value meanings are:
+    - `1`: Output the value of Input A.
+    - `2`: Output the value of Input B.
+    - `3`: Output the value of Input C.
+    - and so on.
 
-- 布尔选择
-- 枚举选择
-- 数值选择
-- 字符串选择
+If you want to add more inputs, double-click the block to enter the configuration panel, and you can see there are 5 more inputs availabe(Input D ~ Input H).
 
-#### 示例
+To make them displayed on the block, modify their `Flags` by checking `Show` in the popup. Confirm your modification and you will see a new Input added on the block. 
 
-【内容待定】
+#### Block Types
 
-以“根据按钮事件切换灯光亮度”为例，步骤如下：
+- Boolean Select
+- Enum Select
+- Numeric Select
+- String Select
 
-1. 在画布左侧添加“开关 - 按钮事件”，在画布右侧添加“灯 - 亮度”。
-2. 添加一个**数值选择**逻辑块。
-3. 设置 `输入A` 为 `20`，`输入B` 为 `60`，`输入C` 为 `100`，分别对应低、中、高三档亮度的数值。
-4. 将“开关 - 按钮事件”的`输出`连接至**数值选择**逻辑块的“选择”。
-5. 将**数值选择**逻辑块的“输出”连接至“灯 - 亮度”的`输入`。
+#### Example
 
+Here is how to switch the brightness of a lamp based on a button event:
+
+1. Add "Switch - Button Event" to the left of the canvas, and "Lamp - Brightness" to the right.
+2. Add a **Numeric Select** block.
+3. Set `Input A` as `20`, `Input B` as `60`, and `Input C` as `100`. These correspond to low, medium, and high brightness levels.
+4. Connect the output of the "Switch - Button Event" to the "Select" port of the **Numeric Select** logic block. In this way, Aqara Studio will automatically choose and output the corresponding input according to the enum value of the button event (for example, when the enum value is `1`, it outputs `Input A`; when it's `2`, it outputs `Input B`, and so on).
+5. Connect the output of the **Numeric Select** block to the input of "Lamp - Brightness".
 

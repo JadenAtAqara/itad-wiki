@@ -1,55 +1,58 @@
 # Other Blocks
 
-## 工具批次设置
+## Kit Batch Set
 
-#### 功能概述
+#### Introduction
 
-工具批次设置逻辑块用于同时设置多个功能点的值，适合批量参数配置与设备调试场景。您可一次性输入最多8个不同的数值，通过对应输出点分别下发至目标功能点。仅当“操作”字段传入OK时，本次批量设置才会生效，有效防止误操作，提升批量配置的效率与准确性。
+The Kit Batch Set block lets you set the values of up to 8 different function points at the same time. This is useful for configuring many parameters in bulk or for device debugging. You can enter up to 8 values, and each one will be sent through a separate output port to your target function points. The batch setting will only take effect if the "Action" field receives "OK". This helps prevent mistakes and makes batch configuration more efficient and accurate.
 
-#### 参数说明
+#### Attribute Description
 
-- **输入A ~ 输入H**：输入待设置的数值。  
-    - 可直接填写，也可通过左侧连接常量、变量或其他逻辑块的输出。  
-    - 默认数据类型为 Number，如需修改类型，可双击逻辑块顶部进入设置页面，并在对应输入项处编辑 type。  
-- **输出A ~ 输出H**：对应输出端口，将每个输入的值分别传递到目标功能点或逻辑块。  
-    - 输入输出一一对应，例如输入A的值会通过输出A输出。  
-- **操作**：控制批量设置的触发条件，仅当传入 `OK` 时批量设置生效，用于避免误操作。 
+- **In A ~ In H**: Enter the values you want to set.
+    - You can type the value directly, or connect constants, variables, or outputs from other blocks.
+    - The default type is Number. If you want to change the type, double-click the top of the block to open the settings page, and edit the type for each input item.
+- **Out A ~ Out H**: The corresponding output ports send each input value to the target function point or logic block.
+    - Each input matches one output. For example, Input A outputs through Output A.
+- **Action**: Controls when the batch setting happens. The batch set only works if you input `OK` here. This helps avoid mistakes.
 
-#### 示例
+#### Example
 
-【内容待定】
+Here’s how to use it to set different brightness levels for multiple bulbs at once:
 
-以“同时设置多个灯泡不同亮度”为例，操作步骤如下：
+1. On the right side of the canvas, add several bulb brightness points, such as "Bulb 1 - Brightness," "Bulb 2 - Brightness," "Bulb 3 - Brightness," and "Bulb 4 - Brightness."
+2. Add a **Kit Batch Set** block.
+3. Set `In A` to 20, `In B` to 40, `In C` to 60, and `In D` to 80.
+4. Connect the right side of Out A, B, C, and D to the "Input" port of each bulb brightness point.
+5. Set the **Action** parameter to `OK`. This will batch set the brightness for each bulb: Bulb 1 to 20, Bulb 2 to 40, Bulb 3 to 60, and Bulb 4 to 80.
 
-1. 在画布右侧添加需要控制的多个灯泡亮度功能点，例如“灯泡1 - 亮度”、“灯泡2 - 亮度”、“灯泡3 - 亮度”、“灯泡4 - 亮度”等。
-2. 添加一个**工具批次设置**逻辑块。
-3. 设置输入 A 为 20，输入 B 为 40，输入 C 为 60，输入 D 为 80.
-4. 将输出 A、B、C、D 的右侧分别连接至上述灯泡亮度功能点的“输入”，
-4. 设置**操作**参数为 `OK`，即可批量设置多个灯泡的亮度，实现灯泡1亮度为20、灯泡2亮度为40、灯泡3亮度为60、灯泡4亮度为80。
+## Min Max Avg
 
-## 最小最大平均值
+#### Introduction
 
-#### 功能概述
+This logic block can analyze multiple input values. It calculates the minimum, maximum, and average values automatically.
 
-该逻辑块可用于对多个输入数值进行统计，自动计算其中的最小值、最大值和平均值。
+#### Attribute Description
 
-#### 数据类型
+The default attributes displayed on the block:
+- **In A ~ B**: You can set 2 numbers for analysis.
+- **Min Value**: Outputs the minimum value among all valid inputs.
+- **Max Value**: Outputs the maximum value among all valid inputs.
+- **Average Value**: Outputs the average of all valid inputs.
 
-- **输入A ~ J**：支持输入 1~10 个数字。
-- **数值**：设置本次参与计算的输入个数，只统计前面几个输入。
-- **最小值**：输出所有有效输入中的最小值。
-- **最大值**：输出所有有效输入中的最大值。
-- **平均值**：输出所有有效输入的平均值。
+To display more `In` inputs on the block, double-click to open the configuration panel, enable "Show" in the Flags for additional inputs, confirm your changes, and the new inputs will appear in the editor.
 
-## 随机
+## Random
 
-#### 功能概述
+#### Introduction
 
-通过此逻辑块，您可以获得一个随机数。
+With this logic block, you can get a random number.
 
-#### 数据类型
+#### Attribute Description
 
-- **偏移量**：指定生成随机数的最小起点，随机结果不会小于该值。默认值为 50。
-- **乘数**：决定随机数的浮动区间。实际随机数范围为 `(偏移量, 偏移量 + 乘数)`。例如：若偏移量为 50，乘数为 100，则结果范围为 (50, 150)。
-- **更新间隔**：控制随机数生成的频率。设置为 1 秒时，每秒会输出一个新的随机数。
-- **输出**：输出当前生成的随机数，可连接到需要使用该数值的节点或功能点。
+The default attributes displayed on the block:
+- **Output**: Outputs a random number. You can connect this to a block o point that needs to use the value.
+
+To configure the random number parameters, double-click the block to open the configuration panel:
+- **Multiplier**: Determines the range of the random number. The result will be within `(Offset, Offset + Multiplier)`. For example, if Offset is 50 and Multiplier is 100, the random number will be between 50 and 150.
+- **Offset**: Sets the minimum value for the random number. The result will not be less than this value. Default is 50.
+- **Update Interval**: Controls how often a new random number is generated. If set to 1 second, a new random number will be output every second.
