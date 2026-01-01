@@ -1,111 +1,117 @@
 # Timer Blocks
 
-## 布尔延迟
+## Boolean Delay
 
-#### 功能概述
+#### Introduction
 
-**布尔延迟**逻辑块可针对布尔值（`true` / `false`）的状态变化进行延时处理。当输入端的布尔状态发生变化时，输出端会在设定的延迟时间后才同步变化，延迟时间可根据输入状态分别进行设置（即输入为 `true` 和输入为 `false` 时可配置不同的等待时长）。
+The **Boolean Delay** logic block is used to delay the change of a boolean value (`true` / `false`). When the input boolean value changes, the output will sync with it only after a set delay time. You can set different delay times for `true` and `false` status separately.
 
-此逻辑块不会改变原始数据，只是延缓状态变化的输出，用于实现防抖、延迟触发，或判断条件需持续为真或假达到指定时间后才执行后续逻辑。
+This block does not change the original data. It only delays the output of status changes. This is helpful for debounce, delayed triggering, or requiring a state to be true or false for a certain period before running the next logic.
 
-通过“输入为 true 时延迟”和“输入为 false 时延迟”两个参数（可直接数值设定，也可外接数值型输入），可以灵活满足多种持续触发与延迟响应场景的需求。
+You can use the parameters “Delay when input is true” and “Delay when input is false” to control delay times. You can enter the delay directly, or connect a number-type input for more flexible automation.
 
-#### 数据类型
+#### Attribute Description
 
-- **输入：** 在左侧连接布尔型数据。
-- **输入为 true 时延迟**：等待时长，支持数值型数据，您可以在此直接设置数值，也可以在左侧连接数值型数据。
-- **输入为 false 时延迟**：同上。
-- **输出：** 在右侧连接可存储布尔类型数据的节点。
+- **Input / Output:** Configured on the block
+    - **Input:** Connect the boolean data to the left side.
+    - **Output:** Connect the output to a node that stores boolean data on the right.
+- **On Delay / Off Delay:** Double-click the block to enter the settings panel and configure the corresponding delay times.
+    - **On Delay:** Set the wait time (number type) for the true value.
+    - **Off Delay:** Set the wait time (number type) for the false value.
 
-#### 示例
+#### Example
 
-以“有人进入房间时延迟开灯、无人后延迟关灯”为例，步骤如下：
+Here is an example of turning on a light with a delay when someone enters a room, and turning off the light with a delay after the room is empty:
 
-1. 在画布左侧区域添加“人体传感器 - 存在状态”（布尔型）作为**输入点**。
-2. 在画布中部添加一个**布尔延迟**逻辑块。
-3. 将“人体传感器 - 存在状态”的**输出**连接到**布尔延迟**块的**输入**端。
-4. 配置**输入为 true 时延迟**为 2 秒，表示检测到有人时，延迟 2 秒才输出 true。
-5. 配置**输入为 false 时延迟**为 10 秒，表示检测到无人时，延迟 10 秒才输出 false。
-6. 在画布右侧添加“灯 - 开关状态”作为**输出点**。
-7. 将**布尔延迟**逻辑块的**输出**连接到“灯 - 开关状态”输入端。
+1. Add a "Human Presence Sensor - Presence Status" (Boolean) as the **input node** on the left side of the canvas.
+2. Add a **Boolean Delay** logic block in the center of the canvas.
+3. Connect the **output** of the "Human Presence Sensor - Presence Status" to the **input** of the Boolean Delay block.
+4. Set the **On delay** to 2 seconds. This means when someone is detected, it will output true after a 2-second delay.
+5. Set the **Off delay** to 10 seconds. This means when no one is detected, it will output false after a 10-second delay.
+6. Add a "Light - Switch Status" as the **output node** on the right side of the canvas.
+7. Connect the **output** of the Boolean Delay logic block to the input of "Light - Switch Status".
 
-通过上述配置，可以实现：检测到有人后延迟 2 秒亮灯，检测到无人后延迟 10 秒关灯，有效防止误触发，实现更智能的灯光控制。
+With this setup, the system will turn on the light with a 2-second delay after detecting someone, and turn off the light with a 10-second delay after no one is detected. This helps prevent false triggers and makes your lighting control smarter.
 
-## 延迟时间
+## Delay Event
 
-#### 功能概述
+#### Introduction
 
-当您希望在前一个行为完成后，延迟一段时间再触发下一个行为时，可用此逻辑块将两者连接，实现延时效果。
+When you want to delay the next action until the previous one finishes, you can use this logic block. It allows you to add a delay between two actions easily.
 
-#### 如何使用
+#### How to Use
 
-1. 在画布中添加**延迟时间**逻辑块。
-2. 将需要延迟处理的操作连接到该逻辑块的`触发`输入端。
-3. 双击逻辑块，在`时间`参数中设置所需的延迟时长。
-4. 在`输入`处填写或连接延迟后希望传递的数据（可为数值、字符串等）。
-5. 将`延迟事件`输出端连接到后续需接收该数据的节点，实现延时触发。
+1. Add the **Delay Event** logic block to your canvas.
+2. Connect the operation you want to delay to the `Fire` input of this block.
+3. Double-click the block, and set the delay duration in the `Delay Time` parameter.
+4. In the `Input` field, enter or connect the data you want to pass along after the delay (this can be a number, string, etc.).
+5. Connect the `Delay Event` output to the next node that needs to receive the delayed data. This completes the delayed triggering.
 
-#### 示例
+#### Example
 
-【内容待定】】
+Let’s take “delay 3 seconds to turn off the air conditioner after a door/window opens” as an example:
 
-以“门窗打开后延迟 3 秒关闭空调”为例，步骤如下：
+1. Add a “Door/Window Sensor - State” point on the left of the canvas.
+2. Add a **Delay Event** block.
+3. Connect the output of the “Door/Window Sensor - State” to the `Fire` input of the Delay Event block.
+4. Double-click the block, set the delay time to `3` seconds, and set the `Input` to the value to turn off the AC (for example, `false`).
+5. Add an “Air Conditioner - Switch State” node on the right side of the canvas.
+6. Connect the `Delay Event` output to the `Input` of the “Air Conditioner - Switch State” node.
 
-1. 在画布左侧添加“门窗传感器 - 开关状态功能点。
-2. 添加一个**延迟时间**逻辑块。
-3. 将“门窗传感器 - 开关状态”的`输出`连接到该逻辑块的`触发`输入端。
-4. 双击该逻辑块，设置延迟时间为 `3` 秒，设置`输入`处填写空调关机数值（如 `false`）。
-5. 在画布右侧添加“空调 - 开关状态”功能点。
-6. 将“延迟时间”逻辑块的`延迟事件`输出端连接到“空调 - 开关状态”的`输入`。
+With this setup, when the door or window is opened, the system will turn off the air conditioner after 3 seconds. This automation helps reduce energy waste.
 
-这样，当门窗被打开时，系统将在等待 3 秒后关闭空调，实现防止冷能浪费的自动化逻辑。
+## Time Trigger
 
-## 定时触发
+#### Introduction
 
-#### 功能概述
+The **Time Trigger** logic block is used to automatically trigger specific actions based on preset days and times. You can flexibly choose which days in a week and the exact time to trigger your devices. This makes scheduled automation, like turning devices on or off, simple.
 
-**定时触发**逻辑块用于在设定的日期和时间条件下自动触发指定的动作。您可以灵活配置一周中的生效天数、每天的具体触发时间，实现定时开启/关闭设备等自动化需求。
+#### Attribute Description
 
-#### 数据类型
+- **Fire:** Connect this output to the action you want to trigger.
+- **Days:** Set which days of the week this trigger takes effect (multiple selection is supported).
+- **Time:** Set the exact time for the trigger.
 
-- **天**：在此处设置在周几（可多选）生效。
-- **时间**：在此设置生效的确切时间。
-- **触发**：右侧连接待触发的动作。
+:::tip
+To set `Days` and `Time`, double-click the block to see the configuration panel, and then you can set the `Value`.
+:::
 
-#### 示例
+#### Example
 
-以“每天早上 8:00 自动开启窗帘”为例，步骤如下：
+For “open the curtain at 8:00 every morning”, follow these steps:
 
-1. 在画布中添加一个**定时触发**逻辑块。
-2. 设置`天`为每周一到周日（全选），设置`时间`为 `08:00`。
-3. 在画布右侧添加“窗帘 - 开关状态”作为待执行设备节点。
-4. 将“定时触发”逻辑块的`触发`输出端连接到“窗帘 - 开关状态”的`输入`端，并设置为“打开”状态。
+1. Add a **Time Trigger** block to your canvas.
+2. Set `Days` to every Monday to Sunday (select all), and set `Time` to `08:00`.
+3. Add a “Curtain - Switch State” node on the right side as the target device.
+4. Connect the `Trigger` output of the Time Trigger block to the `Input` of “Curtain - Switch State”.
+5. Double-click the connection line to open the configuration panel, expand `Converter > Target`, and open the toggle button of the `Value`.
 
-这样，系统将会在每天早上 8 点自动打开窗帘.
+In this setup, the system will automatically open the curtain at 8:00 every morning.
 
-## 时间范围
+## Time Period
 
-#### 功能概述
+#### Introduction
 
-使用此逻辑块，可以根据设定的“周几”、“开始时间”和“结束时间”等条件，在指定的时间范围内判断是否允许某个行为发生。当时间处于设定范围时，会触发“满足”分支的后续动作；否则，触发“不满足”分支的动作。
+This logic block helps you check if the current time falls within a specified period (based on selected days, start, and end times). When the time is within the range, it triggers the “Match” branch; otherwise, it triggers the “Not Match” branch.
 
-#### 数据类型
+#### Attribute Description
 
-- **天**：在此处设置在周几（可多选）生效。
-- **开始时间**：在此设置开始时间。
-- **结束时间**：在此设置结束时间。
-- **满足**：连接一个待触发的环节，表示时间为此范围时待触发的行为。
-- **不满足**：连接一个待触发的环节，表示时间在此范围以外时待触发的行为。
-- **触发**：左侧连接触发此逻辑块的行为。
+- Attributes displayed on block:
+    - **True:** Connect the action to trigger when the time is in the specified range.
+    - **Trigger:** Connect the action that should trigger this check on the left side.
+- Attributes hidden in configuration panel:
+    - **Days:** Set which days of the week the time period applies to (can select multiple).
+    - **Start Time:** Set the start time for the period.
+    - **End Time:** Set the end time for the period.
+    - **False:** (Optional)Connect the action to trigger when outside the range.
 
-#### 示例
+#### Example
 
-【延迟时间】
+For “turn on the conference room lights during working hours”, follow these steps:
 
-以“在工作时间内开启会议室灯光”为例，步骤如下：
-
-1. 在画布左侧添加一个“灯 - 开关状态”节点，作为开启灯光的触发动作。
-2. 添加一个**时间范围**逻辑块。
-3. 设置`天`为每周一到周五，设置`开始时间`为 `09:00`，`结束时间`为 `18:00`，表示仅在工作日的上午 9 点至下午 6 点范围内生效。
-4. 将“灯 - 开关状态”的`输出`连接到“时间范围”逻辑块的`触发`端口。
-5. 在“满足”分支下连接“灯 - 开关状态”功能点的`输入`，执行“开启”操作。 
+1. Add a "Light - Switch State" node to the left side of the canvas. This will be the action to turn on the lights.
+2. Add a **Time Period** logic block.
+3. Double-click the block, set `Days` to Monday through Friday. Set `Start Time` to `09:00` and `End Time` to `18:00`, so it only works from 9 AM to 6 PM on workdays.
+4. Connect the output of the "Light - Switch State" node to the `Trigger` port of the Time Period block.
+5. In the `True` branch, connect the input of "Light - Switch State" 
+6. Double-click the connection line to open the configuration panel. Edit the `Value` of `Converter > Target`, turn on the toggle switch in the popup, and make sure no Status is selected. So it will turn on during working hours.
