@@ -25,7 +25,7 @@ After you establish a connection, you can send and receive JSON messages in real
 
 | Parameter      | Type   | Required         | Description   |
 | -------------- | ------ | --------------- | ------------------------------------------------------------ |
-| Authorization  | String | Required for HTTP and WebSocket | Authorization Token for user authentication.<br />Format is `Bearer <token>`. Replace `<token>` with the token you obtained from Aqara Studio. (If the token from Aqara Studio already includes the Bearer prefix, use it directly without adding another Bearer.) For more details on how to get the token, see [Developer Guide - Obtain Required Information](./../developer-guide.mdx#获取必要信息). |
+| Authorization  | String | Required for HTTP and WebSocket | Authorization Token for user authentication.<br />Format is `Bearer <token>`. Replace `<token>` with the token you obtained from Aqara Studio. (If the token from Aqara Studio already includes the Bearer prefix, use it directly without adding another Bearer.) For more details on how to get the token, see [Developer Guide - Obtain Required Information](./../developer-guide.mdx#obtain-required-information). |
 | Content-Type   | String | HTTP only        | Default is `application/json`.  |
 
 ## Query Device ID List
@@ -180,7 +180,7 @@ Below is an example of a `GetDevicesRequest` request body:
 - In the response, `data[].deviceTypesList` shows the list of device types supported by the device. For the meaning of each string, see [Device Types](./device-type.mdx).
 - In the response, `data[].endpoints[].functions[].traits[].traitCode` shows the trait code, representing a specific function the device supports. For detailed explanation of each trait, including its meaning, type (such as numeric, boolean, enum, etc.), and whether it is readable, writable, or reportable, see [Trait Codes](./trait-codes.mdx).
 
-##### Trait Property Types
+##### Trait Parameter Types
 
 | Name      | Type      | Description                                                                                       |
 |-----------|-----------|---------------------------------------------------------------------------------------------------|
