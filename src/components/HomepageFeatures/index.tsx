@@ -3,19 +3,20 @@ import clsx from 'clsx';
 import Heading from '@theme/Heading';
 
 import Translate from '@docusaurus/Translate';
+import { useColorMode } from '@docusaurus/theme-common';
 
 import styles from './styles.module.css';
 
 type FeatureItem = {
   title: ReactNode;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
+  imgName: string;
   description: ReactNode;
 };
 
 const FeatureList: FeatureItem[] = [
   {
     title: <Translate id="homepage.features.knowledgeCenter.title">Developer Knowledge Center</Translate>,
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    imgName: 'card-1',
     description: (
       <Translate id="homepage.features.knowledgeCenter.description">
         The single source of truth. Always up-to-date API specs, SDK references, and tool guides.
@@ -24,7 +25,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: <Translate id="homepage.features.docs.title">Clear, Comprehensive Docs</Translate>,
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    imgName: 'card-2',
     description: (
       <Translate id="homepage.features.docs.description">
         From Quickstart to production-ready implementations, with real-world examples.
@@ -33,7 +34,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: <Translate id="homepage.features.partner.title">Your Evolving Learning Partner</Translate>,
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    imgName: 'card-3',
     description: (
       <Translate id="homepage.features.partner.description">
         Release-aware content covering migrations, best practices, and troubleshooting.
@@ -42,11 +43,14 @@ const FeatureList: FeatureItem[] = [
   },
 ];
 
-function Feature({title, Svg, description}: FeatureItem) {
+function Feature({title, imgName, description}: FeatureItem) {
+  const { colorMode } = useColorMode();
+  const imgSrc = require(`@site/static/img/${imgName}-${colorMode}.svg`).default;
+
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
+        <img src={imgSrc} className={styles.featureSvg} alt={imgName} />
       </div>
       <div className="text--center padding-horiz--md">
         <Heading as="h3">{title}</Heading>
