@@ -1,7 +1,7 @@
-FROM harbor.aqaramaster.com/base/nginx:v1.20.2-stable-alpine-nginx-config 
+FROM nginx:1.25.2-alpine
 
-WORKDIR /data/
-COPY ./build /data/dist/
+WORKDIR /usr/share/nginx/html
 
-USER root
-RUN chown -R nginx:nginx /data/
+COPY --chown=nginx:nginx ./build/ ./
+
+EXPOSE 80

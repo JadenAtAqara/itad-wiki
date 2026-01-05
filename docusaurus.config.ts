@@ -1,5 +1,5 @@
-import {themes as prismThemes} from 'prism-react-renderer';
-import type {Config} from '@docusaurus/types';
+import { themes as prismThemes } from 'prism-react-renderer';
+import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
@@ -34,11 +34,11 @@ const config: Config = {
   // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
-    locales: ['en','zh'],
+    locales: ['en', 'zh'],
     path: 'i18n',
     localeConfigs: {
       en: { label: 'English', direction: 'ltr', path: 'en', htmlLang: 'en-US' },
-      zh: { label: '简体中文', direction: 'ltr', path: 'zh', htmlLang: 'zh-Hans'},
+      zh: { label: '简体中文', direction: 'ltr', path: 'zh', htmlLang: 'zh-Hans' },
     }
   },
 
@@ -51,35 +51,18 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/lumigit/itad-wiki/edit/main/',
-	  includeCurrentVersion: false,
-	  versions: {
+            'https://github.com/aqara/aqara-developer-docs/edit/main/',
+          includeCurrentVersion: false,
+          versions: {
             'Beta': {
               label: 'Beta (Current)',
               // path: '/', // options
             },
-	   },
-	  remarkPlugins: [remarkMath],
+          },
+          remarkPlugins: [remarkMath],
           rehypePlugins: [rehypeKatex],
         },
-	/*
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-	 
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/lumigit/itad-wiki/edit/main/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
-        */
+
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -111,38 +94,28 @@ const config: Config = {
         src: 'img/logo.svg',
       },
       items: [
-	{
-	  label: "Docs",
-	  position: "left",
-	  items:[
-	    {label: "Aqara Studio", to: "docs/aqara-studio/overview/introduction"},
-	  ],
-	},
-/*
         {
-          type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
-          position: 'left',
-          label: 'Tutorial',
+          label: "Docs",
+          position: "left",
+          items: [
+            { label: "Aqara Studio", to: "docs/aqara-studio/overview/introduction" },
+          ],
         },
-*/
-/*
-        {to: '/blog', label: 'Blog', position: 'left'},
-*/
+
         {
           href: 'https://builder.aqara.com',
           label: 'Aqara Builder',
           position: 'right',
         },
-	{
-	  type: 'localeDropdown',
-          position: 'right', 
-	},
-	{
-          type: 'docsVersionDropdown', 
+        {
+          type: 'localeDropdown',
+          position: 'right',
+        },
+        {
+          type: 'docsVersionDropdown',
           position: 'left',
         },
-	{
+        {
           type: 'search',
           position: 'left', // search to left
         },
@@ -151,7 +124,7 @@ const config: Config = {
     },
     docs: {
       sidebar: {
-	hideable: true,
+        hideable: true,
       },
     },
     footer: {
@@ -193,11 +166,11 @@ const config: Config = {
             },
             {
               label: 'Privacy Policy',
-              href: 'https://www.aqara.com/en/privacy_policy.html', // 建议加上合规链接
+              href: 'https://www.aqara.com/en/privacy_policy.html',
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/lumigit/itad-wiki',
+              href: 'https://github.com/aqara/aqara-developer-docs',
             },
           ],
         },
