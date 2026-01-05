@@ -17,14 +17,19 @@ Aqara Studio 提供了标准的 IFTTT 流程，仅需配置“当-且-就”三�
 
 #### 添加触发条件
 
-1. 单击**添加触发条件**。
+1. 单击**添加触发条件**。   
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-AddEvent.png" style={{ width: '80%' }} />   
+
 2. 选择**设备**或**定时触发**。
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-EventTypes.png" style={{ width: '80%' }} />   
+
     - 单击**设备**后：
         1. 添加设备事件   
             在**设备**弹窗中选择需要的设备和需要的功能卡片后，单击**确认**。   
             <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-DevicePopup.png" style={{ width: '80%' }} />   
+
             此时，你可以在**当**区域看到了 Studio 将会在**一周七天 24 小时不间断**监听该设备事件的**默认值**。   
             <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-EventAdded.png" style={{ width: '80%' }} />   
         2. 修改监听目标值   
@@ -46,15 +51,22 @@ Aqara Studio 提供了标准的 IFTTT 流程，仅需配置“当-且-就”三�
         1. 选择触发行为的日子（每周周几，可多选）。   
             <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-SetEventDate.png" alt="选择一周的某几天" style={{ width: '80%' }} />   
         2. 设定时间类型。   
-            <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-SetTimeType.png" alt="选择时间类型" style={{ width: '80%' }} />   
-            > **说明**
-            >
-            > 选择日出或日落时，请输入您家庭的经纬度，格式如下：
-            > - 北纬、东经 → 使用正数（如：北纬 35.0° → `35.0`）
-            > - 南纬、西经 → 使用负数（如：西经 120.0° → `-120.0`）
-            > <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-PassInLongitudeandLatitude.png" alt="传入家庭的经纬度" style={{ width: '80%' }} />   
+
+            <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-SetTimeType.png" alt="选择时间类型" style={{ width: '80%' }} /> 
+
+            :::tip
+            
+            选择日出或日落时，请输入您家庭的经纬度，格式如下：
+            - 北纬、东经 → 使用正数（如：北纬 35.0° → `35.0`）
+            - 南纬、西经 → 使用负数（如：西经 120.0° → `-120.0`）
+            <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-PassInLongitudeandLatitude.png" alt="传入家庭的经纬度" style={{ width: '80%' }} />
+            
+            ::: 
+
         3. 设置时间。   
+
             <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-SpecifyTime.png" alt="设置具体时间点" style={{ width: '80%' }} />   
+
 #### 选择条件满足逻辑
 
 当您添加多个触发条件时，可以灵活设置这些条件的满足逻辑：
@@ -62,6 +74,7 @@ Aqara Studio 提供了标准的 IFTTT 流程，仅需配置“当-且-就”三�
 - **按顺序依次触发**：只有当所有条件按照设定顺序依次被满足后，才会触发后续动作。
 
 <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-SelectEventLogic.png" alt="设置触发条件" style={{ width: '80%' }} />   
+
 ### 2 （可选）配置且
 
 **且**区域用于添加额外的状态条件，以进一步精确控制自动化的触发。只有在**当**区域的条件已满足后，系统才会判断**且**区域中的条件，只有这些条件**全部或部分**满足时，自动化才会执行。
@@ -70,17 +83,28 @@ Aqara Studio 提供了标准的 IFTTT 流程，仅需配置“当-且-就”三�
 
 #### 添加状态条件
 
-1. 单击**添加状态条件**。   
+1. 单击**添加状态条件**。
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-AddCondition.png" style={{ width: '80%' }} />   
+
 2. 选择**设备**。   
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-AddConditionDevice.png" style={{ width: '80%' }} />   
+
 3. 选择所需的**设备**及其对应的**功能卡片**，然后点击**确认**。  
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-SelectConditionFunction.png" style={{ width: '80%' }} />   
+
     添加完成后，你将在**且**区域看到已选设备条件，显示该条件的**默认状态**。   
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-ConditionAdded.png" style={{ width: '80%' }} />   
+
 4. 修改条件判断的目标值    
+
    如需判断设备的其他状态或数值，点击条件中的蓝色字段，选择或输入你想要判断的目标值即可完成修改。   
+
    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-ModifyConditionParameter.png" style={{ width: '80%' }} />   
+
 5. 配置时间限制    
    可以为条件判断设置两类时间限制：一类是判断生效的时间段，另一类是事件需持续的最短时长。具体设置方法与“当”区域的操作一致，按照相同流程进行选择和修改即可。
 
@@ -91,6 +115,7 @@ Aqara Studio 提供了标准的 IFTTT 流程，仅需配置“当-且-就”三�
 - **满足任一条件**：只要有一个状态条件满足，即可触发后续自动化动作。
 
 <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-SelectConditionLogic.png" alt="设置判断逻辑" style={{ width: '80%' }} />   
+
 ### 3 配置就
 
 **就**区域用于配置自动化被触发后需要执行的具体操作。例如，可以让某个设备执行开关、调节数值等。除了设备动作之外，还可以在这里添加“延时”，并将延时操作穿插在各个设备动作之间，实现灵活的控制流程。
@@ -109,36 +134,48 @@ Aqara Studio 提供了标准的 IFTTT 流程，仅需配置“当-且-就”三�
 
 配置流程如下：
 1. 单击**添加执行条件**。   
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-AddAction.png" style={{ width: '80%' }} />   
+
 2. 选择**设备**或**延时执行**。 
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-SelectActionType.png" style={{ width: '80%' }} />   
+
 3. 选择所需的**设备**及其对应的**功能卡片**，然后点击**确认**。  
     - 单击**设备**后：
         1. 添加设备动作   
             在**设备**弹窗中选择需要的设备和需要的功能卡片后，单击**确认**。   
-            添加完成后，已选择的设备动作将在**就**区域显示，并预设为默认参数值，你可以根据实际需求进一步修改设置。     
+            添加完成后，已选择的设备动作将在**就**区域显示，并预设为默认参数值，你可以根据实际需求进一步修改设置。    
+
             <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-ActionAdded.png" style={{ width: '80%' }} />   
+
         2. 修改动作参数   
             若需调整设备动作的具体参数，可点击动作中的蓝色字段，选择或输入所需的目标值进行设置。   
+
             <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-ModifyAction.png" style={{ width: '80%' }} />   
+
         3. 配置时间限制
             可以为动作执行设置生效的时间段，具体设置方法与“当”区域的操作一致，按照相同流程进行选择和修改即可。
     - 单击**延时**后：点击蓝色时长字段，即可修改延时时长。
+    
         <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-DelayTimeSetting.png" style={{ width: '80%' }} />   
-        > **说明**
-        >
-        > **延时**仅对它之后的设备动作生效。举例说明：
-        > - 动作 A
-        > - 延时
-        > - 动作 B
-        >
-        > 上述流程中，当触发条件被满足时，Studio 会首先执行动作 A，随后等待设置的延时时长，再执行动作 B。也就是说，延时是为了让动作 B 延后执行，动作 A 会立即执行，不受影响。
-        >
-        > 如果执行条件如下：
-        > - 延时
-        > - 动作 A
-        >
-        > 则当触发条件被满足后，Studio 会先等待设定的延时时长，然后再执行动作 A。
+        :::tip
+        **延时** 仅对它之后的设备动作生效。  
+        例如：
+
+        - 动作 A  
+        - 延时  
+        - 动作 B  
+
+        上述流程中，当触发条件被满足时，Studio 会首先执行动作 A，随后等待设置的延时时长，再执行动作 B。延时是为了让动作 B 延后执行，动作 A 会立即执行，不受影响。
+
+        如果执行条件如下：
+
+        - 延时  
+        - 动作 A  
+
+        则当触发条件被满足后，Studio 会先等待设定的延时时长，然后再执行动作 A。
+        :::
 
 #### 选择执行逻辑
 
@@ -147,6 +184,7 @@ Aqara Studio 提供了标准的 IFTTT 流程，仅需配置“当-且-就”三�
 - **切换执行**：每次满足触发条件时，仅执行其中的一个设备动作，动作将按照设置的顺序轮流执行。每触发一次，执行下一个动作，循环往复。
 
 <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IFTTT-SelectActionLogic.png" alt="设置动作执行逻辑" style={{ width: '80%' }} />   
+
 ### 4 测试自动化
 
 配置完上述条件后，单击**测试**按钮，即可检测你的自动化。
