@@ -1,56 +1,25 @@
----
-sidebar_label: Log Management (Hidden)
-hide_title: true
-hide_table_of_contents: true
-draft: true
----
-
 # Log Management
 
-Aqara Studio系统内置三种核心日志：
+Select **Log Audit** in the sidebar to access the following three types of logs: [Device Log](#device-log), [Link Log](#link-log), and [User Operation Log](#user-operation-log). These logs provide detailed data to support system operation and security audits.
 
-- **运行日志**（RuningLog）：自动记录系统运行状态、错误信息及资源使用情况，帮助快速排查故障。
-- **操作日志**（AuditLog）：追踪用户登录、功能使用等所有操作记录，便于追溯人为操作行为。
-- **安全日志**（SecurityLog）：专门记录登录异常、权限变更、配置修改等安全事件，及时预警潜在风险。
+- **Device Log**: The device log records all changes in the function point values of devices, allowing you to track device status and operation history.
+- **Link Log**: The link log includes the connection status and target IP information for Aqara Studio and various protocols.
+- **User Operation Log**: The user operation log comprehensively records user logins and operation behaviors, making it easy to trace activities and clarify responsibilities.
 
-所有日志均支持时间筛选和关键词搜索，可通过控制面板直观查看与管理，满足日常运维与审计需求。
+All logs support time filtering and keyword search, meeting daily operation and audit requirements.
 
-## 运行日志
+:::tip
+By default, Aqara Studio displays logs from 00:00:00 to 23:59:59 of the current day. To view historical logs, please manually select the desired time range.
+:::
 
-1. 单击首页任一菜单进入，单击左上角菜单导航图标，选择Common-Logs；
-2. 在左侧导航栏双击RuningLog，可查看运行日志；
-   - Index：序号；
-   - Timestamp：时间；
-   - Log Name：产生日志的模块名称；
-   - Severity：日志等级，分为ERROR、WARN、INFO三个等级；
-   - Messge：具体日志信息。
-3. 可根据过滤条件自行查询日志。
+## Device Log
 
-## 操作日志
+You can view all records of changes in device function point values. You can also filter the logs by device ID, device name, and function point name.
 
-1. 单击首页任一菜单进入，单击左上角菜单导航图标，选择Common-Logs；
-2. 在左侧导航栏双击AuditLog，可查看操作日志；
-   - Index：序号；
-   - Timestamp：时间；
-   - Operation：具体操作；
-   - Target：目标文件路径；
-   - Property Name：属性名称；
-   - Old Value：操作前的旧值；
-   - Value：当前操作的值。
+## Link Log 
 
-3. 可根据过滤条件自行查询日志。
+You can view whether the link channels between Aqara Studio and each protocol (such as Aqara Cloud-M300, Studio Connect-BACnet IP) are operating normally (showing the most recent 500 records). You can also filter the logs by link name.
 
-## 安全日志
+## User Operation Log
 
-1. 单击首页任一菜单进入，单击左上角菜单导航图标，选择Common-Logs；
-
-2. 在左侧导航栏双击SecurityLog，可查看操作日志；
-
-   - Index：序号；
-
-   - Timestamp：时间；
-   - Operation：具体操作；
-   - User Name：操作人；
-   - Message：具体日志信息。
-
-3. 可根据过滤条件自行查询日志。
+You can view all records of user logins and function usage (showing the most recent 500 records). You can also filter the logs by user name.
