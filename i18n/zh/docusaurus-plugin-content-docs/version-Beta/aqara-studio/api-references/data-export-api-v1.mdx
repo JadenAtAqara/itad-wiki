@@ -56,7 +56,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
     "msgId": "get_devices_1751609244328",
     "data":{
         "deviceTypesList": ["Light"],
-		"orderBy": "createTime desc",
+        "orderBy": "createTime desc",
         "pageNum": 1,
         "pageSize": 100
     }
@@ -382,7 +382,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 | data[].code | Number | 此 API 调用是否成功，0 表示成功，非 0 表示失败。 |
 
 :::tip
-`code` 为 `0` 仅表示接口调用成功，并不意味着设备状态已改变。请通过 [查询功能点的最新值](./data-export-api-v1.mdx#查询设备的最新功能点值) 确认是否已成功控制设备。
+`code` 为 `0` 仅表示接口调用成功，并不意味着设备状态已改变。请通过 [查询设备的最新功能点值](./data-export-api-v1.mdx#查询设备的最新功能点值) 确认是否已成功控制设备。
 ::: 
 
 #### 响应数据示例
@@ -803,7 +803,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 
 :::tip
 
-若事件为 `DEVICE_TRAIT_PARAMETER_UPDATE`，建议重新调用 `GetDevicesRequest` 接口 [查询设备配置](#查询设备的-spec-配置)。
+若事件为 `DEVICE_TRAIT_PARAMETER_UPDATE`，建议重新调用 `GetDevicesRequest` 接口 [查询设备的 spec 配置](#查询设备的-spec-配置)。
 
 :::
 
