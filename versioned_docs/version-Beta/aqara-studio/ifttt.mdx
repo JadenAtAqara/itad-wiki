@@ -37,9 +37,9 @@ The **When** step defines the point triggering your automation, either a **devic
             You can add two types of time constraints for event listening: the effective time period and the required event duration.
             - Set effective listening period   
                 To monitor events only during specific dates/times, click **... > Time Period** to configure.
-                > **Note**
-                >
-                > Setting the time range as 00:00:00-00:00:00 means this logic is active all day.
+                :::tip
+                Setting the time range as 00:00:00-00:00:00 means this logic is active all day.
+                :::
 
                 <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-SetEventTimePeriod.png" style={{width: '80%'}} />   
             - Set event duration requirement
@@ -51,12 +51,15 @@ The **When** step defines the point triggering your automation, either a **devic
         2. Set the type of time.
             <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-SetTimeType.png" alt="Choose time type" style={{width: '80%'}} />   
 
-            > **Note**
-            >
-            > When selecting sunrise or sunset, please enter your home's latitude and longitude in the following format:
-            > - North latitude, east longitude: use positive numbers (e.g., 35.0° N → `35.0`)
-            > - South latitude, west longitude: use negative numbers (e.g., 120.0° W → `-120.0`)
-            > <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-PassInLongitudeandLatitude.png" alt="Enter latitude/longitude" style={{width: '80%'}} />   
+            :::tip
+
+            When selecting sunrise or sunset, please enter your home's latitude and longitude in the following format:
+            - North latitude, east longitude: use positive numbers (e.g., 35.0° N → `35.0`)
+            - South latitude, west longitude: use negative numbers (e.g., 120.0° W → `-120.0`)
+
+            <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-PassInLongitudeandLatitude.png" alt="Enter latitude/longitude" style={{width: '80%'}} />
+
+            ::: 
 
         3. Set the exact time.
             <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-SpecifyTime.png" alt="Set specific time" style={{width: '80%'}} />   
@@ -77,13 +80,13 @@ For example: Set "someone detected in the room" as a **When** condition, then ad
 
 #### Add Condition
 
-1. Click **Add Condition**.
+1. Click **Add Condition**.<br />
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-AddCondition.png" style={{width: '80%'}} />   
-2. Choose **Device**.
+2. Choose **Device**.<br />
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-AddConditionDevice.png" style={{width: '80%'}} />   
-3. Select the needed **device** and its **function card**, then click **Confirm**.
+3. Select the needed **device** and its **function card**, then click **Confirm**.<br />
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-SelectConditionFunction.png" style={{width: '80%'}} />   
-    After completion, you'll see the chosen device condition in the **And** section, showing its **default state**.
+    After completion, you'll see the chosen device condition in the **And** section, showing its **default state**.<br />
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-ConditionAdded.png" style={{width: '80%'}} />    
 4. Edit target values for condition
     To check for other device states or values, click the blue field in the condition, then select or enter your target value as needed.
@@ -117,37 +120,38 @@ Actions refer to the device actions and delay steps that should be performed aft
 
 The process:
 1. Click **Add Action**.
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-AddAction.png" style={{width: '80%'}} />   
 2. Choose **Device** or **Delay execution**.
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-SelectActionType.png" style={{width: '80%'}} />   
 3. Select the needed **device** and its **function card**, then click **Confirm**.
     - If you choose **Device**:
         1. Add device action
             In the **Device** popup, select the required device and function card, then click **Confirm**.
-            Now you can see the selected device action in **Then** with default parameter value. You can further change the value as needed.
+            Now you can see the selected device action in **Then** with default parameter value. You can further change the value as needed.<br />
             <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-ActionAdded.png" style={{width: '80%'}} />   
         2. Edit action parameters
-            To adjust the action's parameters, click the blue field and select or input the target value.
+            To adjust the action's parameters, click the blue field and select or input the target value.<br />
             <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-ModifyAction.png" style={{width: '80%'}} />   
         3. Configure time constraints
             You can specify an effective period for the action, just like in the **When** section.
-    - If you choose **Delay**: Click the blue duration field to change the delay length.
+    - If you choose **Delay**: Click the blue duration field to change the delay length.<br />
         <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-DelayTimeSetting.png" style={{width: '80%'}} />   
 
-        > **Note**
-        >
-        > **Delay** only affects actions that come after it. Example:
-        > - Action A
-        > - Delay
-        > - Action B
-        >
-        > In this sequence, once the triggers are met, Studio will first execute Action A, then wait the delay period, and then execute Action B. The delay is for postponing Action B; Action A executes immediately.
-        >
-        > If your sequence is:
-        > - Delay
-        > - Action A
-        >
-        > Studio will first wait for the delay before executing Action A.
+        :::tip
+        **Delay** only affects the actions that follow it.  
+        For example:
+
+        - Action A  
+        - Delay  
+        - Action B  
+
+        In this sequence, once the triggers are met, Studio will first execute Action A immediately, then wait for the delay period, and then execute Action B. The delay is only for postponing Action B; Action A executes right away.
+
+        If your sequence is:
+
+        - Delay  
+        - Action A  
+
+        Studio will first wait for the specified delay, then execute Action A.
+        :::
 
 #### Set Execution Logic
 
