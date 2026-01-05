@@ -1,76 +1,61 @@
----
-sidebar_label: User (Hidden)
-hide_title: true
-hide_table_of_contents: true
-draft: true
----
-
 # User
 
-当您使用默认账号登录 Aqara Studio 后，在首页单击单击**用户**，即可 [添加](#添加用户) 和 [删除](#删除用户) 用户、[编辑用户信息](#编辑用户信息)、[重置用户密码](#重置密码) 和 [添加用户组](#添加用户组)。
+After logging into Aqara Studio with the default account, go to the **User** page in the left sidebar to [add](#add-users) and [delete](#delete-users) users, [edit user information](#edit-user-information), [reset user passwords](#reset-password), and [add user groups](#add-user-group).
 
-【待补充用户页面示意图】
+## Basic Concepts
 
-## 基本概念
+Before managing users, it is helpful to understand two core concepts: "user roles" and "user groups." These will assist you in efficiently assigning permissions and managing accounts.
 
-在管理用户之前，了解好“用户角色”与“用户组”两个核心概念，可以帮助您更高效地分配权限、管理账号。
+### User Roles
 
-### 用户角色
+Aqara Studio comes with three built-in user roles, each with different permission scopes. When creating a new user, the role must be assigned by the super admin. The roles and their permissions are described in the following table:
 
-Aqara Studio 内置三种用户角色，每种角色的权限范围不同。新建用户时，必须由超级管理员指派其角色。角色及其权限如下表所示：
+| Role    | Permission Scope |
+| ------- | --------------- |
+| Super admin   | <ul><li>User management (add, delete, edit users)</li><li>License management</li><li>Full read/write access to all features and data without any restrictions.</li></ul> |
+| Admin   | After authorization from the super admin, the role has read and write access to assigned features and data. |
+| Operator| After authorization from the super admin, the role has read-only access to assigned features and data. |
 
-| 角色 | 权限范围 |
-| --- | --- |
-| 超级管理员 | <ul><li>用户管理（添加用户、删除用户、编辑用户、）</li><li>License 管理</li><li>拥有对所有功能和数据的读和写权限，无任何限制。</li></ul> |
-| 管理员 | 经超级管理员授权后，拥有对指定功能和数据的读和写权限。 |
-| 操作员 | 经超级管理员授权后，拥有对指定功能和数据的读权限。 |
+### User Groups
 
-### 用户组
+A user group is used to batch assign roles and permissions, making user management more convenient and efficient. When multiple users are added to the same user group, they share the same set of permissions.
 
-用户组可用于批量分配角色和权限，让用户管理变得更加便捷高效。当多个用户加入同一个用户组时，他们拥有了相同的权限。
+### Permission Overlay
 
-### 权限叠加规则
+After joining a user group, a user's personal role and permissions are combined with those of the user group. The effective permissions are the sum of both.
 
-当用户加入某个用户组后，其个人角色和权限会与所属用户组的角色和权限合并，实际拥有的权限为两者的总和。
+## Add Users
 
-## 添加用户
+1. Open the **User Management** tab and click the **Add** button.
 
-1. 打开**用户管理**选项卡，单击**添加**按钮。
-   【待补充示意图】
-2. 在弹窗中填写用户名、角色等必要信息，点击**确定**完成用户添加。
-   【待补充示意图】
-3. 系统会弹出提示，表示用户已添加成功，并自动为新用户生成初始密码。请妥善保存该初始密码。
-   【待补充示意图】
-4. 回到用户列表，在新用户所在行点击**编辑图标**，在弹出的**用户信息**窗口切换至**访问权限**选项卡。
-   【待补充示意图】
-5. 在**访问权限**选项卡里，勾选该用户可访问的功能模块，然后点击**确认**保存设置。
-   【待补充示意图】
-6. 新用户首次使用用户名和初始密码登录 Aqara Studio 时，系统会自动要求其修改密码，以保障账号安全。
-   【待补充示意图】
+2. Fill in the required information such as username and role in the popup, then click **Confirm** to add the user.
 
-## 删除用户
+3. The system will display a prompt indicating the user was added successfully and automatically generate an initial password for the new user. Please keep this password safe.
 
-xxx
+4. Return to the user list, and in the row for the new user, click the **Edit icon**. In the **User Information** popup, switch to the **Access Permission** tab.
 
-## 添加用户组
+5. In the **Access Permission** tab, select the functions the user can access, then click **Confirm** to save the settings.
 
-1. 打开**用户组**选项卡，单击**添加**按钮。
-   【待补充示意图】
-2. 在弹窗中填写用户组名称、分配角色（可多选），并可选择添加用户，最后点击**确认**完成用户组创建。
-   【待补充示意图】
-3. 在**编辑用户组**窗口，你可以设置该用户组的基本信息和访问权限。
-   【待补充示意图】
+6. The first time the new user logs into Aqara Studio with their username and initial password, the system will require them to change their password to ensure account security.
 
-## 编辑用户信息
+## Delete Users
 
-打开**用户管理**，找到目标用户所在一行，单击 :pen: 图标，即可修改该用户的基础信息、自定义配置和访问权限。
-- 基础信息：昵称、角色、用户组、语言、电子邮件、电话号码。
-- 自定义配置：过期、自动注销已启用、自动注销期间、使用默认自动注销期间。
-- 访问权限。
+Open the **User Management** tab, find the row for the target user, and click the **Delete icon** to remove the user.
 
-## 重置密码
+## Add User Groups
 
-1. 打开**用户管理**，找到目标用户所在一行，单击 &#128274; 图标，即可重置该用户的密码。
-2. 保存弹窗中的新初始密码。该用户使用该密码登录后，Aqara Studio 会提示修改密码。
+1. Open the **User Group** tab and click the **Add** button.
 
-【待补充示意图】
+2. In the popup, enter the group name, assign roles (multiple can be selected), and optionally add users. Click **Confirm** to create the user group.
+
+## Edit User Information
+
+Open **User Management**, find the row for the target user, and click the :pen: icon to edit the user's basic information, custom settings, and access permissions.
+- Basic information: nickname, role, user group, language, email, phone number.
+- Custom configuration: expiration, auto-logout enabled, auto-logout period.
+- Access permissions.
+
+## Reset Password
+
+1. Open **User Management**, find the row for the target user, and click the &#128274; icon to reset the user's password.
+2. Save the new initial password shown in the popup. The user will be prompted to change their password after logging in to Aqara Studio with the new initial password.
