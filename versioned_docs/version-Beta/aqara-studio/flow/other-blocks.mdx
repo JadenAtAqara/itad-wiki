@@ -116,3 +116,25 @@ Here's how to use the `String Concat` block:
 1. Connect the variable blocks you want to concatenate (supports string, numeric, boolean, etc.) to the input points on the left side of the block.
 2. Connect 1 `string variable` block to the right side of the block to record the concatenation results.
 
+## Counter
+
+### Feature
+
+The Counter block is used for cumulative counting, supporting operations such as increment, decrement, preset value, and reset. It is suitable for various scenarios that require counting or accumulating values.
+
+Typical scenarios include:
+- People counting: Counting the number of people entering or exiting.
+- Device counting: Recording the number of device switch-ons or runtime counts.
+- Limited-action control: Triggering specific actions after reaching a set count.
+
+### Components
+
+| Connection Point/Parameter        | Required | Description |
+|-----------------------------|:--:|-------------|
+| Count Up (Input Point)      | ✘ | It connects to an [Event](./../flow/device-blocks.mdx#event) or a [Condition](./device-blocks.mdx#condition) card. Each time the event or condition occurs, the count increases. |
+| Count Down (Input Point)    | ✘ | It connects to an [Event](./../flow/device-blocks.mdx#event) or a [Condition](./device-blocks.mdx#condition) card. Each time the event or condition occurs, the count decreases. |
+| Preset (Input Point)        | ✘ | It connects to an [Event](./../flow/device-blocks.mdx#event) or a [Condition](./device-blocks.mdx#condition) card. Each time the event or condition occurs, the count is reset to the preset value. |
+| Clear (Input Point)         | ✘ | It connects to an [Event](./../flow/device-blocks.mdx#event) or a [Condition](./device-blocks.mdx#condition) card. Each time the event or condition occurs, the count is cleared (set to zero). |
+| Preset Value (Parameter)    | ✘ | The value to which the counter will reset when the **Preset** event occurs. |
+| Count Increment (Parameter) | ✔ | The increment or decrement applied each time. Defaults to 1, customizable. |
+| Output Point                | ✔ | It outputs the current count, connectable to a card receiving numeric values. |

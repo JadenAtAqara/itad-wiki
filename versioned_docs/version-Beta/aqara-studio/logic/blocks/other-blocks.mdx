@@ -56,3 +56,85 @@ To configure the random number parameters, double-click the block to open the co
 - **Multiplier**: Determines the range of the random number. The result will be within `(Offset, Offset + Multiplier)`. For example, if Offset is 50 and Multiplier is 100, the random number will be between 50 and 150.
 - **Offset**: Sets the minimum value for the random number. The result will not be less than this value. Default is 50.
 - **Update Interval**: Controls how often a new random number is generated. If set to 1 second, a new random number will be output every second.
+
+## Counter
+
+#### Overview
+
+The counter is a logic block used for accumulating counts. It supports count up, counter down, preset value, and clearing operations. It is suitable for scenarios where you need to count occurrences or accumulate numerical values.
+
+Example Scenarios:
+- People counting: counting the number of people entering or leaving.
+- Device counting: recording the on/off or runtime counts of a device.
+- Limited-use control: triggering a specific action after reaching a certain number of times.
+
+#### Attribute Description
+
+The default attributes displayed on the block:
+- **Output**: It outputs the accumulated count value.
+- **Count up**: It can be connected to the output of a function point or a [logic block](./logic-blocks.mdx); each time the output changes, the counter increments.
+
+In addition, you can double-click the counter to configure the following extended attributes:
+- **Preset Value**: You can set the initial value of the counter.
+- **Count Increment**: You can set the increment/decrement step each time "Count up" or "Counter down" is triggered.
+- **Counter down**: It can be connected to the output of a function point or a [logic block](./logic-blocks.mdx); each time the output changes, the counter decrements.
+- **Preset**: It can be connected to the output of a function point or a [logic block](./logic-blocks.mdx); each time the output changes, the counter resets to the "Preset Value".
+- **Clear**: Can be connected to the output of a function point or a [logic block](./logic-blocks.mdx); each time the output changes, the counter resets to 0.
+
+#### Usage
+
+Common use cases for the counter include:
+- **Change-triggered counting**: Each time the monitored function point value changes, the counter increases by one. This is suitable for counting the total number of events. You can directly connect the output of the function point to this logic block.
+- **Condition-triggered counting**: The counter only increments when the function point's value meets a specific condition (such as equals a certain value). This usually requires cooperation with a [logic block](./logic-blocks.mdx) to achieve conditional counting.
+
+#### Examples
+
+**Change-triggered counting**
+
+For example, to count the total number of times a device switch changes:
+
+1. Add the "Device - Switch Status" function point on the left side of the canvas.
+2. Drag a **counter** logic block onto the canvas. 
+3. Connect the "Device - Switch Status" output to the "Count up" input of the counter.
+4. The counter's **Output** will show the accumulated number of switch changes.
+
+**Condition-triggered counting**
+
+For example, to count the number of times a light is turned on:
+
+1. Add the "Light - Switch" function point.
+2. Add an [Equal](./logic-blocks.mdx#equal) block to the canvas. Connect the "Input A" of the Equal block to the Output of the "Light - Switch" function point above, and set "Input B" as "1" (which represents the light being on).
+3. Double-click the Equal block to open its settings panel, check "Show" in the `True` attribute's `Flags` to display this attribute on the block.
+4. Drag a **counter** block onto the canvas. Connect the right endpoint of the `True` output above to the "Count up" of the counter.
+5. The **Output** of the counter will then display the total number of times the light has turned on. The counter will only increment when the light turns on.
+
+## While
+
+#### Introduction
+
+When you want to repeat an action, you can use this logic block to implement loop control and flexibly build periodic automation flows.
+
+#### Attribute Description
+
+By default, the following parameters are displayed:
+- **Trigger**: The right-side endpoint connects to the target function point to be looped.
+- **Active**: The left-side endpoint connects to a boolean data that triggers the loop.
+
+To configure more parameters, double-click to open the settings panel. The configurable parameters include:
+- **Every**: Set the interval between each action execution here, in seconds.
+- **First trigger waits**: Set the delay before the first execution, in milliseconds. After the loop starts, it will first wait this duration before the initial trigger. All subsequent triggers use the "Every" interval. Proper configuration helps avoid device competition or starting multiple loops at once, and is suitable for scenarios like device initialization warm-up or staggered start. Unit: milliseconds.
+
+#### Example
+
+Below is an example of periodic air conditioning adjustment ("When a person is detected, automatically set the air conditioner to cooling mode 26℃ and auto fan speed every 1 hour"):
+
+1. Add "Presence sensor - Existence state" as the loop trigger condition on the left side of the canvas, then add "AC - Mode", "AC - Temperature", and "AC - Fan Speed" function points in sequence on the right.
+2. Drag in a **While** logic block and place it between them.
+3. Double-click the block and set **Every** as `3600` seconds to achieve hourly automatic adjustment.
+4. If you need to delay the first cycle execution, set the time in "First trigger waits" (e.g., 30000 ms, which equals 30 seconds).
+5. Connect the output (Boolean type) of "Presence sensor - Existence state" to the **Active** port of the While logic block to ensure the automation only repeatedly runs when someone is present.
+6. Double-click the While block, and in the `Trigger` parameter's `Flags`, check "Allow multiple target connections" so you can operate multiple function points at once.
+7. Connect the "Trigger" output to the inputs of "AC - Mode", "AC - Temperature", "AC - Fan Speed", etc.
+8. For each connection, double-click to open "Converter - Target Value", uncheck the original **status** value, and set the custom values you wish to send. For example: set AC mode to "Cooling", temperature to "26", and fan speed to "Auto".
+
+With this configuration, when someone is present in the room, the air conditioner will automatically adjust to the specified state every hour, enhancing automation experience and saving energy.
