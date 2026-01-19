@@ -13,6 +13,7 @@
 时间类包含的卡片如下图所示：
 
 <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-Total.png" alt="事件类卡片概览" style={{ width: '80%' }} />   
+
 ## 定时触发
 
 ### 功能
@@ -112,11 +113,17 @@
    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-EventConnectedToTimeWindow.png" alt="连接一个当卡片" style={{ width: '80%' }} />   
 4. 在卡片右侧，连接待触发的行为，如 `就` 卡片。
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-ConnectionToActionForTimeWindow.png" alt="连接待触发的行为" style={{ width: '80%' }} />   
+
 ## 延时执行
 
 ### 功能
 
 当您希望在前一个行为完成后，延迟一段时间再触发下一个行为时，可用此卡片将两者连接，实现延时效果。
+
+可应用在以下场景：
+- **防抖动处理**：避免传感器信号频繁抖动导致的误触发。
+- **延迟响应**：需要在某个事件发生后延迟一段时间再执行后续动作的场景。
+- **定时联动**：如开门后延迟 30 秒自动关灯。
 
 ### 组成
 

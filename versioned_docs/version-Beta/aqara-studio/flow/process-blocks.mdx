@@ -27,9 +27,10 @@ This block is **dual-point type**, with **1 input point**, **1 output point** an
 
 | Connection point / Parameter | Required | Description |
 | -- | -- | -- |
-| Activate (input) | ✔ | It controls when the loop starts and stops.<br />The cards it connects depend on how you want to control the loop:<ul> <li><strong>Single Boolean Value:</strong> The same Boolean value starts and stops the loop. For example: “Door opens → start loop; Door closes → stop loop.” Connect this to the <a href="./variables-blocks.mdx#point-data">Point Data</a> card.</li> <li><strong>Two Separate Events:</strong> Two different events control the start and stop of the loop. For example: “Door opens → start loop; Window closes → stop loop.” Connect this to <a href="./device-blocks.mdx#event">Event</a> cards.</li> </ul> |
+| Active (input) | ✔ | It controls when the loop starts and stops.<br />The cards it connects depend on how you want to control the loop:<ul> <li><strong>Single Boolean Value:</strong> The same Boolean value starts and stops the loop. For example: “Door opens → start loop; Door closes → stop loop.” Connect this to the <a href="./variables-blocks.mdx#point-data">Point Data</a> card.</li> <li><strong>Two Separate Events:</strong> Two different events control the start and stop of the loop. For example: “Door opens → start loop; Window closes → stop loop.” Connect this to <a href="./device-blocks.mdx#event">Event</a> cards.</li> </ul> |
 | Interval | ✔ | It sets the wait time between each execution. Choose seconds, minutes, or hours. |
-| Fire (output) | ✔ | It connects the steps you want to repeat. |
+| Waiting duration before the first trigger | ✘ | **The wait duration before the first execution.** After the loop starts, it will wait for this amount of time before performing the target action for the first time. For subsequent rounds, the regular interval you set will be used.<br /> Setting this parameter can help you avoid resource contention between devices or prevent multiple loops from starting at the same time, which is useful for device initialization, staggered startups, and similar scenarios. |
+| Trigger (output) | ✔ | It connects the steps you want to repeat. |
 
 ### How to Use
 
