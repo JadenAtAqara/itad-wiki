@@ -1,0 +1,109 @@
+# 连接至 Aqara Studio MCP Server
+
+## 什么是 MCP
+
+Model Context Protocol（MCP，模型上下文协议）是一种开源标准，用于为 AI 应用提供与外部系统连接的统一接口。通过 MCP，像 ChatGPT、Claude 这样的 AI 可以安全、标准化地接入数据源（文件、数据库）、工具（搜索、计算）以及工作流（专业提示与自动化流程），从而在理解上下文的同时执行真实任务。
+
+MCP 的价值在于降低集成成本、扩展 AI 能力并提升用户体验：开发者能更快构建和复用能力，AI 应用能接入丰富生态并变得更强大，终端用户则获得真正“可行动”的智能助手。无论是个人助理、企业级聊天分析，还是设计、编程与自动化场景，MCP 都为 AI 与现实系统之间架起了高效、可扩展的桥梁。
+
+## 你可以通过 Aqara Studio MCP Server 做什么？
+
+连接 Aqara Studio MCP Server 后，您可以通过各类 AI 应用实时查看并控制您在 Aqara Studio 已接入的所有设备，实现设备状态监控与便捷操控。
+
+## 启用 MCP 访问功能
+
+【UI 界面未支持】
+
+## 获取 MCP Server URL
+
+不同的 AI 应用对 MCP Server 的 URL 地址格式有不同要求。常见有两类：
+
+### 局域网地址
+
+局域网地址适用于 **Cursor** 等支持直接访问您电脑本地或所在局域网设备的应用。
+
+- 前提条件：确保 Aqara Studio 和 Cursor 等应用在同一局域网下运行。
+- 格式：`http://局域网内网IP/open/api/mcp`
+
+    :::tip
+    局域网内网 IP 为 Aqara Studio 的本机地址。
+    :::
+
+- 示例：`http://192.168.1.2/open/api/mcp`
+
+### 远程访问地址
+
+远程访问地址适用于 **ChatGPT、Manus 等仅能通过公网访问的应用**，如 **OpenAI** 平台只允许访问 **HTTPS** 公网 API。
+
+- 前提条件：已获取 Aqara Studio 的 [远程访问地址](./remote-access.mdx)。
+- 格式：`https://远程访问地址/open/api/mcp`
+- 示例：`https://your-mcp-domain.example.com/open/api/mcp`
+
+```tip
+- ChatGPT/Manus 这类纯云端 LLM 工具，只能访问公网 HTTPS 地址，无法连接仅在本地或局域网暴露的 `http://` 地址。
+- 若只需要本地或同一局域网访问，局域网 MCP 地址即可。
+- 若需要云端 AI 应用（如 ChatGPT/GPTs）访问，则必须提供公网 HTTPS 地址。
+```
+
+## 获取 Token
+
+请参考 [开发者指南 - 获取必要信息](./../developer-guide.mdx#获取必要信息)，获取授权 Token，用于通过用户身份验证，以便与 Aqara Studio MCP Server 建立连接。
+
+Token 的格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio 获取的 Token 字符串（若从 Aqara Studio 获取的令牌已带 Bearer 前缀，请直接使用，无需重复添加）。
+
+如需了解获取方式，
+
+## 在 Cursor 上使用 MCP
+
+Cursor 官方文档：[模型上下文协议（MCP）](https://cursor.com/cn/docs/context/mcp#installing-mcp-servers)
+
+1. 在 Cursor 打开 Settings，在侧边栏选择 **Tools & MCP**，并单击 **Add Custom MCP**，已打开 `mcp.json` 文件。
+
+    ![在 Cursor 选择 Add Custom MCP](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-cursor1.png)
+
+    ![初始 mcp.json 文件](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-cursor2.png)
+
+2. 将以下代码复制粘贴到该文件，替换原有的内容,然后保存，如下图所示。
+
+    ![更新 mcp.json 文件](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-cursor3.png)
+
+    ```json
+    {
+        "mcpServers": {
+            /* 
+             * 以下为通过局域网访问 Aqara Studio MCP Server 的配置
+             * LocalSmartDeviceControl 为您自定义的 MCP server 名称 
+             */
+            "LocalSmartDeviceControl": {
+                "url": "http://10.xx.xx.xx/open/api/mcp", // 替换为 Aqara Studio 的本机地址
+                "headers": {
+                    "Authorization": "Bearer xxx"  // 替换为您从 Aqara Studio 获取的 token
+                }
+            },
+            /* 
+             * 以下为通过远程访问 Aqara Studio MCP Server 的配置
+             * RemoteSmartDeviceControl 为您自定义的 MCP server 名称 
+             */
+            "RemoteSmartDeviceControl": {
+                "url": "https://xxx.xxx.xxx/open/api/mcp", // 替换为 Aqara Studio 的远程访问地址
+                "headers": {
+                    "Authorization": "Bearer xxx" // 替换为您从 Aqara Studio 获取的 token
+                }
+            }
+        }
+    }
+    ```
+
+3. **Tools & MCP** 会显示刚才配置的 MCP 及连接状态。
+
+    ![](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-cursor4.png)
+
+
+
+## 在 Manus 上使用 MCP
+
+官方文档：[Custom MCP Servers](https://manus.im/docs/integrations/custom-mcp)
+
+## 在 ChatGPT 上使用 MCP
+
+官方文档：[ChatGPT Developer Mode](https://platform.openai.com/docs/guides/developer-mode)

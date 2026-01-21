@@ -10,14 +10,20 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 
 #### 请求说明
 
+根据是否启用 [远程访问](./../remote-access.mdx) 功能，请求 URL 的格式有所不同。
+
 ##### HTTP 请求 URL
 
 **请求方法**：POST   
-**请求 URL 格式**：`http://局域网内网IP/open/api/v1`
+**请求 URL 格式**：
+- 未开启远程访问：`http://局域网内网IP/open/api/v1`
+- 已开启远程访问：`http://远程访问地址/open/api/v1`
 
 ##### WebSocket 请求 URL
 
-**请求 URL 格式**：`ws://局域网内网IP/open/ws`
+**请求 URL 格式**：
+- 未开启远程访问：`ws://局域网内网IP/open/ws`
+- 已开启远程访问：`ws://远程访问地址/open/ws`
 
 建立连接后，可通过发送/接收 JSON 消息与服务器进行实时通信。
 
@@ -93,7 +99,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
     "version": "v1",
     "msgId": "get_devices_1751609244328",
     "code": 0,
-	"message": "",
+    "message": "",
     "data":{
         "totalCount": 1,
         "pageSize": 100,
@@ -103,8 +109,8 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
                 "deviceId": "xxx",
                 "deviceTypesList": ["Light"],
                 "deviceName": "xxx",
-			    "createTime":1758549173093,
-			    "state": true
+                "createTime":1758549173093,
+                "state": true
             }
         ]
     }
@@ -132,7 +138,7 @@ Studio API 的接口支持 [HTTP](#http-请求-url) 与 [WebSocket](#websocket-�
 ```json
 {
     "type": "GetDevicesRequest",
-	"version": "v1",
+    "version": "v1",
     "msgId": "get_devices_1751609244328",
     "data":{
         "deviceIds": ["57190441014857"]
