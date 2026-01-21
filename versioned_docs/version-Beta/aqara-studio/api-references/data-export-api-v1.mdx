@@ -10,14 +10,20 @@ The Studio API supports two main protocols: [HTTP](#http-request-url) and [WebSo
 
 #### Request Details
 
+The request URL format varies depending on whether [remote access](./../remote-access.mdx) is enabled.
+
 ##### HTTP Request URL
 
 **Request method**: POST   
-**Request URL format**: `http://<local_LAN_IP>/open/api/v1`
+**Request URL format**: 
+- Remote access disabled: `http://<local_LAN_IP>/open/api/v1`
+- Remote access enabled: `http://<remote_access_address>/open/api/v1`
 
 ##### WebSocket Request URL
 
-**Request URL format**: `ws://<local_LAN_IP>/open/ws`
+**Request URL format**: 
+- Remote access disabled: `ws://<local_LAN_IP>/open/ws`
+- Remote access enabled: `ws://<remote_access_address>/open/ws`
 
 After you establish a connection, you can send and receive JSON messages in real time with the server.
 
