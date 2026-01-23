@@ -154,7 +154,9 @@
         "aqara-studio/developer-guide",
         "aqara-studio/api-references/data-export-api-v1",
         "aqara-studio/api-references/device-type",
-        "aqara-studio/api-references/trait-codes"
+        "aqara-studio/api-references/trait-codes",
+        "aqara-studio/data-export-by-mqtt",
+        "aqara-studio/set-up-mcp-server"
       ]      
     }
   ]
