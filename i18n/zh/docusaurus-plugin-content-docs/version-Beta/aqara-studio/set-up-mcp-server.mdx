@@ -51,7 +51,9 @@ Token 的格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio
 
 ## 在 Cursor 上使用 MCP
 
+:::tip
 Cursor 官方文档：[模型上下文协议（MCP）](https://cursor.com/cn/docs/context/mcp#installing-mcp-servers)
+:::
 
 1. 在 Cursor 打开 Settings，在侧边栏选择 **Tools & MCP**，并单击 **Add Custom MCP**，已打开 `mcp.json` 文件。
 
@@ -94,19 +96,30 @@ Cursor 官方文档：[模型上下文协议（MCP）](https://cursor.com/cn/doc
 
     ![显示新增的 MCP](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-cursor4.png)
 
-4. 使用。。。
+4. 在 Cursor 聊天框输入以下指令即可使用您增加的 MCP 进行对话：
+    - **以下对话使用 Cursor MCP Servers 配置中的 LocalSmartDeviceControl 或 RemoteSmartDeviceControl** .
+    - **以下对话使用 Cursor Tools & MCP 中配置的 LocalSmartDeviceControl 或 RemoteSmartDeviceControl 处理** 。
+    - 其他类似表达，只要能明确指出使用上述配置的 MCP 服务器，也都可以被识别和执行。
+
+    :::tip
+    如果 Cursor 显示未检测到 MCP，可以再次输入：**已经配置**，然后耐心等待 Cursor 完成 MCP 配置的确认。
+    :::
+
+    ![使用 MCP](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-cursor5.png)
 
 ## 在 Manus 上使用 MCP
 
+:::tip
 Manus 官方文档：[Custom MCP Servers - Connecting a Custom MCP Server](https://manus.im/docs/integrations/custom-mcp#connecting-a-custom-mcp-server)
+:::
 
 1. 导航到 **Settings** → **Connectors**，点击 **Add Connectors**
 
-    ![](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-manus1.png)
+    ![Add connectors](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-manus1.png)
 
 2. 选择 **Custom MCP**，点击 **Add Custom MCP Server** -> 选择 **Import By JSON**
 
-    ![](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-manus2.png)
+    ![Import By JSON](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-manus2.png)
 
 3. 将以下 MCP Servers JSON 配置添加至弹窗中，然后点击 **Import** 按钮。
 
@@ -127,28 +140,34 @@ Manus 官方文档：[Custom MCP Servers - Connecting a Custom MCP Server](https
     }
    ```
 
-    ![](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-manus3.png)
+    ![添加 MCP Servers](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-manus3.png)
 
 4. 点击你创建的 MCP，点击 **Try it out**，就可以使用。
 
-    ![](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-manus4.png)
+    ![Try it out](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-manus4.png)
 
 5. 在聊天框输入：**使用名为 RemoteSmartDeviceControl 的自定义 MCP 进行对话**，即可调用该 MCP 服务。
 
     其他类似上述内容的表达也能用于调用该 MCP 服务。
 
+    ![开始使用]](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-manus5.png)
+
 
 ## 在 ChatGPT 上使用 MCP
 
-官方文档：[ChatGPT Developer Mode](https://platform.openai.com/docs/guides/developer-mode)
+:::tip
+OpenAI 官方文档：
+- 通过 MCP 创建 App：[ChatGPT Developer Mode - How to Use](https://platform.openai.com/docs/guides/developer-mode#how-to-use)
+- [Developer mode, and MCP apps in ChatGPT【beta】 - 可用性与要求](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt-beta)
+:::
 
 1. 导航到 **Settings** → **Apps**，点击 **Advanced settings**。
     
-    ![](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT1.png)
+    ![选择 Advanced settings](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT1.png)
 
 2. 开启 **Developer mode**，点击**Create app**
 
-    ![](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT2.png)
+    ![创建 App](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT2.png)
 
 3. 填写以下配置信息后，点击 **Create** 完成创建。
     
@@ -159,24 +178,26 @@ Manus 官方文档：[Custom MCP Servers - Connecting a Custom MCP Server](https
     | MCP Server URL     | 采用 HTTPS 协议的 MCP Server 地址。                      |
     | Authentication     | 选择 **OAuth** 方式。OAuth ClientId 和 OAuth Client Secret 保持为空。                                            |
 
-    ![](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT3.png)
+    ![填写配置](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT3.png)
 
 4. 在 **Oauth授权登录页** 输入 [已获取的 Token](./set-up-mcp-server.mdx#获取-token)。
-    ![](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT4.png)
+
+    ![填写 Token](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT4.png)
 
 5. 在 **OAuth 授权确认页** 点击 **同意**，即可激活 MCP App，授权有效期为 7 天。
 
-    ![](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT5.png)
+    ![填写 Token](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT5.png)
 
+    ![App 详情](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT6.png)
+
+    :::tip
     7 天后，MCP App 的连接状态会变为 Disconnect。此时只需返回 **Oauth 授权登录页**，重新输入您的 [Token](./set-up-mcp-server.mdx#获取-token)（无需重新生成），并继续完成授权确认，即可延长使用周期。
+    :::
 
-    ![](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT6.png)
-
-8. 在聊天框输入：**使用名为 AqaraDeviceControl 的自定义 MCP 进行对话**，即可调用该 MCP 服务。
+8. 在聊天框输入：**使用名为 RemoteSmartDeviceControl 的自定义 MCP 进行对话**，即可调用该 MCP 服务。
 
     其他类似上述内容的表达也能用于调用该 MCP 服务。
 
 ## 最佳实践
 
 建议在控制设备前，先让 AI 查询该设备的功能定义，再进行操作。这样可以减少 AI 误判设备能力，从而显著提升操作的准确性和成功率。
-
