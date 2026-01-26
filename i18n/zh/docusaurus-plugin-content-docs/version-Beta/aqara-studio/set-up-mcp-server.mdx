@@ -184,14 +184,18 @@ Token 的格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio
 
     ![填写 Token](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT4.png)
 
-5. 在 **OAuth 授权确认页** 点击 **同意**，即可激活 MCP App，授权有效期为 7 天。
+5. 在 **OAuth 授权确认页** 点击 **同意**，即可激活 MCP App。
 
     ![同意 OAuth 授权](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT5.png)
+
+    :::tip
+    如果您希望修改已输入的 Token，请在此页面单击 **退出登录**，即可返回至 **Oauth授权登录页**。
+    :::
 
     ![App 详情](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT6.png)
 
     :::tip
-    7 天后，MCP App 的连接状态会变为 Disconnect。此时只需返回 **Oauth 授权登录页**，重新输入您的 [Token](./set-up-mcp-server.mdx#获取-token)（无需重新生成），并继续完成授权确认，即可延长使用周期。
+    每过 7 天，MCP App 的连接状态将变为 Disconnect。此时，只需返回 **Oauth 授权登录页**，重新输入您的 [Token](./set-up-mcp-server.mdx#获取-token)（无需重新生成），并完成授权，即可重新使用此 App
     :::
 
 8. 在聊天框输入：**使用名为 RemoteSmartDeviceControl 的自定义 MCP 进行对话**，即可调用该 MCP 服务。
