@@ -1,8 +1,8 @@
 # 连接至 Aqara Studio MCP Server
 
-## 什么是 MCP
+## 什么是 MCP？
 
-Model Context Protocol（MCP，模型上下文协议）是一种开源标准，用于为 AI 应用提供与外部系统连接的统一接口。通过 MCP，像 ChatGPT、Claude 这样的 AI 可以安全、标准化地接入数据源（文件、数据库）、工具（搜索、计算）以及工作流（专业提示与自动化流程），从而在理解上下文的同时执行真实任务。
+[Model Context Protocol](https://modelcontextprotocol.io/docs/getting-started/intro)（MCP，模型上下文协议）是一种开源标准，用于为 AI 应用提供与外部系统连接的统一接口。通过 MCP，像 ChatGPT、Claude 这样的 AI 可以安全、标准化地接入数据源（文件、数据库）、工具（搜索、计算）以及工作流（专业提示与自动化流程），从而在理解上下文的同时执行真实任务。
 
 MCP 的价值在于降低集成成本、扩展 AI 能力并提升用户体验：开发者能更快构建和复用能力，AI 应用能接入丰富生态并变得更强大，终端用户则获得真正“可行动”的智能助手。无论是个人助理、企业级聊天分析，还是设计、编程与自动化场景，MCP 都为 AI 与现实系统之间架起了高效、可扩展的桥梁。
 
@@ -29,7 +29,7 @@ MCP 的价值在于降低集成成本、扩展 AI 能力并提升用户体验：
 
 ### 远程访问地址
 
-远程访问地址适用于 **ChatGPT、Manus 等仅能通过公网访问的应用**，如 **OpenAI** 平台只允许访问 **HTTPS** 公网 API。
+远程访问地址适用于 **ChatGPT、Manus 等仅能通过公网访问的应用**，如 **OpenAI** 平台仅支持采用 **HTTPS** 协议的 MCP Server 地址，不支持 HTTP 协议地址。
 
 - 前提条件：已获取 Aqara Studio 的 [远程访问地址](./remote-access.mdx)。
 - 格式：`https://远程访问地址/open/api/mcp`
@@ -97,8 +97,8 @@ Token 的格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio
     ![显示新增的 MCP](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-cursor4.png)
 
 4. 在 Cursor 聊天框输入以下指令即可使用您增加的 MCP 进行对话：
-    - **以下对话使用 Cursor MCP Servers 配置中的 LocalSmartDeviceControl 或 RemoteSmartDeviceControl** .
-    - **以下对话使用 Cursor Tools & MCP 中配置的 LocalSmartDeviceControl 或 RemoteSmartDeviceControl 处理** 。
+    - **以下对话使用 Cursor MCP Servers 配置中的 LocalSmartDeviceControl 或 RemoteSmartDeviceControl**。
+    - **以下对话使用 Cursor Tools & MCP 中配置的 LocalSmartDeviceControl 或 RemoteSmartDeviceControl 处理**。
     - 其他类似表达，只要能明确指出使用上述配置的 MCP 服务器，也都可以被识别和执行。
 
     :::tip
@@ -150,14 +150,14 @@ Token 的格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio
 
     其他类似上述内容的表达也能用于调用该 MCP 服务。
 
-    ![开始使用]](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-manus5.png)
+    ![开始使用](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-manus5.png)
 
 
 ## 在 ChatGPT 上使用 MCP
 
 :::tip
 - 如需了解如何在 ChatGPT 上创建 MCP 应用的详细 OpenAI 官方说明，请参考：[ChatGPT Developer Mode - How to Use](https://platform.openai.com/docs/guides/developer-mode#how-to-use)。
-- 请注意，根据 OpenAI 官方文档[Developer mode, and MCP apps in ChatGPT【beta】 - Availability and requirements](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt-beta)，Apps、完整的 MCP 支持及开发者模式目前仅面向 ChatGPT Web 的 **Business** 和 **Enterprise/Edu** 用户开放。因此，在使用 MCP 服务前，请务必确认您的 ChatGPT 用户套餐已达到要求。
+- 请注意，根据 OpenAI 官方文档 [Developer mode, and MCP apps in ChatGPT【beta】 - Availability and requirements](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt-beta)，只有 ChatGPT Web 的 **Business** 和 **Enterprise/Edu** 用户才能使用 Apps、完整的 MCP 支持及开发者模式。因此，在开始使用 MCP 服务之前，请确认您的 ChatGPT 用户套餐满足要求。
 :::
 
 
@@ -186,7 +186,7 @@ Token 的格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio
 
 5. 在 **OAuth 授权确认页** 点击 **同意**，即可激活 MCP App，授权有效期为 7 天。
 
-    ![填写 Token](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT5.png)
+    ![同意 OAuth 授权](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT5.png)
 
     ![App 详情](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT6.png)
 
