@@ -136,12 +136,12 @@
         "label": "Management",
         "items": [
           "aqara-studio/user",
-          "aqara-studio/cloud",  
           "aqara-studio/backup-and-restore",
           {
             "type": "category",
             "label": "Settings",
             "items": [
+                "aqara-studio/cloud",  
                 "aqara-studio/remote-access"
               ]
           }
@@ -152,9 +152,18 @@
       "label": "Developer",
       "items": [
         "aqara-studio/developer-guide",
-        "aqara-studio/api-references/data-export-api-v1",
-        "aqara-studio/api-references/device-type",
-        "aqara-studio/api-references/trait-codes",
+        {
+          "type": "category",
+          "label": "Data Export API",
+          "link": {
+              "type": "doc",
+              "id": "aqara-studio/api-references/data-export-api-v1"
+          },
+          "items": [
+            "aqara-studio/api-references/device-type",
+            "aqara-studio/api-references/trait-codes"
+          ]
+        },
         "aqara-studio/data-export-by-mqtt",
         "aqara-studio/set-up-mcp-server"
       ]      
