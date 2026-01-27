@@ -47,15 +47,13 @@ MCP 的价值在于降低集成成本、扩展 AI 能力并提升用户体验：
 
 Token 的格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio 获取的 Token 字符串（若从 Aqara Studio 获取的令牌已带 Bearer 前缀，请直接使用，无需重复添加）。
 
-如需了解获取方式，
-
 ## 在 Cursor 上使用 MCP
 
 :::tip
 如需了解 Cursor 对 MCP 的说明，请参考：[模型上下文协议（MCP）](https://cursor.com/cn/docs/context/mcp#installing-mcp-servers)。
 :::
 
-1. 在 Cursor 打开 Settings，在侧边栏选择 **Tools & MCP**，并单击 **Add Custom MCP**，已打开 `mcp.json` 文件。
+1. 在 Cursor 打开 Settings，在侧边栏选择 **Tools & MCP**，并单击 **Add Custom MCP**，以打开 `mcp.json` 文件。
 
     ![在 Cursor 选择 Add Custom MCP](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-cursor1.png)
 
@@ -75,7 +73,7 @@ Token 的格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio
             "LocalSmartDeviceControl": {
                 "url": "http://10.xx.xx.xx/open/api/mcp", // 替换为 Aqara Studio 的本机地址
                 "headers": {
-                    "Authorization": "Bearer xxx"  // 替换为您从 Aqara Studio 获取的 token
+                    "Authorization": "Bearer xxx"  // 替换 xxx 为您从 Aqara Studio 获取的 token
                 }
             },
             /* 
@@ -83,9 +81,9 @@ Token 的格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio
              * RemoteSmartDeviceControl 为您自定义的 MCP server 名称 
              */
             "RemoteSmartDeviceControl": {
-                "url": "https://xxx.xxx.xxx/open/api/mcp", // 替换为 Aqara Studio 的远程访问地址
+                "url": "https://xxx.xxx.xxx/open/api/mcp", // 替换 xxx.xxx.xxx 为 Aqara Studio 的远程访问地址
                 "headers": {
-                    "Authorization": "Bearer xxx" // 替换为您从 Aqara Studio 获取的 token
+                    "Authorization": "Bearer xxx" // 替换 xxx 为您从 Aqara Studio 获取的 token
                 }
             }
         }
@@ -131,9 +129,9 @@ Token 的格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio
              * SmartDeviceControl 为您自定义的 MCP server 名称 
              */
             "RemoteSmartDeviceControl": {
-                "url": "https://xxx.xxx.xxx/open/api/mcp", // 替换为 Aqara Studio 的远程访问地址
+                "url": "https://xxx.xxx.xxx/open/api/mcp", // 替换 xxx.xxx.xxx 为 Aqara Studio 的远程访问地址
                 "headers": {
-                    "Authorization": "Bearer xxx" // 替换为您从 Aqara Studio 获取的 token
+                    "Authorization": "Bearer xxx" // 替换 xxx 为您从 Aqara Studio 获取的 token
                 }
             }
         }
@@ -169,7 +167,7 @@ Token 的格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio
 
     ![创建 App](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MCP-ChatGPT2.png)
 
-3. 填写以下配置信息后，点击 **Create** 完成创建。
+3. 填写以下配置信息后，点击 **Create**。
     
     | 配置项                | 说明                                                         |
     |---------------------|------------------------------------------------------------|

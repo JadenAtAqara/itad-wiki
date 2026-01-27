@@ -54,5 +54,9 @@
   "sidebar.aqaraStudioSidebar.category.Settings": {
     "message": "设置",
     "description": "The label for category 'Settings' in sidebar 'aqaraStudioSidebar'"
+  },
+  "sidebar.aqaraStudioSidebar.category.Data Export API": {
+    "message": "数据转出 API",
+    "description": "The label for category 'Data Export API' in sidebar 'aqaraStudioSidebar'"
   }
 }
