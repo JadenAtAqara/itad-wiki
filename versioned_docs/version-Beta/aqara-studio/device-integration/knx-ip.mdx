@@ -11,10 +11,8 @@ Before you start, please make sure:
 ## Add a KNX/IP Device
 
 1. On the left sidebar, click to enter the **Devices** page.
-2. In the protocol list on the left, click the "+" button. In the popup, choose `KNX IP` to add a `KNX IP` folder.
-3. Right-click the `KNX IP` folder and select **Add**. A new `KNX IP Device` folder will appear.
-4. Double-click this folder and go to the **Essential** tab, where you can edit the device **Display Name**.
-5. Switch to the **Configuration** tab. Expand **Device Configuration** and fill in the following parameters:
+2. In the device tree on the left, click the "+" button. In the popup, choose `KNX IP`.
+3. Click `KNX IP`, switch to the **Add Device** tab. fill in the following parameters, and then click the  **Save and continue** button:
 
    <table>
      <thead>
@@ -24,6 +22,10 @@ Before you start, please make sure:
        </tr>
      </thead>
      <tbody>
+       <tr>
+         <td>Device Name</td>
+         <td>The name you set for this device.</td>
+       </tr>
        <tr>
          <td>Device Address</td>
          <td>The unique address of the KNX device in the KNX network. Enter the physical address set in ETS6, using a three-part format (e.g., 1.1.0).</td>
@@ -51,9 +53,9 @@ Before you start, please make sure:
      </tbody>
    </table>
 
-6. Expand **Advanced Configuration** to decide if you want to enable this device.
-7. Switch to **Point Discovery** tab and **click to upload** the device's KNXPROJ file or group address XML file (both exported from ETS6). Once the file uploads, click **Discover Points**. The system will automatically parse the file and generate a list of available points.
-8. Select the points you want and click the blue **+** button to finish the addition.
+4. **Upload** the KNXPROJ file or group address XML file for the device (both can be exported via ETS6). 
+5. After a successful upload, click the **Discover Points** button. The system will automatically parse the file and generate a list of available data points to add.
+6. Select data points and click the **+** button in the middle. The newly added data points will appear in the **Added Points** list on the right, and will also show up under the associated device in the device tree on the left.
 
 ## Next Steps
 
