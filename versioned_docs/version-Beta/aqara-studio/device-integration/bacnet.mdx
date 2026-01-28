@@ -11,9 +11,9 @@ Before you start, please make sure your network meets these conditions based on 
 ## Add a BACnet Device
 
 1. On the left sidebar, click to enter the **Devices** page.
-2. In the sidebar, click the “+” button. In the popup, choose `BACnet IP` to add a `BACnet IP` folder.
-3. Double-click the `BACnet IP` folder to open the BACnet IP protocol management page.
-4. Go to the `Configuration` tab and set the following parameters for this protocol:
+2. In the device tree on the left, click the “+” button. In the popup, choose `BACnet IP`.
+3. Select `BACnet IP` to open the management page.
+4. Go to the `Protocol Configuration` tab and set the following parameters for this protocol:
 
     <table>
         <colgroup>
@@ -117,7 +117,7 @@ Before you start, please make sure your network meets these conditions based on 
         </tbody>
     </table>
 
-3. (Optional) Go to the "Device discover" tab, and click the “Discovery Settings” button to set up device discovery rules.
+3. (Optional) Go to the "Add Device" tab, and click the ⚙ button to set up device discovery rules.
 
     The following discovery rule fields can be set:
 
@@ -148,56 +148,21 @@ Before you start, please make sure your network meets these conditions based on 
         </tbody>
     </table>
    
-4. Click the “Discovery” button. Aqara Studio will then scan the network to find devices.
+4. Click the “Discover Devices” button. Aqara Studio will then scan the network to find devices.
 
     :::tip
     If Aqara Studio does not find your BACnet device, you can also [add the device manually](#how-to-handle-bacnet-devices-not-discovered-by-aqara-studio).
     :::
 
-5. Select the devices you want to add and click the center **+** button to add the BACnet device.
+5. Select the device(s) you want to add, and click the "+" button in the center. The newly added device(s) will appear in the **Added Device List** on the right, and will also be displayed under BACnet IP in the device tree on the left.
 
-6. In the left sidebar, double-click the device you just added to enter its configuration page. Go to the `Point discovery` tab and click `Discovery`. Aqara Studio will begin scanning to discover function points for this device.
+6. In the device tree, select the newly added device to enter its configuration page. Go to the `Point` tab and click the `Add point` button. In the "Add point" page, click **Discover Points** button, Aqara Studio will begin scanning to discover function points for this device.
 
-    > **Note**
-    >
+    :::tip
     > If the system does not discover the function points you need, you can also [add them manually](#how-to-handle-bacnet-points-not-discovered-by-aqara-studio).
+    :::
 
-7. Depending on whether you need to modify the discovered points, you can add points in two ways:
-    - No modification needed: Select the points needed and click the "+" button to finish adding.
-    - Need to modify: Double-click the point, and in the popup, you can modify the point’s information.
-
-        The details for each parameter are shown in this table:
-        <table>
-            <thead>
-                <tr>
-                    <th>Parameter</th>
-                    <th>Required</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Point Name</td>
-                    <td>✔</td>
-                    <td>You can set a custom name for this point.</td>
-                </tr>
-                <tr>
-                    <td>Aqara Object Type</td>
-                    <td>✘</td>
-                    <td>Object type defined by Aqara.</td>
-                </tr>
-                <tr>
-                    <td>Object Type</td>
-                    <td>✘</td>
-                    <td>Object type as defined by BACnet.</td>
-                </tr>
-                <tr>
-                    <td>Object Instance identifier</td>
-                    <td>✔</td>
-                    <td>The instance number for this point. Range: [0, 4194303].</td>
-                </tr>
-            </tbody>
-        </table>
+7. Select the required points and click the blue "+" button. The newly added points will appear in the **Added Points** list on the right, and will also be displayed under the corresponding device in the device tree on the left.
 
 ## Next Steps
 
@@ -207,7 +172,7 @@ Now, you can [view details and control the device](./../device-management/basic-
 
 ### How to Handle BACnet Devices Not Discovered by Aqara Studio
 
-If Aqara Studio does not find your BACnet device, click "Add Custom." In the "Add Device" popup, enter the required parameters manually to finish adding the device.
+If Aqara Studio does not find your BACnet device, click "Manually Add." In the "Add Device" popup, enter the required parameters to finish adding the device.
 
 Details for each parameter are as follows:
 
@@ -229,7 +194,7 @@ Details for each parameter are as follows:
 
 ### How to Handle BACnet Points Not Discovered by Aqara Studio
 
-If Aqara Studio does not find the points you need, click "Add Custom" on the Point Discovery page, and enter the point parameters in the popup.
+If Aqara Studio does not find the points you need, click "Manually Add" on the Point Add page, and enter the point parameters in the popup.
 
 Details for each parameter are as follows:
 

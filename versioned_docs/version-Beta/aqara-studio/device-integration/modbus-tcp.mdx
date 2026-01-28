@@ -11,17 +11,19 @@ Before you begin, please make sure:
 ## Add a Modbus TCP Device
 
 1. Click the **Devices** page in the left sidebar.
-2. In the protocol directory on the left, click the “+” button, select `Modbus TCP` in the popup to add a `Modbus TCP` folder.
-3. Right-click the `Modbus TCP` folder, and choose **Add**. You will see a new `Modbus TCP Device` folder appear under it.
-4. Double-click the new folder. In the **Essential** tab, you can modify the device’s **Display Name**.
-5. Switch to the **Configuration** tab, open **Device Configuration**, and fill in the following parameters:
+2. In the device tree on the left, click the “+” button, select `Modbus TCP` in the popup.
+3. Click `Modbus TCP`, switch to **Add Device** page, fill in and save the following parameters:
+
+  - Device Configuration:
 
     | Parameter Name | Required | Description |
     | --- | --- | --- |
-    | Device Address | No | The slave device address (unit identifier), range 0~255. |
-    | IP Address | Yes | The IP address of this device. |
-    | Port | Yes | The Modbus TCP communication port, default is 502. |
-6. Expand **Advanced Configuration** and fill in the following parameters:
+    | Device Name | ✔ | The name you define for this device. |
+    | Device Address | ✘ | The slave device address (unit identifier), range 0~255. |
+    | IP Address | ✔ | The IP address of this device. |
+    | Port | ✔ | The Modbus TCP communication port, default is 502. |
+
+  - Advanced Configuration: 
 
     <table>
     <thead>
@@ -93,8 +95,9 @@ Before you begin, please make sure:
         </tr>  
     </tbody>
     </table>
-7. Switch to the **Point Add** tab. Click the **+** button in the “Type selection” area.
-8. Click the new point to set its type and configure it. When finished, click **OK**.
+
+4. In the "Add Point" page, click the **+** button in the “Type selection” area to add a point.
+5. Click the new point to set its type and configure it. When finished, click **Complete adding**.
 
    <table>
      <colgroup>
