@@ -35,6 +35,15 @@
     </thead>
     <tbody>
         <tr>
+        <td rowspan="2">Ping地址</td>
+        <td>地址格式</td>
+        <td>用于检测此 Modbus 设备正常工作的<strong>保持寄存器</strong>地址，支持以下格式：<ul><li>十六进制</li><li>十进制</li><li>标准 Modbus 地址</li></ul></td>
+        </tr>
+        <tr>
+        <td>地址</td>
+        <td>实际的<strong>保持寄存器</strong>地址数值。</td>
+        </tr>
+        <tr>
         <td colspan="2">接收处理模式</td>
         <td>接收数据处理模式，支持以下值：<ul><li><strong>Byte</strong>：字节流模式。</li><li><strong>Packet</strong>：报文模式。</li></ul></td>
         </tr>  
@@ -66,7 +75,7 @@
         <tr>
         <td rowspan="2">保持寄存器偏移地址</td>
         <td>地址格式</td>
-        <td>保存寄存器（对应 Modbus 协议中的功能码 03：Read Holding Registers）偏移地址的格式，支持格式与"输入寄存器偏移地址"相同。</td>
+        <td>保持寄存器（对应 Modbus 协议中的功能码 03：Read Holding Registers）偏移地址的格式，支持格式与"输入寄存器偏移地址"相同。</td>
         </tr>
         <tr>
         <td>地址</td>
