@@ -1,11 +1,17 @@
 # View and Control Function Points
 
-This article explains how to view and operate device function points in Aqara Studio. You will learn how to check real-time status and control devices by writing function point parameters.
+This article explains how to view and operate device function points in Aqara Studio. You will learn how to check real-time status and control devices by writing function point fields.
 
 ## Steps
 
-1. Go to the **Devices** page. In the device tree on the left, find the device folder you want to view.
-2. Double-click the device folder to open the device **Essential** tab.
-3. In the "Point Information" section, you will see several function point cards. Each function point represents a parameter or status of the device.
-    - **Read-Only Function Points**: Shown as non-editable cards. Examples include power meter readings, voltage, air quality, temperature, and others. You can only view their real-time data.
-    - **Writable Function Points**: Shown as editable cards. Examples include air conditioner temperature, fan mode, light brightness, and so on. You can change these parameters directly to control the device.
+1. Go to the **Devices** page and find the device you want to view in the device tree on the left.
+2. Select the device to open its management page.
+3. Switch to the "Point" tab. Here, you will see a list of function points, with each point representing a field or status of the device. From this list, you can view the following fields:
+
+    | Field       | Description                         |
+    |-----------------|-------------------------------------|
+    | Point Name            | The name of the function point. |
+    | Point Type            | The category the function point belongs to. The editability of this filed varies based on the device protocol:<ul><li>Aqara and Home Assistant ecosystem devices: not editable.</li><li>BACnet IP, KNX IP, and Modbus TCP devices: editable.</li></ul> |
+    | Recent Value    | The most recent real-time value of the function point. |
+    | Value Status    | The status of the current value. Possible values:<ul><li>Disable: This function point is disabled.</li><li>Fault: There is a configuration error in the device or function point.</li><li>Down: Network issue causing offline status.</li><li>Alarm: The current value has triggered an alarm.</li><li>Unacked Alarm: The user hasn't acknowledged an alarm.</li><li>Expired: Latest value for the device or point is not available.</li><li>Unknown: Unknown status.</li><li>Normal</li></ul> |
+    | Control         | For writable function points, you can set fields or perform operations such as switching on or off directly here. Once configured successfully, the `Recent Value` will be automatically updated to reflect the new status. |
