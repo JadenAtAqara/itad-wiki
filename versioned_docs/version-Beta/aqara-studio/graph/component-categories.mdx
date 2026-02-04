@@ -239,9 +239,14 @@ The **Image**, **Function Name**, and **Background** properties of this componen
 
 ### Execute Auto Logic
 
-This component is used to trigger "Logic" automation based on string values.
+This component is used to trigger a specified action in automation processes, suitable for the following types of automation:
+- The **Then** step in IFTTT logic ([details](./../ifttt.mdx#3-configure-then))
+- The **Then** block in Advanced Flow ([details](./../flow/device-blocks.mdx#))
+- The **Kit Batch Set** block in AutoLogic Flow ([details](./../logic/blocks/other-blocks.mdx#kit-batch-set))
 
-The Execute Auto Logic component consists of three elements: Image, Function Name, and Background.
+After adding this component, please follow these steps to bind an automation action:
+1. Select the component, and switch to the **Data** tab in the configuration drawer.
+2. Click the **Data source** dropdown, and select an automation action to be connected from the list.
 
 The descriptions of the **Image**, **Function Name**, and **Background** properties in this component are the same as those of the [Boolean Switch](#boolean-switch) component.
 
