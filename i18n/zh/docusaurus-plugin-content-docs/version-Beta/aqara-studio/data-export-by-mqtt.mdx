@@ -24,9 +24,9 @@ Aqara Studio 内置 MQTT broker，支持您通过 MQTT 协议将设备数据转�
 
     ![订阅响应](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/mqtt-export-3.png) 
 
-4. 在已创建的订阅中，将 Aqara Studio 提供的 **请求 Topic 格式**中的 ClientID 替换为 MQTTX 自动生成的实际 ClientID，并填写到 Topic 输入框。参照 [数据转出 API](./api-references/data-export-api-v1.mdx) 文档中各接口的请求参数说明（忽略 Header 部分），编写 JSON 格式的消息并发送，即可获得响应。
+4. 在已创建的订阅中，将 Aqara Studio 提供的 **请求 Topic 格式**中的 ClientID 替换为 MQTTX 自动生成的实际 ClientID，并填写到 Topic 输入框。参照 [设备功能 API](./api-references/trait-api.mdx) 文档中各接口的请求参数说明，编写 JSON 格式的消息并发送，即可获得响应。
 
-    下图以 [查询设备 ID 列表](./api-references/data-export-api-v1.mdx#查询设备-id-列表) 的请求为例：
+    下图以 [查询设备 ID 列表](./api-references/trait-api.mdx#查询设备的-spec-配置) 的请求为例：
 
     ![发送请求](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/mqtt-export-4.png) 
 

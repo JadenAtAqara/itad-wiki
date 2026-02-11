@@ -1,0 +1,866 @@
+# Device Function API
+
+## Query Device ID List
+
+You can query the list of devices in the Studio system with pagination. Filtering by device type, sorting, and paging are supported.
+
+#### Request Parameters
+
+| Parameter             | Type              | Required | Description  |
+|-----------------------|-------------------|----------|--------------|
+| type                  | String            | Yes      | Message type, must be `GetDeviceInfoRequest`. |
+| version               | String            | Yes      | API version, must be `v1`. |
+| msgId                 | String            | Yes      | Custom request ID defined by you. |
+| data                  | Object            | Yes      | Request data. |
+| data.deviceTypesList  | Array of String   | No       | List of device types. For available strings, see [Device Types](./device-type.mdx). |
+| data.orderBy          | String            | No       | Sort rule. Supported values:<ul><li><code>createTime asc</code>: Sort by creation time ascending.</li><li><code>createTime desc</code>: Sort by creation time descending.</li></ul> |
+| data.pageNum          | Number            | No       | Page number, starting from 1. Values less than 1 will be treated as 1. |
+| data.pageSize         | Number            | No       | Number of device IDs per page. Range is (0, 200]. |
+
+#### Example Request
+
+Below is an example request body for `GetDeviceInfoRequest`:
+
+```json
+{
+    "type": "GetDeviceInfoRequest",
+    "version": "v1",
+    "msgId": "get_devices_1751609244328",
+    "data":{
+        "deviceTypesList": ["Light"],
+		"orderBy": "createTime desc",
+        "pageNum": 1,
+        "pageSize": 100
+    }
+}
+```
+
+#### Response Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| type | String | The type of message in the response. Always set to `GetDeviceInfoResponse`. |
+| version | String | Response version. It matches the version used in the request. |
+| msgId | String | The `msgId` you sent in your request. |
+| message | String | Description of the request result. |
+| code | Number | Indicates if the request was successful. 0 means success, any non-zero value means failure. |
+| data | Object | Response data. |
+| data.totalCount | Number | Total number of devices. |
+| data.pageSize | Number | Page size. |
+| data.pageNum | Number | Page number. |
+| data.data | Array of Object | List of device data. |
+| data.data[].deviceId | String | Device ID. |
+| data.data[].deviceTypesList | Array of String | Device type. For an explanation of the string values, see [Device Types](./device-type.mdx). |
+| data.data[].deviceName | String | Device name. |
+| data.data[].createTime | Number | Unix timestamp (milliseconds) when the device was added. |
+| data.data[].state | Boolean | Device online status:<ul><li>false: offline.</li><li>true: online.</li></ul> |
+
+#### Response Example
+
+Below is an example of a `GetDeviceInfoResponse` response:
+
+```json
+{
+    "type": "GetDeviceInfoResponse",
+    "version": "v1",
+    "msgId": "get_devices_1751609244328",
+    "code": 0,
+	"message": "",
+    "data":{
+        "totalCount": 1,
+        "pageSize": 100,
+        "pageNum": 1,
+        "data":[
+            {
+                "deviceId": "xxx",
+                "deviceTypesList": ["Light"],
+                "deviceName": "xxx",
+			    "createTime":1758549173093,
+			    "state": true
+            }
+        ]
+    }
+}
+```
+
+## Query Device Spec Configuration
+
+Query the spec configuration of devices by device ID.
+
+#### Request Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| type | String | Yes | The type of message to send. Must be `GetDevicesRequest`. |
+| version | String | Yes | API version. Must be `v1`. |
+| msgId | String | Yes | The request ID defined by you. |
+| data | Object | Yes | Request data object. |
+| data.deviceIds | Array of String | No | List the device IDs you want to query. You can use the [device ID list query](#query-device-id-list) result here. If this list is empty, it means query the spec configuration of all devices. |
+
+#### Request Example
+
+Below is an example of a `GetDevicesRequest` request body:
+
+```json
+{
+    "type": "GetDevicesRequest",
+	"version": "v1",
+    "msgId": "get_devices_1751609244328",
+    "data":{
+        "deviceIds": ["57190441014857"]
+    }  
+}
+```
+
+#### Response Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| type | String | The type of message in the response. Always set to `GetDevicesResponse`. |
+| version | String | Response version. It matches the version used in the request. |
+| msgId | String | The `msgId` you sent in your request. |
+| code | Number | Indicates if the request was successful. 0 means success, any non-zero value means failure. |
+| message | String | Description of the request result. |
+| data | Array of Object | Response data. |
+| data[].deviceId | String | Device ID. |
+| data[].name | String | Device name. |
+| data[].deviceTypesList | Array of String | Device type list. For an explanation of the string values, see [Device Types](./device-type.mdx). |
+| data[].endpoints | Array of Object | Endpoint list. |
+| data[].endpoints[].endpointId | Number | Endpoint ID. |
+| data[].endpoints[].endpointName | String | Endpoint name. |
+| data[].endpoints[].deviceType | String | Endpoint type list. |
+| data[].endpoints[].functions | Array of Object | Function list. |
+| data[].endpoints[].functions[].functionCode | String | Function code. |
+| data[].endpoints[].functions[].traits | Array of Object | Trait list. |
+| data[].endpoints[].functions[].traits[].traitCode | String | Trait code, corresponding to the specific function supported by the device. For details, see [Trait Codes](./trait-codes.mdx), including the meaning, type (such as numeric, boolean, enumeration, etc.), whether it is readable/writable/reportable, etc. |
+| data[].endpoints[].functions[].traits[].parameter | Object | Trait parameter. |
+| data[].endpoints[].functions[].traits[].parameter.type | String | Type of trait parameter. For an explanation of the string values, see [Trait Parameter Types](#trait-parameter-types). |
+| data[].endpoints[].functions[].traits[].parameter.readable | Boolean | Whether the trait is readable. |
+| data[].endpoints[].functions[].traits[].parameter.writable | Boolean | Whether the trait is writable. |
+| data[].endpoints[].functions[].traits[].parameter.subscribable | Boolean | Whether the trait can be subscribed to. |
+| data[].endpoints[].functions[].traits[].parameter.supportedValues | Array of Object | List of enum values. This field is only meaningful when parameter.type is `Enum`. |
+| data[].endpoints[].functions[].traits[].parameter.supportedValues[].key | String | Enum key. |
+| data[].endpoints[].functions[].traits[].parameter.supportedValues[].value | String | Enum value. |
+| data[].endpoints[].functions[].traits[].parameter.min | Number | Minimum value. This field is only meaningful when parameter.type is `Integer` or `Float`. |
+| data[].endpoints[].functions[].traits[].parameter.max | Number | Maximum value. This field is only meaningful when parameter.type is `Integer` or `Float`. |
+| data[].endpoints[].functions[].traits[].parameter.unit | String | Unit. This field is only meaningful when parameter.type is `Integer` or `Float`. |
+| data[].endpoints[].functions[].traits[].value | Any | The current value of the function point. The type is the same as `parameter.type`. |
+| data[].endpoints[].functions[].traits[].time | Number | Unix timestamp (milliseconds) when the function point value was reported. |
+
+##### Checking Device Types and Trait Codes
+
+- In the response, `data[].deviceTypesList` shows the list of device types supported by the device. For the meaning of each string, see [Device Types](./device-type.mdx).
+- In the response, `data[].endpoints[].functions[].traits[].traitCode` shows the trait code, representing a specific function the device supports. For detailed explanation of each trait, including its meaning, type (such as numeric, boolean, enum, etc.), and whether it is readable, writable, or reportable, see [Trait Codes](./trait-codes.mdx).
+
+##### Trait Parameter Types
+
+| Name      | Type      | Description                                                                                       |
+|-----------|-----------|---------------------------------------------------------------------------------------------------|
+| Bool      | Boolean   | True or false (true/false).                                                                       |
+| Integer   | Integer   | Integer type.                                                                                     |
+| Float     | Float     | Number with decimals.                                                                             |
+| String    | String    | String value.                                                                                     |
+| Struct    | Struct    | Aqara-defined structured data in JSON string format.<br />It can contain multiple types of fields. |
+| Enum      | Enum      | Enum type, defines a fixed set of values.                                                         |
+| List[X]   | List      | A list of elements of type X, in JSON string format.<br />X can be Integer, Float, String, Struct, or Enum. |
+| Data      | Data      | Hex string (Hex String), e.g. "0x01AB3F".                                                         |
+
+#### Response Example
+
+Below is an example response for `GetDevicesResponse`:
+
+```json
+{
+    "type": "GetDevicesResponse",
+    "version": "v1",
+    "msgId": "get_devices_1751609244328",
+    "code": 0,
+    "message": null,
+    "data": [
+        {
+            "deviceId": "57190441014857",
+            "name": "Touch Screen Switch Panel S1 Pro",
+            "deviceTypesList": [
+                "Speaker"
+            ],
+            "endpoints": [
+                {
+                    "endpointId": 0,
+                    "endpointName": "DeviceObject",
+                    "deviceType": "Root"
+                },
+                {
+                    "endpointId": 3,
+                    "endpointName": "Multi-stateOutputObject",
+                    "deviceType": "Speaker",
+                    "functions": [
+                        {
+                            "functionCode": "MediaPlayback",
+                            "endpointId": 3,
+                            "traits": [
+                                {
+                                    "traitCode": "TargetPlaybackState",
+                                    "parameter": {
+                                        "type": "Enum",
+                                        "readable": true,
+                                        "writable": true,
+                                        "subscribable": true,
+                                        "supportedValue": [
+                                            {
+                                                "key": "Play",
+                                                "value": "0"
+                                            },
+                                            {
+                                                "key": "Pause",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "key": "Stop",
+                                                "value": "2"
+                                            },
+                                            {
+                                                "key": "StartOver",
+                                                "value": "3"
+                                            },
+                                            {
+                                                "key": "FastForward",
+                                                "value": "4"
+                                            },
+                                            {
+                                                "key": "Rewind",
+                                                "value": "5"
+                                            },
+                                            {
+                                                "key": "Previous",
+                                                "value": "6"
+                                            },
+                                            {
+                                                "key": "Next",
+                                                "value": "7"
+                                            },
+                                            {
+                                                "key": "PlaySpecificList",
+                                                "value": "8"
+                                            }
+                                        ]
+                                    },
+                                    "value": "0",
+                                    "time": 1761295151845
+                                },
+                                {
+                                    "traitCode": "MediaInformation",
+                                    "parameter": {
+                                        "type": "String",
+                                        "readable": true,
+                                        "writable": false,
+                                        "subscribable": true
+                                    },
+                                    "value": "",
+                                    "time": null
+                                }
+                            ]
+                        },
+                        {
+                            "functionCode": "Speaker",
+                            "endpointId": 3,
+                            "traits": [
+                                {
+                                    "traitCode": "Mute",
+                                    "parameter": {
+                                        "type": "Bool",
+                                        "readable": true,
+                                        "writable": true,
+                                        "subscribable": true
+                                    },
+                                    "value": false,
+                                    "time": 1761295151843
+                                },
+                                {
+                                    "traitCode": "Volume",
+                                    "parameter": {
+                                        "type": "Float",
+                                        "readable": true,
+                                        "writable": true,
+                                        "subscribable": true,
+                                        "min": 0.0,
+                                        "max": 100.0,
+                                        "unit": "%"
+                                    },
+                                    "value": 0.0,
+                                    "time": 1761295151847
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        } 
+    ]
+}
+```
+
+
+## Control Device
+
+After you [get the device's spec configuration](#query-device-spec-configuration), you can control the device by passing the relevant fields for the trait you want to operate and calling this API.
+
+#### Request Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| type | String | Yes | The message type. Must be `ExecuteTraitRequest`. |
+| version | String | Yes | The version of the API. Must be `v1`. |
+| msgId | String | Yes | A request ID defined by you. |
+| data | Array of Object | Yes | Request data. |
+| data[].deviceId | String | Yes | The ID of the device to control. |
+| data[].endpointId | Number | Yes | Target endpoint ID. |
+| data[].functionCode | String | Yes | Function code. |
+| data[].traitCode | String | Yes | Trait code that must have `writable` set to `true`. |
+| data[].value | Any | Yes | The value supported by this trait. |
+
+#### Request Example
+
+Below is an example request body for `ExecuteTraitRequest`:
+
+```json
+{
+    "type" : "ExecuteTraitRequest",
+    "version" : "v1",
+    "msgId" : "get_devices_1751609244328",
+    "data":[{
+        "deviceId": "14a0bxx",
+        "endpointId": 0,
+        "functionCode": "Output",
+        "traitCode": "OnOff",
+        "value": true
+    }]
+}
+```
+
+#### Response Data
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| type | String | The response message type. Always `ExecuteTraitResponse`. |
+| version | String | The response version. Matches the request API version. |
+| msgId | String | The same `msgId` you sent in your request. |
+| code | Number | Status code for the control operation:<ul><li>0: At least one trait was controlled successfully.</li><li>Non-zero: All trait controls failed.</li></ul> |
+| message | String | Description of the result. |
+| data | Array of Object | A list of device control results. |
+| data[].deviceId | String | The device ID. |
+| data[].endpointId | Number | The endpoint ID. |
+| data[].functionCode | String | The function code. |
+| data[].traitCode | String | The trait code. |
+| data[].code | Number | Whether this API call succeeded for this item. 0 means success, non-zero means failure. |
+
+:::tip
+A `code` value of `0` only means the API call was successful. It does not guarantee the device state has changed. Please [query the latest trait value](#query-the-latest-values-of-device-traits) to confirm if the control was effective.
+::: 
+
+#### Response Example
+
+Below is a sample response for `ExecuteTraitResponse`:
+
+```json
+{
+    "type": "ExecuteTraitResponse",
+    "version": "v1",
+    "msgId": "get_devices_1751609244328",
+    "code": 0,
+    "message": null,
+    "data": [
+        {
+            "deviceId": "virtual2.35330452174472",
+            "endpointId": 2,
+            "functionCode": "FanControl",
+            "traitCode": "RockSetting",
+            "code": 0
+        }
+    ]
+}
+```
+
+## Query the Latest Values of Device Traits
+
+Get the latest values for one or more device traits in a batch query.
+
+#### Request Parameters
+
+Below is an example of the request body for `GetTraitValueRequest`:
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| type | String | Yes | The message type. Must be `GetTraitValueRequest`. |
+| version | String | Yes | The API version. Must be `v1`. |
+| msgId | String | Yes | The request ID, defined by you, to identify this request. |
+| data | Array of Object | Yes | List of query targets. Each object specifies one query item. |
+| data[].deviceId | String | Yes | The ID of the target device to query. |
+| data[].endpointId | Number | Yes | Endpoint ID. Specifies which device endpoint to query. |
+| data[].functionCode | String | Yes | The function code. Specifies which function to query. |
+| data[].traitCodes | Array of String | Yes | List of trait codes. Specifies which trait values to query. |
+
+#### Request Example
+
+Below is a request body example for `GetTraitValueRequest`:
+
+```json
+{
+    "type" : "GetTraitValueRequest",
+    "version" : "v1",
+    "msgId" : "get_devices_1751609244328",
+    "data":[{
+        "deviceId": "57190441014857",
+        "endpointId": 3,
+        "functionCode": "MediaPlayback",
+        "traitCodes": ["TargetPlaybackState"]
+    }]
+
+}
+```
+
+#### Response Data
+
+| Parameter | Type | Description |
+|---|---|---|
+| type | String | The message type of the response. Always `GetTraitValueResponse`. |
+| version | String | Response version, same as the request API version. |
+| msgId | String | The `msgId` you provided in your request. |
+| code | Number | Whether the request was successful. 0 means success, non-zero means failure. |
+| message | String | Description of the request result. |
+| data | Array of Object | The list of response data items. |
+| data[].deviceId | String | Device ID. |
+| data[].endpointId | Number | Endpoint ID. |
+| data[].functionCode | String | Function code. |
+| data[].traitCode | String | Trait code. |
+| data[].value | Any | The current value of the trait. |
+| data[].time | Number | The time when the value was reported, as a Unix timestamp in milliseconds. |
+
+#### Response Example
+
+Below is an example response for `GetTraitValueResponse`:
+
+```json
+{
+    "type": "GetTraitValueResponse",
+    "version": "v1",
+    "msgId": "get_devices_1751609244328",
+    "code": 0,
+    "message": null,
+    "data": [
+        {
+            "deviceId": "57190441014857",
+            "endpointId": 3,
+            "functionCode": "MediaPlayback",
+            "traitCode": "TargetPlaybackState",
+            "value": "0",
+            "time": 1761308409323
+        }
+    ]
+}
+```
+
+## Subscribe to Multiple Trait Changes
+
+This API allows you to subscribe to real-time updates for device traits. When the value of a device trait changes, Studio will proactively send you the latest data via this API.
+
+By subscribing, you can get device status changes in time, without polling frequently. This improves communication efficiency and real-time response.
+
+#### Request Parameters
+
+| Parameter | Type | Required | Description |
+| -- | -- | -- | -- |
+| type | String | Yes | The message type. Must be `SubscribeTraitValueRequest`. |
+| version | String | Yes | The API version. Must be `v1`. |
+| msgId | String | Yes | The request ID defined by you. |
+| data | Array of Object | Yes | Request data. |
+| data[].deviceId | String | Yes | The ID of the device to subscribe to. |
+| data[].endpointId | Number | Yes | Endpoint ID. |
+| data[].functionCode | String | Yes | Function code. |
+| data[].traitCodes | Array of String | Yes | List of trait codes to subscribe. |
+
+#### Request Example
+
+Below is a request body example for `SubscribeTraitValueRequest`:
+
+```json
+{
+    "type" : "SubscribeTraitValueRequest",
+    "version" : "v1",
+    "msgId" : "get_devices_1751609244328",
+    "data":[{
+        "deviceId": "57190441014857",
+        "endpointId": 3,
+        "functionCode": "MediaPlayback",
+        "traitCodes": ["TargetPlaybackState"]
+    }]
+}
+```
+
+#### Subscription Response
+
+##### Response Data
+
+| Parameter | Type | Required | Description |
+| -- | -- | -- | -- |
+| type | String | Yes | The response message type. Always `SubscribeTraitValueResponse`. |
+| version | String | Yes | API version, same as in the request. |
+| msgId | String | Yes | Unique identifier for the corresponding request. |
+| code | Number | Yes | Request result. `0` means subscription successful; any other value means failure. |
+| message | String | No | Description of the response result. |
+
+##### Response Example
+
+Below is an example of a successful `SubscribeTraitValueResponse`:
+
+```json
+{
+    "type": "SubscribeTraitValueResponse",
+    "version": "v1",
+    "msgId": "get_devices_1751609244328",
+    "code": 0,
+    "message": ""
+}
+```
+
+#### Device Trait Change Notification
+
+When a device trait value changes, Aqara Studio will push the update to you in real time.
+
+##### Notification Data Structure
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| type | String | Yes | The response message type. Always `TraitValueUpdate`. |
+| version | String | Yes | API version, same as in the request. |
+| msgId | String | Yes | Unique identifier for the corresponding request. |
+| data | Array of Object | Yes | Array of data objects. |
+| data[].deviceId | String | Yes | Device ID. |
+| data[].endpointId | Number | Yes | Endpoint ID. |
+| data[].functionCode | String | Yes | Function code. |
+| data[].traitCode | String | Yes | Trait code. |
+| data[].value | Any | Yes | Value of the trait. The data type depends on the trait. |
+| data[].time | Number | Yes | Upload time of the trait value, as a Unix timestamp in milliseconds. |
+
+##### Notification Example
+
+When the trait value you subscribed to changes, a `TraitValueUpdate` will look like this:
+
+```json
+{
+    "type": "TraitValueUpdate",
+    "version": "v1",
+    "msgId": "get_devices_1751609244328",
+    "data": [{
+        "deviceId": "57190441014857",
+        "endpointId": 3,
+        "functionCode": "MediaPlayback",
+        "traitCode": "TargetPlaybackState",
+        "value": "0",
+        "time": 1754469720110   
+    }]
+}
+```
+
+## Unsubscribe from Trait Changes
+
+If you no longer need real-time updates about trait values, use this API to cancel your subscription.
+
+#### Request Parameters
+
+| Parameter | Type | Required | Description |
+|------|------|----------|------|
+| type | String | Yes | The message type. Must be `UnsubscribeTraitValueRequest`. |
+| version | String | Yes | API version. Must be `v1`. |
+| msgId | String | Yes | A request ID defined by you. |
+| data | Array of Object | Yes | Request data. |
+| data[].deviceId | String | Yes | Device ID to unsubscribe from. |
+| data[].endpointId | Number | Yes | Endpoint ID. |
+| data[].functionCode | String | Yes | Function code. |
+| data[].traitCodes | Array of String | Yes | List of trait codes to unsubscribe. |
+
+#### Request Example
+
+Here is an example request body for `UnsubscribeTraitValueRequest`:
+
+```json
+{
+    "type" : "UnsubscribeTraitValueRequest",
+    "version" : "v1",
+    "msgId" : "get_devices_1751609244328",
+    "data": [{
+        "deviceId": "57190441014857",
+        "endpointId": 3,
+        "functionCode": "MediaPlayback",
+        "traitCodes": ["TargetPlaybackState"]
+    }]
+}
+```
+
+#### Response Data
+
+| Parameter | Type | Description |
+|---------|---------|---------------------------|
+| type    | String  | The response message type. Always `UnsubscribeTraitValueResponse`.|
+| version | String | Yes | API version, same as in the request. |
+| msgId | String | Yes | Unique identifier for the corresponding request. |
+| code | Number | Yes | Request result. `0` means unsubscribe successful; any other value means failure. |
+| message | String | No | Description of the response result. |
+
+
+#### Response Example
+
+Here is a sample `UnsubscribeTraitValueResponse`:
+
+```json
+{
+    "type": "UnsubscribeTraitValueResponse",
+    "version": "v1",
+    "msgId": "0806",
+    "code": 0,
+    "message": ""
+}
+```
+
+
+## Subscribe to All Trait Changes
+
+Subscribe to all trait changes of multiple devices.
+
+#### Request Parameters
+
+| Parameter | Type | Required | Description |
+| -- | -- | -- | -- |
+| type | String | Yes | The message type. Must be `SubscribeAllRequest`. |
+| version | String | Yes | API version. Must be `v1`. |
+| msgId | String | Yes | Custom request ID defined by you. |
+| data | Array of String | No | List of device IDs to subscribe. If empty, all devices will be subscribed. |
+
+> **Note**  
+> Subscribing to all devices and subscribing to specific devices are mutually exclusive and cannot be active at the same time. If this request’s `data` field is not empty but the previous one was empty, the system will cancel the previous “all devices” subscription and keep only the specific device subscription. The opposite also applies.
+
+#### Request Example
+
+Here is an example body for `SubscribeAllRequest`:
+
+```json
+{
+    "type": "SubscribeAllRequest",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": ["deviceId"]
+}
+```
+
+#### Response Data
+
+| Parameter | Type   | Required | Description |
+| --------- | ------ | -------- | ----------- |
+| type      | String | Yes      | Response type. Always `SubscribeAllResponse`. |
+| version   | String | Yes      | Response API version. Must be `v1`. |
+| msgId     | String | Yes      | Unique ID corresponding to the request. |
+| code      | Number | Yes      | Result code. `0` means success, non-`0` means fail. |
+| message   | String | No       | Description of the response. |
+
+#### Response Example
+
+Here is an example response of `SubscribeAllResponse`:
+
+```json
+{
+    "type": "SubscribeAllResponse",
+	"version": "v1",
+	"msgId": "1751609244328",
+	"code": 0,
+	"message": ""
+}
+```
+
+## Unsubscribe from All Trait Changes
+
+Unsubscribe from all trait changes of multiple devices.
+
+#### Request Parameters
+
+| Parameter | Type | Required | Description |
+| ------- | ------- | -------- | -------------------- |
+| type | String | Yes | The message type. Must be `UnsubscribeAllRequest`. |
+| version | String | Yes | API version. Must be `v1`. |
+| msgId | String | Yes | Custom request ID defined by you. |
+| data | Array of String | No | List of device IDs to unsubscribe. If empty, will unsubscribe all devices. |
+
+> **Note**
+>
+> - If you have subscribed to "all devices", unsubscribing by specifying device IDs in `data` (i.e., a non-empty array) will be ignored. Only an empty `data` (unsubscribe all) takes effect.
+> - If you have subscribed to "specific devices", sending an empty `data` (unsubscribe all) will unsubscribe all previous subscriptions for those devices.
+
+#### Request Example
+
+Here is an example body for `UnsubscribeAllRequest`:
+
+```json
+{
+    "type": "UnsubscribeAllRequest",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": []
+}
+```
+
+#### Response Data
+
+| Parameter | Type   | Required | Description |
+|-----------|--------|----------|-------------|
+| type      | String | Yes      | Response type. Always `UnsubscribeAllResponse`. |
+| version   | String | Yes      | API version, same as requested. |
+| msgId     | String | Yes      | Unique ID corresponding to the request. |
+| code      | Number | Yes      | Result code. `0` means success, non-`0` means failure. |
+| message   | String | No       | Description of the response. |
+
+#### Response Example
+
+Here is a sample `UnsubscribeAllResponse`:
+
+```json
+{
+    "type": "UnsubscribeAllResponse",
+	"version": "v1",
+	"msgId": "1751609244328",
+	"code": 0,
+	"message": ""
+}
+```
+
+## Object Event Messages Push
+
+When you [subscribe to certain trait changes](#subscribe-to-multiple-trait-changes) or [subscribe to all trait changes for a device](#subscribe-to-all-trait-changes), Studio will send you these real-time events:
+- Device added.
+- Device removed.
+- Device endpoint added.
+- Device endpoint removed.
+- Device trait parameter updated (e.g., min, max, unit, etc.).
+
+#### Response Data
+
+| Parameter         | Type   | Description |
+|-------------------|--------|-------------|
+| type              | String | Response type. Always `objectEvent`. |
+| version           | String | API version, will match the request. |
+| msgId             | String | Unique ID corresponding to the request. |
+| data              | Object | Event data object. |
+| data.eventType    | String | Event type:<ul><li>`DEVICE_ADDED`: Device added</li><li>`DEVICE_REMOVED`: Device removed</li><li>`DEVICE_ENDPOINT_ADDED`: Device endpoint added</li><li>`DEVICE_ENDPOINT_REMOVED`: Device endpoint removed</li><li>`DEVICE_TRAIT_PAREMETER_UPDATE`: Trait parameter updated (min, max, unit, etc.)</li></ul> |
+| data.objectId     | String | Object ID (the device ID). |
+| data.time         | Number | Event time, Unix timestamp in milliseconds. |
+| data.data         | Object | Detailed event data. For details of this field, see [data.data Field Description](#datadata-field-description) |
+
+##### data.data Field Description
+
+The content of `data.data` varies by event type.
+
+###### Non-DEVICE_TRAIT_PARAMETER_UPDATE Events
+
+This structure applies if `eventType` is one of:
+- `DEVICE_ADDED`
+- `DEVICE_REMOVED`
+- `DEVICE_ENDPOINT_ADDED`
+- `DEVICE_ENDPOINT_REMOVED`
+
+| Parameter        | Type             | Description |
+| ---------------- | ----------------|-------------|
+| deviceId         | String           | Device ID. |
+| name             | String           | Device name. |
+| deviceTypesList  | Array of String  | List of device types. For details, see [Device Types](./device-type.mdx). |
+| endpointIds      | Array of Number  | List of endpoint IDs. |
+
+###### DEVICE_TRAIT_PARAMETER_UPDATE Event
+
+:::tip
+
+If you receive a `DEVICE_TRAIT_PARAMETER_UPDATE` event, it is recommended to call `GetDevicesRequest` again to [get the updated device spec](#query-device-spec-configuration).
+
+:::
+
+| Parameter                     | Type      | Description |
+|-------------------------------|-----------|-------------|
+| data.data.deviceId            | String    | Device ID. |
+| data.data.endpointId          | Integer   | Endpoint ID. |
+| data.data.functionCode        | String    | Function code. |
+| data.data.traitCode           | String    | Trait code. |
+| data.data.newValue            | Object    | Latest configuration. |
+| data.data.newValue.endpointId | Integer   | Endpoint ID. |
+| data.data.newValue.functionCode | String  | Function code. |
+| data.data.newValue.traitCode  | String    | Trait code. |
+| data.data.newValue.min        | Number    | Minimum value. |
+| data.data.newValue.max        | Number    | Maximum value. |
+| data.data.newValue.unit       | String    | Unit. |
+| data.data.newValue.step       | Number    | Step. |
+| data.data.oldValue            | Object    | Previous configuration, same structure as `newValue`. |
+
+#### Response Example
+
+Here are example responses for different events.
+
+###### Non-DEVICE_TRAIT_PARAMETER_UPDATE Event
+
+Example response for an `objectEvent`:
+
+```json
+{
+    "type": "objectEvent",
+	"version": "v1",
+	"msgId": "123456",
+    "data": {
+		"eventType": "DEVICE_ADDED",
+        "objectId": "14d3b91",
+		"time": 1754469720110,
+		"data": {
+			"deviceId": "14d3b91",
+			"name": "",
+			"deviceTypesList": ["Light"],
+			"endpointIds": [0,2,3]
+		}
+    }
+}
+```
+
+###### DEVICE_TRAIT_PARAMETER_UPDATE Event
+
+Example response for a `DEVICE_TRAIT_PARAMETER_UPDATE` event:
+
+```json
+{
+    "type": "objectEvent",
+    "version": "v1",
+    "msgId": "1765163175639",
+    "data": {
+        "eventType": "DEVICE_TRAIT_PARAMETER_UPDATE",
+        "objectId": "xxxxxxx",
+        "time": 1765163175603,
+        "data": {
+            "deviceId": "virtual.14247766413772",
+            "endpointId": 2,
+            "functionCode": "LevelControl",
+			"traitCode": "CurrentLevel",
+            "newValue": {
+                "endpointId": 2,
+                "functionCode": "LevelControl",
+                "max": 100.0,
+                "min": 1.0,
+                "step": null,
+                "traitCode": "CurrentLevel",
+                "unit": "%"
+            },
+            "oldValue": {
+                "endpointId": 2,
+                "functionCode": "LevelControl",
+                "max": 100.0,
+                "min": 1.0,
+                "step": 1.0,
+                "traitCode": "CurrentLevel",
+                "unit": "%"
+            }
+        }
+    },
+    "code": 0,
+    "message": null
+}
+```
