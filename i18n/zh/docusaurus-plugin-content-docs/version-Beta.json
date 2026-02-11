@@ -51,6 +51,14 @@
     "message": "开发者",
     "description": "The label for category 'Developer' in sidebar 'aqaraStudioSidebar'"
   },
+  "sidebar.aqaraStudioSidebar.category.Device Function API": {
+    "message": "设备功能 API",
+    "description": "The label for category 'Device Function API' in sidebar 'aqaraStudioSidebar'"
+  },
+  "sidebar.aqaraStudioSidebar.category.Automation API": {
+    "message": "自动化 API",
+    "description": "The label for category 'Automation API' in sidebar 'aqaraStudioSidebar'"
+  },
   "sidebar.aqaraStudioSidebar.category.Settings": {
     "message": "设置",
     "description": "The label for category 'Settings' in sidebar 'aqaraStudioSidebar'"

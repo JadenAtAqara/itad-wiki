@@ -1,0 +1,456 @@
+# 自动化 API
+
+## 创建自动化   
+
+调用本接口，您可以创建并启用一个自动化。
+
+#### 请求参数
+
+| 参数        | 类型    | 是否必需 | 说明                                               |
+| ----------- | ------- | ------- | -------------------------------------------------- |
+| type        | String  | ✓      | 请求的消息类型，必需为 `CreateScriptAutomationRequest`。 |
+| version     | String  | ✓      | 请求接口版本号，必需为 `v1`。                     |
+| msgId       | String  | ✓      | 由您定义的请求 ID。                                |
+| data        | Object  | ✓      | 请求数据。                                         |
+| data.config   | Object  | ✓      | JSON 自动化脚本，详情请参考 [JSON 自动化脚本定义](./json-automation-script.mdx)。                            |
+
+#### 请求参数示例     
+
+以下为 `CreateScriptAutomationRequest` 的请求体示例：
+
+```json
+{
+    "type": "CreateScriptAutomationRequest",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": {
+        "config": {
+            "metadata": {
+                "name": "智能灯光控制",
+                "description": "当开关打开时，自动打开两盏灯",
+                "scope": [
+                    {
+                        "name": "switchState",
+                        "type": "device.property",
+                        "deviceId": "switch001",
+                        "endpointId": 1,
+                        "functionCode": "OnOff",
+                        "traitCode": "OnOff"
+                    },
+                    {
+                        "name": "tempSensor",
+                        "type": "device.property",
+                        "deviceId": "sensor001",
+                        "endpointId": 1,
+                        "functionCode": "TemperatureMeasurement",
+                        "traitCode": "MeasuredValue"
+                    }
+                ]
+            },
+            "automations": [
+                {
+                    "name": "开关联动灯光",
+                    "starters": [
+                        {
+                            "type": "property.event",
+                            "source": {
+                                "type": "data.ref",
+                                "from": "/metadata/scope",
+                                "select": {
+                                    "by": "name",
+                                    "value": "switchState"
+                                }
+                            },
+                            "is": true,
+                            "for": "5sec",
+                            "suppressFor": "10sec"
+                        }
+                    ],
+                    "condition": {
+                        "type": "and",
+                        "conditions": [
+                            {
+                                "type": "property.state",
+                                "source": {
+                                    "type": "data.ref",
+                                    "from": "/metadata/scope",
+                                    "select": {
+                                        "by": "name",
+                                        "value": "tempSensor"
+                                    }
+                                },
+                                "greaterThan": 20
+                            },
+                            {
+                                "type": "time.between",
+                                "after": "08:00",
+                                "before": "22:00"
+                            }
+                        ]
+                    },
+                    "actions": [
+                        {
+                            "type": "device.trait.write",
+                            "functionCode": "Switch",
+                            "traitCode": "OnOff",
+                            "targets": [
+                                {
+                                    "deviceId": "light001",
+                                    "endpointIds": [1]
+                                }
+                            ],
+                            "value": true
+                        },
+                        {
+                            "type": "delay",
+                            "for": "2sec"
+                        },
+                        {
+                            "type": "device.trait.write",
+                            "functionCode": "LevelControl",
+                            "traitCode": "CurrentLevel",
+                            "targets": [
+                                {
+                                    "deviceId": "light001",
+                                    "endpointIds": [1]
+                                }
+                            ],
+                            "value": 100
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+```
+
+#### 响应数据
+
+| 参数    | 类型   | 说明                                   |
+| ------- | ------ | -------------------------------------- |
+| type    | String | 响应的消息类型，固定为 `CreateScriptLinkageResponse`。 |
+| version | String | 响应版本号，与请求接口版本号一致。       |
+| msgId   | String | 您发起请求时传入的 `msgId`。             |
+| code    | Number | 请求是否成功。0 表示成功，非 0 表示失败。 |
+| message | String | 请求结果描述。                           |
+| data    | String | 创建成功的自动化 ID（linkageId）。        |
+
+
+#### 响应数据示例
+
+以下为 `CreateScriptLinkageResponse` 的响应示例：
+
+```json
+{
+    "type": "CreateScriptLinkageResponse",
+	"version": "v1",
+	"msgId": "1751609244328",
+	"code": 0,
+	"message": "",
+    "data": "L.15b0cde.127312348967862272"
+}
+```
+
+## 编辑自动化脚本
+
+调用本接口，您可以编辑已存在的自动化脚本。
+
+#### 请求参数
+
+| 参数 | 类型 | 是否必需 | 说明 |
+|---|---|---|---|
+| type | String | ✓ | 请求的消息类型，必需为 `UpdateScriptAutomationRequest`。 |
+| version | String | ✓ | 请求接口版本号，必需为 `v1`。 |
+| msgId | String | ✓ | 由您定义的请求 ID。 |
+| data | Object | ✓ | 请求数据对象。 |
+| data.linkageId | String | ✓ | 编辑目标的的自动化 ID， |
+| data.config | Object | ✗ | 新的 JSON 自动化脚本。不传或为 null 时表示不变更现有配置；如传入空对象 `{}`，则自动化脚本内容会被清空。 |
+
+#### 请求参数示例
+
+以下为 `UpdateScriptAutomationRequest` 的请求体示例：
+
+```json
+{
+    "type": "UpdateScriptAutomationRequest",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": {
+        "linkageId":"L.15b0cde.127312348967862272",
+        "config": {
+
+        }
+    }
+}
+```
+
+#### 响应数据
+
+| 参数    | 类型   | 说明                       |
+|---------|--------|----------------------------|
+| type    | String | 响应的消息类型，固定为 `UpdateScriptAutomationResponse`。|
+| version | String | 响应版本号，与请求接口版本号一致。|
+| msgId   | String | 您发起请求时传入的 `msgId`。             |
+| code    | Number | 请求是否成功，0 表示成功，非 0 表示失败。 |
+| message | String | 请求结果描述。              |
+| data    | String | 空字符串。  |
+
+#### 响应数据示例
+
+以下为 `UpdateScriptAutomationResponse` 的响应示例：
+
+```json
+{
+    "type": "UpdateScriptAutomationResponse",
+	"version": "v1",
+	"msgId": "1751609244328",
+	"code": 0,
+	"message": "",
+    "data": ""
+}
+```
+
+## 修改自动化名称及启用状态
+
+通过本接口，您可以更新已创建自动化的名称及启用（启用/禁用）状态，无需更改其 JSON 自动化脚本。
+
+#### 请求参数
+
+| 参数 | 类型 | 是否必需 | 说明 |
+|------|------|---------|------|
+| type | String | ✓ | 请求的消息类型，必需为 `UpdateScriptAutomationRequest`。 |
+| version | String | ✓ | 请求接口版本号，必需为 `v1`。 |
+| msgId | String | ✓ | 由您定义的请求 ID。 |
+| data | Object | ✓ | 请求数据对象。 |
+| data.linkageId | String | ✓ | 编辑目标的的自动化 ID， |
+| data.name | String | ✗ | 自动化名称。不传或为传入值为空时，表示不更新名称；当传入值不为空且当前名称不同时，本接口会更新该名称。 |
+| data.enabled | Boolean | ✗ | 是否启用自动化。不传或为传入值为 null 时，表示不更新启用状态；当传入值不为 null 且当前启用状态不同时，本接口会更新该启用状态。<ul><li>true：启用。</li><li>false：关闭。</li></ul> |
+
+
+#### 请求参数示例   
+
+以下为 `UpdateScriptAutomationRequest` 的请求体示例：
+
+```json
+{
+    "type": "UpdateScriptAutomationRequest",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": {
+        "linkageId":"L.15b0cde.127312348967862272",
+        "name":"a3",
+        "enabled": false
+    }
+}
+```
+
+#### 响应数据
+
+与 [编辑自动化（配置） - 响应数据](#响应数据-1) 一致。
+
+#### 响应数据示例
+
+与 [编辑自动化（配置） - 响应数据示例](#响应数据示例-1) 一致。
+
+## 查询自动化列表 
+
+调用本接口，您可以获取一个自动化简介列表，了解每个自动化的 ID、名称、启用状态和创建时间。
+
+#### 请求参数
+
+| 参数         | 类型    | 是否必需 | 说明                                     |
+|--------------|---------|----------|------------------------------------------|
+| type         | String  | ✓        | 请求的消息类型，必需为 `GetScriptAutomationListRequest`。|
+| version      | String  | ✓        | 请求接口版本号，必需为 `v1`。            |
+| msgId        | String  | ✓        | 由您定义的请求 ID。                       |
+| data         | Object  | ✓        | 请求数据对象。                           |
+| data.pageNum | Number  | ✓        | 页码，从 1 开始。                         |
+| data.pageSize| Number  | ✓        | 每页数据条数。                            |
+
+
+#### 请求参数示例   
+
+以下为 `GetScriptAutomationListRequest` 的请求体示例：
+
+```json
+{
+    "type": "GetScriptAutomationListRequest",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": {
+        "pageNum":1,
+        "pageSize":2
+    }
+}
+```
+
+#### 响应数据
+
+| 字段名              | 类型     | 说明                                   |
+|---------------------|----------|----------------------------------------|
+| type                | String   | 响应消息类型，固定为 `GetScriptAutomationListResponse` |
+| version             | String   | 响应接口版本号，固定为 `v1`            |
+| msgId   | String | 您发起请求时传入的 `msgId`。             |
+| data                | Object   | 响应数据对象，包含自动化列表及分页信息  |
+| data.totalCount     | Number   | 总自动化数量。                          |
+| data.pageNum        | Number   | 当前页码。                               |
+| data.pageSize       | Number   | 每页数量。                               |
+| data.data           | Array of Object    | 自动化列表。                             |
+| data.data[].linkageId | String | 自动化 ID。                              |
+| data.data[].name    | String   | 自动化名称。                             |
+| data.data[].enabled | Boolean  | 启用状态：<ul><li>true：已启用</li><li>false：禁用</li></ul>      |
+| data.data[].createTime | Number | 自动化创建时间，单位为毫秒的 UTC 时间戳。 |
+| code    | Number | 请求是否成功。0 表示成功，非 0 表示失败。 |
+| message             | String 或 null | 响应描述消息。为空字符串或 null 时表示请求成功。                         |
+
+#### 响应数据示例   
+
+以下为 `GetScriptAutomationListResponse` 的响应示例：
+
+
+```json
+{
+    "type": "GetScriptAutomationListResponse",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": {
+        "totalCount": 6,
+        "pageNum": 1,
+        "pageSize": 2,
+        "data": [
+            {
+                "linkageId": "L.15b0cde.127312348967862272",
+                "name": "a3-1",
+                "enabled": false,
+                "createTime": 1766043229326
+            },
+            {
+                "linkageId": "L.15b0ceb.127312523723538432",
+                "name": "b2",
+                "enabled": true,
+                "createTime": 1766043270999
+            }
+        ]
+    },
+    "code": 0,
+    "message": null
+}
+```
+
+## 查询自动化详情 
+
+通过调用本接口并传入自动化 ID，您可以获取指定自动化的详细信息（如 JSON 自动化脚本）。
+
+#### 请求参数
+
+| 参数    | 类型    | 是否必需 | 说明                                      |
+| ------- | ------- | ------- | ----------------------------------------- |
+| type    | String  | ✓      | 请求消息类型，固定为 `GetScriptAutomationDetailsRequest` |
+| version | String  | ✓      | 接口版本号，固定为 `v1`                   |
+| msgId        | String  | ✓        | 由您定义的请求 ID。                       |
+| data    | String  | ✓      | 查询目标的自动化 ID。               |
+
+
+#### 请求参数示例   
+
+以下为 `GetScriptAutomationDetailsRequest` 的请求体示例：
+
+```json
+{
+    "type": "GetScriptAutomationDetailsRequest",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": "L.15b0cde.127312348967862272"
+}
+```
+
+#### 响应数据
+
+| 字段             | 类型           | 说明（必填）                                      |
+| ---------------- | -------------- | ------------------------------------------------ |
+| type             | String         | 响应消息类型，固定为 `GetScriptAutomationDetailsResponse`。|
+| version          | String         | 接口版本号，固定为 `v1`。                          |
+| msgId   | String | 您发起请求时传入的 `msgId`。             |
+| data             | Object         | 返回的自动化详情数据对象。                          |
+| data.linkageId   | String         | 自动化ID。   |
+| data.name        | String         | 自动化名称。                                       |
+| data.enabled     | Boolean        | 自动化的启用状态。     |
+| data.config      | Object         | JSON 自动化脚本。         |
+| data.createTime  | Number         | 自动化创建时间，单位为毫秒的 UTC 时间戳。 |
+| code             | Number         | 响应码。0表示成功，其他为错误码。                  |
+| message          | String 或 null | 响应描述消息。为空字符串或 null 时表示请求成功。    |
+
+
+#### 响应数据示例  
+
+以下为 `GetScriptAutomationDetailsResponse` 的响应示例：
+
+```json
+{
+    "type": "GetScriptAutomationDetailsResponse",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": {
+        "linkageId": "L.15b0cde.127312348967862272",
+        "name": "a3-1",
+        "enabled": false,
+        "config": {
+            
+        },
+        "createTime": 1766043229326
+    },
+    "code": 0,
+    "message": null
+}
+```
+
+## 删除自动化
+
+调用本接口，您可以删除多个自动化。
+
+#### 请求参数
+
+| 参数      | 类型     | 是否必需 | 说明                                     |
+| --------- | -------- | ------- | --------------------------------------------------- |
+| type      | String   | ✓       | 请求消息类型，固定为 `DeleteAutomationRequest`。      |
+| version   | String   | ✓       | 接口版本号，固定为 `v1`。                            |
+| msgId        | String  | ✓        | 由您定义的请求 ID。                       |
+| data      | Array of String   | ✓       | 待删除的自动化 ID 数组，每个元素为对应的 linkageId。|
+
+#### 请求参数示例   
+
+以下为 `DeleteAutomationRequest` 的请求体示例：
+
+```json
+{
+    "type": "DeleteAutomationRequest",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": ["L.15b0b4d.1273030749213163"]
+}
+```
+
+#### 响应数据
+
+| 字段      | 类型    | 说明                         |
+|---------|-------|----------------------------|
+| type    | String | 响应消息类型，固定为 `DeleteAutomationResponse` |
+| version | String | 接口版本号，固定为 `v1`            |
+| msgId   | String | 您发起请求时传入的 `msgId`。             |
+| code    | Number | 响应状态码，0 表示成功。非 0 表示失败。               |
+| message | String | 响应描述信息。             |
+| data    | String | 空字符串。          |
+
+#### 响应数据示例   
+
+```json
+{
+    "type": "DeleteAutomationResponse",
+	"version":"v1",
+	"msgId":"1751609244328",
+	"code":0,
+	"message":"",
+    "data":""
+}
+```
