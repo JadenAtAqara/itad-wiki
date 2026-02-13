@@ -34,7 +34,28 @@ After you establish a connection, you can send and receive JSON messages in real
 | Authorization  | String | Required for HTTP and WebSocket | Authorization Token for user authentication.<br />Format is `Bearer <token>`. Replace `<token>` with the token you obtained from Aqara Studio. (If the token from Aqara Studio already includes the Bearer prefix, use it directly without adding another Bearer.) For more details on how to get the token, see [Developer Guide - Obtain Required Information](./../developer-guide.mdx#obtain-required-information). |
 | Content-Type   | String | HTTP only        | Default is `application/json`.  |
 
+## API List
 
+Aqara Studio determines and responds to different API functions based on the `type` field in the request body. The table below summarizes all supported APIs in Aqara Studio, along with their corresponding request and response types:
+
+| API Function | Request Type | Response Type |
+| --- | --- | --- |
+| [Query Device ID List](./trait-api.mdx#query-device-id-list) | GetDeviceInfoRequest | GetDeviceInfoResponse |
+| [Query Device Spec Configuration](./trait-api.mdx#query-device-spec-configuration) | GetDevicesRequest | GetDevicesResponse |
+| [Control Device](./trait-api.mdx#control-device) | ExecuteTraitRequest | ExecuteTraitResponse |
+| [Query the Latest Values of Device Traits](./trait-api.mdx#query-the-latest-values-of-device-traits) | GetTraitValueRequest | GetTraitValueResponse |
+| [Subscribe to Multiple Trait Changes](./trait-api.mdx#subscribe-to-multiple-trait-changes) | SubscribeTraitValueRequest | SubscribeTraitValueResponse |
+| [Unsubscribe from Trait Changes](./trait-api.mdx#unsubscribe-from-trait-changes) | UnsubscribeTraitValueRequest | UnsubscribeTraitValueResponse |
+| [Subscribe to All Trait Changes](./trait-api.mdx#subscribe-to-all-trait-changes) | SubscribeAllRequest | SubscribeAllResponse |
+| [Unsubscribe from All Trait Changes](./trait-api.mdx#unsubscribe-from-all-trait-changes) | UnsubscribeAllRequest | UnsubscribeAllResponse |
+| [Object Event Messages Push](./trait-api.mdx#object-event-messages-push) | - | objectEvent | 
+| [Query Device History](./trait-api.mdx#query-device-history) | QueryDeviceHistoryDataRequest | QueryDeviceHistoryDataResponse | 
+| [Create Automation](./automation-api.mdx#create-automation) | CreateScriptAutomationRequest | CreateScriptLinkageResponse |
+| [Edit Automation Script](./automation-api.mdx#edit-automation-script) | UpdateScriptAutomationRequest | UpdateScriptAutomationResponse |
+| [Modify Automation Name and Enable Status](./automation-api.mdx#modify-automation-name-and-enable-status) | UpdateScriptAutomationRequest | UpdateScriptAutomationResponse |
+| [Query Automation List](./automation-api.mdx#query-automation-list) | GetScriptAutomationListRequest | GetScriptAutomationListResponse |
+| [Query Automation Details](automation-api.mdx#query-automation-details) | GetScriptAutomationDetailsRequest | GetScriptAutomationDetailsResponse |
+| [Delete Automation](automation-api.mdx#delete-automation) | DeleteAutomationRequest | DeleteAutomationResponse |
 
 ## Error Handling
 

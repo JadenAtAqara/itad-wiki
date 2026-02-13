@@ -10,13 +10,13 @@ JSON 自动化脚本的标准结构如下所示，包含元数据（metadata）�
 | 参数        | 类型    | 是否必需 | 说明                                      |
 | ----------- | ------- | ------- | ----------------------------------------- |
 | metadata    | Object  | ✗      | 自动化操作的元数据，包含自动化操作的名称、说明和变量定义。      |
-| metadata.name        | String           | ✗      | 自动化的名称（仅供开发者参考，不向用户显示）。    |
+| metadata.name        | String           | ✗      | 自动化的名称。    |
 | metadata.description | String           | ✗      | 自动化的描述。                                 |
 | metadata.scope       | Array of [DeviceProperty](#deviceproperty) | ✗      | 定义设备的属性值变量列表。   |
 | automations | Array of Object   | ✓      | 自动化数组，包含一个或多个自动化。                        |
 | automations.name        | String        | ✗        | 自动化名称               |
 | automations.starters    | Array of [Starter](#starter)     | ✓        | 触发器列表（至少包含一个）。    |
-| automations.condition   | Object     | ✗        | 执行条件，详情情参考 [Condition 说明](#condition)。                 |
+| automations.condition   | Object     | ✗        | 执行条件，详情情参考 [Condition](#condition)。                 |
 | automations.actions     | Array of [Action](#action)      | ✓        | 此参数定义自动化触发后要执行的操作列表（至少包含 1 个），按顺序执行。|
 
 ## Starter
@@ -25,9 +25,9 @@ Starter 是用于触发自动化的条件，支持以下类型：
 
 | 类型           | 说明                             |
 | -------------- | -------------------------------- |
-| [PropertyEvent](#propertyevent)  | 当设备属性变化并满足特定条件时触发。 |
-| [TimeSchedule](#timeschedule)   | 在指定的时间或按 Cron 表达式定时触发。 |
-| [Manual](#manual)         | 用户手动触发。                      |
+| [PropertyEvent](#propertyevent)  | 此触发器表示仅当设备属性变化并满足特定条件时触发自动化。 |
+| [TimeSchedule](#timeschedule)   |此触发器表示仅在指定时间触发自动化。 |
+| [Manual](#manual)         | 此触发器表示自动化由用户手动触发。                      |
 
 ### PropertyEvent
 
@@ -35,14 +35,14 @@ Starter 是用于触发自动化的条件，支持以下类型：
 |---------------------|------------|---------|------------------------------------------------|
 | type                | String     | ✓       | 固定为 "property.event"。                                      |
 | source              | [Datasource](#datasource) | ✓       | 监听的设备属性数据源。                                          |
-| is                  | [Dynamic](#比较运算符的类型说明)    | ✗       | 检查事件数据是否等于某个值。                                    |
-| isNot               | [Dynamic](#比较运算符的类型说明)    | ✗       | 检查事件数据是否不等于某个值。                                  |
-| greaterThan         | [Dynamic](#比较运算符的类型说明)    | ✗       | 检查事件数据是否大于某个值。                               |
-| greaterThanOrEqualTo| [Dynamic](#比较运算符的类型说明)    | ✗       | 检查事件数据是否大于等于某个值。                           |
-| lessThan            | [Dynamic](#比较运算符的类型说明)    | ✗       | 检查事件数据是否小于某个值。                                |
-| lessThanOrEqualTo   | [Dynamic](#比较运算符的类型说明)    | ✗       | 检查事件数据是否小于等于某个值。                           |
-| for                 | [Duration](#duration)   | ✗       | 条件需要持续满足的时间（如 "30min"、"1hour10min20sec"）。           |
-| suppressFor         | [Duration](#duration)   | ✗       | 触发后抑制再次触发的时间。                                      |
+| is                  | [Dynamic](#比较运算符的类型说明)    | ✗       | 检查数据是否等于某个值。                                    |
+| isNot               | [Dynamic](#比较运算符的类型说明)    | ✗       | 检查数据是否不等于某个值。                                  |
+| greaterThan         | [Dynamic](#比较运算符的类型说明)    | ✗       | 检查数据是否大于某个值。                               |
+| greaterThanOrEqualTo| [Dynamic](#比较运算符的类型说明)    | ✗       | 检查数据是否大于等于某个值。                           |
+| lessThan            | [Dynamic](#比较运算符的类型说明)    | ✗       | 检查数据是否小于某个值。                                |
+| lessThanOrEqualTo   | [Dynamic](#比较运算符的类型说明)    | ✗       | 检查数据是否小于等于某个值。                           |
+| for         | [Duration](#duration) | ✗ | 比较条件必须持续满足的时间长度（例如："30min"、"1hour10min20sec"）。 |
+| suppressFor | [Duration](#duration) | ✗ | 在一次触发之后，必须等待该时间结束后才能再次触发。 |
 
 :::tip
 参数使用需遵循以下约束：
@@ -54,7 +54,7 @@ Starter 是用于触发自动化的条件，支持以下类型：
 #### 比较运算符的类型说明
 
 比较运算符（is、isNot、greaterThan 等）的值支持以下三种类型：
-- 字面量值：基本数值类型，如 Boolean、Number、String。
+- 字面量：基本数值类型，如 Boolean、Number、String。
 
     示例如下：
 
@@ -514,7 +514,7 @@ Cron 表达式的结构为：秒 分 时 日 月 周 年（依次排列），说
 | 3    | 时         | 0-23       | * /        |
 | 4    | 日（月中天） | 1-31       | , * ?      |
 | 5    | 月         | 1-12       | , - *      |
-| 6    | 周（周中天） | <ul><li>1（星期一）</li><li>2（星期二）</li><li>3（星期三）</li><li>4（星期四）</li><li>5（星期五）</li><li>6（星期六）</li><li>7（星期日）</li></ul> | , * ?      |
+| 6    | 周（周中天） | <ul><li>1：星期一</li><li>2：星期二</li><li>3：星期三</li><li>4：星期四</li><li>5：星期五</li><li>6：星期六</li><li>7：星期日</li></ul> | , * ?      |
 | 7    | 年         | 四位数字    | , *        |
 
 ### 特殊字符说明
@@ -543,7 +543,7 @@ Cron 表达式的结构为：秒 分 时 日 月 周 年（依次排列），说
 
 ## Time
 
-Time 表示一天中的时间点，支持 时钟时间 和 太阳时间 两种类型。
+Time 表示一天中的时间点，支持 [时钟时间](#时钟时间) 和 [太阳时间](#太阳时间) 两种类型。
 
 ### 时钟时间
 
@@ -559,7 +559,7 @@ Time 表示一天中的时间点，支持 时钟时间 和 太阳时间 两种�
     | --------------- | ------------- | ---------------------- |
     | h:mm am/pm      | 0:30 am | 凌晨 0 点 30 分 |
     | h:mm am/pm      | 7:30 pm       | 晚上 7 点 30分            |
-    | h:mm:ss am/pm   | 8:00:00 am    | 早上 8 点整（秒可选）    |
+    | h:mm:ss am/pm   | 8:00:00 am    | 早上 8 点整    |
 
 ### 太阳时间
 
@@ -578,8 +578,8 @@ Time 表示一天中的时间点，支持 时钟时间 和 太阳时间 两种�
 
 Duration 表示一段时间长度，用于以下字段：
 - `delay.for`：延迟控制设备的等待时间。
-- `property.event.for`：触发器条件需要持续满足的时间。
-- `property.event.suppressFor`：触发后抑制再次触发的时间。
+- `property.event.for`：比较条件必须持续满足的时间长度。
+- `property.event.suppressFor`：在一次触发之后，必须等待该时间结束后才能再次触发。
 - `property.state.for`：检查状态是否已保持一定时长。
 
 支持的时间单位：
