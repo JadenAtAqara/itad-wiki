@@ -55,7 +55,7 @@ Below is an example request body for `GetDeviceInfoRequest`:
 | data.data[].createTime | Number | Unix timestamp (milliseconds) when the device was added. |
 | data.data[].state | Boolean | Device online status:<ul><li>false: offline.</li><li>true: online.</li></ul> |
 
-#### Response Example
+#### Example Response
 
 Below is an example of a `GetDeviceInfoResponse` response:
 
@@ -165,7 +165,7 @@ Below is an example of a `GetDevicesRequest` request body:
 | List[X]   | List      | A list of elements of type X, in JSON string format.<br />X can be Integer, Float, String, Struct, or Enum. |
 | Data      | Data      | Hex string (Hex String), e.g. "0x01AB3F".                                                         |
 
-#### Response Example
+#### Example Response
 
 Below is an example response for `GetDevicesResponse`:
 
@@ -357,7 +357,7 @@ Below is an example request body for `ExecuteTraitRequest`:
 A `code` value of `0` only means the API call was successful. It does not guarantee the device state has changed. Please [query the latest trait value](#query-the-latest-values-of-device-traits) to confirm if the control was effective.
 ::: 
 
-#### Response Example
+#### Example Response
 
 Below is a sample response for `ExecuteTraitResponse`:
 
@@ -435,7 +435,7 @@ Below is a request body example for `GetTraitValueRequest`:
 | data[].value | Any | The current value of the trait. |
 | data[].time | Number | The time when the value was reported, as a Unix timestamp in milliseconds. |
 
-#### Response Example
+#### Example Response
 
 Below is an example response for `GetTraitValueResponse`:
 
@@ -508,7 +508,7 @@ Below is a request body example for `SubscribeTraitValueRequest`:
 | code | Number | Yes | Request result. `0` means subscription successful; any other value means failure. |
 | message | String | No | Description of the response result. |
 
-##### Response Example
+##### Example Response
 
 Below is an example of a successful `SubscribeTraitValueResponse`:
 
@@ -607,7 +607,7 @@ Here is an example request body for `UnsubscribeTraitValueRequest`:
 | message | String | No | Description of the response result. |
 
 
-#### Response Example
+#### Example Response
 
 Here is a sample `UnsubscribeTraitValueResponse`:
 
@@ -661,7 +661,7 @@ Here is an example body for `SubscribeAllRequest`:
 | code      | Number | Yes      | Result code. `0` means success, non-`0` means fail. |
 | message   | String | No       | Description of the response. |
 
-#### Response Example
+#### Example Response
 
 Here is an example response of `SubscribeAllResponse`:
 
@@ -716,7 +716,7 @@ Here is an example body for `UnsubscribeAllRequest`:
 | code      | Number | Yes      | Result code. `0` means success, non-`0` means failure. |
 | message   | String | No       | Description of the response. |
 
-#### Response Example
+#### Example Response
 
 Here is a sample `UnsubscribeAllResponse`:
 
@@ -795,7 +795,7 @@ If you receive a `DEVICE_TRAIT_PARAMETER_UPDATE` event, it is recommended to cal
 | data.data.newValue.step       | Number    | Step. |
 | data.data.oldValue            | Object    | Previous configuration, same structure as `newValue`. |
 
-#### Response Example
+#### Example Response
 
 Here are example responses for different events.
 
@@ -862,5 +862,124 @@ Example response for a `DEVICE_TRAIT_PARAMETER_UPDATE` event:
     },
     "code": 0,
     "message": null
+}
+```
+
+## Query Device History
+
+Query the history of a device by its device ID.
+
+#### Request Parameters
+
+| Parameter         | Type              | Required | Description |
+|-------------------|-------------------|----------|-------------|
+| type              | String            | Yes      | Message type, must be `QueryDeviceHistoryDataRequest`. |
+| version           | String            | Yes      | API version, must be `v1`. |
+| msgId             | String            | Yes      | Custom request ID defined by you. |
+| data              | Object            | Yes      | Request data object. |
+| data.deviceId     | String            | Yes      | Device ID to query historical data for. |
+| data.traitCodes   | Array of String   | No       | List of trait codes to query. If not specified, all historical data of the specified `deviceId` will be queried by default. |
+| data.scanId       | Number            | No       | Pagination marker. Keep blank for the first query. To query the next page, pass the `scanId` returned in the previous response. Used for continuous paging of data. |
+| data.desc         | Boolean           | No       | Whether to sort query results in descending order by time: <ul><li>true: (default) descending</li><li>false: ascending</li></ul> |
+| data.startTime    | Number            | Yes      | The query start timestamp, in milliseconds (UTC). |
+| data.endTime      | Number            | Yes      | The query end timestamp, in milliseconds (UTC).<br/>**Note: The interval between start time and end time cannot exceed 7 days (`endTime - startTime ≤ 7 * 24 * 60 * 60 * 1000`)** |
+| data.lang         | String            | Yes      | Language. <ul><li>en-US: English</li><li>zh-CN: Chinese</li></ul> |
+| data.size         | Number            | No       | Number of records to query per request. Range: [1, 200], default is 50. |
+
+#### Example Request
+
+Below is an example request body for `QueryDeviceHistoryDataRequest`:
+
+```json
+{
+    "type" : "QueryDeviceHistoryDataRequest",
+    "version": "v1",
+    "msgId" : "msgId123456",
+    "data":{
+        "deviceId": "b1654af4fda39824",
+        // "traitCodes": ["EndpointCount"],
+        // "desc":false,
+        "lang":"en-US",
+        "startTime": 1770114300000,
+        "endTime": 1770639900000,
+        // "scanId": 0,
+        "size":3
+    }  
+}
+```
+
+#### Response Parameters
+
+| Parameter                    | Type                | Description |
+|------------------------------|---------------------|-------------|
+| type                         | String              | Response message type, always `QueryDeviceHistoryDataResponse`. |
+| version                      | String              | Response version, matches API version in the request. |
+| msgId                        | String              | The `msgId` you sent in your request. |
+| code                         | Number              | Indicates whether the request succeeded. 0 means success, nonzero means failure. |
+| data                         | Object              | Response data object. |
+| data.scanId                  | Number              | Pagination marker for querying the next page. |
+| data.data                    | Array of Object     | Historical data list. Each item contains: |
+| data.data[].deviceId         | String              | Device ID. |
+| data.data[].deviceName       | String              | Device name. |
+| data.data[].endpointId       | Number              | Endpoint ID. |
+| data.data[].functionCode     | String              | Function code. |
+| data.data[].traitCode        | String              | Trait code. |
+| data.data[].value            | Any                 | Value for the specified `traitCode`. |
+| data.data[].pointName        | String              | Trait display name (in the language specified by the `data.lang` parameter). |
+| data.data[].pointValue       | String              | Human-readable value (in the language specified by `data.lang`). |
+| data.data[].unit             | String              | Unit of `value`. |
+| data.data[].time             | Number              | Report time in UTC, milliseconds. |
+
+#### Example Response
+
+Below is an example of a `QueryDeviceHistoryDataResponse` response:
+
+```json
+{
+    "type": "QueryDeviceHistoryDataResponse",
+    "version": "v1",
+    "msgId": "msgId123456",
+    "data": {
+        "scanId": 3178,
+        "data": [
+            {
+                "deviceId": "b1654af4fda39824",
+                "deviceName": "Home Assistant Versions Update Available",
+                "endpointId": 2,
+                "functionCode": "OnOffSensor",
+                "traitCode": "BooleanState",
+                "value": true,
+                "pointName": "OnOff Sensor - Boolean State",
+                "pointValue": "True",
+                "unit": "",
+                "time": 1770580415746
+            },
+            {
+                "deviceId": "b1654af4fda39824",
+                "deviceName": "Home Assistant Versions Update Available",
+                "endpointId": 2,
+                "functionCode": "OnOffSensor",
+                "traitCode": "BooleanState",
+                "value": false,
+                "pointName": "OnOff Sensor - Boolean State",
+                "pointValue": "False",
+                "unit": "",
+                "time": 1770580114489
+            },
+            {
+                "deviceId": "b1654af4fda39824",
+                "deviceName": "Home Assistant Versions Update Available",
+                "endpointId": 2,
+                "functionCode": "OnOffSensor",
+                "traitCode": "BooleanState",
+                "value": true,
+                "pointName": "OnOff Sensor - Boolean State",
+                "pointValue": "True",
+                "unit": "",
+                "time": 1770564659744
+            }
+        ]
+    },
+    "code": 0
 }
 ```
