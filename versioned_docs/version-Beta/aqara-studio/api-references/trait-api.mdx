@@ -134,7 +134,7 @@ Below is an example of a `GetDevicesRequest` request body:
 | data[].endpoints[].functions[].traits | Array of Object | Trait list. |
 | data[].endpoints[].functions[].traits[].traitCode | String | Trait code, corresponding to the specific function supported by the device. For details, see [Trait Codes](./trait-codes.mdx), including the meaning, type (such as numeric, boolean, enumeration, etc.), whether it is readable/writable/reportable, etc. |
 | data[].endpoints[].functions[].traits[].parameter | Object | Trait parameter. |
-| data[].endpoints[].functions[].traits[].parameter.type | String | Type of trait parameter. For an explanation of the string values, see [Trait Parameter Types](#trait-parameter-types). |
+| data[].endpoints[].functions[].traits[].parameter.type | String | Type of trait value. For an explanation of the string values, see [Trait Value Types](#trait-value-types). |
 | data[].endpoints[].functions[].traits[].parameter.readable | Boolean | Whether the trait is readable. |
 | data[].endpoints[].functions[].traits[].parameter.writable | Boolean | Whether the trait is writable. |
 | data[].endpoints[].functions[].traits[].parameter.subscribable | Boolean | Whether the trait can be subscribed to. |
@@ -152,7 +152,7 @@ Below is an example of a `GetDevicesRequest` request body:
 - In the response, `data[].deviceTypesList` shows the list of device types supported by the device. For the meaning of each string, see [Device Types](./device-type.mdx).
 - In the response, `data[].endpoints[].functions[].traits[].traitCode` shows the trait code, representing a specific function the device supports. For detailed explanation of each trait, including its meaning, type (such as numeric, boolean, enum, etc.), and whether it is readable, writable, or reportable, see [Trait Codes](./trait-codes.mdx).
 
-##### Trait Parameter Types
+##### Trait Value Types
 
 | Name      | Type      | Description                                                                                       |
 |-----------|-----------|---------------------------------------------------------------------------------------------------|

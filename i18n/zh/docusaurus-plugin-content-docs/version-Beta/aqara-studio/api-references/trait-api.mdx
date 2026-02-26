@@ -134,7 +134,7 @@
 | data[].endpoints[].functions[].traits | Array of Object | 功能点列表。 |
 | data[].endpoints[].functions[].traits[].traitCode | String | 功能点代码，对应设备支持的具体功能。请参阅 [功能点代码](./trait-codes.mdx)，了解该功能点详情包括含义、类型（如数值、布尔、枚举等）、是否可读/可写/可上报等。 |
 | data[].endpoints[].functions[].traits[].parameter | Object | 功能点属性。 |
-| data[].endpoints[].functions[].traits[].parameter.type | String | 功能点属性的类型，字符串含义请参考 [功能点属性类型](#功能点属性类型)。 |
+| data[].endpoints[].functions[].traits[].parameter.type | String | 功能点值的类型，字符串含义请参考 [功能点值类型](#功能点值类型)。 |
 | data[].endpoints[].functions[].traits[].parameter.readable | Boolean | 是否可读。 |
 | data[].endpoints[].functions[].traits[].parameter.writable | Boolean | 是否可写。 |
 | data[].endpoints[].functions[].traits[].parameter.subscribable | Boolean | 是否可订阅。 |
@@ -152,7 +152,7 @@
 - 响应中的 `data[].deviceTypesList`，表示设备支持的类型列表，请参考 [设备类型](./device-type.mdx) 了解字符串相关含义。
 - 响应中的 `data[].endpoints[].functions[].traits[].traitCode`，表示功能点代码，对应设备支持的具体功能，请参阅 [功能点代码](./trait-codes.mdx)，了解该功能点详情包括含义、类型（如数值、布尔、枚举等）、是否可读/可写/可上报等。
 
-##### 功能点属性类型
+##### 功能点值类型
 
 | 名称      | 类型      | 说明                                                         |
 |-----------|-----------|--------------------------------------------------------------|

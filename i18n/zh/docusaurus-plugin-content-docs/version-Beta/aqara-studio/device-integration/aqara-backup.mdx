@@ -27,32 +27,33 @@ Aqara Studio 支持两种 Aqara 设备接入方式，具体选择依据其是否
 
 ### 导入五元组
 
-1. 请先将所有 Aqara 设备退出网络。
-2. 在左侧侧边栏点击进入**设备管理**页面。
+1. 在左侧侧边栏点击进入**设备管理**页面。
 3. 在侧边栏双击 **Aqara** 文件夹，进入 Aqara 协议管理界面。
 4. 切换到 **导入五元组** 选项卡。
-5. 向 Aqara 技术支持申请五元组信息 Excel 文件。
-6. 上传五元组 Excel 文件，Aqara Studio 会自动解析文件内容，等待设备入网。
+5. 联系 Aqara 商务人员获取待接入 Aqara Studio 的**网关本身**的五元组信息文件（JSON）（注意：只需提供网关的五元组信息，不需要其子设备的五元组信息）。
+6. 上传该文件，Aqara Studio 会自动解析文件内容，等待设备入网。
 
 ### 添加设备
 
 1. 联系 Aqara 技术支持，获取并安装 Aqara Studio Tool App（目前仅支持 Android）。
 2. 启动 App，填写所需的网络登录信息：
-    - **BaseUrl**：Aqara Studio 的访问地址。
-    - **FastLinkUrl**：Aqara Studio 所在设备的 IP 或域名，详情请查看 [如何获取 FastLinkUrl](#如何获取-fastlinkurl)。
+    - BaseUrl：总是包含协议（如 http:// 或 https://），后面紧跟主机（IP或域名），并可能包含端口和路径。它是完整的服务入口地址。
+
+        示例：
+        - `http://10.10.24.83:8088`（IP + 端口）
+        - `https://xxx.yyy.com/zzz/`（域名 + 路径）
+
+    - FastLinkUrl：总是仅包含主机部分（IP或域名），不包含协议、端口和路径。它是一个简化标识，通常用于内部快速访问或与其他默认配置（如默认协议、端口）组合使用。
+
+        示例：
+        - 10.10.24.83（IP）
+        - xxx.yyy.com（域名）
 3. 登录成功后，选择“网关入口”，并根据页面提示添加 Aqara 网关。
 4. 网关添加完成后，连续按下该网关按钮 3 次，进入子设备入网模式。  
     :::tip
     如需了解各设备入网流程，请参考设备说明书或在 Aqara Home App 查询。
     :::
 5. 待子设备入网成功后，设备信息会自动显示在右侧侧边栏的 <code>Aqara</code> 目录中，无需手动添加功能点，Aqara Studio 会自动识别。
-
-#### 如何获取 FastLinkUrl
-
-1. 双击 Aqara 文件夹，进入 **配置** 选项卡，展开 **基础配置**。
-2. 查看`Name Srv Address`是否为空：
-    - 是：**基础配置** 下的 `Ip Address` 为 FastLinkUrl。
-    - 否：该地址为 FastLinkUrl。
 
 ## 下一步
 
