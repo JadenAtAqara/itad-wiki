@@ -1,5 +1,144 @@
 # Automation API
 
+## Query Device Traits Available for Automation
+
+By calling this API, you can query trait information that can be used for automation from all devices. The returned content includes the value type, unit, and the applicable phase for each trait in the automation process (such as [starter](./json-automation-script.mdx#starter), [condition](./json-automation-script.mdx#condition), or [action](./json-automation-script.mdx#action)).
+
+#### Request Parameters
+
+| Parameter    | Type    | Required | Description                                                                                  |
+| ------------ | ------- | -------- | -------------------------------------------------------------------------------------------- |
+| type         | String  | ✓        | Message type for the request, must be `QueryDeviceSupportedScriptAutomationConfigRequest`.    |
+| version      | String  | ✓        | API version, must be `v1`.                                                                   |
+| msgId        | String  | ✓        | Request ID defined by you.                                                                   |
+| data         | String  | ✓        | Pass an empty string here.                                                                   |
+
+#### Example Request
+
+Below is a sample request body for `QueryDeviceSupportedScriptAutomationConfigRequest`:
+
+```json
+{
+    "type": "QueryDeviceSupportedScriptAutomationConfigRequest",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": ""
+}
+```
+
+#### Response Parameters
+
+| Parameter | Type | Description  |
+| --- | --- | --- |
+| type | String | The message type of the response, always `QueryDeviceSupportedScriptAutomationConfigResponse`. |
+| version | String | Response version. It matches the version used in the request. |
+| msgId | String | The `msgId` provided in your request. |
+| code | Number | Return code. `0` means success, any non-zero value indicates failure. |
+| data.devices | Array of Object | List of device information. |
+| data.devices[].deviceId | String | Device ID. |
+| data.devices[].deviceName | String | Device name. |
+| data.devices[].endpoints | Array of Object | List of endpoint information for the device. |
+| data.devices[].endpoints[].endpointName | String | Endpoint name. |
+| data.devices[].endpoints[].endpointId | Number | Endpoint ID. |
+| data.devices[].endpoints[].properties | Array of Object | List of traits. |
+| data.devices[].endpoints[].properties[].functionCode | String | Function code. |
+| data.devices[].endpoints[].properties[].functionName | String | Function name. |
+| data.devices[].endpoints[].properties[].traitCode | String | Trait code. |
+| data.devices[].endpoints[].properties[].traitName | String | Trait name. |
+| data.devices[].endpoints[].properties[].valueType | String | The value type of the trait (such as boolean, number, etc.). |
+| data.devices[].endpoints[].properties[].semanticRole | Array of String | The automation phases this trait can participate in, including [starter](./json-automation-script.mdx#starter), [condition](./json-automation-script.mdx#condition), and [action](./json-automation-script.mdx#action). The specific roles depend on the returned array. |
+| data.devices[].endpoints[].properties[].unit | String/null | Unit. If no unit, this is null. |
+
+#### Example Response
+
+Below is an example response for `QueryDeviceSupportedScriptAutomationConfigResponse`:
+
+```json
+{
+    "type": "QueryDeviceSupportedScriptAutomationConfigResponse",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": {
+        "devices": [
+            {
+                "deviceId": "9f3e3632068ff047",
+                "deviceName": "Door and Window Magnet Sensor",
+                "endpoints": [
+                    {
+                        "endpointName": "Endpoint_2",
+                        "endpointId": 2,
+                        "properties": [
+                            {
+                                "functionCode": "OnOffSensor",
+                                "functionName": "OnOff Sensor",
+                                "traitCode": "BooleanState",
+                                "traitName": "Boolean State",
+                                "valueType": "boolean",
+                                "semanticRole": [
+                                    "starter",
+                                    "condition"
+                                ],
+                                "unit": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "deviceId": "af9e93b709de1fd9",
+                "deviceName": "Motion Sensor",
+                "endpoints": [
+                    {
+                        "endpointName": "Endpoint_2",
+                        "endpointId": 2,
+                        "properties": [
+                            {
+                                "functionCode": "OnOffSensor",
+                                "functionName": "OnOff Sensor",
+                                "traitCode": "BooleanState",
+                                "traitName": "Boolean State",
+                                "valueType": "boolean",
+                                "semanticRole": [
+                                    "starter",
+                                    "condition"
+                                ],
+                                "unit": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "deviceId": "947793560f5b2fbd",
+                "deviceName": "Flood Detector",
+                "endpoints": [
+                    {
+                        "endpointName": "Endpoint_2",
+                        "endpointId": 2,
+                        "properties": [
+                            {
+                                "functionCode": "OnOffSensor",
+                                "functionName": "OnOff Sensor",
+                                "traitCode": "BooleanState",
+                                "traitName": "Boolean State",
+                                "valueType": "boolean",
+                                "semanticRole": [
+                                    "starter",
+                                    "condition"
+                                ],
+                                "unit": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            ...
+        ]
+    },
+    "code": 0
+}
+```
+
 ## Create Automation
 
 By calling this API, you can create and enable an automation.
@@ -131,8 +270,8 @@ Below is a sample request body for `CreateScriptAutomationRequest`:
 | ------- | ------ | -------------------------------------- |
 | type    | String | The type of message in the response. Always set to `CreateScriptLinkageResponse`. |
 | version | String | Response version. It matches the version used in the request. |
-| msgId   | String | The `msgId` you sent in your request. |
-| code    | Number | Indicates if the request was successful. 0 means success, any non-zero value means failure. |
+| msgId   | String | The `msgId` provided in your request. |
+| code    | Number | Return code. `0` means success, any non-zero value indicates failure. |
 | message | String | Description of the request result. |
 | data    | String | 创建成功的自动化 ID（linkageId）。        |
 
@@ -191,8 +330,8 @@ Below is an example of the request body for `UpdateScriptAutomationRequest`:
 |---------|--------|----------------------------|
 | type    | String | The type of message in the response. Always set to `UpdateScriptAutomationResponse`.|
 | version | String | Response version. It matches the version used in the request.|
-| msgId   | String | The `msgId` you sent in your request.|
-| code    | Number | Indicates if the request was successful. 0 means success, any non-zero value means failure.|
+| msgId   | String | The `msgId` provided in your request.|
+| code    | Number | Return code. `0` means success, any non-zero value indicates failure.|
 | message | String | Description of the request result.  |
 | data    | String | Empty string.  |
 
@@ -372,7 +511,7 @@ Below is an example request body for `GetScriptAutomationDetailsRequest`:
 |-------------------|----------------|--------------------------------------------------------------------------------------------------|
 | type              | String         | The type of response message. Always set to `GetScriptAutomationDetailsResponse`.                |
 | version           | String         | API version. Always `v1`.                                                                        |
-| msgId             | String         | The `msgId` you sent in your request.                                                            |
+| msgId             | String         | The `msgId` provided in your request.                                                            |
 | data              | Object         | The returned object containing the automation's detailed information.                             |
 | data.linkageId    | String         | The automation ID.                                                                               |
 | data.name         | String         | The name of the automation.                                                                      |
@@ -438,8 +577,8 @@ Below is an example request body for `DeleteAutomationRequest`:
 |-----------|--------|------------------------------------------------------------|
 | type      | String | The type of message in the response. Always set to `DeleteAutomationResponse`. |
 | version   | String | Response version. Always set to `v1`.                      |
-| msgId     | String | The `msgId` you sent in your request.                      |
-| code      | Number | Indicates if the request was successful. 0 means success, any non-zero value means failure. |
+| msgId     | String | The `msgId` provided in your request.                      |
+| code      | Number | Return code. `0` means success, any non-zero value indicates failure. |
 | message   | String | Description of the request result.                         |
 | data      | String | An empty string.                                           |
 

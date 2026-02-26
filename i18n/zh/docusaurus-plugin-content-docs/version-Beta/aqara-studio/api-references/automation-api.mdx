@@ -1,5 +1,144 @@
 # 自动化 API
 
+## 查询设备可用于自动化的功能点信息
+
+通过调用本接口，您可获取所有设备中可用于自动化配置的功能点信息。返回内容包括各功能点的值类型、单位，以及其在自动化流程中的适用环节（如可作为 [触发器](./json-automation-script.mdx#starter)、[条件](./json-automation-script.mdx#condition) 或 [操作](./json-automation-script.mdx#action)）。
+
+#### 请求参数
+
+| 参数        | 类型    | 是否必需 | 说明                                               |
+| ----------- | ------- | ------- | -------------------------------------------------- |
+| type        | String  | ✓      | 请求的消息类型，必需为 `QueryDeviceSupportedScriptAutomationConfigRequest`。 |
+| version     | String  | ✓      | 请求接口版本号，必需为 `v1`。                     |
+| msgId       | String  | ✓      | 由您定义的请求 ID。                                |
+| data        | String  | ✓      | 此处传空字符串。                                        |
+
+#### 请求参数示例
+
+以下为 `QueryDeviceSupportedScriptAutomationConfigRequest` 的请求体示例：
+
+```json
+{
+    "type": "QueryDeviceSupportedScriptAutomationConfigRequest",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": ""
+}
+```
+
+#### 响应数据
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| type | String | 响应的消息类型，固定为 `QueryDeviceSupportedScriptAutomationConfigResponse`。 |
+| version | String | 响应接口版本号，与请求接口版本号一致。 |
+| msgId | String | 请求时传入的 `msgId`。 |
+| code | Number | 返回码，0 表示成功，非 0 表示失败。 |
+| data.devices | Array of Object | 设备信息列表。 |
+| data.devices[].deviceId | String | 设备 ID。 |
+| data.devices[].deviceName | String | 设备名称。 |
+| data.devices[].endpoints | Array of Object | 设备的端点信息列表。 |
+| data.devices[].endpoints[].endpointName | String | 端点名称。 |
+| data.devices[].endpoints[].endpointId | Number | 端点 ID。 |
+| data.devices[].endpoints[].properties | Array of Object | 功能点列表。|
+| data.devices[].endpoints[].properties[].functionCode | String | 功能代码。 |
+| data.devices[].endpoints[].properties[].functionName | String | 功能名称。 |
+| data.devices[].endpoints[].properties[].traitCode | String | 功能点代码。 |
+| data.devices[].endpoints[].properties[].traitName | String | 功能点名称。 |
+| data.devices[].endpoints[].properties[].valueType | String | 功能点值的类型（如 boolean、number 等）。 |
+| data.devices[].endpoints[].properties[].semanticRole | Array of String | 查询到该功能点在自动化中可用的环节范围，包括 [starter](./json-automation-script.mdx#starter)（可作为触发器）、[condition](./json-automation-script.mdx#condition)（可作为条件判断）、[action](./json-automation-script.mdx#action)（可作为操作）等，具体以返回的数组内容为准。 |
+| data.devices[].endpoints[].properties[].unit | String/null | 单位，若无单位则为 null。 |
+
+#### 响应数据示例
+
+以下为 `QueryDeviceSupportedScriptAutomationConfigResponse` 的响应示例：
+
+```json
+{
+    "type": "QueryDeviceSupportedScriptAutomationConfigResponse",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": {
+        "devices": [
+            {
+                "deviceId": "9f3e3632068ff047",
+                "deviceName": "Door and Window Magnet Sensor",
+                "endpoints": [
+                    {
+                        "endpointName": "Endpoint_2",
+                        "endpointId": 2,
+                        "properties": [
+                            {
+                                "functionCode": "OnOffSensor",
+                                "functionName": "OnOff Sensor",
+                                "traitCode": "BooleanState",
+                                "traitName": "Boolean State",
+                                "valueType": "boolean",
+                                "semanticRole": [
+                                    "starter",
+                                    "condition"
+                                ],
+                                "unit": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "deviceId": "af9e93b709de1fd9",
+                "deviceName": "Motion Sensor",
+                "endpoints": [
+                    {
+                        "endpointName": "Endpoint_2",
+                        "endpointId": 2,
+                        "properties": [
+                            {
+                                "functionCode": "OnOffSensor",
+                                "functionName": "OnOff Sensor",
+                                "traitCode": "BooleanState",
+                                "traitName": "Boolean State",
+                                "valueType": "boolean",
+                                "semanticRole": [
+                                    "starter",
+                                    "condition"
+                                ],
+                                "unit": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "deviceId": "947793560f5b2fbd",
+                "deviceName": "Flood Detector",
+                "endpoints": [
+                    {
+                        "endpointName": "Endpoint_2",
+                        "endpointId": 2,
+                        "properties": [
+                            {
+                                "functionCode": "OnOffSensor",
+                                "functionName": "OnOff Sensor",
+                                "traitCode": "BooleanState",
+                                "traitName": "Boolean State",
+                                "valueType": "boolean",
+                                "semanticRole": [
+                                    "starter",
+                                    "condition"
+                                ],
+                                "unit": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            ...
+        ]
+    },
+    "code": 0
+}
+```
+
 ## 创建自动化   
 
 调用本接口，您可以创建并启用一个自动化。
