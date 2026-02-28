@@ -17,7 +17,7 @@
 
 该方法负责向 Aqara Studio 声明“该设备具备哪些功能点”。
 
-您需根据设备的协议，在返回数组中填写一个或多个待发现功能点结构（如 `pointId` 等，详情请见 [point 对象结构](#point-对象结构)）。这样，Aqara Studio 才能在功能点发现流程中会调用该函数，解析返回值，从而识别设备具备的所有功能点，实现功能点无缝接入和控制。
+您需要在返回数组中填写一个或多个待发现功能点结构（如 `pointId` 等，详情请见 [point 对象结构](#point-对象结构)）。这样，Aqara Studio 才能在功能点发现流程中会调用该函数，解析返回值，从而识别设备具备的所有功能点，实现功能点无缝接入和控制。
 
 ### point 对象结构
 
@@ -30,8 +30,8 @@
 | traitId   | 对应 Aqara Spec 的 `traitId`，具体值请参考 Aqara Spec 相关文档。                                      |
 | dataType  | 功能点数据类型，支持以下取值：<ul><li><code>bool</code>：布尔型</li><li><code>numerical</code>：数值型</li><li><code>text</code>：文本型</li></ul> |
 | access    | 读写类型，<ul><li>1：仅可读</li><li>2：可读可写</li></ul>                                 |
-| subTopic  | （仅适用于 MQTT 设备）Aqara Studio 通过订阅该 Topic 获取功能点的最新数据。具体 Topic 请根据设备协议或厂商文档填写。  |
-| pubTopic  | （仅适用于 MQTT 设备）Aqara Studio 通过向此 Topic 发送消息数据控制功能点。具体 Topic 请根据设备协议或厂商文档填写。（对于仅可读的功能点，此字段留空）        |
+| subTopic  | （**仅适用于 MQTT 设备**）Aqara Studio 通过订阅该 Topic 获取功能点的最新数据。具体 Topic 请根据设备协议或厂商文档填写。  |
+| pubTopic  | （**仅适用于 MQTT 设备**）Aqara Studio 通过向此 Topic 发送消息数据控制功能点。具体 Topic 请根据设备协议或厂商文档填写。（对于仅可读的功能点，此字段留空）        |
 
 :::tip
 新增功能点时，您可以根据实际情况选择两种方式：
@@ -84,19 +84,18 @@ function parseDiscoverPointsResponse() {
 
 ## parseReportRequest
 
-该方法负责从设备上报的 JSON 数据中，解析出指定功能点（`pointId`）的当前值。
+该方法负责从设备上报的数据解析出指定功能点（`pointId`）的当前值。
 
-当 Aqara Studio 收到设备上报消息时，会调用此函数并传入功能点 ID 和原始 JSON 字符串，函数会从其中的 `values` 字段提取出对应 `pointId` 的值。这样 Aqara Studio 才能实时更新与展示功能点值。
+当 Aqara Studio 收到设备上报消息时，会调用此函数并传入功能点 ID 和原始消息字符串。您需要在本函数中实现从其中的 `values` 字段提取出对应 `pointId` 的值。这样 Aqara Studio 才能实时更新与展示功能点值。
 
 :::tip
-- 请首先确认设备的上报数据格式是否为标准 JSON 字符串，若为其他字符串格式，请相应调整函数解析逻辑；
-- 请根据设备的实际上报协议，自定义实现数据解析，确保能够准确从 JSON 结构中提取出 `pointId` 所对应的值（如：MQTT 设备需从 `obj["values"][pointId]` 读取）。
+请结合设备的实际数据上报协议，自定义解析逻辑，确保能准确从原始消息中提取 `pointId` 对应的数值（例如示例中的 `obj["values"][pointId]`）。
 :::
 
 ### 示例
 
 ```javascript
-// 以下为解析 MQTT 设备上报数据为例
+// 以下为解析 MQTT 设备上报 JSON 消息字符串的示例
 function parseReportRequest(pointId, jsonStr) {
 	try {
 		const obj = JSON.parse(jsonStr);
@@ -109,16 +108,16 @@ function parseReportRequest(pointId, jsonStr) {
 
 ## buildWriteRequest
 
-该方法负责根据要控制的功能点 ID 和设定的值，构造向设备下发控制指令的 JSON 数据。
+该方法负责根据要控制的功能点 ID 和设定的值，构造向设备下发控制指令的字符串。
 
-当 Aqara Studio 需要向设备发送控制命令（如开关、设定温度）时，会调用此函数，传入目标功能点 ID 和要设置的数值。函数需返回一个 JSON 字符串，该字符串需符合设备协议的控制指令格式，通常包含设备标识、时间戳和具体的值字段。
+当 Aqara Studio 需要向设备发送控制命令（如开关、设定温度）时，会调用此函数，传入目标功能点 ID 和要设置的数值。函数需返回一个字符串，该字符串需符合设备协议的控制指令格式，通常包含设备标识、时间戳和具体的值字段。
 
-请根据设备实际的上报协议或接收到的原始 JSON 报文格式，在函数内部合理构建对象结构。例如，以 MQTT 设备为例，应包含 `node`、`group`、`timestamp` 等字段，并将 `pointId` 对应的值被写入 `values` 字段。确保生成的 JSON 能够符合设备协议要求，并能被设备正确解析与执行操作。
+请根据设备实际可接受的报文格式，在函数内部合理构建对象结构。例如，以 MQTT 设备为例，可包含 `node`、`group`、`timestamp` 等字段，并将 `pointId` 对应的值被写入 `values` 字段。
 
 ### 示例
 
 ```javascript
-// 以 MQTT 设备为例
+// 以通过 JSON 字符串控制 MQTT 设备为例
 // value 参数由 Aqara Studio 自动传入，无需手动声明或赋值
 function buildWriteRequest(pointId, value) {
 	try {

@@ -1,1 +1,221 @@
 # JavaScript Script for Adding Data Points
+
+This document introduces how to use a JavaScript script in Aqara Studio to add device data points and their parsing methods.
+
+## Script Overview
+
+The script **must** include the following 3 JavaScript methods:
+- [parseDiscoverPointsResponse](#parsediscoverpointsresponse)
+- [parseReportRequest](#parsereportrequest)
+- [buildWriteRequest](#buildwriterequest)
+
+:::tip
+Do not modify the parameters or the input and output structures of these methods.
+:::
+
+## parseDiscoverPointsResponse
+
+This method declares to Aqara Studio "which data points this device supports".
+
+You need to return an array containing one or more data point objects (such as `pointId`, etc.; for more details, please refer to [Point Object Structure](#point-object-structure)). Aqara Studio will call this function during the discovery process of data points, parse the return value, and thus identify all data points supported by the device, enabling seamless integration and control of these points.
+
+### Point Object Structure
+
+| Field Name | Description |
+|-----------|-------------|
+| pointId   | Data point ID. Please consult the device manufacturer to obtain the actual ID to allow Aqara Studio to discover this point. |
+| pointName | Name for the data point defined by you. |
+| pointType | Same as the `deviceType` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
+| functionId| Same as the `functionId` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
+| traitId   | Same as the `traitId` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
+| dataType  | Data point type. Supported values: <ul><li><code>bool</code>: Boolean</li><li><code>numerical</code>: Numeric</li><li><code>text</code>: Text</li></ul> |
+| access    | Access mode of the resource. <ul><li>1: Read-only</li><li>2: Read-write</li></ul> |
+| subTopic  | (**Only applicable for MQTT devices**) Aqara Studio subscribes to this topic to get the latest data for this point. Please fill in according to your device protocol or manufacturer documentation. |
+| pubTopic  | (**Only applicable for MQTT devices**) Aqara Studio sends control message data to this topic for the data point. Please fill in according to your device protocol or manufacturer documentation. (For read-only points, leave this field empty) |
+
+:::tip
+When adding new data points, you may choose one of the following approaches depending on your needs:
+
+- **Based on Aqara Spec**: You need to fill in fields such as `pointType`, `functionId`, and `traitId`, which enables the data point to be compatible with the Aqara protocol.
+- **General Approach**: You only need to fill in the basic fields such as `dataType` and `access`.
+:::
+
+### Example
+
+```javascript
+function parseDiscoverPointsResponse() {
+	return [
+		{
+			pointId: "1#Chiller Operation Status",
+			pointName: "1#Chiller Operation Status",
+			pointType: "AirConditioner",
+			functionId: 132,
+			traitId: 32920,
+			subTopic: "/WEI-iEdge/realdata/xxx",
+			pubTopic: "/WEI-iEdge/write/req/xxx"
+		},
+		{
+			pointId: "1#Chiller On/Off Read",
+			pointName: "1#Chiller On/Off Read",
+			dataType: "bool",
+			access: 1,
+			subTopic: "/WEI-iEdge/realdata/xxx",
+			pubTopic: "/WEI-iEdge/write/req/xxx"
+		},
+		{
+			pointId: "1#Chiller Outlet Water Temp Set Read",
+			pointName: "1#Chiller Outlet Water Temp Set Read",
+			dataType: "numerical",
+			access: 2,
+			subTopic: "/WEI-iEdge/realdata/xxx",
+			pubTopic: "/WEI-iEdge/write/req/xxx"
+		},
+		{
+			pointId: "1#Chiller Cooling Capacity Percentage",
+			pointName: "1#Chiller Cooling Capacity Percentage",
+			dataType: "numerical",
+			access: 2,
+			subTopic: "/WEI-iEdge/realdata/xxx",
+			pubTopic: "/WEI-iEdge/write/req/xxx"
+		}
+	];
+}
+```
+
+## parseReportRequest
+
+This method extracts the current value of a specified data point (`pointId`) from the reported data sent by the device.
+
+When Aqara Studio receives a message reported by the device, it will call this function and pass in the data point ID and the original message string. You need to implement logic in this function to extract the value corresponding to the specified `pointId` from the `values` field. In this way, Aqara Studio can update and display the value of the data point in real time.
+
+:::tip
+Please customize the parsing logic based on the actual data reporting protocol of your device to ensure you can accurately extract the numeric value corresponding to `pointId` from the original message (for example, `obj["values"][pointId]` in the example).
+:::
+
+### Example
+
+```javascript
+// The following example parses a JSON message string reported from an MQTT device
+function parseReportRequest(pointId, jsonStr) {
+	try {
+		const obj = JSON.parse(jsonStr);
+		return obj["values"][pointId]?.toString();
+	} catch (e) {
+		return null;
+	}
+}
+```
+
+## buildWriteRequest
+
+This method constructs the command string to control the device based on the data point ID to control and the value to set.
+
+When Aqara Studio needs to send a control command to a device (such as switch on or off the device, set temperature), it will call this function and pass in the target data point ID and the value to be set. The function must return a string that meets the control command format required by the device protocol, usually including device identifier, timestamp, and specific value fields.
+
+Please construct the object structure within the function according to the actual acceptable message format of your device. For example, for an MQTT device, you may include fields like `node`, `group`, `timestamp`, and write the value corresponding to `pointId` in the `values` field.
+
+### Example
+
+```javascript
+// Example: Control an MQTT device via a JSON string
+// The value parameter is automatically passed in by Aqara Studio; no need to manually declare or assign it
+function buildWriteRequest(pointId, value) {
+	try {
+		const obj = {
+			"node": "Chiller",
+			"group": "1#Chiller",
+			"timestamp": 1768204054654,
+			"values": {
+
+			},
+			"errors": {
+
+			},
+			"metas": {
+
+			}
+		};
+		obj.values[pointId] = parseFloat(value);
+		return JSON.stringify(obj);
+	} catch (e) {
+		return null;
+	}
+}
+```
+
+## Complete Example
+
+Below is a complete example for adding data points for an MQTT device:
+
+```javascript
+function parseDiscoverPointsResponse() {
+	return [
+		{
+			pointId: "1#Chiller Operation Status",
+			pointName: "1#Chiller Operation Status",
+			pointType: "AirConditioner",
+			functionId: 132,
+			traitId: 32920,
+			subTopic: "/WEI-iEdge/realdata/xxx",
+			pubTopic: "/WEI-iEdge/write/req/xxx"
+		},
+		{
+			pointId: "1#Chiller On/Off Read",
+			pointName: "1#Chiller On/Off Read",
+			dataType: "bool",
+			access: 1,
+			subTopic: "/WEI-iEdge/realdata/xxx",
+			pubTopic: "/WEI-iEdge/write/req/xxx"
+		},
+		{
+			pointId: "1#Chiller Outlet Water Temp Set Read",
+			pointName: "1#Chiller Outlet Water Temp Set Read",
+			dataType: "numerical",
+			access: 2,
+			subTopic: "/WEI-iEdge/realdata/xxx",
+			pubTopic: "/WEI-iEdge/write/req/xxx"
+		},
+		{
+			pointId: "1#Chiller Cooling Capacity Percentage",
+			pointName: "1#Chiller Cooling Capacity Percentage",
+			dataType: "numerical",
+			access: 2,
+			subTopic: "/WEI-iEdge/realdata/xxx",
+			pubTopic: "/WEI-iEdge/write/req/xxx"
+		}
+	];
+}
+
+function parseReportRequest(pointId, jsonStr) {
+	try {
+		const obj = JSON.parse(jsonStr);
+		return obj["values"][pointId]?.toString();
+	} catch (e) {
+		return null;
+	}
+}
+
+// The value parameter is automatically passed in by Aqara Studio; no need to manually declare or assign it
+function buildWriteRequest(pointId, value) {
+	try {
+		const obj = {
+			"node": "Chiller",
+			"group": "1#Chiller",
+			"timestamp": 1768204054654,
+			"values": {
+				
+			},
+			"errors": {
+				
+			},
+			"metas": {
+				
+			}
+			};
+		obj.values[pointId] = parseFloat(value);
+		return JSON.stringify(obj);
+	} catch (e) {
+		return null;
+	}
+}
+```
