@@ -66,5 +66,9 @@
   "sidebar.aqaraStudioSidebar.category.Data Export API": {
     "message": "数据转出 API",
     "description": "The label for category 'Data Export API' in sidebar 'aqaraStudioSidebar'"
+  },
+  "sidebar.aqaraStudioSidebar.category.Reference": {
+    "message": "参考信息",
+    "description": "The label for category 'Reference' in sidebar 'aqaraStudioSidebar'"
   }
 }
