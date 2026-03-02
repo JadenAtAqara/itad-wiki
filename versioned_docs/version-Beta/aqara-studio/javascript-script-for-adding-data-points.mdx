@@ -45,6 +45,7 @@ When adding new data points, you may choose one of the following approaches depe
 ```javascript
 function parseDiscoverPointsResponse() {
 	return [
+		// Add points based on Aqara Spec
 		{
 			pointId: "1#Chiller Operation Status",
 			pointName: "1#Chiller Operation Status",
@@ -54,6 +55,7 @@ function parseDiscoverPointsResponse() {
 			subTopic: "/WEI-iEdge/realdata/xxx",
 			pubTopic: "/WEI-iEdge/write/req/xxx"
 		},
+		// Add points by the general approach
 		{
 			pointId: "1#Chiller On/Off Read",
 			pointName: "1#Chiller On/Off Read",
@@ -150,6 +152,7 @@ Below is a complete example for adding data points for an MQTT device:
 ```javascript
 function parseDiscoverPointsResponse() {
 	return [
+		// Add points based on Aqara Spec
 		{
 			pointId: "1#Chiller Operation Status",
 			pointName: "1#Chiller Operation Status",
@@ -159,6 +162,7 @@ function parseDiscoverPointsResponse() {
 			subTopic: "/WEI-iEdge/realdata/xxx",
 			pubTopic: "/WEI-iEdge/write/req/xxx"
 		},
+		// Add points by the general approach
 		{
 			pointId: "1#Chiller On/Off Read",
 			pointName: "1#Chiller On/Off Read",

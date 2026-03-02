@@ -45,6 +45,7 @@
 ```javascript
 function parseDiscoverPointsResponse() {
 	return [
+		// 基于 Aqara Spec 接入功能点
 		{
 			pointId: "1#冷机运行状态",
 			pointName: "1#冷机运行状态",
@@ -54,6 +55,7 @@ function parseDiscoverPointsResponse() {
 			subTopic: "/WEI-iEdge/realdata/7a1dd258f32940d95a542c68",
 			pubTopic: "/WEI-iEdge/write/req/7a1dd258f32940d95a542c68"
 		},
+		// 基于通用方式接入功能点
 		{
 			pointId: "1#冷机关机/开机读",
 			pointName: "1#冷机关机/开机读",
@@ -150,6 +152,7 @@ function buildWriteRequest(pointId, value) {
 ```javascript
 function parseDiscoverPointsResponse() {
 	return [
+		// 基于 Aqara Spec 接入功能点
 		{
 			pointId: "1#冷机运行状态",
 			pointName: "1#冷机运行状态",
@@ -159,6 +162,7 @@ function parseDiscoverPointsResponse() {
 			subTopic: "/WEI-iEdge/realdata/7a1dd258f32940d95a542c68",
 			pubTopic: "/WEI-iEdge/write/req/7a1dd258f32940d95a542c68"
 		},
+		// 基于通用方式接入功能点
 		{
 			pointId: "1#冷机关机/开机读",
 			pointName: "1#冷机关机/开机读",
