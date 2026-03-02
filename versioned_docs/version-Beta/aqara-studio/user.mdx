@@ -1,46 +1,46 @@
 # User
 
-After logging into Aqara Studio with the default account, go to the **User** page in the left sidebar to [add](#add-users) and [delete](#delete-users) users, [edit user information](#edit-user-information), [reset user passwords](#reset-password), and [add user groups](#add-user-groups).
+After logging into Aqara Studio with the default account, go to the **User** page in the left sidebar to [add](#add-local-users) and [delete](#delete-local-users) local users, [edit local user information](#edit-local-user-information), [reset local user passwords](#reset-local-user-password), and [add user groups](#add-user-groups).
 
 ## Basic Concepts
 
-Before managing users, it is helpful to understand two core concepts: "user roles" and "user groups." These will assist you in efficiently assigning permissions and managing accounts.
+Before managing users, it is helpful to understand two core concepts: "local user roles" and "user groups." These will assist you in efficiently assigning permissions and managing accounts.
 
-### User Roles
+### Local User Roles
 
-Aqara Studio comes with three built-in user roles, each with different permission scopes. When creating a new user, the role must be assigned by the super admin. The roles and their permissions are described in the following table:
+Aqara Studio comes with three built-in local user roles, each with different permission scopes. When creating a new local user, the role must be assigned by the super admin. The roles and their permissions are described in the following table:
 
 | Role    | Permission Scope |
 | ------- | --------------- |
-| Super admin   | <ul><li>User management (add, delete, edit users)</li><li>License management</li><li>Full read/write access to all features and data without any restrictions.</li></ul> |
+| Super admin   | <ul><li>Local user management (add, delete, and edit local users)</li><li>License management</li><li>Full read/write access to all features and data without any restrictions.</li></ul> |
 | Admin   | After authorization from the super admin, the role has read and write access to assigned features and data. |
 | Operator| After authorization from the super admin, the role has read-only access to assigned features and data. |
 
 ### User Groups
 
-A user group is used to batch assign roles and permissions, making user management more convenient and efficient. When multiple users are added to the same user group, they share the same set of permissions.
+A user group is used to batch assign roles and permissions, making local user management more convenient and efficient. When multiple users are added to the same user group, they share the same set of permissions.
 
 ### Permission Overlay
 
-After joining a user group, a user's personal role and permissions are combined with those of the user group. The effective permissions are the sum of both.
+After joining a user group, a local user's personal role and permissions are combined with those of the user group. The effective permissions are the sum of both.
 
-## Add Users
+## Add Local Users
 
 1. Select the **User** tab, and click the **Add** button.
 
-2. Fill in the required information such as username and role in the popup, then click **Confirm** to add the user.
+2. Fill in the required information such as username and role in the popup, then click **Confirm** to add the local user.
 
-3. The system will display a prompt indicating the user was added successfully and automatically generate an initial password for the new user. Please keep this password safe.
+3. The system will display a prompt indicating the local user was added successfully and automatically generate an initial password for the new user. Please keep this password safe.
 
-4. Return to the user list, and in the row for the new user, click the **Edit** button. In the **User Information** popup, switch to the **Access Permission** tab.
+4. Return to the user list, and in the row for the new local user, click the **Edit** button. In the **User Information** popup, switch to the **Access Permission** tab.
 
-5. In the **Access Permission** tab, select the functions the user can access, then click **Confirm** to save the settings.
+5. In the **Access Permission** tab, select the functions the local user can access, then click **Confirm** to save the settings.
 
-6. The first time the new user logs into Aqara Studio with their username and initial password, the system will require them to change their password to ensure account security.
+6. The first time the new local user logs into Aqara Studio with their username and initial password, the system will require them to change their password to ensure account security.
 
-## Delete Users
+## Delete Local Users
 
-Open the **User** tab, find the row for the target user, and click the **Delete icon** to remove the user.
+Open the **User** tab, find the row for the target local user, and click the **Delete icon** to remove the user.
 
 ## Add User Groups
 
@@ -48,14 +48,14 @@ Open the **User** tab, find the row for the target user, and click the **Delete 
 
 2. In the popup, enter the group name, assign roles (multiple can be selected), and optionally add users. Click **Confirm** to create the user group.
 
-## Edit User Information
+## Edit Local User Information
 
-Open the **User** tab, find the target user, and click the **Edit** button to edit the user's basic information, custom configurations, and access permissions.
+Open the **User** tab, locate the row of the target local user, click the **...** button, and select the **Edit** button to edit the local user's basic information, custom configurations, and access permissions.
 - Basic information: nickname, role, user group, language, email, phone number.
-- Custom configuration: expiration time, auto-logout enabled, auto-logout period.
+- Custom configuration: expiration time, auto-logoff enabled, auto-logoff period.
 - Access permissions.
 
 ## Reset Password
 
-1. Open **User**, find the target user, and click the **Reset password** button to reset the user's password to a new initial password.
+1. Open **User Management**, locate the row of the target local user, click the **...** button, and select **Reset password** from the dropdown list to reset the user's password to a new initial password.
 2. Save the new initial password shown in the popup. The user will be prompted to change their password after logging in to Aqara Studio with the new initial password.

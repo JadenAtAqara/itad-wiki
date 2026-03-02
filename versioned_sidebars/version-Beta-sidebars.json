@@ -45,7 +45,7 @@
                     "aqara-studio/device-management/alarms",
                     "aqara-studio/device-management/tags",
                     "aqara-studio/device-management/references",
-                    "aqara-studio/device-management/control-third-party-devices-on-aqara-home-app"
+                    "aqara-studio/device-management/control-third-party-devices-via-aqara-home-app"
                   ]
               },
               {
