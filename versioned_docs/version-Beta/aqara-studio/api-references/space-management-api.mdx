@@ -1,0 +1,346 @@
+# Space Management API
+
+## Query Space List
+
+Retrieve the list of all spaces created in Aqara Studio.
+
+This API retrieves the list of all spaces created in Aqara Studio, supporting hierarchical nesting to facilitate management and display of the space tree structure.
+
+
+#### Request Parameters
+
+| Parameter | Type   | Required | Description                                                                 |
+|-----------|--------|----------|-----------------------------------------------------------------------------|
+| type      | String | Yes      | The message type. Must be `GetSpacesRequest`.                    |
+| version   | String | Yes      | The version of the API. Must be `v1`.                                                  |
+| msgId     | String | Yes      | A request ID defined by you.                                                 |
+
+#### Request Example
+
+Below is a example request body for `GetSpacesRequest`:
+
+``` json
+{
+    "type" : "GetSpacesRequest",
+    "version":"v1",
+    "msgId" : "1751609244328"
+}
+```
+
+#### Response Data
+
+| Parameter         | Type            | Description                                                               |
+|-------------------|-----------------|---------------------------------------------------------------------------|
+| type              | String          | The response message type. Always GetSpacesResponse.      |
+| version           | String          | The response version. Matches the request API version.                  |
+| msgId             | String          | The `msgId` sent in the request.                                          |
+| code              | Number          | Status code for the control operation:<ul><li>0: At least one trait was controlled successfully.</li><li>Non-zero: All trait controls failed.</li></ul>                 |
+| data              | Array of Object | Response data.                                                            |
+| data[].spaceId    | String          | Space ID.                                                                 |
+| data[].name       | String          | Space name.                                                               |
+| data[].children   | Array of Object | List of child spaces. For detailed structure, refer to [Space Structure](#space-structure). |
+
+#### Space Structure
+
+| Parameter         | Type           | Description                                                                                                                                    |
+|-------------------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| parentSpaceId | String | Parent space ID. If this field is not present, the space is a top-level space (i.e., has no parent space). |
+| spaceId           | String         | Space ID.                                                                                                                                      |
+| name              | String         | Space name.                                                                                                                                    |
+| spatialMarking    | String / Null  | Spatial marking.                                                                                                                               |
+| children          | Array of Object| List of child spaces. For detailed structure, refer to [Space Structure](#space-structure). If the request message type is [GetDeviceInfoRequest](./trait-api.mdx#query-device-ids-by-pages) or [GetAllDeviceInfoRequest](./trait-api.mdx), this field will not be present. |
+
+#### Example Response
+
+Below is a sample response for `GetSpacesResponse`:
+
+```json
+{
+    "type": "GetSpacesResponse",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": [
+        {
+            "spaceId": "15cdd37",
+            "name": "One-bedroom Apartment",
+            "children": [
+                {
+                    "parentSpaceId": "15cdd37",
+                    "spaceId": "15cdd39",
+                    "name": "Living Room",
+                    "spatialMarking": "living_room"
+                },
+                {
+                    "parentSpaceId": "15cdd37",
+                    "spaceId": "15cdd3b",
+                    "name": "Kitchen",
+                    "spatialMarking": "kitchen"
+                },
+                {
+                    "parentSpaceId": "15cdd37",
+                    "spaceId": "15cddaa",
+                    "name": "Study",
+                    "spatialMarking": "",
+                    "children": [
+                        {
+                            "parentSpaceId": "15cddaa",
+                            "spaceId": "15fd66f",
+                            "name": "Bookshelf"
+                        },
+                        {
+                            "parentSpaceId": "15cddaa",
+                            "spaceId": "15fd670",
+                            "name": "Desk"
+                        }
+                    ]
+                },
+                {
+                    "parentSpaceId": "15cdd37",
+                    "spaceId": "15ea8f4",
+                    "name": "Bedroom"
+                }
+            ]
+        },
+        {
+            "spaceId": "15cf659",
+            "name": "p2"
+        },
+        {
+            "spaceId": "15ed481",
+            "name": "Building 1 - Room 101",
+            "children": [
+                {
+                    "parentSpaceId": "15ed481",
+                    "spaceId": "15f7fec",
+                    "name": "1",
+                    "children": [
+                        {
+                            "parentSpaceId": "15f7fec",
+                            "spaceId": "15f7ff0",
+                            "name": "12"
+                        }
+                    ]
+                },
+                {
+                    "parentSpaceId": "15ed481",
+                    "spaceId": "15f8059",
+                    "name": "2",
+                    "spatialMarking": "",
+                    "children": [
+                        {
+                            "parentSpaceId": "15f8059",
+                            "spaceId": "15f812b",
+                            "name": "21",
+                            "spatialMarking": "",
+                            "children": [
+                                {
+                                    "parentSpaceId": "15f812b",
+                                    "spaceId": "15fd66e",
+                                    "name": "212"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "parentSpaceId": "15ed481",
+                    "spaceId": "15f80c3",
+                    "name": "3",
+                    "spatialMarking": ""
+                }
+            ]
+        }
+    ],
+    "code": 0
+}
+```
+
+## Create A Space
+
+This API is used to create a space in Aqara Studio. Users can specify the name, spatial mark, and parent space ID of the space. If the parent space ID is not specified, the new space will be created as a top-level space. The response from this API will return the unique ID of the newly created space.
+
+#### Request Parameters
+
+| Parameter         | Type   | Required | Description                                                  |
+|-------------------|--------|----------|--------------------------------------------------------------|
+| type              | String | Yes      | The message type. Must be `CreateSpaceRequest`.              |
+| version           | String | Yes      | The API version. Must be `v1`.                               |
+| msgId             | String | Yes      | A request ID defined by you.                                 |
+| data              | Object | Yes      | The request data.                                            |
+| data.parentSpaceId| String | No       | Parent space ID. If it is blank, the API will create a top-level space.    |
+| data.name         | String | Yes      | Space name.                                                  |
+| data.spatialMarking | String | No    | Spatial marking for the space.                               |
+
+#### Request Example
+
+Below is an example request body for `CreateSpaceRequest`:
+
+```json
+{
+    "type" : "CreateSpaceRequest",
+    "version": "v1",
+    "msgId" : "1751609244328",
+    "data": {
+        "parentSpaceId": "",
+        "name": "Building 2",
+        "spatialMarking": ""
+    }
+}
+```
+
+
+#### Response Data
+
+| Parameter | Type   | Description                                                                                                              |
+|-----------|--------|--------------------------------------------------------------------------------------------------------------------------|
+| type      | String | The response message type. Always `CreateSpaceResponse`.                                                                 |
+| version   | String | The response version. Matches the request API version.                                                                   |
+| msgId     | String | The `msgId` sent in the request.                                                                                         |
+| data      | String | The newly created space ID.                                                                                              |
+| code      | Number | Status code indicating whether the request was successful. 0 means success, non-zero means failure.                      |
+| message   | String | Error message if the operation failed.                                                                                   |
+
+#### Example Response  
+
+Below is a sample response for `CreateSpaceResponse`:
+
+```json
+{
+    "type": "CreateSpaceResponse",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": "15fd672",
+    "code": 0
+}
+```
+
+## Update A Space
+
+This API is used to update the name or spatial marking of an existing space.
+
+#### Request Parameters
+
+| Parameter           | Type   | Required | Description                                                                               |
+|---------------------|--------|----------|-------------------------------------------------------------------------------------------|
+| type                | String | Yes      | The message type. Must be `UpdateSpaceRequest`.                                           |
+| version             | String | Yes      | The API version. Must be `v1`.                                                            |
+| msgId               | String | Yes      | A request ID defined by you.                                                              |
+| data                | Object | Yes      | The request data.                                                                         |
+| data.spaceId        | String | Yes      | The space ID.                                                                             |
+| data.name           | String | No       | The new space name.                                                                       |
+| data.spatialMarking | String | No       | The new spatial marking.                                                    |
+
+#### Request Example
+
+Below is an example request body for `UpdateSpaceRequest`:
+
+```json
+{
+    "type" : "UpdateSpaceRequest",
+    "version":"v1",
+    "msgId" : "1751609244328",
+    "data":{
+        "spaceId":"15fd672",
+        "name": "2栋",
+        "spatialMarking": "The second building"
+    }
+}
+```
+
+#### Response Data
+
+| Parameter | Type   | Description                                                                 |
+|-----------|--------|-----------------------------------------------------------------------------|
+| type      | String | The response message type. Always `UpdateSpaceResponse`.                    |
+| version   | String | The response version. Matches the API version in the request.               |
+| msgId     | String | The `msgId` you provided in the request.                                    |
+| data      | String | An empty string.                                                            |
+| code      | Number | Whether the request was successful. 0 means success; non-0 means failure.   |
+| message   | String | Description of the API call result.                                   |
+
+#### Example Response
+
+Below is a sample response for `UpdateSpaceResponse`:
+
+```json
+{
+    "type": "UpdateSpaceResponse",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": "",
+    "code": 0,
+    "message": ""
+}
+```
+
+## Associate Devices with Space
+
+This API is used to associate one or more devices with a specified space, that is, to allocate devices to a space. By calling this API, users can batch bind devices to a certain space, enabling organized management of spaces and devices.
+
+The request requires the target space ID and a list of device IDs to be associated. The system will attempt to associate these devices with the specified space, and the response will return the results of the association operation (only the failed associations will be returned).
+
+
+#### Request Parameters
+
+| Parameter      | Type              | Required | Description                                                   |
+|----------------|-------------------|----------|---------------------------------------------------------------|
+| type           | String            | Yes      | The message type. Must be `AssociateDevicesToSpaceRequest`.   |
+| version        | String            | Yes      | The API version. Must be `v1`.                                |
+| msgId          | String            | Yes      | A request ID defined by you.                                  |
+| data           | Object            | Yes      | The request data.                                             |
+| data.spaceId   | String            | Yes      | The space ID.                                                 |
+| data.deviceIds | Array of String   | Yes      | The list of device IDs.                                       |
+
+#### Request Example
+
+Below is an example request body for `AssociateDevicesToSpaceRequest`:
+
+```json
+{
+    "type" : "AssociateDevicesToSpaceRequest",
+    "version":"v1",
+    "msgId" : "1751609244328",
+    "data":{
+        "spaceId":"15eeb3e",
+        "deviceIds":[
+            "b8f3e1229c0255f7", 
+            "8d62c0b94226fd43", 
+            "b68d1ad781753520"
+        ]
+    }
+}
+```
+
+#### Response Data
+
+| Parameter         | Type            | Description                                                               |
+|-------------------|-----------------|---------------------------------------------------------------------------|
+| type              | String          | The response message type. Always `AssociateDevicesToSpaceResponse`.       |
+| version           | String          | The response version, same as the request API version.                     |
+| msgId             | String          | The `msgId` provided in your request.                                      |
+| code              | Number          | It indicates if the request was successful. 0 means success, and non-zero means failure. |
+| data              | Array of Object | The list of devices that failed to be associated; only failed device are returned. |
+| data[].deviceId   | String          | Device ID.                                                                 |
+| data[].code       | Number          | The association result for this device. 0 means success, and non-zero means failure. |
+| data[].message    | String          | Failure description.                                               |
+
+#### Example Response
+
+Below is a sample response for `AssociateDevicesToSpaceResponse`:
+
+```json
+{
+    "type": "AssociateDevicesToSpaceResponse",
+    "version": "v1",
+    "msgId": "1751609244328",
+    // The data array only contains information about failed devices; successful devices will not appear in this array
+    "data": [
+        {
+            "deviceId": "b8f3e1229c0255f7",
+            "code": 2030,
+            "message": "Device is not exists"
+        }
+    ],
+    "code": 0
+}
+```

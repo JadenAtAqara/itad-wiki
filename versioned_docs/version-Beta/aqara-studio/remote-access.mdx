@@ -14,3 +14,39 @@ Before using remote access, please ensure that you have logged in to your **Aqar
 2. In the left menu, click on **Studios**.
 3. In the **Studio Instances & Projects** list, find the device corresponding to your Aqara Studio IP and click on its **Connect** button.
 4. A new page will automatically open, displaying the remote access interface for your Aqara Studio. The URL shown in your browser’s address bar is the remote access address for that device.
+5. After opening the remote access address, log in with your Aqara Builder account that is bound to the Workspace; you will then have remote administrator access to Aqara Studio.
+
+    :::tip
+    You can also use an existing local user account to log in to the remote access address. The permissions granted will be exactly the same as those for local access. For details, please refer to [Local User Management - Local User Roles](./user.mdx#local-user-roles).
+    :::
+
+## Invite Other Users
+
+1. Visit [Aqara Builder](https://builder.aqara.com/), select your bound Aqara Workspace on the left, and click **Manage Workspaces**.
+
+    :::tip
+    To allow other Aqara Builder users to access your Aqara Studio, you need to connect to an Aqara Workspace that is not of type `Personal`.
+    :::
+
+2. In the **Manage Workspaces** popup, click the **Invite Members** button to open the invitation window.
+3. In the popup, enter the email address of an Aqara Builder user and assign a role (`Operator` or `Admin`). For details on role permissions, please refer to [Remote User Roles](#remote-user-roles).
+4. Once the invited user accepts the invitation, they can securely log in remotely and access your Aqara Studio using their Aqara Builder account (i.e., registered email and password).
+
+## Remote User Roles
+
+A remote user refers to a user who accesses Aqara Studio using an Aqara Builder account. Remote users can have either the operator or admin role. Their permissions are as follows:
+
+| Feature              | Admin (Remote) | Operator (Remote) |
+| -------------------- | ---------------- | ------------- |
+| Device Logs          | ✗                | ✗             |
+| Link Logs            | ✗                | ✗             |
+| User Operation Logs  | ✗                | ✗             |
+| System Upgrade Logs  | ✗                | ✗             |
+| Local User Management| ✗                | ✗             |
+| Backup & Restore     | ✗                | ✗             |
+| Cloud Connection     | ✗                | ✗             |
+| Remote Access        | ✗                | ✗             |
+| System Update        | ✗                | ✗             |
+| About                | ✗                | ✗             |
+| Developer            | ✗                | ✗             |
+| Others               | ✓                | ✓             |
