@@ -14,3 +14,39 @@
 2. 在左侧菜单中点击进入 **Studios**。
 3. 在 **Studio Instances & Projects** 列表中，找到与您的 Aqara Studio IP 相对应的设备，点击其 **Connect** 按钮。
 4. 系统会自动弹出新页面，打开该 Aqara Studio 的远程访问界面。此时浏览器地址栏显示的网址，即为该设备的远程访问地址。
+5. 打开远程访问地址后，使用已绑定 Workspace 的 Aqara Builder 账号登录，即可以管理员（远端）的角色访问 Aqara Studio。
+
+    :::tip
+    您还可以使用现有的本地用户账号登录该远程访问地址，所拥有的权限与在本地访问时完全一致，详情请参考 [本地用户管理 - 本地用户角色](./user.mdx#本地用户角色)。
+    :::
+
+## 邀请其他用户
+
+1. 访问 [Aqara Builder](https://builder.aqara.com/)，在左侧选择您已绑定的 Aqara Workspace，单击 **Manage Workspaces**。
+
+    :::tip
+    如需允许其他 Aqara Builder 用户访问您的 Aqara Studio，您需要在云端连接一个 `Personal` 以外的 Aqara Workspace。
+    ::
+
+2. 在 **Manage Workspaces** 弹窗单击 **Invite Members** 按钮，呼出弹窗。
+3. 在弹窗中传入 1 名 Aqara Builder 用户的邮箱地址，并指定该用户的角色（`Operator` 或 `Admin`，角色权限的说明请参考 [远程用户角色](#远程用户角色)）。
+4. 受邀用户接受邀请后，可直接使用其 Aqara Builder 账号（即注册邮箱和密码）安全远程登录并访问您的 Aqara Studio。
+
+## 远程用户角色
+
+远程用户，是指使用 Aqara Builder 账号访问 Aqara Studio 的用户。远程用户的角色可分为管理员（admin）或操作员（operator），权限说明如下：
+
+| 功能 | 操作员（远程） | 管理员（远程） |
+| -- | -- | -- |
+| 设备日志 | ✗    | ✗    |
+| 链路日志 | ✗    | ✗    |
+| 用户操作日志 | ✗    | ✗    |
+| 系统升级日志 | ✗    | ✗    |
+| 本地用户管理 | ✗    | ✗    |
+| 备份还原 | ✗      | ✗    |
+| 云端连接 | ✗    | ✗    |
+| 远程访问 | ✗    | ✗    |
+| 系统更新 | ✗    | ✗    |
+| 关于     | ✗    | ✗    |
+| 开发者 | ✗ | ✗ |
+| 其他 | ✓  |  ✓  |

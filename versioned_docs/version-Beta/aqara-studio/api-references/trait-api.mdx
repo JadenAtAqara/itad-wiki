@@ -1,8 +1,10 @@
 # Device Function API
 
-## Query Device ID List
+## Query Device IDs by Pages
 
 You can query the list of devices in the Studio system with pagination. Filtering by device type, sorting, and paging are supported.
+
+This API allows you to retrieve a paginated list of device information. By specifying parameters such as device types, sort fields, page number, and page size, you can flexibly filter, sort, and paginate the detailed information of devices integrated into Aqara Studio. The response includes device ID, name, type, creation time, online status, associated space, and more.
 
 #### Request Parameters
 
@@ -15,7 +17,7 @@ You can query the list of devices in the Studio system with pagination. Filterin
 | data.deviceTypesList  | Array of String   | No       | List of device types. For available strings, see [Device Types](./device-type.mdx). |
 | data.orderBy          | String            | No       | Sort rule. Supported values:<ul><li><code>createTime asc</code>: Sort by creation time ascending.</li><li><code>createTime desc</code>: Sort by creation time descending.</li></ul> |
 | data.pageNum          | Number            | No       | Page number, starting from 1. Values less than 1 will be treated as 1. |
-| data.pageSize         | Number            | No       | Number of device IDs per page. Range is (0, 200]. |
+| data.pageSize         | Number            | No       | Number of device IDs per page. Range is (0, 200]. The default value is 200. |
 
 #### Example Request
 
@@ -54,6 +56,7 @@ Below is an example request body for `GetDeviceInfoRequest`:
 | data.data[].deviceName | String | Device name. |
 | data.data[].createTime | Number | Unix timestamp (milliseconds) when the device was added. |
 | data.data[].state | Boolean | Device online status:<ul><li>false: offline.</li><li>true: online.</li></ul> |
+| data.data[].space | Object | Space information associated with the device. For the detailed structure, refer to [Space Structure](./space-management-api.mdx#space-structure). |
 
 #### Example Response
 
@@ -76,10 +79,100 @@ Below is an example of a `GetDeviceInfoResponse` response:
                 "deviceTypesList": ["Light"],
                 "deviceName": "xxx",
 			    "createTime":1758549173093,
-			    "state": true
+			    "state": true,
+                "space": {
+                    "parentSpaceId": "a1",
+                    "spaceId": "a1-001",
+                    "name": "Living Room",
+                    "spatialMarking": null,
+                }
             }
         ]
     }
+}
+```
+
+## Query All Device IDs
+
+This API is used to retrieve the complete list of device information. With this interface, you can obtain detailed information of all devices within Aqara Studio at once, including device ID, name, device type, time added, online status, and associated space. The request body supports filtering based on device type and sorting fields.
+
+The response returns the device list as an array, without pagination information. It is suitable for scenarios where all device data needs to be obtained in a single request.
+
+#### Request Parameters
+
+| Parameter              | Type        | Required | Description |
+|------------------------|------------|----------|-------------|
+| type                   | String     | Yes      | Message type, must be `GetAllDeviceInfoRequest`. |
+| version                | String     | Yes      | API version, must be `v1`. |
+| msgId                  | String     | Yes      | Custom request ID defined by you. |
+| data                   | Object     | No       | Filter configuration. |
+| data.deviceTypesList   | String[]   | No       | Array of device types to filter the query. If left empty, all device types will be queried by default. Each element represents a specific device type string. For details, see [Device Types](./device-type.mdx). |
+| data.orderBy           | String     | No       | Sorting rule. Supported values:<ul><li><code>createTime asc</code>: Sort by creation time ascending.</li><li><code>createTime desc</code>: Sort by creation time descending.</li></ul> |
+
+#### Example Request
+
+Below is an example request body for `GetAllDeviceInfoRequest`:
+
+```json
+{
+    "type": "GetAllDeviceInfoRequest",
+    "version": "v1",
+    "msgId": "req-003",
+    "data": {
+        "deviceTypesList": ["Light"],
+        "orderBy": "createTime desc"
+    }
+}
+```
+
+#### Response Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| type | String | The type of message in the response. Always set to `GetAllDeviceInfoResponse`. |
+| version | String | Response version. It matches the version used in the request. |
+| msgId | String | The `msgId` you sent in your request. |
+| message | String | Description of the request result. |
+| code | Number | Indicates if the request was successful. 0 means success, any non-zero value means failure. |
+| data | Array of Object | Data list. |
+| data[].deviceId | String | Device ID. |
+| data[].deviceTypesList | Array of String | Device types. For an explanation of the string values, see [Device Types](./device-type.mdx). |
+| data[].deviceName | String | Device name. |
+| data[].createTime | Number | The Unix timestamp (milliseconds) when the device was added. |
+| data[].state | Boolean | Device online status:<ul><li>false: offline.</li><li>true: online.</li></ul> |
+| data[].space | Object | Space information associated with the device. For the detailed structure, refer to [Space Structure](./space-management-api.mdx#space-structure). |
+
+#### Example Response
+
+Below is a sample response for `GetAllDeviceInfoResponse`:
+
+```json
+{
+    "type": "GetAllDeviceInfoResponse",
+    "version": "v1",
+    "msgId": "req-003",
+    "code": 0,
+    "data": [
+        {
+            "deviceId": "device-001",
+            "deviceName": "Living Room Lamp",
+            "deviceTypesList": ["Light"],
+            "createTime": 1609459200000,
+            "state": true,
+            "space": {
+                "parentSpaceId": "a1",
+                "spaceId": "a1-001",
+                "name": "Living Room",
+            }
+        },
+        {
+            "deviceId": "device-002",
+            "deviceName": "Bedroom Lamp",
+            "deviceTypesList": ["Light"],
+            "createTime": 1609459300000,
+            "state": false,
+        }
+    ]
 }
 ```
 
@@ -95,7 +188,7 @@ Query the spec configuration of devices by device ID.
 | version | String | Yes | API version. Must be `v1`. |
 | msgId | String | Yes | The request ID defined by you. |
 | data | Object | Yes | Request data object. |
-| data.deviceIds | Array of String | No | List the device IDs you want to query. You can use the [device ID list query](#query-device-id-list) result here. If this list is empty, it means query the spec configuration of all devices. |
+| data.deviceIds | Array of String | No | Pass the device ID list obtained from the [paginated query](#query-device-ids-by-pages) or the [complete query](#query-all-device-ids) of device IDs into this list as the target for querying the spec configuration of the devices. If this list is empty, the spec configuration for all devices will be queried. |
 
 #### Request Example
 
@@ -346,12 +439,13 @@ Below is an example request body for `ExecuteTraitRequest`:
 | msgId | String | The same `msgId` you sent in your request. |
 | code | Number | Status code for the control operation:<ul><li>0: At least one trait was controlled successfully.</li><li>Non-zero: All trait controls failed.</li></ul> |
 | message | String | Description of the result. |
-| data | Array of Object | A list of device control results. |
-| data[].deviceId | String | The device ID. |
-| data[].endpointId | Number | The endpoint ID. |
-| data[].functionCode | String | The function code. |
-| data[].traitCode | String | The trait code. |
-| data[].code | Number | Whether this API call succeeded for this item. 0 means success, non-zero means failure. |
+| data | Array of Object | List of failed device trait control results. Only failed records are included; successful controls are not returned. |
+| data[].deviceId | String | Device ID. |
+| data[].endpointId | Number | Endpoint ID. |
+| data[].functionCode | String | Function code. |
+| data[].traitCode | String | Trait code. |
+| data[].code | Number | Failure code for this trait control. |
+| data[].message | String | Failure description. |
 
 :::tip
 A `code` value of `0` only means the API call was successful. It does not guarantee the device state has changed. Please [query the latest trait value](#query-the-latest-values-of-device-traits) to confirm if the control was effective.
@@ -370,11 +464,7 @@ Below is a sample response for `ExecuteTraitResponse`:
     "message": null,
     "data": [
         {
-            "deviceId": "virtual2.35330452174472",
-            "endpointId": 2,
-            "functionCode": "FanControl",
-            "traitCode": "RockSetting",
-            "code": 0
+            // When there is no failure, the data is empty
         }
     ]
 }
@@ -605,6 +695,7 @@ Here is an example request body for `UnsubscribeTraitValueRequest`:
 | msgId | String | Yes | Unique identifier for the corresponding request. |
 | code | Number | Yes | Request result. `0` means unsubscribe successful; any other value means failure. |
 | message | String | No | Description of the response result. |
+
 
 
 #### Example Response

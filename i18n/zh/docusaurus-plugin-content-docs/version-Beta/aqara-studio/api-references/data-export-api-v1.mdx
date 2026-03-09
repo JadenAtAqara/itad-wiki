@@ -40,7 +40,8 @@ Aqara Studio 会依据请求体中的 `type` 字段，决定并响应不同的 A
 
 | API 功能 | 请求 type | 响应 type |
 | --- | --- | -- |
-| [查询设备 ID 列表](./trait-api.mdx#查询设备-id-列表) | GetDeviceInfoRequest | GetDeviceInfoResponse |
+| [分页查询设备 ID 列表](./trait-api.mdx#分页查询设备-id-列表) | GetDeviceInfoRequest | GetDeviceInfoResponse |
+| [全量查询设备 ID 列表](./trait-api.mdx#全量查询设备-id-列表) | GetAllDeviceInfoRequest | GetAllDeviceInfoResponse |
 | [查询设备的 spec 配置](./trait-api.mdx#查询设备的-spec-配置) | GetDevicesRequest | GetDevicesResponse |
 | [控制设备](./trait-api.mdx#控制设备) | ExecuteTraitRequest | ExecuteTraitResponse |
 | [查询设备的最新功能点值](./trait-api.mdx#查询设备的最新功能点值) | GetTraitValueRequest | GetTraitValueResponse |
@@ -56,7 +57,10 @@ Aqara Studio 会依据请求体中的 `type` 字段，决定并响应不同的 A
 | [查询自动化列表](./automation-api.mdx#查询自动化列表) | GetScriptAutomationListRequest | GetScriptAutomationListResponse |
 | [查询自动化详情](automation-api.mdx#查询自动化详情) | GetScriptAutomationDetailsRequest | GetScriptAutomationDetailsResponse |
 | [删除自动化](automation-api.mdx#删除自动化) | DeleteAutomationRequest | DeleteAutomationResponse |
-
+| [查询空间列表](./space-management-api.mdx#查询空间列表) | GetSpacesRequest | GetSpacesResponse |
+| [创建一个空间](./space-management-api.mdx#创建一个空间) | CreateSpaceRequest | CreateSpaceResponse |
+| [编辑空间](./space-management-api.mdx#编辑空间) | UpdateSpaceRequest | UpdateSpaceResponse |
+| [关联设备到空间](./space-management-api.mdx#关联设备到空间) | AssociateDevicesToSpaceRequest | AssociateDevicesToSpaceResponse |
 
 ## 错误处理
 

@@ -268,21 +268,21 @@ Below is a sample request body for `CreateScriptAutomationRequest`:
 
 | Parameter | Type | Description  |
 | ------- | ------ | -------------------------------------- |
-| type    | String | The type of message in the response. Always set to `CreateScriptLinkageResponse`. |
+| type    | String | The type of message in the response. Always set to `CreateScriptAutomationResponse`. |
 | version | String | Response version. It matches the version used in the request. |
 | msgId   | String | The `msgId` provided in your request. |
 | code    | Number | Return code. `0` means success, any non-zero value indicates failure. |
 | message | String | Description of the request result. |
-| data    | String | 创建成功的自动化 ID（linkageId）。        |
+| data    | String | The linkage ID (`linkageId`) of the created automation.        |
 
 
 #### Example Response
 
-Below is an example response for `CreateScriptLinkageResponse`:
+Below is an example response for `CreateScriptAutomationResponse`:
 
 ```json
 {
-    "type": "CreateScriptLinkageResponse",
+    "type": "CreateScriptAutomationResponse",
 	"version": "v1",
 	"msgId": "1751609244328",
 	"code": 0,

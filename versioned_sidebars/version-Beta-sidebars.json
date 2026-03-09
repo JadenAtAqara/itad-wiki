@@ -187,7 +187,8 @@
               "items": [
                 "aqara-studio/api-references/json-automation-script"
               ]
-            }
+            },
+            "aqara-studio/api-references/space-management-api"
           ]
         },
         "aqara-studio/data-export-by-mqtt",

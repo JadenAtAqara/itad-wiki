@@ -1,0 +1,343 @@
+# 空间管理 API
+
+## 查询空间列表
+
+该接口用于获取 Aqara Studio 中已创建的所有空间的列表信息，支持层级嵌套结构，便于管理和展示空间树状关系。
+
+#### 请求参数
+
+| 参数 | 类型 | 是否必须 | 说明 |
+|------|------|----------|------|
+| type | String | 是 | 请求的消息类型，必须为 `GetSpacesRequest`。 |
+| version | String | 是 | 请求接口版本号，必须为 `v1`。 |
+| msgId | String | 是 | 由您定义的请求 ID。 |
+
+#### 请求参数示例
+
+以下为 `GetSpacesRequest` 的请求体示例：
+
+``` json
+{
+    "type" : "GetSpacesRequest",
+    "version":"v1",
+    "msgId" : "1751609244328"
+}
+```
+
+#### 响应参数
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| type | String | 响应的消息类型，固定为 `GetSpacesResponse`。 |
+| version | String | 响应版本号，与请求接口版本号一致。 |
+| msgId | String | 您发起请求时传入的 `msgId`。 |
+| code | Number | 请求是否成功。0 表示成功，非 0 表示失败。 |
+| data | Array of Object | 响应数据。 |
+| data[].spaceId | String | 空间 ID。 |
+| data[].name | String | 空间名称。 |
+| data[].children | Array of Object | 子空间列表。具体结构请参考 [Space 结构](#space-结构)。 |
+
+#### Space 结构
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| parentSpaceId | String | 父空间 ID。如无此字段，表示该空间为顶级空间，即没有父空间。 |
+| spaceId | String | 空间 ID。 |
+| name | String | 空间名称。 |
+| spatialMarking | String / Null | 空间标签。 |
+| children | Array of Object | 子空间列表。具体结构请参考 [Space 结构](#space-结构)。若请求消息类型为 [GetDeviceInfoRequest](./trait-api.mdx#分页查询设备-id-列表) 和 [GetAllDeviceInfoRequest](./trait-api.mdx#全量查询设备-id-列表) 时，不会有此字段。 |
+
+#### 响应数据示例
+
+以下为 `GetSpacesResponse` 的响应示例：
+
+```json
+{
+    "type": "GetSpacesResponse",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": [
+        {
+            "spaceId": "15cdd37",
+            "name": "一居室公寓",
+            "children": [
+                {
+                    "parentSpaceId": "15cdd37",
+                    "spaceId": "15cdd39",
+                    "name": "客厅",
+                    "spatialMarking": "living_room"
+                },
+                {
+                    "parentSpaceId": "15cdd37",
+                    "spaceId": "15cdd3b",
+                    "name": "厨房",
+                    "spatialMarking": "kitchen"
+                },
+                {
+                    "parentSpaceId": "15cdd37",
+                    "spaceId": "15cddaa",
+                    "name": "书房",
+                    "spatialMarking": "",
+                    "children": [
+                        {
+                            "parentSpaceId": "15cddaa",
+                            "spaceId": "15fd66f",
+                            "name": "书柜"
+                        },
+                        {
+                            "parentSpaceId": "15cddaa",
+                            "spaceId": "15fd670",
+                            "name": "书桌"
+                        }
+                    ]
+                },
+                {
+                    "parentSpaceId": "15cdd37",
+                    "spaceId": "15ea8f4",
+                    "name": "卧室"
+                }
+            ]
+        },
+        {
+            "spaceId": "15cf659",
+            "name": "p2"
+        },
+        {
+            "spaceId": "15ed481",
+            "name": "1栋-101房",
+            "children": [
+                {
+                    "parentSpaceId": "15ed481",
+                    "spaceId": "15f7fec",
+                    "name": "1",
+                    "children": [
+                        {
+                            "parentSpaceId": "15f7fec",
+                            "spaceId": "15f7ff0",
+                            "name": "12"
+                        }
+                    ]
+                },
+                {
+                    "parentSpaceId": "15ed481",
+                    "spaceId": "15f8059",
+                    "name": "2",
+                    "spatialMarking": "",
+                    "children": [
+                        {
+                            "parentSpaceId": "15f8059",
+                            "spaceId": "15f812b",
+                            "name": "21",
+                            "spatialMarking": "",
+                            "children": [
+                                {
+                                    "parentSpaceId": "15f812b",
+                                    "spaceId": "15fd66e",
+                                    "name": "212"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "parentSpaceId": "15ed481",
+                    "spaceId": "15f80c3",
+                    "name": "3",
+                    "spatialMarking": ""
+                }
+            ]
+        }
+    ],
+    "code": 0
+}
+```
+
+## 创建一个空间
+
+该接口用于在 Aqara Studio 中创建一个新的空间。用户可以指定该空间的名称、空间标签以及父空间 ID。若未指定父空间 ID，则新空间会作为顶级空间被创建。该接口响应将返回新建空间的唯一 ID。
+
+####  请求参数
+
+| 参数 | 类型 | 是否必须 | 说明 |
+|------|------|----------|------|
+| type | String | 是 | 请求的消息类型，必须为 `CreateSpaceRequest`。 |
+| version | String | 是 | 请求接口版本号，必须为 `v1`。 |
+| msgId | String | 是 | 由您定义的请求 ID。 |
+| data | Object | 是 | 请求数据。 |
+| data.parentSpaceId | String | 否 | 父空间 ID。为空时创建顶级空间 |
+| data.name | String | 是 | 空间名称。 |
+| data.spatialMarking | String | 否 | 空间标签。 |
+
+#### 请求参数示例
+
+以下为 `CreateSpaceRequest` 的请求体示例：
+
+```json
+{
+    "type" : "CreateSpaceRequest",
+    "version":"v1",
+    "msgId" : "1751609244328",
+    "data":{
+        "parentSpaceId":"",
+        "name":"2栋",
+        "spatialMarking":""
+    }
+}
+```
+
+#### 响应参数
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| type | String | 响应的消息类型，固定为 `CreateSpaceResponse`。 |
+| version | String | 响应版本号，与请求接口版本号一致。 |
+| msgId | String | 您发起请求时传入的 `msgId`。 |
+| data | String | 新建的空间 ID。 |
+| code | Number | 请求是否成功。0 表示成功，非 0 表示失败。 |
+| message | String | 失败时的错误提示消息。 |
+
+#### 响应数据示例  
+
+以下为 `CreateSpaceResponse` 的响应示例：
+
+```json
+{
+    "type": "CreateSpaceResponse",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": "15fd672",
+    "code": 0
+}
+```
+
+## 编辑空间
+
+本接口用于更新已有空间的名称或空间标签。
+
+#### 请求参数
+
+| 参数 | 类型 | 是否必须 | 说明 |
+|------|------|----------|------|
+| type | String | 是 | 请求的消息类型，必须为 `UpdateSpaceRequest`。 |
+| version | String | 是 | 请求接口版本号，必须为 `v1`。 |
+| msgId | String | 是 | 由您定义的请求 ID。 |
+| data | Object | 是 | 请求数据。 |
+| data.spaceId | String | 是 | 空间 ID。 |
+| data.name | String | 否 | 新的空间名称。 |
+| data.spatialMarking | String | 否 | 新的空间标签。 |
+
+#### 请求参数示例
+
+以下为 `UpdateSpaceRequest` 的请求体示例：
+
+```json
+{
+    "type" : "UpdateSpaceRequest",
+    "version":"v1",
+    "msgId" : "1751609244328",
+    "data":{
+        "spaceId":"15fd672",
+        "name": "2栋",
+        "spatialMarking": "The second building"
+    }
+}
+```
+
+#### 响应参数
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| type | String | 响应的消息类型，固定为 `UpdateSpaceResponse`。 |
+| version | String | 响应版本号，与请求接口版本号一致。 |
+| msgId | String | 您发起请求时传入的 `msgId`。 |
+| data | String | 空字符串。 |
+| code | Number | 请求是否成功。0 表示成功，非 0 表示失败。 |
+| message | String | 接口调用结果描述信息。 |
+
+#### 响应数据示例  
+
+以下为 `UpdateSpaceResponse` 的响应示例：
+
+```json
+{
+    "type": "UpdateSpaceResponse",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": "",
+    "code": 0,
+    "message": ""
+}
+```
+
+## 关联设备到空间
+
+该接口用于将一个或多个设备关联到指定的空间，即为空间分配设备。通过调用本接口，用户可以批量把设备与某个空间进行绑定，实现空间与设备的组织管理。
+
+在请求中需提供目标空间的 ID 以及要关联的设备 ID 列表，系统会尝试将这些设备与指定空间关联，并在响应中返回关联操作的结果（仅返回失败的关联项）。
+
+
+#### 请求参数
+
+| 参数 | 类型 | 是否必须 | 说明 |
+|------|------|----------|------|
+| type | String | 是 | 请求的消息类型，必须为 `AssociateDevicesToSpaceRequest`。 |
+| version | String | 是 | 请求接口版本号，必须为 `v1`。 |
+| msgId | String | 是 | 由您定义的请求 ID。 |
+| data | Object | 是 | 请求数据。 |
+| data.spaceId | String | 是 | 空间 ID。 |
+| data.deviceIds | Array of String | 是 | 设备 ID 列表。 |
+
+#### 请求参数示例
+
+以下为 `AssociateDevicesToSpaceRequest` 的请求体示例：
+
+```json
+{
+    "type" : "AssociateDevicesToSpaceRequest",
+    "version":"v1",
+    "msgId" : "1751609244328",
+    "data":{
+        "spaceId":"15eeb3e",
+        "deviceIds":[
+            "b8f3e1229c0255f7", 
+            "8d62c0b94226fd43", 
+            "b68d1ad781753520"
+        ]
+    }
+}
+```
+
+#### 响应参数
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| type | String | 响应的消息类型，固定为 `AssociateDevicesToSpaceResponse`。 |
+| version | String | 响应版本号，与请求接口版本号一致。 |
+| msgId | String | 您发起请求时传入的 `msgId`。 |
+| code | Number | 请求是否成功。0 表示成功，非 0 表示失败。 |
+| data | Array of Object | 关联失败的设备列表，仅包含关联失败的设备，关联成功的不会返回。 |
+| data[].deviceId | String | 设备 ID。 |
+| data[].code | Number | 此设备关联到空间是否成功。0 表示成功，非 0 表示失败。 |
+| data[].message | String | 失败说明。 |
+
+#### 响应数据示例  
+
+以下为 `AssociateDevicesToSpaceResponse` 的响应示例：
+
+```json
+{
+    "type": "AssociateDevicesToSpaceResponse",
+    "version": "v1",
+    "msgId": "1751609244328",
+    // data 数组仅包含关联失败的设备信息，关联成功的设备不会出现在该数组中
+    "data": [
+        {
+            "deviceId": "b8f3e1229c0255f7",
+            "code": 2030,
+            "message": "Device is not exists"
+        }
+    ],
+    "code": 0
+}
+```
+
