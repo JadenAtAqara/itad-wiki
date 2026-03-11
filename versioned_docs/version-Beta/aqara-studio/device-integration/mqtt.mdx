@@ -1,8 +1,58 @@
 # MQTT
 
-本文说明如何将 BACnet 设备接入 Aqara Studio。
+This document explains how to integrate MQTT devices into Aqara Studio.
 
-## 前提条件
+## Prerequisites
 
-xxx
-## 添加 BACnet 设备
+Before you begin, please ensure that the MQTT device to be integrated is already connected to an MQTT Broker.
+
+## Add A MQTT Device and Data Points
+
+1. In the left sidebar, click to enter the **Device Management** page.
+2. In the left device tree, click the "+" button. In the popup, choose `MQTT`.
+3. Select `MQTT` to enter the management page.
+4. Go to the `Add Device` tab, configure the following parameters for your MQTT device, and click **Save and Continue**.
+
+    | Parameter | Required | Description |
+    | -- | -- | -- |
+    | Device Name | ✔ | Name of the MQTT device to be added |
+    | Username | ✘ | Username for the MQTT server |
+    | Password | ✘ | Password for the MQTT server |
+    | Broker Endpoint | ✔ | Address of the MQTT Broker the device connects to |
+    | Broker Port | ✔ | Port number of the MQTT Broker the device connects to |
+    | Connection Type | ✘ | Authentication/security type for the MQTT client connection. Supported values: <ul><li>Anonymous</li><li>Anonymous Over SSL</li><li>Use Login Over SSL</li><li>User Login None SSL</li></ul> |
+
+5. According to your actual device, refer to the [JavaScript Script for Adding Data Points](./../javascript-script-for-adding-data-points.mdx) and write the data point addition script. After completing it, click **Save and Continue**.
+6. Click the **Discover Points** button. Aqara Studio will automatically detect the device's data points based on your script.
+7. In the **Discovered Points** list, check the required points and click the middle **+** button. Newly added data points will appear in the **Added Points** list on the right and will also be shown under the corresponding device in the left device tree.
+
+    :::tip
+    - If Aqara Studio detects incorrect data point information, you can click the **Add** button on the corresponding row to modify it.
+    - If the system does not discover the data points you need, you can [manually add the data point](#how-to-handle-mqtt-device-data-points-not-discovered-by-aqara-studio).
+    :::
+
+8. Click the **Complete adding** button to finish adding devices and data points.
+
+## Next Steps
+
+Now, you can [view details and control the device](./../device-management/basic-information.mdx), or [use the device in automation](./../automation.mdx).
+
+## FAQ
+
+### How to Handle MQTT Device Data Points Not Discovered by Aqara Studio
+
+If Aqara Studio does not detect the data points you need, please go to the "Add Point" page and click the "Manually Add" button. In the popup, enter the required parameters to manually add the point.
+
+Detailed parameter descriptions are as follows:
+
+| Parameter | Required | Description |
+| --- | --- | --- |
+| Friendly Name | ✔ | Data point ID. Please consult the device manufacturer for the real ID, so Aqara Studio can discover the point. |
+| Point Name | ✘ | Custom name for the data point. |
+| Point Type | ✘ | Same as `deviceType` in Aqara Spec. Please refer to Aqara Spec documentation for details. |
+| Function Id | ✘ | Same as `functionId` in Aqara Spec. Please refer to Aqara Spec documentation for details. |
+| Trait Id | ✘ | Same as `traitId` in Aqara Spec. Please refer to Aqara Spec documentation for details. |
+| Data Type | ✘ | Data point type. Supported values:<ul><li><code>bool</code>: Boolean</li><li><code>numerical</code>: Numeric</li><li><code>text</code>: Text</li></ul>  |
+| Access | ✘ | Access type:<ul><li>1: Read Only</li><li>2: Read/Write</li></ul> |
+| Sub Topic | ✘ | Topic that Aqara Studio subscribes to for the latest data for this point. Please fill in according to the device protocol or manufacturer documentation. |
+| Pub Topic | ✘ | Topic used by Aqara Studio to send messages to control this point. Please fill in according to the device protocol or manufacturer documentation. (For read-only points, leave this blank)  |
