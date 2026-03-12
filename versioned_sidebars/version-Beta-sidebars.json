@@ -137,16 +137,19 @@
     {
         "type": "category",
         "label": "Management",
+        "collapsed": false,
         "items": [
           "aqara-studio/user",
           "aqara-studio/backup-and-restore",
           {
             "type": "category",
             "label": "Settings",
+            "collapsed": false,
             "items": [
                 "aqara-studio/cloud",  
                 "aqara-studio/remote-access",
-                "aqara-studio/system-update"
+                "aqara-studio/system-update",
+                "aqara-studio/local-domain-name-access"
               ]
           }
         ]      
