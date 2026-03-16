@@ -195,6 +195,7 @@
           ]
         },
         "aqara-studio/data-export-by-mqtt",
+        "aqara-studio/use-aqara-studio-skill-in-openclaw-web-ui",
         "aqara-studio/set-up-mcp-server"
       ]      
     },

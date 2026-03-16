@@ -1,0 +1,30 @@
+# Use Aqara Studio Skill in OpenClaw Web UI
+
+## Overview
+
+Aqara provides an OpenClaw skill for integrating Aqara Studio capabilities. In the OpenClaw Web UI, you only need to input the specified instruction text to automatically install and configure the skill, enabling you to:
+
+- Access and manage all devices connected to Aqara Studio
+- Query device status, space lists, and other information using natural language
+- Seamlessly control devices and retrieve data via OpenClaw
+
+The entire process requires no coding. You only need to configure the necessary information, making it easy to comprehensively manage Aqara devices and bringing great convenience to your smart space management.
+
+## Process
+
+1. Open your local OpenClaw Web UI.
+2. In the left sidebar, select **Chat** and input the following text in the chat box:
+
+    ```txt
+    Fetch and follow instructions from https://cdn.aqara.com/cdn/common/mainland/static/docs/OPENCLAW_OPEN_API_INSTALL.md 
+    ```
+3. According to the Agent’s instructions, provide `AQARA_ENDPOINT_URL` and `AQARA_OPEN_API_TOKEN`.
+
+    :::tip
+    - `AQARA_ENDPOINT_URL` is the [HTTP Request URL](./api-references/data-export-api-v1.mdx#http-request-url) of Aqara Studio, usually ending with `/open/api/v1`.
+    - `AQARA_OPEN_API_TOKEN` is the [token](./developer-guide.mdx#obtain-required-information) used for authentication in Aqara Studio.
+    :::
+
+4. After submitting the above information, OpenClaw will automatically finish the required configuration and may reload or restart its service. Please wait patiently. Once OpenClaw starts up again, you can view and manage all devices connected to Aqara Studio in real time through OpenClaw, achieving efficient monitoring and convenient device control.
+
+5. 【补充示例】
