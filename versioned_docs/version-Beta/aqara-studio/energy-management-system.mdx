@@ -2,11 +2,24 @@
 
 ## Overview
 
-Aqara Studio tracks and aggregates energy device data. It supports daily, weekly, and monthly energy reports and trends. The Energy Management System(EMS) dashboard shows total energy, trends, and top-consuming spaces and devices. You can view patterns by space, device, or device type.
+Aqara Studio’s energy management system can automatically collect data from all types of energy-consuming devices, supporting daily, weekly, and monthly multi-dimensional statistics and trend analysis. Through this UI, you can intuitively view the total energy usage for your entire space, rank energy consumption by space, device, or device type, and analyze specific energy usage trends in depth.
 
-This feature helps you see real-time energy use in all areas. It helps spot energy waste and abnormal consumption. You can take action to save energy or optimize use.
+This feature helps you monitor the energy consumption status of various areas and devices in real time, quickly identify high-consumption devices and abnormal usage behavior, and provides decision support for energy-saving optimization and efficiency management.
 
-The dashboard makes all energy data easier to view in one place. It supports future analysis, alerting, and device maintenance.
+Additionally, the energy management dashboard presents energy data visually and centrally, providing strong data support for subsequent efficiency analysis, energy consumption warnings, and device maintenance.
+
+## Prerequisites
+
+The energy management page displays only devices capable of reporting power consumption data (such as refrigerators, air conditioners, switches, sockets, and other devices with energy statistics capability), and only statistics based on each device's **Cumulative Energy Consumption** data point are collected.
+
+Energy management can display energy data from different protocol devices, but specific visibility depends on the device protocol configuration:
+
+- **Aqara** devices and those in the **Home Assistant** ecosystem natively support this feature. As long as they are connected to Aqara Studio, their data is shown in the energy management page directly, with no extra adjustment required.
+- For devices using **other protocols**, you must manually map the energy consumption-related data point to **Cumulative Energy Consumption** when integrating them, otherwise Aqara Studio will not be able to retrieve their energy data.
+
+:::tip
+If you want to monitor energy consumption for devices that do not support energy statistics by themselves (such as lights), you can connect them to a smart socket or smart meter, then view the energy data for that socket or meter in the energy management page to indirectly obtain the device’s consumption.
+:::
 
 ## Adjust Data
 
