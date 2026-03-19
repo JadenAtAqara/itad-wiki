@@ -4,6 +4,8 @@
 
 ## 脚本介绍
 
+您在本脚本需提供发起设备 HTTP 请求所需的信息，并自定义如何将返回数据解析为 Aqara Studio 能识别的标准格式。
+
 本脚本**必须**包含以下 9 个 JavaScript 方法：
 
 | 方法 | 说明 |
@@ -19,14 +21,35 @@
 | [parseReportRequest](#parsereportrequest) | 用于解析设备上报的报文，提取设备ID、点ID、点值等信息 |
 
 :::tip
-请勿更改方法的参数及其输入输出结构。
+请勿更改方法的名称和参数。
 :::
+
+## 前提条件
+
+请确保您已掌握待接入设备的 HTTP 接口信息，包括请求地址、请求方法、请求头及请求体参数等。
 
 ## buildDiscoveryRequest
 
-您通过该方法返回一个请求配置对象，从而告诉 Aqara Studio 如何发起 HTTP 请求来发现设备。
+请在该方法中返回一个请求配置对象，用于指示 Aqara Studio 如何通过 HTTP API 发现设备。
 
-请求配置对象的字段说明如下：
+### 入参说明
+
+本函数应当无入参，否则 Aqara Studio 无法正确发起请求。
+
+### 返回值
+
+为确保 Aqara Studio 可以正常向设备发起请求，您需要确保 buildDiscoveryRequest 函数返回的数据的格式与下列一致：
+
+```json
+{
+    "path": "/report/discoveryDevices",
+    "method": "POST",
+    "headers": "{\"Content-Type\":\"application/json\"}",
+    "postParams": "{\"appId\":\"V0001\"}"
+}
+```
+
+字段说明如下：
 
 | 字段         | 类型     | 含义 |
 |--------------|----------|------|
@@ -39,18 +62,7 @@
 请根据设备官方技术文档或联系设备技术支持获取 `path`、`method`、`headers` 及 `postParams`。
 :::
 
-返回数据格式示例：
-
-```json
-{
-    "path": "/report/discoveryDevices",
-    "method": "POST",
-    "headers": "{\"Content-Type\":\"application/json\"}",
-    "postParams": "{\"appId\":\"V0001\"}"
-}
-```
-
-### 示例
+### 函数示例
     
 ```javascript
 function buildDiscoveryRequest() {
@@ -69,9 +81,29 @@ function buildDiscoveryRequest() {
 
 ## parseDiscoveryResponse  
 
-该方法解析设备发现接口的返回数据，并提取出设备列表（deviceId + deviceName）。
-	
-传入的报文示例:
+请在此方法中解析设备发现接口（[buildDiscoveryRequest](#builddiscoveryrequest)）的返回结果，并返回包含设备 ID（deviceId）和设备名称（deviceName）的设备列表对象数组，供 Aqara Studio 使用。
+
+### 入参说明
+
+本函数的入参应仅有一个，且参数名必须为 responseString，否则 Aqara Studio 无法正确传递和解析数据。
+
+### 返回值
+
+为确保 Aqara Studio 可以正常获取设备信息，您需要确保 parseDiscoveryResponse 函数返回的数据的格式与下列一致：
+
+```json
+[
+    {
+        "deviceId": "123456",
+        "deviceName": "温度传感器"
+    }
+]
+```
+
+### 函数示例
+
+假设设备发现接口返回的数据如下：
+
 ```json
 {
     "reply": {
@@ -97,18 +129,8 @@ function buildDiscoveryRequest() {
     }
 }
 ```
-	
-返回的数据格式示例：
-```json
-[
-    {
-        "deviceId": "123456",
-        "deviceName": "温度传感器"
-    }
-]
-```
 
-### 示例
+如需处理上述数据，您可参考以下示例设计此函数：
 
 ```javascript
 function parseDiscoveryResponse(responseString) {
@@ -131,9 +153,26 @@ function parseDiscoveryResponse(responseString) {
 
 ## buildDiscoverPointsRequest  
 
-您通过该方法返回一个请求配置对象，从而告诉 Aqara Studio 如何发起 HTTP 请求来查询指定设备的功能点（points）。
+请在该方法中返回一个请求配置对象，用于指示 Aqara Studio 如何通过 HTTP API 查询指定设备的功能点（points）。
 
-请求配置对象的字段说明如下：
+### 入参说明
+
+本函数应当无入参，否则 Aqara Studio 无法正确发起请求。
+
+### 返回值
+
+为确保 Aqara Studio 可以正常向设备发起请求，您需要确保 buildDiscoveryRequest 函数返回的数据的格式与下列一致：
+
+```json
+{
+    "path": "/device/points?deviceId=123456",
+    "method": "GET",
+    "headers": "{\"Content-Type\":\"application/json\"}",
+    "postParams": "{\"deviceId\":\"123456\"}"
+}
+```
+
+字段说明如下：
 
 | 字段         | 类型     | 含义 |
 |--------------|----------|------|
@@ -146,17 +185,7 @@ function parseDiscoveryResponse(responseString) {
 请根据设备官方技术文档或联系设备技术支持获取 `path`、`method`、`headers` 及 `postParams`。
 :::
 
-返回数据格式示例：
-```json
-{
-    "path": "/device/points?deviceId=123456",
-    "method": "GET",
-    "headers": "{\"Content-Type\":\"application/json\"}",
-    "postParams": "{\"deviceId\":\"123456\"}"
-}
-```
-
-### 示例
+### 函数示例
 
 ```javascript
 function buildDiscoverPointsRequest(deviceId) {
@@ -173,11 +202,21 @@ function buildDiscoverPointsRequest(deviceId) {
 
 ## parseDiscoverPointsResponse  
 
-该方法负责向 Aqara Studio 声明“该设备具备哪些功能点”。
+请在此方法中解析设备功能点（[buildDiscoverPointsRequest](#builddiscoverpointsrequest)）发现接口的返回结果，并返回包含所有功能点信息的数组。  
 
-您需要在返回数组中填写一个或多个待发现功能点结构（如 pointId 等，详情请见[point 对象结构](#point-对象结构)）。这样，Aqara Studio 才能在功能点发现流程中会调用该函数，解析返回值，从而识别设备具备的所有功能点，实现功能点无缝接入和控制。
+Aqara Studio 会自动调用此函数，您需要在返回的数组中按要求填写每个功能点的详细结构（例如 pointId、pointName 等，具体请参见[point 对象结构](#point-对象结构)）。  
 
-### point 对象结构 
+通过正确实现本方法，Aqara Studio 才能识别和接入设备支持的全部功能点，从而实现功能点的自动发现与控制。
+
+### 入参说明
+
+本函数的入参应仅有一个，且参数名必须为 responseString，否则 Aqara Studio 无法正确传递和解析数据。
+
+### 返回值
+
+为确保 Aqara Studio 可以正常获取功能点信息，您需要确保 parseDiscoverPointsResponse 函数返回的数据为 [point 对象结构](#point-对象结构) 数组。
+
+#### point 对象结构 
 
 | 字段名称    | 说明                                                                                     |
 |-----------|-------------------------------------------------------------------------------------------|
@@ -190,13 +229,15 @@ function buildDiscoverPointsRequest(deviceId) {
 | access    | 读写类型，<ul><li>1：仅可读</li><li>2：可读可写</li></ul>                                 |
 
 :::tip
-新增功能点时，您可以根据实际情况选择两种方式：
-
-- **基于 Aqara Spec**：需填写 `pointType`、`functionId`、`traitId` 等字段，这可以将设备的功能点关联到 Aqara Spec 协议中的对应功能点
+您可以根据实际情况选择以下任意方式构造功能点的数据结构：   
+- **基于 Aqara Spec**：需填写 `pointType`、`function`、`trait` 等字段，这可以将设备的功能点关联到 Aqara Spec 协议中的对应功能点。
 - **通用方式**：需填写 `dataType`、`access` 等基本字段。
 :::
 	
-返回数据格式示例：
+#### 示例
+
+为确保 Aqara Studio 可以正常获取设备信息，您需要确保 parseDiscoverPointsResponse 函数返回的数据的格式与下列一致：
+
 - 基于 Aqara Spec：
     ```json
     [
@@ -223,7 +264,7 @@ function buildDiscoverPointsRequest(deviceId) {
     ]
     ```
 
-### 示例
+### 函数示例
 
 ```javascript
 function parseDiscoverPointsResponse(responseString) {
@@ -248,17 +289,17 @@ function parseDiscoverPointsResponse(responseString) {
 
 ## buildReadRequest  
 
-该方法负责根据设备 ID 以及需要读取的功能点 ID，构造用于向设备发起读取请求的 HTTP 请求配置列表。
+当 Aqara Studio 需要获取设备的状态数据（例如开关状态、温度、模式等）时，会调用此函数，传入目标设备 ID（deviceId）以及需要读取的功能点 ID 数组（pointIds）。
 
-当 Aqara Studio 需要获取设备的状态数据（例如开关状态、温度、模式等）时，会调用此函数，传入目标设备 ID（deviceId）以及需要读取的功能点 ID 数组（pointIds）。函数需返回一个请求配置对象数组，每个元素对应一个功能点的读取请求，平台将根据这些请求逐一向设备发起查询。
+请在该方法中返回一个请求配置对象，用于指示 Aqara Studio 如何通过 HTTP API 查询指定设备的功能点（points）的值。
 
-请求配置对象的字段说明如下：
-| 字段         | 类型     | 含义 |
-|--------------|----------|------|
-| path         | String   | 请求路径。用于指定查询设备功能点的接口地址，例如 `/device/points?deviceId=xxx`。其中 `deviceId` 为目标设备的唯一标识，通过 query 参数拼接到 path 中。 |
-| method       | String   |  HTTP 请求方法，支持 `GET` 和 `POST`，用于指定调用发现接口时使用的 HTTP 请求方式。 |
-| headers      | String   | 请求头，**JSON 字符串格式**（例如：`{"Content-Type":"application/json"}`） |
-| postParams   | String   | POST 请求体参数，**JSON 字符串格式**（例如：`{"deviceId":"123456"}`）。 |
+### 入参说明
+
+本函数的入参应仅有两个，且参数名必须为 deviceId（设备 ID） 和 pointIds（功能点列表），否则 Aqara Studio 无法正确发起请求。
+
+### 返回值
+
+为确保 Aqara Studio 可以正常获取功能点信息，您需要确保 buildReadRequest 函数返回的数据的格式与下列一致：
 
 ```json
 [
@@ -275,6 +316,20 @@ function parseDiscoverPointsResponse(responseString) {
 这里返回的是一个数组，如果设备支持批量读取，数组只包括一个对象即可，如果设备不支持批量读取，则可以根据实际点生成多个数组返回。
 :::
 
+字段说明如下：
+
+| 字段         | 类型     | 含义 |
+|--------------|----------|------|
+| path         | String   | 请求路径。用于指定查询设备功能点的接口地址。<br />如果 `method` 为 `GET` 且包含参数，可直接拼接到 path。 |
+| method       | String   |  HTTP 请求方法，支持 `GET` 和 `POST`，用于指定调用发现接口时使用的 HTTP 请求方式。 |
+| headers      | String   | 请求头，**JSON 字符串格式**（例如：`{"Content-Type":"application/json"}`） |
+| postParams   | String   | POST 请求体参数，**JSON 字符串格式**（例如：`{"deviceId":"123456"}`）。 |
+
+:::tip
+请根据设备官方技术文档或联系设备技术支持获取 `path`、`method`、`headers` 及 `postParams`。
+:::
+
+### 函数示例
 
 ```javascript
 function buildReadRequest(deviceId, pointIds) {
@@ -292,16 +347,29 @@ function buildReadRequest(deviceId, pointIds) {
 
 ## parseReadResponse  
 
-用于解析读取点数据的响应报文，返回点的值。
-	
-参数：deviceId，responseString
-	
-返回字段信息：key 为点ID，value 为点值（全部为字符串）
-	
-返回数据格式示例：
+本接口用于解析通过功能点读取接口（[buildReadRequest](#buildreadrequest)）获取的设备原始数据。
+
+请在本方法中将设备返回的 responseString 转换为 Aqara Studio 可以识别的功能点数据格式。
+
+### 入参说明
+
+本函数的入参应仅有两个，且参数名必须为 deviceId 和 responseString，否则 Aqara Studio 无法正确传递和解析数据。
+
+### 返回值
+
+为了确保 Aqara Studio 能正确获取功能点的数据，您需要保证 parseReadResponse 函数返回的数据格式与下方示例一致：
+
 ```json
-{"temperature":"22.5","humidity":"60"}
+{
+    "temperature": "22.5",
+    "humidity": "60"
+}
 ```
+
+字段说明：每个 key 表示功能点，对应的 value 为该点的值（均为字符串类型）
+
+### 函数示例
+
 ```javascript
 function parseReadResponse(deviceId, responseString) {
     if (!responseString) return {};
@@ -327,13 +395,18 @@ function parseReadResponse(deviceId, responseString) {
 
 ## buildWriteRequest  
 
-用于生成写入设备点数据的请求报文。
-	
-参数：deviceId，pointId，value
-	
-返回字段信息：path、method、headers、postParams
-	
-返回数据格式示例：
+当您向在 Aqara Studio 上控制设备的功能点（如开关、温度、模式等）时，Aqara Studio 会调用此方法，并传入目标设备 ID（deviceId）、要控制的功能点 ID（pointId）以及要设置的目标值（value）。
+
+请在该方法中返回一个请求配置对象，指示 Aqara Studio 应如何通过 HTTP API 向设备下发控制指令。
+
+### 入参说明
+
+本函数的入参应仅有三个，且参数名必须为 deviceId（设备 ID）、pointId（功能点 ID）和 value（功能点值），否则 Aqara Studio 无法正确发起请求。
+
+### 返回值
+
+为确保 Aqara Studio 可以正常控制功能点，您需要确保 buildWriteRequest 函数返回的数据的格式与下列一致：
+
 ```json
 {
     path: "/device/write/temperature",
@@ -342,6 +415,21 @@ function parseReadResponse(deviceId, responseString) {
     postParams: "{\"value\":22.5}"
 }
 ```
+
+字段说明如下：
+
+| 字段         | 类型     | 含义 |
+|--------------|----------|------|
+| path         | String   | 请求路径。用于指定写入设备点的接口地址。<br />如果 `method` 为 `GET` 且包含参数，可直接拼接到 path，例 |
+| method       | String   |  HTTP 请求方法，支持 `GET` 和 `POST`，用于指定调用发现接口时使用的 HTTP 请求方式。 |
+| headers      | String   | 请求头，**JSON 字符串格式**（例如：`{"Content-Type":"application/json"}`） |
+| postParams   | String   | POST 请求体参数，**JSON 字符串格式**（例如：`{"value":22.5}`）。 |
+
+:::tip
+请根据设备官方技术文档或联系设备技术支持获取 `path`、`method`、`headers` 及 `postParams`。
+:::
+
+### 函数示例
 
 ```javascript
 function buildWriteRequest(deviceId, pointId, value) {
@@ -359,11 +447,23 @@ function buildWriteRequest(deviceId, pointId, value) {
 
 ## parseWriteResponse 
 
-用于解析写入点数据的响应报文，返回是否成功。
-	
-参数：pointId，responseString
-	
-返回：布尔值（true/false）
+本接口用于解析功能点写入（控制）接口（[buildWriteRequest](#buildwriterequest)）返回的数据，用于判断设备的控制指令是否执行成功。
+
+当 Aqara Studio 向设备发起写入请求（例如开关设备、调节温度等）并接收到设备返回结果时，会调用此函数，根据返回值，判断控制是否成功。
+
+请在本方法中解析设备返回的数据，并将其转换为布尔值，便于 Aqara Studio 判断控制指令是否执行成功。
+
+### 入参说明
+
+本函数的入参应仅有两个，且参数名必须为 pointId 和 responseString，否则 Aqara Studio 无法正确传递和解析数据。
+
+## 返回值
+
+请确保函数返回值为布尔值，布尔值说明如下：
+- true：功能点写入成功
+- false：功能点写入失败或设备返回异常
+
+### 函数示例
 
 ```javascript
 function parseWriteResponse(pointId, responseString) {
@@ -380,22 +480,35 @@ function parseWriteResponse(pointId, responseString) {
 
 ## parseReportRequest 
 
-用于解析设备上报的报文，提取设备ID、点ID、点值等信息。
-	
-参数：path，requestString
-	
-返回：Pair\<List\<Map\<String, String>>, String>，即点信息列表和 responseMsg
 
-返回数据格式示例：
+当设备主动向 Aqara Studio 上报数据时（例如设备状态变化、传感器上报数据等），Aqara Studio 会调用此函数，从设备主动上报的数据中提取设备 ID 和各个功能点的上报数据，用于更新设备状态。
+
+请在本方法中将设备返回的 responseString 转换为 Aqara Studio 可以识别的功能点数据格式。
+
+### 入参说明
+	
+本函数的入参应仅有两个，且参数名必须为 path 和 responseString，否则 Aqara Studio 无法正确传递和解析数据。
+
+### 返回值
+
+返回值的格式应为 Pair\<List\<Map\<String, String>>, String>，即点信息列表和 responseMsg。
+
+为了确保 Aqara Studio 能正确获取功能点的数据，您需要保证 parseReportResponse 函数返回的数据格式与下方示例一致：
+
 ```json
 {
     deviceId: "123456",
     points: [
-        { pointId: "temperature", value: "22.5" }
+        { 
+            pointId: "temperature", 
+            value: "22.5" 
+        }
     ],
     responseMsg: ""
 }
 ```
+
+### 函数示例
 
 ```javascript
 function parseReportRequest(path, requestString) {
@@ -421,9 +534,3 @@ function parseReportRequest(path, requestString) {
     return { deviceId: deviceId, points: points, responseMsg: "" };
 }
 ```
-
-
-
-
-
-
