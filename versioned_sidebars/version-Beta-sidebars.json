@@ -203,7 +203,8 @@
       "type": "category",
       "label": "Reference",
       "items": [
-        "aqara-studio/javascript-script-for-adding-data-points"
+        "aqara-studio/javascript-script-for-adding-data-points",
+        "aqara-studio/javascript-for-http-integration"
       ]
     }
   ]

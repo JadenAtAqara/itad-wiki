@@ -10,11 +10,22 @@ The value of MCP is to reduce integration costs, improve AI capabilities, and ma
 
 After connecting the Aqara Studio MCP Server, you can check and control all your devices connected to Aqara Studio using various AI applications in real time. This allows you to monitor device status and control them easily.
 
-## Get MCP Server URL
+## Prerequisites
+
+Before using the MCP Server, please make sure you have completed the following steps:
+- [Enable the MCP service](#enable-mcp-service).
+- [Get the MCP Server URL](#get-mcp-server-url).
+- [Get your Token](#get-your-token).
+
+### Enable MCP Service
+
+In the left sidebar, navigate to the **Developer** page. Find the MCP server card, and toggle the switch at the top right to quickly enable or disable the MCP service.
+
+### Get MCP Server URL
 
 Different AI tools require different MCP Server URL formats. There are two main types:
 
-### LAN Address
+#### LAN Address
 
 LAN addresses work for apps like **Cursor** that can access your local computer or other devices on the same network.
 
@@ -27,7 +38,7 @@ LAN addresses work for apps like **Cursor** that can access your local computer 
 
 - Example: `http://192.168.1.2/open/api/mcp`
 
-### Remote Address
+#### Remote Address
 
 Remote addresses are used when the AI app only supports public (internet) access, such as **ChatGPT** or **Manus**. For example, the **OpenAI** platform only supports MCP Server addresses using **HTTPS**, not HTTP.
 
@@ -41,7 +52,7 @@ Remote addresses are used when the AI app only supports public (internet) access
 - If you want to use cloud AI apps (like ChatGPT or GPTs), you must use a public HTTPS address.
 :::
 
-## Get Your Token
+### Get Your Token
 
 Please see [Developer Guide - Required Information](./developer-guide.mdx#obtain-required-information) to get your authorization token. The token is necessary so you can authenticate and connect to the Aqara Studio MCP Server.
 

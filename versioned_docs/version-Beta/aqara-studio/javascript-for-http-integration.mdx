@@ -1,0 +1,387 @@
+## HTTP 脚本
+
+
+| 方法 | 说明 |
+| --- | --- |
+| [buildDiscoveryRequest](#builddiscoveryrequest) | 用于生成发现设备的请求报文 |
+| [parseDiscoveryResponse](#parsediscoveryresponse) | 用于解析发现设备的响应报文 |
+| [buildDiscoverPointsRequest](#builddiscoverpointsrequest) | 用于生成查询设备点（属性/功能点）信息的请求报文 |
+| [parseDiscoverPointsResponse](#parsediscoverpointsresponse) | 用于解析设备点信息的响应报文，返回点的详细信息 |
+| [buildReadRequest](#buildreadrequest) | 用于生成读取设备点数据的请求报文 |
+| [parseReadResponse](#parsereadresponse) | 用于解析读取点数据的响应报文，返回点的值 |
+| [buildWriteRequest](#buildwriterequest) | 用于生成写入设备点数据的请求报文 |
+| [parseWriteResponse](#parsewriteresponse) | 用于解析写入点数据的响应报文，返回是否成功 |
+| [parseReportRequest](#parsereportrequest) | 用于解析设备上报的报文，提取设备ID、点ID、点值等信息 |
+
+每个方法的输入参数不可改，输出参数字段和结构不可改
+
+字段解析信息
+| 字段名       | 含义                                                     |
+|--------------|----------------------------------------------------------|
+| pointId      | 表示 studio 的 point 与设备属性的关系                    |
+| pointName    | point 的名称                                             |
+| pointType    | 对应 spec 的 deviceType，具体值可参考 spec 相关文档      |
+| functionId   | 对应 spec 的 functionId，具体值可参考 spec 相关文档      |
+| traitId      | 对应 spec 的 traitId，具体值可参考 spec 相关文档         |
+| dataType     | 表示点的数据类型，范围支持：bool、numerical、text        |
+| access       | 读写类型，1 仅可读，2 可读可写                            |
+
+注意项：
+可以选择使用spec信息生成点（必须有的字段：pointType、functionId、traitId），或者通用型生成点（必须有的字段：dataType、access）
+
+
+http设备接入涉及到9个js方法，方法描述如下：
+
+## buildDiscoveryRequest
+
+用于生成发现设备的请求报文
+
+| 字段 | 含义 | 示例 |
+| -- | -- | -- |
+| path       | 请求设备端的地址，例如：/discoveryDevices。如果是GET请求且有参数信息，直接拼接到path里面，例如：/discoveryDevices?channel=1 | /discoveryDevices<br />/discoveryDevices?channel=1        |
+| method     | 请求方法，POST或者GET，根据设备端实际情况填写                                         | POST<br />GET                                            |
+| headers    | 请求头信息                                                                           | `{"Content-Type": "application/json","Authorization": "Bearer your_token"}` |
+| postParams | POST 请求时的参数信息                                                                 | `{"appId":"V0001","offset":0,"limit":100}`              |
+
+返回数据格式示例：
+
+```json
+{
+  "path": "/report/discoveryDevices",
+  "method": "POST",
+  "headers": "{\"Content-Type\":\"application/json\"}",
+  "postParams": "{\"appId\":\"V0001\"}"
+}
+```
+
+详细示例方法如下：
+    
+```javascript
+function buildDiscoveryRequest() {
+    return {
+        path: "/report/discoveryDevices",
+        method: "POST",
+        headers: JSON.stringify({
+            "Content-Type": "application/json"
+        }),
+        postParams: JSON.stringify({
+            "appId": "V0001"
+        })
+    };
+}
+```
+
+## parseDiscoveryResponse  
+
+用于解析发现设备的响应报文
+
+方法返回字段包括 deviceId 和 deviceName
+	
+传入的报文示例:
+```json
+{
+  "reply": {
+    "data": {
+      "meta": {
+        "limit": 10,
+        "offset": 0
+      },
+      "list": [
+        {
+          "deviceId": "123456",
+          "deviceName": "test1",
+          "ip": "127.0.0.1",
+          "createTime": "qwerasd"
+        }
+      ]
+    },
+    "returnCode": {
+      "type": "S",
+      "code": "AAAAA",
+      "domain": null
+    }
+  }
+}
+```
+	
+返回的数据格式示例：
+```json
+[
+    {
+        "deviceId": "123456",
+        "deviceName": "温度传感器"
+    }
+]
+```
+
+详细示例方法如下：
+```javascript
+function parseDiscoveryResponse(responseString) {
+    if (!responseString) return [];
+    let obj;
+    try {
+        obj = JSON.parse(responseString);
+    } catch (e) {
+        return [];
+    }
+    const list = obj?.reply?.data?.list;
+    if (!Array.isArray(list)) return [];
+    // 返回数组，每个元素包含 deviceId 和 deviceName
+    return list.map(item => ({
+        deviceId: item.deviceId,
+        deviceName: item.deviceName
+    }));
+}
+```
+
+## buildDiscoverPointsRequest  
+
+用于生成查询设备点（属性/功能点）信息的请求报文。
+	
+返回字段信息：
+	
+| 字段名         | 说明                                 | 示例                                                         |
+|----------------|--------------------------------------|--------------------------------------------------------------|
+| path           | 请求设备端的地址                      | /device/points?deviceId=123456                               |
+| method         | 请求方法，POST 或 GET                 | GET                                                          |
+| headers        | 请求头信息                            | `{"Content-Type": "application/json"}`                         |
+| postParams     | POST 请求时的参数信息                 | `{"deviceId":"123456"}`                                        |
+| 返回数据格式示例 | 接口返回的整体数据结构示例           | `{"path":"/device/points?deviceId=123456","method": "GET","headers": "{\"Content-Type\":\"application/json\"}","postParams":"{\"deviceId\":\"123456\"}"}` |
+
+方法示例
+```javascript
+function buildDiscoverPointsRequest(deviceId) {
+    return {
+        path: `/device/points?deviceId=${deviceId}`,
+        method: "GET",
+        headers: JSON.stringify({
+            "Content-Type": "application/json"
+        }),
+        postParams: ""
+    };
+}
+```
+
+## parseDiscoverPointsResponse  
+
+用于解析设备点信息的响应报文，返回点的详细信息。
+	
+返回字段信息：pointId、pointName、pointType、function、trait、dataType、access
+	
+返回数据格式示例（使用spec）：
+```json
+[
+  {
+    "pointId": "temperature",
+    "pointName": "温度",
+    "pointType": "TemperatureSensor",
+    "function": "Temperature",
+    "trait": "CurrentTemperature"
+  }
+]
+```
+
+返回数据格式示例（不使用spec）：
+
+```json
+[
+  {
+    "pointId": "temperature",
+    "pointName": "温度",
+    "dataType": "numerical",
+    "access": "1"
+  }
+]
+```
+方法示例
+```javascript
+function parseDiscoverPointsResponse(responseString) {
+    if (!responseString) return [];
+    let obj;
+    try {
+        obj = JSON.parse(responseString);
+    } catch (e) {
+        return [];
+    }
+    const list = obj?.reply?.data?.points;
+    if (!Array.isArray(list)) return [];
+    return list.map(item => ({
+        pointId: item.pointId,
+        pointName: item.pointName,
+        pointType: item.pointType,
+        function: item.function,
+        trait: item.trait
+    }));
+}
+```
+
+## buildReadRequest  
+
+用于生成读取设备点数据的请求报文。
+
+参数：deviceId（设备ID），pointIds（点ID数组）
+	
+返回字段信息：path、method、headers、postParams
+
+返回数据格式示例（注意这里返回的是一个数组，如果设备支持批量读取，数组只包括一个对象即可，如果设备不支持批量读取，则可以根据实际点生成多个数组返回）：
+
+```json
+[
+  {
+    "path": "/device/read/temperature",
+    "method": "GET",
+    "headers": "",
+    "postParams": ""
+  }
+]
+```
+
+```javascript
+function buildReadRequest(deviceId, pointIds) {
+    if (!deviceId || !Array.isArray(pointIds) || pointIds.length === 0) return [];
+    return pointIds.map(function(pointId) {
+        return {
+            path: `/device/read/${deviceId}/${pointId}`,
+            method: "GET",
+            headers: "",
+            postParams: ""
+        };
+    });
+}
+```
+
+## parseReadResponse  
+
+用于解析读取点数据的响应报文，返回点的值。
+	
+参数：deviceId，responseString
+	
+返回字段信息：key 为点ID，value 为点值（全部为字符串）
+	
+返回数据格式示例：
+```json
+{"temperature":"22.5","humidity":"60"}
+```
+```javascript
+function parseReadResponse(deviceId, responseString) {
+    if (!responseString) return {};
+    let obj;
+    try {
+        obj = JSON.parse(responseString);
+    } catch (e) {
+        return {};
+    }
+    const result = {};
+    if (obj.data && Array.isArray(obj.data)) {
+        obj.data.forEach(item => {
+            for (const key in item) {
+                if (Object.prototype.hasOwnProperty.call(item, key)) {
+                    result[key] = String(item[key]);
+                }
+            }
+        });
+    }
+    return result;
+}
+```
+
+## buildWriteRequest  
+
+用于生成写入设备点数据的请求报文。
+	
+参数：deviceId，pointId，value
+	
+返回字段信息：path、method、headers、postParams
+	
+返回数据格式示例：
+```json
+{
+    path: "/device/write/temperature",
+    method: "POST",
+    headers: "",
+    postParams: "{\"value\":22.5}"
+}
+```
+
+```javascript
+function buildWriteRequest(deviceId, pointId, value) {
+    if (!deviceId || !pointId) return {};
+    return {
+        path: `/device/write/${deviceId}/${pointId}`,
+        method: "POST",
+        headers: JSON.stringify({
+            "Content-Type": "application/json"
+        }),
+        postParams: JSON.stringify({ value: value })
+    };
+}
+```
+
+## parseWriteResponse 
+
+用于解析写入点数据的响应报文，返回是否成功。
+	
+参数：pointId，responseString
+	
+返回：布尔值（true/false）
+
+```javascript
+function parseWriteResponse(pointId, responseString) {
+    if (!responseString) return false;
+    let obj;
+    try {
+        obj = JSON.parse(responseString);
+    } catch (e) {
+        return false;
+    }
+    return obj.result === "success";
+}
+```
+
+## parseReportRequest 
+
+用于解析设备上报的报文，提取设备ID、点ID、点值等信息。
+	
+参数：path，requestString
+	
+返回：Pair\<List\<Map\<String, String>>, String>，即点信息列表和 responseMsg
+
+返回数据格式示例：
+```json
+{
+    deviceId: "123456",
+    points: [
+        { pointId: "temperature", value: "22.5" }
+    ],
+    responseMsg: ""
+}
+```
+
+```javascript
+function parseReportRequest(path, requestString) {
+    if (!requestString) return { deviceId: "", points: [], responseMsg: "" };
+    let obj;
+    try {
+        obj = JSON.parse(requestString);
+    } catch (e) {
+        return { deviceId: "", points: [], responseMsg: "" };
+    }
+    const deviceId = obj.deviceld || obj.deviceId || "";
+    const points = [];
+    const parans = obj.data && obj.data.parans ? obj.data.parans : {};
+    for (const pointId in parans) {
+        if (Object.prototype.hasOwnProperty.call(parans, pointId)) {
+            const item = parans[pointId];
+            points.push({
+                pointId: pointId,
+                value: String(item.value)
+            });
+        }
+    }
+    return { deviceId: deviceId, points: points, responseMsg: "" };
+}
+```
+
+
+
+
