@@ -10,11 +10,22 @@ MCP 的价值在于降低集成成本、扩展 AI 能力并提升用户体验：
 
 连接 Aqara Studio MCP Server 后，您可以通过各类 AI 应用实时查看并控制您在 Aqara Studio 已接入的所有设备，实现设备状态监控与便捷操控。
 
-## 获取 MCP Server URL
+## 前提条件
+
+在使用 MCP Server 之前，请确保您已完成以下准备工作：
+- [启用 MCP 服务](#启用-mcp-服务)。
+- [获取 MCP Server URL](#获取-mcp-server-url)。
+- [获取 Token](#获取-token)。
+
+### 启用 MCP 服务
+
+在左侧边栏点击进入**开发者**页面，找到 MCP Server 卡片并切换右上角的开关，即可一键启用或关闭 MCP 服务。
+
+### 获取 MCP Server URL
 
 不同的 AI 应用对 MCP Server 的 URL 地址格式有不同要求。常见有两类：
 
-### 局域网地址
+#### 局域网地址
 
 局域网地址适用于 **Cursor** 等支持直接访问您电脑本地或所在局域网设备的应用。
 
@@ -27,7 +38,7 @@ MCP 的价值在于降低集成成本、扩展 AI 能力并提升用户体验：
 
 - 示例：`http://192.168.1.2/open/api/mcp`
 
-### 远程访问地址
+#### 远程访问地址
 
 远程访问地址适用于 **ChatGPT、Manus 等仅能通过公网访问的应用**，如 **OpenAI** 平台仅支持采用 **HTTPS** 协议的 MCP Server 地址，不支持 HTTP 协议地址。
 
@@ -41,7 +52,7 @@ MCP 的价值在于降低集成成本、扩展 AI 能力并提升用户体验：
 - 若需要云端 AI 应用（如 ChatGPT/GPTs）访问，则必须提供公网 HTTPS 地址。
 :::
 
-## 获取 Token
+### 获取 Token
 
 请参考 [开发者指南 - 获取必要信息](./developer-guide.mdx#获取必要信息)，获取授权 Token，用于通过用户身份验证，以便与 Aqara Studio MCP Server 建立连接。
 

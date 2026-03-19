@@ -1,0 +1,429 @@
+# JavaScript 脚本（适用于 HTTP）
+
+本文件介绍了如何通过 JavaScript 脚本在 Aqara Studio 中自定义添加 HTTP 设备和功能点及其解析方法。
+
+## 脚本介绍
+
+本脚本**必须**包含以下 9 个 JavaScript 方法：
+
+| 方法 | 说明 |
+| --- | --- |
+| [buildDiscoveryRequest](#builddiscoveryrequest) | 用于生成发现设备的请求报文 |
+| [parseDiscoveryResponse](#parsediscoveryresponse) | 用于解析发现设备的响应报文 |
+| [buildDiscoverPointsRequest](#builddiscoverpointsrequest) | 用于生成查询设备点（属性/功能点）信息的请求报文 |
+| [parseDiscoverPointsResponse](#parsediscoverpointsresponse) | 用于解析设备点信息的响应报文，返回点的详细信息 |
+| [buildReadRequest](#buildreadrequest) | 用于生成读取设备点数据的请求报文 |
+| [parseReadResponse](#parsereadresponse) | 用于解析读取点数据的响应报文，返回点的值 |
+| [buildWriteRequest](#buildwriterequest) | 用于生成写入设备点数据的请求报文 |
+| [parseWriteResponse](#parsewriteresponse) | 用于解析写入点数据的响应报文，返回是否成功 |
+| [parseReportRequest](#parsereportrequest) | 用于解析设备上报的报文，提取设备ID、点ID、点值等信息 |
+
+:::tip
+请勿更改方法的参数及其输入输出结构。
+:::
+
+## buildDiscoveryRequest
+
+您通过该方法返回一个请求配置对象，从而告诉 Aqara Studio 如何发起 HTTP 请求来发现设备。
+
+请求配置对象的字段说明如下：
+
+| 字段         | 类型     | 含义 |
+|--------------|----------|------|
+| path         | String   | 请求路径。用于指定设备发现接口地址，例如 `/report/discoveryDevices`。<br />如果 `method` 为 `GET` 且包含参数，可直接拼接到 path，例如 `/discoveryDevices?channel=1`。 |
+| method       | String   | HTTP 请求方法，支持 `GET` 和 `POST`，用于指定调用发现接口时使用的 HTTP 请求方式。 |
+| headers      | String   | 请求头，**JSON 字符串格式**（例如：`{"Content-Type":"application/json"}`） |
+| postParams   | String   | POST 请求体参数，**JSON 字符串格式**（例如：`{"appId":"V0001"}`）。 |
+
+:::tip
+请根据设备官方技术文档或联系设备技术支持获取 `path`、`method`、`headers` 及 `postParams`。
+:::
+
+返回数据格式示例：
+
+```json
+{
+    "path": "/report/discoveryDevices",
+    "method": "POST",
+    "headers": "{\"Content-Type\":\"application/json\"}",
+    "postParams": "{\"appId\":\"V0001\"}"
+}
+```
+
+### 示例
+    
+```javascript
+function buildDiscoveryRequest() {
+    return {
+        path: "/report/discoveryDevices",
+        method: "POST",
+        headers: JSON.stringify({
+            "Content-Type": "application/json"
+        }),
+        postParams: JSON.stringify({
+            "appId": "V0001"
+        })
+    };
+}
+```
+
+## parseDiscoveryResponse  
+
+该方法解析设备发现接口的返回数据，并提取出设备列表（deviceId + deviceName）。
+	
+传入的报文示例:
+```json
+{
+    "reply": {
+        "data": {
+            "meta": {
+                "limit": 10,
+                "offset": 0
+            },
+            "list": [
+                {
+                    "deviceId": "123456",
+                    "deviceName": "test1",
+                    "ip": "127.0.0.1",
+                    "createTime": "qwerasd"
+                }
+            ]
+        },
+        "returnCode": {
+            "type": "S",
+            "code": "AAAAA",
+            "domain": null
+        }
+    }
+}
+```
+	
+返回的数据格式示例：
+```json
+[
+    {
+        "deviceId": "123456",
+        "deviceName": "温度传感器"
+    }
+]
+```
+
+### 示例
+
+```javascript
+function parseDiscoveryResponse(responseString) {
+    if (!responseString) return [];
+    let obj;
+    try {
+        obj = JSON.parse(responseString);
+    } catch (e) {
+        return [];
+    }
+    const list = obj?.reply?.data?.list;
+    if (!Array.isArray(list)) return [];
+    // 返回数组，每个元素包含 deviceId 和 deviceName
+    return list.map(item => ({
+        deviceId: item.deviceId,
+        deviceName: item.deviceName
+    }));
+}
+```
+
+## buildDiscoverPointsRequest  
+
+您通过该方法返回一个请求配置对象，从而告诉 Aqara Studio 如何发起 HTTP 请求来查询指定设备的功能点（points）。
+
+请求配置对象的字段说明如下：
+
+| 字段         | 类型     | 含义 |
+|--------------|----------|------|
+| path         | String   | 请求路径。用于指定查询设备功能点的接口地址，例如 `/device/points?deviceId=xxx`。其中 `deviceId` 为目标设备的唯一标识，通过 query 参数拼接到 path 中。 |
+| method       | String   |  HTTP 请求方法，支持 `GET` 和 `POST`，用于指定调用发现接口时使用的 HTTP 请求方式。 |
+| headers      | String   | 请求头，**JSON 字符串格式**（例如：`{"Content-Type":"application/json"}`） |
+| postParams   | String   | POST 请求体参数，**JSON 字符串格式**（例如：`{"deviceId":"123456"}`）。 |
+
+:::tip
+请根据设备官方技术文档或联系设备技术支持获取 `path`、`method`、`headers` 及 `postParams`。
+:::
+
+返回数据格式示例：
+```json
+{
+    "path": "/device/points?deviceId=123456",
+    "method": "GET",
+    "headers": "{\"Content-Type\":\"application/json\"}",
+    "postParams": "{\"deviceId\":\"123456\"}"
+}
+```
+
+### 示例
+
+```javascript
+function buildDiscoverPointsRequest(deviceId) {
+    return {
+        path: `/device/points?deviceId=${deviceId}`,
+        method: "GET",
+        headers: JSON.stringify({
+            "Content-Type": "application/json"
+        }),
+        postParams: ""
+    };
+}
+```
+
+## parseDiscoverPointsResponse  
+
+该方法负责向 Aqara Studio 声明“该设备具备哪些功能点”。
+
+您需要在返回数组中填写一个或多个待发现功能点结构（如 pointId 等，详情请见[point 对象结构](#point-对象结构)）。这样，Aqara Studio 才能在功能点发现流程中会调用该函数，解析返回值，从而识别设备具备的所有功能点，实现功能点无缝接入和控制。
+
+### point 对象结构 
+
+| 字段名称    | 说明                                                                                     |
+|-----------|-------------------------------------------------------------------------------------------|
+| pointId   | 功能点 ID。请咨询设备厂商获取功能点的真实 ID，以便 Aqara Studio 发现该点。                                                    |
+| pointName | 您自定义的功能点名称。                                                                              |
+| pointType | 对应 Aqara Spec 的 `deviceType`，具体值请参考 Aqara Spec 相关文档。                                  |
+| function| 对应 Aqara Spec 的 `functionCode`，具体值请参考 Aqara Spec 相关文档。                                  |
+| trait   | 对应 Aqara Spec 的 `traitCode`，具体值请参考 Aqara Spec 相关文档。                                      |
+| dataType  | 功能点数据类型，支持以下取值：<ul><li><code>bool</code>：布尔型</li><li><code>numerical</code>：数值型</li><li><code>text</code>：文本型</li></ul> |
+| access    | 读写类型，<ul><li>1：仅可读</li><li>2：可读可写</li></ul>                                 |
+
+:::tip
+新增功能点时，您可以根据实际情况选择两种方式：
+
+- **基于 Aqara Spec**：需填写 `pointType`、`functionId`、`traitId` 等字段，这可以将设备的功能点关联到 Aqara Spec 协议中的对应功能点
+- **通用方式**：需填写 `dataType`、`access` 等基本字段。
+:::
+	
+返回数据格式示例：
+- 基于 Aqara Spec：
+    ```json
+    [
+        {
+            "pointId": "temperature",
+            "pointName": "温度",
+            "pointType": "TemperatureSensor",
+            "function": "Temperature",
+            "trait": "CurrentTemperature"
+        }
+    ]
+    ```
+
+- 使用通用方法：
+
+    ```json
+    [
+        {
+            "pointId": "temperature",
+            "pointName": "温度",
+            "dataType": "numerical",
+            "access": "1"
+        }
+    ]
+    ```
+
+### 示例
+
+```javascript
+function parseDiscoverPointsResponse(responseString) {
+    if (!responseString) return [];
+    let obj;
+    try {
+        obj = JSON.parse(responseString);
+    } catch (e) {
+        return [];
+    }
+    const list = obj?.reply?.data?.points;
+    if (!Array.isArray(list)) return [];
+    return list.map(item => ({
+        pointId: item.pointId,
+        pointName: item.pointName,
+        pointType: item.pointType,
+        function: item.function,
+        trait: item.trait
+    }));
+}
+```
+
+## buildReadRequest  
+
+该方法负责根据设备 ID 以及需要读取的功能点 ID，构造用于向设备发起读取请求的 HTTP 请求配置列表。
+
+当 Aqara Studio 需要获取设备的状态数据（例如开关状态、温度、模式等）时，会调用此函数，传入目标设备 ID（deviceId）以及需要读取的功能点 ID 数组（pointIds）。函数需返回一个请求配置对象数组，每个元素对应一个功能点的读取请求，平台将根据这些请求逐一向设备发起查询。
+
+请求配置对象的字段说明如下：
+| 字段         | 类型     | 含义 |
+|--------------|----------|------|
+| path         | String   | 请求路径。用于指定查询设备功能点的接口地址，例如 `/device/points?deviceId=xxx`。其中 `deviceId` 为目标设备的唯一标识，通过 query 参数拼接到 path 中。 |
+| method       | String   |  HTTP 请求方法，支持 `GET` 和 `POST`，用于指定调用发现接口时使用的 HTTP 请求方式。 |
+| headers      | String   | 请求头，**JSON 字符串格式**（例如：`{"Content-Type":"application/json"}`） |
+| postParams   | String   | POST 请求体参数，**JSON 字符串格式**（例如：`{"deviceId":"123456"}`）。 |
+
+```json
+[
+    {
+        "path": "/device/read/temperature",
+        "method": "GET",
+        "headers": "",
+        "postParams": ""
+    }
+]
+```
+
+:::tip
+这里返回的是一个数组，如果设备支持批量读取，数组只包括一个对象即可，如果设备不支持批量读取，则可以根据实际点生成多个数组返回。
+:::
+
+
+```javascript
+function buildReadRequest(deviceId, pointIds) {
+    if (!deviceId || !Array.isArray(pointIds) || pointIds.length === 0) return [];
+    return pointIds.map(function(pointId) {
+        return {
+            path: `/device/read/${deviceId}/${pointId}`,
+            method: "GET",
+            headers: "",
+            postParams: ""
+        };
+    });
+}
+```
+
+## parseReadResponse  
+
+用于解析读取点数据的响应报文，返回点的值。
+	
+参数：deviceId，responseString
+	
+返回字段信息：key 为点ID，value 为点值（全部为字符串）
+	
+返回数据格式示例：
+```json
+{"temperature":"22.5","humidity":"60"}
+```
+```javascript
+function parseReadResponse(deviceId, responseString) {
+    if (!responseString) return {};
+    let obj;
+    try {
+        obj = JSON.parse(responseString);
+    } catch (e) {
+        return {};
+    }
+    const result = {};
+    if (obj.data && Array.isArray(obj.data)) {
+        obj.data.forEach(item => {
+            for (const key in item) {
+                if (Object.prototype.hasOwnProperty.call(item, key)) {
+                    result[key] = String(item[key]);
+                }
+            }
+        });
+    }
+    return result;
+}
+```
+
+## buildWriteRequest  
+
+用于生成写入设备点数据的请求报文。
+	
+参数：deviceId，pointId，value
+	
+返回字段信息：path、method、headers、postParams
+	
+返回数据格式示例：
+```json
+{
+    path: "/device/write/temperature",
+    method: "POST",
+    headers: "",
+    postParams: "{\"value\":22.5}"
+}
+```
+
+```javascript
+function buildWriteRequest(deviceId, pointId, value) {
+    if (!deviceId || !pointId) return {};
+    return {
+        path: `/device/write/${deviceId}/${pointId}`,
+        method: "POST",
+        headers: JSON.stringify({
+            "Content-Type": "application/json"
+        }),
+        postParams: JSON.stringify({ value: value })
+    };
+}
+```
+
+## parseWriteResponse 
+
+用于解析写入点数据的响应报文，返回是否成功。
+	
+参数：pointId，responseString
+	
+返回：布尔值（true/false）
+
+```javascript
+function parseWriteResponse(pointId, responseString) {
+    if (!responseString) return false;
+    let obj;
+    try {
+        obj = JSON.parse(responseString);
+    } catch (e) {
+        return false;
+    }
+    return obj.result === "success";
+}
+```
+
+## parseReportRequest 
+
+用于解析设备上报的报文，提取设备ID、点ID、点值等信息。
+	
+参数：path，requestString
+	
+返回：Pair\<List\<Map\<String, String>>, String>，即点信息列表和 responseMsg
+
+返回数据格式示例：
+```json
+{
+    deviceId: "123456",
+    points: [
+        { pointId: "temperature", value: "22.5" }
+    ],
+    responseMsg: ""
+}
+```
+
+```javascript
+function parseReportRequest(path, requestString) {
+    if (!requestString) return { deviceId: "", points: [], responseMsg: "" };
+    let obj;
+    try {
+        obj = JSON.parse(requestString);
+    } catch (e) {
+        return { deviceId: "", points: [], responseMsg: "" };
+    }
+    const deviceId = obj.deviceld || obj.deviceId || "";
+    const points = [];
+    const parans = obj.data && obj.data.parans ? obj.data.parans : {};
+    for (const pointId in parans) {
+        if (Object.prototype.hasOwnProperty.call(parans, pointId)) {
+            const item = parans[pointId];
+            points.push({
+                pointId: pointId,
+                value: String(item.value)
+            });
+        }
+    }
+    return { deviceId: deviceId, points: points, responseMsg: "" };
+}
+```
+
+
+
+
+
+
