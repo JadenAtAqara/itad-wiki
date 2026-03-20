@@ -1,42 +1,51 @@
-# JavaScript for HTTP Interation
+# JavaScript for HTTP Integration
 
-本文件介绍了如何通过 JavaScript 脚本在 Aqara Studio 中自定义添加 HTTP 设备和功能点及其解析方法。
+This document introduces how to add HTTP devices and function points as well as their parsing methods in Aqara Studio using JavaScript scripts.
 
-## 脚本介绍
+## Script Introduction
 
-**您必需在本脚本实现以下 9 个方法**，以便 Aqara Studio 获取发起 HTTP 请求的全部信息，并指导如何将响应数据解析为 Aqara Studio 能识别的标准格式。
+**You must implement the following 9 methods in this script** so that Aqara Studio can obtain all the information needed to initiate HTTP requests and instruct how to parse the response data into a standard format recognized by Aqara Studio.
 
-| 方法 | 说明 |
+| Method | Description |
 | --- | --- |
-| [buildDiscoveryRequest](#builddiscoveryrequest) | 用于生成发现设备的请求报文 |
-| [parseDiscoveryResponse](#parsediscoveryresponse) | 用于解析发现设备的响应报文 |
-| [buildDiscoverPointsRequest](#builddiscoverpointsrequest) | 用于生成查询设备点（属性/功能点）信息的请求报文 |
-| [parseDiscoverPointsResponse](#parsediscoverpointsresponse) | 用于解析设备点信息的响应报文，返回点的详细信息 |
-| [buildReadRequest](#buildreadrequest) | 用于生成读取设备点数据的请求报文 |
-| [parseReadResponse](#parsereadresponse) | 用于解析读取点数据的响应报文，返回点的值 |
-| [buildWriteRequest](#buildwriterequest) | 用于生成写入设备点数据的请求报文 |
-| [parseWriteResponse](#parsewriteresponse) | 用于解析写入点数据的响应报文，返回是否成功 |
-| [parseReportRequest](#parsereportrequest) | 用于解析设备上报的报文，提取设备ID、点ID、点值等信息 |
+| [buildDiscoveryRequest](#builddiscoveryrequest) | Builds the request message used to initiate device discovery. |
+| [parseDiscoveryResponse](#parsediscoveryresponse) | Parses the response message returned from device discovery into structured data. |
+| [buildDiscoverPointsRequest](#builddiscoverpointsrequest) | Builds the request message to query device points. |
+| [parseDiscoverPointsResponse](#parsediscoverpointsresponse) | Parses the response message from the device points query into structured ponit information data. |
+| [buildReadRequest](#buildreadrequest) | Builds the request message to read device point data. |
+| [parseReadResponse](#parsereadresponse) | Parses the response message from the device point read operation into structured data. |
+| [buildWriteRequest](#buildwriterequest) | Builds the request message to write device point data. |
+| [parseWriteResponse](#parsewriteresponse) | Parses the response message from the device point write operation into structured data. |
+| [parseReportRequest](#parsereportrequest) | Parses device-reported messages, extracting device ID, point ID, point values, and related data. |
 
 :::tip
-请勿更改方法的名称和参数。
+Please do not modify the names and parameters of the methods.
 :::
 
-## 前提条件
+## Prerequisites
 
-请确保您已掌握待接入设备的 HTTP 接口信息，包括请求地址、请求方法、请求头及请求体参数等。
+Please make sure you are familiar with the HTTP interface information of the device to be integrated, including the request endpoint, HTTP method, request headers, and request body parameters, etc.
+
+Before writing the script, please make sure you fully understand the following HTTP interfaces of the target device, including but not limited to: request endpoint, request method, request headers, request parameters, and response data structure. It is recommended to focus on the following interfaces:
+- Device discovery interface
+- Function point (attribute point) query interface
+- Function point data read interface
+- Function point data write interface
+- Function point data reporting interface
+
+Only by thoroughly understanding the above interfaces can you ensure that your JavaScript script correctly implements the HTTP protocol according to the device specifications and completes data parsing accordingly.
 
 ## buildDiscoveryRequest
 
-请在该方法中返回一个请求配置对象，用于指示 Aqara Studio 如何通过 HTTP API 发现设备。
+Please return a request configuration object in this method to instruct Aqara Studio how to discover devices via the HTTP API.
 
-### 入参说明
+### Parameter Description
 
-本函数应当无入参，否则 Aqara Studio 无法正确发起请求。
+This function should have no parameters; otherwise, Aqara Studio cannot initiate the request properly.
 
-### 返回值
+### Return Value
 
-为确保 Aqara Studio 可以正常向设备发起请求，您需要确保 buildDiscoveryRequest 函数返回的数据的格式与下列一致：
+To ensure Aqara Studio can successfully initiate the device discovery request, the return value of the buildDiscoveryRequest function must adhere to the following format:
 
 ```json
 {
@@ -47,20 +56,20 @@
 }
 ```
 
-字段说明如下：
+Field description:
 
-| 字段         | 类型     | 含义 |
-|--------------|----------|------|
-| path         | String   | 请求路径。用于指定设备发现接口地址，例如 `/report/discoveryDevices`。<br />如果 `method` 为 `GET` 且包含参数，可直接拼接到 path，例如 `/discoveryDevices?channel=1`。 |
-| method       | String   | HTTP 请求方法，支持 `GET` 和 `POST`，用于指定调用发现接口时使用的 HTTP 请求方式。 |
-| headers      | String   | 请求头，**JSON 字符串格式**（例如：`{"Content-Type":"application/json"}`） |
-| postParams   | String   | POST 请求体参数，**JSON 字符串格式**（例如：`{"appId":"V0001"}`）。 |
+| Field      | Type   | Description |
+|------------|--------|-------------|
+| path       | String | Request path. Specifies the device discovery endpoint, for example `/report/discoveryDevices`.<br />If `method` is `GET` and there are parameters, they should be appended directly to the path as in `/discoveryDevices?channel=1`. |
+| method     | String | HTTP request method, supports `GET` and `POST`, used to specify which HTTP method is required for the discovery endpoint. |
+| headers    | String | Request headers, **in JSON string format** (e.g., `{"Content-Type":"application/json"}`). |
+| postParams | String | POST request body parameters, **in JSON string format** (e.g., `{"appId":"V0001"}`). |
 
 :::tip
-请根据设备官方技术文档或联系设备技术支持获取 `path`、`method`、`headers` 及 `postParams`。
+Please consult the official technical documentation for your device or contact its technical support to obtain the correct values for `path`, `method`, `headers`, and `postParams`.
 :::
 
-### 函数示例
+### Example Function
     
 ```javascript
 function buildDiscoveryRequest() {
@@ -79,15 +88,15 @@ function buildDiscoveryRequest() {
 
 ## parseDiscoveryResponse  
 
-请在此方法中解析设备发现接口（[buildDiscoveryRequest](#builddiscoveryrequest)）的返回结果，并返回包含设备 ID（deviceId）和设备名称（deviceName）的设备列表对象数组，供 Aqara Studio 使用。
+In this method, please parse the response from the device discovery API ([buildDiscoveryRequest](#builddiscoveryrequest)), and return an array of device objects, each including device ID (`deviceId`) and device name (`deviceName`), for use by Aqara Studio.
 
-### 入参说明
+### Parameter Description
 
-本函数的入参应仅有一个，且参数名必须为 responseString，否则 Aqara Studio 无法正确传递和解析数据。
+This function should contain only one parameter, and the parameter name must be `responseString`, otherwise Aqara Studio will not be able to pass or parse the data properly.
 
-### 返回值
+### Return Value
 
-为确保 Aqara Studio 可以正常获取设备信息，您需要确保 parseDiscoveryResponse 函数返回的数据的格式与下列一致：
+To ensure Aqara Studio can successfully retrieve device information, the data returned by the `parseDiscoveryResponse` function must conform to the following format:
 
 ```json
 [
@@ -98,9 +107,9 @@ function buildDiscoveryRequest() {
 ]
 ```
 
-### 函数示例
+### Function Example
 
-假设设备发现接口返回的数据如下：
+Let's assume that the device discovery interface returns data as follows:
 
 ```json
 {
@@ -128,7 +137,7 @@ function buildDiscoveryRequest() {
 }
 ```
 
-如需处理上述数据，您可参考以下示例设计此函数：
+To process the above data, you can design the function with reference to the following example:
 
 ```javascript
 function parseDiscoveryResponse(responseString) {
@@ -151,15 +160,15 @@ function parseDiscoveryResponse(responseString) {
 
 ## buildDiscoverPointsRequest  
 
-请在该方法中返回一个请求配置对象，用于指示 Aqara Studio 如何通过 HTTP API 查询指定设备的功能点（points）。
+Please return a request configuration object in this method to instruct Aqara Studio how to query the function points (points) of a specified device via the HTTP API.
 
-### 入参说明
+### Parameter Description
 
-本函数应当无入参，否则 Aqara Studio 无法正确发起请求。
+This function should have no parameters; otherwise, Aqara Studio cannot initiate the request properly.
 
-### 返回值
+### Return Value
 
-为确保 Aqara Studio 可以正常向设备发起请求，您需要确保 buildDiscoveryRequest 函数返回的数据的格式与下列一致：
+To ensure Aqara Studio can successfully initiate the request to the device, you need to make sure the buildDiscoverPointsRequest function returns data in the following format:
 
 ```json
 {
@@ -170,17 +179,19 @@ function parseDiscoveryResponse(responseString) {
 }
 ```
 
-字段说明如下：
+Field description:
 
-| 字段         | 类型     | 含义 |
-|--------------|----------|------|
-| path         | String   | 请求路径。用于指定查询设备功能点的接口地址，例如 `/device/points?deviceId=xxx`。其中 `deviceId` 为目标设备的唯一标识，通过 query 参数拼接到 path 中。 |
-| method       | String   |  HTTP 请求方法，支持 `GET` 和 `POST`，用于指定调用发现接口时使用的 HTTP 请求方式。 |
-| headers      | String   | 请求头，**JSON 字符串格式**（例如：`{"Content-Type":"application/json"}`） |
-| postParams   | String   | POST 请求体参数，**JSON 字符串格式**（例如：`{"deviceId":"123456"}`）。 |
+| Field      | Type   | Description |
+|------------|--------|-------------|
+| path       | String | Request path. Specifies the endpoint for querying device function points, for example `/device/points?deviceId=xxx`. Here, `deviceId` is the unique identifier of the target device and is appended to the path as a query parameter. |
+| path         | String   | 请求路径。用于指定查询设备功能点的接口地址，<br />如果 `method` 为 `GET` 且包含参数，可直接拼接到 path，例如 `/device/points?deviceId=xxx`。 |
+
+| method     | String | HTTP request method, supports `GET` and `POST`, used to specify which HTTP method is required for the query interface. |
+| headers    | String | Request headers, **in JSON string format** (e.g., `{"Content-Type":"application/json"}`). |
+| postParams | String | POST request body parameters, **in JSON string format** (e.g., `{"deviceId":"123456"}`). |
 
 :::tip
-请根据设备官方技术文档或联系设备技术支持获取 `path`、`method`、`headers` 及 `postParams`。
+Please consult the official technical documentation for your device or contact its technical support to obtain the correct values for `path`, `method`, `headers`, and `postParams`.
 :::
 
 ### 函数示例
