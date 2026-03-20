@@ -10,7 +10,7 @@
 | --- | --- |
 | [buildDiscoveryRequest](#builddiscoveryrequest) | 用于生成发现设备的请求报文 |
 | [parseDiscoveryResponse](#parsediscoveryresponse) | 用于解析发现设备的响应报文 |
-| [buildDiscoverPointsRequest](#builddiscoverpointsrequest) | 用于生成查询设备点（属性/功能点）信息的请求报文 |
+| [buildDiscoverPointsRequest](#builddiscoverpointsrequest) | 用于生成查询设备点信息的请求报文 |
 | [parseDiscoverPointsResponse](#parsediscoverpointsresponse) | 用于解析设备点信息的响应报文，返回点的详细信息 |
 | [buildReadRequest](#buildreadrequest) | 用于生成读取设备点数据的请求报文 |
 | [parseReadResponse](#parsereadresponse) | 用于解析读取点数据的响应报文，返回点的值 |
@@ -24,7 +24,14 @@
 
 ## 前提条件
 
-请确保您已掌握待接入设备的 HTTP 接口信息，包括请求地址、请求方法、请求头及请求体参数等。
+在编写脚本前，请先详细了解目标设备的以下 HTTP 接口信息，包括但不限于：请求地址、请求方法、请求头、请求参数及响应数据结构等。建议重点关注以下接口：
+- 设备发现接口
+- 功能点（属性点）查询接口
+- 功能点数据读取接口
+- 功能点数据写入接口
+- 功能点数据上报接口
+
+只有充分理解上述接口，才能确保 JavaScript 脚本按照设备规范正确对接 HTTP 协议并完成数据解析。
 
 ## buildDiscoveryRequest
 
@@ -174,7 +181,7 @@ function parseDiscoveryResponse(responseString) {
 
 | 字段         | 类型     | 含义 |
 |--------------|----------|------|
-| path         | String   | 请求路径。用于指定查询设备功能点的接口地址，例如 `/device/points?deviceId=xxx`。其中 `deviceId` 为目标设备的唯一标识，通过 query 参数拼接到 path 中。 |
+| path         | String   | 请求路径。用于指定查询设备功能点的接口地址，<br />如果 `method` 为 `GET` 且包含参数，可直接拼接到 path，例如 `/device/points?deviceId=xxx`。 |
 | method       | String   |  HTTP 请求方法，支持 `GET` 和 `POST`，用于指定调用发现接口时使用的 HTTP 请求方式。 |
 | headers      | String   | 请求头，**JSON 字符串格式**（例如：`{"Content-Type":"application/json"}`） |
 | postParams   | String   | POST 请求体参数，**JSON 字符串格式**（例如：`{"deviceId":"123456"}`）。 |
