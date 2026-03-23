@@ -88,9 +88,12 @@ function buildDiscoveryRequest() {
 
 In this method, please parse the response from the device discovery API ([buildDiscoveryRequest](#builddiscoveryrequest)), and return an array of device objects, each including device ID (`deviceId`) and device name (`deviceName`), for use by Aqara Studio.
 
+In this method, please parse the device discovery response, and return an array of device objects, each including a device ID (`deviceId`) and device name (`deviceName`), for use by Aqara Studio.
+
+
 ### Parameter Description
 
-This function should contain only one parameter, and the parameter name must be `responseString`, otherwise Aqara Studio will not be able to pass or parse the data properly.
+This method should accept only a string parameter, which is used to parse the device discovery response to ensure Aqara Studio can properly handle the data transfer and processing.
 
 ### Return Value
 
@@ -158,11 +161,12 @@ function parseDiscoveryResponse(responseString) {
 
 ## buildDiscoverPointsRequest  
 
-Please return a request configuration object in this method to instruct Aqara Studio how to query the function points (points) of a specified device via the HTTP API.
+Please return a request configuration object in this method to instruct Aqara Studio how to query the function points (points) of a specified device via HTTP API.
+
 
 ### Parameter Description
 
-This function should have no parameters; otherwise, Aqara Studio cannot initiate the request properly.
+This function only accepts a single string parameter, which is used to specify the target device ID to ensure that Aqara Studio can perform the query operation correctly.
 
 ### Return Value
 
@@ -208,7 +212,8 @@ function buildDiscoverPointsRequest(deviceId) {
 
 ## parseDiscoverPointsResponse  
 
-In this method, please parse the response from the device function points discovery API ([buildDiscoverPointsRequest](#builddiscoverpointsrequest)), and return an array containing all function points information.
+Please parse the function point discovery response in this method and return an array containing all function point information.
+
 
 Aqara Studio will automatically call this function. You need to fill in the detailed structure for each function point in the returned array (such as pointId, pointName, etc. For details, please refer to [Point Object Structure](#point-object-structure)).
 
@@ -216,7 +221,7 @@ By correctly implementing this method, Aqara Studio can recognize and access all
 
 ### Parameter Description
 
-This function should accept exactly one parameter, and the parameter name must be `responseString`; otherwise, Aqara Studio will not be able to correctly pass and parse the data.
+This method only takes one parameter of type string, which is used to parse the point discovery response and ensure that Aqara Studio can correctly process and transfer the data.
 
 ### Return Value
 
@@ -299,11 +304,12 @@ function parseDiscoverPointsResponse(responseString) {
 
 When Aqara Studio needs to obtain status data (such as switch state, temperature, mode, etc.) from a device, it will invoke this function, passing in the target device ID (`deviceId`) and an array of the function point IDs to be read (`pointIds`).
 
-Please return a request configuration object in this method to instruct Aqara Studio how to query the values of the specified device's function points via the HTTP API.
+In this function, please return a request configuration object that instructs Aqara Studio how to query the values of the specified device's function points via the HTTP API.
+
 
 ### Parameter Description
 
-This function should have exactly two parameters, and the parameter names must be deviceId (device ID) and pointIds (list of function points); otherwise, Aqara Studio will not be able to initiate the request properly.
+This function only accepts two string parameters, used to pass in the device ID and the list of function points. Otherwise, Aqara Studio will not be able to initiate the request properly.
 
 ### Return Value
 
@@ -355,13 +361,15 @@ function buildReadRequest(deviceId, pointIds) {
 
 ## parseReadResponse  
 
-This method is used to parse the device data obtained via the function point read interface ([buildReadRequest](#buildreadrequest)).
 
-Please convert the device's returned responseString into a function point data format that Aqara Studio can recognize in this method.
+This method is used to parse the result of the function point read request (raw data).
+
+In this function, please convert the raw data returned by the device into a function point data format that Aqara Studio can recognize.
 
 ### Parameter Description
 
-This function should contain only two parameters, and the parameter names must be deviceId and responseString, otherwise Aqara Studio will not be able to pass or parse the data properly.
+This function accepts only two string parameters, used to pass in the device ID and the function point result string, ensuring that Aqara Studio can correctly parse the data.
+
 
 ### Return Value
 
@@ -409,7 +417,7 @@ In this method, please return a request configuration object to instruct Aqara S
 
 ### Parameter Description
 
-This function should have exactly three parameters, and their names must be `deviceId` (device ID), `pointId` (function point ID), and `value` (function point value). Otherwise, Aqara Studio will not be able to initiate the request properly.
+This function only accepts three string parameters, which are used to pass in the device ID, function point ID, and function point value to ensure that Aqara Studio can properly initiate the request. 
 
 ### Return Value
 
@@ -455,7 +463,8 @@ function buildWriteRequest(deviceId, pointId, value) {
 
 ## parseWriteResponse 
 
-This method is used to parse the response of the function point writing (controling) interface ([buildWriteRequest](#buildwriterequest)) to determine whether the device control command was executed successfully.
+This method is used to parse the result of the function point write (control) request, in order to determine whether the device control command was executed successfully.
+
 
 When Aqara Studio sends a write request to the device (such as switching the device on/off, adjusting temperature, etc.) and receives the device's response, it will call this function to judge whether the control was successful based on the returned data.
 
@@ -463,7 +472,8 @@ Please parse the device's returned data in this method and convert the result in
 
 ### Parameter Description
 
-This function should contain only two parameters, and their names must be `pointId` and `responseString`. Otherwise, Aqara Studio will not be able to pass or parse the data correctly.
+This function only accepts two string parameters: the function point ID, and the response string from the write (control) request, ensuring that Aqara Studio can parse the data properly.
+
 
 ### Return Value
 
@@ -490,11 +500,16 @@ function parseWriteResponse(pointId, responseString) {
 
 When a device reports data to Aqara Studio (for example, when the device status changes or a sensor uploads data), Aqara Studio will call this function. This function extracts the device ID and the reported data for each function point from the device's report, in order to update the device status.
 
-In this method, please convert the responseString returned by the device into a function point data format recognized by Aqara Studio.
+In this method, please convert the raw data returned by the device into a function point data format recognized by Aqara Studio.
 
 ### Parameter Description
 
-This function should only have two parameters, named path and responseString. Otherwise, Aqara Studio will not be able to correctly deliver and parse data.
+This function should accept two string parameters: 
+- The first parameter is used to match and parse the report data path.
+- The second parameter is the original report data content from the device. 
+
+Please ensure the parameter names and order are correct so that Aqara Studio can accurately identify and process the device report data for the specified path.
+
 
 ### Return Value
 
