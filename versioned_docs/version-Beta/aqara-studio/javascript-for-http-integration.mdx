@@ -502,6 +502,14 @@ When a device reports data to Aqara Studio (for example, when the device status 
 
 In this method, please convert the raw data returned by the device into a function point data format recognized by Aqara Studio.
 
+### Prerequisites
+
+Please ensure that the device follows the requirements below for Endpoint, method, and request body when reporting data to Aqara Studio:
+
+- Endpoint: `http://{ip}:8000/report/data`
+- Request Method: POST
+- Request Body: Customizable by you; just ensure that it can be parsed via the [parseReportRequest](#parsereportrequest) interface to extract the required fields in the return value, i.e., `deviceId` and `points`.
+
 ### Parameter Description
 
 This function should accept two string parameters: 

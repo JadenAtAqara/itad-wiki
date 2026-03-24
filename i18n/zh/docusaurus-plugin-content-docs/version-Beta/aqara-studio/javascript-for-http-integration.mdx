@@ -463,7 +463,7 @@ function buildWriteRequest(deviceId, pointId, value) {
 
 本函数仅接受两个 string 类型的参数，用于传入功能点 ID 和功能点写入（控制）接口请求结果字符串，确保 Aqara Studio 能够正确解析数据。
 
-## 返回值
+### 返回值
 
 请确保函数返回值为布尔值，布尔值说明如下：
 - true：功能点写入成功
@@ -486,10 +486,17 @@ function parseWriteResponse(pointId, responseString) {
 
 ## parseReportRequest 
 
-
 当设备主动向 Aqara Studio 上报数据时（例如设备状态变化、传感器上报数据等），Aqara Studio 会调用此函数，从设备主动上报的数据中提取设备 ID 和各个功能点的上报数据，用于更新设备状态。
 
 请在本函数中将设备返回的原始数据转换为 Aqara Studio 可以识别的功能点数据格式。
+
+### 前提条件
+
+请确保设备端严格按照以下 Endpoint、方法及请求体要求向 Aqara Studio 进行数据上报：
+
+- Endpoint：`http://{ip}:8000/report/data`
+- 请求方法：POST
+- 请求体：由您自定义，只需确保能通过 [parseReportRequest](#parsereportrequest) 接口解析获得下述返回值规定的设备信息字段，即 `deviceId` 和 `points`。
 
 ### 入参说明
 
