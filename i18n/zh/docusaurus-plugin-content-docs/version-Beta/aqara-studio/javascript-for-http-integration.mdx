@@ -501,7 +501,13 @@ function parseWriteResponse(pointId, responseString) {
 
 ### 返回值
 
-返回值的格式应为 Pair\<List\<Map\<String, String>>, String>，即点信息列表和 responseMsg。
+返回值应包含以下三个字段：
+
+| 字段          | 类型                          | 说明                                                                                  |
+|---------------|-----------------------------|---------------------------------------------------------------------------------------|
+| deviceId      | String                      | 设备 ID，用于标识当前数据所属的设备。                                                  |
+| points        | List\<Map\<String, String>> | 点信息列表，表示设备的多个点数据。每个点为一个 Map，包含：<ul><li>**pointId**：功能点 ID</li><li>**value**：点值</li></ul> |
+| responseMsg   | String                      | 响应消息，用于告知设备端 Aqara Studio 是否成功接收该数据。                              |
 
 为了确保 Aqara Studio 能正确获取功能点的数据，您需要保证 parseReportResponse 函数返回的数据格式与下方示例一致：
 
