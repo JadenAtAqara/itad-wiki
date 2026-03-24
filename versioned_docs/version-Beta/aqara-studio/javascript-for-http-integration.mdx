@@ -513,7 +513,13 @@ Please ensure the parameter names and order are correct so that Aqara Studio can
 
 ### Return Value
 
-The return value should be of the format Pair\<List\<Map\<String, String>>, String>, that is, a list of point information and a responseMsg string.
+The return value should contain the following three fields:
+
+| Field        | Type                       | Description                                                                                                                      |
+|--------------|----------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| deviceId     | String                     | Device ID, used to identify which device the current data belongs to.                                                            |
+| points       | List\<Map\<String, String>>| A list of point information, representing multiple data points of the device.<br />Each point is a Map containing: <ul><li>**pointId**: Function point ID </li><li>**value**: Point value.</li></ul> |
+| responseMsg  | String                     | Response message, used to inform the device whether Aqara Studio has successfully received this data.                             |
 
 To ensure Aqara Studio can correctly obtain the data of the function points, you need to make sure that the parseReportResponse function returns data in the format shown in the following example:
 
