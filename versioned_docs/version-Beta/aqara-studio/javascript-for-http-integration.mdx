@@ -39,7 +39,7 @@ Please return a request configuration object in this method to instruct Aqara St
 
 ### Parameter Description
 
-This function should have no parameters; otherwise, Aqara Studio cannot initiate the request properly.
+It is recommended that this function has no parameters.
 
 ### Return Value
 
@@ -93,7 +93,7 @@ In this method, please parse the device discovery response, and return an array 
 
 ### Parameter Description
 
-This method should accept only a string parameter, which is used to parse the device discovery response to ensure Aqara Studio can properly handle the data transfer and processing.
+It is recommended that this function accepts only one string parameter, which is the return result of the device discovery request.
 
 ### Return Value
 
@@ -166,7 +166,7 @@ Please return a request configuration object in this method to instruct Aqara St
 
 ### Parameter Description
 
-This function only accepts a single string parameter, which is used to specify the target device ID to ensure that Aqara Studio can perform the query operation correctly.
+It is recommended that this function only accepts a string parameter, which is used to input the target device ID.
 
 ### Return Value
 
@@ -221,7 +221,7 @@ By correctly implementing this method, Aqara Studio can recognize and access all
 
 ### Parameter Description
 
-This method only takes one parameter of type string, which is used to parse the point discovery response and ensure that Aqara Studio can correctly process and transfer the data.
+It is recommended that this function only accepts one string parameter, which is used to pass the result of the function point discovery request.
 
 ### Return Value
 
@@ -309,7 +309,8 @@ In this function, please return a request configuration object that instructs Aq
 
 ### Parameter Description
 
-This function only accepts two string parameters, used to pass in the device ID and the list of function points. Otherwise, Aqara Studio will not be able to initiate the request properly.
+It is recommended that this function accepts two string parameters to pass in the device ID and the list of function points.
+
 
 ### Return Value
 
@@ -368,7 +369,7 @@ In this function, please convert the raw data returned by the device into a func
 
 ### Parameter Description
 
-This function accepts only two string parameters, used to pass in the device ID and the function point result string, ensuring that Aqara Studio can correctly parse the data.
+It is recommended that this function accepts two string parameters, which are used to pass in the device ID and the list of function points.
 
 
 ### Return Value
@@ -417,7 +418,8 @@ In this method, please return a request configuration object to instruct Aqara S
 
 ### Parameter Description
 
-This function only accepts three string parameters, which are used to pass in the device ID, function point ID, and function point value to ensure that Aqara Studio can properly initiate the request. 
+It is recommended that this function accepts three string parameters, which are used to pass in the device ID, function point ID, and function point value.
+
 
 ### Return Value
 
@@ -472,8 +474,7 @@ Please parse the device's returned data in this method and convert the result in
 
 ### Parameter Description
 
-This function only accepts two string parameters: the function point ID, and the response string from the write (control) request, ensuring that Aqara Studio can parse the data properly.
-
+It is recommended that this function accepts two string parameters, used to pass in the device ID and the function point write (control) response.
 
 ### Return Value
 
@@ -513,11 +514,11 @@ Please ensure that the device follows the requirements below for Endpoint, metho
 ### Parameter Description
 
 This function should accept two string parameters: 
-- The first parameter is used to match and parse the report data path.
-- The second parameter is the original report data content from the device. 
+It is recommended that this function accepts two string parameters:
+- The first parameter: Pass in the endpoint used by Aqara Studio to receive device data, i.e., `http://{ip}:8000/report/data` as mentioned above.
+- The second parameter: The request body of the device's reported data.
 
 Please ensure the parameter names and order are correct so that Aqara Studio can accurately identify and process the device report data for the specified path.
-
 
 ### Return Value
 
