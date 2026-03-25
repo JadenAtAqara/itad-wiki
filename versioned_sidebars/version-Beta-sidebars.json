@@ -29,7 +29,8 @@
                   "aqara-studio/device-integration/modbus-tcp",
                   "aqara-studio/device-integration/bacnet",
                   "aqara-studio/device-integration/knx-ip",
-                  "aqara-studio/device-integration/mqtt"
+                  "aqara-studio/device-integration/mqtt",
+                  "aqara-studio/device-integration/http"
                 ]
               },
               {

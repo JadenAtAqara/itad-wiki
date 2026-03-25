@@ -1,0 +1,35 @@
+# HTTP
+
+This document explains how to connect HTTP devices to Aqara Studio.
+
+## Prerequisites
+
+Before you begin, please ensure that the target HTTP device and Aqara Studio are on the same local area network (LAN).
+
+## 添加 HTTP 设备和功能点
+
+1. In the left sidebar, click to enter the **Devices** page.
+2. In the device tree on the left, click the “+” button. In the popup, choose `HTTP` to add an HTTP node.
+3. Select the HTTP node to open the management page.
+4. Go to the `Protocol Configuration` tab and set the following parameters for the HTTP device to be integrated.
+
+    | Parameter | Description |
+    | -- | -- |
+    | Use TLS                | Whether to use TLS encryption for HTTP communication.                                                         |
+    | IP Address             | The IP address of the HTTP device to be integrated.                                                           |
+    | Port                   | The network port on which the device receives and processes HTTP requests. |
+    | Enable/Disable Network | If disabled, the device on this network will be unavailable. |
+
+5. Switch to the **Script** tab, and create a JS script compliant with the [JavaScript for HTTP Integration](./../javascript-for-http-integration.mdx) guidelines, enabling Aqara Studio to discover devices, add function points, and control them automatically.
+6. Switch to the **Add Device** tab, and click the **Discover Devices** button. Aqara Studio will automatically scan for and identify the HTTP device that can be integrated based on your script. The discovered device will appear in the **Added Device List**.
+7. Select the target device and click the **+** button in the center to add the device to the **Added Device List** on the right, and it will also be displayed in real time under the HTTP node in the device tree on the left.
+
+    Expand the device in the device tree on the left to view all recognized function points for that device.
+
+## Add Multiple HTTP Devices
+
+Each HTTP node can be associated with only one HTTP device. If you need to integrate multiple HTTP devices, click the "+" button in the device tree on the left multiple times to create the required number of HTTP nodes, and then configure each node with its corresponding HTTP device information separately, rather than modifying the device parameters within an existing HTTP node.
+
+## Next Steps
+
+Now, you can [view details and control the device](./../device-management/basic-information.mdx), or [use the device in automation](./../automation.mdx).
