@@ -571,3 +571,148 @@ function parseReportRequest(path, requestString) {
     return { deviceId: deviceId, points: points, responseMsg: "" };
 }
 ```
+
+## Complete Example
+
+The following code covers examples of the above 9 functions. Please adjust and optimize according to the actual interfaces and data formats of your device. Please do not directly copy as-is.
+
+```javascript
+function buildDiscoveryRequest() {
+    return {
+        path: "/report/discoveryDevices",
+        method: "POST",
+        headers: JSON.stringify({
+            "Content-Type": "application/json"
+        }),
+        postParams: JSON.stringify({
+            "appId": "V0001"
+        })
+    };
+}
+
+function parseDiscoveryResponse(responseString) {
+    if (!responseString) return [];
+    let obj;
+    try {
+        obj = JSON.parse(responseString);
+    } catch (e) {
+        return [];
+    }
+    const list = obj?.reply?.data?.list;
+    if (!Array.isArray(list)) return [];
+    // Return an array, each element contains deviceId and deviceName
+    return list.map(item => ({
+        deviceId: item.deviceId,
+        deviceName: item.deviceName
+    }));
+}
+
+function buildDiscoverPointsRequest(deviceId) {
+    return {
+        path: `/device/points?deviceId=${deviceId}`,
+        method: "GET",
+        headers: JSON.stringify({
+            "Content-Type": "application/json"
+        }),
+        postParams: ""
+    };
+}
+
+function parseDiscoverPointsResponse(responseString) {
+    if (!responseString) return [];
+    let obj;
+    try {
+        obj = JSON.parse(responseString);
+    } catch (e) {
+        return [];
+    }
+    const list = obj?.reply?.data?.points;
+    if (!Array.isArray(list)) return [];
+    return list.map(item => ({
+        pointId: item.pointId,
+        pointName: item.pointName,
+        pointType: item.pointType,
+        function: item.function,
+        trait: item.trait
+    }));
+}
+
+function buildReadRequest(deviceId, pointIds) {
+    if (!deviceId || !Array.isArray(pointIds) || pointIds.length === 0) return [];
+    return pointIds.map(function(pointId) {
+        return {
+            path: `/device/read/${deviceId}/${pointId}`,
+            method: "GET",
+            headers: "",
+            postParams: ""
+        };
+    });
+}
+
+function parseReadResponse(deviceId, responseString) {
+    if (!responseString) return {};
+    let obj;
+    try {
+        obj = JSON.parse(responseString);
+    } catch (e) {
+        return {};
+    }
+    const result = {};
+    if (obj.data && Array.isArray(obj.data)) {
+        obj.data.forEach(item => {
+            for (const key in item) {
+                if (Object.prototype.hasOwnProperty.call(item, key)) {
+                    result[key] = String(item[key]);
+                }
+            }
+        });
+    }
+    return result;
+}
+
+function buildWriteRequest(deviceId, pointId, value) {
+    if (!deviceId || !pointId) return {};
+    return {
+        path: `/device/write/${deviceId}/${pointId}`,
+        method: "POST",
+        headers: JSON.stringify({
+            "Content-Type": "application/json"
+        }),
+        postParams: JSON.stringify({ value: value })
+    };
+}
+
+function parseWriteResponse(pointId, responseString) {
+    if (!responseString) return false;
+    let obj;
+    try {
+        obj = JSON.parse(responseString);
+    } catch (e) {
+        return false;
+    }
+    return obj.result === "success";
+}
+
+function parseReportRequest(path, requestString) {
+    if (!requestString) return { deviceId: "", points: [], responseMsg: "" };
+    let obj;
+    try {
+        obj = JSON.parse(requestString);
+    } catch (e) {
+        return { deviceId: "", points: [], responseMsg: "" };
+    }
+    const deviceId = obj.deviceld || obj.deviceId || "";
+    const points = [];
+    const parans = obj.data && obj.data.parans ? obj.data.parans : {};
+    for (const pointId in parans) {
+        if (Object.prototype.hasOwnProperty.call(parans, pointId)) {
+            const item = parans[pointId];
+            points.push({
+                pointId: pointId,
+                value: String(item.value)
+            });
+        }
+    }
+    return { deviceId: deviceId, points: points, responseMsg: "" };
+}
+```
