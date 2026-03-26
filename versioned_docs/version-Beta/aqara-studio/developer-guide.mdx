@@ -14,6 +14,11 @@ Follow these steps:
 1. Log in to Aqara Studio. Click into the "Developer" page from the left sidebar.
 2. In the **Data Export API** section, you can directly find the local IP address.
 3. **Enable** the Data Export API, then click the **Get Token** button to copy your Token.
+3. **Enable** the Data Export API, locate the Access Token, and click the copy icon to obtain your Access Token.
+
+    :::tip
+    The Access Token is valid for 7 days. After expiration, please [refresh the Access Token](#refresh-the-access-token).
+    :::
 
 ## Call the API
 
@@ -24,3 +29,20 @@ With the complete API, you can programmatically obtain device data, control devi
 - Develop a customized device management experience.
 
 Please refer to the [API documentation](./api-references/data-export-api-v1.mdx) for detailed API descriptions and usage instructions.
+
+
+## Refresh the Access Token
+
+Aqara Studio provides two ways to refresh your Access Token: [refresh by API](#refresh-by-api) or [manual refresh](#manual-refresh).
+
+### Refresh by API
+
+【内容待补充】
+
+### Manual Refresh
+
+In the **Data Export API** area, click the **Refresh Token** button to immediately obtain a new Access Token and Refresh Token.
+
+:::tip
+Refreshing will immediately invalidate your previous Access Token and Refresh Token. Please operate with caution.
+:::

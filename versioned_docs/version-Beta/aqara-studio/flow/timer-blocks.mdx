@@ -1,8 +1,8 @@
 # Timer Blocks
 
-> **Note**
->
-> Screenshots in this guide may look slightly different from what you see on your device. Please follow the actual interface for reference.
+:::note
+Screenshots in this guide may look slightly different from what you see on your device. Please follow the actual interface for reference.
+:::
 
 ## Overview
 
@@ -49,12 +49,12 @@ Here’s how to set up a Time Trigger block:
 
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/TimeBlock-SelectTimeType.png" alt="Select time type" style={{width: '80%'}} />  
 
-    > **Note**
-    >
-    > If you choose `Sunrise` or `Sunset`, you’ll need to enter your home’s latitude and longitude:
-    > - North latitude and east longitude: use positive numbers (e.g., North 35.0° → `35.0`)
-    > - South latitude and west longitude: use negative numbers (e.g., West 120.0° → `-120.0`)
-    > <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/TimeBlock-PassInLongitudeandLatitude.png" alt="Enter latitude and longitude" style={{width: '80%'}} />  
+    :::note
+    If you choose `Sunrise` or `Sunset`, you’ll need to enter your home’s latitude and longitude:
+    - North latitude and east longitude: use positive numbers (e.g., North 35.0° → `35.0`)
+    - South latitude and west longitude: use negative numbers (e.g., West 120.0° → `-120.0`)
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/TimeBlock-PassInLongitudeandLatitude.png" alt="Enter latitude and longitude" style={{width: '80%'}} />  
+    :::
 
 3. **Set the time**.
    
@@ -91,10 +91,10 @@ Here's how to set up a Time Period block:
 1. **Select the days of the week** when you want the action to run (you can pick more than one day).
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/TimeBlock-SelectDateforTimePeriod.png" alt="Select days of the week" style={{width: '80%'}} />  
 2. **Set the time period**.
-   > **Note**
-   >
-   > When you set the time period to 00:00:00-00:00:00, the action will be active all day.
-   
+   :::note
+   When you set the time period to 00:00:00-00:00:00, the action will be active all day.
+   :::
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/TimeBlock-SetTimeRange.png" alt="Set time period" style={{width: '80%'}} />  
 3. **Connect  the input** on the left side of the block to an event block.    
    This means the follow-up action will only be triggered if the event occurs within the specified days and time period.  

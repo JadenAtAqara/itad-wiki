@@ -1,8 +1,8 @@
 # 时间
 
-> **说明**
->
-> 截图与实际界面可能有所不同，请以实际为准。
+:::tip
+截图与实际界面可能有所不同，请以实际为准。
+:::
 
 ## 概述
 
@@ -66,12 +66,15 @@
 2. 设定时间类型。
 
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-SelectTimeType.png" alt="选择时间类型" style={{ width: '80%' }} />   
-    > **说明**
-    >
-    > 选择日出或日落时，请输入您家庭的经纬度，格式如下：
-    > - 北纬、东经 → 使用正数（如：北纬 35.0° → `35.0`）
-    > - 南纬、西经 → 使用负数（如：西经 120.0° → `-120.0`）
-    > <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-PassInLongitudeandLatitude.png" alt="传入家庭的经纬度" style={{ width: '80%' }} />   
+    
+    :::tip
+    选择日出或日落时，请输入您家庭的经纬度，格式如下：
+    - 北纬、东经 → 使用正数（如：北纬 35.0° → `35.0`）
+    - 南纬、西经 → 使用负数（如：西经 120.0° → `-120.0`）
+    
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-PassInLongitudeandLatitude.png" alt="传入家庭的经纬度" style={{ width: '80%' }} />   
+    :::
+
 3. 设置时间。
    
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-SpecifyTime.png" alt="设置具体时间点" style={{ width: '80%' }} />   
@@ -104,9 +107,9 @@
 1. 选择每周周几（可多选）触发行为。
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-SelectDateforTimePeriod.png" alt="选择每周周几触发行为" style={{ width: '80%' }} />   
 2. 设置时间范围。
-   > **说明**
-   >
-   > 时间范围选择 00:00:00-00:00:00 时，表示此逻辑全天生效。	
+   :::tip
+   时间范围选择 00:00:00-00:00:00 时，表示此逻辑全天生效。
+   :::	
    
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TimeBlock-SetTimeRange.png" alt="设置时间范围" style={{ width: '80%' }} />   
 3. 在卡片左侧连接需要监听的 `当` 卡片，表示只有这个行为在卡片指定的日子和时间内被触发时，才可以触发下一个行为。  
