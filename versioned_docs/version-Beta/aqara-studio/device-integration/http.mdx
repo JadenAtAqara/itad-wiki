@@ -6,7 +6,7 @@ This document explains how to connect HTTP devices to Aqara Studio.
 
 Before you begin, please ensure that the target HTTP device and Aqara Studio are on the same local area network (LAN).
 
-## 添加 HTTP 设备和功能点
+## Add HTTP Devices and Function Points
 
 1. In the left sidebar, click to enter the **Devices** page.
 2. In the device tree on the left, click the “+” button. In the popup, choose `HTTP` to add an HTTP node.
@@ -16,7 +16,7 @@ Before you begin, please ensure that the target HTTP device and Aqara Studio are
     | Parameter | Description |
     | -- | -- |
     | Use TLS                | Whether to use TLS encryption for HTTP communication.                                                         |
-    | IP Address             | The IP address of the HTTP device to be integrated.                                                           |
+    | IP Address | The gateway IP address of the HTTP device to be integrated. |
     | Port                   | The network port on which the device receives and processes HTTP requests. |
     | Enable/Disable Network | If disabled, the device on this network will be unavailable. |
 
@@ -29,6 +29,10 @@ Before you begin, please ensure that the target HTTP device and Aqara Studio are
 ## Add Multiple HTTP Devices
 
 Each HTTP node can be associated with only one HTTP device. If you need to integrate multiple HTTP devices, click the "+" button in the device tree on the left multiple times to create the required number of HTTP nodes, and then configure each node with its corresponding HTTP device information separately, rather than modifying the device parameters within an existing HTTP node.
+
+## Multi-Gateway HTTP Device Integration
+
+Each HTTP node can only be associated with HTTP devices under a single gateway. If you need to integrate devices under different gateways, click the "+" button in the device tree on the left multiple times to add separate HTTP nodes. Configure the gateway information separately for each node. Do not modify an existing node's network parameters to connect devices from other gateways.
 
 ## Next Steps
 
