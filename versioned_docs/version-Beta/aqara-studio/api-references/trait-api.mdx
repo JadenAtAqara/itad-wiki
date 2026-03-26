@@ -726,8 +726,9 @@ Subscribe to all trait changes of multiple devices.
 | msgId | String | Yes | Custom request ID defined by you. |
 | data | Array of String | No | List of device IDs to subscribe. If empty, all devices will be subscribed. |
 
-> **Note**  
-> Subscribing to all devices and subscribing to specific devices are mutually exclusive and cannot be active at the same time. If this request’s `data` field is not empty but the previous one was empty, the system will cancel the previous “all devices” subscription and keep only the specific device subscription. The opposite also applies.
+:::note  
+Subscribing to all devices and subscribing to specific devices are mutually exclusive and cannot be active at the same time. If this request’s `data` field is not empty but the previous one was empty, the system will cancel the previous “all devices” subscription and keep only the specific device subscription. The opposite also applies.
+:::
 
 #### Request Example
 
@@ -779,10 +780,10 @@ Unsubscribe from all trait changes of multiple devices.
 | msgId | String | Yes | Custom request ID defined by you. |
 | data | Array of String | No | List of device IDs to unsubscribe. If empty, will unsubscribe all devices. |
 
-> **Note**
->
-> - If you have subscribed to "all devices", unsubscribing by specifying device IDs in `data` (i.e., a non-empty array) will be ignored. Only an empty `data` (unsubscribe all) takes effect.
-> - If you have subscribed to "specific devices", sending an empty `data` (unsubscribe all) will unsubscribe all previous subscriptions for those devices.
+:::note
+- If you have subscribed to "all devices", unsubscribing by specifying device IDs in `data` (i.e., a non-empty array) will be ignored. Only an empty `data` (unsubscribe all) takes effect.
+- If you have subscribed to "specific devices", sending an empty `data` (unsubscribe all) will unsubscribe all previous subscriptions for those devices.
+:::
 
 #### Request Example
 

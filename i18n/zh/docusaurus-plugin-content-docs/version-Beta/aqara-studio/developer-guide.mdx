@@ -1,9 +1,5 @@
 # 开发者指南
 
-> **说明**
->
-> 截图与实际界面可能有所不同，请以实际为准。
-
 本文档旨在帮助开发者扩展平台功能，实现深度集成与自定义开发。无论您是想通过 API 构建个性化应用，还是将设备接入主流智能家居系统，这里都提供了详细的指引。
 
 在开始调用 API v1 接口前，您需要先 [获取 Studio 的本机 IP 地址和 Token](#获取必要信息)，这些信息将用作请求 URL 和鉴权。
@@ -16,7 +12,11 @@
 
 1. 登录 Aqara Studio。从左侧侧边栏击进入“开发者”页面。
 2. 在**数据转出 API**区域，可直接查看本机 IP 地址。
-3. **启用**数据转出 API，并点击**获取 Token**按钮，即可复制 Token。
+3. **启用**数据转出 API，找到 Access Token，单击复制图标，即可获取 Access Token。
+
+    :::tip
+    Access Token 的有效时间为 7 天。到期后，请 [刷新 Access Token](#刷新-access-token)。
+    :::
 
 ## 调用 API
 
@@ -27,3 +27,19 @@
 - 开发定制化的设备管理体验。
 
 欢迎查阅 [API 文档](./api-references/data-export-api-v1.mdx)，了解详细的接口说明与调用方式。
+
+## 刷新 Access Token
+
+Aqara Studio 提供两种刷新 Access Token 的方式：[通过调用 API 自动刷新](#调用-api-刷新)，或通过界面 [手动刷新](#手动刷新)。
+
+### 调用 API 刷新
+
+【内容待补充】
+
+### 手动刷新
+
+在**数据转出 API**区域，点击 **刷新 Token** 按钮，即可立即获取新的 Access Token 和 Refresh Token。
+
+:::tip
+刷新操作会导致原有 Access Token 和 Refresh Token 会立即失效，请谨慎操作。
+:::
