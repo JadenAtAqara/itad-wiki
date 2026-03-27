@@ -26,8 +26,8 @@ You need to return an array containing one or more data point objects (such as `
 | pointId   | Data point ID. Please consult the device manufacturer to obtain the actual ID to allow Aqara Studio to discover this point. |
 | pointName | Name for the data point defined by you. |
 | pointType | Same as the `deviceType` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
-| functionId| Same as the `functionId` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
-| traitId   | Same as the `traitId` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
+| function  | Same as the `functionCode` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
+| trait     | Same as the `traitCode` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
 | dataType  | Data point type. Supported values: <ul><li><code>bool</code>: Boolean</li><li><code>numerical</code>: Numeric</li><li><code>text</code>: Text</li></ul> |
 | access    | Access mode of the resource. <ul><li>1: Read-only</li><li>2: Read-write</li></ul> |
 | subTopic  | (**Only applicable for MQTT devices**) Aqara Studio subscribes to this topic to get the latest data for this point. Please fill in according to your device protocol or manufacturer documentation. |
@@ -36,7 +36,7 @@ You need to return an array containing one or more data point objects (such as `
 :::tip
 When adding new data points, you may choose one of the following approaches depending on your needs:
 
-- **Based on Aqara Spec**: You need to fill in fields such as `pointType`, `functionId`, and `traitId`, which enables the data point to be compatible with the Aqara Spec.
+- **Based on Aqara Spec**: You need to fill in fields such as `pointType`, `function`, and `trait`, which enables the data point to be compatible with the Aqara Spec.
 - **General Approach**: You only need to fill in the basic fields such as `dataType` and `access`.
 :::
 
@@ -50,8 +50,8 @@ function parseDiscoverPointsResponse() {
 			pointId: "1#Chiller Operation Status",
 			pointName: "1#Chiller Operation Status",
 			pointType: "AirConditioner",
-			functionId: 132,
-			traitId: 32920,
+			function: "Output",
+			trait: "OnOff",
 			subTopic: "/WEI-iEdge/realdata/xxx",
 			pubTopic: "/WEI-iEdge/write/req/xxx"
 		},
@@ -157,8 +157,8 @@ function parseDiscoverPointsResponse() {
 			pointId: "1#Chiller Operation Status",
 			pointName: "1#Chiller Operation Status",
 			pointType: "AirConditioner",
-			functionId: 132,
-			traitId: 32920,
+			function: "Output",
+			trait: "OnOff",
 			subTopic: "/WEI-iEdge/realdata/xxx",
 			pubTopic: "/WEI-iEdge/write/req/xxx"
 		},
