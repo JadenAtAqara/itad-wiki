@@ -26,17 +26,16 @@
 | pointId   | 功能点 ID。请咨询设备厂商获取功能点的真实 ID，以便 Aqara Studio 发现该点。                                                    |
 | pointName | 您自定义的功能点名称。                                                                              |
 | pointType | 对应 Aqara Spec 的 `deviceType`，具体值请参考 Aqara Spec 相关文档。                                  |
-| functionId| 对应 Aqara Spec 的 `functionId`，具体值请参考 Aqara Spec 相关文档。                                  |
-| traitId   | 对应 Aqara Spec 的 `traitId`，具体值请参考 Aqara Spec 相关文档。                                      |
+| function| 对应 Aqara Spec 的 `functionCode`，具体值请参考 Aqara Spec 相关文档。                                  |
+| trait   | 对应 Aqara Spec 的 `traitCode`，具体值请参考 Aqara Spec 相关文档。                                      |
 | dataType  | 功能点数据类型，支持以下取值：<ul><li><code>bool</code>：布尔型</li><li><code>numerical</code>：数值型</li><li><code>text</code>：文本型</li></ul> |
 | access    | 读写类型，<ul><li>1：仅可读</li><li>2：可读可写</li></ul>                                 |
 | subTopic  | （**仅适用于 MQTT 设备**）Aqara Studio 通过订阅该 Topic 获取功能点的最新数据。具体 Topic 请根据设备协议或厂商文档填写。  |
 | pubTopic  | （**仅适用于 MQTT 设备**）Aqara Studio 通过向此 Topic 发送消息数据控制功能点。具体 Topic 请根据设备协议或厂商文档填写。（对于仅可读的功能点，此字段留空）        |
 
 :::tip
-新增功能点时，您可以根据实际情况选择两种方式：
-
-- **基于 Aqara Spec**：需填写 `pointType`、`functionId`、`traitId` 等字段，这可以让设备功能点适配于 Aqara 协议。
+您可以根据实际情况选择以下任意方式构造功能点的数据结构：   
+- **基于 Aqara Spec**：需填写 `pointType`、`function`、`trait` 等字段，这可以将设备的功能点关联到 Aqara Spec 协议中的对应功能点。
 - **通用方式**：需填写 `dataType`、`access` 等基本字段。
 :::
 
@@ -50,8 +49,8 @@ function parseDiscoverPointsResponse() {
 			pointId: "1#冷机运行状态",
 			pointName: "1#冷机运行状态",
 			pointType: "AirConditioner",
-			functionId: 132,
-			traitId: 32920,
+			function: "Output",
+			trait: "OnOff",
 			subTopic: "/WEI-iEdge/realdata/7a1dd258f32940d95a542c68",
 			pubTopic: "/WEI-iEdge/write/req/7a1dd258f32940d95a542c68"
 		},
@@ -157,8 +156,8 @@ function parseDiscoverPointsResponse() {
 			pointId: "1#冷机运行状态",
 			pointName: "1#冷机运行状态",
 			pointType: "AirConditioner",
-			functionId: 132,
-			traitId: 32920,
+			function: "Output",
+			trait: "OnOff",
 			subTopic: "/WEI-iEdge/realdata/7a1dd258f32940d95a542c68",
 			pubTopic: "/WEI-iEdge/write/req/7a1dd258f32940d95a542c68"
 		},
