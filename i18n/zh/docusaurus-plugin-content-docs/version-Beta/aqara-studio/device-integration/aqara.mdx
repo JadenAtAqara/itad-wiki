@@ -1,19 +1,16 @@
-# Aqara 设备接入
+# Aqara Hub 接入
 
-本文说明如何将 Aqara 设备接入到 Aqara Studio。
+本文说明如何将 Aqara Hub 类型设备接入到 Aqara Studio。
 
-### 前提条件
+### 自动发现 Aqara Hub
 
-在开始之前，请确保：
-- 已将 Aqara 设备添加到 Aqara Home App。
-- Aqara 设备、与智慧边端 M300 在 Aqara Home App 处于同一家庭，并接入相同的 WiFi。
+当 Aqara Studio 部署在某个 Aqara Hub 上时，该 Hub 会自动出现在 Aqara Studio 的设备管理页面，无需用户手动添加。
 
-### 添加设备
+### 如何添加其他类型的 Aqara 设备
 
-1. 在左侧侧边栏点击进入**设备管理**页面。
-2. 在左侧设备树选择 **Aqara**，切换至**添加设备**选项卡。
-3. 单击**发现设备**，Aqara Studio 将通过 Aqara Cloud 自动获取 Aqara Home App 中的设备。
-4. 选择需接入的设备后，点击中间“+”按钮，新增设备会出现在右侧的**已添加设备列表**，并同步显示在左侧设备树的 Aqara 下。
+如需接入不同协议的 Aqara 设备，请参考以下文档，按设备协议类型进行集成操作：
+- [接入 Zigbee 设备](./zigbee.mdx)
+- [接入 Matter 设备](./matter.mdx)
 
 ## 下一步
 
