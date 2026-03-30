@@ -37,7 +37,67 @@ Aqara Studio provides two ways to refresh your Access Token: [refresh by API](#r
 
 ### Refresh by API
 
-【内容待补充】
+您可以调用以下接口获得新的 Access Token。
+
+**请求 URL**
+
+根据是否启用 [远程访问](./remote-access.mdx) 功能，请求 URL 的格式有所不同。   
+- 未开启远程访问：`http://局域网内网IP/open/api/v1/auth/refresh-token`
+- 已开启远程访问：`http://远程访问地址/open/api/v1/auth/refresh-token`
+
+**请求方法**：POST
+
+**请求头**
+
+| 参数 | 类型 | 是否必须 | 说明 |
+| ------------- | ------ | -------- | ------------------------------------------------------------ |
+| Authorization | String | 是 | 授权 Token，用于用户身份验证。<br />格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio 获取的 Access Token 字符串（若从 Aqara Studio 获取的令牌已带 Bearer 前缀，请直接使用，无需重复添加）。如需了解获取方式，请参考 [开发者指南 - 获取必要信息](#获取必要信息) 中对 Access Token 的说明。 |
+| Content-Type  | String | 是 | 默认为`application/json`。  |
+
+**请求体**
+
+| 参数 | 类型 | 是否必须 | 说明 |
+| ------------- | ------ | -------- | ------------------------------------------------------------ |
+| refreshToken | String | 是 | 刷新令牌，用于刷新 Access Token。可在 Aqara Studio 的 **开发者 > 数据转出 API** 区域直接获取。 |
+
+**请求示例**
+
+```json
+{
+    "refreshToken": "eyJhbGciO9..."
+}
+```
+
+**响应参数**
+
+| 参数         | 类型     | 说明                                                                                 |
+| ------------ | -------- | ------------------------------------------------------------------------------------ |
+| type         | String   | 响应类型，一般为 `"response"`。                                                       |
+| version      | String   | API 版本号，例如 `"v1"`。                                                            |
+| msgId        | String   | 本次请求的唯一标识符。                                                               |
+| code         | Number   | 业务状态码，0 表示成功，非 0 为失败。                                                  |
+| message      | String   | 请求结果描述。                                                                        |
+| data         | Object   | 数据体，|
+| data.accessToken  | String   | 新的 Access Token，用于后续 API 鉴权。                            |
+| data.refreshToken | String   | 新的 Refresh Token，用于下次刷新 Access Token。有效期为当前 `expiresIn` 时长基础上再延长 30 天。|
+| data.expiresIn    | Number   | 新 Access Token 的有效期，单位为秒，如 86400 表示 1 天。              |
+
+**响应示例**
+
+```json
+{
+    "type": "response",
+    "version": "v1",
+    "msgId": "a1b2c3d4-e5f6-7890-abcd-000000000003",
+    "code": 0,
+    "message": "success",
+    "data": {
+        "accessToken": "newAccessToken...",
+        "refreshToken": "newRefreshToken...",
+        "expiresIn": 86400
+    }
+}
+```
 
 ### Manual Refresh
 
