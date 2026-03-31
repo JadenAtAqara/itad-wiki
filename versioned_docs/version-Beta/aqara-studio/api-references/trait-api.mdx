@@ -1,6 +1,6 @@
 # Device Function API
 
-## Query Device IDs by Pages
+## Query Device Information by Pages
 
 You can query the list of devices in the Studio system with pagination. Filtering by device type, sorting, and paging are supported.
 
@@ -92,7 +92,7 @@ Below is an example of a `GetDeviceInfoResponse` response:
 }
 ```
 
-## Query All Device IDs
+## Query All Device Information
 
 This API is used to retrieve the complete list of device information. With this interface, you can obtain detailed information of all devices within Aqara Studio at once, including device ID, name, device type, time added, online status, and associated space. The request body supports filtering based on device type and sorting fields.
 
@@ -188,7 +188,7 @@ Query the spec configuration of devices by device ID.
 | version | String | Yes | API version. Must be `v1`. |
 | msgId | String | Yes | The request ID defined by you. |
 | data | Object | Yes | Request data object. |
-| data.deviceIds | Array of String | No | Pass the device ID list obtained from the [paginated query](#query-device-ids-by-pages) or the [complete query](#query-all-device-ids) of device IDs into this list as the target for querying the spec configuration of the devices. If this list is empty, the spec configuration for all devices will be queried. |
+| data.deviceIds | Array of String | No | Pass the device ID list obtained from the [paginated query](#query-device-information-by-pages) or the [complete query](#query-all-device-information) of device IDs into this list as the target for querying the spec configuration of the devices. If this list is empty, the spec configuration for all devices will be queried. |
 
 #### Request Example
 

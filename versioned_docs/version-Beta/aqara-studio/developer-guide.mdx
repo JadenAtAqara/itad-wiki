@@ -37,30 +37,30 @@ Aqara Studio provides two ways to refresh your Access Token: [refresh by API](#r
 
 ### Refresh by API
 
-您可以调用以下接口获得新的 Access Token。
+You can call the following API to obtain a new Access Token.
 
-**请求 URL**
+**Request URL**
 
-根据是否启用 [远程访问](./remote-access.mdx) 功能，请求 URL 的格式有所不同。   
-- 未开启远程访问：`http://局域网内网IP/open/api/v1/auth/refresh-token`
-- 已开启远程访问：`http://远程访问地址/open/api/v1/auth/refresh-token`
+The request URL format varies depending on whether [Remote Access](./remote-access.mdx) is enabled:   
+- When Remote Access is disabled: `http://local_LAN_IP/open/api/v1/auth/refresh-token`
+- When Remote Access is enabled: `http://remote_access_address/open/api/v1/auth/refresh-token`
 
-**请求方法**：POST
+**HTTP Method:** POST
 
-**请求头**
+**Request Headers**
 
-| 参数 | 类型 | 是否必须 | 说明 |
+| Name          | Type   | Required | Description |
 | ------------- | ------ | -------- | ------------------------------------------------------------ |
-| Authorization | String | 是 | 授权 Token，用于用户身份验证。<br />格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio 获取的 Access Token 字符串（若从 Aqara Studio 获取的令牌已带 Bearer 前缀，请直接使用，无需重复添加）。如需了解获取方式，请参考 [开发者指南 - 获取必要信息](#获取必要信息) 中对 Access Token 的说明。 |
-| Content-Type  | String | 是 | 默认为`application/json`。  |
+| Authorization | String | Yes      | The token for user authentication.<br />Format: `Bearer <token>`, replace `<token>` with the Access Token obtained from Aqara Studio. (If the token you get from Aqara Studio already includes the Bearer prefix, use it as is. For details on how to obtain it, refer to [Developer Guide - Obtain Required Information](#obtain-required-information).) |
+| Content-Type  | String | Yes      | Default is `application/json`.  |
 
-**请求体**
+**Request Body**
 
-| 参数 | 类型 | 是否必须 | 说明 |
-| ------------- | ------ | -------- | ------------------------------------------------------------ |
-| refreshToken | String | 是 | 刷新令牌，用于刷新 Access Token。可在 Aqara Studio 的 **开发者 > 数据转出 API** 区域直接获取。 |
+| Name         | Type   | Required | Description |
+| ------------ | ------ | -------- | ------------------------------------------------------------ |
+| refreshToken | String | Yes      | Refresh token, used to refresh your Access Token. It can be obtained directly in the **Developer > Data Export API** area of Aqara Studio. |
 
-**请求示例**
+**Request Example**
 
 ```json
 {
@@ -68,21 +68,21 @@ Aqara Studio provides two ways to refresh your Access Token: [refresh by API](#r
 }
 ```
 
-**响应参数**
+**Response Parameters**
 
-| 参数         | 类型     | 说明                                                                                 |
-| ------------ | -------- | ------------------------------------------------------------------------------------ |
-| type         | String   | 响应类型，一般为 `"response"`。                                                       |
-| version      | String   | API 版本号，例如 `"v1"`。                                                            |
-| msgId        | String   | 本次请求的唯一标识符。                                                               |
-| code         | Number   | 业务状态码，0 表示成功，非 0 为失败。                                                  |
-| message      | String   | 请求结果描述。                                                                        |
-| data         | Object   | 数据体，|
-| data.accessToken  | String   | 新的 Access Token，用于后续 API 鉴权。                            |
-| data.refreshToken | String   | 新的 Refresh Token，用于下次刷新 Access Token。有效期为当前 `expiresIn` 时长基础上再延长 30 天。|
-| data.expiresIn    | Number   | 新 Access Token 的有效期，单位为秒，如 86400 表示 1 天。              |
+| Name                | Type     | Description                                                                                 |
+| ------------------- | -------- | ------------------------------------------------------------------------------------------ |
+| type                | String   | Response type, usually `"response"`.                                                        |
+| version             | String   | API version, e.g., `"v1"`.                                                                  |
+| msgId               | String   | Unique identifier for this request.                                                         |
+| code                | Number   | Business status code, 0 indicates success, non-0 means failure.                             |
+| message             | String   | Description of the request result.                                                          |
+| data                | Object   | Data payload.                                                                               |
+| data.accessToken    | String   | The new Access Token, used for subsequent API authentication.                               |
+| data.refreshToken   | String   | The new Refresh Token, used for the next Access Token refresh. Its validity is 30 days beyond the current `expiresIn`. |
+| data.expiresIn      | Number   | Validity period of the new Access Token, in seconds. For example, 86400 means 1 day.        |
 
-**响应示例**
+**Response Example**
 
 ```json
 {
