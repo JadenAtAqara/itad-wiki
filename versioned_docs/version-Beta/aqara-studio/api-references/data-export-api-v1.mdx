@@ -6,20 +6,20 @@ The API supports querying and subscribing to device data, device control, device
 
 ## Communication Protocols
 
-The Studio API supports two main protocols: [HTTP](#http-request-url) and [WebSocket](#websocket-request-url).
+The Studio API supports two main protocols: [HTTP](#http-request) and [WebSocket](#websocket-request).
 
-#### Request Details
+### Request Endpoint
 
 The request URL format varies depending on whether [remote access](./../remote-access.mdx) is enabled.
 
-##### HTTP Request URL
+#### HTTP Request
 
 **Request method**: POST   
 **Request URL format**: 
 - Remote access disabled: `http://<local_LAN_IP>/open/api/v1`
 - Remote access enabled: `http://<remote_access_address>/open/api/v1`
 
-##### WebSocket Request URL
+#### WebSocket Request
 
 **Request URL format**: 
 - Remote access disabled: `ws://<local_LAN_IP>/open/ws`
@@ -27,7 +27,7 @@ The request URL format varies depending on whether [remote access](./../remote-a
 
 After you establish a connection, you can send and receive JSON messages in real time with the server.
 
-##### Request Headers
+### Request Headers
 
 | Parameter      | Type   | Required         | Description   |
 | -------------- | ------ | --------------- | ------------------------------------------------------------ |
@@ -40,10 +40,9 @@ Aqara Studio determines and responds to different API functions based on the `ty
 
 | API Function | Request Type | Response Type |
 | --- | --- | --- |
-| [Query Device IDs by Pages](./trait-api.mdx#query-device-ids-by-pages) | GetDeviceInfoRequest | GetDeviceInfoResponse |
-| [Query All Device IDs](./trait-api.mdx#query-all-device-ids) | GetAllDeviceInfoRequest | GetAllDeviceInfoResponse |
+| [Query Device Information by Pages](./trait-api.mdx#query-device-information-by-pages) | GetDeviceInfoRequest | GetDeviceInfoResponse |
+| [Query All Device Information](./trait-api.mdx#query-all-device-information) | GetAllDeviceInfoRequest | GetAllDeviceInfoResponse |
 | [Query Device Spec Configuration](./trait-api.mdx#query-device-spec-configuration) | GetDevicesRequest | GetDevicesResponse |
-| [Query All Device IDs](./trait-api.mdx#query-all-device-ids) |||
 | [Control Device](./trait-api.mdx#control-device) | ExecuteTraitRequest | ExecuteTraitResponse |
 | [Query the Latest Values of Device Traits](./trait-api.mdx#query-the-latest-values-of-device-traits) | GetTraitValueRequest | GetTraitValueResponse |
 | [Subscribe to Multiple Trait Changes](./trait-api.mdx#subscribe-to-multiple-trait-changes) | SubscribeTraitValueRequest | SubscribeTraitValueResponse |

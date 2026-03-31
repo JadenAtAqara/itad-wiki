@@ -1,0 +1,57 @@
+# Complex Trait Details
+
+## SupportedEndpointDynamic and EndpointArrayDynamic
+
+### Meaning of Traits
+
+- **SupportedEndpointDynamic**: (**For non-Matter devices**) Used to determine whether the device supports "dynamic endpoints".
+- **EndpointArrayDynamic**: (**For all devices**) Displays the current dynamic list of available (activated, working, etc.) endpoints of the device.
+
+When querying device capabilities, if the above fields appear in the response, please determine whether to obtain the dynamic endpoint list based on the device type.
+
+Matter devices (model prefix `aqara.matter`) and non-Matter devices have different handling for these two traits. Please refer to the [How to Determine](#how-to-determine) below for specific methods.
+
+### How to Determine
+
+Based on the device type, the specific process for determining whether a device supports dynamic endpoints is as follows:
+
+#### Matter Devices
+
+For **all Matter devices**, please make the following checks:
+1. Use the [GetDevicesRequest](./trait-api.mdx#query-device-spec-configuration) API to query device traits.
+2. Look for the `EndpointArrayDynamic` field in the API response:
+   - **If it exists and has a value**: The value is the list of available endpoints.
+   - **If it does not exist or has no value**: All endpoints are available by default; no extra handling is required.
+
+#### Non-Matter Devices
+
+**Only the non-Matter devices listed in the table below** support the `SupportedEndpointDynamic` and `EndpointArrayDynamic` traits. Only when querying the traits of these devices do you need to follow the determination process below. Other non-Matter devices can ignore these two traits.
+
+:::tip
+The following list contains devices supporting dynamic endpoints as of November 26, 2025. As products are continually updated, this list will also change. **Do not hardcode this table content into your program**. We recommend always referring to the latest device list on this page during development to ensure compatibility and stability.
+:::
+
+| Model | Device Name |
+|---|---|
+| aqara.airrtc.ecn001      | VRF Controller T1             |
+| lumi.motion.agl001       | Presence Sensor FP2           |
+| lumi.gateway.agl004      | Hub M3                        |
+| lumi.gateway.acn012      | Hub M3                        |
+| aqara.airrtc.acn02       | Temperature control mate T1 (indoor unit) |
+| lumi.curtain.acn010      | Organ smart Curtain Controller C4 |
+| lumi.airrtc.aus002       | Thermostat Hub W200            |
+| lumi.airrtc.aus001       | Aqara Wall Thermostat S1 Pro   |
+| lumi.fitting.agl001      | Current Sensor R100            |
+| lumi.airrtc.aeu001       | Floor Heating Thermostat W500  |
+| lumi.airrtc.acn002       | Thermostat W400 (VRF)          |
+| lumi.airrtc.acn003       | Thermostat W400 (FCU)          |
+| lumi.gateway.agl011      | Hub M200                       |
+
+1. Call the [GetDevicesRequest](./trait-api.mdx#query-device-spec-configuration) API to query device traits.
+2. Check whether `SupportedEndpointDynamic.attribute.defaultValue` in the response **is 1**:
+    - **Yes**: The device supports dynamic endpoints.
+        1. Call the [GetTraitValueRequest](./trait-api.mdx#query-the-latest-values-of-device-traits) API (`traitCodes` set as `["EndpointArrayDynamic"]`) to get the device's current dynamic endpoint list.
+        2. Check whether `value` in the response has a value:
+           - **Yes**: This value is the list of available endpoints.
+           - **No or this trait does not exist**: All endpoints returned by the trait query API are available.
+    - **No**: The device does not support dynamic endpoints; all endpoints returned by the trait query API are available.

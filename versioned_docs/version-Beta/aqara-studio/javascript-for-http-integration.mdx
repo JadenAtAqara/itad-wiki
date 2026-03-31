@@ -234,15 +234,15 @@ To ensure Aqara Studio can correctly obtain function point information, you must
 | pointId   | Data point ID. Please consult the device manufacturer to obtain the actual ID to allow Aqara Studio to discover this point. |
 | pointName | Name for the data point defined by you. |
 | pointType | Same as the `deviceType` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
-| function  | Same as the `functionCode` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
-| trait     | Same as the `traitCode` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
+| functionCode  | Same as the `functionCode` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
+| traitCode     | Same as the `traitCode` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
 | dataType  | Data point type. Supported values: <ul><li><code>bool</code>: Boolean</li><li><code>numerical</code>: Numeric</li><li><code>text</code>: Text</li></ul> |
 | access    | Access mode of the resource. <ul><li>1: Read-only</li><li>2: Read-write</li></ul> |
 
 :::tip
 When adding new data points, you may choose one of the following approaches depending on your needs:
 
-- **Based on Aqara Spec**: You need to fill in fields such as `pointType`, `function`, and `trait`, which enables the data point to be compatible with the Aqara Spec.
+- **Based on Aqara Spec**: You need to fill in fields such as `pointType`, `functionCode`, and `traitCode`, which enables the data point to be compatible with the Aqara Spec.
 - **General Approach**: You only need to fill in the basic fields such as `dataType` and `access`.
 :::
 	
@@ -257,8 +257,8 @@ To ensure Aqara Studio can correctly obtain device information, you need to make
             "pointId": "temperature",
             "pointName": "Temperature",
             "pointType": "TemperatureSensor",
-            "function": "Temperature",
-            "trait": "CurrentTemperature"
+            "functionCode": "Temperature",
+            "traitCode": "CurrentTemperature"
         }
     ]
     ```
@@ -293,8 +293,8 @@ function parseDiscoverPointsResponse(responseString) {
         pointId: item.pointId,
         pointName: item.pointName,
         pointType: item.pointType,
-        function: item.function,
-        trait: item.trait
+        functionCode: item.functionCode,
+        traitCode: item.traitCode
     }));
 }
 ```
@@ -631,8 +631,8 @@ function parseDiscoverPointsResponse(responseString) {
         pointId: item.pointId,
         pointName: item.pointName,
         pointType: item.pointType,
-        function: item.function,
-        trait: item.trait
+        functionCode: item.functionCode,
+        traitCode: item.traitCode
     }));
 }
 
