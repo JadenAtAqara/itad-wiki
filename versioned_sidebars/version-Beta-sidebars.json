@@ -7,7 +7,15 @@
         "aqara-studio/overview/introduction"
       ]
     },
-    "aqara-studio/quick-start",
+    {
+      "type": "category",
+      "label": "Deployment Options",
+      "collapsed": false,
+      "items": [
+        "aqara-studio/deployment-options/edge-deployed-model",
+        "aqara-studio/deployment-options/hub-integrated-model"
+      ]
+    },
     {
         "type": "category",
         "label": "Build", 
@@ -46,9 +54,7 @@
                     "aqara-studio/device-management/point-information",
                     "aqara-studio/device-management/history",
                     "aqara-studio/device-management/alarms",
-                    "aqara-studio/device-management/tags",
-                    "aqara-studio/device-management/references",
-                    "aqara-studio/device-management/control-third-party-devices-via-aqara-home-app"
+                    "aqara-studio/device-management/tags"
                   ]
               },
               {

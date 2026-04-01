@@ -1,0 +1,138 @@
+# 边端部署形态
+
+本文将为您详细介绍如何在边端部署形态下运行和访问 Aqara Studio。
+
+:::tip
+如需了解其他 Aqara Studio 形态的部署指南，请参考以下方式获取：
+- **网关融合形态**：请参阅 [网关融合形态](./hub-integrated-model.mdx) 文档。
+- **云端部署形态**：请联系 Aqara 销售代表获取相关文档。
+:::
+
+## 开通服务及获取资源
+
+在开始之前，请确保已联系 Aqara 销售代表完成以下事项：
+- 开通服务，以获取：
+    - -授权码。
+    - 许可文件，即 Certificate 和 License 文件。
+- 获取如下软件：
+    - Aqara Studio 快速开始安装部署工具（适用于 Windows x64 系统），即 AqaraStudioTool。
+    - Aqara Studio 安装包。
+
+## 边端服务器要求
+
+开始之前，请确保边端服务器满足以下要求：
+- 操作系统：
+    - 操作系统需为 Linux，且 CPU 指令集架构为 `x86_64` 或 `arm64`
+    - 支持的系统包括：
+        - Ubuntu 22.04
+        - CentOS 9
+        - Kylin
+    - 系统需满足：glibc 版本 ≥ 2.34
+    - 推荐使用：Ubuntu Server 22.04
+- 最低硬件要求：
+  - 4 核 CPU
+  - 8 GB 内存
+  - 100 GB 存储空间
+
+## 网络要求
+
+在开始之前，请确保您的边端服务器支持以下网络能力：
+
+| 项目 | 要求 |
+|------|------|
+| IP 配置 | 支持 DHCP 自动获取 IP（可选））。 |
+| 通信能力 | 支持单播通信；推荐组播通信。 |
+| 远程访问 | 支持 SSH 远程访问及代理方式访问。 |
+| 时间同步 | 支持配置 NTP Server 用于系统时间同步。 |
+| TCP 端口 | 开放以下端口：80 / 443 / 1883 / 1893 / 2311 / 3671 / 4311 / 5050 / 8000 / 8088 / 11111 / 11121 / 15050 |
+| UDP 端口 | 开放以下端口：2311 / 47808 |
+
+## 部署流程
+
+:::tip
+下面为以 Windows 端 AqaraStudio Tool 为例，说明如何在边端服务器部署 Aqara Studio。
+:::
+
+1. 打开 Aqara Studio 快速开始安装部署工具，进入安装流程。勾选“我已阅读并同意许可协议”，单击“开始安装”。 
+
+    ![勾选“我已阅读并同意许可协议”并点击“开始安装”](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraStudioTool-Welcome.png)
+
+2. 单击“添加服务器”，传入以下边端服务器的信息，并单击“确定”：
+
+    | 字段   | 说明          |
+    | ------ | ------------- |
+    | IP 地址 | 边端服务器的 IP 地址。 |
+    | 端口   | SSH 端口，通常为 22。  |
+    | 账号   | 登录服务器的用户名。   |
+    | 密码   | 登录服务器的密码。     |
+
+    ![输入边端服务器信息](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraStudioTool-FillinServerInfo.jpeg)
+
+    添加成功如图，然后单击“下一步”：
+
+    ![服务器添加成功](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraStudioTool-ServerAdded.jpeg)
+
+3. 选择你已获得的 Aqara Studio 安装包。
+
+    ![选择 Aqara Studio 安装包](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraStudioTool-SelectPackage.png)
+
+    解析如下，选择你需要部署的服务，各服务介绍请见 [下文](#服务介绍)。
+
+    ![安装包解析结果](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraStudioTool-PackageAnalysis.png)
+
+    如果单节点就勾选对应的服务，多节点就选择对应的服务部署到对应的 IP 地址：
+
+    ![选择服务](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraStudioTool-SelectService.png)
+
+4. 进入“环境检查”步骤，点击“开始检查”按钮以自动检测部署环境是否符合要求：
+
+    ![检测环境](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraStudioTool-CheckEnvironment.png)
+
+    检查成功后如图，然后点击下一步：
+
+    ![检测环境](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraStudioTool-CheckSuccess.jpeg)
+
+5. 点击“开始安装”，开始自动部署 Aqara Studio 服务。系统将根据你的选择完成各服务的部署与启动，等待进度完成即可。
+
+    ![检测环境](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraStudioTool-StartInstallation.png)
+
+    安装成功后如下图所示，单击“下一步”：
+
+    ![安装成功](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraStudioTool-InstallationSuccess.jpeg)
+
+6. 输入 [从 Aqara 销售代表处获取的授权码](#开通服务及获取资源)。
+
+    ![输入授权码](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraStudioTool-InstallationSuccess.jpeg)
+
+    激活成功表示 Aqara Studio 服务已部署完成。
+
+    ![成功激活](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraStudioTool-AuthenticationSuccess.png)
+
+
+### 服务介绍
+
+| 服务名称 | 核心角色 | 是否必选 | 主要功能 |
+| - | - | - | - |
+| docker | 容器运行环境 | ✔ | 提供所有服务运行的底层容器化平台。 |
+| aqara_sys | Studio 核心服务 | ✔ | 提供设备接入、自动化、数据可视化大屏等功能。 |
+| aqara-agent | 运维管理组件 | ✔ | 服务运维组件，提供远程管理功能。 |
+| aqara-nanomq | 消息中间件 | ✘ | 本地 MQTT 消息代理，实现服务间解耦通信（设备状态转发、控制指令传输）。<br />如需 [集成 MQTT 设备](./../device-integration/mqtt.mdx) 或将 [以 MQTT 转出设备数据](./../data-export-by-mqtt.mdx)，请选择此服务。 |
+| aqara-srs | 视频推拉流管理 | ✘ | 提供管理视频流服务。<br />如需在大屏展示视频流，请选择此服务。 |
+
+## 访问 Aqara Studio
+
+1. 在电脑浏览器中输入已部署 Aqara Studio 的服务器 IP 地址，即可访问 Aqara Studio。
+2. 首次访问 Aqara Studio 时，您需要修改名称为 `super` 的账号的密码，否则无法进入登录界面。
+3. 密码修改后，您可以通过该 `super` 账号登录。   
+4. 登录成功后，您将看到授权许可页面。在此页面上传 [已获取的 Certificate 和 License]，
+
+    ![在此页面上传许可文件](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraStudio-CertificateAndLicense.png)
+
+    再次刷新页面，即可看到 Aqara Studio 的主页面。
+
+
+## 下一步
+
+恭喜！您已迈出关键的第一步，成功连接 Aqara 智慧边端 M300 和登录 Aqara Studio 页面。
+
+请继续阅读 [空间管理](./../space.mdx) 文档在 Aqara Studio 构建你的家，并且阅读 [设备接入](/docs/category/device-integration) 相关文档，将您的智能家居设备添加至本系统，开启个性化自动化方案的构建。
