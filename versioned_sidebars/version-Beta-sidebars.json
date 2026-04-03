@@ -4,16 +4,17 @@
       "type": "category",
       "label": "Overview",
       "items": [
-        "aqara-studio/overview/introduction"
+        "aqara-studio/overview/introduction",
+        "aqara-studio/overview/features"
       ]
     },
     {
       "type": "category",
-      "label": "Deployment Options",
+      "label": "Deployment",
       "collapsed": false,
       "items": [
-        "aqara-studio/deployment-options/edge-deployed-model",
-        "aqara-studio/deployment-options/hub-integrated-model"
+        "aqara-studio/deployment/edge-deployed-model",
+        "aqara-studio/deployment/hub-integrated-model"
       ]
     },
     {
@@ -208,6 +209,7 @@
         "aqara-studio/set-up-mcp-server"
       ]      
     },
+    "aqara-studio/faq",
     {
       "type": "category",
       "label": "Reference",
