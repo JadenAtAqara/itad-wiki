@@ -7,9 +7,9 @@
     "message": "概览",
     "description": "The label for category 'Overview' in sidebar 'aqaraStudioSidebar'"
   },
-  "sidebar.aqaraStudioSidebar.category.Deployment Options": {
-    "message": "部署方案",
-    "description": "The label for category 'Deployment Options' in sidebar 'aqaraStudioSidebar'"
+  "sidebar.aqaraStudioSidebar.category.Deployment": {
+    "message": "部署",
+    "description": "The label for category 'Deployment' in sidebar 'aqaraStudioSidebar'"
   },
   "sidebar.aqaraStudioSidebar.category.Build": {
     "message": "构建",
