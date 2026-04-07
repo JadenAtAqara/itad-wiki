@@ -1,0 +1,171 @@
+# 判断
+
+本文说明高阶 Flow 的判断类卡片。
+
+## 概述
+
+在自动化 Flow 中，判断类卡片用于对流程中的数据、设备状态或变量等进行条件判定，是流程分支控制的重要节点。
+
+判断卡片通常拥有两个输出点，分别对应判断结果为 true（满足条件）或 false（不满足条件）。只有在某一输出路径被激活时，后续的动作或分支才会被执行。
+
+通过配置不同类型的判断卡片，可以灵活实现数据比较、逻辑运算等条件判断，使自动化流程具备复杂的智能分支处理能力，满足多样化的业务需求。
+
+在高阶 Flow 中，以下内容都可进行判断：
+- [设备](#设备)：判断设备的当前状态或其某项数据是否满足设定条件，例如“灯是否已打开”、“温度是否超过阈值”等。
+- [逻辑](#逻辑)：支持与、或、异或、非等基础逻辑运算，可灵活组合多个布尔条件，实现复杂分支控制。同时，支持等于、不等于、大于、小于、大于等于、小于等于等多种数据比较，实现对任意两个数据的精准判定。
+- [时间](#时间)：判断当前时间是否处于指定的时间区间，例如判断“是否为周一 10 点至 12 点”，实现与时间相关的自动化分支。
+- [流程判断](#流程判断)：判断某个高阶 Flow 是否启用。
+
+点击上述链接可快速查看对应的判断类型和使用说明。
+
+## 判断类输出点说明
+
+判断类卡片的输出点通常有两个，分别代表判断的结果：
+
+- **True 输出**：当判断条件满足（即结果为 true）时，流程将从此输出点继续执行。
+- **False 输出**：当判断条件不满足（即结果为 false）时，流程将从此输出点继续执行。
+
+如下图所示：
+
+![判断卡片输出点说明](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-ConditionOuputs.png)
+
+开发者可根据实际自动化需求，分别在 true 和 false 输出下配置不同的后续卡片，实现流程的分支和差异化处理。例如，在设备状态达到设定条件时执行某些操作，否则执行另一组操作，从而提升自动化的灵活性和智能性。
+
+## 设备
+
+基于设备的判断卡片可对设备当前状态或数据进行条件判断，作为自动化流程中的分支节点。例如可判断“某灯是否打开”、“温湿度是否超过指定阈值”等。
+
+开发者可通过配置设备以及其对应的功能点、状态或数值，并设置判断条件（如等于、不等于、大于、小于等），灵活实现针对设备状态的精准判定。
+
+### 使用步骤
+
+1. 在画布的左侧边栏单击 **+** 按钮。在**判断**下选择**设备**。在设备列表中选择待判断的设备。
+
+    ![选择设备](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SelectADeviceCondition.png)
+
+2. 随后，您可以看到该设备可用的卡片列表，即该设备的可读功能点列表。单击所需卡片。即可将该卡片添加到画布。
+
+    ![选择设备](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SelectAConditionPointCard.png)
+
+    ![基于设备的判断卡片已添加到画布](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-DeviceConditionAdded.png)
+
+3. 单击卡片上的第一个参数，可选择设备的具体判断条件（如等于、不等于、大于、小于等）。
+
+    :::tip
+    不同类型的设备功能点可选的监听条件各异。例如，开关类型一般支持“等于”、“不等于”等选项，而数值类功能点还支持“大于”、“小于”等选项。
+    :::
+
+    ![修改判断条件](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-DeviceConditionEventSelection.png)
+
+    单击第二个参数，您还可以进一步指定需要监听的数据目标。
+
+    ![制定监听数据](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-DefineConditionValue.png)
+
+4. 完成上述配置后，需确保该判断卡片的输出点（True 或 False 输出）中至少有一个已连接到其他卡片（[判断类卡片](./condition.mdx) 或 [执行类卡片](./action.mdx)）。
+
+## 逻辑
+
+判断类卡片中与逻辑相关的类型主要有 [比较运算](#比较运算) 和 [逻辑运算](#逻辑运算)。  
+- **比较运算**用于判断两组数据之间的关系（如等于、不等于、大于、小于等），用于实现数值、状态等条件的判断。  
+- **逻辑运算**则用于对多个条件判断结果（如多个判断卡片的输出）进行逻辑关系组合（如与、或、异或），实现更为复杂的条件分支控制。  
+
+开发者可根据实际需求灵活选用前述卡片类型，构建多样化的判断逻辑。
+
+### 比较运算
+
+比较运算是一类常用于判断两组数据（如设备数据、变量）之间关系的逻辑运算卡片。在高阶 Flow 中，比较运算通常支持等于、不等于、大于、小于、大于等于、小于等于等多种比较方式。
+
+当比较条件成立时，卡片会输出 true，否则输出 false。通过灵活配置比较运算，可以实现对设备状态、变量值等的精准判定，从而控制后续自动化流程的分支走向。例如，可以判断“温度是否超过阈值”，有效提升自动化决策的智能化与多样性。
+
+#### 使用步骤
+
+1. 在画布的左侧边栏单击 **+** 按钮。在**判断**下选择**逻辑**。单击**比较运算**，即可在画布上添加该卡片。
+
+    ![选择比较运算](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SelectComparison.png)
+
+2. 单击卡片上的第一个参数，即可从下拉列表中选择一个设备数据作为数值 A。
+
+    ![选择数值 A](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SelectValueA.png)
+
+    若需对比变量值，只需点击 &#128279; 图标，即可从变量列表中选择所需变量参与比较。
+
+    ![使用变量](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-UseVariable.png)
+
+3. 单击卡片上的第二个参数，即可设置比较运算符，如大于。
+
+    ![设置运算符](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SetComparison.png)
+
+4. 单击卡片上的第三个参数，设置数值 B。设置方式与数值 A 相同。
+5. 完成上述配置后，需确保该判断卡片的输出点（True 或 False 输出）中至少有一个已连接到其他卡片（[判断类卡片](./condition.mdx) 或 [执行类卡片](./action.mdx)）。
+
+### 逻辑运算
+
+逻辑运算是用于判断两个输入布尔值之间逻辑关系的运算卡片。在高阶 Flow 中，逻辑运算卡片用于判断“与”、“或”、“异或” 和 “非”这四种基础逻辑关系。
+
+#### 使用步骤
+
+1. 在画布左侧边栏**判断**下选择**逻辑**，添加“逻辑运算”卡片。
+
+    ![选择逻辑运算](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SelectLogicalOperation.png)
+
+2. 点击卡片上的逻辑类型参数，从下拉选项中选择所需的逻辑运算方式（如“与”、“或”、“异或”或“非”）。
+
+    ![设置规则](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SetLogicalOperationRule.png)
+
+3. 单击 “+” 按钮，为逻辑运算卡片添加输入项。可添加的布尔值类别包括：
+   - 判断类卡片的输出；
+   - 布尔型变量（支持全局变量、局部变量及设备相关的布尔数据）。
+   
+    ![添加布尔值](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-AddBooleanValues.png)
+
+4. 完成上述配置后，需确保该判断卡片的输出点（True 或 False 输出）中至少有一个已连接到其他卡片（[判断类卡片](./condition.mdx) 或 [执行类卡片](./action.mdx)）。
+
+## 时间
+
+判断类卡片中与时间相关的类型主要有 **周期判断** 和 **定期判断**。  
+
+| 判断类型       | 适用场景描述                                                         | 示例                                              |
+|--------------|--------------------------------------------------------------------|--------------------------------------------------|
+| **周期判断**   | 判断当前时间是否处于设定的周期性时间范围内，如每周的某几天的某个时段等，适用于“工作日”“周末”等定期场景，实现周期性的时间段条件判断 | 每周一至周五 09:00-18:00               |
+| **定期判断**   | 判断当前时间是否处于某个具体期间，适用于一次性的时间判断           | 2026/01/01 12:00:00 - 2026/01/02 13:00:00  |
+
+
+### 使用流程
+
+1. 在画布左侧边栏**判断**下选择**时间**。单击任意卡片，即可在画布上添加该卡片。
+
+    ![选择时间相关的判断卡片](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-AddTimeCondition.png)
+
+2. 配置参数：
+    - 对于 **周期判断**：
+        - 点击卡片上的第一个参数，选择需要判断的星期几（支持多选）。
+        - 点击卡片上的第二个和第三个参数，分别设置起始和结束时间。
+
+        ![设置周期判断的参数](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SetPeriodicConditionParameters.png)
+
+    - 对于 **定期判断**：
+        - 点击卡片上的起始参数，设置起始的具体日期和时间；
+        - 点击卡片上的结束参数，设置结束的具体日期和时间。
+        
+        ![设置定期判断的具体日期和时间](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SetSpecificDateandTime.png)
+
+3. 完成上述配置后，需确保该判断卡片的输出点（True 或 False 输出）中至少有一个已连接到其他卡片（[判断类卡片](./condition.mdx) 或 [执行类卡片](./action.mdx)）。
+
+
+## 流程判断
+
+流程判断卡片用于判断其他高阶 Flow 当前是否已启用。通过引用和检测目标 Flow 的启用状态，可以实现自动化流程间的联动。
+
+例如：当某条高阶 Flow 处于启用状态时，流程判断卡片输出为 True，从而决定是否继续执行当前流程的后续动作。
+
+### 使用步骤
+
+1. 在画布左侧边栏**判断**下选择**流程**，添加“流程判断”卡片。
+
+    ![添加流程判断卡片](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-AddFlowCondition.png)
+
+2. 单击卡片上的参数，选择需要监听的已创建 Flow。只要该 Flow 处于启用状态，流程便会从本 **流程判断** 卡片的 True 输出继续执行，反之亦然。
+
+    ![选择 Flow](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SelectAFlow.png)
+
+3. 完成上述配置后，需确保该判断卡片的输出点（True 或 False 输出）中至少有一个已连接到其他卡片（[判断类卡片](./condition.mdx) 或 [执行类卡片](./action.mdx)）。

@@ -1,0 +1,187 @@
+# 触发
+
+本文说明高阶 Flow 的触发类卡片。
+
+## 概述
+
+在自动化 Flow 中，触发节点用于定义流程的起始条件，是激活整个自动化流程的入口。只有在触发节点监听到特定事件（如设备状态变化、定时、手动操作或告警事件）时，后续的条件判断和动作执行才会启动。通过配置不同类型的触发节点，可以灵活实现对各类场景的自动响应，满足多样化的自动化需求。
+
+在高阶 Flow 中，以下内容都可作为触发器使用，作为流程的起点：
+
+- [设备](#设备)：监听设备事件或状态变化时触发流程
+- [手动触发](#手动触发)：通过手动操作进行触发
+- [时间](#时间)：按定时、周期等方式定时触发
+- [告警](#告警)：在告警事件发生时触发执行流程
+
+点击上述链接可快速查看对应的触发器类型和使用说明。
+
+## 设备
+
+基于设备的触发卡片可监听设备的事件或状态变化，作为自动化流程的起点。当所选设备发生指定事件（如开关被按下）或进入特定状态（如数值变化、状态改变）时，流程便会被激活，执行后续的判断和动作。
+
+通过配置设备及其所支持的事件或状态，您可灵活设定自动响应的触发条件。例如：有人进入房间时、温湿度超过阈值时、灯被手动开启时等，均可依赖基于设备的触发卡片启动自动化流程。
+
+支持选择不同设备和多种事件／状态进行监听，满足多样化的自动化需求。
+
+### 使用步骤
+
+1. 在画布的左侧边栏单击 **+** 按钮。在**触发**下选择**设备**。在设备列表中选择待监听的设备。
+
+    ![选择设备](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SelectTriggerDevice.png)
+
+2. 随后，您可以看到该设备可用的卡片列表，即该设备的可读功能点列表。单击所需卡片。即可将该卡片添加到画布。
+
+    ![选择卡片](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SelectAPointCard.png)
+
+    ![基于设备的触发卡片已添加到画布](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-DeviceTriggerAdded.png)
+
+3. 单击卡片上的第一个参数，可选择设备的具体监听条件（如等于、不等于、大于、小于等）。
+
+    :::tip
+    不同类型的设备功能点可选的监听条件各异。例如，开关类型一般支持“等于”、“不等于”等选项，而数值类功能点还支持“大于”、“小于”等选项。
+    :::
+
+    ![修改监听条件](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-DeviceTriggerEventSelection.png)
+
+    单击第二个参数，您还可以进一步指定需要监听的数据目标。
+
+    ![制定监听数据](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-DefineTargetData.png)
+
+4. 完成上述配置后，您就可以将其与 [判断类卡片](./condition.mdx) 和 [执行类卡片](./action.mdx) 连接。
+ 
+## 手动触发
+
+手动触发是一种由用户主动操作执行流程的触发方式。当需要手动启动某个自动化场景，或需要在测试、调试流程时进行即时触发时，可使用手动触发卡片。
+
+### 使用步骤
+
+1. 在画布的左侧边栏单击 **+** 按钮。在**触发**下选择**手动**。单击**手动触发**，即可在画布上添加该卡片。
+
+    ![选择手动触发](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SelectManualTrigger.png)
+
+2. 将 **手动触发** 卡片与 [判断类卡片](./condition.mdx) 和 [执行类卡片](./action.mdx) 连接。
+
+    ![选择手动触发](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-ConnectManualTriggerAndOthers.png)
+
+3. 单击 **手动触发** 卡片上的图标，即可测试此 Flow。
+
+    ![选择手动触发](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-StartManualTrigger.png)
+
+    此时，Flow 的外边框颜色会从灰色逐渐转为蓝色，表示流程正在执行中。
+
+    ![手动触发进行中](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-TriggerInProgress.png)
+
+    当手动触发成功后，界面会弹出提示，标识流程已完成执行。
+
+    ![手动触发完成](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-TriggerFinished.png)
+
+
+## 时间
+
+时间相关的触发卡片主要包括 **周期触发**、**定期触发** 和 **循环触发** 三种，可用于满足不同场景下的自动化时间调度需求。
+
+| 触发类型       | 适用场景描述                                   | 示例                   |
+|--------------|---------------------------------------------|----------------------|
+| **周期触发**   | 根据设定的周期（如每天、每周、指定工作日等）在特定时间自动执行流程   | 每天 7:00 自动开灯        |
+| **定期触发**   | 在指定的日期和时间仅执行一次流程                        | 2024/07/01 08:00 打开窗帘 |
+| **循环触发**   | 每隔一段时间循环执行流程                           | 每隔 10 分钟开灯          |
+
+此外，这些时间触发卡片支持多种参数设定，例如自定义周期、指定时间、依据日出日落（支持手动输入经纬度）选择时间点等，帮助您精细化控制自动化流程的执行时机。通过合理组合使用，可以轻松实现复杂的定时联动管理，让智能设备更加贴合实际生活与工作需求。
+
+### 使用步骤
+
+1. 在画布的左侧边栏单击 **+** 按钮。在**触发**下选择**时间**。单击任意卡片，即可在画布上添加该卡片。
+
+    ![选择时间相关的触发卡片](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SelectTimeTrigger.png)
+
+2. 配置参数：
+    - 对于 **周期触发**：
+        - 在卡片上选择第一个参数，选择每周周几触发行为。
+
+            ![选择周期触发的日期](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-PeriodicTriggerDate.png)
+
+        - 在卡片上选择第二个参数“触发时刻”。您可以设置为具体时间点，或选择以“日出”或“日落”为基准的相对时刻（如日出前/后、日落前/后）。详情请参考 [时刻类型](#时刻类型)。
+
+            ![选择周期触发的时刻](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-PeriodicTriggerTime.png)
+
+    - 对于 **定期触发**：
+        - 在卡片上选择上选择第一个参数，指定触发的具体日子。
+
+            ![选择定期触发的日期](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SpecificDateTrigger.png)
+
+        - 在卡片上选择第二个参数“触发时刻”。详情请参考 [时刻类型](#时刻类型)。
+
+            ![选择定期触发的时刻](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-DefineTime.png)
+
+    - 对于 **循环触发**：   
+        在卡片上选择时间间隔参数，表示每个多久触发一次流程。
+        
+        ![选择循环触发的间隔](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SelectInterval.png]
+
+3. 将上述卡片与 [判断类卡片](./condition.mdx) 和 [执行类卡片](./action.mdx) 连接。
+
+### 时刻类型
+
+Aqara Studio 支持您在配置时刻的时候使用**指定时刻**、**日出日落时间**或**日出日落前后**。
+
+![时刻种类](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-TimeCategories.png)
+
+各类型说明如下：
+
+| 时刻类型       | 说明                                                         |
+|--------------|------------------------------------------------------------|
+| 指定时刻      | 可设置为 24 小时制的具体时间点，用于精确控制触发时刻。          |
+| 日出日落时间   | 需填写所在位置的经纬度。填写规则：<ul><li>北纬及东经为正数（如：35.0 代表北纬 35.0°）</li><li>南纬及西经为负数（如：-120.0 代表西经 120.0°）</li></ul>设置后，Aqara Studio 将自动获取该地的日出日落时间。 |
+| 日出/日落前后 | 需输入经纬度及期望的相对时间间隔（如 15 分钟），可实现更灵活的时间控制。    |
+
+## 告警
+
+告警触发在自动化流程中主要用于监控和响应系统中的异常或预警事件。通过配置告警触发卡片，您可以将功能点告警事件与自动化任务联动。例如，当系统检测到某设备出现故障发生时，可以自动触发后续流程，如联动其它设备等。这样可以实现及时响应和处理，有效提升系统的智能化与安全性。
+
+在实际应用中，您可以根据不同类型的告警（如未确认、已确认、已恢复、已关闭等状态）选择对应的流程响应策略，将监控、报警与自动化有机结合，保障空间与设备的稳定运行。
+
+### 前提条件
+
+在使用此卡片之前，请确保您已 [配置功能点告警](./../device-management/alarms.mdx)。单击
+
+### 使用流程
+
+1. 在画布的左侧边栏单击 **+** 按钮。在**触发**下选择**告警**。单击**告警触发**，即可在画布上添加该卡片。
+
+    ![选择告警触发卡片](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SelectAlarmTrigger.png)
+
+2. 在卡片的第一个参数中，选择您已创建的功能点告警。
+
+    ![选择一个功能点告警](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SelectAnAlarm.png)
+
+3. 选择需监听的告警状态，仅当前告警达到所选状态（如未确认、已确认、恢复正常等）时，才会触发后续流程。
+
+    ![选择告警状态](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SelectAnAlarmStatus.png)
+
+4. 将上述卡片与 [判断类卡片](./condition.mdx) 和 [执行类卡片](./action.mdx) 连接。
+
+## 变量
+
+在自动化流程中，变量触发用于感知和响应系统内变量的变化，实现动态和智能的流程控制。本系统支持监听 [全局变量](./flow-introduction.mdx#变量类别)、[局部变量](./flow-introduction.mdx#变量类别) 和 **设备数据** 三种类型。
+
+:::tip
+**设备数据**：指具体设备的数据点，如传感器数值、开关状态等。
+:::
+
+变量触发机制能让您的自动化流程更灵活性，适合各种复杂、动态的场景需求。
+
+### 前提条件
+
+在使用此卡片之前，请确保您已 [创建变量](./flow-introduction.mdx#创建变量) 或 [接入设备](/docs/category/device-integration)。
+
+### 使用流程
+
+1. 在画布的左侧边栏单击 **+** 按钮。在**触发**下选择**变量**。单击**变量触发**，即可在画布上添加该卡片。
+
+    ![选择变量触发卡片](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SelectVariableTrigger.png)
+
+2. 在卡片的第一个参数中，选择一个全局变量、局部变量或设备数据。当此变量或设备数据发生变化时，就会触发后续流程。
+
+    ![选择变量或设备数据](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AdvancedFlow-SelectVariable.png)
+
+3. 将上述卡片与 [判断类卡片](./condition.mdx) 和 [执行类卡片](./action.mdx) 连接。
