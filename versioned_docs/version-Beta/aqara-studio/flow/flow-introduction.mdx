@@ -6,11 +6,18 @@ With flexible visual configuration, you can use various blocks to build data flo
 
 To learn how to create an advanced flow, please see [Automation - Create an Automation](./../automation.mdx#create-an-automation).
 
-Then, you can add and connect different [blocks](#blocks) on the canvas. Build device interaction logic for your specific needs.
+Then, you can [add](#how-to-add-blocks) and connect different [blocks](#blocks) on the canvas. Build device interaction logic for your specific needs.
 
 ## Blocks
 
 In Aqara Studio, blocks serve as the "information hub" and "control center" of automation. They transform complex backend automation logic (such as "turn on the light when someone is present and the room is dark") into clear, visual device states and one-click scene switches, making invisible automation intuitive and controllable.
+
+### How to Add Blocks
+
+1. Click the **+** button in the left sidebar of the canvas.
+2. Browse and select the desired block type (such as Trigger, Condition, or Action).
+3. Under the desired block type, further select a specific block. For example, if you click **Time** under the **Trigger** type, you will see the **Periodic Trigger**, **Scheduled Trigger**, and **Loop Trigger** blocks.
+4. Click the desired block and the block will appear on the canvas.
 
 ### Components
 
@@ -18,55 +25,32 @@ Each block can consists of the following elements:
 
 | Component | Description |
 | -- | -- |
-| Input point | If a block has an input point, it can be triggered or receive data.          |
+| Input point | If a block has an input point, it can be triggered.          |
 | Parameter  | Used to set the state to monitor, the action to perform, or other settings. |
-| Output point | If a block has an output point, it can trigger other steps or output data.   |
-
-#### Connection Point Types
-
-In Aqara Studio, both input and output point can be either circles or triangles, each representing a different meaning:
-
-<table>
-  <thead>
-    <tr>
-      <th>Symbol</th>
-      <th>Name</th>
-      <th>Function</th>
-      <th>How to Trigger</th>
-      <th>Example</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>●</td>
-      <td>Data Flow Node</td>
-      <td>It transfers data between blocks</td>
-      <td>By default, it triggers the execution of function blocks. Data changes or arrivals drive the block to run.</td>
-      <td>
-        Connect the temperature value from a temperature sensor’s 
-        <a href="./flow/variables-blocks.mdx#point-data">Point Data</a> block 
-        to a <a href="./flow/other-blocks.mdx#math">Math</a> block. Each time the sensor detects a new temperature, this value is automatically passed through this node to the Math block, triggering a calculation.
-      </td>
-    </tr>
-    <tr>
-      <td>▷</td>
-      <td>Event Flow Node</td>
-      <td>It represents an instant signal or action.</td>
-      <td>When an event occurs, it notifies the function block to start executing.</td>
-      <td>A button click (event flow) triggers a switch block.</td>
-    </tr>
-  </tbody>
-</table>
-
-Aqara recommends keeping the connection types consistent when linking blocks, i.e., circle to circle, triangle to triangle.
+| Output point | If a block has an output point, it can trigger other blocks.   |
 
 ### Categories
+Advanced Flow supports the following types of blocks, each serving a specific role:
 
-To learn more about each type of blocks, what they do, and how to use them, check out the following guides:
+| Category | Description |
+| -------- | ----------- |
+| [Trigger](./trigger.mdx)   | The **starting node** of an Advanced Flow.<br />Triggers can be initiated by various conditions, such as device status changes (e.g., a light being turned on), scheduled times, or alarm events, serving as the entry point for the flow. |
+| [Condition](./condition.mdx) | The **intermediate node** of an Advanced Flow.<br />Used to determine whether device states, time, or various logical/comparison operations meet the preset conditions, and thereby control the direction of the flow. |
+| [Action](./action.mdx) | The **ending node** of an Advanced Flow.<br />Used for sending and executing various actions, including controlling single or multiple devices, data processing, delays, etc., to achieve a closed automation loop. |
 
-- [Device Blocks](./../flow/device-blocks.mdx)
-- [Timer Blocks](./../flow/timer-blocks.mdx)
-- [Process Blocks](./../flow/process-blocks.mdx)
-- [Logic Blocks](./../flow/logic-blocks.mdx)
-- [Variables Blocks](./../flow/variables-blocks.mdx)
-- [Other Blocks](./../flow/other-blocks.mdx)
+### Connection
+
+The connection methods for different [block categories](#categories) are as follows:
+
+- [Trigger](./trigger.mdx): It only has output points, no input points. The output of a trigger block can connect to multiple other blocks, acting as the starting point of a flow.
+- [Condition](./condition.mdx): It can have both input and output points. Outputs from multiple blocks can connect to the input of a condition block; each output of the condition block (such as different judgment results) can also connect to multiple subsequent blocks, enabling branching in the flow.
+- [Action](./action.mdx): As the end point of the flow, it supports multiple input points, and can be triggered by several blocks at once. Depending on actual needs, multiple output points can also be set to further extend the flow.
+
+:::tip
+The input and output points of Flow blocks are primarily used for flow control. For example, multiple inputs mean that flows from different blocks can converge on a single block; multiple outputs mean that the flow from one block can branch out to several subsequent steps.
+
+These inputs and outputs are not related to the transfer of real "data"; all data processing and computation are handled internally within each block, and are not passed directly between blocks.
+
+Additionally, the outputs of [Condition blocks](./condition.mdx) provide both true/false branches to further control the direction of the flow.
+:::
+

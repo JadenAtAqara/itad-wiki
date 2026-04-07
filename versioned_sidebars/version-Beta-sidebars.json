@@ -76,14 +76,9 @@
                       },
                       "collapsed": true,
                       "items": [
-                          "aqara-studio/flow/device-blocks",
-                          "aqara-studio/flow/timer-blocks",
-                          "aqara-studio/flow/process-blocks",
-                          "aqara-studio/flow/logic-blocks",
-                          "aqara-studio/flow/variables-blocks",
-                          "aqara-studio/flow/other-blocks",
-                          "aqara-studio/flow/data-conversion",
-                          "aqara-studio/flow/examples"
+                          "aqara-studio/flow/trigger",
+                          "aqara-studio/flow/condition",
+                          "aqara-studio/flow/action"
                       ]
                     },
                     {

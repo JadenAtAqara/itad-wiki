@@ -2,18 +2,26 @@
 
 ## What to do if I cannot log in to Aqara Studio?
 
-If you are unable to log in to Aqara Studio, please follow these troubleshooting steps:
+Please refer to the following troubleshooting guide according to whether you are a [local user](#local-user) or [remote user](#remote-user).
 
-1. **Check whether the account exists:**
-    - If you do not have an account, please contact a user with super administrator permissions to create one for you.
+#### Local User
+
+1. **Confirm whether the account exists:**
+    - If you do not have an account, please contact a local user with `Super Administrator` permissions to create one for you.
     - If you already have an account, refer to the following information to recall your username and password:
-        - Common usernames: `super`, `admin`, `operator` or other custom names you may have used.
+        - Common usernames include: `super` (i.e., `Super Administrator`), `admin`, `operator`, or other custom usernames you may have set.
         - Password requirements: 8-16 characters, must include uppercase and lowercase letters, numbers, and special characters.
+2. **If you still cannot remember your password, please choose one of the following methods according to your user role:**
+    - `Super Administrator`: Please choose the following approach based on the running mode of Aqara Studio:
+        - **Gateway-Integrated Mode**: Refer to the device manual to perform a factory reset.
+        - **Edge-Deployed Mode**: Uninstall the current Aqara Studio and reinstall it.
+        :::tip
+        Factory reset will clear all data.
+        :::
+    - Other roles: Please contact the `Super Administrator` to [reset your password](./user.mdx#reset-local-user-password).
 
-2. **If you still cannot log in and cannot remember your password, please choose one of the following solutions based on the deployment model of Aqara Studio:**
-    - **Hub-Integrated Model**: Please refer to the device manual to perform a factory reset.
-    - **Edge-Deployed Model**: Please uninstall the current Aqara Studio and reinstall it.
+#### Remote User
 
-    :::tip
-    Factory reset will clear all data.
-    :::
+**Please confirm whether your Aqara Builder account has been invited:**
+- If not invited, please contact a remote user with `Remote Administrator` permissions to send you an invitation.
+- If already invited, please visit [Aqara Builder](https://builder.aqara.com) to reset your password.
