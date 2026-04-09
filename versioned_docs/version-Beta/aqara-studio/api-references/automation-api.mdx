@@ -8,18 +8,18 @@ By calling this API, you can query trait information that can be used for automa
 
 | Parameter    | Type    | Required | Description                                                                                  |
 | ------------ | ------- | -------- | -------------------------------------------------------------------------------------------- |
-| type         | String  | ✓        | Message type for the request, must be `QueryDeviceSupportedScriptAutomationConfigRequest`.    |
+| type         | String  | ✓        | Message type for the request, must be `QueryAutomationCapabilitiesRequest`.    |
 | version      | String  | ✓        | API version, must be `v1`.                                                                   |
 | msgId        | String  | ✓        | Request ID defined by you.                                                                   |
 | data         | String  | ✓        | Pass an empty string here.                                                                   |
 
 #### Example Request
 
-Below is a sample request body for `QueryDeviceSupportedScriptAutomationConfigRequest`:
+Below is a sample request body for `QueryAutomationCapabilitiesRequest`:
 
 ```json
 {
-    "type": "QueryDeviceSupportedScriptAutomationConfigRequest",
+    "type": "QueryAutomationCapabilitiesRequest",
     "version": "v1",
     "msgId": "1751609244328",
     "data": ""
@@ -30,7 +30,7 @@ Below is a sample request body for `QueryDeviceSupportedScriptAutomationConfigRe
 
 | Parameter | Type | Description  |
 | --- | --- | --- |
-| type | String | The message type of the response, always `QueryDeviceSupportedScriptAutomationConfigResponse`. |
+| type | String | The message type of the response, always `QueryAutomationCapabilitiesResponse`. |
 | version | String | Response version. It matches the version used in the request. |
 | msgId | String | The `msgId` provided in your request. |
 | code | Number | Return code. `0` means success, any non-zero value indicates failure. |
@@ -51,11 +51,11 @@ Below is a sample request body for `QueryDeviceSupportedScriptAutomationConfigRe
 
 #### Example Response
 
-Below is an example response for `QueryDeviceSupportedScriptAutomationConfigResponse`:
+Below is an example response for `QueryAutomationCapabilitiesResponse`:
 
 ```json
 {
-    "type": "QueryDeviceSupportedScriptAutomationConfigResponse",
+    "type": "QueryAutomationCapabilitiesResponse",
     "version": "v1",
     "msgId": "1751609244328",
     "data": {
@@ -141,28 +141,33 @@ Below is an example response for `QueryDeviceSupportedScriptAutomationConfigResp
 
 ## Create Automation
 
-By calling this API, you can create and enable an automation.
+By calling this API, you can create and enable a [flow automation](./../flow/flow-introduction.mdx).
+
+Once created successfully, you can view and manage this flow in the automation list on Aqara Studio.
+
 
 #### Request Parameters
 
 | Parameter | Type | Required | Description  |
 | ----------- | ------- | ------- | -------------------------------------------------- |
-| type        | String  | ✓     | Message type, must be `CreateScriptAutomationRequest`. |
+| type        | String  | ✓     | Message type, must be `CreateAutomationRequest`. |
 | version               | String            | ✓      | API version, must be `v1`. |
 | msgId                 | String            | ✓      | Custom request ID defined by you. |
 | data                  | Object            | ✓      | Request data. |
+| data.definitionType | String | ✓ | Automation type. Currently, only `"SCRIPT_JSON"` is supported. |
 | data.config   | Object  | ✓      | JSON automation script. For details, see [JSON Automation Script](./json-automation-script.mdx). |
 
 #### Example Request
 
-Below is a sample request body for `CreateScriptAutomationRequest`:
+Below is a sample request body for `CreateAutomationRequest`:
 
 ```json
 {
-    "type": "CreateScriptAutomationRequest",
+    "type": "CreateAutomationRequest",
     "version": "v1",
     "msgId": "1751609244328",
     "data": {
+        "definitionType": "SCRIPT_JSON",
         "config": {
             "metadata": {
                 "name": "Smart Lighting Control",
@@ -268,58 +273,65 @@ Below is a sample request body for `CreateScriptAutomationRequest`:
 
 | Parameter | Type | Description  |
 | ------- | ------ | -------------------------------------- |
-| type    | String | The type of message in the response. Always set to `CreateScriptAutomationResponse`. |
+| type    | String | The type of message in the response. Always set to `CreateAutomationResponse`. |
 | version | String | Response version. It matches the version used in the request. |
 | msgId   | String | The `msgId` provided in your request. |
 | code    | Number | Return code. `0` means success, any non-zero value indicates failure. |
 | message | String | Description of the request result. |
-| data    | String | The linkage ID (`linkageId`) of the created automation.        |
+| data    | String | The automatin ID of the created automation.        |
 
 
 #### Example Response
 
-Below is an example response for `CreateScriptAutomationResponse`:
+Below is an example response for `CreateAutomationResponse`:
 
 ```json
 {
-    "type": "CreateScriptAutomationResponse",
+    "type": "CreateAutomationResponse",
 	"version": "v1",
 	"msgId": "1751609244328",
 	"code": 0,
 	"message": "",
-    "data": "L.15b0cde.127312348967862272"
+    "data": "auto_15b0cde_127312348967862272"
 }
 ```
 
-## Edit Automation Script
+## Edit Automation
 
-You can use this API to edit an existing automation script.
+By calling this API, you can modify the name and enabled status of an existing automation. If the automation's `definitionType` is `"SCRIPT_JSON"`, you can also update its automation script content at the same time.
+
 
 #### Request Parameters
 
 | Parameter       | Type   | Required | Description                                                                                       |
 |-----------------|--------|:--------:|---------------------------------------------------------------------------------------------------|
-| type            | String | ✓        | Message type, must be `UpdateScriptAutomationRequest`.                                            |
+| type            | String | ✓        | Message type, must be `UpdateAutomationRequest`.                                            |
 | version         | String | ✓        | API version, must be `v1`.                                                                        |
 | msgId           | String | ✓        | Custom request ID defined by you.                                                                 |
 | data            | Object | ✓        | Request data.                                                                                     |
-| data.linkageId  | String | ✓        | The target automation ID to edit.                                                                 |
-| data.config     | Object | ✗        | The new JSON automation script.<br/>If omitted or set to null, the existing configuration is not changed. If an empty object `{}` is provided, the automation script content will be cleared. |
+| data.automationId  | String | ✓        | The target automation ID. |
+| data.definitionType | String | ✓ | The definition type of the target automation to be edited. |
+| data.name | String | ✗ | The new name. |
+| data.enabled | Boolean | ✗ | The new enabled status. `true` means enabled. `false` means disabled. |
+| data.config | Object | ✗ | The new JSON automation script. |
+| data.updateMask | Array of String | List of parameter names to be updated. Only the following fields are supported: <ul><li>`"name"`</li><li>`"enabled"`</li><li>`"config"`</li></ul> Please make sure each item in <code>updateMask</code> has a corresponding new value provided in the data object. |
 
 #### Example Request
 
-Below is an example of the request body for `UpdateScriptAutomationRequest`:
+Below is an example of the request body for `UpdateAutomationRequest`:
 
 ```json
 {
-    "type": "UpdateScriptAutomationRequest",
+    "type": "UpdateAutomationRequest",
     "version": "v1",
     "msgId": "1751609244328",
     "data": {
-        "linkageId":"L.15b0cde.127312348967862272",
-        "config": {
-
-        }
+        "automationId":"auto_15b0cde_127312348967862272",
+        "definitionType": "SCRIPT_JSON",
+        "name": "New Name",
+        "updateMask": [
+            "name"
+        ]
     }
 }
 ```
@@ -328,7 +340,7 @@ Below is an example of the request body for `UpdateScriptAutomationRequest`:
 
 | Parameter | Type | Description  |
 |---------|--------|----------------------------|
-| type    | String | The type of message in the response. Always set to `UpdateScriptAutomationResponse`.|
+| type    | String | The type of message in the response. Always set to `UpdateAutomationResponse`.|
 | version | String | Response version. It matches the version used in the request.|
 | msgId   | String | The `msgId` provided in your request.|
 | code    | Number | Return code. `0` means success, any non-zero value indicates failure.|
@@ -337,11 +349,11 @@ Below is an example of the request body for `UpdateScriptAutomationRequest`:
 
 #### Example Response
 
-The following is an example response for `UpdateScriptAutomationResponse`:
+The following is an example response for `UpdateAutomationResponse`:
 
 ```json
 {
-    "type": "UpdateScriptAutomationResponse",
+    "type": "UpdateAutomationResponse",
 	"version": "v1",
 	"msgId": "1751609244328",
 	"code": 0,
@@ -350,35 +362,35 @@ The following is an example response for `UpdateScriptAutomationResponse`:
 }
 ```
 
-## Modify Automation Name and Enable Status
+## Batch Update Automation Status
 
-With this API, you can update the name and enable/disable status of an existing automation without modifying its JSON automation script.
+By calling this API, you can update the enable status of multiple automations at once.
 
 #### Request Parameters
 
-| Parameter        | Type    | Required | Description  |
-|------------------|---------|----------|------------------------------------------------------------------------------------------------------------|
-| type             | String  | ✓        | Message type, must be `UpdateScriptAutomationRequest`.                                                     |
-| version          | String  | ✓        | API version, must be `v1`.                                                                                |
-| msgId            | String  | ✓        | Custom request ID defined by you.                                                                         |
-| data             | Object  | ✓        | Request data.                                                                                             |
-| data.linkageId   | String  | ✓        | The ID of the automation to be edited.                                                                    |
-| data.name        | String  | ✗        | Automation name. If omitted or empty, the name will not be updated. If a non-empty value different from the current name is provided, this API will update the name. |
-| data.enabled     | Boolean | ✗        | Whether to enable the automation. If omitted or set as null, the enabled status is unchanged; if set to a value other than null and different from the current enable status, this API will update the enable status. <ul><li>true: enable</li><li>false: disable</li></ul> |
+| Parameter       | Type   | Required | Description                                                                                       |
+|--------------|---------|----------|------------------------------------------|
+| type         | String  | ✓        | Type of request message, must be `UpdateAutomationStatusRequest`. |
+| version      | String  | ✓        | API version, must be `v1`.            |
+| msgId        | String  | ✓        | Custom request ID defined by you.      |
+| data         | Object  | ✓        | Request data object.                   |
+| data.automationIds | Array of String | ✓ | List of automation IDs to update the status for. |
+| data.enabled| Boolean  | ✓        | The status to set: `true` to enable, `false` to disable. |
 
+#### Example Request
 
-#### Example Request   
-
-Below is a example request body for `UpdateScriptAutomationRequest`:
+以下为 `UpdateAutomationStatusRequest` 的请求体示例：
+Below is a example request body for `UpdateAutomationStatusRequest`:
 
 ```json
 {
-    "type": "UpdateScriptAutomationRequest",
+    "type": "UpdateAutomationStatusRequest",
     "version": "v1",
     "msgId": "1751609244328",
     "data": {
-        "linkageId":"L.15b0cde.127312348967862272",
-        "name":"a3",
+        "automationIds": [
+            "auto_15b0cde_127312348967862272"
+        ],
         "enabled": false
     }
 }
@@ -386,25 +398,52 @@ Below is a example request body for `UpdateScriptAutomationRequest`:
 
 #### Response Parameters
 
-Same as [Edit Automation Script - Response Parameters](#response-parameters-1).
+| Parameter | Type | Description  |
+|---------|--------|----------------------------|
+| type                | String   | Response message type, always `UpdateAutomationStatusResponse`. |
+| version             | String   | API version in the response, always `v1`.                      |
+| msgId               | String   | The `msgId` you provided in the request.                       |
+| code                | Number   | Indicates whether the request was successful: 0 for success, non-zero for failure. |
+| message             | String   | Description of the request result.                              |
+| data                | Object   | Response data object.                                           |
+| data.successIds     | Array of String | List of successfully updated automation IDs.             | 
+| data.failedItems    | Array of Object  | List of failed automation update objects.                | 
+| data.failedItems.automationId | String  | Automation ID.                                       | 
+| data.failedItems.code        | Number   | Error code.                                          | 
+| data.failedItems.message     | String   | Failure description.                                 |
 
-#### Example Response
+#### Example Response 
 
-Same as [Edit Automation Script - Example Response](#example-response-1).
+The following is an example response for `UpdateAutomationStatusResponse`:
+
+```json
+{
+    "type": "UpdateAutomationStatusResponse",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": {
+        "successIds": [
+            "auto_15b0cde_127312348967862272"
+        ]
+    }
+}
+```
 
 ## Query Automation List
 
-By calling this API, you can obtain a brief list of automations, including each automation's ID, name, enable status, and creation time.
+By calling this API, you can get a paginated list of automation summaries, including each automation's ID, name, enable status, and creation time.
 
 
 #### Request Parameters
 
 | Parameter | Type | Required | Description  |
 |--------------|---------|----------|------------------------------------------|
-| type         | String  | ✓        | Message type, must be `GetScriptAutomationListRequest`. |
+| type         | String  | ✓        | Message type, must be `GetAutomationListRequest`. |
 | version               | String            | ✓      | API version, must be `v1`. |
 | msgId                 | String            | ✓      | Custom request ID defined by you. |
 | data                  | Object            | ✓      | Request data. |
+| data.definitionTypes | Array of String | ✗ | Target types to query. Optional values: `"SCRIPT_JSON"`, `"SCRIPT_TEXT"`, `"WHEN_IF_THEN"`. If not provided or empty, queries all types. |
+| data.orderBy | String  | ✗        | Sorting field. <ul><li>`"createTime asc"`: (default) sort by creation time in ascending order</li><li>`"createTime desc"`: sort by creation time in descending order</li></ul>   |
 | data.pageNum | Number  | ✓        | Page number, starting from 1.     |
 | data.pageSize| Number  | ✓        | Number of items per page.         |
 
@@ -419,6 +458,7 @@ Below is a sample request body for `GetScriptAutomationListRequest`:
     "version": "v1",
     "msgId": "1751609244328",
     "data": {
+        "definitionTypes": "SCRIPT_JSON",
         "pageNum":1,
         "pageSize":2
     }
@@ -429,7 +469,7 @@ Below is a sample request body for `GetScriptAutomationListRequest`:
 
 | Parameter                | Type                | Description  |
 |--------------------------|---------------------|--------------------------------------------------------------|
-| type                     | String              | Response message type, always `GetScriptAutomationListResponse`. |
+| type                     | String              | Response message type, always `GetAutomationListResponse`. |
 | version                  | String              | API version in the response, always `v1`.                    |
 | msgId                    | String              | The `msgId` you provided in the request.                     |
 | data                     | Object              | Response data object, including the automation list and pagination info. |
@@ -437,7 +477,8 @@ Below is a sample request body for `GetScriptAutomationListRequest`:
 | data.pageNum             | Number              | Current page number.                                         |
 | data.pageSize            | Number              | Number of items per page.                                    |
 | data.data                | Array of Object     | List of automations.                                         |
-| data.data[].linkageId    | String              | Automation ID.                                               |
+| data.data[].automationId    | String              | Automation ID.                                               |
+| data.data[].definitionType | String | Automation type.                              |
 | data.data[].name         | String              | Name of the automation.                                      |
 | data.data[].enabled      | Boolean             | Enable status: <ul><li>true: enabled</li><li>false: disabled</li></ul> |
 | data.data[].createTime   | Number              | Creation time of the automation, as a UTC timestamp in milliseconds. |
@@ -446,12 +487,12 @@ Below is a sample request body for `GetScriptAutomationListRequest`:
 
 #### Example Response   
 
-Below is an example response for `GetScriptAutomationListResponse`:
+Below is an example response for `GetAutomationListResponse`:
 
 
 ```json
 {
-    "type": "GetScriptAutomationListResponse",
+    "type": "GetAutomationListResponse",
     "version": "v1",
     "msgId": "1751609244328",
     "data": {
@@ -460,13 +501,15 @@ Below is an example response for `GetScriptAutomationListResponse`:
         "pageSize": 2,
         "data": [
             {
-                "linkageId": "L.15b0cde.127312348967862272",
+                "automationId": "auto_15b0cde_127312348967862272",
+                "definitionType": "SCRIPT_JSON",
                 "name": "a3-1",
                 "enabled": false,
                 "createTime": 1766043229326
             },
             {
-                "linkageId": "L.15b0ceb.127312523723538432",
+                "automationId": "auto_15b0ceb_127312523723538432",
+                "definitionType": "SCRIPT_JSON",
                 "name": "b2",
                 "enabled": true,
                 "createTime": 1766043270999
@@ -482,11 +525,15 @@ Below is an example response for `GetScriptAutomationListResponse`:
 
 By calling this API and providing the automation ID, you can retrieve the detailed information for the specified automation (such as the JSON automation script).
 
+:::tip
+Only automations with `definitionType` equal to `"SCRIPT_JSON"` are supported for querying details.
+:::
+
 #### Request Parameters
 
 | Parameter | Type | Required | Description  |
 | ------- | ------- | ------- | ----------------------------------------- |
-| type    | String  | ✓      | Request message type, must be `GetScriptAutomationDetailsRequest`. |
+| type    | String  | ✓      | Request message type, must be `GetAutomationDetailsRequest`. |
 | version | String  | ✓ | API version, must be `v1`. |
 | msgId   | String  | ✓ | Custom request ID defined by you. |
 | data    | String  | ✓ | The automation ID to be queried. |
@@ -494,14 +541,14 @@ By calling this API and providing the automation ID, you can retrieve the detail
 
 #### Example Request   
 
-Below is an example request body for `GetScriptAutomationDetailsRequest`:
+Below is an example request body for `GetAutomationDetailsRequest`:
 
 ```json
 {
-    "type": "GetScriptAutomationDetailsRequest",
+    "type": "GetAutomationDetailsRequest",
     "version": "v1",
     "msgId": "1751609244328",
-    "data": "L.15b0cde.127312348967862272"
+    "data": "auto_15b0cde_127312348967862272"
 }
 ```
 
@@ -509,11 +556,12 @@ Below is an example request body for `GetScriptAutomationDetailsRequest`:
 
 | Parameter         | Type           | Description                                                                                      |
 |-------------------|----------------|--------------------------------------------------------------------------------------------------|
-| type              | String         | The type of response message. Always set to `GetScriptAutomationDetailsResponse`.                |
+| type              | String         | The type of response message. Always set to `GetAutomationDetailsResponse`.                |
 | version           | String         | API version. Always `v1`.                                                                        |
 | msgId             | String         | The `msgId` provided in your request.                                                            |
 | data              | Object         | The returned object containing the automation's detailed information.                             |
-| data.linkageId    | String         | The automation ID.                                                                               |
+| data.automationId    | String         | The automation ID.                                                                               |
+| data.definitionType   | String         | Automation type. Currently always `"SCRIPT_JSON"`.   |
 | data.name         | String         | The name of the automation.                                                                      |
 | data.enabled      | Boolean        | Whether the automation is enabled.                                                               |
 | data.config       | Object         | The JSON automation script.                                                                      |
@@ -524,19 +572,20 @@ Below is an example request body for `GetScriptAutomationDetailsRequest`:
 
 #### Example Response  
 
-Below is an example response for `GetScriptAutomationDetailsResponse`:
+Below is an example response for `GetAutomationDetailsResponse`:
 
 ```json
 {
-    "type": "GetScriptAutomationDetailsResponse",
+    "type": "GetAutomationDetailsResponse",
     "version": "v1",
     "msgId": "1751609244328",
     "data": {
-        "linkageId": "L.15b0cde.127312348967862272",
+        "automationId": "auto_15b0cde_127312348967862272",
+        "definitionType": "SCRIPT_JSON",
         "name": "a3-1",
         "enabled": false,
         "config": {
-            
+            ...
         },
         "createTime": 1766043229326
     },
@@ -556,7 +605,7 @@ By calling this API, you can delete multiple automations.
 | type      | String   | ✓       | Request message type, fixed as `DeleteAutomationRequest`.      |
 | version   | String   | ✓       | API version, always `v1`.                        |
 | msgId     | String   | ✓       | Custom request ID defined by you.                |
-| data      | Array of String | ✓ | Array of automation IDs (linkageId) to be deleted. |
+| data      | Array of String | ✓ | Array of automation IDs to be deleted. |
 
 #### Example Request   
 
@@ -567,7 +616,7 @@ Below is an example request body for `DeleteAutomationRequest`:
     "type": "DeleteAutomationRequest",
     "version": "v1",
     "msgId": "1751609244328",
-    "data": ["L.15b0b4d.1273030749213163"]
+    "data": ["auto_15b0b4d_1273030749213163"]
 }
 ```
 
@@ -580,7 +629,12 @@ Below is an example request body for `DeleteAutomationRequest`:
 | msgId     | String | The `msgId` provided in your request.                      |
 | code      | Number | Return code. `0` means success, any non-zero value indicates failure. |
 | message   | String | Description of the request result.                         |
-| data      | String | An empty string.                                           |
+| data    | Object | Response object.          |
+| data.successIds | Array of String  | IDs of automations deleted successfully. | 
+| data.failedItems | Array of Object  | Objects representing failed deletions. | 
+| data.failedItems.automationId | String | Automation ID. | 
+| data.failedItems.code | Number | Error code. | 
+| data.failedItems.message | String | Failure description. |
 
 #### Example Response   
 
@@ -591,6 +645,10 @@ Below is an example request body for `DeleteAutomationRequest`:
 	"msgId":"1751609244328",
 	"code":0,
 	"message":"",
-    "data":""
+    "data": {
+        "successIds": [
+            "auto_15b0b4d_1273030749213163"
+        ]
+    }
 }
 ```
