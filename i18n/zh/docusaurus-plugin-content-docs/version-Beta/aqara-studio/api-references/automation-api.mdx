@@ -1,6 +1,6 @@
 # 自动化 API
 
-## 查询设备可用于自动化的功能点信息
+## 获取可用于自动化的所有功能点信息
 
 通过调用本接口，您可获取所有设备中可用于自动化配置的功能点信息。返回内容包括各功能点的值类型、单位，以及其在自动化流程中的适用环节（如可作为 [触发器](./json-automation-script.mdx#starter)、[条件](./json-automation-script.mdx#condition) 或 [操作](./json-automation-script.mdx#action)）。
 
@@ -8,18 +8,18 @@
 
 | 参数        | 类型    | 是否必需 | 说明                                               |
 | ----------- | ------- | ------- | -------------------------------------------------- |
-| type        | String  | ✓      | 请求的消息类型，必需为 `QueryDeviceSupportedScriptAutomationConfigRequest`。 |
+| type        | String  | ✓      | 请求的消息类型，必需为 `QueryAutomationCapabilitiesRequest`。 |
 | version     | String  | ✓      | 请求接口版本号，必需为 `v1`。                     |
 | msgId       | String  | ✓      | 由您定义的请求 ID。                                |
 | data        | String  | ✓      | 此处传空字符串。                                        |
 
 #### 请求参数示例
 
-以下为 `QueryDeviceSupportedScriptAutomationConfigRequest` 的请求体示例：
+以下为 `QueryAutomationCapabilitiesRequest` 的请求体示例：
 
 ```json
 {
-    "type": "QueryDeviceSupportedScriptAutomationConfigRequest",
+    "type": "QueryAutomationCapabilitiesRequest",
     "version": "v1",
     "msgId": "1751609244328",
     "data": ""
@@ -30,7 +30,7 @@
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
-| type | String | 响应的消息类型，固定为 `QueryDeviceSupportedScriptAutomationConfigResponse`。 |
+| type | String | 响应的消息类型，固定为 `QueryAutomationCapabilitiesResponse`。 |
 | version | String | 响应接口版本号，与请求接口版本号一致。 |
 | msgId | String | 请求时传入的 `msgId`。 |
 | code | Number | 返回码，0 表示成功，非 0 表示失败。 |
@@ -51,11 +51,11 @@
 
 #### 响应数据示例
 
-以下为 `QueryDeviceSupportedScriptAutomationConfigResponse` 的响应示例：
+以下为 `QueryAutomationCapabilitiesResponse` 的响应示例：
 
 ```json
 {
-    "type": "QueryDeviceSupportedScriptAutomationConfigResponse",
+    "type": "QueryAutomationCapabilitiesResponse",
     "version": "v1",
     "msgId": "1751609244328",
     "data": {
@@ -141,28 +141,32 @@
 
 ## 创建自动化   
 
-调用本接口，您可以创建并启用一个自动化。
+调用本接口，您可以创建并启用一个 [Flow 自动化](./../flow/flow-introduction.mdx)。
+
+创建成功后，您可以在 Aqara Studio 的自动化列表中查看并管理该 Flow。
 
 #### 请求参数
 
 | 参数        | 类型    | 是否必需 | 说明                                               |
 | ----------- | ------- | ------- | -------------------------------------------------- |
-| type        | String  | ✓      | 请求的消息类型，必需为 `CreateScriptAutomationRequest`。 |
+| type        | String  | ✓      | 请求的消息类型，必需为 `CreateAutomationRequest`。 |
 | version     | String  | ✓      | 请求接口版本号，必需为 `v1`。                     |
 | msgId       | String  | ✓      | 由您定义的请求 ID。                                |
 | data        | Object  | ✓      | 请求数据。                                         |
+| data.definitionType | String | ✓ | 自动化类型。当前仅支持 `"SCRIPT_JSON"`。 |
 | data.config   | Object  | ✓      | JSON 自动化脚本，详情请参考 [JSON 自动化脚本定义](./json-automation-script.mdx)。                            |
 
 #### 请求参数示例     
 
-以下为 `CreateScriptAutomationRequest` 的请求体示例：
+以下为 `CreateAutomationRequest` 的请求体示例：
 
 ```json
 {
-    "type": "CreateScriptAutomationRequest",
+    "type": "CreateAutomationRequest",
     "version": "v1",
     "msgId": "1751609244328",
     "data": {
+        "definitionType": "SCRIPT_JSON",
         "config": {
             "metadata": {
                 "name": "智能灯光控制",
@@ -268,58 +272,64 @@
 
 | 参数    | 类型   | 说明                                   |
 | ------- | ------ | -------------------------------------- |
-| type    | String | 响应的消息类型，固定为 `CreateScriptAutomationResponse`。 |
+| type    | String | 响应的消息类型，固定为 `CreateAutomationResponse`。 |
 | version | String | 响应版本号，与请求接口版本号一致。       |
 | msgId   | String | 您发起请求时传入的 `msgId`。             |
 | code    | Number | 请求是否成功。0 表示成功，非 0 表示失败。 |
 | message | String | 请求结果描述。                           |
-| data    | String | 创建成功的自动化 ID（linkageId）。        |
+| data    | String | 创建成功的自动化 ID（`automationId`）        |
 
 
 #### 响应数据示例
 
-以下为 `CreateScriptAutomationResponse` 的响应示例：
+以下为 `CreateAutomationResponse` 的响应示例：
 
 ```json
 {
-    "type": "CreateScriptAutomationResponse",
+    "type": "CreateAutomationResponse",
 	"version": "v1",
 	"msgId": "1751609244328",
 	"code": 0,
 	"message": "",
-    "data": "L.15b0cde.127312348967862272"
+    "data": "auto_15b0cde_127312348967862272"
 }
 ```
 
-## 编辑自动化脚本
+## 编辑自动化
 
-调用本接口，您可以编辑已存在的自动化脚本。
+通过调用本接口，您可以修改已有自动化的名称与启用状态。若该自动化的 `definitionType` 为 `"SCRIPT_JSON"`，还可同时更新其自动化脚本内容。
 
 #### 请求参数
 
 | 参数 | 类型 | 是否必需 | 说明 |
 |---|---|---|---|
-| type | String | ✓ | 请求的消息类型，必需为 `UpdateScriptAutomationRequest`。 |
+| type | String | ✓ | 请求的消息类型，必需为 `UpdateAutomationRequest`。 |
 | version | String | ✓ | 请求接口版本号，必需为 `v1`。 |
 | msgId | String | ✓ | 由您定义的请求 ID。 |
 | data | Object | ✓ | 请求数据对象。 |
-| data.linkageId | String | ✓ | 编辑目标的的自动化 ID， |
-| data.config | Object | ✗ | 新的 JSON 自动化脚本。不传或为 null 时表示不变更现有配置；如传入空对象 `{}`，则自动化脚本内容会被清空。 |
+| data.automationId | String | ✓ | 编辑目标的的自动化 ID。 |
+| data.definitionType | String | ✓ | 编辑目标的的自动化类型。 |
+| data.name | String | ✗ | 新的名称。 |
+| data.enabled | Boolean | ✗ | 新的启用状态。`true` 表示启用，`false` 表示禁用。 |
+| data.config | Object | ✗ | 新的 JSON 自动化脚本。 |
+| data.updateMask | Array of String | 需更新的参数名称列表，仅支持以下字段：<ul><li>`"name"`</li><li>`"enabled"`</li><li>`"config"`</li></ul>请确保 <code>updateMask</code> 中的每一项都已在 data 对象中正确提供新值。 |
 
 #### 请求参数示例
 
-以下为 `UpdateScriptAutomationRequest` 的请求体示例：
+以下为 `UpdateAutomationRequest` 的请求体示例：
 
 ```json
 {
-    "type": "UpdateScriptAutomationRequest",
+    "type": "UpdateAutomationRequest",
     "version": "v1",
     "msgId": "1751609244328",
     "data": {
-        "linkageId":"L.15b0cde.127312348967862272",
-        "config": {
-
-        }
+        "automationId":"auto_15b0cde_127312348967862272",
+        "definitionType": "SCRIPT_JSON",
+        "name": "New Name",
+        "updateMask": [
+            "name"
+        ]
     }
 }
 ```
@@ -328,7 +338,7 @@
 
 | 参数    | 类型   | 说明                       |
 |---------|--------|----------------------------|
-| type    | String | 响应的消息类型，固定为 `UpdateScriptAutomationResponse`。|
+| type    | String | 响应的消息类型，固定为 `UpdateAutomationResponse`。|
 | version | String | 响应版本号，与请求接口版本号一致。|
 | msgId   | String | 您发起请求时传入的 `msgId`。             |
 | code    | Number | 请求是否成功，0 表示成功，非 0 表示失败。 |
@@ -337,11 +347,11 @@
 
 #### 响应数据示例
 
-以下为 `UpdateScriptAutomationResponse` 的响应示例：
+以下为 `UpdateAutomationResponse` 的响应示例：
 
 ```json
 {
-    "type": "UpdateScriptAutomationResponse",
+    "type": "UpdateAutomationResponse",
 	"version": "v1",
 	"msgId": "1751609244328",
 	"code": 0,
@@ -350,60 +360,83 @@
 }
 ```
 
-## 修改自动化名称及启用状态
+## 批量更新自动化状态
 
-通过本接口，您可以更新已创建自动化的名称及启用（启用/禁用）状态，无需更改其 JSON 自动化脚本。
+调用本接口，您可以一次性更新多个自动化的启用状态。
 
 #### 请求参数
 
-| 参数 | 类型 | 是否必需 | 说明 |
-|------|------|---------|------|
-| type | String | ✓ | 请求的消息类型，必需为 `UpdateScriptAutomationRequest`。 |
-| version | String | ✓ | 请求接口版本号，必需为 `v1`。 |
-| msgId | String | ✓ | 由您定义的请求 ID。 |
-| data | Object | ✓ | 请求数据对象。 |
-| data.linkageId | String | ✓ | 编辑目标的的自动化 ID， |
-| data.name | String | ✗ | 自动化名称。不传或为传入值为空时，表示不更新名称；当传入值不为空且当前名称不同时，本接口会更新该名称。 |
-| data.enabled | Boolean | ✗ | 是否启用自动化。不传或为传入值为 null 时，表示不更新启用状态；当传入值不为 null 且当前启用状态不同时，本接口会更新该启用状态。<ul><li>true：启用。</li><li>false：关闭。</li></ul> |
+| 参数         | 类型    | 是否必需 | 说明                                     |
+|--------------|---------|----------|------------------------------------------|
+| type         | String  | ✓        | 请求的消息类型，必需为 `UpdateAutomationStatusRequest`。|
+| version      | String  | ✓        | 请求接口版本号，必需为 `v1`。            |
+| msgId        | String  | ✓        | 由您定义的请求 ID。                       |
+| data         | Object  | ✓        | 请求数据对象。                           |
+| data.automationIds | Array of String | ✓ | 需要更新状态的自动化 ID 列表。 |
+| data.enabled| Boolean  | ✓        | 需要设置的启用状态，`true` 表示启用，`false` 表示禁用。|
 
+#### 请求参数示例
 
-#### 请求参数示例   
-
-以下为 `UpdateScriptAutomationRequest` 的请求体示例：
+以下为 `UpdateAutomationStatusRequest` 的请求体示例：
 
 ```json
 {
-    "type": "UpdateScriptAutomationRequest",
+    "type": "UpdateAutomationStatusRequest",
     "version": "v1",
     "msgId": "1751609244328",
     "data": {
-        "linkageId":"L.15b0cde.127312348967862272",
-        "name":"a3",
+        "automationIds": [
+            "auto_15b0cde_127312348967862272"
+        ],
         "enabled": false
     }
 }
 ```
 
 #### 响应数据
-
-与 [编辑自动化（配置） - 响应数据](#响应数据-1) 一致。
+| 字段名              | 类型     | 说明                                   |
+|---------------------|----------|----------------------------------------|
+| type                | String   | 响应消息类型，固定为 `UpdateAutomationStatusResponse` |
+| version             | String   | 响应接口版本号，固定为 `v1`            |
+| msgId   | String | 您发起请求时传入的 `msgId`。             |
+| code    | Number | 请求是否成功，0 表示成功，非 0 表示失败。 |
+| message | String | 请求结果描述。              |
+| data                | Object   | 响应数据对象。  |
+| data.successIds | Array of String | 成功的自动化 ID 列表。| 
+| data.failedItems | Array of Object  | 失败的自动化对象。 | 
+| data.failedItems.automationId | String  | 自动化 ID。 | 
+| data.failedItems.code | String  | 错误码。 | 
+| data.failedItems.message | String  | 失败描述。 | 
 
 #### 响应数据示例
-
-与 [编辑自动化（配置） - 响应数据示例](#响应数据示例-1) 一致。
+以下为 `UpdateAutomationStatusResponse` 的响应示例：
+```json
+{
+    "type": "UpdateAutomationStatusResponse",
+    "version": "v1",
+    "msgId": "1751609244328",
+    "data": {
+        "successIds": [
+            "auto_15b0cde_127312348967862272"
+        ]
+    }
+}
+```
 
 ## 查询自动化列表 
 
-调用本接口，您可以获取一个自动化简介列表，了解每个自动化的 ID、名称、启用状态和创建时间。
+调用本接口，您可以分页获取一个自动化简介列表，了解每个自动化的 ID、名称、启用状态和创建时间。
 
 #### 请求参数
 
 | 参数         | 类型    | 是否必需 | 说明                                     |
 |--------------|---------|----------|------------------------------------------|
-| type         | String  | ✓        | 请求的消息类型，必需为 `GetScriptAutomationListRequest`。|
+| type         | String  | ✓        | 请求的消息类型，必需为 `GetAutomationListRequest`。|
 | version      | String  | ✓        | 请求接口版本号，必需为 `v1`。            |
 | msgId        | String  | ✓        | 由您定义的请求 ID。                       |
 | data         | Object  | ✓        | 请求数据对象。                           |
+| data.definitionTypes | Array of String | ✗ | 查询目标类型，可选值：`"SCRIPT_JSON"`、`"SCRIPT_TEXT"`、`"WHEN_IF_THEN"`。不传或为空时查询全部类型。 |
+| data.orderBy | String  | ✗        | 排序字段。<ul><li>`"createTime asc"`：（默认）按创建时间升序</li><li>`"createTime desc"`：按创建时间降序</li></ul>   |
 | data.pageNum | Number  | ✓        | 页码，从 1 开始。                         |
 | data.pageSize| Number  | ✓        | 每页数据条数。                            |
 
@@ -418,6 +451,7 @@
     "version": "v1",
     "msgId": "1751609244328",
     "data": {
+        "definitionTypes": "SCRIPT_JSON",
         "pageNum":1,
         "pageSize":2
     }
@@ -428,7 +462,7 @@
 
 | 字段名              | 类型     | 说明                                   |
 |---------------------|----------|----------------------------------------|
-| type                | String   | 响应消息类型，固定为 `GetScriptAutomationListResponse` |
+| type                | String   | 响应消息类型，固定为 `GetAutomationListResponse` |
 | version             | String   | 响应接口版本号，固定为 `v1`            |
 | msgId   | String | 您发起请求时传入的 `msgId`。             |
 | data                | Object   | 响应数据对象，包含自动化列表及分页信息  |
@@ -436,7 +470,8 @@
 | data.pageNum        | Number   | 当前页码。                               |
 | data.pageSize       | Number   | 每页数量。                               |
 | data.data           | Array of Object    | 自动化列表。                             |
-| data.data[].linkageId | String | 自动化 ID。                              |
+| data.data[].automationId | String | 自动化 ID。                              |
+| data.data[].definitionType | String | 自动化类型。                              |
 | data.data[].name    | String   | 自动化名称。                             |
 | data.data[].enabled | Boolean  | 启用状态：<ul><li>true：已启用</li><li>false：禁用</li></ul>      |
 | data.data[].createTime | Number | 自动化创建时间，单位为毫秒的 UTC 时间戳。 |
@@ -445,12 +480,12 @@
 
 #### 响应数据示例   
 
-以下为 `GetScriptAutomationListResponse` 的响应示例：
+以下为 `GetAutomationListResponse` 的响应示例：
 
 
 ```json
 {
-    "type": "GetScriptAutomationListResponse",
+    "type": "GetAutomationListResponse",
     "version": "v1",
     "msgId": "1751609244328",
     "data": {
@@ -459,13 +494,15 @@
         "pageSize": 2,
         "data": [
             {
-                "linkageId": "L.15b0cde.127312348967862272",
+                "automationId": "auto_15b0cde_127312348967862272",
+                "definitionType": "SCRIPT_JSON",
                 "name": "a3-1",
                 "enabled": false,
                 "createTime": 1766043229326
             },
             {
-                "linkageId": "L.15b0ceb.127312523723538432",
+                "automationId": "auto_15b0ceb_127312523723538432",
+                "definitionType": "SCRIPT_JSON",
                 "name": "b2",
                 "enabled": true,
                 "createTime": 1766043270999
@@ -481,11 +518,15 @@
 
 通过调用本接口并传入自动化 ID，您可以获取指定自动化的详细信息（如 JSON 自动化脚本）。
 
+:::tip
+仅支持查询 `definitionType` 等于 `"SCRIPT_JSON"` 的自动化的详情。
+:::
+
 #### 请求参数
 
 | 参数    | 类型    | 是否必需 | 说明                                      |
 | ------- | ------- | ------- | ----------------------------------------- |
-| type    | String  | ✓      | 请求消息类型，固定为 `GetScriptAutomationDetailsRequest` |
+| type    | String  | ✓      | 请求消息类型，固定为 `GetAutomationDetailsRequest` |
 | version | String  | ✓      | 接口版本号，固定为 `v1`                   |
 | msgId        | String  | ✓        | 由您定义的请求 ID。                       |
 | data    | String  | ✓      | 查询目标的自动化 ID。               |
@@ -493,14 +534,14 @@
 
 #### 请求参数示例   
 
-以下为 `GetScriptAutomationDetailsRequest` 的请求体示例：
+以下为 `GetAutomationDetailsRequest` 的请求体示例：
 
 ```json
 {
-    "type": "GetScriptAutomationDetailsRequest",
+    "type": "GetAutomationDetailsRequest",
     "version": "v1",
     "msgId": "1751609244328",
-    "data": "L.15b0cde.127312348967862272"
+    "data": "auto_15b0cde_127312348967862272"
 }
 ```
 
@@ -508,11 +549,12 @@
 
 | 字段             | 类型           | 说明                                      |
 | ---------------- | -------------- | ------------------------------------------------ |
-| type             | String         | 响应消息类型，固定为 `GetScriptAutomationDetailsResponse`。|
+| type             | String         | 响应消息类型，固定为 `GetAutomationDetailsResponse`。|
 | version          | String         | 接口版本号，固定为 `v1`。                          |
 | msgId   | String | 您发起请求时传入的 `msgId`。             |
 | data             | Object         | 返回的自动化详情数据对象。                          |
-| data.linkageId   | String         | 自动化ID。   |
+| data.automationId   | String         | 自动化ID。   |
+| data.definitionType   | String         | 自动化类型。当前固定为 `"SCRIPT_JSON"`。   |
 | data.name        | String         | 自动化名称。                                       |
 | data.enabled     | Boolean        | 自动化的启用状态。     |
 | data.config      | Object         | JSON 自动化脚本。         |
@@ -523,19 +565,20 @@
 
 #### 响应数据示例  
 
-以下为 `GetScriptAutomationDetailsResponse` 的响应示例：
+以下为 `GetAutomationDetailsResponse` 的响应示例：
 
 ```json
 {
-    "type": "GetScriptAutomationDetailsResponse",
+    "type": "GetAutomationDetailsResponse",
     "version": "v1",
     "msgId": "1751609244328",
     "data": {
-        "linkageId": "L.15b0cde.127312348967862272",
+        "automationId": "auto_15b0cde_127312348967862272",
+        "definitionType": "SCRIPT_JSON",
         "name": "a3-1",
         "enabled": false,
         "config": {
-            
+            ...
         },
         "createTime": 1766043229326
     },
@@ -555,7 +598,7 @@
 | type      | String   | ✓       | 请求消息类型，固定为 `DeleteAutomationRequest`。      |
 | version   | String   | ✓       | 接口版本号，固定为 `v1`。                            |
 | msgId        | String  | ✓        | 由您定义的请求 ID。                       |
-| data      | Array of String   | ✓       | 待删除的自动化 ID 数组，每个元素为对应的 linkageId。|
+| data      | Array of String   | ✓       | 待删除的自动化 ID 数组，每个元素为对应的 automationId。|
 
 #### 请求参数示例   
 
@@ -566,7 +609,7 @@
     "type": "DeleteAutomationRequest",
     "version": "v1",
     "msgId": "1751609244328",
-    "data": ["L.15b0b4d.1273030749213163"]
+    "data": ["auto_15b0b4d_1273030749213163"]
 }
 ```
 
@@ -579,7 +622,12 @@
 | msgId   | String | 您发起请求时传入的 `msgId`。             |
 | code    | Number | 响应状态码，0 表示成功。非 0 表示失败。               |
 | message | String | 响应描述信息。             |
-| data    | String | 空字符串。          |
+| data    | Object | 响应对象。          |
+| data.successIds | Array of String  | 删除成功的自动化 ID。 | 
+| data.failedItems | Array of Object  | 删除失败的自动化对象。 | 
+| data.failedItems.automationId | String | 自动化 ID。 | 
+| data.failedItems.code | Number | 错误码。 | 
+| data.failedItems.message | String | 失败描述。 | 
 
 #### 响应数据示例   
 
@@ -590,6 +638,10 @@
 	"msgId":"1751609244328",
 	"code":0,
 	"message":"",
-    "data":""
+    "data": {
+        "successIds": [
+            "auto_15b0b4d_1273030749213163"
+        ]
+    }
 }
 ```
