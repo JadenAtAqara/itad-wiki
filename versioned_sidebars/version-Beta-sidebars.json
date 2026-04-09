@@ -5,6 +5,9 @@
       "label": "Overview",
       "items": [
         "aqara-studio/overview/introduction",
+        "aqara-studio/overview/ai-native-architecture",
+        "aqara-studio/overview/core-concepts",
+        "aqara-studio/overview/compatible-aqara-devices",              
         "aqara-studio/overview/features"
       ]
     },
