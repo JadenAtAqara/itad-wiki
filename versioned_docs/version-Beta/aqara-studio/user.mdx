@@ -16,27 +16,34 @@ Aqara Studio comes with three built-in local user roles, each with different per
 | Admin (local)   | After authorization from the super admin, the role has read and write access to assigned features and data. |
 | Operator (local) | After authorization from the super admin, the role has read-only access to assigned features and data. |
 
-下表详细展示了不同本地角色在 Aqara Studio 各功能模块的权限可见性：
+The following table details the feature visibility and permissions for different local user roles in Aqara Studio:
 
 :::tip
 - ✓ indicates that the role has access to the feature.
 - ✗ indicates that the role does not have access to the feature.
 :::
 
-| Feature                | Super Admin (Local) | Admin (Local) | Operator (Local) |
-|------------------------|--------------------|--------------|------------------|
-| Device Logs            | ✓                  | ✗            | ✗                |
-| Link Logs              | ✓                  | ✗            | ✗                |
-| User Operation Logs    | ✓                  | ✗            | ✗                |
-| System Upgrade Logs    | ✓                  | ✗            | ✗                |
-| Local User Management        | ✓                  | ✗            | ✗                |
-| Backup & Restore       | ✓                  | ✓            | ✗                |
-| Cloud Connection       | ✓                  | ✗            | ✗                |
-| Remote Access          | ✓                  | ✗            | ✗                |
-| System Update          | ✓                  | ✗            | ✗                |
-| About                  | ✓                  | ✗            | ✗                |
-| Developer              | ✓                  | ✗            | ✗                |
-| Others                 | ✓                  | ✓            | ✓                |
+| Primary Category | Secondary Category     | Tertiary Category            | Super Admin (Local) | Admin (Local) | Operator (Local) |
+|------------------|-----------------------|------------------------------|---------------------|---------------|------------------|
+| Overview         | /                     | /                            | ✓                   | ✓             | ✓                |
+| Build            | Space Management      | /                            | ✓                   | ✓             | ✓                |
+|                  | Device Management     | /                            | ✓                   | ✓             | ✓                |
+|                  | Automation            | /                            | ✓                   | ✓             | ✓                |
+| Operation        | Alarm Management      | /                            | ✓                   | ✓             | ✓                |
+|                  | Energy Management     | /                            | ✓                   | ✓             | ✓                |
+|                  | Log Audit             | Device Logs / Link Logs      | ✓                   | ✓             | ✓                |
+|                  |                       | User Operation Logs          | ✓                   | ✗             | ✗                |
+|                  |                       | System Upgrade Logs          | ✓                   | ✓             | ✗                |
+| Management       | User Management       | /                            | ✓                   | ✗             | ✗                |
+|                  | Backup & Restore      | /                            | ✓                   | ✓             | ✗                |
+| Settings         | Local Settings        | /                            | ✓                   | ✗             | ✗                |
+|                  | Cloud Connection      | /                            | ✓                   | ✗             | ✗                |
+|                  | Remote Access         | /                            | ✓                   | ✗             | ✗                |
+|                  | System Update         | /                            | ✓                   | ✓             | ✗                |
+|                  | Technical Support     | /                            | ✓                   | ✗             | ✗                |
+| About            | /                     | /                            | ✓                   | ✓             | ✗                |
+| Extensions       | Developer             | /                            | ✓                   | ✗             | ✗                |
+|                  | Plugin Management     | /                            | ✓                   | ✗             | ✗                |
 
 ### User Groups
 
