@@ -28,7 +28,7 @@
     "description": "The label for category 'Automation' in sidebar 'aqaraStudioSidebar'"
   },
   "sidebar.aqaraStudioSidebar.category.Flow": {
-    "message": "高阶 Flow",
+    "message": "Flow",
     "description": "The label for category 'Flow' in sidebar 'aqaraStudioSidebar'"
   },
   "sidebar.aqaraStudioSidebar.category.Logic": {

@@ -1,45 +1,47 @@
 # Core Concepts
 
-Aqara Studio 以 [空间本体论与 ORAP 模型](#空间本体论与-orap-模型)、[空间图谱](#空间图谱)、[MCP 协议](#mcp-协议)、[分布式计算与数据处理](#分布式计算与数据处理) 四大技术为亮点，从而具备 [四大空间智能核心能力](#四大空间智能核心能力)。
+Aqara Studio is distinguished by four core technological pillars: [Spatial Ontology and ORAP Model](#spatial-ontology-and-the-orap-model), [Spatial Graph](#spatial-graph), [MCP Protocol](#mcp-protocol), and [Distributed Computing and Data Processing](#distributed-computing-and-data-processing). These foundations enable Aqara Studio to deliver [four core capabilities of spatial intelligence](#four-core-capabilities-of-spatial-intelligence).
 
-## 空间本体论与 ORAP 模型
+## Spatial Ontology and the ORAP Model
 
-空间本体论是 Aqara Studio 的技术根基，通过 **ORAP（对象、关系、动作、策略）** 四大要素，为物理空间构建统一的、显式的语义模型，将物理空间的结构、设备、行为、规则抽象为机器可理解的语言，打破了传统 IoT “设备驱动” 的模式，实现 “空间驱动” 的智能管控。
-- **对象**（**Object**）：物理空间中的各类实体，包括空间区域（房间、楼层、楼宇）、物理设备（传感器、控制器、执行器）、虚拟实体（场景、模式）；
-- **关系**（**Relation**）：对象之间的关联关系，包括包含关系（灯在客厅）、连接关系（传感器与空调联动）、控制映射关系（开关控制灯光）；
-- **动作**（**Actio**n）：对象可执行的指令集合，如设备的开关、调光、调温，空间的场景切换（会议模式、离家模式）；
-- **策略**（**Policy**）：对象执行动作的规则与逻辑约束，如触发条件、执行权限、操作范围、安全规则，是自动化创作的核心依据。
+Spatial Ontology is the technical foundation of Aqara Studio. By leveraging the four elements of ORAP—**Object, Relation, Action, and Policy**—it establishes a unified and explicit semantic model for physical space, abstracting the structure, equipment, behaviors, and rules of spaces into a language machines can understand. This breaks from traditional IoT's "device-driven" paradigm, achieving intelligent management that is "space-driven".
 
-## 空间图谱
+- **Object**: Any type of entity within the physical space, including spatial areas (such as rooms, floors, buildings), physical devices (like sensors, controllers, actuators), and virtual entities (such as scenes and modes).
+- **Relation**: The various associations between objects, including containment (e.g., "the light is in the living room"), linkage (e.g., "sensor linked with air conditioner"), and control mappings (e.g., "switch controls light").
+- **Action**: The set of executable commands associated with objects, such as device power on/off, dimming, temperature adjustment, or spatial scene switching (e.g., "meeting mode", "away mode").
+- **Policy**: The rules and logical constraints that govern object actions, covering trigger conditions, execution permissions, operation scope, and security—these provide the essential underpinning for automation.
 
-空间图谱是空间本体论的**具象化载体**，整合了空间结构、设备拓扑、实时状态、操作约束等全维度信息，是整个系统的**唯一真实数据来源**，其核心能力包括：
-- **统一语义建模**：将物理空间的三维结构、设备位置、设备属性、关联关系进行可视化建模，形成物理空间的数字孪生体；
-- **实时状态同步**：实时采集设备状态、空间环境数据，保障图谱与物理空间的状态高度一致，为决策提供准确数据；
-- **全域数据共享**：在设备层、边缘层、云端层之间提供一致的、可查询的、可订阅的模型，支持多端同步访问，保障全系统数据一致性；
-- **行为可解释性**：所有设备操作、场景联动、告警事件均可追溯至空间图谱中的对象与关系，让系统行为可解释、可审计、可追溯。
+## Spatial Graph
 
-## MCP 协议
+The spatial graph is the concrete carrier of the spatial ontology. It unifies spatial structure, device topology, real-time state, and operational constraints, serving as the **single source of truth** for the entire system, with key capabilities including:
 
-MCP 协议是 Aqara Studio 技能层对外的标准化接口协议，作为系统与外部 AI 工具、第三方系统、自动化脚本的交互桥梁，实现外部系统与空间图谱的**统一语义交互**，其核心价值与能力体现在：
+- **Unified Semantic Modeling**: Visually represent the 3D structure, device positions, attributes, and their associations, creating a digital twin of the physical space.
+- **Real-Time State Synchronization**: Collect device states and environmental data in real-time, keeping the graph highly consistent with the actual physical space and providing precise data for decisions.
+- **Full-Scope Data Sharing**: Provide consistent, queryable, and subscribable models across device, edge, and cloud layers. Supports real-time multi-terminal synchronization and ensures system-wide data consistency.
+- **Behavior Interpretability**: Every device action, scene linkage, and alert can be traced back to objects and relationships in the graph, making all system behaviors interpretable, auditable, and traceable.
 
-- **语义化交互**：外部系统通过 MCP 协议可直接基于空间本体论的语义模型访问、控制空间与设备，无需关注底层设备的协议与型号差异，大幅降低集成门槛；
-- **受管辖的执行**：外部操作需遵循系统预设的策略约束，确保所有访问与控制行为安全、可审计、可逆，保障系统运行稳定性；
-- **多端生态兼容**：支持与 ChatGPT、Cursor、Manus 等 AI 工具，以及各类自动化脚本、第三方系统对接，实现 AI 与空间智能的深度融合。
+## MCP Protocol
 
-## 分布式计算与数据处理
+The MCP Protocol is the standard interface that exposes the capabilities of the Aqara Studio Skill Layer to external parties. Acting as a bridge between the system, AI tools, third-party systems, and automation scripts, it enables unified semantic interactions with the spatial graph. Key benefits and capabilities include:
 
-针对 IoT/IIoT 领域常见的**带宽消耗高**、**CPU 占用大**、**存储读写冲突**、**大规模数据点接入困难**等问题，Aqara Studio 采用 <strong>Supervisor Studio（中心服务器）+ Control Studio（边缘节点）</strong> 的分布式架构：
+- **Semantic-Level Interaction**: External systems can access and control spaces and devices directly using the semantic model of the spatial ontology, without concerning themselves with underlying protocols or device model differences, greatly lowering integration thresholds.
+- **Governed Execution**: External operations must obey built-in policy constraints, ensuring all access and control are secure, auditable, and reversible—preserving system stability.
+- **Multi-Endpoint Ecosystem Compatibility**: Supports integration with AI tools (such as ChatGPT, Cursor, Manus), automation scripts, and third-party systems, enabling deep fusion between AI and spatial intelligence.
 
-- **Supervisor Studio（中心服务器）**：负责历史数据归档、大数据分析、报表生成，归档操作在非高峰时段进行，查询仅执行读操作，保障系统运行效率。
-- **Control Studio（边缘节点）**：部署在设备附近，负责高频数据采集、本地历史记录、告警分析、逻辑控制，降低网络带宽压力，避免历史数据读写冲突；
+## Distributed Computing and Data Processing
 
-该架构支持**数十万至数百万数据点**的大规模接入，无需高端服务器，具备极强的横向扩展性，可适配从家庭到大型商业园区的全规模场景。
+To solve common IoT/IIoT problems such as high bandwidth usage, high CPU load, storage read-write contention, and mass data point access, Aqara Studio adopts a distributed architecture featuring **Supervisor Studio (central server)** and **Control Studio (edge node)**:
 
-## 四大空间智能核心能力
+- **Control Studio (Edge Node)**: Deployed close to devices, responsible for high-frequency data collection, local history, alarm analysis, and logic control, alleviating network bandwidth and avoiding read-write conflicts with historical data.
+- **Supervisor Studio (Central Server)**: Handles long-term data archiving, big data analysis, and report generation. Archiving occurs off-peak, and queries are read-only, ensuring system efficiency.
 
-基于上述核心技术，Aqara Studio 具备**识别与感知**、**认知与决策**、**执行与重塑**、**连接与融合**四大空间智能核心能力，实现从 “感知物理空间” 到 “改造物理空间” 的全流程落地，让空间智能从概念变为实际应用：
+This architecture scales horizontally to support hundreds of thousands or even millions of data points—without the need for expensive servers—and is robust enough for scenarios from smart homes to large commercial parks.
 
-- **识别与感知**：通过多协议传感器、摄像头等设备，实现对物理空间的人、物、环境状态的精准识别与实时感知；
-- **认知与决策**：基于空间本体论与空间图谱，对感知到的信息进行语义化解析与推理，结合预设策略做出智能决策；
-- **执行与重塑**：通过标准化技能层，将决策转化为设备操作与场景切换，实现对物理空间状态的智能重塑；
-- **连接与融合**：打破设备、协议、系统的壁垒，实现跨设备、跨系统、跨场景的连接与融合，让空间智能成为一个有机整体。
+## Four Core Capabilities of Spatial Intelligence
+
+Built on the above core technologies, Aqara Studio enables four core spatial intelligence capabilities—spanning the entire process from "perceiving physical spaces" to "remodelling physical environments" and making spatial intelligence truly practical:
+
+- **Identification & Perception**: Accurately recognizes and senses people, objects, and environmental states in real time via multi-protocol sensors, cameras, and other devices.
+- **Cognition & Decision-Making**: Uses spatial ontology and spatial graphs for semantic analysis and reasoning, then makes intelligent decisions based on preset policies.
+- **Execution & Remolding**: Converts decisions into device actions and scene switching through standardized skills, realizing intelligent reshaping of the environment.
+- **Connection & Fusion**: Breaks the barriers across devices, protocols, and systems to enable cross-device, cross-system, and cross-scenario integration—making spatial intelligence a unified, organic whole.
