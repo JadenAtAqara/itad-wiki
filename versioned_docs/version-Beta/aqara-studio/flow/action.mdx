@@ -1,1 +1,141 @@
 # Action
+
+This document explains the **action blocks** in Flow.
+
+## Overview
+
+In Flow, **action blocks** are used to perform actions within an automation process. They represent the key nodes where operations such as device control, data processing, or other results are executed.
+
+Action blocks typically serve as end points in an automation Flow. After a condition is met or a branch is activated, such blocks are used to trigger real operations like "turn on the light", or "modify a variable value". Each action block can support multiple inputs (allowing it to be triggered by different conditions or data sources) and multiple outputs (enabling the sequential execution of multiple actions or synchronizing results with several following blocks).
+
+Within Flow, you can perform the following actions:
+- [Device](#device): Directly send specific instructions to a single device, such as "turn on the light" or "turn off the air conditioner" for precise control.
+- [Batch Execute](#batch-execute): Execute the same operation on multiple devices of the same type at once, such as one-tap turning off multiple switches, for increased efficiency.
+- [Data Process](#data-process): Perform calculations, statistics, or string processing for use in subsequent logic.
+- [Time](#time): Delay downstream judgement or actions for flexible process pacing.
+- [Variable](#variable): Modify or toggle variable values to enable dynamic data flow.
+- [Flow](#flow): Enable or disable other flows within the current process for coordination and management.
+
+## Device
+
+The device action block is used to send operation commands to a specific device within an automation Flow. This enables actions such as "turn on/off a light", "adjust air conditioner temperature", or "toggle a switch". You select the target device and its controllable features (function points), configure relevant parameters, and thus achieve precise device control.
+
+### How to Use
+
+1. Click the **+** button in the left sidebar of the canvas, and under the **Action** category, select **Device**. Choose the target device from the device list.
+2. Next, you'll see a list of available blocks for that device, each representing a writable function point. Click the required block to add it to the canvas.
+3. Click the block's parameter to select or input the value or state for the target device's function point.
+4. After configuring the block, connect its input point to a condition block or trigger block so that the operation will be performed when the preceding condition is satisfied.
+
+## Batch Execute
+
+The batch execute block is used to control the same function point on multiple devices of the same type simultaneously, allowing you to send the same command to several devices at once (e.g., turning off multiple switches in one step, or setting the brightness of several lights to 50).
+
+### How to Use
+
+1. In the left sidebar of the canvas, click the **+** button, select **Batch Execute** under the **Action** category, and choose a device type from the popup list.
+2. You will then see the available blocks for this type, each representing a writable function point. Click the required block to add it to the canvas.
+3. Click the block's parameter to set a unified target value.
+
+    点击“+”按钮，可批量选择需要操作的目标设备。
+
+4. After configuring the block, connect its input point to a condition block or trigger block so that the batch operation will be performed when the preceding condition is satisfied.
+
+## Data Process
+
+A data process block is mainly used to perform calculations, statistical aggregation, or string processing on collected data. It is a key tool for complex logic and dynamic decision-making. By flexibly processing variables, device data, and more, you can address diverse data requirements in automation scenarios to make the flow more intelligent.
+
+Flow supports three common data processing methods: [Math Operation](#math-operation), [String Processing](#string-processing), and [Data Aggregation](#data-aggregation), for numeric calculations, text processing, and data statistics, respectively.
+
+### Math Operation
+
+The math operation block allows you to perform basic arithmetic operations (addition, subtraction, multiplication, division, rounding, absolute value, etc.) on input variables or device data. This is used for numeric calculation and dynamic assignment within a flow. By configuring input parameters and target result variables, you can flexibly process data in automated scenarios.
+
+#### How to Use
+
+1. In the left sidebar under **Action**, select **Data Process** and add a "Math Operation" block.
+2. Click the first parameter on the block to choose a global variable, local variable, device variable, or custom value as "Number A" for the calculation.
+3. Click the second parameter to choose the desired mathematical operator (e.g., add, substract, multiply, divide, etc.).
+4. If the operation is addition, subtraction, multiplication, division, or exponentiation, click the third parameter to set "Number B". For rounding, absolute value, or square root, this parameter is unnecessary.
+5. In the final parameter, select where to output the result, i.e., a global variable, local variable, or device variable.
+6. Once configured, connect the block's input point to a condition or trigger block so the calculation runs when the preceding condition is met.
+
+### String Processing
+
+The string processing block handles text data in the Flow, permitting concatenation, substring, replacement, case conversion, and combination. It supports flexible use of variables, device data, and custom input, helping you generate required text results for richer data expression and automation logic.
+
+### Data Aggregation
+
+The data aggregation block can statistically process multiple variables, and custom values, including summing, averaging, finding the maximum, and the minimum. The statistical result can be output as a global or local variable, or as a device data to enable real-time control in the process.
+
+#### How to Use
+
+1. In the left sidebar under **Action**, select **Data Process** and add a "Data Aggregation" block.
+2. Click the first parameter to pop up the device data list. If you need to select a variable, click the &#128279; icon to switch to the variable list.
+3. Select items from the device data or variable list, or enter numbers directly. After adding each item, click the **Add** button to include it in the calculation.
+4. Click the second parameter of the block to select a statistical function ("Sum", "Average", "Maximum", or "minimum").
+5. For the final parameter, choose the output target for the result: this can be a global variable, local variable, or directly written to a device trait.
+6. Once the block is configured, connect its input point to a condition block or trigger block so that aggregation is performed when conditions are satisfied.
+
+## Time
+
+The action block related to time is the [Delay](#delay) block.
+
+### Delay
+
+The delay block inserts a specified duration of waiting within the automation Flow. By setting a delay time, you can buffer between process steps, control the pacing, or achieve timing triggers for special scenarios (e.g., delay before/after an action or judgment).
+
+#### How to Use
+
+1. In the left sidebar under **Action**, select **Delay**. Click **Delay** to add the block to your canvas.
+2. Click the block's parameter to set the delay duration.
+3. Once configured, insert the delay block between two blocks in the process.
+
+## Variable
+
+Action blocks related to variables include [Set Variable](#set-variable) and [Toggle Variable](#toggle-variable).
+
+### Set Variable
+
+The set variable block is used to modify the value of a variable dynamically within an automation Flow. It only supports string, boolean, and number type variables and device data.
+
+#### How to Use
+
+1. In the left sidebar under **Action**, select **Variable** and click **Set Variable** to add the block to your canvas.
+2. Click the first parameter to select any global or local variable, or device data of type string, boolean, or number.
+3. Click the second parameter to set the new value.
+4. Once configured, connect the block's input point to other blocks so that the variable will be modified when prior conditions are met.
+
+### Toggle Variable
+
+The toggle variable block is used to invert (toggle) the value of a specified writable boolean variable or device data (i.e., true becomes false, false becomes true). This is often used for scenarios such as lighting switches. With this block, you can flip a variable's state in one step, without manually inputting a new value.
+
+#### How to Use
+
+1. In the left sidebar under **Action**, select **Variable** and click **Toggle Variable** to add the block to your canvas.
+2. Click the first parameter to select a boolean variable or device data.
+3. Once configured, connect the block's input point to other blocks so that the Boolean value is toggled when conditions are met.
+
+## Flow
+
+Action blocks related to process control include [Flow Execution](#flow-execution), [Flow Management · Enable](#flow-management), and [Flow Management · Disable](#flow-management).
+
+### Flow Execution
+
+The flow execution block allows you to actively trigger [manual trigger](./trigger.mdx#manual-trigger) blocks configured in any Flow. In this way, you can flexibly link different flows to implement process-level coordination and reuse.
+
+#### How to Use
+
+1. In the left sidebar under the **Action** module, select **Flow**, and click **Flow Execution** to add the block to your canvas.
+2. Click the parameter to select a "manual trigger".
+3. Once configured, connect the input of the flow execution block to other blocks. When conditions are satisfied, the selected manual trigger will be executed.
+
+### Flow Management
+
+You can dynamically enable or disable other Flows that have already been created from within a Flow.
+
+#### How to Use
+
+1. In the left sidebar under the **Action** module, select **Flow**, and click any "Flow Management" block to add it to your canvas.
+2. Click the "Flow" parameter on the block to select the target flow.
+3. Once configured, connect the input of the flow management block to other blocks. When conditions are satisfied, the target flow will be enabled or disabled.

@@ -2,57 +2,78 @@
 
 ## Overview
 
-Space management forms the foundation for efficiently organizing devices and enabling intelligent automation in a smart home system. 
+Space management forms the foundation of efficient device organization and intelligent interactions in smart home systems. In Aqara Studio, you can flexibly define your building's structure, create hierarchical spatial areas, and link various smart devices or physical entities (such as furniture, structures, etc.) according to practical needs to accurately map your real environment. This process lays a solid groundwork for advanced functionalities like automation, data analytics, and permission management, while greatly improving device management efficiency and user experience.
 
-In Aqara Studio, you can flexibly define your home's structure, create layered space zones, and associate various smart devices and other physical entities (like furniture or structures) according to real-world needs, accurately mapping your actual environment. This process lays a solid foundation for advanced functions such as automation, data analysis, and permissions management, while significantly improving device management efficiency and user experience.
-
-Space management also supports standard ontology-based semantic modeling, which is essential for [integrating with third-party AI Agents](./set-up-mcp-server.mdx) or [using OpenClaw](./use-aqara-studio-skill-in-openclaw-web-ui.mdx) for intelligent space management. By properly dividing and configuring space, Aqara Studio robustly supports the creation of intelligent, convenient, and safe living or working environments.
+Space management also supports standardized ontological semantic modeling, which is essential for [integrating third-party AI Agents](./set-up-mcp-server.mdx) or [using OpenClaw](./use-aqara-studio-skill-in-openclaw-web-ui.mdx) for intelligent space management. Through reasonable division and configuration of spaces, Aqara Studio strongly supports the construction of intelligent, convenient, and secure office and residential environments.
 
 ## Create a Space
 
-When you enter the **Space** page from the left sidebar, you will see that Aqara Studio provides [space templates](#use-a-template). You can quickly create a preset space layout by choosing a template, or [customize the space structure](#customize-a-space) to fit your needs.
+After entering **Spaces** from the left sidebar, you will see that Aqara Studio offers **space templates** that you can select and quickly create preset spatial layouts. You can also flexibly **customize the space structure** to meet your personalized needs.
 
-### Use a Template
+- **Using a Template**: Select a template that fits your home to create a general space structure, which includes a predefined parent space and several subspaces.
+- **Custom Space**: Select **custom space** to create a parent space. 
 
-1. Choose a template that fits your home.
-2. In the **Template** drawer, check the real areas in your home (such as living room, bedroom).
-3. Click **Create** and the space structure will be created automatically.
-4. In **Space**, click any space to [configure its parameters](#space-parameters).
+## Add Spaces and Entities
 
-### Customize a Space
+After [creating a space](#create-a-space), you can add **subspaces** or **entities** (such as furniture, structures, etc.) under the space.
 
-1. Select **Custom Space**.
-2. In the **Custom Space** drawer, Aqara Studio will automatically add a parent space (New Item). You can [configure its parameters](#space-parameters) directly.
-3. To add a sub-space, select the parent space and click the **+** button.
-4. After finishing all space settings, click **Create** and your custom space structure will be set up.
+- **Space types**: space (general), floor, room, zone (functional zone).
+- **Entity types**: facility (general), furniture, bed, sofa, chair, table, cabinet, component, wall, door, window, floor, ceiling.
 
-### Space Parameters
-
-| Parameter    | Description                                                  |
-|--------------|-------------------------------------------------------------|
-| Name         | (Required) The custom name for the space, easy to identify and manage. |
-| Tag         | You can assign multiple tags to this space.                  |
-| Type         | Set the usage type of this space (e.g., master bedroom, second bedroom, etc.). |
-| Area         | Actual area of the space in square meters; fill in according to your situation. |
-| Parent Space | The upper-level space to which this space belongs. Used to build a space hierarchy. |
-| Main orientation   | The main orientation of the space's windows (such as east, south, west, north, etc.). |
-| Entrance/Exit      | This parameter records whether this space has a "single entrance/exit" or "multiple entrances/exits".   |
+The workflow is as follows:
+1. Select a space in the left spatial tree, click the **...** button, and choose **New space** or **New entity** from the dropdown list.
+2. In the popup window, select a space or entity. 
+3. After adding, the new space or entity will appear under the corresponding node in the spatial tree. At the same time, you can see the source space node linked to the new node on the spatial graph.
 
 ## Link Devices
 
-Linking devices to spaces helps you see at a glance where each device is located. It also makes it easier for unified management, device location, troubleshooting, and setting up smart scenarios.
+Associating devices with spaces not only allows you to intuitively understand the distribution and ownership of each device in the actual space, but also facilitates unified management, device locating, troubleshooting, and smart scene setups.
 
-Here’s how to link devices:
-1. Click a space, then in its **Space Details**, click the **+** button.
-2. In the pop-up window, check one or more target devices and click **Confirm**.
-    :::tip
-    If you haven't added the required devices yet, click **Add new device** in the pop-up. The system will automatically switch to the **Devices** page. You can refer to the [Device Integration](/docs/category/device-integration) docs and add devices before linking them.
-    :::
-3. Now the **Device Num** in the **Space Details** will update. The **Device Num** of the parent space will also get updated.
-4. Go to **Devices** from the left sidebar. Open the **Basic Information** of the linked device. You can see its space information has been updated. If you want to change the linked space, click the edit icon in this section.
+The association process is as follows:
+1. Select a space in the left spatial tree, click the **...** button, and choose **Bind Devices** from the dropdown menu.
+2. In the popup, select one or more devices and click **Confirm**.
+3. Expand the corresponding space in the left spatial tree, and you will see the newly associated device displayed under that space. Similarly, you will see a new device node linked to that space on the spatial graph.
+4. Navigate to **Device Management** from the left sidebar, view the **Basic Information** of the associated device, and you will see its space information has been updated. If you want to adjust its space association, click the edit icon here.
 
-## FAQ
+## Update Spaces and Entities
 
-### Can one device be linked to multiple spaces?
+If you want to modify the information of a space or entity, click that space or entity. Its editing drawer will pop up from the right side of the page, and you can edit its name, coordinates, and other specific fields.
 
-A device can be linked to only one space at a time.
+## Establish Relationships
+
+After completing [space creation](#create-a-space), [adding entities](#add-spaces-and-entities), and [linking devices](#link-devices), you can establish <a href="#relationships">relationships</a> among these spaces, entities, and devices. This allows you to describe physical or logical relations between entities more clearly, which helps AI better understand your spatial structure and device distribution, thus executing your commands more effectively.
+
+Through relationships, you can express spatial hierarchies, entity ownership, physical connections such as doors or walls connecting spaces, installation positions of devices on entities, and spatial positional information among different devices and entities.
+
+<a id="relationships"></a>
+
+The available relationships depend on the types of the selected source node and target node, as detailed below:
+
+| Relationship           | Source Node Type      | Target Node Type      | Quantity Limit | Description |
+|------------------------|----------------------|----------------------|---------------|-------------|
+| Space belongs to space | Space                | Space                | 1             | Indicates which parent space the space belongs to.|
+| Connects   | Door                 | Space                | -             | Indicates a door connects two spaces, acting as a passage. <br />Useful for describing physical connections between rooms.|
+| Installed inside       | Device               | <ul><li>Entity</li><li>Device</li></ul> | -           | Indicates the device is installed inside an entity or device.|
+| Installed on top       | Device               | <ul><li>Entity</li><li>Device</li></ul> | -           | Indicates the device is installed on top of an entity or device.|
+| Sub Meter Belongs to Main Meter | Device      | Device               | 1             | The sub meter (source node) is subordinate to the main meter (target node).|
+| Belongs To Space       | <ul><li>Entity</li><li>Device</li></ul> | Space        | 1           | Indicates which space the entity or device belongs to.|
+| Works for        | <ul><li>Entity</li><li>Device</li></ul> | Space        | -           | Indicates which space the entity or device operates upon.|
+| Camera/mmWave covers a space | Device            | Space                | -             | Indicates the coverage area of a camera or mmWave device, suitable for describing devices that can sense people or actions within a space.|
+| Adjacent to              | All Types            | All Types            | -             | Indicates two nodes are physically next to each other and unobstructed. <br />Commonly used for "side by side" or "connected" scenarios.|
+| Below                  | All Types            | All Types            | -             | The source node is below the target node.|
+| Opposed to               | All Types            | All Types            | -             | The source node is spatially opposite to the target node. <br />Used for describing "opposite ends" or "face to face" positions.|
+| Near to                  | All Types            | All Types            | -             | The nodes are close to each other but not necessarily directly connected. <br />Common in spatial layout associations.|
+| Above                  | All Types            | All Types            | -             | The source node is above the target node.|
+| Visible to                | All Types            | All Types            | -             | The source node can be seen directly from the target node.|
+| Accessible from           | All Types            | All Types            | -             | The source node is accessible from the target node. |
+
+Workflow:
+
+1. Click on a space, entity, or device to set it as the source node for the relationship. Its editing drawer will appear on the right; find the **Connection relationships** area.
+
+2. Click the **Add** button to open the editing dialog.
+
+
+3. In **Target node**, select a space, entity, or device. Then, in **Relation type**, select the desired <a href="#relationships">relationship type</a>, and finally click **Confirm** to complete relationship creation.
+
+4. After creating a relationship, you can see it visually in the space graph.

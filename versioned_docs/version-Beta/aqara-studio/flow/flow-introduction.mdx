@@ -6,52 +6,76 @@ With flexible visual configuration, you can use various blocks to build data flo
 
 To learn how to create a flow, please see [Automation - Create an Automation](./../automation.mdx#create-an-automation).
 
-Then, you can [add](#how-to-add-blocks) and connect different [blocks](#blocks) on the canvas. Build device interaction logic for your specific needs.
+Then, you can [add](#steps-to-add) and connect different [blocks](#blocks) on the canvas. Build device interaction logic for your specific needs.
 
 ## Blocks
 
-In Aqara Studio, blocks serve as the "information hub" and "control center" of automation. They transform complex backend automation logic (such as "turn on the light when someone is present and the room is dark") into clear, visual device states and one-click scene switches, making invisible automation intuitive and controllable.
+In Aqara Studio, **blocks** serve as the "information hub" and "control center" of automation. Blocks visually transform complex backend automation logic (such as "turn on the light if someone is present and the light is low") into clear device states and one-tap scene switches, making automation intuitive and manageable.
 
-### How to Add Blocks
+### Steps to Add
 
-1. Click the **+** button in the left sidebar of the canvas.
-2. Browse and select the desired block type (such as Trigger, Condition, or Action).
-3. Under the desired block type, further select a specific block. For example, if you click **Time** under the **Trigger** type, you will see the **Periodic Trigger**, **Scheduled Trigger**, and **Loop Trigger** blocks.
-4. Click the desired block and the block will appear on the canvas.
+1. Click the **+** button on the left sidebar of the canvas.
+2. Browse and select the required block type (such as trigger, condition, or action).
+3. Under the selected block type, further choose a specific block. For example, under **trigger**, click **time** to see the **periodic trigger**, **scheduled trigger**, and **loop trigger** blocks.
+4. Click the desired block to add it to the canvas.
 
-### Components
+### Block Components
 
-Each block can consists of the following elements:
+A block consists of the following elements:
 
-| Component | Description |
-| -- | -- |
-| Input point | If a block has an input point, it can be triggered.          |
-| Parameter  | Used to set the state to monitor, the action to perform, or other settings. |
-| Output point | If a block has an output point, it can trigger other blocks.   |
+| Element | Description |
+| ------- | ----------- |
+| Input Node | If a block has an input node, it can be triggered. |
+| Parameters | Used to set status to watch for, actions to perform, or other operations. |
+| Output Node | If a block has an output node, it can trigger other steps. |
 
-### Categories
+### Block Categories
 
-Flow supports the following types of blocks, each serving a specific role:
+Flow supports the following types of blocks, each with its own role:
 
 | Category | Description |
 | -------- | ----------- |
-| [Trigger](./trigger.mdx)   | The **starting node** of a flow.<br />Triggers can be initiated by various conditions, such as device status changes (e.g., a light being turned on), scheduled times, or alarm events, serving as the entry point for the flow. |
-| [Condition](./condition.mdx) | The **intermediate node** of a flow.<br />Used to determine whether device states, time, or various logical/comparison operations meet the preset conditions, and thereby control the direction of the flow. |
-| [Action](./action.mdx) | The **ending node** of a flow.<br />Used for sending and executing various actions, including controlling single or multiple devices, data processing, delays, etc., to achieve a closed automation loop. |
+| [Trigger](./trigger.mdx) | The **starting node** of a Flow.<br />Can be triggered by device state changes (like a light being turned on), timing triggers, alarm events, and more to start the process. |
+| [Condition](./condition.mdx) | The **intermediate node** of a Flow.<br />Used to determine whether device state, time, logic, or comparisons meet the set criteria and accordingly direct the flow. |
+| [Action](./action.mdx) | The **end node** of a Flow.<br />Used to deliver and execute various actions, including single or batch device control, data processing, delay, and more, to complete the automation loop. |
 
-### Connection
+### Connection Line
 
-The connection methods for different [block categories](#categories) are as follows:
+The connection method between different [categories](#block-categories) of blocks is as follows:
 
-- [Trigger](./trigger.mdx): It only has output points, no input points. The output of a trigger block can connect to multiple other blocks, acting as the starting point of a flow.
-- [Condition](./condition.mdx): It can have both input and output points. Outputs from multiple blocks can connect to the input of a condition block; each output of the condition block (such as different judgment results) can also connect to multiple subsequent blocks, enabling branching in the flow.
-- [Action](./action.mdx): As the end point of the flow, it supports multiple input points, and can be triggered by several blocks at once. Depending on actual needs, multiple output points can also be set to further extend the flow.
+- [Trigger](./trigger.mdx):  It only has output nodes, no input nodes. The output of one trigger block can be connected to multiple other blocks, serving as the starting point of a flow.
+- [Condition](./condition.mdx): It has both input and output nodes. Multiple blocks can have their outputs connected to the input of the same condition block; each output (such as for different condition results) of a condition block can connect to multiple subsequent blocks, enabling flow branching.
+- [Action](./action.mdx): It acts as the endpoint of the flow, supports multiple input nodes, and can be triggered by several blocks at once; based on the actual requirement, it can also be set up with multiple output nodes to extend subsequent flows.
 
 :::tip
-The input and output points of Flow blocks are primarily used for flow control. For example, multiple inputs mean that flows from different blocks can converge on a single block; multiple outputs mean that the flow from one block can branch out to several subsequent steps.
+The input and output nodes of Flow blocks are mainly used for flow control, determining the direction of the process. For example, multiple inputs mean that flows from several blocks can converge on a single block, while multiple outputs mean the flow from one block can branch out to several subsequent steps.
 
-These inputs and outputs are not related to the transfer of real "data"; all data processing and computation are handled internally within each block, and are not passed directly between blocks.
+These input and output nodes are not related to the actual flow of "data". Data processing and calculation are done inside the block and are not directly passed between blocks.
 
-Additionally, the outputs of [Condition blocks](./condition.mdx) provide both true/false branches to further control the direction of the flow.
+Additionally, the output of [condition blocks](./condition.mdx) features true/false branches to further control flow branching.
 :::
 
+### Block Operations
+
+After adding a block to the canvas, you can right-click the block to open the action menu, allowing you to rename, copy, test, or delete the block.
+
+## Variables
+
+You can create variables in Flow as [trigger](./trigger.mdx#variable-trigger) nodes, or use them in [comparison operations](./condition.mdx#comparison), [math operations](./action.mdx#math-operation), and [data aggregation](./action.mdx#data-aggregation). These variables can also be [modified](./action.mdx#set-variable) or [toggled](./action.mdx#toggle-variable) by blocks, making your flows more flexible and intelligent.
+
+### Variable Types
+
+Variables in Flow can be either **global variables** or **local variables**, with different application scopes as follows:
+
+| Type         | Application Scope                 |
+| ------------ | -------------------------------- |
+| Global Variable | Shared and available across all Flows.   |
+| Local Variable  | Only effective within the Flow where it was created, not accessible by other Flows. |
+
+### Create Variables
+
+To create a variable:
+
+1. Click the variable icon on the left sidebar of the canvas, expand the variable drawer, then click the **add** button.
+2. In the pop-up **New variable** window, choose the data type, set the variable name, enter the initial value, and select the scope (global or local). After filling in the details, click **Save**.
+3. Once created, you can use the filter at the top of the variable drawer to view global or local variables, and find the new variable.
