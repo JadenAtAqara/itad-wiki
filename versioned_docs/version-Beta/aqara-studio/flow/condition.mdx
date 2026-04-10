@@ -1,1 +1,117 @@
 # Condition
+
+This document explains the condition blocks in Flow.
+
+## Overview
+
+In automation Flows, condition blocks are used to determine whether data, device states, or variables in the process meet specified criteria. Condition blocks form important control nodes for process branching.
+
+Condition blocks typically have two output points, corresponding to whether the evaluation result is true (condition met) or false (condition not met). Only when a certain output path is activated will subsequent actions or branches be executed.
+
+By configuring different types of condition blocks, you can flexibly achieve data comparison, logical operations, and other condition checks, enabling complex intelligent branching in automation processes and meeting diverse business needs.
+
+In Flow, you can perform condition checks on the following:
+- [Device](#device): Checks whether the current status or some data of a device meets the set condition, such as "Is the light on?" or "Is the temperature above the threshold?"
+- [Logic](#logic): Supports fundamental logical operations such as AND, OR, XOR, and NOT, allowing flexible combinations of multiple boolean conditions for complex branching. It also supports data comparisons such as equal to, not equal to, greater than, less than, greater than or equal to, and less than or equal to, providing precise judgments between any two data points.
+- [Time](#time): Checks whether the current time is within a specified range (e.g., "Is it between 10:00 and 12:00 on Monday?") to implement time-based automation branches.
+- [Flow Check](#flow-check): Checks whether another Flow is enabled.
+
+## Condition Block Outputs
+
+Condition blocks usually have two outputs, representing the judgment results:
+
+- **True Output**: When the condition is met (the result is true), the Flow proceeds from this output.
+- **False Output**: When the condition is not met (the result is false), the Flow proceeds from this output.
+For example, you can perform certain actions when the device status meets the criteria, and otherwise perform a different set of actions, thereby improving flexibility and intelligence in automation.
+
+## Device
+
+Device-based condition blocks can be used to check the current status or data of a device, serving as branch points in the automation process. For example, you can determine whether a specific light is on or whether temperature and humidity exceed a given threshold.
+
+You can configure the device, its corresponding datapoint, status, or value, and set the relevant condition (such as equal to, not equal to, greater than, less than, etc.) to accurately determine the device state.
+
+### How to Use
+
+1. In the left sidebar of the canvas, click the **+** button. Under **Condition**, select **Device**. In the device list, choose the device you want to check.
+2. You will then see a list of available blocks for that device, which represent the readable datapoints for the selected device. Click the required block to add it to the canvas.
+3. Click the first parameter on the block to select the condition (such as equal to, not equal to, greater than, less than, etc.).
+
+    :::tip
+    The available condition options vary depending on the type of device datapoint. For example, switch types generally support "equal to," "not equal to," etc., while value types also support "greater than," "less than," etc.
+    :::
+
+    Click the second parameter to further specify the target value to monitor.
+
+4. After configuring the above, make sure that at least one output (True or False) of the condition block is connected to another block ([condition block](./condition.mdx) or [action block](./action.mdx)).
+
+## Logic
+
+There are two main types of logic-related condition blocks: [Comparison](#comparison) and [Logic Operation](#logic-operation).  
+- **Comparison** blocks are used to determine the relationships between two sets of data (such as equal to, not equal to, greater than, less than, etc.), serving as condition checks for values, states, etc.
+- **Logic Operation** blocks are used to logically combine the results of multiple conditions (e.g., outputs from multiple condition blocks) using logical relationships like AND, OR, XOR, or NOT, enabling more complex branching structures.
+
+You can flexibly use these blocks to build various logical conditions as needed.
+
+### Comparison
+
+Comparison is commonly used to compare the relationship between two sets of data (such as device data and variables) in a condition block. In Flow, comparison blocks typically support equal to, not equal to, greater than, less than, greater than or equal to, and less than or equal to, among other comparison modes.
+
+#### How to Use
+
+1. In the left sidebar of the canvas, click the **+** button. Under **Condition**, select **Logic**. Click **Comparison** to add the block to the canvas.
+2. Click the first parameter on the block to select a device data item as value A from a dropdown list.
+
+    If you need to compare a variable, click the &#128279; icon to select the required variable from the variable list for the comparison.
+
+3. Click the second parameter to set the comparison operator, such as greater than.
+4. Click the third parameter to set value B, similar to value A.
+5. After configuring, make sure that at least one output (True or False) of the condition block is connected to another block ([condition block](./condition.mdx) or [action block](./action.mdx)).
+
+### Logic Operation
+
+Logic operation blocks are used to find out the logical relationships between multiple input boolean values. In Flow, logic operation blocks are provided for AND, OR, XOR, and NOT, the four basic logical operations.
+
+#### How to Use
+
+1. In the left sidebar of the canvas, under **Condition**, select **Logic** and add a "Logic Operation" block.
+2. Click the **Rule** parameter on the block to select the desired logical operation from the dropdown menu (e.g., AND, OR, XOR, or NOT).
+3. Click the "+" button to add inputs to the logic operation block. The available boolean input sources include:
+   - Outputs from condition blocks;
+   - Boolean variables (global variables, local variables, and boolean device variables).
+4. After configuring, make sure that at least one output (True or False) of the condition block is connected to another block ([condition block](./condition.mdx) or [action block](./action.mdx)).
+
+## Time
+
+Among condition blocks, there are two main time-related types: **Periodic Check** and **Scheduled Check**.
+
+| Type | Description | Example |
+| -- | -- |--|
+| **Periodic Check**     | Checks if the current time falls within a recurring time range (such as certain days or periods each week), suitable for regular scenarios like "workdays" or "weekends", allowing for periodic time condition checks | 09:00-18:00, Monday to Friday |
+| **Scheduled Check**    | Checks if the current time falls within a specific period, suitable for one-time time checks | 2026/01/01 12:00:00 - 2026/01/02 13:00:00    |
+
+
+### How to Use
+
+1. In the left sidebar of the canvas, under **Condition**, select **Time**. Click any block to add it to the canvas.
+2. Configure the parameters:
+    - For **Periodic Check**:
+        - Click the first parameter on the block to select which weekdays to check (multi-select supported).
+        - Click the second and third parameters to set the start and end times, respectively.
+
+    - For **Scheduled Check**:
+        - Click the start parameter to set the specific start date and time.
+        - Click the end parameter to set the specific end date and time.
+        
+3. After configuring, make sure that at least one output (True or False) of the condition block is connected to another block ([condition block](./condition.mdx) or [action block](./action.mdx)).
+
+## Flow Check
+
+A Flow Check block is used to determine whether another Flow is currently enabled. By referencing and checking the target Flow's enable state, you can enable automation interconnections between Flows.
+
+For example, when a specific Flow is enabled, the Flow Check block outputs True, and you can decide whether to continue subsequent actions in the current process based on its output.
+
+### How to Use
+
+1. In the left sidebar of the canvas, under **Condition**, select **Flow**, and add a "Flow Check" block.
+2. Click the parameter on the block to select an existing Flow to monitor. As long as the selected Flow is enabled, the process will proceed from the True output of this **Flow Check** block; otherwise, it continues from the False output.
+3. After configuring, make sure that at least one output (True or False) of the condition block is connected to another block ([condition block](./condition.mdx) or [action block](./action.mdx)).

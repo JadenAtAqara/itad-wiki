@@ -1,1 +1,112 @@
 # Trigger
+
+This document explains the trigger blocks in Flow.
+
+## Overview
+
+In automation Flows, trigger nodes define the starting conditions of a process and serve as the entry point to activate the entire automation. Only when the trigger node listens to a specific event (such as a device state change, schedule, manual operation, or alarm event) will subsequent condition checks and actions be executed. By configuring different types of trigger nodes, you can flexibly implement automatic responses for various scenarios to meet diverse automation needs.
+
+In Flow, the following can be used as triggers, serving as the starting point of a process:
+
+- [Device](#device): Triggers the process when listening for device events or state changes
+- [Manual Trigger](#manual-trigger): Triggers the process through manual operation
+- [Schedule](#schedule): Scheduled trigger at specified times or periods
+- [Variable Trigger](#variable-trigger): Triggers the process when listening for variable changes
+
+## Device
+
+Device-based trigger blocks allow you to listen for device events or state changes, serving as the starting point of an automation process. When the selected device undergoes a specified event (such as a switch being pressed) or enters a particular state (such as value change or status change), the process is activated to execute subsequent conditions and actions.
+
+By configuring the device and its supported events or states, you can flexibly define auto-response trigger conditions. For example: when someone enters a room, when temperature or humidity exceeds thresholds, when a light is turned on manually, etc.—all can use device-based trigger blocks to initiate the automation process.
+
+You can select multiple events/states of different devices to monitor, meeting various automation needs.
+
+### How to Use
+
+1. In the left sidebar of the canvas, click the **+** button. Under **Trigger**, select **Device**. Then select the device you want to monitor from the device list.
+
+2. Next, you will see a list of available blocks for this device, which are readable function points for the device. Click the required block to add it to the canvas.
+
+3. Click the first parameter on the block to choose the specific condition to listen for (such as equal, not equal, greater than, less than, etc.).
+
+    :::tip
+    The available conditions for device function points vary by type. For example, switch types usually support "equal" and "not equal", whereas numeric types may offer "greater than" and "less than" as well.
+    :::
+
+    Click the second parameter to specify the target value to monitor.
+
+    By clicking the second parameter, you can further specify the value target to be monitored.
+
+4. After completing the above configuration, you can connect this with [Condition Blocks](./condition.mdx) and [Action Blocks](./action.mdx).
+
+## Manual Trigger
+
+Manual trigger is a type of trigger initiated by the user to start a process. You can use the Manual Trigger block when there is a need to manually start an automation, or for immediate triggering during the testing and debugging of a flow.
+
+### How to Use
+
+1. In the left sidebar of the canvas, click the **+** button. Under **Trigger**, select **Manual**. Then click **Manual Trigger** to add the block to the canvas.
+2. Connect the **Manual Trigger** block with [Condition Blocks](./condition.mdx) and [Action Blocks](./action.mdx).
+3. Click the icon on the **Manual Trigger** block to test the Flow.
+
+    At this point, the border color of the Flow will gradually change from gray to blue, indicating the process is running.
+
+    When the manual trigger has completed successfully, a prompt will pop up on the interface, indicating that the process has finished executing.
+
+## Schedule
+
+Time-based trigger blocks mainly include **Periodic Trigger**, **Scheduled Trigger**, and **Interval Trigger**, which can be used to meet the automation scheduling needs of different scenarios.
+
+| Type         | Applicable Scenario Description                                        | Example                       |
+|---------------------|-----------------------------------------------------------------------|-------------------------------|
+| **Periodic Trigger**  | Automatically executes the flow at a specific time according to a set period (such as daily, weekly, specified weekdays, etc.) | Turn on the lights at 7:00 every day |
+| **Scheduled Trigger** | Executes the flow only once at a specified date and time              | Open curtains at 2024/07/01 08:00 |
+| **Interval Trigger**  | Repeats the execution of the flow at fixed intervals                  | Turn on the lights every 10 minutes |
+
+In addition, these time trigger blocks support a variety of parameter settings such as custom periods, designated times, and selecting time points based on sunrise or sunset (supporting manual latitude/longitude input), helping you precisely control when your automation runs. By combining them flexibly, you can easily achieve complex scheduled linkage management and make smart devices better fit actual life and work needs.
+
+### How to Use
+
+1. In the left sidebar of the canvas, click the **+** button. Under **Trigger**, select **Schedule**. Click any block to add it to the canvas.
+2. Configure the parameters:
+    - For **Periodic Trigger**:
+        - Select the first parameter on the block to choose the days of the week on which the trigger should occur.
+        - Select the second parameter “Trigger Time” on the block. You can set it as a specific time, or choose a time relative to **sunrise** or **sunset** (such as before/after sunrise or sunset). For details, see [Time Types](#time-types).
+    - For **Scheduled Trigger**:
+        - Select the first parameter on the block to specify the exact date for the trigger.
+        - Select the second parameter “Trigger Time” on the block. For details, see [Time Types](#time-types).
+    - For **Interval Trigger**:  
+        Select the time interval parameter on the block, which indicates how often the flow will be triggered.
+3. Connect the above blocks with [Condition Blocks](./condition.mdx) and [Action Blocks](./action.mdx).
+
+### Time Types
+
+Aqara Studio supports three types of times when configuring trigger times: **Specified Time**, **Sunrise/Sunset Time**, or **Relative to Sunrise/Sunset**.
+
+The descriptions are as follows:
+
+| Time Type | Description |
+|--|--|
+| Specified Time  | Set a specific time in 24-hour format for precise control over the trigger moment. |
+| Sunrise/Sunset Time    | You need to provide the latitude and longitude of your location. Rules: <ul><li>North latitude and east longitude are positive numbers (e.g., 35.0 means 35.0° N)</li><li>South latitude and west longitude are negative numbers (e.g., -120.0 means 120.0° W)</li></ul> Once set, Aqara Studio will automatically obtain the local sunrise and sunset times. |
+| Before/After Sunrise/Sunset | Enter the latitude and longitude as well as the desired relative time interval (e.g., 15 minutes) to enable more flexible time control. |
+
+## Variable Trigger
+
+In automation workflows, the variable trigger is used to sense and respond to changes in variables within the system, enabling dynamic and intelligent process control. The system supports monitoring three types of variables: [global variable](./flow-introduction.mdx#variable-types), [local variable](./flow-introduction.mdx#variable-types), and **device variable**.
+
+:::tip
+**Device variable**: Refers to data points on specific devices, such as sensor values, switch status, etc.
+:::
+
+The variable trigger allows your automation processes to be more flexible and is suitable for a wide range of complex and dynamic scenarios.
+
+### Prerequisites
+
+Before using this block, please make sure you have [created a variable](./flow-introduction.mdx#create-variables) or [integrated a device](/docs/category/device-integration).
+
+### How to Use
+
+1. In the left sidebar of the canvas, click the **+** button. Under **Trigger**, select **Variable**. Then click **Variable Trigger** to add this block to the canvas.
+2. For the first parameter on the block, select a global variable, local variable, or device variable. When this variable updates, the automation flow will be triggered.
+3. Connect the block with [Condition Blocks](./condition.mdx) and [Action Blocks](./action.mdx).
