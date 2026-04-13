@@ -157,6 +157,7 @@
                 "aqara-studio/cloud",  
                 "aqara-studio/remote-access",
                 "aqara-studio/system-update",
+                "aqara-studio/technical-support",
                 "aqara-studio/local-domain-name-access"
               ]
           }
