@@ -14,4 +14,6 @@ This article explains how to view and operate device function points in Aqara St
     | Point Type            | The category the function point belongs to. The editability of this filed varies based on the device protocol:<ul><li>Aqara and Home Assistant ecosystem devices: not editable.</li><li>BACnet IP, KNX IP, and Modbus TCP devices: editable.</li></ul> |
     | Recent Value    | The most recent real-time value of the function point. |
     | Value Status    | The status of the current value. Possible values:<ul><li>Disable: This function point is disabled.</li><li>Fault: There is a configuration error in the device or function point.</li><li>Down: Network issue causing offline status.</li><li>Alarm: The current value has triggered an alarm.</li><li>Unacked Alarm: The user hasn't acknowledged an alarm.</li><li>Expired: Latest value for the device or point is not available.</li><li>Unknown: Unknown status.</li><li>Normal</li></ul> |
-    | Control         | For writable function points, you can set fields or perform operations such as switching on or off directly here. Once configured successfully, the `Recent Value` will be automatically updated to reflect the new status. |
+    | Control         | For **writable** function points, you can set fields or perform operations such as switching on or off directly here. Once configured successfully, the `Recent Value` will be automatically updated to reflect the new status. |
+
+![View the point page](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Device-Point.png)
