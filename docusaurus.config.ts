@@ -102,12 +102,11 @@ const config: Config = {
       },
       items: [
         {
-          type: "docsProductDropdown",
           label: "Docs",
           position: "left",
           items: [
-            { label: "Aqara Studio", to: "docs/aqara-studio/overview/introduction" },
-            { label: "API", to: "docs/api/data-export-api" },
+            { label: "Aqara Studio", to: "docs/aqara-studio/overview/introduction", activeBasePath: "docs/aqara-studio" },
+            { label: "API", to: "docs/api/data-export-api", activeBasePath: "docs/api" },
           ],
         },
 
