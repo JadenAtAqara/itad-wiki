@@ -218,5 +218,14 @@
         "aqara-studio/javascript-for-http-integration"
       ]
     }
+  ],
+  "apiSidebar": [
+    {
+      "type": "category",
+      "label": "Data Export API",
+      "items": [
+        "api/data-export-api"
+      ]
+    }
   ]
 }
