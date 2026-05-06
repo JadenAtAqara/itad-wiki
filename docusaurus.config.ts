@@ -106,7 +106,7 @@ const config: Config = {
           position: "left",
           items: [
             { label: "Aqara Studio", to: "docs/aqara-studio/overview/introduction", activeBasePath: "docs/aqara-studio" },
-            { label: "API", to: "docs/api/data-export-api", activeBasePath: "docs/api" },
+            { label: "Aqara API", to: "docs/aqara-api/data-export-api", activeBasePath: "docs/aqara-api" },
           ],
         },
 

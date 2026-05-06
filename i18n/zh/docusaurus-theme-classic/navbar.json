@@ -27,8 +27,8 @@
     "message": "Aqara Studio",
     "description": "Navbar item with label Aqara Studio"
   },
-  "item.label.API": {
-    "message": "API",
+  "item.label.Aqara API": {
+    "message": "Aqara API",
     "description": "Navbar item with label API"
   }
 }
