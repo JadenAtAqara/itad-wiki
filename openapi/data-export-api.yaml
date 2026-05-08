@@ -2949,7 +2949,7 @@ components:
           $ref: '#/components/schemas/AutomationDefinitionType'
         config:
           type: object
-          description: JSON 自动化脚本，详情请参考 [JSON 自动化脚本定义](../../aqara-studio/api-references/json-automation-script.mdx)。
+          description: JSON 自动化脚本，详情请参考 [JSON 自动化脚本定义](../../aqara-studio/api-references/json-automation-script)。
           additionalProperties: true
 
     UpdateAutomationRequest:
