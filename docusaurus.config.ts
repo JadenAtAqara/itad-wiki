@@ -47,7 +47,7 @@ const config: Config = {
     mermaid: true,
   },
 
-  themes: ['@docusaurus/theme-mermaid'],
+  themes: ['@docusaurus/theme-mermaid', 'docusaurus-theme-openapi-docs'],
 
   presets: [
     [
@@ -55,6 +55,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
+          docItemComponent: '@theme/ApiItem',
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
@@ -79,6 +80,24 @@ const config: Config = {
 
   // Add local search plugin
   plugins: [
+    [
+      'docusaurus-plugin-openapi-docs',
+      {
+        id: 'openapi',
+        docsPluginId: 'classic',
+        config: {
+          dataExportApi: {
+            specPath: 'openapi/data-export-api.yaml',
+            outputDir: 'versioned_docs/version-Beta/aqara-api/data-export-api',
+            sidebarOptions: {
+              groupPathsBy: 'tag',
+              categoryLinkSource: 'tag',
+              sidebarCollapsed: false,
+            },
+          },
+        },
+      },
+    ],
     [
       '@easyops-cn/docusaurus-search-local',
       {
@@ -106,7 +125,7 @@ const config: Config = {
           position: "left",
           items: [
             { label: "Aqara Studio", to: "docs/aqara-studio/overview/introduction", activeBasePath: "docs/aqara-studio" },
-            { label: "Aqara API", to: "docs/aqara-api/data-export-api", activeBasePath: "docs/aqara-api" },
+            { label: "Aqara API", to: "docs/aqara-api/data-export-api/data-export-api", activeBasePath: "docs/aqara-api" },
           ],
         },
 

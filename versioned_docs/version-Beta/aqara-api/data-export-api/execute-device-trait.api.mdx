@@ -1,0 +1,75 @@
+---
+id: execute-device-trait
+title: "控制设备 / 设备更换房间 / 设备改名"
+description: "通过 trait 执行设备控制，包括："
+sidebar_label: "控制设备 / 设备更换房间 / 设备改名"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "post api-method"
+info_path: versioned_docs/version-Beta/aqara-api/data-export-api/data-export-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"控制设备 / 设备更换房间 / 设备改名"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/devices/trait/execute"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+通过 trait 执行设备控制，包括：
+- 控制设备属性（如开关、温度等）
+- 设备更换房间（functionCode=EndpointLabel, traitCode=EndpointRoom）
+- 设备改名（functionCode=EndpointLabel, traitCode=EndpointName）
+
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["data"],"properties":{"data":{"type":"array","items":{"type":"object","required":["deviceId","endpointId","functionCode","traitCode","value"],"properties":{"deviceId":{"type":"string","description":"设备 ID"},"endpointId":{"type":"integer","description":"端点 ID"},"functionCode":{"type":"string","description":"功能编码，如：\n- Output（开关控制）\n- EndpointLabel（设备改名/更换房间）\n"},"traitCode":{"type":"string","description":"属性编码，如：\n- OnOff（开关）\n- EndpointRoom（设备所在房间）\n- EndpointName（设备名称）\n"},"value":{"description":"要设置的值（推荐按同级 parameter.type 选择值类型）","oneOf":[{"type":"boolean"},{"type":"integer"},{"type":"number","format":"double"},{"type":"string"}],"title":"FlexibleValue"}},"title":"TraitExecuteItem"}}},"title":"TraitExecuteRequest"},"examples":{"executeOnOff":{"value":{"data":[{"deviceId":"123456","endpointId":1,"functionCode":"Output","traitCode":"OnOff","value":true}]}}}}}}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"成功（data 中返回执行失败的条目）","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"type":"array","description":"data集合元素为执行失败的数据","items":{"type":"object","required":["deviceId","endpointId","functionCode","traitCode","code","message"],"properties":{"deviceId":{"type":"string"},"endpointId":{"type":"integer"},"functionCode":{"type":"string"},"traitCode":{"type":"string"},"code":{"type":"integer","description":"错误码"},"message":{"type":"string","description":"错误信息"}},"title":"TraitExecuteResult"}}}}],"example":{"type":"ExecuteTraitResponse","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-000000000009","code":0,"message":"success","data":[{"deviceId":"device-001","endpointId":1,"functionCode":"Output","traitCode":"OnOff","code":1103,"message":"device offline"}]},"title":"TraitExecuteResponse"},"examples":{"partialFailed":{"value":{"type":"ExecuteTraitResponse","version":"v1","msgId":"2df2f431-a58d-4fdb-b39c-4f0d29e7ecf7","code":0,"message":"success","data":[{"deviceId":"123456","endpointId":1,"functionCode":"Output","traitCode":"OnOff","code":1103,"message":"device offline"}]}}}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 xxx 不能为空"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"token 已过期，请重新生成 token"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"无权限访问该资源"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"资源不存在"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"429":{"description":"请求频率过高","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000005","code":429,"message":"请求频率过高"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"服务内部异常"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      
