@@ -74,5 +74,29 @@
   "sidebar.aqaraStudioSidebar.category.Reference": {
     "message": "参考信息",
     "description": "The label for category 'Reference' in sidebar 'aqaraStudioSidebar'"
+  },  
+  "sidebar.aqaraApiSidebar.category.Data Export API": {
+    "message": "数据转出 API",
+    "description": "The label for category 'Data Export API' in sidebar 'aqaraApiSidebar'"
+  },
+  "sidebar.aqaraApiSidebar.category.Auth": {
+    "message": "鉴权",
+    "description": "The label for category 'Auth' in sidebar 'aqaraStudioSidebar'"
+  },
+  "sidebar.aqaraApiSidebar.category.Space": {
+    "message": "空间",
+    "description": "The label for category 'Space' in sidebar 'aqaraStudioSidebar'"
+  },
+  "sidebar.aqaraApiSidebar.category.Device": {
+    "message": "设备",
+    "description": "The label for category 'Device' in sidebar 'aqaraStudioSidebar'"
+  },
+  "sidebar.aqaraApiSidebar.category.Gateway": {
+    "message": "网关",
+    "description": "The label for category 'Gateway' in sidebar 'aqaraStudioSidebar'"
+  },
+  "sidebar.aqaraApiSidebar.category.Automation": {
+    "message": "自动化",
+    "description": "The label for category 'Automation' in sidebar 'aqaraStudioSidebar'"
   }
 }

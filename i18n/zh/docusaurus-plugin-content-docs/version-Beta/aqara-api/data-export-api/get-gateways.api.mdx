@@ -1,0 +1,76 @@
+---
+id: get-gateways
+title: "查询网关列表"
+description: "查询 Aqara Studio 内的所有 Matter 和 Zigbee 网关。"
+sidebar_label: "查询网关列表"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "get api-method"
+info_path: i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-api/data-export-api/data-export-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"查询网关列表"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"get"}
+  path={"/gateways"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+查询 Aqara Studio 内的所有 Matter 和 Zigbee 网关。    
+:::tip
+当前 Zigbee 网关支持接入部分 Zigbee 设备，具体支持的设备型号请参阅 [可接入 Aqara 设备清单](https://docs.aqara.com/zh/docs/aqara-studio/overview/compatible-aqara-devices)。
+
+:::
+
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[{"name":"state","in":"query","description":"网关在线状态。true：在线；false：离线。","required":false,"schema":{"type":"boolean"}},{"name":"protocols","in":"query","description":"协议类型列表。URL 示例：protocols=zigbee,matter 或 protocols=zigbee&protocols=matter","required":false,"schema":{"type":"array","items":{"type":"string","enum":["zigbee","matter"]}},"style":"form","explode":false}]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={undefined}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"请求发起成功","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"type":"array","items":{"type":"object","required":["deviceId","deviceName"],"properties":{"deviceId":{"type":"string","description":"网关设备 ID"},"deviceName":{"type":"string","description":"网关设备名称"},"supportZigbee":{"type":"boolean","description":"是否支持 Zigbee。缺省或 null 表示不支持。"},"supportedMatterRoles":{"type":"integer","description":"支持的 Matter 角色（十进制数值）。缺省或 null 表示不支持。","nullable":true},"space":{"type":"object","required":["parentSpaceId","spaceId","name"],"properties":{"parentSpaceId":{"type":"string","description":"父空间 ID"},"spaceId":{"type":"string","description":"空间 ID"},"name":{"type":"string","description":"空间名称"}},"title":"DeviceSpace","nullable":true,"description":"网关所在空间"}},"title":"GatewayInfo"}}}}],"example":{"type":"GetGatewaysResponse","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-00000000000e","code":0,"message":"success","data":[{"deviceId":"gateway-001","deviceName":"客厅网关M2","supportZigbee":true,"supportedMatterRoles":1}]},"title":"GatewaysResponse"}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 xxx 不能为空"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"token 已过期，请重新生成 token"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"无权限访问该资源"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"资源不存在"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"429":{"description":"请求频率过高","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000005","code":429,"message":"请求频率过高"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"服务内部异常"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      

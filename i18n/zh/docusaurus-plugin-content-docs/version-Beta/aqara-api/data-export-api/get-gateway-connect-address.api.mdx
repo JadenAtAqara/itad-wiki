@@ -1,0 +1,71 @@
+---
+id: get-gateway-connect-address
+title: "查询网关入网服务地址"
+description: "查询网关入网时需要连接的 CoAP 服务地址，以及 Studio 的 mDNS域名与hostId；客户端在发起网关入网前应先调用此接口获取服务地址"
+sidebar_label: "查询网关入网服务地址"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "get api-method"
+info_path: i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-api/data-export-api/data-export-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"查询网关入网服务地址"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"get"}
+  path={"/gateways/connect/address"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+查询网关入网时需要连接的 CoAP 服务地址，以及 Studio 的 mDNS域名与hostId；客户端在发起网关入网前应先调用此接口获取服务地址
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={undefined}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"请求发起成功","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"type":"object","required":["ip","port","mdnsDomain","hostId"],"properties":{"ip":{"type":"string","description":"CoAP服务IP地址","example":"192.168.1.100"},"port":{"type":"integer","description":"CoAP 服务端口号","example":5684},"mdnsDomain":{"type":"string","description":"mDNS 域名","example":"http://192.168.1.100:8080"},"hostId":{"type":"string","description":"Studio（宿主）实例标识","example":"studio-a1b2c3d4e5f6"}},"title":"GatewayConnectAddressData"}}}],"example":{"type":"GatewayConnectAddressResponse","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-00000000000f","code":0,"message":"success","data":{"ip":"192.168.1.100","port":5684,"mdnsDomain":"http://192.168.1.100:8080","hostId":"studio-a1b2c3d4e5f6"}},"title":"GatewayConnectAddressResponse"},"examples":{"success":{"value":{"type":"GatewayConnectAddressResponse","version":"v1","msgId":"2df2f431-a58d-4fdb-b39c-4f0d29e7ecf0","code":0,"message":"success","data":{"ip":"192.168.1.100","port":5684,"mdnsDomain":"http://192.168.1.100:8080","hostId":"studio-a1b2c3d4e5f6"}}}}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 xxx 不能为空"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"token 已过期，请重新生成 token"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"无权限访问该资源"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"资源不存在"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"429":{"description":"请求频率过高","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000005","code":429,"message":"请求频率过高"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"服务内部异常"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      

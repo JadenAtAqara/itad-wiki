@@ -1,0 +1,71 @@
+---
+id: get-trait-values
+title: "查询 Trait 值"
+description: "批量查询指定 trait 的当前值。"
+sidebar_label: "查询 Trait 值"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "post api-method"
+info_path: i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-api/data-export-api/data-export-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"查询 Trait 值"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/devices/trait/read"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+批量查询指定 trait 的当前值。
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"required":true,"content":{"application/json":{"schema":{"type":"object","properties":{"data":{"type":"array","items":{"type":"object","required":["deviceId","endpointId","functionCode","traitCodes"],"properties":{"deviceId":{"type":"string","description":"设备 ID"},"endpointId":{"type":"integer","description":"端点 ID"},"functionCode":{"type":"string","description":"功能编码"},"traitCodes":{"type":"array","description":"待查询的功能点代码列表","items":{"type":"string"}}},"title":"TraitValueQuery"}}},"title":"TraitReadRequest"},"examples":{"readTraits":{"value":{"data":[{"deviceId":"123456","endpointId":1,"functionCode":"Output","traitCodes":["OnOff"]}]}}}}}}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"请求发起成功","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"type":"array","items":{"type":"object","required":["deviceId","endpointId","functionCode","traitCode","value","time"],"properties":{"deviceId":{"type":"string","description":"设备 ID"},"endpointId":{"type":"integer","description":"端点 ID"},"functionCode":{"type":"string","description":"功能编码"},"traitCode":{"type":"string","description":"功能点代码"},"value":{"description":"当前值。类型与 trait 的 parameter.type 的值保持一致。","oneOf":[{"type":"boolean"},{"type":"integer"},{"type":"number","format":"double"},{"type":"string"}],"title":"FlexibleValue"},"time":{"type":"integer","format":"int64","description":"值更新时间（毫秒级 UTC 时间戳）"}},"title":"TraitValueResult"}}}}],"example":{"type":"GetTraitValueResponse","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-00000000000d","code":0,"message":"success","data":[{"deviceId":"device-001","endpointId":1,"functionCode":"Output","traitCode":"OnOff","value":true,"time":1710001234567}]},"title":"TraitValueResponse"},"examples":{"traitValueSuccess":{"value":{"type":"GetTraitValueResponse","version":"v1","msgId":"2df2f431-a58d-4fdb-b39c-4f0d29e7ecf8","code":0,"message":"success","data":[{"deviceId":"123456","endpointId":1,"functionCode":"Output","traitCode":"OnOff","value":true,"time":1710001234567}]}}}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 xxx 不能为空"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"token 已过期，请重新生成 token"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"无权限访问该资源"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"资源不存在"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"429":{"description":"请求频率过高","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000005","code":429,"message":"请求频率过高"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"服务内部异常"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      
