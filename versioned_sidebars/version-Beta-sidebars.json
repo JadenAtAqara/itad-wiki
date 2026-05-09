@@ -242,22 +242,26 @@
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/get-public-key",
-              "label": "Gat Public Key"
+              "label": "Gat Public Key",
+              "className": "api-method get"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/login",
-              "label": "Login"
+              "label": "Login",
+              "className": "api-method post"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/refresh-token",
-              "label": "Refresh Token"
+              "label": "Refresh Token",
+              "className": "api-method post"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/logout",
-              "label": "Logout"
+              "label": "Logout",
+              "className": "api-method post"
             }
           ]
         },
@@ -273,7 +277,8 @@
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/get-spaces",
-              "label": "Get Spaces"
+              "label": "Get Spaces",
+              "className": "api-method get"
             }
           ]
         },
@@ -289,37 +294,44 @@
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/get-device-types",
-              "label": "Get Device Types"
+              "label": "Get Device Types",
+              "className": "api-method get"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/get-devices",
-              "label": "Get Devices"
+              "label": "Get Devices",
+              "className": "api-method get"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/get-device-definitions",
-              "label": "Get Device Definitions"
+              "label": "Get Device Definitions",
+              "className": "api-method get"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/execute-device-trait",
-              "label": "Execute Device Trait"
+              "label": "Execute Device Trait",
+              "className": "api-method post"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/get-trait-values",
-              "label": "Get Trait Values"
+              "label": "Get Trait Values",
+              "className": "api-method post"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/execute-device-command",
-              "label": "Execute Device Command"
+              "label": "Execute Device Command",
+              "className": "api-method post"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/unbind-device",
-              "label": "Unbind Device"
+              "label": "Unbind Device",
+              "className": "api-method post"
             }
           ]
         },
@@ -335,37 +347,44 @@
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/get-gateways",
-              "label": "Get Gateways"
+              "label": "Get Gateways",
+              "className": "api-method get"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/get-gateway-connect-address",
-              "label": "Get Gateway Connect Address"
+              "label": "Get Gateway Connect Address",
+              "className": "api-method get"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/connect-gateways",
-              "label": "Connect Gateways"
+              "label": "Connect Gateways",
+              "className": "api-method post"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/join-subdevice",
-              "label": "Join Subdevice"
+              "label": "Join Subdevice",
+              "className": "api-method post"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/stop-subdevice-join",
-              "label": "Stop Subdevice Join"
+              "label": "Stop Subdevice Join",
+              "className": "api-method post"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/get-gateway-connect-result",
-              "label": "Get Gateway Connect Result"
+              "label": "Get Gateway Connect Result",
+              "className": "api-method get"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/get-device-bind-result",
-              "label": "Get Device Bind Result"
+              "label": "Get Device Bind Result",
+              "className": "api-method post"
             }
           ]
         },
@@ -381,37 +400,44 @@
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/get-automation-capabilities",
-              "label": "Get Automation Capabilities"
+              "label": "Get Automation Capabilities",
+              "className": "api-method get"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/create-automation",
-              "label": "Create Automation"
+              "label": "Create Automation",
+              "className": "api-method post"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/query-automation-list",
-              "label": "Query Automation List"
+              "label": "Query Automation List",
+              "className": "api-method get"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/query-automation-details",
-              "label": "Query Automation Details"
+              "label": "Query Automation Details",
+              "className": "api-method get"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/update-automation",
-              "label": "Update Automation"
+              "label": "Update Automation",
+              "className": "api-method patch"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/update-automation-status",
-              "label": "Update Automation Status"
+              "label": "Update Automation Status",
+              "className": "api-method post"
             },
             {
               "type": "doc",
               "id": "aqara-api/data-export-api/delete-automations",
-              "label": "Delete Automations"
+              "label": "Delete Automations",
+              "className": "api-method post"
             }
           ]
         }
