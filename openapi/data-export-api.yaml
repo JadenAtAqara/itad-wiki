@@ -1487,6 +1487,7 @@ paths:
     post:
       tags: [Automation]
       summary: 删除自动化
+      description: 批量删除多个自动化。
       operationId: deleteAutomations
       x-skill-intent: automation.delete
       x-idempotent: true
