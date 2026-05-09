@@ -1287,6 +1287,7 @@ paths:
     get:
       tags: [Automation]
       summary: 查询自动化列表
+      description: 查询自动化列表，支持通过自动化类型、排序方式、分页等参数进行筛选和检索。
       operationId: queryAutomationList
       x-skill-intent: automation.list
       x-idempotent: true
@@ -1296,7 +1297,17 @@ paths:
         - in: query
           name: definitionType
           required: false
-          description: 自动化定义类型过滤集合（仅用于列表查询过滤）。支持 SCRIPT_JSON、SCRIPT_TEXT、WHEN_IF_THEN、LEGACY_FLOW、LEGACY_LINKAGE、OTHER。URL 示例：definitionType=SCRIPT_JSON,LEGACY_FLOW 或 definitionType=SCRIPT_JSON&definitionType=LEGACY_FLOW。不传或空值时查询全部类型。创建自动化仅支持 SCRIPT_JSON；编辑自动化中 name/enabled 支持所有可识别自动化类型，config 仅支持 SCRIPT_JSON
+          description: |
+            自动化类型列表。    
+            支持如下值：
+            SCRIPT_JSON：通过 API 创建的 Flow 自动化。  
+            SCRIPT_TEXT：通过 Aqara Studio Web 页面创建的 Flow 自动化。  
+            WHEN_IF_THEN：IFTTT 自动化。  
+            LEGACY_FLOW：Flow 自动化（旧版）。  
+            LEGACY_LINKAGE：Logic 自动化。  
+            OTHER：其他自动化类型。    
+            示例：definitionType=SCRIPT_JSON,LEGACY_FLOW 或 definitionType=SCRIPT_JSON&definitionType=LEGACY_FLOW。    
+            不传或空值时查询全部类型。
           schema:
             type: array
             items:
@@ -1307,7 +1318,10 @@ paths:
         - in: query
           name: orderBy
           required: false
-          description: 排序方式
+          description: |
+            排序方式。支持如下值：
+            - createTime asc：按创建时间升序；
+            - createTime desc：按创建时间降序。
           schema:
             type: string
             default: createTime asc
@@ -1315,12 +1329,14 @@ paths:
           example: createTime asc
         - in: query
           name: pageNum
+          description: 页码
           required: false
           schema:
             type: integer
             default: 1
         - in: query
           name: pageSize
+          description: 每页条数
           required: false
           schema:
             type: integer
@@ -1352,6 +1368,7 @@ paths:
     get:
       tags: [Automation]
       summary: 查询自动化详情
+      description: 查询自动化详情，支持通过自动化 ID 查询自动化详情。
       operationId: queryAutomationDetails
       x-skill-intent: automation.details
       x-idempotent: true
@@ -1363,7 +1380,7 @@ paths:
           required: true
           schema:
             type: string
-          description: 自动化ID
+          description: 自动化 ID。
       responses:
         '200':
           description: 请求发起成功
@@ -1386,6 +1403,11 @@ paths:
     patch:
       tags: [Automation]
       summary: 编辑自动化
+      description: |
+        编辑自动化名称、启用状态、配置等。
+        :::tip
+        您可以编辑所有自动化的名称和启用状态，但是只能编辑 SCRIPT_JSON 自动化的配置。
+        :::
       operationId: updateAutomation
       x-skill-intent: automation.update
       x-idempotent: false
@@ -1394,6 +1416,7 @@ paths:
       parameters:
         - in: path
           name: automationId
+          description: 自动化 ID。
           required: true
           schema:
             type: string
@@ -1427,6 +1450,7 @@ paths:
     post:
       tags: [Automation]
       summary: 批量更新自动化状态
+      description: 一次性更新多个自动化的启用状态。
       operationId: updateAutomationStatus
       x-skill-intent: automation.update_status
       x-idempotent: false
@@ -2896,17 +2920,24 @@ components:
       properties:
         automationId:
           type: string
-          description: 自动化 ID
+          description: 自动化 ID。
         name:
           type: string
-          description: 自动化名称
+          description: 自动化名称。
         enabled:
           type: boolean
-          description: 自动化是否启用
+          description: 是否启用。true：启用；false：禁用。
         definitionType:
           type: string
           enum: [SCRIPT_JSON, SCRIPT_TEXT, WHEN_IF_THEN, LEGACY_FLOW, LEGACY_LINKAGE, OTHER]
-          description: 自动化定义类型
+          description: |
+            自动化类型，说明如下：
+            - SCRIPT_JSON：通过 API 创建的 Flow 自动化。  
+            - SCRIPT_TEXT：通过 Aqara Studio Web 页面创建的 Flow 自动化。  
+            - WHEN_IF_THEN：IFTTT 自动化。  
+            - LEGACY_FLOW：Flow 自动化（旧版）。  
+            - LEGACY_LINKAGE：Logic 自动化。  
+            - OTHER：其他自动化类型。
         createTime:
           type: integer
           format: int64
@@ -2920,7 +2951,7 @@ components:
             config:
               type: object
               nullable: true
-              description: 自动化配置（由 definitionType 决定结构）
+              description: 自动化的配置详情。仅当 definitionType 为 SCRIPT_JSON 时会返回具体配置，否则为空对象。
               additionalProperties: true
 
     AutomationListData:
@@ -2929,12 +2960,16 @@ components:
       properties:
         totalCount:
           type: integer
+          description: 满足条件的自动化总数
         pageNum:
           type: integer
+          description: 当前页码
         pageSize:
           type: integer
+          description: 当前页大小
         data:
           type: array
+          description: 自动化列表
           items:
             $ref: '#/components/schemas/AutomationSummary'
 
@@ -2958,17 +2993,22 @@ components:
       properties:
         name:
           type: string
+          description: 新名称。
           nullable: true
         enabled:
           type: boolean
+          description: 新启用状态。true：启用；false：禁用。
           nullable: true
         config:
           type: object
+          description: 新配置。仅适用于 definitionType 为 SCRIPT_JSON 的自动化，其他类型自动化的配置不可编辑。
           nullable: true
           additionalProperties: true
         updateMask:
           type: array
-          description: 可更新字段：name、enabled、config。更新 name 或 enabled 时，支持所有可识别自动化类型；更新 config 时，仅支持 definitionType 为 SCRIPT_JSON 的自动化修改
+          description: |
+            需更新的参数名称列表，仅支持 name、enabled、config。   
+            **注意**：name 和 enabled 适用于所有自动化。config 只适用于 definitionType 为 SCRIPT_JSON 的自动化。 
           items:
             type: string
             enum: [name, enabled, config]
@@ -2979,11 +3019,13 @@ components:
       properties:
         automationIds:
           type: array
+          description: 自动化 ID 列表。
           minItems: 1
           items:
             type: string
         enabled:
           type: boolean
+          description: 新启用状态。true：启用；false：禁用。
 
     DeleteAutomationsRequest:
       type: object
@@ -2991,6 +3033,7 @@ components:
       properties:
         automationIds:
           type: array
+          description: 自动化 ID 列表。
           minItems: 1
           items:
             type: string
@@ -3001,13 +3044,13 @@ components:
       properties:
         automationId:
           type: string
-          description: 处理失败的 automationId
+          description: 自动化 ID。
         code:
           type: integer
-          description: 失败项错误码
+          description: 错误码。
         message:
           type: string
-          description: 失败项错误信息
+          description: 错误信息。
 
     AutomationBatchResultData:
       type: object
@@ -3015,12 +3058,12 @@ components:
       properties:
         successIds:
           type: array
-          description: 批量处理成功的 automationId 列表
+          description: 成功的自动化 ID 列表。
           items:
             type: string
         failedItems:
           type: array
-          description: 批量处理失败项列表
+          description: 失败的自动化对象列表。
           items:
             $ref: '#/components/schemas/AutomationBatchFailure'
 
@@ -3031,7 +3074,7 @@ components:
           properties:
             data:
               type: string
-              description: 创建成功后的 automationId
+              description: 自动化 ID。
 
     UpdateAutomationResponse:
       allOf:
