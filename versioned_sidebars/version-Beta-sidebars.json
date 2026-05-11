@@ -225,10 +225,8 @@
       "label": "Data Export API",
       "collapsed": false,
       "items": [
-        {
-          "type": "doc",
-          "id": "aqara-api/data-export-api/data-export-api"
-        },
+        "aqara-api/data-export-api/introduction",
+        "aqara-api/data-export-api/getting-started-with-the-data-export-api",
         "aqara-api/data-export-api/try-apis-online",        
         {
           "type": "category",

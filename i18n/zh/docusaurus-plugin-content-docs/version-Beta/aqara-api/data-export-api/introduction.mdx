@@ -1,0 +1,34 @@
+# 简介
+
+## 概述
+
+## API 一览
+
+### 空间
+
+| API Endpoint | 功能 | 请求方法 |
+| --- | --- | --- |
+| /spaces | [查询空间列表](./get-spaces.api.mdx) | GET |
+
+### 设备
+
+| API Endpoint | 功能 | 请求方法 |
+| --- | --- | --- |
+| /device-types | [查询设备类型列表](./get-device-types.api.mdx) | GET |
+| /devices | [查设备信息列表](./get-devices.api.mdx) | GET |
+| /devices/definitions | [查询设备详细信息](./get-device-definitions.api.mdx) | GET |
+| /devices/trait/execute | [通过 Trait 控制设备](./execute-device-trait.api.mdx) | POST |
+| /devices/trait/read | [查询 Trait 值](./get-trait-values.api.mdx) | POST |
+| /devices/command/execute | [通过 Command 控制设备](./execute-device-command.api.mdx) | POST |
+
+### 自动化
+
+| API Endpoint | 功能 | 请求方法 |
+| --- | --- | --- |
+| /automations/capabilities | [查询所有支持自动化的设备功能点](./get-automation-capabilities.api.mdx) | GET |
+| /automations | [创建自动化](./create-automation.api.mdx) | POST |
+| /automations | [查询自动化列表](./query-automation-list.api.mdx) | GET |
+| /automations/\<automationId> | [查询自动化详情](./query-automation-details.api.mdx) | GET |
+| /automations/\<automationId> | [编辑自动化](./update-automation.api.mdx) | PATCH |
+| /automations/status | [批量更新自动化状态](./update-automation-status.api.mdx) | POST |
+| /automations/delete | [删除自动化](./delete-automations.api.mdx) | POST |

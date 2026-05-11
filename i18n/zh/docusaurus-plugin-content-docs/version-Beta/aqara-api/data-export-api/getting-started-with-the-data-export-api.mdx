@@ -1,0 +1,317 @@
+# 数据转出 API 入门
+
+本文介绍如何使用 Aqara 数据转出 API。
+
+## 关于数据转出 API 请求
+
+本节介绍组成数据转出 API 请求的各个要素：
+
+- [HTTP 方法](#http-方法)
+- [端点](#端点)
+- [请求头](#请求头)
+- [认证](#认证)
+- [参数](#参数)
+
+每个对 Aqara 数据转出 API 的请求都包含一个 HTTP 方法和一个路径。根据不同的 API 端点，您可能还需要指定请求头、认证信息、查询参数或请求体参数。
+
+Aqara 数据转出 API 参考文档为每个端点详细说明了对应的 HTTP 方法、路径及所需参数，并提供了请求和响应的示例。建议先查阅[概述 - API 一览](./introduction.mdx#api-一览)，快速了解所有可用端点。
+
+### HTTP 方法
+
+端点的 HTTP 方法定义了其在指定资源上执行的操作类型。一些常见的 HTTP 方法包括：`GET`、`POST`、`DELETE` 和 `PATCH`。REST API 参考文档会为每个端点提供 HTTP 方法说明。
+
+例如，[“查询空间列表”端点](./get-spaces.api.mdx) 的 HTTP 方法是 `GET`。
+
+当前 Aqara 数据转出 API 支持以下 HTTP 方法：
+
+- `GET`。
+- `POST`。
+- `PATCH`。
+
+### 端点
+
+每个端点都有一个 [Base URL](#base-url) 和 [路径](#路径)。
+
+#### Base URL
+
+Base URL 是 [Aqara Studio](../../aqara-studio/overview/introduction.mdx) 的访问地址。Base URL 默认为 Aqara Studio 的本机 IP 地址（http）。若您已启用远程访问，则 Base URL 也可为 Aqara Studio 的远程访问地址（https）。请阅读
+
+| | 示例 | 参考文档|
+|---|---|---|
+| 本机 IP 地址 | `http://192.168.1.100` | [Aqara Studio - 开发者指南 - 获取必要信息](../../aqara-studio/developer-guide.mdx#获取必要信息) |
+| 远程访问地址 | `https://xxxxxx.edge-xxx.aqara.com/` | [Aqara Studio - 远程访问](../../aqara-studio/remote-access.mdx) |
+
+#### 路径
+
+Aqara 数据转出 API 参考文档为每个端点提供了路径。例如，[“查询空间列表”端点](./get-spaces.api.mdx) 的路径是 `/open/api/v1/spaces`。
+
+路径中的大括号 `{}` 表示需要您明确指定的路径参数。路径参数用来修改端点路径，并且在您的请求中是必需的。例如，[“列出仓库议题”端点] 的路径参数为 `{owner}` 和 `{repo}`。在请求时，需要将 `{repo}` 替换为您希望请求议题列表的仓库名，将 `{owner}` 替换为拥有该仓库的帐户名。
+
+### 请求头
+
+请求头可为请求和响应提供额外信息。以下是您在调用 GitHub REST API 时可用的一些请求头示例。想要查看包含请求头的请求示例，请参见 [发起请求]()。
+
+
+### 认证
+
+许多端点需要认证，或在认证后的情况下返回更多信息。此外，认证后您每小时可发送的请求数也会增加。
+
+要对请求进行认证，您需要提供具有所需作用域或权限的认证 token。有几种方式获得 token：可以创建个人访问令牌、使用 GitHub App 生成 token，或在 GitHub Actions 工作流中使用内置的 `GITHUB_TOKEN`。详情请参见 [REST API 认证]()。
+
+带认证 token 的请求示例，请参见 [发起请求]()。
+
+> \[!NOTE]
+> 如果您不想创建 token，可以使用 GitHub CLI。CLI 会自动处理认证，帮助您保持帐户安全。更多信息请见 [本页面的 GitHub CLI 版本]()。
+
+> \[!WARNING]
+> 请像保护密码和其他敏感凭证一样妥善保管您的访问令牌。详情参见 [保护 API 凭证安全]()。
+
+虽然某些 REST API 端点无需认证即可访问，但使用 GitHub CLI 下的 `api` 子命令发起 API 请求前必须先进行登录。请使用 `auth login` 子命令认证 GitHub。详情请参见 [发起请求]()。
+
+要对请求进行认证，您需要提供具有所需作用域或权限的认证 token。有几种方式获得 token：可以创建个人访问令牌、使用 GitHub App 生成 token，或在 GitHub Actions 工作流中使用内置的 `GITHUB_TOKEN`。详情请参见 [REST API 认证]()。
+
+带认证 token 的请求示例，请参见 [发起请求]()。
+
+> \[!WARNING]
+> 请像保护密码和其他敏感凭证一样妥善保管您的访问令牌。详情参见 [保护 API 凭证安全]()。
+
+### 参数
+
+许多 API 方法要求或允许您在请求时传递额外参数。参数类型有多种：路径参数、请求体参数和查询参数。
+
+#### 路径参数
+
+路径参数用于修改端点路径，且为必须填写的参数。详情请参见 [路径](#路径)。
+
+#### 请求体参数
+
+请求体参数可以让您向 API 传递额外数据。部分端点必需，部分可选。例如，当创建新议题时可以通过请求体参数指定标题，或在启用/禁用某些功能时指定设置。每个端点的文档会描述其支持的请求体参数。更多信息参见 [GitHub REST API 文档]()。
+
+例如，[“创建议题”端点]() 要求您在请求体中指定新议题的标题，同时还允许可选指定议题内容、分配用户或标签等。含请求体参数的请求示例可见 [发起请求]()。
+
+您必须认证后才能传递请求体参数。更多信息参见 [认证](#认证)。
+
+#### 查询参数
+
+查询参数用于控制请求返回的数据，通常为可选参数。每个端点文档会说明支持哪些查询参数。更多信息参见 [GitHub REST API 文档]()。
+
+例如，[“列出公共事件”端点]() 默认返回 30 条议题。您可以通过 `per_page` 查询参数只返回 2 条，通过 `page` 查询参数只获取第 1 页。含查询参数的请求示例可见 [发起请求]()。
+
+## 使用响应
+
+发起请求后，API 会返回状态码、响应头和（如有）响应体。
+
+### 关于响应码和响应头
+
+每个请求都会返回 HTTP 状态码，指示是否成功。详见 [MDN HTTP 响应状态码文档](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)。
+
+同时，响应中会包含更多描述细节的请求头。以 `X-` 或 `x-` 开头的请求头是 GitHub 自定义的，比如 `x-ratelimit-remaining` 和 `x-ratelimit-reset` 告诉您限流还剩多少请求次数。
+
+想查看状态码和响应头，发送请求时加 `--include` 或 `--i` 参数。
+
+例如，以下命令获取 octocat/Spoon-Knife 仓库议题列表：
+
+```shell
+gh api \
+--header 'Accept: application/vnd.github+json' \
+--method GET /repos/octocat/Spoon-Knife/issues \
+-F per_page=2 --include
+```
+
+返回的响应示例：
+
+```shell
+HTTP/2.0 200 OK
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: ETag, Link, Location, Retry-After, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset
+Cache-Control: private, max-age=60, s-maxage=60
+Content-Security-Policy: default-src 'none'
+Content-Type: application/json; charset=utf-8
+Date: Thu, 04 Aug 2022 19:56:41 GMT
+Etag: W/"a63dfbcfdb73621e9d2e89551edcf9856731ced534bd7f1e114a5da1f5f73418"
+Link: <https://api.github.com/repositories/1300192/issues?per_page=1&page=2>; rel="next", <https://api.github.com/repositories/1300192/issues?per_page=1&page=14817>; rel="last"
+Referrer-Policy: origin-when-cross-origin, strict-origin-when-cross-origin
+Server: GitHub.com
+Strict-Transport-Security: max-age=31536000; includeSubdomains; preload
+Vary: Accept, Authorization, Cookie, Accept-Encoding, Accept, X-Requested-With
+X-Accepted-Oauth-Scopes: repo
+X-Content-Type-Options: nosniff
+X-Frame-Options: deny
+X-Github-Api-Version-Selected: 2022-08-09
+X-Github-Media-Type: github.v3; format=json
+X-Github-Request-Id: 1C73:26D4:E2E500:1EF78F4:62EC2479
+X-Oauth-Client-Id: 178c6fc778ccc68e1d6a
+X-Oauth-Scopes: gist, read:org, repo, workflow
+X-Ratelimit-Limit: 15000
+X-Ratelimit-Remaining: 14996
+X-Ratelimit-Reset: 1659645499
+X-Ratelimit-Resource: core
+X-Ratelimit-Used: 4
+X-Xss-Protection: 0
+```
+
+本案例的响应码为 `200`，表示请求成功。
+
+用 Octokit.js 发起请求时，`request` 方法会返回 Promise。如果请求成功，Promise 返回的对象中包含响应状态码（`status`）和响应头（`headers`）。如果失败，也会包含响应码和 `response.headers`。
+
+可以用 `try/catch` 捕获异常。例如，若成功则打印状态码与 `x-ratelimit-remaining`，失败则打印状态码、剩余限流与错误消息。
+
+下例中，`REPO-OWNER`、`REPO-NAME` 分别替换为仓库所属帐户和仓库名。
+
+```javascript copy
+try {
+  const result = await octokit.request("GET /repos/{owner}/{repo}/issues", {
+    owner: "REPO-OWNER",
+    repo: "REPO-NAME",
+    per_page: 2,
+  });
+
+  console.log(`Success! Status: ${result.status}. Rate limit remaining: ${result.headers["x-ratelimit-remaining"]}`)
+
+} catch (error) {
+  console.log(`Error! Status: ${error.status}. Rate limit remaining: ${error.headers["x-ratelimit-remaining"]}. Message: ${error.response.data.message}`)
+}
+```
+
+想要查看状态码和响应头，请加 `--include` 或 `--i` 选项。
+
+以下例子获取 octocat/Spoon-Knife 仓库议题列表：
+
+```shell
+curl --request GET \
+--url "https://api.github.com/repos/octocat/Spoon-Knife/issues?per_page=2" \
+--header "Accept: application/vnd.github+json" \
+--header "Authorization: Bearer YOUR-TOKEN" \
+--include
+```
+
+返回的响应示例：
+
+```shell
+HTTP/2 200
+server: GitHub.com
+date: Thu, 04 Aug 2022 20:07:51 GMT
+content-type: application/json; charset=utf-8
+cache-control: public, max-age=60, s-maxage=60
+vary: Accept, Accept-Encoding, Accept, X-Requested-With
+etag: W/"7fceb7e8c958d3ec4d02524b042578dcc7b282192e6c939070f4a70390962e18"
+x-github-media-type: github.v3; format=json
+link: <https://api.github.com/repositories/1300192/issues?per_page=2&sort=updated&direction=asc&page=2>; rel="next", <https://api.github.com/repositories/1300192/issues?per_page=2&sort=updated&direction=asc&page=7409>; rel="last"
+access-control-expose-headers: ETag, Link, Location, Retry-After, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset
+access-control-allow-origin: *
+strict-transport-security: max-age=31536000; includeSubdomains; preload
+x-frame-options: deny
+x-content-type-options: nosniff
+x-xss-protection: 0
+referrer-policy: origin-when-cross-origin, strict-origin-when-cross-origin
+content-security-policy: default-src 'none'
+x-ratelimit-limit: 15000
+x-ratelimit-remaining: 14996
+x-ratelimit-reset: 1659645535
+x-ratelimit-resource: core
+x-ratelimit-used: 4
+accept-ranges: bytes
+content-length: 4936
+x-github-request-id: 14E0:4BC6:F1B8BA:208E317:62EC2715
+```
+
+这里响应码为 `200`，表示成功。
+
+### 关于响应体
+
+大多数端点会返回响应体，除非另有说明，均为 JSON 格式。空字段会以 `null` 表示，而非省略。所有时间戳均为 UTC 时间，格式为 ISO 8601，例如：`YYYY-MM-DDTHH:MM:SSZ`。
+
+与 GraphQL API 只返回你请求的数据不同，REST API 通常会返回比你需要的更多数据。如需，可以自行解析以提取需要的信息。
+
+例如，可以用 `>` 重定向响应结果至文件。下例中将 `REPO-OWNER`、`REPO-NAME` 替换为仓库所属帐户和名称。
+
+```shell copy
+gh api \
+--header 'Accept: application/vnd.github+json' \
+--method GET /repos/REPO-OWNER/REPO-NAME/issues \
+-F per_page=2 > data.json
+```
+
+然后用 jq 提取议题的标题和作者 ID：
+
+```shell copy
+jq '.[] | {title: .title, authorID: .user.id}' data.json
+```
+
+上述两步返回如下类似内容：
+
+```json
+{
+  "title": "Update index.html",
+  "authorID": 10701255
+}
+{
+  "title": "Edit index file",
+  "authorID": 53709285
+}
+```
+
+jq 详细文档见 [jq 官网](https://stedolan.github.io/jq/)。
+
+可以直接获取议题的标题和作者 ID。下例将 `REPO-OWNER`、`REPO-NAME` 替换为实际仓库名。
+
+```javascript copy
+try {
+  const result = await octokit.request("GET /repos/{owner}/{repo}/issues", {
+    owner: "REPO-OWNER",
+    repo: "REPO-NAME",
+    per_page: 2,
+  });
+
+  const titleAndAuthor = result.data.map(issue => {title: issue.title, authorID: issue.user.id})
+
+  console.log(titleAndAuthor)
+
+} catch (error) {
+  console.log(`Error! Status: ${error.status}. Message: ${error.response.data.message}`)
+}
+```
+
+
+同样可用 `>` 将响应写入文件，下例请替换 `REPO-OWNER` 和 `REPO-NAME`：
+
+```shell copy
+curl --request GET \
+--url "https://api.github.com/repos/REPO-OWNER/REPO-NAME/issues?per_page=2" \
+--header "Accept: application/vnd.github+json" \
+--header "Authorization: Bearer YOUR-TOKEN" > data.json
+```
+
+然后用 jq 提取议题标题和作者 ID：
+
+```shell copy
+jq '.[] | {title: .title, authorID: .user.id}' data.json
+```
+
+得到如下：
+
+```json
+{
+  "title": "Update index.html",
+  "authorID": 10701255
+}
+{
+  "title": "Edit index file",
+  "authorID": 53709285
+}
+```
+
+jq 详细资料见 [jq 官网](https://stedolan.github.io/jq/)。
+
+#### 详细和摘要表示
+
+响应内容可能包含资源的全部属性，也可能仅包含一部分属性，取决于你请求单个资源还是资源列表。
+
+* 请求 *单个资源*（如某仓库）时，一般返回所有属性，即“详细”表示。
+* 请求 *资源列表* 时，只返回每个资源部分属性，即“摘要”表示。
+
+授权也会影响返回的数据详细程度。
+
+这样设计是因为某些属性计算开销较大，在摘要中省略，若需这些数据可再请求详细信息。
+
+每个 API 方法文档中都包括示例响应，详细说明返回的全部属性。
