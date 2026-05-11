@@ -1014,13 +1014,160 @@
         "body": null
       },
       "response": {
-        "type": "response",
+        "type": "QueryAutomationCapabilitiesResponse",
         "version": "v1",
-        "msgId": "a1b2c3d4-e5f6-7890-abcd-000000000019",
+        "msgId": "52ebd835-1b8d-48f7-ab30-741d7c1ae0ee",
         "code": 0,
         "message": "success",
         "data": {
-          "devices": []
+          "devices": [
+            {
+              "deviceId": "lumi3.a61fca0f4da1a0bd",
+              "deviceName": "Edge Hub M300",
+              "endpoints": [
+                {
+                  "endpointName": "Root",
+                  "endpointId": 1,
+                  "properties": [
+                    {
+                      "deviceType": "Root",
+                      "functionCode": "GeneralDiagnostics",
+                      "functionName": "GeneralDiagnostics",
+                      "traitCode": "AntiDeletionNotification",
+                      "traitName": "Accidental Deletion Prevention notification (child device)",
+                      "valueType": "event",
+                      "semanticRole": [
+                        "starter"
+                      ],
+                      "valueRange": {
+                        "enumRange": [
+                          {
+                            "value": "1",
+                            "key": "trigger"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "endpointName": "Edge Hub M300",
+                  "endpointId": 2,
+                  "properties": [
+                    {
+                      "deviceType": "Hub",
+                      "functionCode": "Speaker",
+                      "functionName": "Speaker",
+                      "traitCode": "Volume",
+                      "traitName": "volume",
+                      "valueType": "number",
+                      "semanticRole": [
+                        "starter",
+                        "condition",
+                        "action"
+                      ],
+                      "unit": "%",
+                      "valueRange": {
+                        "max": 100.0,
+                        "min": 0.0
+                      }
+                    },
+                    {
+                      "deviceType": "Hub",
+                      "functionCode": "Ringtone",
+                      "functionName": "Ringtone",
+                      "traitCode": "RingtonePlayStatus",
+                      "traitName": "Ringtone play status",
+                      "valueType": "enum",
+                      "semanticRole": [
+                        "starter",
+                        "condition",
+                        "action"
+                      ],
+                      "valueRange": {
+                        "enumRange": [
+                          {
+                            "value": "0",
+                            "key": "Stop"
+                          },
+                          {
+                            "value": "1",
+                            "key": "Play"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "deviceId": "lumi.54ef4410016bf62f",
+              "deviceName": "臻彩光筒射灯 H1",
+              "endpoints": [
+                {
+                  "endpointName": "Light",
+                  "endpointId": 2,
+                  "properties": [
+                    {
+                      "deviceType": "Light",
+                      "functionCode": "Output",
+                      "functionName": "Switch function",
+                      "traitCode": "OnOff",
+                      "traitName": "On/Off",
+                      "valueType": "boolean",
+                      "semanticRole": [
+                        "starter",
+                        "condition",
+                        "action"
+                      ],
+                      "valueRange": {
+                        "enumRange": [
+                          {
+                            "value": "true",
+                            "key": "On"
+                          },
+                          {
+                            "value": "false",
+                            "key": "Off"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "deviceType": "Light",
+                      "functionCode": "Output",
+                      "functionName": "Switch function",
+                      "commandCode": "Toggle",
+                      "commandName": "On/off",
+                      "valueType": "cmd",
+                      "semanticRole": [
+                        "action"
+                      ]
+                    },
+                    {
+                      "deviceType": "Light",
+                      "functionCode": "LevelControl",
+                      "functionName": "Brightness Control",
+                      "traitCode": "CurrentLevel",
+                      "traitName": "Brightness",
+                      "valueType": "number",
+                      "semanticRole": [
+                        "starter",
+                        "condition",
+                        "action"
+                      ],
+                      "unit": "%",
+                      "valueRange": {
+                        "max": 100.0,
+                        "min": 1.0
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       }
     },
