@@ -76,7 +76,7 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-api/data-export-api/get-devices",
-          label: "查设备信息列表",
+          label: "查询设备信息列表",
           className: "api-method get",
         },
         {
@@ -176,7 +176,7 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-api/data-export-api/get-automation-capabilities",
-          label: "查询所有支持自动化的设备功能点",
+          label: "查询支持自动化的端点能力列表",
           className: "api-method get",
         },
         {

@@ -337,7 +337,7 @@ paths:
   /devices:
     get:
       tags: [Device]
-      summary: 查设备信息列表
+      summary: 查询设备信息列表
       description: 获取指定空间下的设备列表，支持分页和过滤条件。
       operationId: getDevices
       x-skill-intent: device.list
@@ -1210,8 +1210,8 @@ paths:
   /automations/capabilities:
     get:
       tags: [Automation]
-      summary: 查询所有支持自动化的设备功能点
-      description: 获取所有设备中可用于创建 Flow 自动化的功能点信息。返回内容包括各功能点的值类型、单位，以及其在自动化流程中的适用环节（如可作为触发器、条件或操作）。
+      summary: 查询支持自动化的端点能力列表
+      description: 获取所有设备中可用于创建 Flow 自动化的端点能力列表。返回内容包括各端点的值类型、单位，以及其在自动化流程中的适用环节（如可作为触发器、条件或操作）。
       operationId: getAutomationCapabilities
       x-skill-intent: automation.capabilities
       x-idempotent: true
@@ -1295,7 +1295,7 @@ paths:
       x-side-effects: none
       parameters:
         - in: query
-          name: definitionType
+          name: definitionTypes
           required: false
           description: |
             自动化类型列表。    
@@ -1306,7 +1306,7 @@ paths:
             LEGACY_FLOW：Flow 自动化（旧版）。  
             LEGACY_LINKAGE：Logic 自动化。  
             OTHER：其他自动化类型。    
-            示例：definitionType=SCRIPT_JSON,LEGACY_FLOW 或 definitionType=SCRIPT_JSON&definitionType=LEGACY_FLOW。    
+            示例：definitionTypes=SCRIPT_JSON,LEGACY_FLOW 或 definitionTypes=SCRIPT_JSON&definitionTypes=LEGACY_FLOW。    
             不传或空值时查询全部类型。
           schema:
             type: array
