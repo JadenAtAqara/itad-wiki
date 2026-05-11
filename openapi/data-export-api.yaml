@@ -24,7 +24,7 @@ servers:
           例如：
           - http://10.11.50.56
           - https://xxx.edge-xxx.aqara.com/
-        default: 'http://<Local-LAN-IP>'
+        default: '<Aqarar_Studio_URL>'
 
 # 全局安全：除 /login/pubkey、/login 外均需 Bearer Token
 security:
@@ -3126,6 +3126,140 @@ components:
         - type: object
           properties:
             data:
-              type: object
-              nullable: true
-              additionalProperties: true
+              $ref: '#/components/schemas/AutomationCapabilitiesData'
+      example:
+        type: QueryAutomationCapabilitiesResponse
+        version: v1
+        msgId: "52ebd835-1b8d-48f7-ab30-741d7c1ae0ee"
+        code: 0
+        message: success
+        data:
+          devices:
+            - deviceId: "lumi3.a61fca0f4da1a0bd"
+              deviceName: "Edge Hub M300"
+              endpoints:
+                - endpointName: "Root"
+                  endpointId: 1
+                  properties:
+                    - deviceType: "Root"
+                      functionCode: "GeneralDiagnostics"
+                      functionName: "GeneralDiagnostics"
+                      traitCode: "AntiDeletionNotification"
+                      traitName: "Accidental Deletion Prevention notification (child device)"
+                      valueType: "event"
+                      semanticRole: ["starter"]
+                      valueRange:
+                        enumRange:
+                          - value: "1"
+                            key: "trigger"
+
+    AutomationCapabilitiesData:
+      type: object
+      nullable: true
+      properties:
+        devices:
+          type: array
+          description: 可用于自动化编排的设备能力列表
+          items:
+            $ref: '#/components/schemas/AutomationCapabilityDevice'
+
+    AutomationCapabilityDevice:
+      type: object
+      required: [deviceId, deviceName, endpoints]
+      properties:
+        deviceId:
+          type: string
+          description: 设备ID
+        deviceName:
+          type: string
+          description: 设备名称
+        endpoints:
+          type: array
+          description: 设备端点列表
+          items:
+            $ref: '#/components/schemas/AutomationCapabilityEndpoint'
+
+    AutomationCapabilityEndpoint:
+      type: object
+      required: [endpointName, endpointId, properties]
+      properties:
+        endpointName:
+          type: string
+          description: 端点名称
+        endpointId:
+          type: integer
+          description: 端点ID
+        properties:
+          type: array
+          description: 端点可用能力列表（功能点/事件/命令）
+          items:
+            $ref: '#/components/schemas/AutomationCapabilityProperty'
+
+    AutomationCapabilityProperty:
+      type: object
+      required: [deviceType, functionCode, functionName, valueType, semanticRole]
+      properties:
+        deviceType:
+          type: string
+          description: 设备类型
+        functionCode:
+          type: string
+          description: 功能编码
+        functionName:
+          type: string
+          description: 功能名称
+        traitCode:
+          type: string
+          description: 功能点代码（valueType 非 cmd 时常见）
+        traitName:
+          type: string
+          description: 功能点名称
+        commandCode:
+          type: string
+          description: 命令编码（valueType 为 cmd 时常见）
+        commandName:
+          type: string
+          description: 命令名称
+        valueType:
+          type: string
+          description: 值类型（如 boolean/number/enum/event/cmd）
+        semanticRole:
+          type: array
+          description: 自动化环节角色
+          items:
+            type: string
+            enum: [starter, condition, action]
+        unit:
+          type: string
+          description: 单位（如 %, °C, lx 等）
+        valueRange:
+          $ref: '#/components/schemas/AutomationCapabilityValueRange'
+
+    AutomationCapabilityValueRange:
+      type: object
+      description: 数值范围或枚举范围
+      properties:
+        min:
+          type: number
+          format: double
+          description: 最小值
+        max:
+          type: number
+          format: double
+          description: 最大值
+        enumRange:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationCapabilityEnumItem'
+
+    AutomationCapabilityEnumItem:
+      type: object
+      description: 枚举范围
+      required: [value, key]
+      properties:
+        value:
+          type: string
+          description: 枚举值（接口返回中通常为字符串）
+        key:
+          type: string
+          description: 枚举显示文案
