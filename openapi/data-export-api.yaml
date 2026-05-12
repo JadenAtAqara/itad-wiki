@@ -16,7 +16,7 @@ info:
 
 servers:
   - url: '{host}/open/api/v1'
-    description: Data Export API Endpoint
+    description: 数据转出 API 端点
     variables:
       host:
         description: |
