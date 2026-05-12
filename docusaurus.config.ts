@@ -105,6 +105,17 @@ const config: Config = {
         language: ['en', 'zh'],
       },
     ],
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [
+          {
+            from: '/docs/aqara-studio/device-management/alarms',
+            to: '/docs/aqara-studio/alarm-management',
+          },
+        ],
+      },
+    ],
   ],
 
   themeConfig: {
