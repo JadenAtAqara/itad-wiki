@@ -153,12 +153,13 @@
             "label": "Settings",
             "collapsed": false,
             "items": [
+              "aqara-studio/wireless-connection",
                 "aqara-studio/cloud",  
                 "aqara-studio/remote-access",
                 "aqara-studio/system-update",
                 "aqara-studio/technical-support",
                 "aqara-studio/local-domain-name-access",
-                "aqara-studio/wireless-connection"
+                "aqara-studio/static-ip"
               ]
           }
         ]      
