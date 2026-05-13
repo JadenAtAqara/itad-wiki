@@ -8,41 +8,6 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "Auth",
-      link: {
-        type: "doc",
-        id: "version-Beta/aqara-api/data-export-api/auth",
-      },
-      collapsed: false,
-      items: [
-        {
-          type: "doc",
-          id: "version-Beta/aqara-api/data-export-api/get-public-key",
-          label: "获取临时 RSA 公钥",
-          className: "api-method get",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-api/data-export-api/login",
-          label: "登录",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-api/data-export-api/refresh-token",
-          label: "刷新 Token",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-api/data-export-api/logout",
-          label: "登出",
-          className: "api-method post",
-        },
-      ],
-    },
-    {
-      type: "category",
       label: "Space",
       link: {
         type: "doc",
@@ -101,65 +66,6 @@ const sidebar: SidebarsConfig = {
           type: "doc",
           id: "version-Beta/aqara-api/data-export-api/execute-device-command",
           label: "通过 Command 控制设备",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-api/data-export-api/unbind-device",
-          label: "设备解绑",
-          className: "api-method post",
-        },
-      ],
-    },
-    {
-      type: "category",
-      label: "Gateway",
-      link: {
-        type: "doc",
-        id: "version-Beta/aqara-api/data-export-api/gateway",
-      },
-      collapsed: false,
-      items: [
-        {
-          type: "doc",
-          id: "version-Beta/aqara-api/data-export-api/get-gateways",
-          label: "查询网关列表",
-          className: "api-method get",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-api/data-export-api/get-gateway-connect-address",
-          label: "查询网关入网服务地址",
-          className: "api-method get",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-api/data-export-api/connect-gateways",
-          label: "网关入网",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-api/data-export-api/join-subdevice",
-          label: "子设备入网",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-api/data-export-api/stop-subdevice-join",
-          label: "子设备停止入网",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-api/data-export-api/get-gateway-connect-result",
-          label: "查询网关入网结果",
-          className: "api-method get",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-api/data-export-api/get-device-bind-result",
-          label: "查询子设备入网结果",
           className: "api-method post",
         },
       ],
