@@ -12,206 +12,161 @@ Aqara Studio offers complete alarm monitoring and management features. It comes 
   - When the instantaneous device power drops below 10W, a "Low Power Abnormal Alarm" is triggered.
   - When the device is in "Night Mode" and a motion signal is detected, a "Night Intrusion Alarm" is triggered.
 
-In addition, the Alarm Center in Aqara Studio centrally presents the latest 10,000 alarms, covering critical information such as alarm events, types, sources, and states for unified viewing and management by users.
+## Check Alarm Information
 
-## Alarm Classes
+You can view alarm information on the **Alarm Center > Alarm Information** page. This page displays key details such as the level, source, data, and status of alarm events, making it convenient for users to view and manage alarms in a unified way.
 
-Alarms can be divided into two classes: system default alarms and custom function point alarms:
+![View Alarm Information](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Alarms-CheckAlarms.png)
 
-| Dimension | System Default Alarm                | Custom Function Point Alarm                                                                |
+### Alarm Classes
+
+Alarms can be divided into two classes: **default alarms** and **custom alarms**:
+
+| Dimension | Default Alarm                | Custom Alarm                                                                |
 | --------- | ----------------------------------- | ----------------------------------------------------------------------------------------- |
-| Meaning   | Alarm for basic operational status of the device. | Alarms based on device function points (such as temperature, humidity, battery, etc.).    |
-| Name      | Device Alarm Class                  | <ul><li>Normal</li><li>Urgent</li><li>Important</li><li>Other names customized by users</li></ul>   |
+| Meaning | Alarms for protocol communication failures and device offline events. | [User-defined alarms for specific device function points](#配置告警规则). |
+| Alarm Level | <ul><li><strong>Critical</strong>: Protocol communication failure</li><li><strong>Warning</strong>: Device offline</li></ul> | Users can customize alarm levels: **Critical**, **Warning**, **Info**. |
 | Configured by | Aqara Studio                   | User                                                                                      |
 | Configurability | Not modifiable                | Creatable, modifiable, deletable                                                          |
 | Trigger Condition | Communication errors, and device offline | Device function point value meets user-defined alarm rule                                 |
 
 :::tip
-System default alarms are used to ensure the basic availability of the platform and devices; these rules are maintained by the system and cannot be modified or deleted by users.
+Default alarms are used to ensure the basic availability of the platform and devices; these rules are maintained by the system, and cannot be modified or deleted by users.
 :::
 
-### Function Point Alarm Configuration
+### Custom Alarm Information Table
 
-Alarm management includes configuring and customizing alarm rules for device function points, enabling real-time monitoring and timely response to abnormal states.
+To filter columns in the alarm information table, click the ⚙ icon. In the **Custom table columns** popup, select the fields you want to display, then click the **Confirm** button to apply your settings:
 
+![Click the gear icon](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Alarms-ClickGear.png)
 
-1. Go to the **Devices** page. In the device tree on the left, find the function point you want to view.
-2. Select this point to view **Device details** tab.
-3. Find the **Alarm config** section and click the **+** button.
-4. In the popup, set the following parameters:
+### Alarm Details
 
-    | Parameter         | Description                                                                                      |
-    |------------------|--------------------------------------------------------------------------------------------------|
-    | Source Name      | The custom name of the alarm.                                                                    |
-    | Alarm Value      | The value that triggers the alarm. For boolean function points, this is a single-choice parameter. For enum function points, you can select multiple values.  |
-    | Alarm Class       | Alarm level. Options include Normal, Urgent, Important, or you can set a custom type.            |
-    | Delay Time       | The system will only send an alarm to the user if the function point stays abnormal for this period. This helps to avoid false alarms caused by short fluctuations.  |
-    | Normal Delay Time| After the function point leaves the alarm state, it must stay normal for this period to be considered recovered. This prevents frequent reminders due to temporary changes. |
-    | To Off Normal Text | The message shown to the user when the alarm is triggered.                                        |
-    | To Normal Text | The message shown to the user after recovery.                                                     |
+In the alarm information table, find any alarm and click **... > Details** to view the detailed information for the alarm, including [basic information](#basic-information) and [alarm history](#alarm-history).
 
-    The diagram below illustrates the effect of delay time, normal delay time, user confirmation of alarms, and the status of alarm rule activation on the overall alarm timeline:
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Alarms-Details.png" alt="Alarm Details" />
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/alarm-status.png" alt="Alarm State Timeline" />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Alarms-DetailsPopup.png" alt="Alarm Detail Popup" style={{width: '80%'}} />
 
-    For numeric function points, there are also these parameters:
+#### Basic Information
 
-    | Parameter         | Description                                                                 |
-    |-------------------|-----------------------------------------------------------------------------|
-    | Limit Enabled     | Choose to enable the lower limit, upper limit, or both.                      |
-    | Low Limit       | The lowest allowed normal value. When the device reading drops below the low limit, the alarm state changes to abnormal (LOW_LIMIT).                                            |
-    | High Limit      | The highest allowed normal value. When the device reading exceeds the high limit, the alarm state changes to abnormal (HIGH_LIMIT).                                           |
-    | Deadband        | It is used to prevent frequent state switching due to small fluctuations near the threshold. <ul><li>When the low limit is enabled: Once the reading drops to the low limit and becomes abnormal, the state will only return to normal when the reading rises above the lower limit plus the deadband.</li><li>When the high limit is enabled: Once the reading rises to the high limit and becomes abnormal, the state will only return to normal when the reading drops below the high limit minus the deadband.</li></ul> |
+The basic information includes the following fields:
 
-    The diagram below shows how the alarm state responds as the device reading crosses the low and high limits, as well as when it returns to the recovery points (low limit + deadban, and high limit - deadband).
+| Field                | Description                                                                                                          |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Alarm level          | The urgency level of the alarm. Options include **Critical**, **Warning**, and **Info**.                             |
+| Alarm source         | The source that triggered the alarm.                                                                                  |
+| Alarm data           | The detailed description of the alarm. For [custom function point alarms](#alarm-rule-configuration), this shows the alarm name you configured.    |
+| Alarm status         | The current status of the alarm. Options include: <ul><li>NORMAL</li><li>OFF_NORMAL</li></ul>                          |
+| Alarm time           | The time when the alarm was triggered.                                                                               |
+| Return to normal time        | The time when the alarm was cleared and returned to normal.                                                          |
+| Alarm ID             | The unique identifier of the alarm.                                                                                  |
+| Alarm confirmation status | Whether the alarm has been confirmed or not. Options include: <ul><li>Unconfirmed</li><li>Confirmed</li></ul> |
+| Alarm handler        | The user who performed the confirmation operation.                                                                |
+| Alarm confirmation time | When the alarm was confirmed.                                                                               |
+| Last updated time     | The most recent time the alarm information was updated.                                                              |
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/states-for-numeric-points.jpg" alt="Alarm status for numeric readings" />
+#### Alarm History
 
-    After setting the parameters, click **Confirm**. You will see a new card in the **Alarm config** section.
-5. Toggle the switch on the card to enable the alarm configuration.
-6. After the alarm config is enabled, once the function point value meets the configured alarm rule, the alarm configuration card will automatically display the alarm prompt, status, occurrence time, and an acknowledge button. You can click the acknowledge button to quickly confirm the alarm.
+Alarm history is used to record the complete process of each trigger and recovery for the same alarm. The system aggregates multiple identical and unconfirmed alarm events for easier viewing and tracking.
 
-## Alarm Lifecycle
+:::tip
+Once a user acknowledges an alarm, if the alarm is triggered again, it will be considered a new alarm and will not be included in the previous alarm history.
+:::
 
-In the **Alarm Config** section of the function point configuration page, you can view the current status of alarms in real time via the alarm config card and clearly track which stage of the alarm lifecycle it is in.
+Alarm history includes the following fields:
 
-The alarm lifecycle is divided into four stages: "Warning-Pending Confirmation", "Warning-Confirmed", "Alarm Recovery-Pending confirmation", and "Alarm closed". Transitions between these stages depend both on whether the alarm has recovered to normal and on whether the user has confirmed it. The whole process is illustrated below:
+| Field        | Description                                                                                                                                         |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Alarm data   | Detailed description of the alarm. For [custom function point alarms](#配置告警规则), your custom alarm name will be displayed here.                |
+| Alarm status | The current status of the alarm: <ul><li>Normal</li><li>Abnormal</li></ul>                                                                          |
+| Alarm time   | The specific time when the alarm was triggered.                                                                                                     |
+| Return to normal time| The time when the alarm returned to normal.                                                                                                         |
 
-```mermaid
-flowchart TD
-    style A fill:#f8d7da,stroke:#c62828,color:#000,font-weight:bold
-    style B fill:#f8d7da,stroke:#c62828,color:#000,font-weight:bold
-    style C fill:#fff3cd,stroke:#f57c00,color:#000
-    style D fill:#ffffff,stroke:#616161,color:#000
+### Alarm Aggregation
 
-    A[<b>Warning-<br/>Pending Confirmation</b>]
-    B[<b>Warning-<br/>Confirmed</b>]
-    C[<b>Alarm Recovery-<br/>Pending confirmation</b>]
-    D[<b>Alarm closed</b>]
+The system aggregates all **unconfirmed** alarms of the same rule, and displays them as a single record. By viewing the number in the **Alarm data** field of this record, you can know how many alarms are aggregated together.
 
-    %% Adjust arrow meanings/positions
-    A -- Click **Confirm alarm** --> B
-    A -- Alarm recovery --> C
-    B -- Alarm recovery --> D
-    C -- Click **Confirm alarm** --> D
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Alarms-Aggregation.png" alt="Alarm Details Popup" style={{width: '80%'}} />
 
-    %% Class label
-    A:::red
-    B:::red
-    C:::orange
-    D:::whitebg
-
-    classDef red fill:#f8d7da,stroke:#c62828,color:#000,font-weight:bold
-    classDef orange fill:#fff3cd,stroke:#f57c00,color:#000
-    classDef whitebg fill:#ffffff,stroke:#616161,color:#000
-```
-
-Stage explanations:
-
-- **Warning-Pending Confirmation**: A new alarm is generated, and the user has not yet confirmed it, indicating that the alarm requires attention and handling.
-- **Warning-Confirmed**: The alarm still exists, but the user is aware of it, indicating that the alarm is being dealt with.
-- **Alarm Recovery-Pending confirmation**: The alarm has recovered to normal, but the user has not confirmed it yet. This means the event will only be fully closed after user confirmation.
-- **Alarm closed**: The alarm has recovered to normal and also been confirmed by the user. The alarm is now closed.
+Click the number to view the aggregated alarm list ([alarm history](#alarm-history)).
 
 ## Alarm Confirmation
 
-The alarm confirmation process includes viewing and confirming alarms, described in detail as follows:
+When you receive an alarm, you can click the **Confirm** button to indicate that the alarm has been confirmed. After confirmation, the alarm's confirmation status will change to `Confirmed`.
 
-1. Click **Alarms** in the left navigation bar to display all alarms in a list.
-2. Alarm information mainly includes the following fields:
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Alarms-Confirm.png" alt="Confirm Alarm" />
 
-   | Field             | Description                                                                                                           |
-   | ----------------- | --------------------------------------------------------------------------------------------------------------------- |
-   | Timestamp        | Specific time when the alarm occurred.                                                                                |
-   | UUID        | Unique identifier of the alarm.                                                                                       |
-   | Alarm Source      | Alarm source. Content varies depending on alarm type; for custom alarms, double-click to view specific device info.   |
-   | Source State      | Current state of the alarm, including: <ul><li>NORMAL</li><li>OFF_NORMAL</li></ul>                                     |
-   | Alarm Class    | Classification of the alarm, see [Alarm Classes](#alarm-classes).                                                         |
-   | Alarm Data        | Detailed alarm data, varied by alarm type.                                                                            |
-   | Priority          | Urgency level of the alarm.                                                                                           |
-   | Normal Time     | Time when the alarm is cleared/recovered to normal.                                                                   |
-   | Ack state | Whether the alarm is confirmed, including: <ul><li>UN_ACKED: The alarm is not confirmed.</li><li>ACKED: The alar is confirmed.</li><li>ACK-Pending: Aqara may take a long time to confirm, and once done, it switches to ACKED automatically.</li></ul> |
-   | Ack Time | The time when the alarm was confirmed.                                                                          |
-   | User     | User name of the person performing the confirmation.                                                 |
-   | Last Updated | Most recent update time of the alarm information.                                                                     |
+## Alarm Rule Configuration
 
-3. Double-click any alarm to open a detail popup showing full information of the alarm. For function point custom alarms, you can accurately locate which device and function point triggered this alarm in the popup.
-4. At the bottom of the detail popup, click the **Confirm alarm** button, indicating the alarm has been acknowledged. Afterwards, the alarm’s ack state will change to `ACKED` or `ACK-Pending`.
-5. As prompted by the alarm content, you may further investigate and handle protocol anomalies, device offline, etc. After resolving the root cause, the alarm state will switch from `OFF_NORMAL` to `NORMAL` automatically.
+The Alarm Center supports flexible configuration of alarm rules for device function points, enabling real-time monitoring and timely response to abnormal states.
 
-### Alarm Data Details
+1. Go to **Alarms > Alarm rule** page and click the **Add** button.
 
-Different classes of alarm records contain different data fields. See the tables below:
+    ![Add Alarm Rule](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Alarms-AddAlarmRules.png)
 
-#### System Default Alarm Fields
+2. In the pop-up window, you will see the **Alarm information** section and the **Alarm object** section.
 
-| Field Name   | Description                                          |
-| ------------ | --------------------------------------------------- |
-| sourceName   | Alarm source, usually device name or protocol name.  |
-| msgText      | Description of the alarm event.                      |
-| TimeZone     | Time zone information of the device.                 |
+    ![Add Alarm Rule Popup](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Alarms-AlarmRuleConfiguration.png)
+    
+    The **Alarm information** section is used to configure the following parameters:
 
-#### Function Point Custom Alarm Fields
+    | Parameter         | Description                                                                                      |
+    |------------------|--------------------------------------------------------------------------------------------------|
+    | Alarm name      | The custom name of the alarm.                                                                    |
+    | Alarm level      | The urgency level of the alarm. Options include **Critical**, **Warning**, and **Info**.  |
+    | Alarm copy | The message shown to the user when the alarm is triggered.   |
+    | Return to normal copy | The message shown to the user after recovery.                                                     |
+    | Alarm delay       | The system will only send an alarm to the user if the function point stays abnormal for this period. This helps to avoid false alarms caused by short fluctuations.  |
+    | Alarm recovery delay | After the function point leaves the alarm state, it must stay normal for this period to be considered recovered. This prevents frequent reminders due to temporary changes. |
+    | Effective time | The time when the alarm rule takes effect. |
 
-| Field Name        | Description                                                                          |
-| ----------------- | ------------------------------------------------------------------------------------ |
-| offNormalValue    | (OFF_NORMAL only) The actual value of the abnormal property detected.                  |
-| alarmValue        | (OFF_NORMAL only) Original threshold value of the alarm.                               |
-| presentValue      | Real-time value of the current function point.                                             |
-| fromState         | Status before the change.                                                   |
-| toState           | Status after the change (current status).                                            |
-| sourceName        | Alarm source; by default, the device function point name.                            |
-| timeDelay         | Time delay (seconds) required to trigger the alarm.                                  |
-| timeDelayToNormal | Time delay (seconds) to notify to alarm recovery.                                     |
-| msgText           | Description of the alarm event.                                                      |
-| count             | Number of occurrences of this alarm.                                                 |
-| deadBand          | (Numeric only) Deadband threshold range.                                             |
-| highLimit         | (Numeric only) Permitted upper value limit.                                          |
-| lowLimit          | (Numeric only) Permitted lower value limit.                                          |
-| numericValue      | (Boolean/Enum type) Numeric value corresponding to the boolean value or the enumeration.                        |
-| TimeZone          | Time zone information of the device.                                                 |
+    In the **Alarm object** section, you can select objects either by **function point** or **function type**.
 
-:::tip
-System default alarm data is usually concise, focusing on the source and content; function point custom alarms provide richer and more detailed attribute and status information as per configuration, helping users quickly locate and analyze the cause.
-:::
+    - When selecting an object by **function point**：
+        - First select the target device, then choose the specific function point under it.
+        - Then, configure alarm trigger conditions for this function point:
+            - For Boolean types, you can set the alarm to trigger on either true or false;
+            - For numeric types, you can flexibly configure upper and lower limits, alarm deadband, and other parameters to achieve refined abnormal monitoring.
 
-## Alarms Page configuration
+        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Alarms-SelectAPoint.png" alt="Select by function point" />
+   
+        :::tip
+        For numeric function points, the parameters are as follows:
 
-### Configure Visibility
+        | Parameter | Description |
+        |--|--|
+        | Comparison method     | Select the comparison method, such as **out of range**, **greater than**, **less than**, etc.         |
+        | Low Limit       | (Only effective when the comparison method is **out of range**) The lowest allowed normal value. When the device reading drops below the low limit, the alarm state changes to abnormal (LOW_LIMIT).                                            |
+        | High Limit      | (Only effective when the comparison method is **out of range**) The highest allowed normal value. When the device reading exceeds the high limit, the alarm state changes to abnormal (HIGH_LIMIT).                                           |
+        | Hysteresis        | It is used to prevent frequent state switching due to small fluctuations near the threshold. <ul><li>When the low limit is enabled: Once the reading drops to the low limit and becomes abnormal, the state will only return to normal when the reading rises above the lower limit plus the hysteresis.</li><li>When the high limit is enabled: Once the reading rises to the high limit and becomes abnormal, the state will only return to normal when the reading drops below the high limit minus the hysteresis.</li></ul> |
 
-To hide specific fields in the list, click the gear icon in Alarms. In the pop-up, uncheck the fields you do not wish to display.
+        The diagram below shows how the alarm state responds as the device reading crosses the low and high limits, as well as when it returns to the recovery points (low limit + hysteresis, and high limit - hysteresis).
 
-### Filterr Data
+        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Alarms-Hysteresis.png" alt="Alarm status for numeric readings" style={{width: '80%'}} />
+        :::
+    - When selecting objects by **function type**:
+        - First specify the target function type (such as Switch, Temperature, Humidity, etc.), and the system will automatically filter out all function points of that type.
+        - Then, you can quickly select all points, select multiple points in bulk, or invert the selection of target function points.
+        - Finally, configure the alarm trigger conditions for the selected function points: for Boolean types, you can set the alarm to trigger on true or false; for numeric types, you can flexibly set upper and lower limits, alarm hysteresis, and other parameters for refined abnormal monitoring.
 
-To filter data in the Alarms page, click the "Filter" icon. In the pop-up, set filter criteria for list fields, and check those fields for which you want the filter to take effect:
+        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Alarms-SelectPoints.png" alt="Select by function point type" />
 
-| Field           | Configuration Description                                                                                                                                                                                   |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Timestamp | The time when the alarm occured. <ul><li>Start Time: Set the upper limit of the time range.</li><li>End Time: Set the lower limit of the time range.</li><li>Min Enabled(Enable Start Time): Whether to enable start time.</li><li>Max Enabled(Enable End Time): Whether to enable end time.</li></ul> |
-| Uuid       | <ul><li>Include: Set multiple alarm IDs; only alarms with these IDs will be listed.</li><li>Exclude: Set multiple alarm IDs to exclude from the alarm list.</li></ul>                                            |
-| Source State | Filter: Select required alarm states (multi-selection supported), and only alarms with these states will be shown.  |
-| Alarm Source    | <ul><li>Include: Set multiple alarm sources; only alarms from these sources will be listed.</li><li>Exclude: Set multiple alarm sources to exclude from the alarm list.</li></ul>                           |
-| Priority        | <ul><li>Min Value: Set minimum priority.</li><li>Max Value: Set maximum priority.</li><li>Min Enabled: Whether to enable min value.</li><li>Max Enabled: Whether to enable max value.</li></ul>   |
-| Normal Time   | The time when the alarm recovered. Its configuration is the same as Timestamp. |
-| Ack Time | The time when a user confirmed the alarm. Its configuration is the same as Timestamp.|                                     
-| User  | <ul><li>Pattern: Supports entering the complete username, as well as the following fuzzy search syntax:<ul><li>%keyword%: Search for all usernames containing the keyword.</li><li>keyword%: Search for usernames starting with keyword.</li><li>%keyword: Search for usernames ending with keyword.</li></ul></li><li>Exact: Whether an exact match is required.</li><li>Include: Whether the list includes usernames containing the specified text or not.</li><li>Match Case: Whether case sensitivity is enabled.</li></ul> |
-| Alarm Data      | Filter Entries: Filter alarms containing these data pairs via key-value pairs. Supports adding multiple key-value pairs.    |
-| Last Update | The time when the alarm upates for the last time. Its configuration is the same as Timestamp.  |
+3. After configuration is complete, click the **Save** button. The new alarm rule will be added to the list and enabled by default.
+4. Once the alarm rule is enabled, whenever the value of a device function point meets the alarm condition, you can view the alarm status, trigger time, and confirm the alarm in [Alarm Information](#check-alarm-information).
 
-## FAQ
+## Alarm Template
 
-### How to quickly locate the device that triggered a function point custom alarm?
+1. Click **Alarms** in the left navigation bar and select **Alarm Template**. You will see that Aqara Studio provides multiple alarm templates. 
 
-When creating a function point custom alarm rule, if you use the system default function point name, the alarm source shown in the Alarm Center will often be something like `Switch - On/Off`, which does not intuitively indicate which device went wrong.
+    Click the **Use** button on any template. If there are devices in Aqara Studio that support this rule, you will be able to view and edit the alarm rule in the template drawer.
 
-The way to find the specific device is as follows:
-1. Double-click the alarm to pop up the detail window and find the "Alarm Source" path information in the window.
-2. In the path, the `communication` node indicates the protocol, followed by the protocol used by the device (such as `Aqara`), and then the device name.
+   ![Enable Alarm Template](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Alarms-UseTemplates.png)
 
-For example, if the alarm source path is:  
-`local:|station:|property:/communication/Aqara/Wall Switch H1 (With Neutral, Single Rocker)/points/BinaryOutputObject/PROP_PRESENT_VALUE/alarm`
+2. In the edit drawer, you can configure the alarm rule. After completing the configuration, click the **Save** button.
 
-- The part after `communication` (here, `Aqara`) indicates this device uses the Aqara protocol.
-- The part after `Aqara` (`Wall Switch H1 (With Neutral, Single Rocker)`) is the full device name, indicating exactly which device triggered the alarm.
+    ![Save](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Alarms-SaveTemplate.png)
 
-Using the above method, you can quickly locate the specific device with an anomaly.
+3. The newly created alarm rule will be added to the [alarm rule list](#alarm-rule-configuration) and enabled by default.
+
+    ![New alarm rule](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Alarms-NewAlarmByTemplate.png)
