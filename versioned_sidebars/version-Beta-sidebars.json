@@ -232,7 +232,8 @@
           "collapsed": false,
           "items": [
             "aqara-api/data-export-api/getting-started-with-the-data-export-api",
-            "aqara-api/data-export-api/try-apis-online",        
+            "aqara-api/data-export-api/try-apis-online",
+            "aqara-api/data-export-api/postman",        
             {
               "type": "category",
               "label": "Space",
