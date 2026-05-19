@@ -78,8 +78,8 @@ Alarm history includes the following fields:
 
 | Field        | Description                                                                                                                                         |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Alarm data   | Detailed description of the alarm. For [custom function point alarms](#配置告警规则), your custom alarm name will be displayed here.                |
-| Alarm status | The current status of the alarm: <ul><li>Normal</li><li>Abnormal</li></ul>                                                                          |
+| Alarm data   | Detailed description of the alarm. For [custom function point alarms](#alarm-rule-configuration), your custom alarm name will be displayed here.                |
+| Alarm status | The current status of the alarm: <ul><li>NORMAL</li><li>OFF_NORMAL</li></ul>                                                                          |
 | Alarm time   | The specific time when the alarm was triggered.                                                                                                     |
 | Return to normal time| The time when the alarm returned to normal.                                                                                                         |
 
@@ -137,8 +137,8 @@ The Alarm Center supports flexible configuration of alarm rules for device funct
         | Parameter | Description |
         |--|--|
         | Comparison method     | Select the comparison method, such as **out of range**, **greater than**, **less than**, etc.         |
-        | Low Limit       | (Only effective when the comparison method is **out of range**) The lowest allowed normal value. When the device reading drops below the low limit, the alarm state changes to abnormal (LOW_LIMIT).                                            |
-        | High Limit      | (Only effective when the comparison method is **out of range**) The highest allowed normal value. When the device reading exceeds the high limit, the alarm state changes to abnormal (HIGH_LIMIT).                                           |
+        | Low Limit       | (Only effective when the comparison method is **out of range**) The lowest allowed normal value. When the device reading drops below the low limit, the alarm state changes to OFF_NORMAL (LOW_LIMIT).                                            |
+        | High Limit      | (Only effective when the comparison method is **out of range**) The highest allowed normal value. When the device reading exceeds the high limit, the alarm state changes to OFF_NORMAL (HIGH_LIMIT).                                           |
         | Hysteresis        | It is used to prevent frequent state switching due to small fluctuations near the threshold. <ul><li>When the low limit is enabled: Once the reading drops to the low limit and becomes abnormal, the state will only return to normal when the reading rises above the lower limit plus the hysteresis.</li><li>When the high limit is enabled: Once the reading rises to the high limit and becomes abnormal, the state will only return to normal when the reading drops below the high limit minus the hysteresis.</li></ul> |
 
         The diagram below shows how the alarm state responds as the device reading crosses the low and high limits, as well as when it returns to the recovery points (low limit + hysteresis, and high limit - hysteresis).
