@@ -91,6 +91,10 @@
     "message": "设备",
     "description": "The label for category 'Device' in sidebar 'aqaraStudioSidebar'"
   },
+  "sidebar.aqaraApiSidebar.category.Subscription": {
+    "message": "订阅",
+    "description": "The label for category 'Subscription' in sidebar 'aqaraStudioSidebar'"
+  },
   "sidebar.aqaraApiSidebar.category.Gateway": {
     "message": "网关",
     "description": "The label for category 'Gateway' in sidebar 'aqaraStudioSidebar'"
