@@ -72,6 +72,29 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
+      label: "Subscription",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-api/data-export-api/subscription",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-api/data-export-api/mqtt-subscribe",
+          label: "获取 MQTT 连接配置",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-api/data-export-api/mqtt-unsubscribe",
+          label: "使 MQTT 连接配置失效",
+          className: "api-method post",
+        },
+      ],
+    },
+    {
+      type: "category",
       label: "Automation",
       link: {
         type: "doc",
@@ -119,6 +142,12 @@ const sidebar: SidebarsConfig = {
           type: "doc",
           id: "version-Beta/aqara-api/data-export-api/delete-automations",
           label: "删除自动化",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-api/data-export-api/execute-automation-manual-trigger",
+          label: "手动触发自动化",
           className: "api-method post",
         },
       ],
