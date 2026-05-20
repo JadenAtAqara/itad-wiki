@@ -1,0 +1,330 @@
+openapi: 3.0.3
+info:
+  title: AIOT API
+  termsOfService: https://domain.com/terms
+  x-internal: true
+  description: |
+    AIOT API 开放接口文档
+
+    ## 公共请求头
+    所有接口均需携带以下 Header 参数（由客户端统一附加）：
+    | Header | 必填 | 说明 |
+    |--------|------|------|
+    | Authorization | 是 | `Bearer accessToken` |
+    | Content-Type | 是 | `application/json` |
+  version: v1
+
+servers:
+  - url: '{host}/open/api/v1'
+    description: AIOT API 端点
+    variables:
+      host:
+        description: 请输入开放平台 API 服务器域名。
+        default: 'https://open-cn.aqara.com'
+
+# 全局安全：所有接口均需 Bearer Token
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Subscription
+    description: 订阅接口（MQTT 等）
+
+paths:
+
+  # ────────────────────────────────────────────────────────────────
+  # MQTT 订阅 / 取消订阅
+  # ────────────────────────────────────────────────────────────────
+  /subscriptions/mqtt/subscribe:
+    post:
+      tags: [Subscription]
+      summary: 获取 MQTT 连接配置
+      description: |
+        调用此接口，传入指定的设备 ID，获取 MQTT 连接与 topic 订阅所需的信息，包括 Client ID、MQTT 服务地址、MQTT 服务端口、支持的协议、用户名、密钥等。 <br />
+        您可基于返回的信息，通过第三方 MQTT 客户端连接 Aqara 提供的 MQTT Broker，并根据客户端 ID 按特定规则生成对应 Topic，以实时获取指定设备的功能点值变化。
+      operationId: mqttSubscribe
+      x-skill-intent: subscription.mqtt.subscribe
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: subscription_create_or_refresh
+      parameters: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MqttSubscribeRequest'
+            examples:
+              subscribe:
+                value:
+                  deviceUniqueId: "device-unique-id-001"
+                  expiresIn: 7200
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MqttSubscribeResponse'
+              examples:
+                subscribeSuccess:
+                  value:
+                    type: MqttSubscribeResponse
+                    version: v1
+                    msgId: "2df2f431-xxxx-4fdb-xxxx-xxxxxxxx"
+                    code: 0
+                    message: success
+                    data:
+                      clientId: "omqt.studio_16xxxxxxxxxxx9"
+                      mqttHost: "mqtt.xxx.com"
+                      mqttPort: "1883"
+                      supportedProtocols: ["tcp"]
+                      secretId: "YmFzZTY0xxxxxxxxxxxxxxxxxxJldElk"
+                      secretKey: "YmFzZTY0xxxxxxxxxxxxxxxxxxxxxxleQ=="
+                      expiresIn: 7200
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /subscriptions/mqtt/unsubscribe:
+    post:
+      tags: [Subscription]
+      summary: 使 MQTT 连接配置失效
+      description: |
+        调用此接口，传入指定的设备 ID，使该设备对应的 MQTT 连接配置失效。
+      operationId: mqttUnsubscribe
+      x-skill-intent: subscription.mqtt.unsubscribe
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: subscription_delete
+      parameters: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MqttUnsubscribeRequest'
+            examples:
+              unsubscribe:
+                value:
+                  deviceUniqueId: "device-unique-id-001"
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MqttUnsubscribeResponse'
+              examples:
+                unsubscribeSuccess:
+                  value:
+                    type: MqttUnsubscribeResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f002"
+                    code: 0
+                    message: success
+                    data: null
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+# ══════════════════════════════════════════════════════════════════
+# Components
+# ══════════════════════════════════════════════════════════════════
+components:
+
+  responses:
+    BadRequestResponse:
+      description: 请求参数错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            example:
+              type: ErrorMessage
+              version: v1
+              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000001"
+              code: 400
+              message: "参数 xxx 不能为空"
+    UnauthorizedResponse:
+      description: 未认证或认证失效
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            example:
+              type: ErrorMessage
+              version: v1
+              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000002"
+              code: 401
+              message: "token 已过期，请重新生成 token"
+    ForbiddenResponse:
+      description: 无权限访问
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            example: 
+              type: ErrorMessage
+              version: v1
+              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000003"
+              code: 403
+              message: "无权限访问该资源"
+    NotFoundResponse:
+      description: 资源不存在
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            example:
+              type: ErrorMessage
+              version: v1
+              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000004"
+              code: 404
+              message: "资源不存在"
+    TooManyRequestsResponse:
+      description: 请求频率过高
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            example:
+              type: ErrorMessage
+              version: v1
+              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000005"
+              code: 429
+              message: "请求频率过高"
+    InternalServerErrorResponse:
+      description: 服务内部错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            example:
+              type: ErrorMessage
+              version: v1
+              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000006"
+              code: 500
+              message: "服务内部异常"
+  
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: "Authorization: Bearer token"
+
+  schemas:
+
+    # ── 基础请求 / 响应 ──────────────────────────────────────────
+    BaseResponse:
+      type: object
+      required: [type, version, msgId, code]
+      properties:
+        type:
+          type: string
+          description: 消息类型
+        version:
+          type: string
+          description: 接口版本
+          example: v1
+        msgId:
+          type: string
+          description: 消息 ID
+        code:
+          type: integer
+          description: "业务状态码，0 表示成功"
+        message:
+          type: string
+          description: 提示信息
+
+    ErrorResponse:
+      description: 错误响应，错误信息通过 code 与 message 提供
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+
+    MqttSubscribeRequest:
+      type: object
+      properties:
+        deviceUniqueId:
+          type: string
+          description: 设备唯一标识（设备 ID）。若不在此字段中配置设备 ID，也可在请求头（Header）的 `Device-Unique-Id` 字段中传递该信息。
+        expiresIn:
+          type: integer
+          format: int32
+          description: 有效期（秒），取值范围为 [7200, 604800]；不在范围内或不传时默认 7200。
+          minimum: 7200
+          maximum: 604800
+
+    MqttUnsubscribeRequest:
+      type: object
+      properties:
+        deviceUniqueId:
+          type: string
+          description: 设备唯一标识（设备 ID）。若不在此字段中配置设备 ID，也可在请求头（Header）的 `Device-Unique-Id` 字段中传递该信息。
+
+    MqttSubscribeData:
+      type: object
+      required: [clientId, mqttHost, mqttPort, supportedProtocols, secretId, secretKey, expiresIn]
+      properties:
+        clientId:
+          type: string
+          description: |
+            MQTT Client ID。获取此信息后，请按规则 `receive_${clientId}` 生成订阅 topic。<br />
+            示例：当 `clientId` 为 `omqt.studio_16ce93b6fc723f0d9f0dc02f4d4a2f15_123456789` 时，topic 为 `receive_omqt.studio_16ce93b6fc723f0d9f0dc02f4d4a2f15_123456789`。
+        mqttHost:
+          type: string
+          description: MQTT 服务地址。
+        mqttPort:
+          type: string
+          description: MQTT 服务端口。
+        supportedProtocols:
+          type: array
+          description: 支持的协议列表。
+          items:
+            type: string
+        secretId:
+          type: string
+          description: Base64 编码后的 MQTT 用户名。
+        secretKey:
+          type: string
+          description: Base64 编码后的 MQTT 密钥。
+        expiresIn:
+          type: integer
+          format: int32
+          description: 订阅有效期（秒）。
+
+    MqttSubscribeResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/MqttSubscribeData'
+
+    MqttUnsubscribeResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              nullable: true
+              description: 固定返回 null

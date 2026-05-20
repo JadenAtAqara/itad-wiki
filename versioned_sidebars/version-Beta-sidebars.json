@@ -300,29 +300,6 @@
             },
             {
               "type": "category",
-              "label": "Subscription",
-              "link": {
-                "type": "doc",
-                "id": "aqara-api/data-export-api/subscription"
-              },
-              "collapsed": false,
-              "items": [
-                {
-                  "type": "doc",
-                  "id": "aqara-api/data-export-api/mqtt-subscribe",
-                  "label": "Get MQTT Connection Configuration",
-                  "className": "api-method post"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-api/data-export-api/mqtt-unsubscribe",
-                  "label": "Invalidate MQTT Connection Configuration",
-                  "className": "api-method post"
-                }
-              ]
-            },
-            {
-              "type": "category",
               "label": "Automation",
               "link": {
                 "type": "doc",
@@ -383,6 +360,36 @@
           ]
         }
       ]
+    },
+    {
+      "type": "category",
+      "label": "AIOT API",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "category",
+          "label": "Subscription",
+          "link": {
+            "type": "doc",
+            "id": "aqara-api/aiot-api/subscription"
+          },
+          "collapsed": false,
+          "items": [
+            {
+              "type": "doc",
+              "id": "aqara-api/aiot-api/mqtt-subscribe",
+              "label": "Get MQTT Connection Configuration",
+              "className": "api-method post"
+            },
+            {
+              "type": "doc",
+              "id": "aqara-api/aiot-api/mqtt-unsubscribe",
+              "label": "Invalidate MQTT Connection Configuration",
+              "className": "api-method post"
+            }
+          ]
+        }      
+      ]      
     }
   ]
 }
