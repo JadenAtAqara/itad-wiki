@@ -2,21 +2,43 @@
 
 本文档旨在帮助开发者扩展平台功能，实现深度集成与自定义开发。无论您是想通过 API 构建个性化应用，还是将设备接入主流智能家居系统，这里都提供了详细的指引。
 
-在开始调用 API v1 接口前，您需要先 [获取 Studio 的本机 IP 地址和 Token](#获取必要信息)，这些信息将用作请求 URL 和鉴权。
+在开始调用 API v1 接口前，您需要先 [获取 Studio 的访问地址和 Token](#获取必要信息)，这些信息将用作请求 URL 和鉴权。
 
 ## 获取必要信息
 
-在开始调用 API v1 接口前，您需要先获取 Studio 的本机 IP 地址和 Token，这些信息将用作请求 URL 和鉴权。
+在开始调用 API v1 接口前，您需要先获取 Studio 的访问地址和 Token，这些信息将用作请求 URL 和鉴权。
 
-操作步骤优化如下：
+### 获取访问地址
 
-1. 登录 Aqara Studio。从左侧侧边栏击进入“开发者”页面。
-2. 在**数据转出 API**区域，可直接查看本机 IP 地址。
-3. **启用**数据转出 API，找到 Access Token（即访问令牌），单击复制图标，即可获取 Access Token。
+您可以通过以下三种地址访问 Aqara Studio：
+- IP 地址（http）
+- 主机访问域名（http）
+- 远程访问地址（https）
 
-    :::tip
-    Access Token 的有效时间为 7 天。到期后，请 [刷新 Access Token](#刷新-access-token)。
-    :::
+具体获取方法如下：
+
+- **IP 地址**：在左侧导航栏进入 **设置** 页面。在侧边栏选择 **本机设置**，即可查看 **IP 地址**。   
+    ![获取 IP 地址](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Settings-GetIP.png)   
+- **主机访问域名**：详见 [通过局域网域名访问](./local-domain-name-access.mdx) 文档。
+- **远程访问地址**：详见 [远程访问](./remote-access.mdx) 文档。
+
+### 获取 Token
+
+操作步骤如下：
+
+1. 从左侧侧边栏击进入“开发者”页面。在**数据转出 API**区域，单击 **新建 Token** 按钮。
+
+    ![单击新建 Token 按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Developer-NewToken.png)
+
+2. 在弹窗中定义 Token 名称和有效期，单击 **确认** 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Developer-DefineToken.png" alt="定义 Token 名称和有效期" style={{width: '80%'}} />
+
+    随后您可以看到一个弹窗，提示您已创建成功，并展示该 Token。
+
+3. 在**数据转出 API**区域，您可以看到新增的 Token 条目。单击复制图标，即可获取 Token。
+
+    ![复制 Token](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Developer-CopyToken.png)
 
 ## 调用 API
 
@@ -27,79 +49,3 @@
 - 开发定制化的设备管理体验。
 
 欢迎查阅 [API 文档](./api-references/data-export-api-v1.mdx)，了解详细的接口说明与调用方式。
-
-## 刷新 Access Token
-
-Aqara Studio 提供两种刷新 Access Token 的方式：[通过调用 API 自动刷新](#调用-api-刷新)，或通过界面 [手动刷新](#手动刷新)。
-
-### 调用 API 刷新
-
-您可以调用以下接口获得新的 Access Token。
-
-**请求 URL**
-
-根据是否启用 [远程访问](./remote-access.mdx) 功能，请求 URL 的格式有所不同。   
-- 未开启远程访问：`http://<局域网内网IP>/open/api/v1/auth/refresh-token`
-- 已开启远程访问：`https://<远程访问地址>/open/api/v1/auth/refresh-token`
-
-**请求方法**：POST
-
-**请求头**
-
-| 参数 | 类型 | 是否必须 | 说明 |
-| ------------- | ------ | -------- | ------------------------------------------------------------ |
-| Authorization | String | 是 | 授权 Token，用于用户身份验证。<br />格式为 `Bearer <token>`，将 `<token>` 替换为您从 Aqara Studio 获取的 Access Token 字符串（若从 Aqara Studio 获取的令牌已带 Bearer 前缀，请直接使用，无需重复添加）。如需了解获取方式，请参考 [开发者指南 - 获取必要信息](#获取必要信息) 中对 Access Token 的说明。 |
-| Content-Type  | String | 是 | 默认为`application/json`。  |
-
-**请求体**
-
-| 参数 | 类型 | 是否必须 | 说明 |
-| ------------- | ------ | -------- | ------------------------------------------------------------ |
-| refreshToken | String | 是 | 刷新令牌，用于刷新 Access Token。可在 Aqara Studio 的 **开发者 > 数据转出 API** 区域直接获取。 |
-
-**请求示例**
-
-```json
-{
-    "refreshToken": "eyJhbGciO9..."
-}
-```
-
-**响应参数**
-
-| 参数         | 类型     | 说明                                                                                 |
-| ------------ | -------- | ------------------------------------------------------------------------------------ |
-| type         | String   | 响应类型，一般为 `"response"`。                                                       |
-| version      | String   | API 版本号，例如 `"v1"`。                                                            |
-| msgId        | String   | 本次请求的唯一标识符。                                                               |
-| code         | Number   | 业务状态码，0 表示成功，非 0 为失败。                                                  |
-| message      | String   | 请求结果描述。                                                                        |
-| data         | Object   | 数据体，|
-| data.accessToken  | String   | 新的 Access Token，用于后续 API 鉴权。                            |
-| data.refreshToken | String   | 新的 Refresh Token，用于下次刷新 Access Token。有效期为当前 `expiresIn` 时长基础上再延长 30 天。|
-| data.expiresIn    | Number   | 新 Access Token 的有效期，单位为秒，如 86400 表示 1 天。              |
-
-**响应示例**
-
-```json
-{
-    "type": "response",
-    "version": "v1",
-    "msgId": "a1b2c3d4-e5f6-7890-abcd-000000000003",
-    "code": 0,
-    "message": "success",
-    "data": {
-        "accessToken": "newAccessToken...",
-        "refreshToken": "newRefreshToken...",
-        "expiresIn": 86400
-    }
-}
-```
-
-### 手动刷新
-
-在**数据转出 API**区域，点击 **刷新 Token** 按钮，即可立即获取新的 Access Token 和 Refresh Token。
-
-:::tip
-刷新操作会导致原有 Access Token 和 Refresh Token 会立即失效，请谨慎操作。
-:::
