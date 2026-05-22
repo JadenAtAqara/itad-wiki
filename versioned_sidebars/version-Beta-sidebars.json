@@ -232,7 +232,7 @@
           "collapsed": false,
           "items": [
             "aqara-api/data-export-api/getting-started-with-the-data-export-api",
-            "aqara-api/data-export-api/try-apis-online",
+            "aqara-api/data-export-api/try-api-online",
             "aqara-api/data-export-api/postman",        
             {
               "type": "category",
@@ -246,7 +246,6 @@
                 {
                   "type": "doc",
                   "id": "aqara-api/data-export-api/get-spaces",
-                  "label": "Get Spaces",
                   "className": "api-method get"
                 }
               ]
@@ -263,37 +262,31 @@
                 {
                   "type": "doc",
                   "id": "aqara-api/data-export-api/get-device-types",
-                  "label": "Get Device Types",
                   "className": "api-method get"
                 },
                 {
                   "type": "doc",
                   "id": "aqara-api/data-export-api/get-devices",
-                  "label": "Get Devices",
                   "className": "api-method get"
                 },
                 {
                   "type": "doc",
                   "id": "aqara-api/data-export-api/get-device-definitions",
-                  "label": "Get Device Definitions",
                   "className": "api-method get"
                 },
                 {
                   "type": "doc",
                   "id": "aqara-api/data-export-api/execute-device-trait",
-                  "label": "Execute Device Trait",
                   "className": "api-method post"
                 },
                 {
                   "type": "doc",
                   "id": "aqara-api/data-export-api/get-trait-values",
-                  "label": "Get Trait Values",
                   "className": "api-method post"
                 },
                 {
                   "type": "doc",
                   "id": "aqara-api/data-export-api/execute-device-command",
-                  "label": "Execute Device Command",
                   "className": "api-method post"
                 }
               ]
@@ -310,49 +303,41 @@
                 {
                   "type": "doc",
                   "id": "aqara-api/data-export-api/get-automation-capabilities",
-                  "label": "Get Automation Capabilities",
                   "className": "api-method get"
                 },
                 {
                   "type": "doc",
                   "id": "aqara-api/data-export-api/create-automation",
-                  "label": "Create Automation",
                   "className": "api-method post"
                 },
                 {
                   "type": "doc",
                   "id": "aqara-api/data-export-api/query-automation-list",
-                  "label": "Query Automation List",
                   "className": "api-method get"
                 },
                 {
                   "type": "doc",
                   "id": "aqara-api/data-export-api/query-automation-details",
-                  "label": "Query Automation Details",
                   "className": "api-method get"
                 },
                 {
                   "type": "doc",
                   "id": "aqara-api/data-export-api/update-automation",
-                  "label": "Update Automation",
                   "className": "api-method patch"
                 },
                 {
                   "type": "doc",
                   "id": "aqara-api/data-export-api/update-automation-status",
-                  "label": "Update Automation Status",
                   "className": "api-method post"
                 },
                 {
                   "type": "doc",
                   "id": "aqara-api/data-export-api/delete-automations",
-                  "label": "Delete Automations",
                   "className": "api-method post"
                 },
                 {
                   "type": "doc",
                   "id": "aqara-api/data-export-api/execute-automation-manual-trigger",
-                  "label": "Manual Automation Trigger",
                   "className": "api-method post"
                 } 
               ]
@@ -378,13 +363,11 @@
             {
               "type": "doc",
               "id": "aqara-api/aiot-api/mqtt-subscribe",
-              "label": "Get MQTT Connection Configuration",
               "className": "api-method post"
             },
             {
               "type": "doc",
               "id": "aqara-api/aiot-api/mqtt-unsubscribe",
-              "label": "Invalidate MQTT Connection Configuration",
               "className": "api-method post"
             }
           ]
