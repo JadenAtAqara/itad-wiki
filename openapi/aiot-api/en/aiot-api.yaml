@@ -4,44 +4,44 @@ info:
   termsOfService: https://domain.com/terms
   x-internal: true
   description: |
-    AIOT API 开放接口文档
+    AIOT API Documentation
 
-    ## 公共请求头
-    所有接口均需携带以下 Header 参数（由客户端统一附加）：
-    | Header | 必填 | 说明 |
-    |--------|------|------|
-    | Authorization | 是 | `Bearer accessToken` |
-    | Content-Type | 是 | `application/json` |
+    ## Common Request Headers
+    All APIs require the following header parameters (to be attached uniformly by the client):
+    | Header         | Required | Description                  |
+    | -------------- | -------- | ---------------------------- |
+    | Authorization  | Yes      | `Bearer accessToken`         |
+    | Content-Type   | Yes      | `application/json`           |
   version: v1
 
 servers:
   - url: '{host}/open/api/v1'
-    description: AIOT API 端点
+    description: AIOT API Endpoint
     variables:
       host:
-        description: 请输入开放平台 API 服务器域名。
-        default: 'https://open-cn.aqara.com'
+        description: Please enter the Open Platform API server domain.
+        default: 'https://open-usa.aqara.com'
 
-# 全局安全：所有接口均需 Bearer Token
+# Global Security: All endpoints require Bearer Token
 security:
   - BearerAuth: []
 
 tags:
   - name: Subscription
-    description: 订阅接口（MQTT 等）
+    description: Subscription API (MQTT, etc.)
 
 paths:
 
   # ────────────────────────────────────────────────────────────────
-  # MQTT 订阅 / 取消订阅
+  # MQTT Subscription / Unsubscription
   # ────────────────────────────────────────────────────────────────
   /subscriptions/mqtt/subscribe:
     post:
       tags: [Subscription]
-      summary: 获取 MQTT 连接配置
+      summary: Get MQTT Connection Configuration
       description: |
-        调用此接口，传入指定的设备 ID，获取 MQTT 连接与 topic 订阅所需的信息，包括 Client ID、MQTT 服务地址、MQTT 服务端口、支持的协议、用户名、密钥等。 <br />
-        您可基于返回的客户端 ID 和特定规则，生成相关的 topic。加上其他返回的信息，通过第三方 MQTT 客户端连接 Aqara 提供的 MQTT Broker，订阅上述 topic，以实时获取指定设备的功能点值变化。
+        Call this API, providing the specified device ID, to obtain the necessary information for MQTT connection and topic subscription, including Client ID, MQTT host address, MQTT port, supported protocols, username, secret key, etc.<br />        
+        Based on the returned client ID and specific rules, you can generate the corresponding topics. Together with the other returned information, use a third-party MQTT client to connect to Aqara's MQTT Broker and subscribe to these topics to receive real-time updates of the specified device's function point value changes.
       operationId: mqttSubscribe
       x-skill-intent: subscription.mqtt.subscribe
       x-idempotent: true
@@ -61,7 +61,7 @@ paths:
                   expiresIn: 7200
       responses:
         '200':
-          description: 成功
+          description: Success
           content:
             application/json:
               schema:
@@ -98,9 +98,9 @@ paths:
   /subscriptions/mqtt/unsubscribe:
     post:
       tags: [Subscription]
-      summary: 使 MQTT 连接配置失效
+      summary: Invalidate MQTT Connection Configuration
       description: |
-        调用此接口，传入指定的设备 ID，使该设备对应的 MQTT 连接配置失效。
+        Call this API, providing the specified device ID, to invalidate the MQTT connection configuration related to the device.
       operationId: mqttUnsubscribe
       x-skill-intent: subscription.mqtt.unsubscribe
       x-idempotent: true
@@ -119,7 +119,7 @@ paths:
                   deviceUniqueId: "device-unique-id-001"
       responses:
         '200':
-          description: 成功
+          description: Success
           content:
             application/json:
               schema:
@@ -153,7 +153,7 @@ components:
 
   responses:
     BadRequestResponse:
-      description: 请求参数错误
+      description: Request Parameter Error
       content:
         application/json:
           schema:
@@ -163,9 +163,9 @@ components:
               version: v1
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000001"
               code: 400
-              message: "参数 xxx 不能为空"
+              message: "Parameter xxx cannot be empty"
     UnauthorizedResponse:
-      description: 未认证或认证失效
+      description: Unauthorized or Authentication Expired
       content:
         application/json:
           schema:
@@ -175,9 +175,9 @@ components:
               version: v1
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000002"
               code: 401
-              message: "token 已过期，请重新生成 token"
+              message: "Token expired, please regenerate token"
     ForbiddenResponse:
-      description: 无权限访问
+      description: No Permission to Access
       content:
         application/json:
           schema:
@@ -187,9 +187,9 @@ components:
               version: v1
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000003"
               code: 403
-              message: "无权限访问该资源"
+              message: "No permission to access this resource"
     NotFoundResponse:
-      description: 资源不存在
+      description: Resource Not Found
       content:
         application/json:
           schema:
@@ -199,9 +199,9 @@ components:
               version: v1
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000004"
               code: 404
-              message: "资源不存在"
+              message: "Resource not found"
     TooManyRequestsResponse:
-      description: 请求频率过高
+      description: Too Many Requests
       content:
         application/json:
           schema:
@@ -211,9 +211,9 @@ components:
               version: v1
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000005"
               code: 429
-              message: "请求频率过高"
+              message: "Too many requests"
     InternalServerErrorResponse:
-      description: 服务内部错误
+      description: Internal Server Error
       content:
         application/json:
           schema:
@@ -223,7 +223,7 @@ components:
               version: v1
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000006"
               code: 500
-              message: "服务内部异常"
+              message: "Internal server error"
   
 
   securitySchemes:
@@ -234,30 +234,30 @@ components:
 
   schemas:
 
-    # ── 基础请求 / 响应 ──────────────────────────────────────────
+    # ── Base Request / Response ───────────────────────────────────
     BaseResponse:
       type: object
       required: [type, version, msgId, code]
       properties:
         type:
           type: string
-          description: 消息类型
+          description: Message type
         version:
           type: string
-          description: 接口版本
+          description: API version
           example: v1
         msgId:
           type: string
-          description: 消息 ID
+          description: Message ID
         code:
           type: integer
-          description: "业务状态码，0 表示成功"
+          description: "Business status code, 0 indicates success"
         message:
           type: string
-          description: 提示信息
+          description: Message
 
     ErrorResponse:
-      description: 错误响应，错误信息通过 code 与 message 提供
+      description: Error response. Read code and message for details.
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
 
@@ -266,11 +266,11 @@ components:
       properties:
         deviceUniqueId:
           type: string
-          description: 设备唯一标识（设备 ID）。若不在此字段中配置设备 ID，也可在请求头（Header）的 `Device-Unique-Id` 字段中传递该信息。
+          description: Device ID. If not configured in this field, you can also pass this information in the `Device-Unique-Id` field of the request header (Header).
         expiresIn:
           type: integer
           format: int32
-          description: 有效期（秒），取值范围为 [7200, 604800]；不在范围内或不传时默认 7200。
+          description: Subscription expiration time (seconds). Valid values are [7200, 604800]; if not within the range or not provided, the default is 7200.
           minimum: 7200
           maximum: 604800
 
@@ -279,7 +279,7 @@ components:
       properties:
         deviceUniqueId:
           type: string
-          description: 设备唯一标识（设备 ID）。若不在此字段中配置设备 ID，也可在请求头（Header）的 `Device-Unique-Id` 字段中传递该信息。
+          description: Device ID. If not configured in this field, you can also pass this information in the `Device-Unique-Id` field of the request header (Header).
 
     MqttSubscribeData:
       type: object
@@ -288,29 +288,29 @@ components:
         clientId:
           type: string
           description: |
-            MQTT Client ID。获取此信息后，请按规则 `receive_${clientId}` 生成订阅 topic。<br />
-            示例：当 `clientId` 为 `omqt.studio_16ce93b6fc723f0d9f0dc02f4d4a2f15_123456789` 时，topic 为 `receive_omqt.studio_16ce93b6fc723f0d9f0dc02f4d4a2f15_123456789`。
+            MQTT Client ID. After obtaining this information, please generate the corresponding topic according to the rule `receive_${clientId}`.<br />
+            Example: When `clientId` is `omqt.studio_16ce93b6fc723f0d9f0dc02f4d4a2f15_123456789`, the topic is `receive_omqt.studio_16ce93b6fc723f0d9f0dc02f4d4a2f15_123456789`.
         mqttHost:
           type: string
-          description: MQTT 服务地址。
+          description: MQTT host address.
         mqttPort:
           type: string
-          description: MQTT 服务端口。
+          description: MQTT port.
         supportedProtocols:
           type: array
-          description: 支持的协议列表。
+          description: Supported protocols list.
           items:
             type: string
         secretId:
           type: string
-          description: Base64 编码后的 MQTT 用户名。
+          description: Base64-encoded MQTT username.
         secretKey:
           type: string
-          description: Base64 编码后的 MQTT 密钥。
+          description: Base64-encoded MQTT secret key.
         expiresIn:
           type: integer
           format: int32
-          description: 订阅有效期（秒）。
+          description: Subscription expiration time (seconds).
 
     MqttSubscribeResponse:
       allOf:
@@ -327,4 +327,4 @@ components:
           properties:
             data:
               nullable: true
-              description: 固定返回 null
+              description: null (fixed)

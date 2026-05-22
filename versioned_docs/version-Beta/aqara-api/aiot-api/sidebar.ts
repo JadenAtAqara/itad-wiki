@@ -18,13 +18,13 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-api/aiot-api/mqtt-subscribe",
-          label: "获取 MQTT 连接配置",
+          label: "Get MQTT Connection Configuration",
           className: "api-method post",
         },
         {
           type: "doc",
           id: "version-Beta/aqara-api/aiot-api/mqtt-unsubscribe",
-          label: "使 MQTT 连接配置失效",
+          label: "Invalidate MQTT Connection Configuration",
           className: "api-method post",
         },
       ],
