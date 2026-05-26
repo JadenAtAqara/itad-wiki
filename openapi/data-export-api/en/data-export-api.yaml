@@ -95,6 +95,88 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
 
+    post:
+      tags: [Space]
+      summary: Create A Space
+      description: Create a space. When parentSpaceId is empty, a top-level (root) space will be created; if not empty, a child space will be created under the specified parent space.
+      operationId: createSpace
+      x-skill-intent: space.create
+      x-idempotent: false
+      x-retryable: false
+      x-side-effects: create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSpaceRequest'
+            example:
+              parentSpaceId: "space-home-001"
+              name: "Living Room"
+      responses:
+        '200':
+          description: Request succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSpaceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Update Space Name
+  # ────────────────────────────────────────────────────────────────
+  /spaces/name:
+    post:
+      tags: [Space]
+      summary: Update A Space Name
+      description: Update the name of the specified space.
+      operationId: updateSpaceName
+      x-skill-intent: space.name.update
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: update
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSpaceNameRequest'
+            example:
+              spaceId: "space-livingroom-001"
+              name: "New Living Room"
+      responses:
+        '200':
+          description: Request succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateSpaceNameResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':  
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
   # ────────────────────────────────────────────────────────────────
   # DeviceType Collection Query
   # ────────────────────────────────────────────────────────────────
@@ -544,7 +626,7 @@ paths:
   /automations:
     post:
       tags: [Automation]
-      summary: Create Automation
+      summary: Create An Automation
       description: Create a **Flow** automation.
       operationId: createAutomation
       x-skill-intent: automation.create
@@ -695,7 +777,7 @@ paths:
           $ref: '#/components/responses/InternalServerErrorResponse'
     patch:
       tags: [Automation]
-      summary: Edit Automation
+      summary: Edit An Automation
       description: |
         Edit automation name, enabled status, and configuration.
         :::tip
@@ -742,8 +824,8 @@ paths:
   /automations/status:
     post:
       tags: [Automation]
-      summary: Batch Update Automation Status
-      description: Update the enabled status of multiple automations in one request.
+      summary: Batch Update Automation Statuses
+      description: Update the enabled statuses of multiple automations in one request.
       operationId: updateAutomationStatus
       x-skill-intent: automation.update_status
       x-idempotent: false
@@ -819,7 +901,7 @@ paths:
   /automations/manual-triggers/execute:
     post:
       tags: [Automation]
-      summary: Execute Manual Trigger
+      summary: Execute A Manual Trigger
       description: |
         Execute a manual trigger within an automation to initiate subsequent conditions and actions.
         :::tip
@@ -1002,6 +1084,68 @@ components:
           items:
             $ref: '#/components/schemas/SpaceNode'
           description: Child space list (recursive structure)
+
+    CreateSpaceRequest:
+      type: object
+      required: [name]
+      properties:
+        parentSpaceId:
+          type: string
+          nullable: true
+          description: Parent space ID. When empty, a top-level (root) space will be created; if not empty, a child space will be created under the specified parent space.
+        name:
+          type: string
+          minLength: 1
+          description: Space name, cannot be an empty string.
+      example:
+        parentSpaceId: "space-home-001"
+        name: "Living Room"
+
+    CreateSpaceResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: Space ID of the newly created space.
+      example:
+        type: CreateSpaceResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000006"
+        code: 0
+        message: success
+        data: "space-livingroom-001"
+
+    UpdateSpaceNameRequest:
+      type: object
+      required: [spaceId, name]
+      properties:
+        spaceId:
+          type: string
+          description: Space ID.
+        name:
+          type: string
+          description: New space name.
+      example:
+        spaceId: "space-livingroom-001"
+        name: "New Living Room"
+
+    UpdateSpaceNameResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: Empty string (Fixed).
+      example:
+        type: UpdateSpaceResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000007"
+        code: 0
+        message: success
+        data: ""
 
     SpacesResponse:
       allOf:

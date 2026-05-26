@@ -21,6 +21,18 @@ const sidebar: SidebarsConfig = {
           label: "查询空间列表",
           className: "api-method get",
         },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-api/data-export-api/create-space",
+          label: "创建空间",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-api/data-export-api/update-space-name",
+          label: "修改空间名称",
+          className: "api-method post",
+        },
       ],
     },
     {

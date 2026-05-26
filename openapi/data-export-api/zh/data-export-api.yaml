@@ -94,6 +94,88 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
 
+    post:
+      tags: [Space]
+      summary: 创建空间
+      description: 创建一个空间。当 parentSpaceId 为空时创建顶级空间；不为空时，在该空间下创建子空间。
+      operationId: createSpace
+      x-skill-intent: space.create
+      x-idempotent: false
+      x-retryable: false
+      x-side-effects: create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSpaceRequest'
+            example:
+              parentSpaceId: "space-home-001"
+              name: "客厅"
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSpaceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 修改空间名称
+  # ────────────────────────────────────────────────────────────────
+  /spaces/name:
+    post:
+      tags: [Space]
+      summary: 修改空间名称
+      description: 传入空间 ID，更新该空间的名称。
+      operationId: updateSpaceName
+      x-skill-intent: space.name.update
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: update
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSpaceNameRequest'
+            example:
+              spaceId: "space-livingroom-001"
+              name: "新客厅"
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateSpaceNameResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
   # ────────────────────────────────────────────────────────────────
   # 查询DeviceType集合
   # ────────────────────────────────────────────────────────────────
@@ -997,6 +1079,68 @@ components:
           items:
             $ref: '#/components/schemas/SpaceNode'
           description: 子空间列表（递归结构）
+
+    CreateSpaceRequest:
+      type: object
+      required: [name]
+      properties:
+        parentSpaceId:
+          type: string
+          nullable: true
+          description: 父空间 ID。为空时创建顶级空间。
+        name:
+          type: string
+          minLength: 1
+          description: 空间名称，不能为空字符串。
+      example:
+        parentSpaceId: "space-home-001"
+        name: "客厅"
+
+    CreateSpaceResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: 新创建的空间 ID。
+      example:
+        type: CreateSpaceResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000006"
+        code: 0
+        message: success
+        data: "space-livingroom-001"
+
+    UpdateSpaceNameRequest:
+      type: object
+      required: [spaceId, name]
+      properties:
+        spaceId:
+          type: string
+          description: 空间 ID。
+        name:
+          type: string
+          description: 新空间名称。
+      example:
+        spaceId: "space-livingroom-001"
+        name: "新客厅"
+
+    UpdateSpaceNameResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: 固定为空字符串。
+      example:
+        type: UpdateSpaceResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000007"
+        code: 0
+        message: success
+        data: ""
 
     SpacesResponse:
       allOf:
