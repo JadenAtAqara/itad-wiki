@@ -21,6 +21,18 @@ const sidebar: SidebarsConfig = {
           label: "List Spaces",
           className: "api-method get",
         },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-api/data-export-api/create-space",
+          label: "Create A Space",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-api/data-export-api/update-space-name",
+          label: "Update A Space Name",
+          className: "api-method post",
+        },
       ],
     },
     {
@@ -88,7 +100,7 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-api/data-export-api/create-automation",
-          label: "Create Automation",
+          label: "Create An Automation",
           className: "api-method post",
         },
         {
@@ -106,13 +118,13 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-api/data-export-api/update-automation",
-          label: "Edit Automation",
+          label: "Edit An Automation",
           className: "api-method patch",
         },
         {
           type: "doc",
           id: "version-Beta/aqara-api/data-export-api/update-automation-status",
-          label: "Batch Update Automation Status",
+          label: "Batch Update Automation Statuses",
           className: "api-method post",
         },
         {
@@ -124,7 +136,7 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-api/data-export-api/execute-automation-manual-trigger",
-          label: "Execute Manual Trigger",
+          label: "Execute A Manual Trigger",
           className: "api-method post",
         },
       ],

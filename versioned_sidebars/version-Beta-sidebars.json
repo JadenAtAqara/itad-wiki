@@ -217,6 +217,16 @@
                   "type": "doc",
                   "id": "aqara-api/data-export-api/get-spaces",
                   "className": "api-method get"
+                },
+                {
+                  "type": "doc",
+                  "id": "aqara-api/data-export-api/create-space",
+                  "className": "api-method post"
+                },
+                {
+                  "type": "doc",
+                  "id": "aqara-api/data-export-api/update-space-name",
+                  "className": "api-method post"
                 }
               ]
             },
