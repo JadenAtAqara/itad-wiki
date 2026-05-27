@@ -1140,7 +1140,7 @@ components:
               type: string
               description: Empty string (Fixed).
       example:
-        type: UpdateSpaceResponse
+        type: UpdateSpaceNameResponse
         version: v1
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000007"
         code: 0
