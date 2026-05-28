@@ -12,3 +12,16 @@ Follow these steps to access the platform via local domain name:
 2. In the sidebar of the **Settings** page, click **About**.
 3. Find and copy the value of **Host Access Domain**.
 4. In your browser's address bar, enter `http://` followed by this domain name (e.g., `http://aqarastudio.local`) to quickly access the Aqara Studio platform.
+
+## FAQ
+
+### How to resolve the issue of not being able to access Aqara Studio using the host domain name on Windows?
+
+This issue may be caused by DNS resolution failure. You can try the following steps to solve it:
+
+1. Open Windows Settings and click on **Network & Internet**.
+2. Select the WiFi you are connected to, and view its configuration.
+3. Find the **IP settings**, and select **Edit**.
+4. In the "Edit IP settings" pop-up, select "Manual", then enable "IPv4".
+5. Set the **Preferred DNS** to `224.0.0.251` and save the settings.
+6. Try accessing Aqara Studio again using the host domain name; it should now work properly.
