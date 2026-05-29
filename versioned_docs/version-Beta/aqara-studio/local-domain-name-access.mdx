@@ -1,17 +1,23 @@
-# Local Domain Name Access
+# Host Access Domain Name Access
 
 ## Overview
 
-To simplify access, Aqara Studio provides a dedicated local domain name (HTTP). You no longer need to remember or look up potentially changing local IP addresses. Simply enter this domain name in your browser to access Aqara Studio stably and conveniently.
+To simplify access, Aqara Studio provides a dedicated host access domain name (HTTP). You no longer need to remember or look up potentially changing local IP addresses. Simply enter this domain name in your browser to access Aqara Studio stably and conveniently.
 
-## Process
+## Get Host Access Domain Name
 
-Follow these steps to access the platform via local domain name:
+You can get the host access domain name through any of the following two methods:
+- **Method 1**: Find it on the device (e.g., M300).
+- **Method 2**: Get it from Aqara Studio.
+    1. Click **Settings** in the left navigation bar.
+    2. In the sidebar of the **Settings** page, click **About**.
+    3. Find and copy the value of **Host Access Domain**.
 
-1. Click **Settings** in the left navigation bar.
-2. In the sidebar of the **Settings** page, click **About**.
-3. Find and copy the value of **Host Access Domain**.
-4. In your browser's address bar, enter `http://` followed by this domain name (e.g., `http://aqarastudio.local`) to quickly access the Aqara Studio platform.
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LocalDomainName-GetHostDomainNameAddress.png" alt="Get Host Access Domain Name" style={{width: '80%'}} />
+
+## Use Host Access Domain Name to Access Aqara Studio
+
+In the browser address bar, enter `http://` followed by this domain name (e.g., `http://aqarastudio-xxxx.local`) to quickly access the Aqara Studio platform.
 
 ## FAQ
 
@@ -20,8 +26,16 @@ Follow these steps to access the platform via local domain name:
 This issue may be caused by DNS resolution failure. You can try the following steps to solve it:
 
 1. Open Windows Settings and click on **Network & Internet**.
-2. Select the WiFi you are connected to, and view its configuration.
+2. Check your network properties.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LocalDomainName-CheckNetworkProperties.png" alt="Check Network Properties" style={{width: '80%'}} />
+
 3. Find the **IP settings**, and select **Edit**.
-4. In the "Edit IP settings" pop-up, select "Manual", then enable "IPv4".
-5. Set the **Preferred DNS** to `224.0.0.251` and save the settings.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LocalDomainName-Edit.png" alt="Edit IP Settings" style={{width: '80%'}} />
+
+4. In the "Edit IP settings" pop-up, select "Manual", then enable "IPv4". Set the **Preferred DNS** to `224.0.0.251` and save the settings.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LocalDomainName-SetDNS.png" alt="Set Preferred DNS" style={{width: '60%'}} />
+
 6. Try accessing Aqara Studio again using the host domain name; it should now work properly.
