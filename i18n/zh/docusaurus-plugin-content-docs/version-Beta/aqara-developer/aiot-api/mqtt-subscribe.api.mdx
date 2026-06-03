@@ -1,0 +1,73 @@
+---
+id: mqtt-subscribe
+title: "获取 MQTT 连接配置"
+description: "调用此接口，传入指定的设备 ID，获取 MQTT 连接与 topic 订阅所需的信息，包括 Client ID、MQTT 服务地址、MQTT 服务端口、支持的协议、用户名、密钥等。 <br />"
+sidebar_label: "获取 MQTT 连接配置"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "post api-method"
+info_path: i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-developer/aiot-api/aiot-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"获取 MQTT 连接配置"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/subscriptions/mqtt/subscribe"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+调用此接口，传入指定的设备 ID，获取 MQTT 连接与 topic 订阅所需的信息，包括 Client ID、MQTT 服务地址、MQTT 服务端口、支持的协议、用户名、密钥等。 <br />
+您可基于返回的信息，通过第三方 MQTT 客户端连接 Aqara 提供的 MQTT Broker，并根据客户端 ID 按特定规则生成对应 Topic，以实时获取指定设备的功能点值变化。
+
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"required":false,"content":{"application/json":{"schema":{"type":"object","properties":{"deviceUniqueId":{"type":"string","description":"设备唯一标识（设备 ID）。若不在此字段中配置设备 ID，也可在请求头（Header）的 `Device-Unique-Id` 字段中传递该信息。"},"expiresIn":{"type":"integer","format":"int32","description":"有效期（秒），取值范围为 [7200, 604800]；不在范围内或不传时默认 7200。","minimum":7200,"maximum":604800}},"title":"MqttSubscribeRequest"},"examples":{"subscribe":{"value":{"deviceUniqueId":"device-unique-id-001","expiresIn":7200}}}}}}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"成功","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"type":"object","required":["clientId","mqttHost","mqttPort","supportedProtocols","secretId","secretKey","expiresIn"],"properties":{"clientId":{"type":"string","description":"MQTT Client ID。获取此信息后，请按规则 `receive_${clientId}` 生成订阅 topic。<br />\n示例：当 `clientId` 为 `omqt.studio_16ce93b6fc723f0d9f0dc02f4d4a2f15_123456789` 时，topic 为 `receive_omqt.studio_16ce93b6fc723f0d9f0dc02f4d4a2f15_123456789`。\n"},"mqttHost":{"type":"string","description":"MQTT 服务地址。"},"mqttPort":{"type":"string","description":"MQTT 服务端口。"},"supportedProtocols":{"type":"array","description":"支持的协议列表。","items":{"type":"string"}},"secretId":{"type":"string","description":"Base64 编码后的 MQTT 用户名。"},"secretKey":{"type":"string","description":"Base64 编码后的 MQTT 密钥。"},"expiresIn":{"type":"integer","format":"int32","description":"订阅有效期（秒）。"}},"title":"MqttSubscribeData"}}}],"title":"MqttSubscribeResponse"},"examples":{"subscribeSuccess":{"value":{"type":"MqttSubscribeResponse","version":"v1","msgId":"2df2f431-xxxx-4fdb-xxxx-xxxxxxxx","code":0,"message":"success","data":{"clientId":"omqt.studio_16xxxxxxxxxxx9","mqttHost":"mqtt.xxx.com","mqttPort":"1883","supportedProtocols":["tcp"],"secretId":"YmFzZTY0xxxxxxxxxxxxxxxxxxJldElk","secretKey":"YmFzZTY0xxxxxxxxxxxxxxxxxxxxxxleQ==","expiresIn":7200}}}}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 xxx 不能为空"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"token 已过期，请重新生成 token"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"无权限访问该资源"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"资源不存在"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"429":{"description":"请求频率过高","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000005","code":429,"message":"请求频率过高"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"服务内部异常"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      
