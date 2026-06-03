@@ -267,6 +267,12 @@ paths:
               type: string
           style: form
           explode: true
+        - name: deviceName
+          in: query
+          description: Device name fuzzy matching (case-insensitive, blank values are automatically ignored)
+          required: false
+          schema:
+            type: string
         - name: orderBy
           in: query
           description: "Sorting method. <ul><li><code>createTime asc</code>: Sorts results by creation time in ascending order (oldest first).</li><li><code>createTime desc</code>: Sorts results by creation time in descending order (newest first).</li></ul>"
