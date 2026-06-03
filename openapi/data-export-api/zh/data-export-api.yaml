@@ -265,6 +265,12 @@ paths:
               type: string
           style: form
           explode: true
+        - name: deviceName
+          in: query
+          description: 设备名称模糊匹配（不区分大小写，空白值自动忽略）
+          required: false
+          schema:
+            type: string
         - name: orderBy
           in: query
           description: 排序方式。<ul><li>createTime asc：按创建时间升序排序。</li><li>createTime desc：按创建时间降序排序。</li></ul>
