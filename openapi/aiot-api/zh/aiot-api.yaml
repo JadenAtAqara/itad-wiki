@@ -34,10 +34,6 @@ servers:
           - 'https://open-sg.aqara.com'
         default: 'https://open-cn.aqara.com'
 
-# 全局安全：所有接口均需 Bearer Token
-security:
-  - BearerAuth: []
-
 tags:
   - name: Space
     description: 空间管理接口
@@ -1035,13 +1031,7 @@ components:
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000006"
               code: 500
               message: "服务内部异常"
-  
 
-  securitySchemes:
-    BearerAuth:
-      type: http
-      scheme: bearer
-      description: "Authorization: Bearer token"
 
 
   # 公共请求头参数（所有接口均需携带，由客户端统一附加）
