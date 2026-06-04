@@ -7,15 +7,20 @@ info:
     AIOT API 开放接口文档
 
     ## 公共请求头
-    所有接口均需携带以下 Header 参数（由客户端统一附加）：
+    所有接口均需携带以下 Header 参数（由客户端统一附加）：   
     | Header | 必填 | 说明 |
     |--------|------|------|
-    | Authorization | 是 | `Bearer accessToken` |
-    | Content-Type | 是 | `application/json` |
+    | Accesstoken | String | 否   | 通过授权获取的访问 Token。        |
+    | Appid       | String | 是   | 在 [Aqara 开发者平台](https://developer.aqara.com) 创建应用时分配的 App ID。 |
+    | Keyid       | String | 是   | 在 [Aqara 开发者平台](https://developer.aqara.com) 创建应用时分配的 Key ID。                   |
+    | Nonce       | String | 是   | 随机字符串，每次请求都不同。     |
+    | Time        | String | 是   | 请求时间戳，单位毫秒。           |
+    | Sign | 是 | 请求签名。如需了解签名生成方法，请参考 [Sign 生成规则](https://opendoc.aqara.cn/docs/%E4%BA%91%E5%BC%80%E5%8F%91/API%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/Sign%E7%94%9F%E6%88%90%E8%A7%84%E5%88%99.html)。 |
+    | Lang        | Enum   | 否   | 语言，默认英文，'zh', 'en'     |
   version: v1
 
 servers:
-  - url: '{host}/open/api/v1'
+  - url: '{host}/v4.0/open/api'
     description: AIOT API 端点
     variables:
       host:
@@ -27,10 +32,795 @@ security:
   - BearerAuth: []
 
 tags:
+  - name: Space
+    description: 空间管理接口
+  - name: Device
+    description: 设备查询、属性读写与命令执行接口
   - name: Subscription
     description: 订阅接口（MQTT 等）
 
 paths:
+
+  # ────────────────────────────────────────────────────────────────
+  # 查询空间列表
+  # ────────────────────────────────────────────────────────────────
+  /spaces:
+    get:
+      tags: [Space]
+      summary: 查询空间列表
+      description: 查询父级空间下的子空间，可选包含父空间自身
+      operationId: getSpaces
+      x-skill-intent: space.list
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - $ref: '#/components/parameters/Accesstoken'
+        - $ref: '#/components/parameters/Appid'
+        - $ref: '#/components/parameters/Keyid'
+        - $ref: '#/components/parameters/Nonce'
+        - $ref: '#/components/parameters/Time'
+        - $ref: '#/components/parameters/Sign'
+        - $ref: '#/components/parameters/Lang'
+        - name: parentSpaceId
+          in: query
+          description: 父空间 ID。为空时返回所有顶级空间（即没有父空间的空间，属于空间树的根节点）。
+          required: false
+          schema:
+            type: string
+        - name: needChildren
+          in: query
+          description: 是否查询子孙空间，默认true；当 parentSpaceId 是否查询父空间下的子空间。若 parentSpaceId 非空且 needChildren 为 false，则不返回子空间（仅在 needParentSpaceSelf 为 true 时可返回父空间自身）。
+          required: false
+          schema:
+            type: boolean
+            default: true
+        - name: needParentSpaceSelf
+          in: query
+          description: 是否包含 parentSpaceId 对应的父空间自身。仅当 parentSpaceId 非空时生效。
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: 请求发起成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpacesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+    post:
+      tags: [Space]
+      summary: 创建空间
+      description: 在指定父空间下创建子空间；parentSpaceId 为空时创建顶级空间
+      operationId: createSpace
+      x-skill-intent: space.create
+      x-idempotent: false
+      x-retryable: false
+      x-side-effects: create
+      parameters:
+        - $ref: '#/components/parameters/Accesstoken'
+        - $ref: '#/components/parameters/Appid'
+        - $ref: '#/components/parameters/Keyid'
+        - $ref: '#/components/parameters/Nonce'
+        - $ref: '#/components/parameters/Time'
+        - $ref: '#/components/parameters/Sign'
+        - $ref: '#/components/parameters/Lang'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSpaceRequest'
+            example:
+              parentSpaceId: "space-home-001"
+              name: "客厅"
+              settings:
+                gmtTimeZone: "GMT+08:00"
+                locationId: "123.456,78.90"
+                autoAdjustDst: true
+      responses:
+        '200':
+          description: 请求发起成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSpaceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 修改空间名称
+  # ────────────────────────────────────────────────────────────────
+  /spaces/name:
+    post:
+      tags: [Space]
+      summary: 修改空间名称
+      description: 根据空间ID修改空间名称
+      operationId: updateSpaceName
+      x-skill-intent: space.name.update
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: update
+      parameters:
+        - $ref: '#/components/parameters/Accesstoken'
+        - $ref: '#/components/parameters/Appid'
+        - $ref: '#/components/parameters/Keyid'
+        - $ref: '#/components/parameters/Nonce'
+        - $ref: '#/components/parameters/Time'
+        - $ref: '#/components/parameters/Sign'
+        - $ref: '#/components/parameters/Lang'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSpaceNameRequest'
+            example:
+              spaceId: "space-livingroom-001"
+              name: "新客厅"
+      responses:
+        '200':
+          description: 请求发起成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateSpaceNameResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+
+  # ────────────────────────────────────────────────────────────────
+  # 查询DeviceType集合
+  # ────────────────────────────────────────────────────────────────
+  /devices/types:
+    get:
+      tags: [Device]
+      summary: 查询DeviceType集合
+      operationId: getDeviceTypes
+      x-skill-intent: device.type.list
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - $ref: '#/components/parameters/Accesstoken'
+        - $ref: '#/components/parameters/Appid'
+        - $ref: '#/components/parameters/Keyid'
+        - $ref: '#/components/parameters/Nonce'
+        - $ref: '#/components/parameters/Time'
+        - $ref: '#/components/parameters/Sign'
+        - $ref: '#/components/parameters/Lang'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceTypesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 查设备信息列表
+  # ────────────────────────────────────────────────────────────────
+  /devices:
+    get:
+      tags: [Device]
+      summary: 查设备信息列表
+      operationId: getDevices
+      x-skill-intent: device.list
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - $ref: '#/components/parameters/Accesstoken'
+        - $ref: '#/components/parameters/Appid'
+        - $ref: '#/components/parameters/Keyid'
+        - $ref: '#/components/parameters/Nonce'
+        - $ref: '#/components/parameters/Time'
+        - $ref: '#/components/parameters/Sign'
+        - $ref: '#/components/parameters/Lang'
+        - name: spaceIds
+          in: query
+          description: 空间ID列表，为空查询所有设备
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - name: needChildren
+          in: query
+          description: 是否需要查询子孙空间的设备，只有传了spaceIds条件，needChildren参数才有用
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - name: state
+          in: query
+          description: 设备在线状态（缺省时不做过滤条件）
+          required: false
+          schema:
+            type: boolean
+            nullable: true
+        - name: deviceTypesList
+          in: query
+          description: 设备类型列表
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - name: deviceName
+          in: query
+          description: 设备名称模糊匹配（不区分大小写，空白值自动忽略）
+          required: false
+          schema:
+            type: string
+        - name: orderBy
+          in: query
+          description: 排序方式
+          required: false
+          schema:
+            type: string
+            default: createTime asc
+            enum: [createTime asc, createTime desc]
+          example: createTime asc
+        - name: pageNum
+          in: query
+          description: 页码
+          required: false
+          schema:
+            type: integer
+          example: 1
+        - name: pageSize
+          in: query
+          description: 每页数量
+          required: false
+          schema:
+            type: integer
+          example: 200
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DevicesResponse'
+              examples:
+                devicesPage:
+                  value:
+                    type: GetDeviceInfoResponse
+                    version: v1
+                    msgId: "1751609244328"
+                    code: 0
+                    message: success
+                    data:
+                      totalCount: 3
+                      pageNum: 1
+                      pageSize: 200
+                      data:
+                        - deviceId: "device-001"
+                          deviceName: "客厅灯"
+                          deviceTypesList: ["light"]
+                          createTime: 1710001234567
+                          state: true
+                          space:
+                            parentSpaceId: "space-home-001"
+                            spaceId: "space-room-001"
+                            name: "客厅"
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 查询设备定义（设备详细信息）
+  # ────────────────────────────────────────────────────────────────
+  /devices/definitions:
+    get:
+      tags: [Device]
+      summary: 查询设备定义（设备详细信息）
+      operationId: getDeviceDefinitions
+      x-skill-intent: device.definition.get
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - $ref: '#/components/parameters/Accesstoken'
+        - $ref: '#/components/parameters/Appid'
+        - $ref: '#/components/parameters/Keyid'
+        - $ref: '#/components/parameters/Nonce'
+        - $ref: '#/components/parameters/Time'
+        - $ref: '#/components/parameters/Sign'
+        - $ref: '#/components/parameters/Lang'
+        - name: deviceIds
+          in: query
+          required: true
+          description: 设备ID列表（当前一次最多支持10个设备ID）
+          schema:
+            type: array
+            maxItems: 10
+            items:
+              type: string
+          style: form
+          explode: true
+        - name: includeValues
+          in: query
+          required: false
+          description: |
+            是否包含各 trait 的当前值（`value`）与上报时间（`time`）。默认 `false` 时仅返回能力定义元数据，结构与 `true` 相同但trait值value字段可能为空或是不准确的旧值；为 `true` 时会拉取设备的当前trait值。
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceDefinitionsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 设备定义（数字 ID 形态，与 definitions 同类、结构不同，内部 App）
+  # ────────────────────────────────────────────────────────────────
+  /devices/definitions/numeric:
+    get:
+      tags: [Device]
+      summary: 查询单设备定义（数字 ID 形态）
+      description: |
+        供内部 AqaraLife App 使用。与 `GET /devices/definitions` 表示**同类**设备能力信息，但本接口用另一套**树形 JSON**：
+        `devices[] → eps（端点）→ funcs（功能簇 ID）→ traits / cmds`，其中 **trait、command、function、endpoint 均以整型 ID** 标识；
+        具体读写值在 `traits[].args[]`、`cmds[].args[]` 中，`value` 多为字符串（含 JSON 文本、数字字符串等），`time` 为毫秒时间戳（可选）。
+        `data` 还会出现 `centralGateway`、`userId`、`nid`、`spaceId` 等上下文字段。单设备：`query deviceId`（即 did）。
+      operationId: getDeviceDefinitionNumeric
+      x-internal: true
+      x-skill-intent: device.definition.numeric.get
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - $ref: '#/components/parameters/Accesstoken'
+        - $ref: '#/components/parameters/Appid'
+        - $ref: '#/components/parameters/Keyid'
+        - $ref: '#/components/parameters/Nonce'
+        - $ref: '#/components/parameters/Time'
+        - $ref: '#/components/parameters/Sign'
+        - $ref: '#/components/parameters/Lang'
+        - name: deviceId
+          in: query
+          required: true
+          description: 设备 ID（did）
+          schema:
+            type: string
+        - name: includeValues
+          in: query
+          required: false
+          description: 是否拉取完整取值
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDeviceDefinitionNumericResponse'
+              examples:
+                numericDefinitionShape:
+                  summary: 树形结构节选（真实字段组合可能更多）
+                  value:
+                    type: GetDeviceDefinitionNumericResponse
+                    version: v1
+                    msgId: "a1b2c3d4-e5f6-7890-abcd-000000000008a"
+                    code: 0
+                    message: success
+                    data:
+                      spaceId: "space.1091392905374072832.1."
+                      devices:
+                        - did: "matt.5d4bf57d132e34c44c60e000"
+                          eps:
+                            - id: 0
+                              funcs:
+                                - id: 128
+                                  traits:
+                                    - id: 32900
+                                      args:
+                                        - id: 1
+                                          value: "Aqara Light Switch H2 EU"
+                                - id: 130
+                                  traits:
+                                    - id: 32914
+                                      args:
+                                        - id: 1
+                                          value: "space.1091392905374072832.1."
+                            - id: 1
+                              type: [1]
+                              funcs:
+                                - id: 131
+                                  traits:
+                                    - id: 32916
+                                      args:
+                                        - id: 1
+                                          value: "0"
+                                  cmds:
+                                    - id: 32918
+                      nid: "157543569210258538"
+                      userId: "100903618050550.1091392892818497537"
+                      centralGateway: "M_LEADER-4750190511643105290"
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 控制设备 / 设备更换房间 / 设备改名和更换房间
+  # ────────────────────────────────────────────────────────────────
+  /devices/trait/execute:
+    post:
+      tags: [Device]
+      summary: 控制设备 / 设备更换房间 / 设备改名
+      description: |
+        通过 trait 执行设备控制，包括：
+        - 控制设备属性（如开关、温度等）
+        - 设备更换房间（functionCode=EndpointLabel, traitCode=EndpointRoom）
+        - 设备改名（functionCode=EndpointLabel, traitCode=EndpointName）
+      operationId: executeDeviceTrait
+      x-skill-intent: device.trait.execute
+      x-idempotent: false
+      x-retryable: conditional
+      x-side-effects: device_state_change
+      parameters:
+        - $ref: '#/components/parameters/Accesstoken'
+        - $ref: '#/components/parameters/Appid'
+        - $ref: '#/components/parameters/Keyid'
+        - $ref: '#/components/parameters/Nonce'
+        - $ref: '#/components/parameters/Time'
+        - $ref: '#/components/parameters/Sign'
+        - $ref: '#/components/parameters/Lang'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TraitExecuteRequest'
+            examples:
+              executeOnOff:
+                value:
+                  data:
+                    - deviceId: "123456"
+                      endpointId: 1
+                      functionCode: Output
+                      traitCode: OnOff
+                      value: true
+      responses:
+        '200':
+          description: 成功（data 中返回执行失败的条目）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TraitExecuteResponse'
+              examples:
+                partialFailed:
+                  value:
+                    type: ExecuteTraitResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecf7"
+                    code: 0
+                    message: success
+                    data:
+                      - deviceId: "123456"
+                        endpointId: 1
+                        functionCode: Output
+                        traitCode: OnOff
+                        code: 1103
+                        message: device offline
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # command下发设备
+  # ────────────────────────────────────────────────────────────────
+  /devices/command/execute:
+    post:
+      tags: [Device]
+      summary: 设备命令执行
+      description: |
+        通过 command 执行设备操作
+      operationId: executeDeviceCommand
+      x-skill-intent: device.command.execute
+      x-idempotent: false
+      x-retryable: conditional
+      x-side-effects: device_state_change
+      parameters:
+        - $ref: '#/components/parameters/Accesstoken'
+        - $ref: '#/components/parameters/Appid'
+        - $ref: '#/components/parameters/Keyid'
+        - $ref: '#/components/parameters/Nonce'
+        - $ref: '#/components/parameters/Time'
+        - $ref: '#/components/parameters/Sign'
+        - $ref: '#/components/parameters/Lang'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommandExecuteRequest'
+            examples:
+              executeCommand:
+                value:
+                  data:
+                    - deviceId: "gateway001"
+                      endpointId: 1
+                      functionCode: NetworkCommissioning
+                      commandCode: TriggerZigbeeNetworkInfoUpload
+                      args:
+                        - fieldCode: InstallCode
+                          value: "F9B34846413AB5DE81B60E63E440"
+                        - fieldCode: MAC
+                          value: "54EF441000EB0CCF"
+      responses:
+        '200':
+          description: 成功（data 中返回执行失败的条目）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandExecuteResponse'
+              examples:
+                commandFailed:
+                  value:
+                    type: ExecuteCommandResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecf9"
+                    code: 0
+                    message: success
+                    data:
+                      - deviceId: "gateway001"
+                        endpointId: 1
+                        functionCode: HubCoordination
+                        commandCode: APIBindSubdeviceWithSecurityCode
+                        code: 2201
+                        message: invalid security code
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /devices/command/execute/await:
+    post:
+      tags: [Device]
+      summary: 设备命令执行并等待响应
+      description: |
+        通过 command 执行设备操作，并在服务端等待设备命令上报数据。
+      operationId: executeDeviceCommandAwait
+      x-skill-intent: device.command.execute.await
+      x-idempotent: false
+      x-retryable: conditional
+      x-side-effects: device_state_change
+      parameters:
+        - $ref: '#/components/parameters/Accesstoken'
+        - $ref: '#/components/parameters/Appid'
+        - $ref: '#/components/parameters/Keyid'
+        - $ref: '#/components/parameters/Nonce'
+        - $ref: '#/components/parameters/Time'
+        - $ref: '#/components/parameters/Sign'
+        - $ref: '#/components/parameters/Lang'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommandExecuteAwaitRequest'
+            examples:
+              executeCommandAwait:
+                value:
+                  data:
+                    - deviceId: "gateway001"
+                      endpointId: 1
+                      functionCode: NetworkCommissioning
+                      commandCode: TriggerZigbeeNetworkInfoUpload
+                      args:
+                        - fieldCode: InstallCode
+                          value: "F9B34846413AB5DE81B60E63E440"
+                        - fieldCode: MAC
+                          value: "54EF441000EB0CCF"
+      responses:
+        '200':
+          description: 成功（data 返回每条命令的执行及设备上报结果）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandExecuteAwaitResponse'
+              examples:
+                commandExecuteAwaitSuccess:
+                  value:
+                    type: ExecuteCommandAwaitResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecfa"
+                    code: 0
+                    message: success
+                    data:
+                      - deviceId: "gateway001"
+                        endpointId: 1
+                        functionCode: NetworkCommissioning
+                        commandCode: TriggerZigbeeNetworkInfoUpload
+                        code: 0
+                        message: success
+                        responded: true
+                        commandReportValue: "{\"result\":\"ok\"}"
+                        responseTime: 1710001234567
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 查询trait功能值
+  # ────────────────────────────────────────────────────────────────
+  /devices/trait/read:
+    post:
+      tags: [Device]
+      summary: 查询trait功能值
+      operationId: getTraitValues
+      x-skill-intent: device.trait.read
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - $ref: '#/components/parameters/Accesstoken'
+        - $ref: '#/components/parameters/Appid'
+        - $ref: '#/components/parameters/Keyid'
+        - $ref: '#/components/parameters/Nonce'
+        - $ref: '#/components/parameters/Time'
+        - $ref: '#/components/parameters/Sign'
+        - $ref: '#/components/parameters/Lang'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TraitReadRequest'
+            examples:
+              readTraits:
+                value:
+                  data:
+                    - deviceId: "123456"
+                      endpointId: 1
+                      functionCode: Output
+                      traitCodes: [OnOff]
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TraitValueResponse'
+              examples:
+                traitValueSuccess:
+                  value:
+                    type: GetTraitValueResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecf8"
+                    code: 0
+                    message: success
+                    data:
+                      - deviceId: "123456"
+                        endpointId: 1
+                        functionCode: Output
+                        traitCode: OnOff
+                        value: true
+                        time: 1710001234567
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
   # MQTT 订阅 / 取消订阅
@@ -47,7 +837,14 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: subscription_create_or_refresh
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Accesstoken'
+        - $ref: '#/components/parameters/Appid'
+        - $ref: '#/components/parameters/Keyid'
+        - $ref: '#/components/parameters/Nonce'
+        - $ref: '#/components/parameters/Time'
+        - $ref: '#/components/parameters/Sign'
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: false
         content:
@@ -61,7 +858,7 @@ paths:
                   expiresIn: 7200
       responses:
         '200':
-          description: 成功
+          description: 请求发起成功
           content:
             application/json:
               schema:
@@ -106,7 +903,14 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: subscription_delete
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Accesstoken'
+        - $ref: '#/components/parameters/Appid'
+        - $ref: '#/components/parameters/Keyid'
+        - $ref: '#/components/parameters/Nonce'
+        - $ref: '#/components/parameters/Time'
+        - $ref: '#/components/parameters/Sign'
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: false
         content:
@@ -232,6 +1036,67 @@ components:
       scheme: bearer
       description: "Authorization: Bearer token"
 
+
+  # 公共请求头参数（所有接口均需携带，由客户端统一附加）
+  parameters:
+    Accesstoken:
+      name: Accesstoken
+      in: header
+      required: false
+      schema:
+        type: string
+        example: "{{Accesstoken}}"
+      description: 通过授权获取的访问 Token。
+    Appid:
+      name: Appid
+      in: header
+      required: true
+      schema:
+        type: string
+        example: "{{Appid}}"
+      description: 在 [Aqara 开发者平台](https://developer.aqara.com/) 创建应用时分配的 App ID。
+    Keyid:
+      name: Keyid
+      in: header
+      required: true
+      schema:
+        type: string
+        example: "{{Keyid}}"
+      description: 在 [Aqara 开发者平台](https://developer.aqara.com/) 创建应用时分配的 Key ID。
+    Nonce:
+      name: Nonce
+      in: header
+      required: true
+      schema:
+        type: string
+        example: "{{Nonce}}"
+      description: 随机字符串，每次请求都不同。
+    Time:
+      name: Time
+      in: header
+      required: true
+      schema:
+        type: string
+        example: "{{Time}}"
+      description: 请求时间戳，单位毫秒。
+    Sign:
+      name: Sign
+      in: header
+      required: true
+      schema:
+        type: string
+        example: "{{Sign}}"
+      description: 请求签名。如需了解签名生成方法，请参考 [Sign 生成规则](https://opendoc.aqara.cn/docs/%E4%BA%91%E5%BC%80%E5%8F%91/API%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/Sign%E7%94%9F%E6%88%90%E8%A7%84%E5%88%99.html)。
+    Lang:
+      name: Lang
+      in: header
+      required: false
+      schema:
+        type: string
+        enum: [zh, en]
+        example: "en"
+      description: 语言，默认英文。支持 'zh', 'en' 两种语言。
+
   schemas:
 
     # ── 基础请求 / 响应 ──────────────────────────────────────────
@@ -261,6 +1126,949 @@ components:
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
 
+    # ── Space ────────────────────────────────────────────────────
+    SpaceNode:
+      type: object
+      required: [spaceId, name]
+      properties:
+        spaceId:
+          type: string
+          description: 空间ID
+        parentSpaceId:
+          type: string
+          nullable: true
+          description: 父空间ID
+        name:
+          type: string
+          description: 空间名称
+        spatialMarking:
+          type: string
+          nullable: true
+          description: 空间标记
+        children:
+          type: array
+          nullable: true
+          items:
+            type: object
+            properties:
+              spaceId:
+                type: string
+                description: 子空间ID
+              parentSpaceId:
+                type: string
+                nullable: true
+                description: 父空间ID
+              name:
+                type: string
+                description: 子空间名称
+              spatialMarking:
+                type: string
+                nullable: true
+                description: 子空间标记
+              children:
+                type: array
+                nullable: true
+                items:
+                  type: object
+                  properties:
+                    spaceId:
+                      type: string
+                    parentSpaceId:
+                      type: string
+                      nullable: true
+                    name:
+                      type: string
+                    spatialMarking:
+                      type: string
+                      nullable: true
+                description: 孙级及更深层子空间列表（结构同子空间节点，按此模式递归）
+          description: 子空间列表（树结构）
+
+    SpaceSettings:
+      type: object
+      description: 空间配置属性（创建/修改时均可选传入）
+      properties:
+        gmtTimeZone:
+          type: string
+          description: 标准GMT格式时区，如 GMT+08:00
+          example: "GMT+08:00"
+        locationId:
+          type: string
+          nullable: true
+          description: 家庭位置标识，支持经纬度串（如 "123.456,78.90"）或城市编码（如 "30372"）
+        autoAdjustDst:
+          type: boolean
+          default: true
+          description: 是否自动调整夏令时（Daylight Saving Time）
+
+    CreateSpaceRequest:
+      type: object
+      required: [name]
+      properties:
+        parentSpaceId:
+          type: string
+          nullable: true
+          description: 父空间ID；为空时创建顶级空间
+        name:
+          type: string
+          minLength: 1
+          description: 空间名称，不能为空字符串
+        settings:
+          $ref: '#/components/schemas/SpaceSettings'
+      example:
+        parentSpaceId: "space-home-001"
+        name: "客厅"
+        settings:
+          gmtTimeZone: "GMT+08:00"
+          locationId: "123.456,78.90"
+          autoAdjustDst: true
+
+    CreateSpaceResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: 新创建的空间ID
+      example:
+        type: CreateSpaceResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000006"
+        code: 0
+        message: success
+        data: "space-livingroom-001"
+
+    UpdateSpaceNameRequest:
+      type: object
+      required: [spaceId, name]
+      properties:
+        spaceId:
+          type: string
+          description: 空间ID
+        name:
+          type: string
+          description: 新空间名称
+      example:
+        spaceId: "space-livingroom-001"
+        name: "新客厅"
+
+    UpdateSpaceNameResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: 固定为空字符串
+      example:
+        type: UpdateSpaceNameResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000007"
+        code: 0
+        message: success
+        data: ""
+
+    SpacesResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/SpaceNode'
+      example:
+        type: GetSpacesResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000005"
+        code: 0
+        message: success
+        data:
+          - spaceId: "space-home-001"
+            parentSpaceId: null
+            name: "我的家"
+            spatialMarking: "home"
+            children:
+              - spaceId: "space-floor1-001"
+                parentSpaceId: "space-home-001"
+                name: "一楼"
+                spatialMarking: "floor"
+                children: []
+
+    # ── Device ───────────────────────────────────────────────────
+    DeviceType:
+      type: object
+      required: [deviceType, name]
+      properties:
+        deviceType:
+          type: string
+          description: 设备类型编码
+        name:
+          type: string
+          description: 设备类型名称
+
+    DeviceInfo:
+      type: object
+      required: [deviceId, deviceName, deviceTypesList, createTime, state, space]
+      properties:
+        deviceId:
+          type: string
+          description: 设备ID
+        deviceName:
+          type: string
+          description: 设备名称
+        deviceTypesList:
+          type: array
+          items:
+            type: string
+          description: 设备类型列表
+        createTime:
+          type: integer
+          format: int64
+          description: 创建时间（毫秒时间戳）
+        state:
+          type: boolean
+          description: 设备在线状态
+        space:
+          $ref: '#/components/schemas/DeviceSpace'
+
+    DeviceSpace:
+      type: object
+      required: [parentSpaceId, spaceId, name]
+      properties:
+        parentSpaceId:
+          type: string
+        spaceId:
+          type: string
+        name:
+          type: string
+
+    DeviceDefinition:
+      type: object
+      required: [deviceId, name, deviceTypesList, endpoints]
+      properties:
+        deviceId:
+          type: string
+          description: 设备ID
+        name:
+          type: string
+          description: 设备名称
+        deviceTypesList:
+          type: array
+          items:
+            type: string
+          description: 设备类型列表
+        endpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/Endpoint'
+
+    # ── 设备定义（数字 ID 形态，与 DeviceDefinition 信息同类、结构不同）────
+    DeviceDefinitionNumericParameter:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+          description: 参数槽位 ID（常见为 1，或其它约定槽位）
+        mth:
+          type: string
+          nullable: true
+        value:
+          description: 多为字符串；亦可能为数值等，依设备/协议而定
+        time:
+          type: integer
+          format: int64
+          nullable: true
+          description: 最新值时间（毫秒）
+
+    DeviceDefinitionNumericTrait:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+          description: Trait 规格 ID（整型，对应协议/服务表）
+        args:
+          type: array
+          description: 属性参数列表；无参数时可缺省或为空
+          items:
+            $ref: '#/components/schemas/DeviceDefinitionNumericParameter'
+
+    DeviceDefinitionNumericCommand:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: integer
+          description: Command 规格 ID
+        mth:
+          type: string
+          nullable: true
+        args:
+          type: array
+          description: 命令参数；可无
+          items:
+            $ref: '#/components/schemas/DeviceDefinitionNumericParameter'
+
+    DeviceDefinitionNumericFunction:
+      type: object
+      required: [id]
+      description: 某一功能簇；可仅有 traits、仅有 cmds，或二者兼有
+      properties:
+        id:
+          type: integer
+          description: Function（功能簇）ID
+        traits:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceDefinitionNumericTrait'
+        cmds:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceDefinitionNumericCommand'
+
+    DeviceDefinitionNumericEndpoint:
+      type: object
+      required: [id, funcs]
+      properties:
+        id:
+          type: integer
+          description: Endpoint ID（端点索引，含 0 的根/设备级端点）
+        type:
+          type: array
+          items:
+            type: integer
+          description: 端点类型 ID 列表；部分端点可能缺省该字段
+        funcs:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceDefinitionNumericFunction'
+
+    DeviceDefinitionNumericDevice:
+      type: object
+      required: [did, eps]
+      properties:
+        did:
+          type: string
+          description: 设备 ID
+        eps:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceDefinitionNumericEndpoint'
+
+    DeviceDefinitionNumericData:
+      type: object
+      required: [devices]
+      properties:
+        centralGateway:
+          type: string
+          nullable: true
+        userId:
+          type: string
+          nullable: true
+        threadExtPanId:
+          type: string
+          nullable: true
+        nid:
+          type: string
+          nullable: true
+        spaceId:
+          type: string
+          nullable: true
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceDefinitionNumericDevice'
+
+    GetDeviceDefinitionNumericResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/DeviceDefinitionNumericData'
+
+    DeviceDefinitionsResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/DeviceDefinition'
+      example:
+        type: GetDeviceResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000008"
+        code: 0
+        message: success
+        data:
+          - deviceId: "device-001"
+            name: "客厅灯"
+            deviceTypesList: ["light"]
+            endpoints: []
+
+    DeviceUnbindResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              nullable: true
+              description: 解绑成功后返回 null 或空字符串
+              example: ""
+      example:
+        type: DeviceUnbindResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000018"
+        code: 0
+        message: success
+        data: null
+
+    DeviceUnbindRequest:
+      type: object
+      required: [deviceId]
+      properties:
+        deviceId:
+          type: string
+          description: 解绑设备ID
+        needDeleteNodeData:
+          type: boolean
+          description: 需要删除节点数据
+
+
+    Endpoint:
+      type: object
+      required: [endpointId, endpointName, deviceType, functions]
+      properties:
+        endpointId:
+          type: integer
+          description: 端点ID
+        endpointName:
+          type: string
+          description: 端点名称
+        deviceType:
+          type: string
+          description: 设备类型
+        functions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceFunction'
+
+    DeviceFunction:
+      type: object
+      required: [functionCode]
+      properties:
+        functionCode:
+          type: string
+          description: 功能编码（如 LevelControl, ColorControl, Output）
+        traits:
+          type: array
+          items:
+            $ref: '#/components/schemas/Trait'
+        commands:
+          type: array
+          items:
+            $ref: '#/components/schemas/Command'
+
+    FlexibleValue:
+      oneOf:
+        - type: boolean
+        - type: integer
+        - type: number
+          format: double
+        - type: string
+      description: |
+        动态值，具体类型取决于 trait/command 定义。
+        推荐值类型来源规则：
+        1) trait 场景优先读取同级 parameter.type；
+        2) command 场景优先读取对应 field 的 parameter.type；
+        3) 当 parameter.type=Enum 时，值类型是string；
+        4) 若缺少 parameter 或类型未识别，按 string 兜底并保留原始值。
+
+    Trait:
+      type: object
+      required: [traitCode, parameter]
+      properties:
+        traitCode:
+          type: string
+          description: 属性编码（如 CurrentLevel, ColorTemperature, OnOff）
+        parameter:
+          $ref: '#/components/schemas/TraitParameter'
+        value:
+          $ref: '#/components/schemas/FlexibleValue'
+          description: 当前值（推荐按 parameter.type 解析）
+        time:
+          type: integer
+          format: int64
+          description: 值更新时间（毫秒时间戳）
+
+    Command:
+      type: object
+      required: [commandCode]
+      properties:
+        commandCode:
+          type: string
+          description: 命令编码（如 MoveToXYColor）
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommandField'
+          description: 命令参数字段列表
+
+    CommandField:
+      type: object
+      required: [fieldCode, parameter]
+      properties:
+        fieldCode:
+          type: string
+          description: 参数字段编码（如 ColorX, ColorY, Time）
+        parameter:
+          $ref: '#/components/schemas/CommandFieldParameter'
+
+    BaseParameter:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          description: 数据类型（Bool、Integer、Float、Enum、String、Struct、List[X]、Data 等）
+          enum: [Bool, Float, Integer, Enum, String, Struct, "List[X]", Data]
+        min:
+          type: number
+          format: double
+          nullable: true
+        max:
+          type: number
+          format: double
+          nullable: true
+        supportedValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyValue'
+          nullable: true
+        unit:
+          type: string
+          nullable: true
+        step:
+          type: number
+          format: double
+          nullable: true
+
+    TraitParameter:
+      allOf:
+        - $ref: '#/components/schemas/BaseParameter'
+        - type: object
+          required: [readable, writable, subscribable]
+          properties:
+            readable:
+              type: boolean
+              default: true
+            writable:
+              type: boolean
+              default: true
+            subscribable:
+              type: boolean
+              default: true
+
+    CommandFieldParameter:
+      allOf:
+        - $ref: '#/components/schemas/BaseParameter'
+        - type: object
+          required: [mandatory]
+          properties:
+            mandatory:
+              type: boolean
+              description: 是否必填
+
+    KeyValue:
+      type: object
+      required:
+        - key
+        - value
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+
+    # ── Trait Execute ────────────────────────────────────────────
+    TraitExecuteRequest:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TraitExecuteItem'
+
+    TraitExecuteItem:
+      type: object
+      required: [deviceId, endpointId, functionCode, traitCode, value]
+      properties:
+        deviceId:
+          type: string
+          description: 设备ID
+        endpointId:
+          type: integer
+          description: 端点ID
+        functionCode:
+          type: string
+          description: |
+            功能编码，如：
+            - Output（开关控制）
+            - EndpointLabel（设备改名/更换房间）
+        traitCode:
+          type: string
+          description: |
+            属性编码，如：
+            - OnOff（开关）
+            - EndpointRoom（设备所在房间）
+            - EndpointName（设备名称）
+        value:
+          $ref: '#/components/schemas/FlexibleValue'
+          description: 要设置的值（推荐按同级 parameter.type 选择值类型）
+
+    TraitExecuteResult:
+      type: object
+      required: [deviceId, endpointId, functionCode, traitCode, code, message]
+      properties:
+        deviceId:
+          type: string
+        endpointId:
+          type: integer
+        functionCode:
+          type: string
+        traitCode:
+          type: string
+        code:
+          type: integer
+          description: 错误码
+        message:
+          type: string
+          description: 错误信息
+
+    TraitExecuteResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              description: data集合元素为执行失败的数据
+              items:
+                $ref: '#/components/schemas/TraitExecuteResult'
+      example:
+        type: ExecuteTraitResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000009"
+        code: 0
+        message: success
+        data:
+          - deviceId: "device-001"
+            endpointId: 1
+            functionCode: "Output"
+            traitCode: "OnOff"
+            code: 1103
+            message: "device offline"
+
+    # ── Trait Value Query ────────────────────────────────────────
+    TraitReadRequest:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TraitValueQuery'
+
+    TraitValueQuery:
+      type: object
+      required: [deviceId, endpointId, functionCode, traitCodes]
+      properties:
+        deviceId:
+          type: string
+          description: 设备ID
+        endpointId:
+          type: integer
+          description: 端点ID
+        functionCode:
+          type: string
+          description: 功能编码
+        traitCodes:
+          type: array
+          items:
+            type: string
+          description: 要查询的属性编码列表
+
+    TraitValueResult:
+      type: object
+      required: [deviceId, endpointId, functionCode, traitCode, value, time]
+      properties:
+        deviceId:
+          type: string
+        endpointId:
+          type: integer
+        functionCode:
+          type: string
+        traitCode:
+          type: string
+        value:
+          $ref: '#/components/schemas/FlexibleValue'
+          description: 属性值（推荐按对应 trait 的 parameter.type 解析）
+        time:
+          type: integer
+          format: int64
+          description: 值更新时间（毫秒时间戳）
+
+    TraitValueResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/TraitValueResult'
+      example:
+        type: GetTraitValueResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000000d"
+        code: 0
+        message: success
+        data:
+          - deviceId: "device-001"
+            endpointId: 1
+            functionCode: "Output"
+            traitCode: "OnOff"
+            value: true
+            time: 1710001234567
+
+    # ── Command Execute ──────────────────────────────────────────
+    CommandExecuteRequest:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommandExecuteItem'
+
+    CommandExecuteItem:
+      type: object
+      required: [deviceId, endpointId, functionCode, commandCode]
+      properties:
+        deviceId:
+          type: string
+          description: 设备ID
+        endpointId:
+          type: integer
+          description: 端点ID
+        functionCode:
+          type: string
+          description: |
+            功能编码，如：
+            - NetworkCommissioning
+        commandCode:
+          type: string
+          description: |
+            命令编码，如：
+            - TriggerZigbeeNetworkInfoUpload
+        args:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommandArg'
+          description: command
+
+    CommandArg:
+      type: object
+      required: [fieldCode, value]
+      properties:
+        fieldCode:
+          type: string
+          description: commandCode Field的filedCode
+        value:
+          $ref: '#/components/schemas/FlexibleValue'
+          description: 参数值（推荐按对应 field 的 parameter.type 选择值类型）
+
+    CommandExecuteResult:
+      type: object
+      required: [deviceId, endpointId, functionCode, commandCode, code, message]
+      properties:
+        deviceId:
+          type: string
+        endpointId:
+          type: integer
+        functionCode:
+          type: string
+        commandCode:
+          type: string
+        code:
+          type: integer
+          description: 错误码
+        message:
+          type: string
+          description: 错误信息
+
+    CommandExecuteResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/CommandExecuteResult'
+      example:
+        type: ExecuteCommandResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000019"
+        code: 0
+        message: success
+        data: []
+
+    CommandExecuteAwaitRequest:
+      allOf:
+        - $ref: '#/components/schemas/CommandExecuteRequest'
+        - type: object
+          properties:
+            timeoutMs:
+              type: integer
+              format: int32
+              description: 等待设备命令上报超时（毫秒）；不传使用服务端默认值
+              minimum: 500
+              maximum: 10000
+
+    CommandExecuteAwaitResult:
+      type: object
+      required: [deviceId, endpointId, functionCode, commandCode, code, message, responded]
+      properties:
+        deviceId:
+          type: string
+        endpointId:
+          type: integer
+        functionCode:
+          type: string
+        commandCode:
+          type: string
+        code:
+          type: integer
+          description: 执行结果码
+        message:
+          type: string
+          description: 执行结果描述
+        responded:
+          type: boolean
+          description: 是否收到设备该 command 的上报
+        commandReportValue:
+          type: string
+          description: 设备该 command 的上报原始字符串，由调用端自行解析
+        responseTime:
+          type: integer
+          format: int64
+          description: 设备 command 上报时间（毫秒时间戳）
+
+    CommandExecuteAwaitResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/CommandExecuteAwaitResult'
+      example:
+        type: ExecuteCommandAwaitResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000001a"
+        code: 0
+        message: success
+        data:
+          - deviceId: "gateway001"
+            endpointId: 1
+            functionCode: NetworkCommissioning
+            commandCode: TriggerZigbeeNetworkInfoUpload
+            code: 0
+            message: success
+            responded: true
+            commandReportValue: "{\"result\":\"ok\"}"
+            responseTime: 1710001234567
+
+    DeviceTypesResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/DeviceType'
+      example:
+        type: GetDeviceTypeInfosResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000006"
+        code: 0
+        message: success
+        data:
+          - deviceType: "light"
+            name: "灯"
+          - deviceType: "switch"
+            name: "开关"
+
+    DeviceListData:
+      type: object
+      required: [totalCount, pageNum, pageSize, data]
+      properties:
+        totalCount:
+          type: integer
+          description: 满足条件的设备总数
+          example: 3
+        pageNum:
+          type: integer
+          description: 当前页码
+          example: 1
+        pageSize:
+          type: integer
+          description: 当前页大小
+          example: 200
+        data:
+          type: array
+          description: 当前页设备列表
+          items:
+            $ref: '#/components/schemas/DeviceInfo'
+
+    DevicesResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/DeviceListData'
+      example:
+        type: GetDeviceInfoResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000007"
+        code: 0
+        message: success
+        data:
+          totalCount: 3
+          pageNum: 1
+          pageSize: 200
+          data:
+            - deviceId: "device-001"
+              deviceName: "客厅灯"
+              deviceTypesList: ["light"]
+              createTime: 1710001234567
+              state: true
+              space:
+                parentSpaceId: "space-home-001"
+                spaceId: "space-room-001"
+                name: "客厅"
+
+    # ── MQTT ─────────────────────────────────────────────────────
     MqttSubscribeRequest:
       type: object
       properties:

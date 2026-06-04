@@ -206,6 +206,7 @@
             {
               "type": "category",
               "label": "Space",
+              "key": "local-api-space",
               "link": {
                 "type": "doc",
                 "id": "aqara-developer/data-export-api/space"
@@ -232,6 +233,7 @@
             {
               "type": "category",
               "label": "Device",
+              "key": "local-api-device",
               "link": {
                 "type": "doc",
                 "id": "aqara-developer/data-export-api/device"
@@ -329,6 +331,85 @@
       "type": "category",
       "label": "Cloud API",
       "items": [
+        {
+          "type": "category",
+          "label": "Space",
+          "key": "cloud-api-space",
+          "link": {
+            "type": "doc",
+            "id": "aqara-developer/aiot-api/space"
+          },
+          "collapsed": false,
+          "items": [
+            {
+              "type": "doc",
+              "id": "aqara-developer/aiot-api/get-spaces",
+              "className": "api-method get"
+            },
+            {
+              "type": "doc",
+              "id": "aqara-developer/aiot-api/create-space",
+              "className": "api-method post"
+            },
+            {
+              "type": "doc",
+              "id": "aqara-developer/aiot-api/update-space-name",
+              "className": "api-method post"
+            }
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Device",
+          "key": "cloud-api-device",
+          "link": {
+            "type": "doc",
+            "id": "aqara-developer/aiot-api/device"
+          },
+          "collapsed": false,
+          "items": [
+            {
+              "type": "doc",
+              "id": "aqara-developer/aiot-api/get-device-types",
+              "className": "api-method get"
+            },
+            {
+              "type": "doc",
+              "id": "aqara-developer/aiot-api/get-devices",
+              "className": "api-method get"
+            },
+            {
+              "type": "doc",
+              "id": "aqara-developer/aiot-api/get-device-definitions",
+              "className": "api-method get"
+            },
+            {
+              "type": "doc",
+              "id": "aqara-developer/aiot-api/get-device-definition-numeric",
+              "className": "api-method get"
+            },
+            {
+              "type": "doc",
+              "id": "aqara-developer/aiot-api/execute-device-trait",
+              "className": "api-method post"
+            },
+            {
+              "type": "doc",
+              "id": "aqara-developer/aiot-api/execute-device-command",
+              "className": "api-method post"
+            },
+            {
+              "type": "doc",
+              "id": "aqara-developer/aiot-api/execute-device-command-await",
+              "className": "api-method post"
+            },
+            {
+              "type": "doc",
+              "id": "aqara-developer/aiot-api/get-trait-values",
+              "className": "api-method post"
+            }
+          ]
+        },
         {
           "type": "category",
           "label": "Subscription",

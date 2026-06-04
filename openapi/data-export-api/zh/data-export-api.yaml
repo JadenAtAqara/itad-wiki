@@ -1067,11 +1067,11 @@ components:
       properties:
         spaceId:
           type: string
-          description: 空间ID
+          description: 空间 ID
         parentSpaceId:
           type: string
           nullable: true
-          description: 父空间ID
+          description: 父空间 ID
         name:
           type: string
           description: 空间名称

@@ -1,0 +1,75 @@
+---
+id: get-device-definition-numeric
+title: "查询单设备定义（数字 ID 形态）"
+description: "供内部 AqaraLife App 使用。与 `GET /devices/definitions` 表示**同类**设备能力信息，但本接口用另一套**树形 JSON**："
+sidebar_label: "查询单设备定义（数字 ID 形态）"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "get api-method"
+info_path: i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-developer/aiot-api/aiot-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"查询单设备定义（数字 ID 形态）"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"get"}
+  path={"/devices/definitions/numeric"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+供内部 AqaraLife App 使用。与 `GET /devices/definitions` 表示**同类**设备能力信息，但本接口用另一套**树形 JSON**：
+`devices[] → eps（端点）→ funcs（功能簇 ID）→ traits / cmds`，其中 **trait、command、function、endpoint 均以整型 ID** 标识；
+具体读写值在 `traits[].args[]`、`cmds[].args[]` 中，`value` 多为字符串（含 JSON 文本、数字字符串等），`time` 为毫秒时间戳（可选）。
+`data` 还会出现 `centralGateway`、`userId`、`nid`、`spaceId` 等上下文字段。单设备：`query deviceId`（即 did）。
+
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[{"name":"Accesstoken","in":"header","required":false,"schema":{"type":"string","example":"{{Accesstoken}}"},"description":"通过授权获取的访问 Token。"},{"name":"Appid","in":"header","required":true,"schema":{"type":"string","example":"{{Appid}}"},"description":"在 [Aqara 开发者平台](https://developer.aqara.com/) 创建应用时分配的 App ID。"},{"name":"Keyid","in":"header","required":true,"schema":{"type":"string","example":"{{Keyid}}"},"description":"在 [Aqara 开发者平台](https://developer.aqara.com/) 创建应用时分配的 Key ID。"},{"name":"Nonce","in":"header","required":true,"schema":{"type":"string","example":"{{Nonce}}"},"description":"随机字符串，每次请求都不同。"},{"name":"Time","in":"header","required":true,"schema":{"type":"string","example":"{{Time}}"},"description":"请求时间戳，单位毫秒。"},{"name":"Sign","in":"header","required":true,"schema":{"type":"string","example":"{{Sign}}"},"description":"请求签名。如需了解签名生成方法，请参考 [Sign 生成规则](https://opendoc.aqara.cn/docs/%E4%BA%91%E5%BC%80%E5%8F%91/API%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/Sign%E7%94%9F%E6%88%90%E8%A7%84%E5%88%99.html)。"},{"name":"Lang","in":"header","required":false,"schema":{"type":"string","enum":["zh","en"],"example":"en"},"description":"语言，默认英文。支持 'zh', 'en' 两种语言。"},{"name":"deviceId","in":"query","required":true,"description":"设备 ID（did）","schema":{"type":"string"}},{"name":"includeValues","in":"query","required":false,"description":"是否拉取完整取值","schema":{"type":"boolean"}}]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={undefined}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"成功","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"type":"object","required":["devices"],"properties":{"centralGateway":{"type":"string","nullable":true},"userId":{"type":"string","nullable":true},"threadExtPanId":{"type":"string","nullable":true},"nid":{"type":"string","nullable":true},"spaceId":{"type":"string","nullable":true},"devices":{"type":"array","items":{"type":"object","required":["did","eps"],"properties":{"did":{"type":"string","description":"设备 ID"},"eps":{"type":"array","items":{"type":"object","required":["id","funcs"],"properties":{"id":{"type":"integer","description":"Endpoint ID（端点索引，含 0 的根/设备级端点）"},"type":{"type":"array","items":{"type":"integer"},"description":"端点类型 ID 列表；部分端点可能缺省该字段"},"funcs":{"type":"array","items":{"type":"object","required":["id"],"description":"某一功能簇；可仅有 traits、仅有 cmds，或二者兼有","properties":{"id":{"type":"integer","description":"Function（功能簇）ID"},"traits":{"type":"array","items":{"type":"object","required":["id"],"properties":{"id":{"type":"integer","description":"Trait 规格 ID（整型，对应协议/服务表）"},"args":{"type":"array","description":"属性参数列表；无参数时可缺省或为空","items":{"type":"object","required":["id"],"properties":{"id":{"type":"integer","description":"参数槽位 ID（常见为 1，或其它约定槽位）"},"mth":{"type":"string","nullable":true},"value":{"description":"多为字符串；亦可能为数值等，依设备/协议而定"},"time":{"type":"integer","format":"int64","nullable":true,"description":"最新值时间（毫秒）"}},"title":"DeviceDefinitionNumericParameter"}}},"title":"DeviceDefinitionNumericTrait"}},"cmds":{"type":"array","items":{"type":"object","required":["id"],"properties":{"id":{"type":"integer","description":"Command 规格 ID"},"mth":{"type":"string","nullable":true},"args":{"type":"array","description":"命令参数；可无","items":{"type":"object","required":["id"],"properties":{"id":{"type":"integer","description":"参数槽位 ID（常见为 1，或其它约定槽位）"},"mth":{"type":"string","nullable":true},"value":{"description":"多为字符串；亦可能为数值等，依设备/协议而定"},"time":{"type":"integer","format":"int64","nullable":true,"description":"最新值时间（毫秒）"}},"title":"DeviceDefinitionNumericParameter"}}},"title":"DeviceDefinitionNumericCommand"}}},"title":"DeviceDefinitionNumericFunction"}}},"title":"DeviceDefinitionNumericEndpoint"}}},"title":"DeviceDefinitionNumericDevice"}}},"title":"DeviceDefinitionNumericData"}}}],"title":"GetDeviceDefinitionNumericResponse"},"examples":{"numericDefinitionShape":{"summary":"树形结构节选（真实字段组合可能更多）","value":{"type":"GetDeviceDefinitionNumericResponse","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-000000000008a","code":0,"message":"success","data":{"spaceId":"space.1091392905374072832.1.","devices":[{"did":"matt.5d4bf57d132e34c44c60e000","eps":[{"id":0,"funcs":[{"id":128,"traits":[{"id":32900,"args":[{"id":1,"value":"Aqara Light Switch H2 EU"}]}]},{"id":130,"traits":[{"id":32914,"args":[{"id":1,"value":"space.1091392905374072832.1."}]}]}]},{"id":1,"type":[1],"funcs":[{"id":131,"traits":[{"id":32916,"args":[{"id":1,"value":"0"}]}],"cmds":[{"id":32918}]}]}]}],"nid":"157543569210258538","userId":"100903618050550.1091392892818497537","centralGateway":"M_LEADER-4750190511643105290"}}}}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 xxx 不能为空"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"token 已过期，请重新生成 token"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"无权限访问该资源"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"资源不存在"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"429":{"description":"请求频率过高","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000005","code":429,"message":"请求频率过高"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"服务内部异常"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      
