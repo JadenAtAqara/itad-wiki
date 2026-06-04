@@ -32,11 +32,16 @@ import Export from "@theme/ApiExplorer/Export";
 AIOT API Documentation
 
 ## Common Request Headers
-All APIs require the following header parameters (to be attached uniformly by the client):
+All APIs require the following header parameters (to be attached uniformly by the client):   
 | Header         | Required | Description                  |
 | -------------- | -------- | ---------------------------- |
-| Authorization  | Yes      | `Bearer accessToken`         |
-| Content-Type   | Yes      | `application/json`           |
+| Accesstoken | String | No  | Access token obtained via authorization. |
+| Appid       | String | Yes | App ID assigned when creating an application on the [Aqara Developer Platform](https://developer.aqara.com). |
+| Keyid       | String | Yes | Key ID assigned when creating an application on the [Aqara Developer Platform](https://developer.aqara.com). |
+| Nonce       | String | Yes | Random string, should be different for each request. |
+| Time        | String | Yes | Request timestamp in milliseconds. |
+| Sign        | Yes    | Request signature. For signature generation method, please refer to [Sign Generation Rules](https://opendoc.aqara.com/en/docs/developmanual/apiIntroduction/signGenerationRules.html). |
+| Lang        | Enum   | No  | Language, default is English, possible values: 'zh', 'en' |
 
 
 <div
