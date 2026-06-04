@@ -26,6 +26,13 @@ servers:
     variables:
       host:
         description: Please enter the Open Platform API server domain.
+        enum:
+          - 'https://open-cn.aqara.com'
+          - 'https://open-usa.aqara.com'
+          - 'https://open-kr.aqara.com'
+          - 'https://open-ru.aqara.com'
+          - 'https://open-ger.aqara.com'
+          - 'https://open-sg.aqara.com'
         default: 'https://open-usa.aqara.com'
 
 # Global Security: All endpoints require Bearer Token

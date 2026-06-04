@@ -25,6 +25,13 @@ servers:
     variables:
       host:
         description: 请输入开放平台 API 服务器域名。
+        enum:
+          - 'https://open-cn.aqara.com'
+          - 'https://open-usa.aqara.com'
+          - 'https://open-kr.aqara.com'
+          - 'https://open-ru.aqara.com'
+          - 'https://open-ger.aqara.com'
+          - 'https://open-sg.aqara.com'
         default: 'https://open-cn.aqara.com'
 
 # 全局安全：所有接口均需 Bearer Token
