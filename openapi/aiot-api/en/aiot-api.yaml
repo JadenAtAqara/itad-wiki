@@ -35,10 +35,6 @@ servers:
           - 'https://open-sg.aqara.com'
         default: 'https://open-usa.aqara.com'
 
-# Global Security: All endpoints require Bearer Token
-security:
-  - BearerAuth: []
-
 tags:
   - name: Space
     description: Space management APIs
@@ -1037,13 +1033,6 @@ components:
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000006"
               code: 500
               message: "Internal server error"
-  
-
-  securitySchemes:
-    BearerAuth:
-      type: http
-      scheme: bearer
-      description: "Authorization: Bearer token"
 
   # 公共请求头参数（所有接口均需携带，由客户端统一附加）
   parameters:
