@@ -683,7 +683,7 @@ paths:
             Supported values:
             SCRIPT_JSON: **Flow** automation created via API.  
             SCRIPT_TEXT: **Flow** automation created via the Aqara Studio Web page.  
-            WHEN_IF_THEN: **IFTTT** automation.  
+            WHEN_IF_THEN: **Classic** automation.  
             LEGACY_FLOW: **Flow** automation (legacy version).  
             LEGACY_LINKAGE: **Logic** automation.  
             OTHER: Other automation types.    
@@ -1839,7 +1839,7 @@ components:
             Automation type, as follows: <br />
             - SCRIPT_JSON：**Flow** automation created via API.  
             - SCRIPT_TEXT：**Flow** automation created via Aqara Studio Web page.  
-            - WHEN_IF_THEN：**IFTTT** automation.  
+            - WHEN_IF_THEN：**Classic** automation.  
             - LEGACY_FLOW：**Flow** automation (legacy version).  
             - LEGACY_LINKAGE：**Logic** automation.  
             - OTHER：Other automation types.

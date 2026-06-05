@@ -4,7 +4,8 @@
 
 ## 脚本介绍
 
-本脚本**必须**包含以下 3 个 JavaScript 方法：
+本脚本**必须**包含以下 4 个 JavaScript 方法：
+- [parseDiscoveryResponse](#parseDiscoveryResponse)
 - [parseDiscoverPointsResponse](#parsediscoverpointsresponse)
 - [parseReportRequest](#parsereportrequest)
 - [buildWriteRequest](#buildwriterequest)
@@ -12,6 +13,44 @@
 :::tip
 请勿更改方法的参数及其输入输出结构。
 :::
+
+## parseDiscoveryResponse
+
+该方法 `parseDiscoveryResponse` 主要用于向 Aqara Studio 声明需要接入的 MQTT 设备的基本配置信息。
+
+您需要以**对象数组**的形式返回待接入设备的基本信息，详情请参考 [设备对象结构](#设备对象结构)。
+
+Aqara Studio 会调用此方法以发现所有可用设备，实现自动接入与管理。
+
+### 设备对象结构
+
+| 字段名称 | 说明 |
+| --- | --- |
+| deviceName | 设备名称。 |
+| deviceId   | 设备 ID。 |
+| brokerEndpoint | MQTT Broker 的地址。 |
+| brokerPort | MQTT Broker 的端口。 |
+| connectionType | 连接类型。支持以下取值：<ul><li>1：TCP</li><li>2：TLS</li><li>3：WebSocket</li></ul> |
+| username | 用户名。 |
+| password | 密码。 |
+
+### 示例 
+
+```javascript
+function parseDiscoveryResponse() {
+	return [
+		{
+			deviceName: "TestDevice",
+			deviceId: "98CC4D189E60",
+			brokerEndpoint: "127.0.0.1",
+			brokerPort: 1883,
+			connectionType: 3,
+			username: "admin",
+			password: "public"
+		}
+	];
+}
+```
 
 ## parseDiscoverPointsResponse
 
@@ -149,76 +188,97 @@ function buildWriteRequest(pointId, value) {
 下面是一个添加 MQTT 设备功能点的完整示例：
 
 ```javascript
-function parseDiscoverPointsResponse() {
-	return [
-		// 基于 Aqara Spec 接入功能点
-		{
-			pointId: "1#冷机运行状态",
-			pointName: "1#冷机运行状态",
-			pointType: "AirConditioner",
-			functionCode: "Output",
-			traitCode: "OnOff",
-			subTopic: "/WEI-iEdge/realdata/7a1dd258f32940d95a542c68",
-			pubTopic: "/WEI-iEdge/write/req/7a1dd258f32940d95a542c68"
-		},
-		// 基于通用方式接入功能点
-		{
-			pointId: "1#冷机关机/开机读",
-			pointName: "1#冷机关机/开机读",
-			dataType: "bool",
-			access: 1,
-			subTopic: "/WEI-iEdge/realdata/7a1dd258f32940d95a542c68",
-			pubTopic: "/WEI-iEdge/write/req/7a1dd258f32940d95a542c68"
-		},
-		{
-			pointId: "1#冷机出水温度设定读",
-			pointName: "1#冷机出水温度设定读",
-			dataType: "numerical",
-			access: 2,
-			subTopic: "/WEI-iEdge/realdata/7a1dd258f32940d95a542c68",
-			pubTopic: "/WEI-iEdge/write/req/7a1dd258f32940d95a542c68"
-		},
-		{
-			pointId: "1#冷机制冷量百分比",
-			pointName: "1#冷机制冷量百分比",
-			dataType: "numerical",
-			access: 2,
-			subTopic: "/WEI-iEdge/realdata/7a1dd258f32940d95a542c68",
-			pubTopic: "/WEI-iEdge/write/req/7a1dd258f32940d95a542c68"
-		}
-	];
-}
-
-function parseReportRequest(pointId, jsonStr) {
-	try {
-		const obj = JSON.parse(jsonStr);
-		return obj["values"][pointId]?.toString();
-	} catch (e) {
-		return null;
-	}
-}
-
-// value 参数由 Aqara Studio 自动传入，无需手动声明或赋值
-function buildWriteRequest(pointId, value) {
-	try {
-		const obj = {
-			"node": "冷机",
-			"group": "1#冷机",
-			"timestamp": 1768204054654,
-			"values": {
-				
-			},
-			"errors": {
-				
-			},
-			"metas": {
-				
+(function(){
+	function parseDiscoveryResponse() {
+		return [
+			{
+				deviceName: "TestDevice",
+				deviceId: "98CC4D189E60",
+				brokerEndpoint: "127.0.0.1",
+				brokerPort: 1883,
+				connectionType: 3,
+				username: "admin",
+				password: "public"
 			}
-			};
-		obj.values[pointId] = parseFloat(value);
-		return JSON.stringify(obj);
-	} catch (e) {
-		return null;
+		];
 	}
-}
+
+	function parseDiscoverPointsResponse() {
+		return [
+			// 基于通用方式接入功能点
+			{
+				pointId: "busAddr1.on",
+				pointName: "开关1",
+				dataType: "bool",
+				access: 2,
+				subTopic: "/dev/MTS/98CC4D189E60/status/json",
+				pubTopic: "/dev/MTS/98CC4D189E60/cmd/json"
+			},
+			{
+				pointId: "busAddr2.on",
+				pointName: "开关2",
+				dataType: "bool",
+				access: 2,
+				subTopic: "/dev/MTS/98CC4D189E60/status/json",
+				pubTopic: "/dev/MTS/98CC4D189E60/cmd/json"
+			}
+		];
+	}
+
+	function parseReportRequest(pointId, jsonStr) {
+		try {
+			const obj = JSON.parse(jsonStr);
+			const match = /^busAddr(\d+)\.on$/.exec(pointId);
+			if (!match || !Array.isArray(obj.data)) {
+				return null;
+			}
+
+			const busAddr = parseInt(match[1], 10);
+			for (const item of obj.data) {
+				const state = item && item.mcbComSta;
+				if (state && Number(state.busAddr) === busAddr && state.on !== undefined && state.on !== null) {
+					return String(state.on);
+				}
+			}
+			return null;
+		} catch (e) {
+			return null;
+		}
+	}
+
+        // value 参数由 Aqara Studio 自动传入，无需手动声明或赋值。
+        function buildWriteRequest(pointId, value) {
+		try {
+			const match = /^busAddr(\d+)\.on$/.exec(pointId);
+			if (!match) {
+				return null;
+			}
+
+			const busAddr = parseInt(match[1], 10);
+			const isOn = value === true || value === 1 || value === "1" || value === "true" || value === "on";
+			const obj = {
+				method: 3,
+				dstID: 43008827855272960,
+				msgCode: 120,
+				timeMS: 0,
+				data: [
+					{
+						tag: 305,
+						cmd: isOn ? "do_turn_on" : "do_turn_off",
+						busAddr: [busAddr]
+					}
+				]
+			};
+			return JSON.stringify(obj);
+		} catch (e) {
+			return null;
+		}
+	}
+
+    globalThis.parseDiscoveryResponse = parseDiscoveryResponse;
+    globalThis.parseDiscoverPointsResponse = parseDiscoverPointsResponse;
+    globalThis.buildWriteRequest = buildWriteRequest;
+    globalThis.parseReportRequest = parseReportRequest;
+	return null	
+})()
 ```

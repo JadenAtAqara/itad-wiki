@@ -17,7 +17,7 @@ info:
     | Time        | String | 是   | 请求时间戳，单位毫秒。           |
     | Sign | 是 | 请求签名。如需了解签名生成方法，请参考 [Sign 生成规则](https://opendoc.aqara.cn/docs/%E4%BA%91%E5%BC%80%E5%8F%91/API%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/Sign%E7%94%9F%E6%88%90%E8%A7%84%E5%88%99.html)。 |
     | Lang        | Enum   | 否   | 语言，默认英文，'zh', 'en'     |
-  version: v1
+  version: v4
 
 servers:
   - url: '{host}/v4.0/open/api'
@@ -51,7 +51,7 @@ paths:
     get:
       tags: [Space]
       summary: 查询空间列表
-      description: 查询父级空间下的子空间，可选包含父空间自身
+      description: 查询指定父空间下的所有子空间，可选包含父空间自身，满足灵活的空间层级查询需求。
       operationId: getSpaces
       x-skill-intent: space.list
       x-idempotent: true
@@ -73,7 +73,7 @@ paths:
             type: string
         - name: needChildren
           in: query
-          description: 是否查询子孙空间，默认true；当 parentSpaceId 是否查询父空间下的子空间。若 parentSpaceId 非空且 needChildren 为 false，则不返回子空间（仅在 needParentSpaceSelf 为 true 时可返回父空间自身）。
+          description: 是否查询父空间下的子空间。若 parentSpaceId 非空且 needChildren 为 false，则不返回子空间（仅在 needParentSpaceSelf 为 true 时可返回父空间自身）。
           required: false
           schema:
             type: boolean
@@ -107,7 +107,7 @@ paths:
     post:
       tags: [Space]
       summary: 创建空间
-      description: 在指定父空间下创建子空间；parentSpaceId 为空时创建顶级空间
+      description: 创建一个空间。当 parentSpaceId 为空时创建顶级空间；不为空时，在该空间下创建子空间。
       operationId: createSpace
       x-skill-intent: space.create
       x-idempotent: false
@@ -161,7 +161,7 @@ paths:
     post:
       tags: [Space]
       summary: 修改空间名称
-      description: 根据空间ID修改空间名称
+      description: 传入空间 ID，更新该空间的名称。
       operationId: updateSpaceName
       x-skill-intent: space.name.update
       x-idempotent: true
@@ -206,12 +206,13 @@ paths:
 
 
   # ────────────────────────────────────────────────────────────────
-  # 查询DeviceType集合
+  # 查询设备类型集合
   # ────────────────────────────────────────────────────────────────
   /devices/types:
     get:
       tags: [Device]
-      summary: 查询DeviceType集合
+      summary: 查询设备类型集合
+      description: 获取现有的所有设备类型（DeviceType）。
       operationId: getDeviceTypes
       x-skill-intent: device.type.list
       x-idempotent: true
@@ -227,7 +228,7 @@ paths:
         - $ref: '#/components/parameters/Lang'
       responses:
         '200':
-          description: 成功
+          description: 请求发起成功
           content:
             application/json:
               schema:
@@ -246,12 +247,12 @@ paths:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
-  # 查设备信息列表
+  # 查询设备信息列表
   # ────────────────────────────────────────────────────────────────
   /devices:
     get:
       tags: [Device]
-      summary: 查设备信息列表
+      summary: 查询设备信息列表
       operationId: getDevices
       x-skill-intent: device.list
       x-idempotent: true
@@ -267,7 +268,7 @@ paths:
         - $ref: '#/components/parameters/Lang'
         - name: spaceIds
           in: query
-          description: 空间ID列表，为空查询所有设备
+          description: 空间 ID 列表。示例：spaceIds=xx1,xx2 或 spaceIds=xx1&spaceIds=xx2。为空查询所有设备
           required: false
           schema:
             type: array
@@ -277,21 +278,21 @@ paths:
           explode: true
         - name: needChildren
           in: query
-          description: 是否需要查询子孙空间的设备，只有传了spaceIds条件，needChildren参数才有用
+          description: 是否需要查询子空间下的设备。仅当 spaceIds 不为空时，本参数才有用。
           required: false
           schema:
             type: boolean
             default: false
         - name: state
           in: query
-          description: 设备在线状态（缺省时不做过滤条件）
+          description: 设备在线状态。<ul><li>true：查询在线设备。</li><li>false：查询离线设备。</li><li>不填：不筛选。</li></ul>
           required: false
           schema:
             type: boolean
             nullable: true
         - name: deviceTypesList
           in: query
-          description: 设备类型列表
+          description: 设备类型列表。示例：deviceTypesList=light,switch 或 deviceTypesList=light&deviceTypesList=switch
           required: false
           schema:
             type: array
@@ -307,7 +308,7 @@ paths:
             type: string
         - name: orderBy
           in: query
-          description: 排序方式
+          description: 排序方式。<ul><li>createTime asc：按创建时间升序排序。</li><li>createTime desc：按创建时间降序排序。</li></ul>
           required: false
           schema:
             type: string
@@ -316,14 +317,14 @@ paths:
           example: createTime asc
         - name: pageNum
           in: query
-          description: 页码
+          description: 页码。
           required: false
           schema:
             type: integer
           example: 1
         - name: pageSize
           in: query
-          description: 每页数量
+          description: 每页数量。
           required: false
           schema:
             type: integer
@@ -339,7 +340,7 @@ paths:
                 devicesPage:
                   value:
                     type: GetDeviceInfoResponse
-                    version: v1
+                    version: v4
                     msgId: "1751609244328"
                     code: 0
                     message: success
@@ -376,7 +377,8 @@ paths:
   /devices/definitions:
     get:
       tags: [Device]
-      summary: 查询设备定义（设备详细信息）
+      summary: 查询设备详细信息
+      description: 获取指定设备的详细信息，包括设备类型、端点列表、属性列表等。
       operationId: getDeviceDefinitions
       x-skill-intent: device.definition.get
       x-idempotent: true
@@ -393,7 +395,7 @@ paths:
         - name: deviceIds
           in: query
           required: true
-          description: 设备ID列表（当前一次最多支持10个设备ID）
+          description: 设备 ID 列表，支持一次查询最多 10 个设备。示例：deviceIds=xx1,xx2 或 deviceIds=xx1&deviceIds=xx2。
           schema:
             type: array
             maxItems: 10
@@ -479,7 +481,7 @@ paths:
                   summary: 树形结构节选（真实字段组合可能更多）
                   value:
                     type: GetDeviceDefinitionNumericResponse
-                    version: v1
+                    version: v4
                     msgId: "a1b2c3d4-e5f6-7890-abcd-000000000008a"
                     code: 0
                     message: success
@@ -580,7 +582,7 @@ paths:
                 partialFailed:
                   value:
                     type: ExecuteTraitResponse
-                    version: v1
+                    version: v4
                     msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecf7"
                     code: 0
                     message: success
@@ -656,7 +658,7 @@ paths:
                 commandFailed:
                   value:
                     type: ExecuteCommandResponse
-                    version: v1
+                    version: v4
                     msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecf9"
                     code: 0
                     message: success
@@ -729,7 +731,7 @@ paths:
                 commandExecuteAwaitSuccess:
                   value:
                     type: ExecuteCommandAwaitResponse
-                    version: v1
+                    version: v4
                     msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecfa"
                     code: 0
                     message: success
@@ -801,7 +803,7 @@ paths:
                 traitValueSuccess:
                   value:
                     type: GetTraitValueResponse
-                    version: v1
+                    version: v4
                     msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecf8"
                     code: 0
                     message: success
@@ -870,7 +872,7 @@ paths:
                 subscribeSuccess:
                   value:
                     type: MqttSubscribeResponse
-                    version: v1
+                    version: v4
                     msgId: "2df2f431-xxxx-4fdb-xxxx-xxxxxxxx"
                     code: 0
                     message: success
@@ -935,7 +937,7 @@ paths:
                 unsubscribeSuccess:
                   value:
                     type: MqttUnsubscribeResponse
-                    version: v1
+                    version: v4
                     msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f002"
                     code: 0
                     message: success
@@ -967,7 +969,7 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
             example:
               type: ErrorMessage
-              version: v1
+              version: v4
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000001"
               code: 400
               message: "参数 xxx 不能为空"
@@ -979,7 +981,7 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
             example:
               type: ErrorMessage
-              version: v1
+              version: v4
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000002"
               code: 401
               message: "token 已过期，请重新生成 token"
@@ -991,7 +993,7 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
             example: 
               type: ErrorMessage
-              version: v1
+              version: v4
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000003"
               code: 403
               message: "无权限访问该资源"
@@ -1003,7 +1005,7 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
             example:
               type: ErrorMessage
-              version: v1
+              version: v4
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000004"
               code: 404
               message: "资源不存在"
@@ -1015,7 +1017,7 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
             example:
               type: ErrorMessage
-              version: v1
+              version: v4
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000005"
               code: 429
               message: "请求频率过高"
@@ -1027,7 +1029,7 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
             example:
               type: ErrorMessage
-              version: v1
+              version: v4
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000006"
               code: 500
               message: "服务内部异常"
@@ -1103,20 +1105,20 @@ components:
       properties:
         type:
           type: string
-          description: 消息类型
+          description: 消息类型。
         version:
           type: string
-          description: 接口版本
-          example: v1
+          description: 接口版本。
+          example: v4
         msgId:
           type: string
-          description: 消息 ID
+          description: 消息 ID。
         code:
           type: integer
           description: "业务状态码，0 表示成功"
         message:
           type: string
-          description: 提示信息
+          description: 提示信息。
 
     ErrorResponse:
       description: 错误响应，错误信息通过 code 与 message 提供
@@ -1130,18 +1132,18 @@ components:
       properties:
         spaceId:
           type: string
-          description: 空间ID
+          description: 空间 ID。
         parentSpaceId:
           type: string
           nullable: true
-          description: 父空间ID
+          description: 父空间 ID。
         name:
           type: string
-          description: 空间名称
+          description: 空间名称。
         spatialMarking:
           type: string
           nullable: true
-          description: 空间标记
+          description: 空间标记。
         children:
           type: array
           nullable: true
@@ -1150,18 +1152,18 @@ components:
             properties:
               spaceId:
                 type: string
-                description: 子空间ID
+                description: 子空间 ID。
               parentSpaceId:
                 type: string
                 nullable: true
-                description: 父空间ID
+                description: 父空间 ID。
               name:
                 type: string
-                description: 子空间名称
+                description: 子空间名称。
               spatialMarking:
                 type: string
                 nullable: true
-                description: 子空间标记
+                description: 子空间标记。
               children:
                 type: array
                 nullable: true
@@ -1178,25 +1180,26 @@ components:
                     spatialMarking:
                       type: string
                       nullable: true
-                description: 孙级及更深层子空间列表（结构同子空间节点，按此模式递归）
-          description: 子空间列表（树结构）
+                description: 孙级及更深层子空间列表（结构同子空间节点，按此模式递归）。
+          description: 子空间列表（树结构）。
 
     SpaceSettings:
       type: object
-      description: 空间配置属性（创建/修改时均可选传入）
+      description: 空间配置属性。
       properties:
         gmtTimeZone:
           type: string
-          description: 标准GMT格式时区，如 GMT+08:00
+          description: 标准 GMT 格式时区，如 GMT+08:00。
           example: "GMT+08:00"
         locationId:
           type: string
           nullable: true
-          description: 家庭位置标识，支持经纬度串（如 "123.456,78.90"）或城市编码（如 "30372"）
+          description: 家庭位置标识，支持经纬度串（如 "123.456,78.90"）或城市编码（如 "30372"）。
+          example: "123.456,78.90"
         autoAdjustDst:
           type: boolean
           default: true
-          description: 是否自动调整夏令时（Daylight Saving Time）
+          description: 是否自动适应夏令时（Daylight Saving Time）。
 
     CreateSpaceRequest:
       type: object
@@ -1205,11 +1208,11 @@ components:
         parentSpaceId:
           type: string
           nullable: true
-          description: 父空间ID；为空时创建顶级空间
+          description: 父空间 ID ；为空时创建顶级空间。
         name:
           type: string
           minLength: 1
-          description: 空间名称，不能为空字符串
+          description: 空间名称，不能为空字符串。
         settings:
           $ref: '#/components/schemas/SpaceSettings'
       example:
@@ -1227,10 +1230,10 @@ components:
           properties:
             data:
               type: string
-              description: 新创建的空间ID
+              description: 新创建的空间 ID。
       example:
         type: CreateSpaceResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000006"
         code: 0
         message: success
@@ -1242,10 +1245,10 @@ components:
       properties:
         spaceId:
           type: string
-          description: 空间ID
+          description: 空间 ID。
         name:
           type: string
-          description: 新空间名称
+          description: 新空间名称。
       example:
         spaceId: "space-livingroom-001"
         name: "新客厅"
@@ -1257,10 +1260,10 @@ components:
           properties:
             data:
               type: string
-              description: 固定为空字符串
+              description: 固定为空字符串。
       example:
         type: UpdateSpaceNameResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000007"
         code: 0
         message: success
@@ -1277,7 +1280,7 @@ components:
                 $ref: '#/components/schemas/SpaceNode'
       example:
         type: GetSpacesResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000005"
         code: 0
         message: success
@@ -1300,10 +1303,10 @@ components:
       properties:
         deviceType:
           type: string
-          description: 设备类型编码
+          description: 设备类型编码。 
         name:
           type: string
-          description: 设备类型名称
+          description: 设备类型名称。
 
     DeviceInfo:
       type: object
@@ -1311,24 +1314,25 @@ components:
       properties:
         deviceId:
           type: string
-          description: 设备ID
+          description: 设备 ID。
         deviceName:
           type: string
-          description: 设备名称
+          description: 设备名称。
         deviceTypesList:
           type: array
           items:
             type: string
-          description: 设备类型列表
+          description: 设备类型列表。
         createTime:
           type: integer
           format: int64
-          description: 创建时间（毫秒时间戳）
+          description: 创建时间（毫秒时间戳）。
         state:
           type: boolean
-          description: 设备在线状态
+          description: 设备在线状态。
         space:
           $ref: '#/components/schemas/DeviceSpace'
+          description: 设备关联的空间信息。
 
     DeviceSpace:
       type: object
@@ -1336,10 +1340,13 @@ components:
       properties:
         parentSpaceId:
           type: string
+          description: 父空间 ID。
         spaceId:
           type: string
+          description: 空间 ID。
         name:
           type: string
+          description: 空间名称。
 
     DeviceDefinition:
       type: object
@@ -1350,12 +1357,12 @@ components:
           description: 设备ID
         name:
           type: string
-          description: 设备名称
+          description: 设备名称。
         deviceTypesList:
           type: array
           items:
             type: string
-          description: 设备类型列表
+          description: 设备类型列表。
         endpoints:
           type: array
           items:
@@ -1368,17 +1375,17 @@ components:
       properties:
         id:
           type: integer
-          description: 参数槽位 ID（常见为 1，或其它约定槽位）
+          description: 参数槽位 ID（常见为 1，或其它约定槽位）。
         mth:
           type: string
           nullable: true
         value:
-          description: 多为字符串；亦可能为数值等，依设备/协议而定
+          description: 多为字符串；亦可能为数值等，依设备/协议而定。
         time:
           type: integer
           format: int64
           nullable: true
-          description: 最新值时间（毫秒）
+          description: 最新值时间（毫秒）。
 
     DeviceDefinitionNumericTrait:
       type: object
@@ -1386,10 +1393,10 @@ components:
       properties:
         id:
           type: integer
-          description: Trait 规格 ID（整型，对应协议/服务表）
+          description: Trait 规格 ID（整型，对应协议/服务表）。
         args:
           type: array
-          description: 属性参数列表；无参数时可缺省或为空
+          description: 属性参数列表；无参数时可缺省或为空。
           items:
             $ref: '#/components/schemas/DeviceDefinitionNumericParameter'
 
@@ -1399,24 +1406,24 @@ components:
       properties:
         id:
           type: integer
-          description: Command 规格 ID
+          description: Command 规格 ID。
         mth:
           type: string
           nullable: true
         args:
           type: array
-          description: 命令参数；可无
+          description: 命令参数；可无。
           items:
             $ref: '#/components/schemas/DeviceDefinitionNumericParameter'
 
     DeviceDefinitionNumericFunction:
       type: object
       required: [id]
-      description: 某一功能簇；可仅有 traits、仅有 cmds，或二者兼有
+      description: 某一功能簇；可仅有 traits、仅有 cmds，或二者兼有。
       properties:
         id:
           type: integer
-          description: Function（功能簇）ID
+          description: Function（功能簇）ID。
         traits:
           type: array
           items:
@@ -1432,12 +1439,12 @@ components:
       properties:
         id:
           type: integer
-          description: Endpoint ID（端点索引，含 0 的根/设备级端点）
+          description: Endpoint ID（端点索引，含 0 的根/设备级端点）。
         type:
           type: array
           items:
             type: integer
-          description: 端点类型 ID 列表；部分端点可能缺省该字段
+          description: 端点类型 ID 列表；部分端点可能缺省该字段。
         funcs:
           type: array
           items:
@@ -1449,7 +1456,7 @@ components:
       properties:
         did:
           type: string
-          description: 设备 ID
+          description: 设备 ID。
         eps:
           type: array
           items:
@@ -1498,7 +1505,7 @@ components:
                 $ref: '#/components/schemas/DeviceDefinition'
       example:
         type: GetDeviceResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000008"
         code: 0
         message: success
@@ -1516,11 +1523,11 @@ components:
             data:
               type: string
               nullable: true
-              description: 解绑成功后返回 null 或空字符串
+              description: 解绑成功后返回 null 或空字符串。
               example: ""
       example:
         type: DeviceUnbindResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000018"
         code: 0
         message: success
@@ -1532,10 +1539,10 @@ components:
       properties:
         deviceId:
           type: string
-          description: 解绑设备ID
+          description: 解绑设备ID。
         needDeleteNodeData:
           type: boolean
-          description: 需要删除节点数据
+          description: 需要删除节点数据。
 
 
     Endpoint:
@@ -1544,13 +1551,13 @@ components:
       properties:
         endpointId:
           type: integer
-          description: 端点ID
+          description: 端点ID。
         endpointName:
           type: string
-          description: 端点名称
+          description: 端点名称。
         deviceType:
           type: string
-          description: 设备类型
+          description: 设备类型。
         functions:
           type: array
           items:
@@ -1562,7 +1569,7 @@ components:
       properties:
         functionCode:
           type: string
-          description: 功能编码（如 LevelControl, ColorControl, Output）
+          description: 功能编码（如 LevelControl, ColorControl, Output）。
         traits:
           type: array
           items:
@@ -1593,16 +1600,16 @@ components:
       properties:
         traitCode:
           type: string
-          description: 属性编码（如 CurrentLevel, ColorTemperature, OnOff）
+          description: 属性编码（如 CurrentLevel, ColorTemperature, OnOff）。
         parameter:
           $ref: '#/components/schemas/TraitParameter'
         value:
           $ref: '#/components/schemas/FlexibleValue'
-          description: 当前值（推荐按 parameter.type 解析）
+          description: 当前值（推荐按 parameter.type 解析）。
         time:
           type: integer
           format: int64
-          description: 值更新时间（毫秒时间戳）
+          description: 值更新时间（毫秒时间戳）。
 
     Command:
       type: object
@@ -1610,12 +1617,12 @@ components:
       properties:
         commandCode:
           type: string
-          description: 命令编码（如 MoveToXYColor）
+          description: 命令编码（如 MoveToXYColor）。
         fields:
           type: array
           items:
             $ref: '#/components/schemas/CommandField'
-          description: 命令参数字段列表
+          description: 命令参数字段列表。
 
     CommandField:
       type: object
@@ -1623,7 +1630,7 @@ components:
       properties:
         fieldCode:
           type: string
-          description: 参数字段编码（如 ColorX, ColorY, Time）
+          description: 参数字段编码（如 ColorX, ColorY, Time）。
         parameter:
           $ref: '#/components/schemas/CommandFieldParameter'
 
@@ -1633,7 +1640,7 @@ components:
       properties:
         type:
           type: string
-          description: 数据类型（Bool、Integer、Float、Enum、String、Struct、List[X]、Data 等）
+          description: 数据类型（Bool、Integer、Float、Enum、String、Struct、List[X]、Data 等）。
           enum: [Bool, Float, Integer, Enum, String, Struct, "List[X]", Data]
         min:
           type: number
@@ -1680,7 +1687,7 @@ components:
           properties:
             mandatory:
               type: boolean
-              description: 是否必填
+              description: 是否必填。
 
     KeyValue:
       type: object
@@ -1709,10 +1716,10 @@ components:
       properties:
         deviceId:
           type: string
-          description: 设备ID
+          description: 设备ID。
         endpointId:
           type: integer
-          description: 端点ID
+          description: 端点ID。
         functionCode:
           type: string
           description: |
@@ -1728,7 +1735,7 @@ components:
             - EndpointName（设备名称）
         value:
           $ref: '#/components/schemas/FlexibleValue'
-          description: 要设置的值（推荐按同级 parameter.type 选择值类型）
+          description: 要设置的值（推荐按同级 parameter.type 选择值类型）。
 
     TraitExecuteResult:
       type: object
@@ -1736,15 +1743,19 @@ components:
       properties:
         deviceId:
           type: string
+          description: 设备ID。
         endpointId:
           type: integer
+          description: 端点ID。
         functionCode:
           type: string
+          description: 功能编码。
         traitCode:
           type: string
+          description: 功能点代码。
         code:
           type: integer
-          description: 错误码
+          description: 错误码。
         message:
           type: string
           description: 错误信息
@@ -1756,12 +1767,12 @@ components:
           properties:
             data:
               type: array
-              description: data集合元素为执行失败的数据
+              description: data集合元素为执行失败的数据。
               items:
                 $ref: '#/components/schemas/TraitExecuteResult'
       example:
         type: ExecuteTraitResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000009"
         code: 0
         message: success
@@ -1788,18 +1799,18 @@ components:
       properties:
         deviceId:
           type: string
-          description: 设备ID
+          description: 设备ID。
         endpointId:
           type: integer
-          description: 端点ID
+          description: 端点ID。
         functionCode:
           type: string
-          description: 功能编码
+          description: 功能编码。
         traitCodes:
           type: array
           items:
             type: string
-          description: 要查询的属性编码列表
+          description: 要查询的属性编码列表。
 
     TraitValueResult:
       type: object
@@ -1807,12 +1818,16 @@ components:
       properties:
         deviceId:
           type: string
+          description: 设备ID。
         endpointId:
           type: integer
+          description: 端点ID。
         functionCode:
           type: string
+          description: 功能编码。
         traitCode:
           type: string
+          description: 功能点代码。
         value:
           $ref: '#/components/schemas/FlexibleValue'
           description: 属性值（推荐按对应 trait 的 parameter.type 解析）
@@ -1832,7 +1847,7 @@ components:
                 $ref: '#/components/schemas/TraitValueResult'
       example:
         type: GetTraitValueResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-00000000000d"
         code: 0
         message: success
@@ -1860,10 +1875,10 @@ components:
       properties:
         deviceId:
           type: string
-          description: 设备ID
+          description: 设备 ID。
         endpointId:
           type: integer
-          description: 端点ID
+          description: 端点 ID
         functionCode:
           type: string
           description: |
@@ -1897,18 +1912,22 @@ components:
       properties:
         deviceId:
           type: string
+          description: 设备 ID。
         endpointId:
           type: integer
+          description: 端点 ID。
         functionCode:
           type: string
+          description: 功能编码。
         commandCode:
           type: string
+          description: 命令编码。
         code:
           type: integer
-          description: 错误码
+          description: 错误码。
         message:
           type: string
-          description: 错误信息
+          description: 错误信息。
 
     CommandExecuteResponse:
       allOf:
@@ -1921,7 +1940,7 @@ components:
                 $ref: '#/components/schemas/CommandExecuteResult'
       example:
         type: ExecuteCommandResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000019"
         code: 0
         message: success
@@ -1945,28 +1964,32 @@ components:
       properties:
         deviceId:
           type: string
+          description: 设备 ID。
         endpointId:
           type: integer
+          description: 端点 ID。
         functionCode:
           type: string
+          description: 功能编码。
         commandCode:
           type: string
+          description: 命令编码。
         code:
           type: integer
-          description: 执行结果码
+          description: 执行结果码。
         message:
           type: string
-          description: 执行结果描述
+          description: 执行结果描述。
         responded:
           type: boolean
-          description: 是否收到设备该 command 的上报
+          description: 是否收到设备该 command 的上报。
         commandReportValue:
           type: string
-          description: 设备该 command 的上报原始字符串，由调用端自行解析
+          description: 设备该 command 的上报原始字符串，由调用端自行解析。
         responseTime:
           type: integer
           format: int64
-          description: 设备 command 上报时间（毫秒时间戳）
+          description: 设备 command 上报时间（毫秒时间戳）。
 
     CommandExecuteAwaitResponse:
       allOf:
@@ -1979,7 +2002,7 @@ components:
                 $ref: '#/components/schemas/CommandExecuteAwaitResult'
       example:
         type: ExecuteCommandAwaitResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-00000000001a"
         code: 0
         message: success
@@ -2005,7 +2028,7 @@ components:
                 $ref: '#/components/schemas/DeviceType'
       example:
         type: GetDeviceTypeInfosResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000006"
         code: 0
         message: success
@@ -2021,19 +2044,19 @@ components:
       properties:
         totalCount:
           type: integer
-          description: 满足条件的设备总数
+          description: 满足条件的设备总数。
           example: 3
         pageNum:
           type: integer
-          description: 当前页码
+          description: 当前页码。
           example: 1
         pageSize:
           type: integer
-          description: 当前页大小
+          description: 当前页大小。
           example: 200
         data:
           type: array
-          description: 当前页设备列表
+          description: 当前页设备列表。
           items:
             $ref: '#/components/schemas/DeviceInfo'
 
@@ -2046,7 +2069,7 @@ components:
               $ref: '#/components/schemas/DeviceListData'
       example:
         type: GetDeviceInfoResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000007"
         code: 0
         message: success
@@ -2132,4 +2155,4 @@ components:
           properties:
             data:
               nullable: true
-              description: 固定返回 null
+              description: 固定返回 null。

@@ -1,0 +1,21 @@
+---
+title: 告警管理
+hide_table_of_contents: true
+---
+
+import Head from '@docusaurus/Head';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+export function RedirectToAlarmManagement() {
+  const target = useBaseUrl('/docs/aqara-studio/alarm-management');
+  return (
+    <Head>
+      <meta httpEquiv="refresh" content={`0;url=${target}`} />
+      <link rel="canonical" href={target} />
+    </Head>
+  );
+}
+
+<RedirectToAlarmManagement />
+
+本页已迁移至 [告警管理](../alarm-management)。
