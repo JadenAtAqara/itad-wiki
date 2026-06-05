@@ -194,7 +194,6 @@ paths:
       responses:
         '200':
           description: Request succeeded
-     
           content:
             application/json:
               schema:
@@ -394,7 +393,6 @@ paths:
         - Update device attributes (such as switch, temperature, etc. For functionCode and traitCode, please refer to the /devices/definitions interface)
         - Reconnect device to a new room (functionCode="EndpointLabel", traitCode="EndpointRoom")
         - Rename device (functionCode="EndpointLabel", traitCode="EndpointName")
-   
       operationId: executeDeviceTrait
       x-skill-intent: device.trait.execute
       x-idempotent: false
@@ -1739,8 +1737,6 @@ components:
         code: 0
         message: success
         data: []
-
-
 
     DeviceTypesResponse:
       allOf:

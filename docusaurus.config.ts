@@ -96,6 +96,16 @@ const config: Config = {
               sidebarCollapsed: false,
             },
           },
+          aiotApi: {
+            specPath: 'openapi/aiot-api/en/aiot-api.yaml',
+            outputDir:
+              'versioned_docs/version-Beta/aqara-developer/aiot-api',
+            sidebarOptions: {
+              groupPathsBy: 'tag',
+              categoryLinkSource: 'tag',
+              sidebarCollapsed: false,
+            },
+          },
           aiotApiZh: {
             specPath: 'openapi/aiot-api/zh/aiot-api.yaml',
             outputDir:
