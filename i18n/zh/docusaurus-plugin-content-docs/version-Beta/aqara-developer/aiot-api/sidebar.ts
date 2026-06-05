@@ -47,13 +47,13 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-developer/aiot-api/get-device-types",
-          label: "查询DeviceType集合",
+          label: "查询设备类型集合",
           className: "api-method get",
         },
         {
           type: "doc",
           id: "version-Beta/aqara-developer/aiot-api/get-devices",
-          label: "查设备信息列表",
+          label: "查询设备信息列表",
           className: "api-method get",
         },
         {

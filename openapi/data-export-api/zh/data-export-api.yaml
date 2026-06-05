@@ -679,7 +679,7 @@ paths:
             支持如下值：
             SCRIPT_JSON：通过 API 创建的 Flow 自动化。  
             SCRIPT_TEXT：通过 Aqara Studio Web 页面创建的 Flow 自动化。  
-            WHEN_IF_THEN：IFTTT 自动化。  
+            WHEN_IF_THEN：Classic 自动化。  
             LEGACY_FLOW：Flow 自动化（旧版）。  
             LEGACY_LINKAGE：Logic 自动化。  
             OTHER：其他自动化类型。    
@@ -1834,7 +1834,7 @@ components:
             自动化类型，说明如下： <br />
             - SCRIPT_JSON：通过 API 创建的 Flow 自动化。  
             - SCRIPT_TEXT：通过 Aqara Studio Web 页面创建的 Flow 自动化。  
-            - WHEN_IF_THEN：IFTTT 自动化。  
+            - WHEN_IF_THEN：Classic 自动化。  
             - LEGACY_FLOW：Flow 自动化（旧版）。  
             - LEGACY_LINKAGE：Logic 自动化。  
             - OTHER：其他自动化类型。

@@ -1,16 +1,14 @@
-# IFTTT
+# Classic
 
 Using Aqara Studio, you can quickly set up your own automation by specifying what triggers it (**When**), setting conditions (**And**), and defining the actions (**Then**) you want to happen.
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Automation-IFTTT.png" style={{width: '80%'}} />   
-
 ## Create an Automation
 
-To learn how to create an IFTTT automation, please refer to [Automation - Create an Automation](./automation.mdx#create-an-automation).
+To learn how to create an Classic automation, please refer to [Automation - Create an Automation](./automation.mdx#create-an-automation).
 
 ## Set Up Automation
 
-See below for how to set up an IFTTT automation flow.
+See below for how to set up an Classic automation flow.
 
 ### 1. Configure When
 
@@ -19,20 +17,20 @@ The **When** step defines the point triggering your automation, either a **devic
 #### Add triggers
 
 1. Click **Add Trigger**.<br/>
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-AddEvent.png" style={{width: '80%'}} />   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-AddEvent.png" style={{width: '80%'}} />   
 
 2. Choose **Device** or **Scheduled Trigger**.<br/>
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-EventTypes.png" style={{width: '80%'}} />   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-EventTypes.png" style={{width: '80%'}} />   
 
 - If you choose **Device**:
     1. Add a device event<br/>
         In the **Device** popup, select the device and function card you want, then click **Confirm**.   
-        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-DevicePopup.png" style={{width: '80%'}} />   
+        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-DevicePopup.png" style={{width: '80%'}} />   
         Now, in the **When** section, you'll see Studio will monitor this device event and its default value **24/7**.   
-        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-EventAdded.png" style={{width: '80%'}} />   
+        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-EventAdded.png" style={{width: '80%'}} />   
     2. Edit the value<br/>
         If you'd like to listen for another value, click the blue text in the event to modify it.<br/>
-        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-ModifyEventParameter.png" style={{width: '80%'}} />   
+        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-ModifyEventParameter.png" style={{width: '80%'}} />   
         3. Add time constraints
             You can add two types of time constraints for event listening: the effective time period and the required event duration.
             - Set effective listening period   
@@ -41,15 +39,15 @@ The **When** step defines the point triggering your automation, either a **devic
                 Setting the time range as 00:00:00-00:00:00 means this logic is active all day.
                 :::
 
-                <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-SetEventTimePeriod.png" style={{width: '80%'}} />   
+                <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-SetEventTimePeriod.png" style={{width: '80%'}} />   
             - Set event duration requirement
                 If you want the automation to trigger only when an event lasts a certain period, click **... > Duration Time** to set it.
-                <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-SetEventDuration.png" style={{width: '80%'}} />   
+                <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-SetEventDuration.png" style={{width: '80%'}} />   
     - If you choose **Trigger Time**:
         1. Select which weekdays the action should run (multiple selections supported).
-            <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-SetEventDate.png" alt="Choose weekdays" style={{width: '80%'}} />   
+            <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-SetEventDate.png" alt="Choose weekdays" style={{width: '80%'}} />   
         2. Set the type of time.
-            <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-SetTimeType.png" alt="Choose time type" style={{width: '80%'}} />   
+            <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-SetTimeType.png" alt="Choose time type" style={{width: '80%'}} />   
 
             :::tip
 
@@ -57,12 +55,12 @@ The **When** step defines the point triggering your automation, either a **devic
             - North latitude, east longitude: use positive numbers (e.g., 35.0° N → `35.0`)
             - South latitude, west longitude: use negative numbers (e.g., 120.0° W → `-120.0`)
 
-            <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-PassInLongitudeandLatitude.png" alt="Enter latitude/longitude" style={{width: '80%'}} />
+            <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-PassInLongitudeandLatitude.png" alt="Enter latitude/longitude" style={{width: '80%'}} />
 
             ::: 
 
         3. Set the exact time.
-            <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-SpecifyTime.png" alt="Set specific time" style={{width: '80%'}} />   
+            <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-SpecifyTime.png" alt="Set specific time" style={{width: '80%'}} />   
 
 #### Select Event Logic
 
@@ -70,7 +68,7 @@ When you add multiple triggers, you can flexibly set their relationship logic:
 - **Any condition is triggered**: The automation will proceed if Studio detects any one of the conditions is met.
 - **Trigger in sequence**: Automation proceeds only if all conditions are met in the specified sequence.
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-SelectEventLogic.png" alt="Set trigger logic" style={{width: '80%'}} />   
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-SelectEventLogic.png" alt="Set trigger logic" style={{width: '80%'}} />   
 
 ### 2. (Optional) Configure **And**
 
@@ -81,16 +79,16 @@ For example: Set "someone detected in the room" as a **When** condition, then ad
 #### Add Condition
 
 1. Click **Add Condition**.<br />
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-AddCondition.png" style={{width: '80%'}} />   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-AddCondition.png" style={{width: '80%'}} />   
 2. Choose **Device**.<br />
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-AddConditionDevice.png" style={{width: '80%'}} />   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-AddConditionDevice.png" style={{width: '80%'}} />   
 3. Select the needed **device** and its **function card**, then click **Confirm**.<br />
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-SelectConditionFunction.png" style={{width: '80%'}} />   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-SelectConditionFunction.png" style={{width: '80%'}} />   
     After completion, you'll see the chosen device condition in the **And** section, showing its **default state**.<br />
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-ConditionAdded.png" style={{width: '80%'}} />    
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-ConditionAdded.png" style={{width: '80%'}} />    
 4. Edit target values for condition
     To check for other device states or values, click the blue field in the condition, then select or enter your target value as needed.
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-ModifyConditionParameter.png" style={{width: '80%'}} />   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-ModifyConditionParameter.png" style={{width: '80%'}} />   
 5. Configure time constraints
     You can apply two types of time limits: an effective period or a required minimum duration. The setup is the same as the **When** step.
 
@@ -100,7 +98,7 @@ When you add multiple status conditions, set the logic for judgment as follows:
 - **All conditions are met**: Actions will be executed only  when all conditions are met.
 - **Any condition is met**: Actions will be executed if any conditions are met.
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-SelectConditionLogic.png" alt="Set condition logic" style={{width: '80%'}} />   
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-SelectConditionLogic.png" alt="Set condition logic" style={{width: '80%'}} />   
 
 ### 3. Configure Then
 
@@ -126,14 +124,14 @@ The process:
         1. Add device action
             In the **Device** popup, select the required device and function card, then click **Confirm**.
             Now you can see the selected device action in **Then** with default parameter value. You can further change the value as needed.<br />
-            <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-ActionAdded.png" style={{width: '80%'}} />   
+            <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-ActionAdded.png" style={{width: '80%'}} />   
         2. Edit action parameters
             To adjust the action's parameters, click the blue field and select or input the target value.<br />
-            <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-ModifyAction.png" style={{width: '80%'}} />   
+            <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-ModifyAction.png" style={{width: '80%'}} />   
         3. Configure time constraints
             You can specify an effective period for the action, just like in the **When** section.
     - If you choose **Delay**: Click the blue duration field to change the delay length.<br />
-        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-DelayTimeSetting.png" style={{width: '80%'}} />   
+        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-DelayTimeSetting.png" style={{width: '80%'}} />   
 
         :::tip
         **Delay** only affects the actions that follow it.  
@@ -159,7 +157,7 @@ After adding multiple actions, you can choose how they are executed:
 - **Execute all**: Whenever the triggers are met, Studio executes all set actions, one after another.
 - **Execute in rotation**: Each time the trigger fires, only one action is executed, rotating through the set list in order each time. The sequence repeats in a loop.
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IFTTT-SelectActionLogic.png" alt="Set action execution logic" style={{width: '80%'}} />   
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Classic-SelectActionLogic.png" alt="Set action execution logic" style={{width: '80%'}} />   
 
 ### 4. Test Automation
 
@@ -167,4 +165,4 @@ After configuration, click the **Test** button to check your automation.
 
 ### 5. Save
 
-Once you confirm your automation works as expected, click **Save**. The new IFTTT automation (enabled by default) will appear in the **Automation** page.
+Once you confirm your automation works as expected, click **Save**. The new Classic automation (enabled by default) will appear in the **Automation** page.

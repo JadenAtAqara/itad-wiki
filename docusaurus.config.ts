@@ -87,8 +87,29 @@ const config: Config = {
         docsPluginId: 'classic',
         config: {
           dataExportApi: {
-            specPath: 'openapi/data-export-api.yaml',
-            outputDir: 'versioned_docs/version-Beta/aqara-api/data-export-api',
+            specPath: 'openapi/data-export-api/en/data-export-api.yaml',
+            outputDir:
+              'versioned_docs/version-Beta/aqara-developer/data-export-api',
+            sidebarOptions: {
+              groupPathsBy: 'tag',
+              categoryLinkSource: 'tag',
+              sidebarCollapsed: false,
+            },
+          },
+          aiotApiZh: {
+            specPath: 'openapi/aiot-api/zh/aiot-api.yaml',
+            outputDir:
+              'i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-developer/aiot-api',
+            sidebarOptions: {
+              groupPathsBy: 'tag',
+              categoryLinkSource: 'tag',
+              sidebarCollapsed: false,
+            },
+          },
+          dataExportApiZh: {
+            specPath: 'openapi/data-export-api/zh/data-export-api.yaml',
+            outputDir:
+              'i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-developer/data-export-api',
             sidebarOptions: {
               groupPathsBy: 'tag',
               categoryLinkSource: 'tag',
@@ -103,17 +124,6 @@ const config: Config = {
       {
         hashed: true,
         language: ['en', 'zh'],
-      },
-    ],
-    [
-      '@docusaurus/plugin-client-redirects',
-      {
-        redirects: [
-          {
-            from: '/docs/aqara-studio/device-management/alarms',
-            to: '/docs/aqara-studio/alarm-management',
-          },
-        ],
       },
     ],
   ],

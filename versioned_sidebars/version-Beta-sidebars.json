@@ -68,7 +68,7 @@
                     "id": "aqara-studio/automation"
                 },
                 "items": [
-                    "aqara-studio/ifttt", 
+                    "aqara-studio/classic-automation", 
                     {
                       "type": "category",
                       "label": "Flow",
@@ -198,7 +198,6 @@
         {
           "type": "category",
           "label": "HTTP",
-          "collapsed": false,
           "items": [
             "aqara-developer/data-export-api/getting-started-with-the-data-export-api",
             "aqara-developer/data-export-api/try-api-online",

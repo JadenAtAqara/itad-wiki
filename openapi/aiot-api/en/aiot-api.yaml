@@ -18,7 +18,7 @@ info:
     | Sign        | Yes    | Request signature. For signature generation method, please refer to [Sign Generation Rules](https://opendoc.aqara.com/en/docs/developmanual/apiIntroduction/signGenerationRules.html). |
     | Lang        | Enum   | No  | Language, default is English, possible values: 'zh', 'en' |
     
-  version: v1
+  version: v4
 
 servers:
   - url: '{host}/v4.0/open/api'
@@ -341,7 +341,7 @@ paths:
                 devicesPage:
                   value:
                     type: GetDeviceInfoResponse
-                    version: v1
+                    version: v4
                     msgId: "1751609244328"
                     code: 0
                     message: success
@@ -481,7 +481,7 @@ paths:
                   summary: 树形结构节选（真实字段组合可能更多）
                   value:
                     type: GetDeviceDefinitionNumericResponse
-                    version: v1
+                    version: v4
                     msgId: "a1b2c3d4-e5f6-7890-abcd-000000000008a"
                     code: 0
                     message: success
@@ -582,7 +582,7 @@ paths:
                 partialFailed:
                   value:
                     type: ExecuteTraitResponse
-                    version: v1
+                    version: v4
                     msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecf7"
                     code: 0
                     message: success
@@ -658,7 +658,7 @@ paths:
                 commandFailed:
                   value:
                     type: ExecuteCommandResponse
-                    version: v1
+                    version: v4
                     msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecf9"
                     code: 0
                     message: success
@@ -731,7 +731,7 @@ paths:
                 commandExecuteAwaitSuccess:
                   value:
                     type: ExecuteCommandAwaitResponse
-                    version: v1
+                    version: v4
                     msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecfa"
                     code: 0
                     message: success
@@ -803,7 +803,7 @@ paths:
                 traitValueSuccess:
                   value:
                     type: GetTraitValueResponse
-                    version: v1
+                    version: v4
                     msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecf8"
                     code: 0
                     message: success
@@ -872,7 +872,7 @@ paths:
                 subscribeSuccess:
                   value:
                     type: MqttSubscribeResponse
-                    version: v1
+                    version: v4
                     msgId: "2df2f431-xxxx-4fdb-xxxx-xxxxxxxx"
                     code: 0
                     message: success
@@ -937,7 +937,7 @@ paths:
                 unsubscribeSuccess:
                   value:
                     type: MqttUnsubscribeResponse
-                    version: v1
+                    version: v4
                     msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f002"
                     code: 0
                     message: success
@@ -969,7 +969,7 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
             example:
               type: ErrorMessage
-              version: v1
+              version: v4
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000001"
               code: 400
               message: "Parameter xxx cannot be empty"
@@ -981,7 +981,7 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
             example:
               type: ErrorMessage
-              version: v1
+              version: v4
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000002"
               code: 401
               message: "Token expired, please regenerate token"
@@ -993,7 +993,7 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
             example: 
               type: ErrorMessage
-              version: v1
+              version: v4
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000003"
               code: 403
               message: "No permission to access this resource"
@@ -1005,7 +1005,7 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
             example:
               type: ErrorMessage
-              version: v1
+              version: v4
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000004"
               code: 404
               message: "Resource not found"
@@ -1017,7 +1017,7 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
             example:
               type: ErrorMessage
-              version: v1
+              version: v4
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000005"
               code: 429
               message: "Too many requests"
@@ -1029,7 +1029,7 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
             example:
               type: ErrorMessage
-              version: v1
+              version: v4
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000006"
               code: 500
               message: "Internal server error"
@@ -1107,7 +1107,7 @@ components:
         version:
           type: string
           description: API version
-          example: v1
+          example: v4
         msgId:
           type: string
           description: Message ID
@@ -1230,7 +1230,7 @@ components:
               description: 新创建的空间ID
       example:
         type: CreateSpaceResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000006"
         code: 0
         message: success
@@ -1260,7 +1260,7 @@ components:
               description: 固定为空字符串
       example:
         type: UpdateSpaceNameResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000007"
         code: 0
         message: success
@@ -1277,7 +1277,7 @@ components:
                 $ref: '#/components/schemas/SpaceNode'
       example:
         type: GetSpacesResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000005"
         code: 0
         message: success
@@ -1498,7 +1498,7 @@ components:
                 $ref: '#/components/schemas/DeviceDefinition'
       example:
         type: GetDeviceResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000008"
         code: 0
         message: success
@@ -1520,7 +1520,7 @@ components:
               example: ""
       example:
         type: DeviceUnbindResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000018"
         code: 0
         message: success
@@ -1761,7 +1761,7 @@ components:
                 $ref: '#/components/schemas/TraitExecuteResult'
       example:
         type: ExecuteTraitResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000009"
         code: 0
         message: success
@@ -1832,7 +1832,7 @@ components:
                 $ref: '#/components/schemas/TraitValueResult'
       example:
         type: GetTraitValueResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-00000000000d"
         code: 0
         message: success
@@ -1921,7 +1921,7 @@ components:
                 $ref: '#/components/schemas/CommandExecuteResult'
       example:
         type: ExecuteCommandResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000019"
         code: 0
         message: success
@@ -1979,7 +1979,7 @@ components:
                 $ref: '#/components/schemas/CommandExecuteAwaitResult'
       example:
         type: ExecuteCommandAwaitResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-00000000001a"
         code: 0
         message: success
@@ -2005,7 +2005,7 @@ components:
                 $ref: '#/components/schemas/DeviceType'
       example:
         type: GetDeviceTypeInfosResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000006"
         code: 0
         message: success
@@ -2046,7 +2046,7 @@ components:
               $ref: '#/components/schemas/DeviceListData'
       example:
         type: GetDeviceInfoResponse
-        version: v1
+        version: v4
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000007"
         code: 0
         message: success
