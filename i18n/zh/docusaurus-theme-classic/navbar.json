@@ -1,6 +1,6 @@
 {
   "title": {
-    "message": "Aqara 开发者",
+    "message": "Aqara 文档",
     "description": "The title in the navbar"
   },
   "logo.alt": {
@@ -27,8 +27,8 @@
     "message": "Aqara Studio",
     "description": "Navbar item with label Aqara Studio"
   },
-  "item.label.Aqara API": {
-    "message": "Aqara API",
-    "description": "Navbar item with label API"
+  "item.label.Aqara Developer": {
+    "message": "Aqara Developer",
+    "description": "Navbar item with label Aqara Developer"
   }
 }
