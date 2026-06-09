@@ -27,3 +27,31 @@ If a remote user enters the remote access address in the address bar, and then r
 The correct remote access method is: 
 - Log in to [Aqara Builder](https://builder.aqara.com/), find the Studio you have permission to access in the **Studios** section of the left menu.
 - Click the **Connect** button to remotely access that Aqara Studio.
+
+
+## What should I do if I fail to access Aqara Studio through the host domain name?
+
+This may be caused by DNS resolution failure or router interception. You can try setting DNS manually to `224.0.0.251`.
+
+The following steps use the **Windows** interface as an example to show how to manually set the DNS:
+
+:::tip
+The screenshots below are from Windows 10; the interface may look different in your OS.
+To ensure accurate configuration, please refer to the DNS manual setup instructions for your specific OS.
+:::
+
+1. Open Windows Settings and click on **Network & Internet**.
+2. Check your network properties.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LocalDomainName-CheckNetworkProperties.png" alt="Check Network Properties" style={{width: '80%'}} />
+
+3. Find the **IP settings**, and select **Edit**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LocalDomainName-Edit.png" alt="Edit IP Settings" style={{width: '80%'}} />
+
+4. In the "Edit IP settings" pop-up, select "Manual", then enable "IPv4". Set the **Preferred DNS** to `224.0.0.251` and save the settings.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LocalDomainName-SetDNS.png" alt="Set Preferred DNS" style={{width: '60%'}} />
+
+5. Try accessing Aqara Studio again using the host domain name; it should now work properly.
+6. (Optional)If you are unable to access other websites after manually setting the DNS, please restore the DNS configuration to **Automatic**.

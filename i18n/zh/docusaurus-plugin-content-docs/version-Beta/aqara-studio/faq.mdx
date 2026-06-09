@@ -25,3 +25,30 @@
 如远程用户在地址栏输入远程访问地址后，在登录界面输入 Aqara 账号和密码后提示登录失败，请无需继续尝试，此为错误的登录方式。
 
 正确方式应为：先登录 [Aqara Builder](https://builder.aqara.com/)，在左侧菜单的 **Studios** 中找到有权限访问的 Studio，点击对应的 **Connect** 按钮，即可远程访问该 Aqara Studio。
+
+## 通过主机访问域名访问 Aqara Studio 失败怎么办？
+
+这可能是因为 DNS 解析失败或路由器拦截。您可以尝试将 DNS 手动设置为 `224.0.0.251`。
+
+以下步骤以 **Windows** 界面为例，展示如何手动设置 DNS：
+
+:::tip
+下列截图来源于 Windows 10 操作系统，其界面表现可能与您所使用的操作系统不一致。
+为确保准确配置，建议您依据自身系统版本，查找对应的 DNS 手动设置流程。
+:::
+
+1. 打开 Windows Settings，找到并单击**网络和 Internet**。
+2. 查看您的网络属性。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LocalDomainName-CheckNetworkProperties.png" alt="查看网络属性" style={{width: '80%'}} />
+
+3. 找到 **IP 设置**，选择**编辑**。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LocalDomainName-Edit.png" alt="编辑 IP 设置" style={{width: '80%'}} />
+
+4. 在“编辑 IP 设置”弹窗中选择“手动”，然后打开“IPv4”。设置**首选 DNS**为 `224.0.0.251`，随后保存设置。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LocalDomainName-SetDNS.png" alt="设置首选 DNS" style={{width: '60%'}} />
+
+5. 再次通过主机访问域名访问 Aqara Studio，即可正常访问。
+6. （可选）若因手动设置 DNS 导致无法访问其他网页，请将 DNS 配置恢复为 **自动获取**。
