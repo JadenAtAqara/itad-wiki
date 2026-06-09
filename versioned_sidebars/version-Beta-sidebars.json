@@ -189,6 +189,7 @@
     }
   ],
   "aqaraDeveloperSidebar": [
+    "aqara-developer/introduction",
     {
       "type": "category",
       "label": "Local API for Studio",
