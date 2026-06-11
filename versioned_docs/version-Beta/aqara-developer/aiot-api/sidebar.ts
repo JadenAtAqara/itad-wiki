@@ -4,20 +4,6 @@ const sidebar: SidebarsConfig = {
   apisidebar: [
     {
       type: "doc",
-      id: "version-Beta/aqara-developer/aiot-api/introduction",
-    },
-    {
-      type: "doc",
-      id: "version-Beta/aqara-developer/aiot-api/getting-started-with-the-aiot-api",
-      label: "Getting Started with the AIOT API",
-    },
-    {
-      type: "doc",
-      id: "version-Beta/aqara-developer/aiot-api/try-api-online",
-      label: "Try API Online",
-    },
-    {
-      type: "doc",
       id: "version-Beta/aqara-developer/aiot-api/aiot-api",
     },
     {
@@ -73,7 +59,7 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-developer/aiot-api/get-device-definitions",
-          label: "Query Device Details",
+          label: "Query Device Model Definition",
           className: "api-method get",
         },
         {
