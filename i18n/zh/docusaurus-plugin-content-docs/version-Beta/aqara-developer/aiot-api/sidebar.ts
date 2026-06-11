@@ -4,20 +4,6 @@ const sidebar: SidebarsConfig = {
   apisidebar: [
     {
       type: "doc",
-      id: "version-Beta/aqara-developer/aiot-api/introduction",
-    },
-    {
-      type: "doc",
-      id: "version-Beta/aqara-developer/aiot-api/getting-started-with-the-aiot-api",
-      label: "AIOT API 入门",
-    },
-    {
-      type: "doc",
-      id: "version-Beta/aqara-developer/aiot-api/try-api-online",
-      label: "在线体验 API",
-    },
-    {
-      type: "doc",
       id: "version-Beta/aqara-developer/aiot-api/aiot-api",
     },
     {
@@ -73,7 +59,7 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-developer/aiot-api/get-device-definitions",
-          label: "查询设备详细信息",
+          label: "查询设备模型定义",
           className: "api-method get",
         },
         {
