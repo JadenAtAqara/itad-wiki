@@ -59,7 +59,7 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/get-device-definitions",
-          label: "查询设备详细信息",
+          label: "查询设备模型定义",
           className: "api-method get",
         },
         {
@@ -129,9 +129,21 @@ const sidebar: SidebarsConfig = {
         },
         {
           type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/update-automation-space",
+          label: "批量更新自动化关联空间",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/delete-automations",
           label: "删除自动化",
           className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/query-automation-manual-trigger-list",
+          label: "获取手动触发器列表",
+          className: "api-method get",
         },
         {
           type: "doc",

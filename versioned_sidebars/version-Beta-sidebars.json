@@ -43,7 +43,20 @@
                   "aqara-studio/device-integration/bacnet",
                   "aqara-studio/device-integration/knx-ip",
                   "aqara-studio/device-integration/mqtt",
-                  "aqara-studio/device-integration/http"
+                  "aqara-studio/device-integration/http",
+                  "aqara-studio/device-integration/aqara-modbus",
+                  {
+                    "type": "category",
+                    "label": "Virtual",
+                    "link": {
+                      "type": "generated-index",
+                      "keywords": ["virtual-devices"]
+                    },
+                    "items": [
+                      "aqara-studio/device-integration/virtual/infrared-equipment",
+                      "aqara-studio/device-integration/virtual/light-box"
+                    ]
+                  }
                 ]
               },
               {
@@ -184,7 +197,8 @@
       "label": "Reference",
       "items": [
         "aqara-studio/javascript-script-for-adding-data-points",
-        "aqara-studio/javascript-for-http-integration"
+        "aqara-studio/javascript-for-http-integration",
+        "aqara-studio/javascript-for-udp-tcp-integration"
       ]
     }
   ],
@@ -314,8 +328,18 @@
                 },
                 {
                   "type": "doc",
+                  "id": "aqara-developer/data-export-api/update-automation-space",
+                  "className": "api-method post"
+                },
+                {
+                  "type": "doc",
                   "id": "aqara-developer/data-export-api/delete-automations",
                   "className": "api-method post"
+                },
+                {
+                  "type": "doc",
+                  "id": "aqara-developer/data-export-api/query-automation-manual-trigger-list",
+                  "className": "api-method get"
                 },
                 {
                   "type": "doc",
@@ -434,5 +458,9 @@
         }
       ]      
     }
+
+  ],
+  "aqaraLifeSidebar": [
+    "aqara-life/overview"
   ]
 }
