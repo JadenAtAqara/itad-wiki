@@ -1,0 +1,808 @@
+# JavaScript Script (for UDP and TCP)
+
+This document explains how to use JavaScript scripts in Aqara Studio to add custom UDP and TCP devices, points, and parsing functions.
+
+## Script Overview
+
+In UDP and TCP integration scenarios, Aqara Studio relies on your JavaScript script to:
+
+- Build device discovery, point discovery, heartbeat, read, and write request payloads.
+- Parse raw byte data returned by devices.
+- Convert byte payloads into standard object structures recognized by Aqara Studio.
+- Parse point value reports actively pushed by devices.
+
+Depending on your protocol design, you will typically work with the following **14 functions** (some of which may be optional depending on the device protocol):
+
+| Function | Description |
+| --- | --- |
+| [buildDiscoveryRequest](#builddiscoveryrequest) | Builds the request payload for discovering devices |
+| [buildDiscoverPointsRequest](#builddiscoverpointsrequest) | Builds the request payload for discovering device points |
+| [buildProbeRequest](#buildproberequest) | Builds the request payload for probing device heartbeat |
+| [buildReadRequest](#buildreadrequest) | Builds the request payload for reading point values |
+| [buildWriteRequest](#buildwriterequest) | Builds the request payload for writing point values |
+| [buildReportResponse](#buildreportresponse) | Builds the response payload sent back to a device report |
+| [packetProcessConfig](#packetprocessconfig) | Defines how Aqara Studio extracts a complete packet from a byte stream |
+| [dispatch](#dispatch) | Determines which parser should handle the incoming response |
+| [parseDiscoveryResponse](#parsediscoveryresponse) | Parses the device discovery response |
+| [parseDiscoverPointsResponse](#parsediscoverpointsresponse) | Parses the point discovery response |
+| [parseProbeResponse](#parseproberesponse) | Parses the heartbeat response |
+| [parseReadResponse](#parsereadresponse) | Parses the point read response |
+| [parseWriteResponse](#parsewriteresponse) | Parses the point write response |
+| [parseReportRequest](#parsereportrequest) | Parses device-initiated point reports |
+
+:::tip
+Do not change the function names or parameter definitions.
+:::
+
+:::tip
+Not every function must be implemented in every project. For example, if your protocol does not require a reply to point reports, `buildReportResponse` can be omitted. If there is no dedicated point discovery request, `parseDiscoverPointsResponse` can return point information directly.
+:::
+
+## Prerequisites
+
+Before writing the script, make sure you fully understand the target device’s UDP or TCP protocol details, including but not limited to:
+
+- Device discovery payload format
+- Point discovery payload format
+- Heartbeat payload format
+- Point read and write payload format
+- Device report payload format
+- Packet framing rules, frame headers, and packet length rules
+- Response field structures and meanings
+
+Only by understanding the above protocol details can you correctly build requests and parse responses according to the device specification.
+
+## buildDiscoveryRequest
+
+Return a `Uint8Array` that tells Aqara Studio how to send a device discovery request.
+
+### Parameters
+
+It is recommended that this function accept a `msgId` parameter used to correlate the request with its response.
+
+### Return Value
+
+To ensure Aqara Studio can send the request properly, `buildDiscoveryRequest` should return a byte array such as:
+
+```javascript
+Uint8Array.from("001#DEVICE_SCAN#\r\n", c => c.charCodeAt(0))
+```
+
+### Example
+
+```javascript
+function buildDiscoveryRequest(msgId) {
+    return Uint8Array.from(msgId + "#DEVICE_SCAN#\r\n", c => c.charCodeAt(0));
+}
+```
+
+## buildDiscoverPointsRequest
+
+Return a `Uint8Array` that tells Aqara Studio how to send a point discovery request for a specified device.
+
+### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| msgId | String | Request message ID |
+| deviceId | String | Device ID |
+
+### Return Value
+
+The return value must be a byte array representing the point discovery request payload.
+
+### Example
+
+```javascript
+function buildDiscoverPointsRequest(msgId, deviceId) {
+    return Uint8Array.from(msgId + "#DEVICE_POINT_SCAN#" + deviceId, c => c.charCodeAt(0));
+}
+```
+
+## buildProbeRequest
+
+Return a `Uint8Array` that tells Aqara Studio how to send a heartbeat probe request.
+
+### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| msgId | String | Request message ID. Recommended if response matching is based on `msgId`. |
+| deviceId | String | Device ID |
+
+### Return Value
+
+The return value must be a byte array representing the heartbeat request.
+
+### Example
+
+```javascript
+function buildProbeRequest(msgId, deviceId) {
+    return Uint8Array.from(msgId + "#SHAKEHANDS#\r\n", c => c.charCodeAt(0));
+}
+```
+
+## buildReadRequest
+
+Return a `Uint8Array` that tells Aqara Studio how to send a point read request.
+
+### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| msgId | String | Request message ID |
+| deviceId | String | Device ID |
+| pointId | String | Point ID |
+
+### Return Value
+
+The return value must be a byte array representing the point read request payload.
+
+### Example
+
+```javascript
+function buildReadRequest(msgId, deviceId, pointId) {
+    return Uint8Array.from(msgId + "#POLL#" + pointId + "\r\n", c => c.charCodeAt(0));
+}
+```
+
+## buildWriteRequest
+
+Return a `Uint8Array` that tells Aqara Studio how to send a point write request.
+
+### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| msgId | String | Request message ID |
+| deviceId | String | Device ID |
+| pointId | String | Point ID |
+| value | String / Number / Boolean / Int(enum) | Value to write |
+
+### Return Value
+
+The return value must be a byte array representing the point write request payload.
+
+### Example
+
+```javascript
+function buildWriteRequest(msgId, deviceId, pointId, value) {
+    return Uint8Array.from(msgId + "#WRITE#" + "#" + pointId + "#" + value, c => c.charCodeAt(0));
+}
+```
+
+## buildReportResponse
+
+Return a `Uint8Array` that tells Aqara Studio how to reply to a device report.
+
+If your protocol does not require a reply to report messages, this function can be omitted.
+
+### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| msgId | String | Request message ID |
+| pointId | String | Point ID |
+| code | Byte | Response code, where `0` means success |
+| errorMsg | String | Error message |
+
+### Return Value
+
+The return value must be a byte array representing the report reply payload.
+
+### Example
+
+```javascript
+function buildReportResponse(msgId, pointId, code, errorMsg) {
+    return Uint8Array.from(msgId + "#EVT_REPLY#OK", c => c.charCodeAt(0));
+}
+```
+
+## packetProcessConfig
+
+Return an object that defines how Aqara Studio should extract one complete packet from a UDP/TCP byte stream.
+
+If this function is not defined, Aqara Studio reads 128 bytes at a time as the response, which is usually only suitable for very simple packet structures.
+
+### Return Value
+
+Example return value:
+
+```json
+{
+    "frameStartBytes": [0, 216],
+    "lengthKnownAfterBytes": 4,
+    "remainingBytes": 1
+}
+```
+
+Fields:
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| frameStartBytes | number[] | Byte sequence representing the frame header |
+| lengthKnownAfterBytes | number | Offset after which the payload length becomes known |
+| remainingBytes | number | Remaining bytes to read after the length field |
+| totalLength | number | Total packet length, if you prefer using a fixed total length |
+
+:::tip
+Usually you configure either `lengthKnownAfterBytes + remainingBytes` or `totalLength`, depending on the packet format defined by your device protocol.
+:::
+
+### Example
+
+```javascript
+function packetProcessConfig() {
+    return {
+        frameStartBytes: [0x00, 0xD8],
+        lengthKnownAfterBytes: 4,
+        remainingBytes: 1
+    };
+}
+```
+
+## dispatch
+
+Implement the dispatch logic so Aqara Studio can determine which parser should process a given incoming packet.
+
+### Behavior
+
+After receiving a packet, Aqara Studio first calls this function. You should decide:
+
+- which request the packet belongs to;
+- or which parser function should handle it.
+
+If `msgId` is returned, Aqara Studio prioritizes request matching by message ID.
+If `path` is returned, Aqara Studio dispatches directly to the specified parser function.
+If both are empty, Aqara Studio tries to match the previous request; if none exists, it falls back to `parseReportRequest`.
+
+### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| fromAcceptMessage | Uint8Array | Raw response packet from the device |
+
+### Return Value
+
+The returned object can include:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| msgId | String | Request message ID |
+| path | String | Parser function name, such as `parseProbeResponse` |
+
+### Example Return Value
+
+```json
+{
+    "msgId": "msg.1234",
+    "path": "parseProbeResponse"
+}
+```
+
+### Example
+
+```javascript
+function dispatch(fromAcceptMessage) {
+    const dataStr = String.fromCharCode.apply(null, fromAcceptMessage)
+        .split('\0')[0]
+        .replace(/[^\x20-\x7E]/g, '');
+
+    const parts = dataStr.split("#");
+    const reply = parts[1];
+
+    if (reply == "SHAKEHANDS_REPLY") {
+        return {
+            msgId: parts[0],
+            path: "parseProbeResponse"
+        };
+    } else if (reply == "EVT_REPLY") {
+        return {
+            msgId: parts[0],
+            path: "parseWriteResponse"
+        };
+    } else if (reply == "EVT") {
+        return {
+            msgId: parts[0],
+            path: "parseReportRequest"
+        };
+    }
+}
+```
+
+## parseDiscoveryResponse
+
+Parse the device discovery response and return an array of device objects.
+
+If `buildDiscoverPointsRequest` is not defined, Aqara Studio may also use this return value as the basis for point discovery, so make sure the returned structure is stable.
+
+### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| fromAcceptMessage | Uint8Array | Raw discovery response packet |
+
+### Return Value
+
+Example:
+
+```json
+[
+    {
+        "deviceName": "dn1",
+        "model": "model-x",
+        "vendor": "simensA",
+        "firmwareVersion": "1.1.0",
+        "deviceId": "uuid1234",
+        "ip": "device ip",
+        "port": 1102
+    }
+]
+```
+
+Fields:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| deviceName | String | No | Device name |
+| model | String | No | Device model |
+| vendor | String | No | Vendor |
+| firmwareVersion | String | No | Firmware version |
+| ip | String | Yes | Device IP address |
+| port | Int | Yes | UDP/TCP port |
+| deviceId | String | Yes | Unique device ID |
+
+### Example
+
+```javascript
+function parseDiscoveryResponse(msg) {
+    if (!msg || msg.length === 0) {
+        return null;
+    }
+
+    const dataStr = String.fromCharCode.apply(null, msg)
+        .split('\0')[0]
+        .replace(/[^\x20-\x7E]/g, '');
+
+    const snMatch = dataStr.match(/SN=([^&]+)/);
+    const ipMatch = dataStr.match(/IP=([^\r\n&]+)/);
+
+    return [
+        {
+            deviceId: snMatch ? snMatch[1].trim() : "",
+            ip: ipMatch ? ipMatch[1].trim() : "",
+            port: 8820
+        }
+    ];
+}
+```
+
+## parseDiscoverPointsResponse
+
+Parse point information and return an array of point objects.
+
+### Parameters
+
+Depending on the integration flow, this function typically works in one of two ways:
+
+| Name | Type | Description |
+| --- | --- | --- |
+| fromAcceptMessage | Uint8Array | Used when `buildDiscoverPointsRequest` is defined and the device returns a point discovery response |
+| deviceId | String | Used when `buildDiscoverPointsRequest` is not defined and the device ID is passed directly |
+
+### Return Value
+
+Example:
+
+```json
+[
+    {
+        "pointId": "p1",
+        "pointName": "pn1",
+        "deviceType": "Light",
+        "function": "Output",
+        "trait": "OnOff"
+    },
+    {
+        "pointId": "p2",
+        "pointName": "pn2",
+        "dataType": "numerical",
+        "access": 3
+    }
+]
+```
+
+Fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| pointId | String | Unique point ID used for subsequent read/write operations |
+| pointName | String | Point display name |
+| deviceType | String | Aqara Spec device type |
+| function | String | Aqara Spec function code |
+| trait | String | Aqara Spec trait code |
+| dataType | String | Generic point data type: `enumeration`, `bool`, `numerical`, or `text` |
+| access | Int | Access permission bits: `bit1` read, `bit2` write, `bit3` report |
+
+:::tip
+If you define `deviceType`, `function`, and `trait` based on Aqara Spec, you may not need the generic `dataType` and `access` mode. If you do not use Aqara Spec, then `dataType` and `access` are required.
+:::
+
+### Example
+
+```javascript
+function parseDiscoverPointsResponse(fromAcceptMessageOrDeviceId) {
+    return [
+        {
+            pointId: "sceneWrite",
+            pointName: "Scene Trigger",
+            dataType: "text",
+            access: 2
+        },
+        {
+            pointId: "sceneListen",
+            pointName: "Scene Listen",
+            dataType: "text",
+            access: 1
+        }
+    ];
+}
+```
+
+## parseProbeResponse
+
+Parse the heartbeat response and return a standard status object.
+
+### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| fromAcceptMessage | Uint8Array | Raw heartbeat response packet |
+
+### Return Value
+
+Example:
+
+```json
+{
+    "code": 0,
+    "errorMsg": ""
+}
+```
+
+Fields:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| code | Byte | Yes | `0` means success; other values indicate failure |
+| errorMsg | String | No | Error message |
+| deviceId | String | No | Can be returned if message matching is not based on `msgId` |
+
+### Example
+
+```javascript
+function parseProbeResponse(msg) {
+    if (!msg || msg.length === 0) {
+        return null;
+    }
+
+    const dataStr = String.fromCharCode.apply(null, msg)
+        .split('\0')[0]
+        .replace(/[^\x20-\x7E]/g, '');
+
+    const parts = dataStr.split("#");
+    if (parts.length == 3 && parts[2] == "SUCCEED") {
+        return {
+            code: 0,
+            errorMsg: ""
+        };
+    } else {
+        return {
+            code: 1,
+            errorMsg: "no reason"
+        };
+    }
+}
+```
+
+## parseReadResponse
+
+Parse the point read response and return a point value object.
+
+### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| fromAcceptMessage | Uint8Array | Raw point read response packet |
+
+### Return Value
+
+Example:
+
+```json
+{
+    "pointId": "p.1234",
+    "value": 1
+}
+```
+
+Fields:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| pointId | String | No | Recommended when response matching is not based on `msgId` |
+| value | String / Double / Boolean / Int(enum) | Yes | Point value |
+
+### Example
+
+```javascript
+function parseReadResponse(msg) {
+    if (!msg || msg.length === 0) {
+        return null;
+    }
+
+    const dataStr = String.fromCharCode.apply(null, msg)
+        .split('\0')[0]
+        .replace(/[^\x20-\x7E]/g, '');
+
+    const parts = dataStr.split("#");
+    return {
+        pointId: parts[0],
+        value: parts[1]
+    };
+}
+```
+
+## parseWriteResponse
+
+Parse the point write response and return a standard write result object.
+
+### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| fromAcceptMessage | Uint8Array | Raw point write response packet |
+
+### Return Value
+
+Example:
+
+```json
+{
+    "pointId": "p.1234",
+    "code": 0,
+    "errorMsg": ""
+}
+```
+
+Fields:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| code | Byte | Yes | `0` means success |
+| errorMsg | String | Yes | Error message; empty means success |
+| pointId | String | No | Recommended when response matching is not based on `msgId` |
+
+### Example
+
+```javascript
+function parseWriteResponse(msg) {
+    if (!msg || msg.length === 0) {
+        return null;
+    }
+
+    const dataStr = String.fromCharCode.apply(null, msg)
+        .split('\0')[0]
+        .replace(/[^\x20-\x7E]/g, '');
+
+    const parts = dataStr.split("#");
+    if (parts[2] == "OK") {
+        return {
+            code: 0,
+            errorMsg: ""
+        };
+    } else {
+        return {
+            code: 1,
+            errorMsg: parts[2]
+        };
+    }
+}
+```
+
+## parseReportRequest
+
+Parse a device-initiated point report and return a point value object.
+
+### Prerequisites
+
+This function is especially important when the device supports active reporting or your integration depends on device-pushed point value changes.
+
+### Parameters
+
+| Name | Type | Description |
+| --- | --- | --- |
+| fromAcceptMessage | Uint8Array | Raw report packet pushed by the device |
+
+### Return Value
+
+Example:
+
+```json
+{
+    "pointId": "p.1234",
+    "value": 1
+}
+```
+
+Fields:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| pointId | String | Yes | Point ID |
+| value | String / Double / Boolean / Int(enum) | Yes | Point value |
+
+### Example
+
+```javascript
+function parseReportRequest(msg) {
+    if (!msg || msg.length === 0) {
+        return null;
+    }
+
+    const dataStr = String.fromCharCode.apply(null, msg)
+        .split('\0')[0]
+        .replace(/[^\x20-\x7E]/g, '');
+
+    const parts = dataStr.split("#");
+    return {
+        pointId: parts[0],
+        value: parts[1]
+    };
+}
+```
+
+## Complete Example
+
+The following example shows a simplified UDP/TCP integration script structure. Adjust it according to your device protocol:
+
+```javascript
+function buildDiscoveryRequest(msgId) {
+    return Uint8Array.from(msgId + "#DEVICE_SCAN#\r\n", c => c.charCodeAt(0));
+}
+
+function buildDiscoverPointsRequest(msgId, deviceId) {
+    return Uint8Array.from(msgId + "#DEVICE_POINT_SCAN#" + deviceId, c => c.charCodeAt(0));
+}
+
+function buildProbeRequest(msgId, deviceId) {
+    return Uint8Array.from(msgId + "#SHAKEHANDS#\r\n", c => c.charCodeAt(0));
+}
+
+function buildReadRequest(msgId, deviceId, pointId) {
+    return Uint8Array.from(msgId + "#POLL#" + pointId + "\r\n", c => c.charCodeAt(0));
+}
+
+function buildWriteRequest(msgId, deviceId, pointId, value) {
+    return Uint8Array.from(msgId + "#WRITE#" + "#" + pointId + "#" + value, c => c.charCodeAt(0));
+}
+
+function buildReportResponse(msgId, pointId, code, errorMsg) {
+    return Uint8Array.from(msgId + "#EVT_REPLY#OK", c => c.charCodeAt(0));
+}
+
+function packetProcessConfig() {
+    return { frameStartBytes: [0x00, 0xD8], lengthKnownAfterBytes: 4, remainingBytes: 1 };
+}
+
+function dispatch(fromAcceptMessage) {
+    const dataStr = String.fromCharCode.apply(null, fromAcceptMessage)
+        .split('\0')[0]
+        .replace(/[^\x20-\x7E]/g, '');
+
+    const parts = dataStr.split("#");
+    const reply = parts[1];
+
+    if (reply == "SHAKEHANDS_REPLY") {
+        return { msgId: parts[0], path: "parseProbeResponse" };
+    } else if (reply == "EVT_REPLY") {
+        return { msgId: parts[0], path: "parseWriteResponse" };
+    } else if (reply == "EVT") {
+        return { msgId: parts[0], path: "parseReportRequest" };
+    }
+}
+
+function parseDiscoveryResponse(msg) {
+    if (!msg || msg.length === 0) return null;
+
+    const dataStr = String.fromCharCode.apply(null, msg)
+        .split('\0')[0]
+        .replace(/[^\x20-\x7E]/g, '');
+
+    const snMatch = dataStr.match(/SN=([^&]+)/);
+    const ipMatch = dataStr.match(/IP=([^\r\n&]+)/);
+
+    return [
+        {
+            deviceId: snMatch ? snMatch[1].trim() : "",
+            ip: ipMatch ? ipMatch[1].trim() : "",
+            port: 8820
+        }
+    ];
+}
+
+function parseDiscoverPointsResponse(fromAcceptMessageOrDeviceId) {
+    return [
+        {
+            pointId: "sceneWrite",
+            pointName: "Scene Trigger",
+            dataType: "text",
+            access: 2
+        },
+        {
+            pointId: "sceneListen",
+            pointName: "Scene Listen",
+            dataType: "text",
+            access: 1
+        }
+    ];
+}
+
+function parseProbeResponse(msg) {
+    if (!msg || msg.length === 0) return null;
+
+    const dataStr = String.fromCharCode.apply(null, msg)
+        .split('\0')[0]
+        .replace(/[^\x20-\x7E]/g, '');
+
+    const parts = dataStr.split("#");
+    if (parts.length == 3 && parts[2] == "SUCCEED") {
+        return { code: 0, errorMsg: "" };
+    } else {
+        return { code: 1, errorMsg: "no reason" };
+    }
+}
+
+function parseReadResponse(msg) {
+    if (!msg || msg.length === 0) return null;
+
+    const dataStr = String.fromCharCode.apply(null, msg)
+        .split('\0')[0]
+        .replace(/[^\x20-\x7E]/g, '');
+
+    const parts = dataStr.split("#");
+    return {
+        pointId: parts[0],
+        value: parts[1]
+    };
+}
+
+function parseWriteResponse(msg) {
+    if (!msg || msg.length === 0) return null;
+
+    const dataStr = String.fromCharCode.apply(null, msg)
+        .split('\0')[0]
+        .replace(/[^\x20-\x7E]/g, '');
+
+    const parts = dataStr.split("#");
+    if (parts[2] == "OK") {
+        return { code: 0, errorMsg: "" };
+    } else {
+        return { code: 1, errorMsg: parts[2] };
+    }
+}
+
+function parseReportRequest(msg) {
+    if (!msg || msg.length === 0) return null;
+
+    const dataStr = String.fromCharCode.apply(null, msg)
+        .split('\0')[0]
+        .replace(/[^\x20-\x7E]/g, '');
+
+    const parts = dataStr.split("#");
+    return {
+        pointId: parts[0],
+        value: parts[1]
+    };
+}
+```
