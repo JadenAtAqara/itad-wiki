@@ -226,7 +226,7 @@ paths:
       parameters:
         - name: spaceIds
           in: query
-          description: 空间 ID 列表。示例：spaceIds=xx1,xx2 或 spaceIds=xx1&spaceIds=xx2。为空查询所有设备
+          description: 空间 ID 列表。示例：spaceIds=xx1,xx2 或 spaceIds=xx1&spaceIds=xx2。为空查询所有设备。
           required: false
           schema:
             type: array
@@ -236,7 +236,7 @@ paths:
           explode: true
         - name: needChildren
           in: query
-          description: 是否需要查询子空间下的设备。仅当 spaceIds 不为空时，本参数才有用
+          description: 是否查询子空间内的设备。仅在 spaceIds 有值时生效。
           required: false
           schema:
             type: boolean
@@ -342,8 +342,8 @@ paths:
   /devices/definitions:
     get:
       tags: [Device]
-      summary: 查询设备详细信息
-      description: 获取指定设备的详细信息，包括设备类型、端点列表、属性列表等。
+      summary: 查询设备模型定义
+      description: 获取指定设备的模型定义，包括设备类型（deviceType）、端点列表（endpoints）、属性列表（properties）等。
       operationId: getDeviceDefinitions
       x-skill-intent: device.definition.get
       x-idempotent: true
@@ -693,6 +693,41 @@ paths:
           style: form
           explode: true
         - in: query
+          name: automationName
+          required: false
+          description: 自动化名称模糊匹配关键字；不传或空值时不做名称过滤。
+          schema:
+            type: string
+          example: 回家亮灯
+        - in: query
+          name: spaceIds
+          required: false
+          description: 是否查询指定空间 ID 列表下的自动化。示例：spaceIds=xx1,xx2 或 spaceIds=xx1&spaceIds=xx2。为空时不按指定空间过滤。
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - in: query
+          name: needChildren
+          required: false
+          description: 是否查询 spaceIds 指定空间的子空间内的自动化。仅当 spaceIds 参数有值时此参数才生效。
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: spaceAssociated
+          required: false
+          description: |
+            是否根据自动化与空间的关联关系进行过滤。
+            - 不传（默认）：不根据空间关联过滤，返回所有自动化。
+            - true：仅返回已关联空间的自动化。
+            - false：仅返回未关联空间的自动化；此时 spaceIds 和 needChildren 参数不生效。
+          schema:
+            type: boolean
+            nullable: true
+        - in: query
           name: orderBy
           required: false
           description: |
@@ -860,6 +895,47 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
 
+  /automations/space:
+    post:
+      tags: [Automation]
+      summary: 批量更新自动化关联空间
+      description: |
+        批量将多个自动化的关联空间设置为指定目标空间。
+        - 未关联空间的自动化将新增关联。
+        - 已关联其他空间的自动化将替换为目标空间。
+        - 已关联目标空间的自动化保持不变，直接视为成功。
+      operationId: updateAutomationSpace
+      x-skill-intent: automation.space.update
+      x-idempotent: true
+      x-retryable: conditional
+      x-side-effects: automation_update
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAutomationSpaceRequest'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateAutomationSpaceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
   /automations/delete:
     post:
       tags: [Automation]
@@ -884,6 +960,67 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeleteAutomationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 查询自动化手动触发对象列表
+  # ────────────────────────────────────────────────────────────────
+  /automations/manual-triggers:
+    get:
+      tags: [Automation]
+      summary: 获取手动触发器列表
+      description: 可根据自动化 ID 查询对应自动化下的手动触发器列表。
+      operationId: queryAutomationManualTriggerList
+      x-skill-intent: automation.manual_trigger.list
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - in: query
+          name: automationIds
+          required: false
+          description: |
+            自动化 ID 列表。
+            URL 示例：automationIds=xx1,xx2 或 automationIds=xx1&automationIds=xx2。
+            为空时，响应结果返回您可访问的全部自动化下的手动触发器。
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - in: query
+          name: enabledOnly
+          required: false
+          description: 是否仅返回已启用自动化下的手动触发器。<br />true：仅返回已启用的自动化对应的手动触发器。<br />false：返回所有自动化下的手动触发器。
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: includeSpace
+          required: false
+          description: 是否返回手动触发器所属自动化当前关联的空间。<br />true：返回手动触发器所属自动化当前关联的空间。<br />false：不返回空间信息。
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryAutomationManualTriggerListResponse'
         '400':
           $ref: '#/components/responses/BadRequestResponse'
         '401':
@@ -1067,24 +1204,24 @@ components:
       properties:
         spaceId:
           type: string
-          description: 空间 ID
+          description: 空间 ID。
         parentSpaceId:
           type: string
           nullable: true
-          description: 父空间 ID
+          description: 父空间 ID。
         name:
           type: string
-          description: 空间名称
+          description: 空间名称。
         spatialMarking:
           type: string
           nullable: true
-          description: 空间标记
+          description: 空间标记。
         children:
           type: array
           nullable: true
           items:
             $ref: '#/components/schemas/SpaceNode'
-          description: 子空间列表（递归结构）
+          description: 子空间列表（递归结构）。
 
     CreateSpaceRequest:
       type: object
@@ -1257,16 +1394,34 @@ components:
               items:
                 $ref: '#/components/schemas/DeviceDefinition'
       example:
-        type: GetDeviceResponse
+        type: GetDevicesResponse
         version: v1
-        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000008"
+        msgId: "123"
+        data:
+          - deviceId: lumi3.86108040f2b03a4e
+            name: Hub
+            deviceTypesList:
+              - Hub
+            endpoints:
+              - endpointId: 0
+                endpointName: Root
+                deviceType: Root
+                functions:
+                  - functionCode: BasicInformation
+                    traits:
+                      - traitCode: FirmwareRevisionString
+                        parameter:
+                          type: String
+                          readable: true
+                          writable: false
+                          subscribable: true
+                          unit: ""
+                        value: "4.5.50_0021"
+                        time: 1780900703977
+                        pointName: Firmware version number
+                    commands: []
         code: 0
         message: success
-        data:
-          - deviceId: "device-001"
-            name: "客厅灯"
-            deviceTypesList: ["light"]
-            endpoints: []
 
     Endpoint:
       type: object
@@ -1848,6 +2003,11 @@ components:
           description: 可用的手动触发器列表
           items:
             $ref: '#/components/schemas/AutomationManualTriggerBrief'
+        space:
+          allOf:
+            - $ref: '#/components/schemas/SpaceNode'
+          nullable: true
+          description: 自动化当前关联的空间。若自动化未关联空间时，此值为 null。
 
     AutomationManualTriggerBrief:
       type: object
@@ -1859,6 +2019,42 @@ components:
         triggerName:
           type: string
           description: 手动触发器名称
+
+    AutomationManualTriggerInfo:
+      type: object
+      required: [automationId, automationName, triggerNodeId, triggerName, enabled, definitionType, createTime]
+      properties:
+        automationId:
+          type: string
+          description: 自动化ID。
+        automationName:
+          type: string
+          description: 自动化名称。
+        triggerNodeId:
+          type: string
+          description: 手动触发节点ID。
+        triggerName:
+          type: string
+          description: 手动触发名称。
+        enabled:
+          type: boolean
+          description: |
+            所属自动化是否启用。<br />
+            true：启用；<br />
+            false：禁用。
+        definitionType:
+          type: string
+          enum: [SCRIPT_JSON, SCRIPT_TEXT, WHEN_IF_THEN, LEGACY_FLOW, LEGACY_LINKAGE, OTHER]
+          description: 自动化类型。
+        createTime:
+          type: integer
+          format: int64
+          description: 创建时间（毫秒时间戳）。
+        space:
+          allOf:
+            - $ref: '#/components/schemas/SpaceNode'
+          nullable: true
+          description: 自动化当前关联的空间；仅 includeSpace 为 true 时返回，未关联空间时为 null。
 
     AutomationDetails:
       allOf:
@@ -1877,16 +2073,17 @@ components:
       properties:
         totalCount:
           type: integer
-          description: 满足条件的自动化总数
+          description: 满足条件的自动化总数。
         pageNum:
           type: integer
-          description: 当前页码
+          description: 当前页码。
         pageSize:
           type: integer
-          description: 当前页大小
+          description: 当前页大小。
         data:
           type: array
-          description: 自动化列表
+          description: 自动化列表。
+     
           items:
             $ref: '#/components/schemas/AutomationSummary'
 
@@ -1943,6 +2140,24 @@ components:
         enabled:
           type: boolean
           description: 新启用状态。true：启用；false：禁用。
+
+    UpdateAutomationSpaceRequest:
+      type: object
+      required: [spaceId, automationIds]
+      properties:
+        spaceId:
+          type: string
+          minLength: 1
+          description: 目标空间ID。
+        automationIds:
+          type: array
+          minItems: 1
+          description: 待更新空间关联的自动化 ID 列表。
+          items:
+            type: string
+      example:
+        spaceId: "space-livingroom-001"
+        automationIds: ["auto_01HXYZABCDEF1234567890"]
 
     DeleteAutomationsRequest:
       type: object
@@ -2011,6 +2226,17 @@ components:
             data:
               $ref: '#/components/schemas/AutomationBatchResultData'
 
+    QueryAutomationManualTriggerListResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              description: 手动触发对象列表
+              items:
+                $ref: '#/components/schemas/AutomationManualTriggerInfo'
+
     ExecuteAutomationManualTriggerRequest:
       type: object
       required: [automationId, triggerNodeId]
@@ -2033,6 +2259,23 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/AutomationBatchResultData'
+
+    UpdateAutomationSpaceResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/AutomationBatchResultData'
+      example:
+        type: UpdateAutomationSpaceResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000026"
+        code: 0
+        message: success
+        data:
+          successIds: ["auto_01HXYZABCDEF1234567890"]
+          failedItems: []
 
     AutomationDetailsResponse:
       allOf:

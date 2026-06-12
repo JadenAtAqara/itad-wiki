@@ -237,7 +237,7 @@ paths:
           explode: true
         - name: needChildren
           in: query
-          description: Whether to query devices under the child spaces. This parameter is only effective when spaceIds is not empty.
+          description: Whether to query devices in child spaces. Only effective when spaceIds is not empty.
           required: false
           schema:
             type: boolean
@@ -343,8 +343,8 @@ paths:
   /devices/definitions:
     get:
       tags: [Device]
-      summary: Query Device Details
-      description: Get detailed information for specified devices, including device type, endpoint list, parameter list, etc.
+      summary: Query Device Model Definition
+      description: Get detailed model definition for specified devices, including device types, an endpoint list, property lists, etc.
       operationId: getDeviceDefinitions
       x-skill-intent: device.definition.get
       x-idempotent: true
@@ -695,6 +695,41 @@ paths:
           style: form
           explode: true
         - in: query
+          name: automationName
+          required: false
+          description: Fuzzy match keyword for automation name; if not provided or empty, the name will not be filtered.
+          schema:
+            type: string
+          example: Turn on the lights when coming home
+        - in: query
+          name: spaceIds
+          required: false
+          description: "Whether to query automations under the specified list of space IDs. Example: spaceIds=xx1,xx2 or spaceIds=xx1&spaceIds=xx2. If empty, automations will not be filtered by space."
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - in: query
+          name: needChildren
+          required: false
+          description: 是否查询 spaceIds 指定空间的子空间内的自动化。仅当 spaceIds 参数有值时此参数才生效。
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: spaceAssociated
+          required: false
+          description: |
+            Whether to filter automations based on their association with spaces.
+            - Not set (default): Do not filter by space association, return all automations.
+            - true: Only return automations that are associated with spaces.
+            - false: Only return automations that are not associated with any space; in this case, the spaceIds and needChildren parameters are ignored.
+          schema:
+            type: boolean
+            nullable: true
+        - in: query
           name: orderBy
           required: false
           description: |
@@ -862,6 +897,47 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
 
+  /automations/space:
+    post:
+      tags: [Automation]
+      summary: Update Space Association for Automations
+      description: |
+        Batch associate a space for multiple automations.
+        - Automations not associated with any space will be newly associated.
+        - Automations associated with other spaces will be reconnected to the target space.
+        - Automations already associated with the target space will remain unchanged and be considered successful.
+      operationId: updateAutomationSpace
+      x-skill-intent: automation.space.update
+      x-idempotent: true
+      x-retryable: conditional
+      x-side-effects: automation_update
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAutomationSpaceRequest'
+      responses:
+        '200':
+          description: Request succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateAutomationSpaceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
   /automations/delete:
     post:
       tags: [Automation]
@@ -900,7 +976,68 @@ paths:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
-  # 执行手动触发
+  # Query the list of manual triggers within automations
+  # ────────────────────────────────────────────────────────────────
+  /automations/manual-triggers:
+    get:
+      tags: [Automation]
+      summary: Get Manual Trigger List
+      description: You can query the list of manual triggers within specific automations by IDs.
+      operationId: queryAutomationManualTriggerList
+      x-skill-intent: automation.manual_trigger.list
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - in: query
+          name: automationIds
+          required: false
+          description: |
+            Automation ID list.
+            Example: automationIds=xx1,xx2 or automationIds=xx1&automationIds=xx2.
+            If empty, the response will return all manual triggers within the accessible automations.
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - in: query
+          name: enabledOnly
+          required: false
+          description: "Whether to return only manual triggers under enabled automations.<br />true: Only return manual triggers of enabled automations.<br />false: Return manual triggers of all automations."
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: includeSpace
+          required: false
+          description: "Whether to return the current associated space of the automation to which the manual trigger belongs.<br />true: Return the current associated space of the automation.<br />false: Do not return space information."
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Request succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryAutomationManualTriggerListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Execute A Manual Trigger
   # ────────────────────────────────────────────────────────────────
   /automations/manual-triggers/execute:
     post:
@@ -1260,16 +1397,34 @@ components:
               items:
                 $ref: '#/components/schemas/DeviceDefinition'
       example:
-        type: GetDeviceResponse
+        type: GetDevicesResponse
         version: v1
-        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000008"
+        msgId: "123"
+        data:
+          - deviceId: lumi3.86108040f2b03a4e
+            name: Hub
+            deviceTypesList:
+              - Hub
+            endpoints:
+              - endpointId: 0
+                endpointName: Root
+                deviceType: Root
+                functions:
+                  - functionCode: BasicInformation
+                    traits:
+                      - traitCode: FirmwareRevisionString
+                        parameter:
+                          type: String
+                          readable: true
+                          writable: false
+                          subscribable: true
+                          unit: ""
+                        value: "4.5.50_0021"
+                        time: 1780900703977
+                        pointName: Firmware version number
+                    commands: []
         code: 0
         message: success
-        data:
-          - deviceId: "device-001"
-            name: "Living Room Light"
-            deviceTypesList: ["light"]
-            endpoints: []
 
     Endpoint:
       type: object
@@ -1849,6 +2004,11 @@ components:
           description: List of available manual triggers
           items:
             $ref: '#/components/schemas/AutomationManualTriggerBrief'
+        space:
+          allOf:
+            - $ref: '#/components/schemas/SpaceNode'
+          nullable: true
+          description: The current associated space of the automation; if not associated with any space, it is null.
 
     AutomationManualTriggerBrief:
       type: object
@@ -1860,6 +2020,39 @@ components:
         triggerName:
           type: string
           description: Manual trigger name
+
+    AutomationManualTriggerInfo:
+      type: object
+      required: [automationId, automationName, triggerNodeId, triggerName, enabled, definitionType, createTime]
+      properties:
+        automationId:
+          type: string
+          description: Automation ID.
+        automationName:
+          type: string
+          description: Automation name.
+        triggerNodeId:
+          type: string
+          description: Manual trigger node ID.
+        triggerName:
+          type: string
+          description: Manual trigger name.
+        enabled:
+          type: boolean
+          description: Whether the automation is enabled.
+        definitionType:
+          type: string
+          enum: [SCRIPT_JSON, SCRIPT_TEXT, WHEN_IF_THEN, LEGACY_FLOW, LEGACY_LINKAGE, OTHER]
+          description: Automation type.
+        createTime:
+          type: integer
+          format: int64
+          description: Creation time (UTC timestamp in milliseconds)
+        space:
+          allOf:
+            - $ref: '#/components/schemas/SpaceNode'
+          nullable: true
+          description: The current associated space of the automation; only returned when `includeSpace` is true, and null if not associated with any space.
 
     AutomationDetails:
       allOf:
@@ -1947,6 +2140,24 @@ components:
           type: boolean
           description: "New enabled state. true: enabled; false: disabled."
 
+    UpdateAutomationSpaceRequest:
+      type: object
+      required: [spaceId, automationIds]
+      properties:
+        spaceId:
+          type: string
+          minLength: 1
+          description: Target space ID.
+        automationIds:
+          type: array
+          minItems: 1
+          description: List of automation IDs to update the space association.
+          items:
+            type: string
+      example:
+        spaceId: "space-livingroom-001"
+        automationIds: ["auto_01HXYZABCDEF1234567890"]
+
     DeleteAutomationsRequest:
       type: object
       required: [automationIds]
@@ -2014,6 +2225,17 @@ components:
             data:
               $ref: '#/components/schemas/AutomationBatchResultData'
 
+    QueryAutomationManualTriggerListResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              description: List of manual triggers
+              items:
+                $ref: '#/components/schemas/AutomationManualTriggerInfo'
+
     ExecuteAutomationManualTriggerRequest:
       type: object
       required: [automationId, triggerNodeId]
@@ -2036,6 +2258,23 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/AutomationBatchResultData'
+
+    UpdateAutomationSpaceResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/AutomationBatchResultData'
+      example:
+        type: UpdateAutomationSpaceResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000026"
+        code: 0
+        message: success
+        data:
+          successIds: ["auto_01HXYZABCDEF1234567890"]
+          failedItems: []
 
     AutomationDetailsResponse:
       allOf:

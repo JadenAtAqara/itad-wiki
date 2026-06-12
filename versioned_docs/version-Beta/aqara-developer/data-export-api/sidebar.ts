@@ -59,7 +59,7 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/get-device-definitions",
-          label: "Query Device Details",
+          label: "Query Device Model Definition",
           className: "api-method get",
         },
         {
@@ -129,9 +129,21 @@ const sidebar: SidebarsConfig = {
         },
         {
           type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/update-automation-space",
+          label: "Update Space Association for Automations",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/delete-automations",
           label: "Delete Automations",
           className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/query-automation-manual-trigger-list",
+          label: "Get Manual Trigger List",
+          className: "api-method get",
         },
         {
           type: "doc",
