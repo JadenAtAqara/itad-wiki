@@ -84,6 +84,35 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
+      label: "Gateway",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-developer/data-export-api/gateway",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/join-subdevice",
+          label: "Start Sub-device Joining",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/stop-subdevice-join",
+          label: "Stop Gateway Pairing",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-device-bind-result",
+          label: "Query Sub-device Joining Results",
+          className: "api-method post",
+        },
+      ],
+    },
+    {
+      type: "category",
       label: "Automation",
       link: {
         type: "doc",

@@ -32,11 +32,13 @@ security:
 
 tags:
   - name: Space
-    description: Space query interface
+    description: APIs for space query
   - name: Device
-    description: API for Device query, properties read/write, and command execution
+    description: APIs for device query, properties read/write, and command execution
+  - name: Gateway
+    description: APIs for managing gateway subdevice pairing, binding, and unbinding operations
   - name: Automation
-    description: API for Automation creation, editing, query, deletion, and capability query
+    description: APIs for automation creation, editing, query, deletion, and capability query
 
 paths:
 
@@ -569,6 +571,222 @@ paths:
                         commandCode: APIBindSubdeviceWithSecurityCode
                         code: 2201
                         message: invalid security code
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Start Sub-device Joining
+  # ────────────────────────────────────────────────────────────────
+  /gateways/subdevices/join:
+    post:
+      tags: [Gateway]
+      summary: Start Sub-device Joining
+      description: |
+        Call this API to start pairing a Zigbee or Matter gateway with a sub-device.
+
+        :::tip
+        Before getting started, please ensure the sub-device is in pairing mode.
+        :::
+      operationId: joinSubdevice
+      x-skill-intent: gateway.subdevice.join
+      x-idempotent: false
+      x-retryable: conditional
+      x-side-effects: device_state_change
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubdeviceJoinRequest'
+            examples:
+              zigbeeJoin:
+                summary: Standard Zigbee device pairing (e.g., triple-click to join)
+                value:
+                  gatewayId: "gateway001"
+                  commandCode: APIEnableSubdeviceJoining
+              magicpairJoin:
+                summary: Zigbee device pairing using MagicPair technology
+                value:
+                  gatewayId: "gateway001"
+                  commandCode: APIBindBleDeviceToHub
+                  data:
+                    shortAddr: 65534
+                    mac: "54EF4410003604C9"
+                    manufacturerCode: 4447
+                    fwVer: "0.0.0_0030"
+                    model: "lumi.light.acn014"
+                    did: "lumi.54ef4410003604c9"
+                    devType: 142
+                    hdVer: 1
+                    zbVer: "3"
+                    pid: "lumi1.54ef442dcd15"
+              matterJoin:
+                summary: Matter device pairing
+                value:
+                  gatewayId: "gateway001"
+                  commandCode: APIPushMatterBindInfo
+                  data:
+                    code: "04036408297"
+      responses:
+        '200':
+          description: Request succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubdeviceJoinResponse'
+              examples:
+                success:
+                  value:
+                    type: SubdeviceJoinResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecf9"
+                    code: 0
+                    message: success
+                fail:
+                  value:
+                    type: SubdeviceJoinResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecfa"
+                    code: 2201
+                    message: invalid security code
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Stop Sub-device Joining
+  # ────────────────────────────────────────────────────────────────
+  /gateways/subdevices/join/stop:
+    post:
+      tags: [Gateway]
+      summary: Stop Gateway Pairing
+      description: Call this API to make the gateway exit pairing mode and no longer accept new sub-devices joining the network.
+      operationId: stopSubdeviceJoin
+      x-skill-intent: gateway.subdevice.join.stop
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: device_state_change
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubdeviceJoinStopRequest'
+            examples:
+              stopJoin:
+                value:
+                  gatewayId: "gateway001"
+      responses:
+        '200':
+          description: Request succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+              examples:
+                success:
+                  value:
+                    type: SubdeviceJoinStopResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecfb"
+                    code: 0
+                    message: success
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Query Sub-device Joining Result
+  # ────────────────────────────────────────────────────────────────
+  /gateways/subdevices/bindResult:
+    post:
+      tags: [Gateway]
+      summary: Query Sub-device Joining Results
+      description: |
+        Query the joining results of specified sub-devices. Flexible filtering is supported via `protocols` (protocol types) and `gatewaySubdeviceFilters` (filter conditions for gateways and their sub-devices). Multiple protocols and multiple gateway/sub-device combinations can be queried at the same time.   
+      operationId: getDeviceBindResult
+      x-skill-intent: device.bind.result
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceBindResultRequest'
+            examples:
+              queryByGatewayAndSubDevices:
+                value:
+                  protocols: [zigbee, matter]
+                  gatewaySubdeviceFilters:
+                    - gatewayId: "gateway-001"
+                      subDeviceIds: []
+                    - gatewayId: "gateway-001"
+                      subDeviceIds: ["subdevice-001", "subdevice-002"]
+                    - gatewayId: "gateway-002"
+                      subDeviceIds: ["subdevice-101"]
+      responses:
+        '200':
+          description: Request succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceBindResultResponse'
+              examples:
+                bindResultSuccess:
+                  value:
+                    type: DeviceBindResultResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecfb"
+                    code: 0
+                    message: success
+                    data:
+                      - deviceId: "subdevice-001"
+                        deviceName: "Bedroom Temperature Sensor"
+                        protocols: [zigbee]
+                        gatewayId: "gateway-001"
+                        code: 0
+                        message: null
+                        bindTime: 1710001235000
+                      - deviceId: "subdevice-002"
+                        deviceName: null
+                        protocols: [matter]
+                        gatewayId: "gateway-001"
+                        code: 0
+                        message: null
+                        bindTime: 1710001236000
         '400':
           $ref: '#/components/responses/BadRequestResponse'
         '401':
@@ -1373,6 +1591,10 @@ components:
         deviceId:
           type: string
           description: Device ID
+        gatewayId:
+          type: string
+          nullable: true
+          description: The gateway ID bound to this device. If gatewayId equals deviceId, it means this device is a gateway itself.
         name:
           type: string
           description: Device name
@@ -1892,6 +2114,149 @@ components:
         code: 0
         message: success
         data: []
+
+
+    # ── Subdevice Join ────────────────────────────────────────────
+    SubdeviceJoinRequest:
+      type: object
+      required: [gatewayId, commandCode]
+      properties:
+        gatewayId:
+          type: string
+          description: Gateway ID
+        commandCode:
+          type: string
+          enum:
+            - APIEnableSubdeviceJoining
+            - APIBindBleDeviceToHub
+            - APIPushMatterBindInfo
+          description: |
+            Command codes for sub-device joining:
+            - APIEnableSubdeviceJoining: Standard Zigbee device joining (e.g. triggered by pressing a button to enter join mode)
+            - APIBindBleDeviceToHub: Zigbee device joining using MagicPair technology
+            - APIPushMatterBindInfo: Matter device joining   
+        data:
+          type: object
+          description: |
+            Network joining parameters (JSON object). Depending on the commandCode, the required parameters are as follows:
+            - APIEnableSubdeviceJoining: No need to provide this field.
+            - APIBindBleDeviceToHub: Required. Data structure: {"shortAddr":65534,"mac":"54EF4410003604C9","manufacturerCode":4447,"fwVer":"0.0.0_0030","model":"lumi.light.acn014","did":"lumi.54ef4410003604c9","devType":142,"hdVer":1,"zbVer":"3","pid":"lumi1.54ef442dcd15"}
+            - APIPushMatterBindInfo: Required. Data structure: {"code":"11-digit Matter pairing code of the subdevice"}
+
+    SubdeviceJoinResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+      example:
+        type: SubdeviceJoinResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000011"
+        code: 0
+        message: success
+
+    SubdeviceJoinStopRequest:
+      type: object
+      required: [gatewayId]
+      properties:
+        gatewayId:
+          type: string
+          description: Gateway ID
+
+    # ── Device Bind Result ────────────────────────────────────────
+    GatewaySubdeviceDidFilter:
+      type: object
+      required: [gatewayId]
+      properties:
+        gatewayId:
+          type: string
+          description: Gateway ID
+        subDeviceIds:
+          type: array
+          nullable: true
+          description: |
+            List of subdevice IDs.
+            - If empty or omitted: Query all subdevices under the specified gateway.
+            - If not empty: Query the specified subdevices under the specified gateway.
+          items:
+            type: string
+
+    DeviceBindResultRequest:
+      type: object
+      required: [gatewaySubdeviceFilters]
+      properties:
+        protocols:
+          type: array
+          nullable: true
+          description: Specifies the protocol types of subdevices to query. If not provided, there is no restriction on protocol types.
+          items:
+            type: string
+            enum: [zigbee, matter]
+        gatewaySubdeviceFilters:
+          type: array
+          description: Filters (Gateway ID and Subdevice ID)
+          required: true
+          items:
+            $ref: '#/components/schemas/GatewaySubdeviceDidFilter'
+
+    DeviceBindResultItem:
+      type: object
+      required: [deviceId, protocols, gatewayId, bindTime]
+      properties:
+        deviceId:
+          type: string
+          description: Sub-device ID
+        deviceName:
+          type: string
+          nullable: true
+          description: Sub-device name
+        space:
+          $ref: '#/components/schemas/DeviceSpace'
+          nullable: true
+          description: Space where the sub-device is located
+        protocols:
+          type: array
+          items:
+            type: string
+            enum: [zigbee, matter]
+          description: List of supported protocols
+        gatewayId:
+          type: string
+          description: Associated gateway ID
+        code:
+          type: integer
+          nullable: true
+          description: Error code (returned on failure)
+        message:
+          type: string
+          nullable: true
+          description: Error message (returned on failure)
+        bindTime:
+          type: integer
+          format: int64
+          description: Join timestamp (milliseconds, UTC)
+
+    DeviceBindResultResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/DeviceBindResultItem'
+      example:
+        type: DeviceBindResultResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000017"
+        code: 0
+        message: success
+        data:
+          - deviceId: "subdevice-001"
+            deviceName: "Bedroom Temperature Sensor"
+            protocols: [zigbee]
+            gatewayId: "gateway-001"
+            code: 0
+            message: null
+            bindTime: 1710001235000
 
     DeviceTypesResponse:
       allOf:
