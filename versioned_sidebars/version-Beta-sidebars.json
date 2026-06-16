@@ -207,7 +207,6 @@
     {
       "type": "category",
       "label": "Local API for Studio",
-      "collapsed": false,
       "items": [
         "aqara-developer/data-export-api/introduction",
         {
@@ -241,6 +240,33 @@
                 {
                   "type": "doc",
                   "id": "aqara-developer/data-export-api/update-space-name",
+                  "className": "api-method post"
+                }
+              ]
+            },
+            {
+              "type": "category",
+              "label": "Gateway",
+              "key": "local-api-gateway",
+              "link": {
+                "type": "doc",
+                "id": "aqara-developer/data-export-api/gateway"
+              },
+              "collapsed": false,
+              "items": [
+                {
+                  "type": "doc",
+                  "id": "aqara-developer/data-export-api/join-subdevice",
+                  "className": "api-method post"
+                },
+                {
+                  "type": "doc",
+                  "id": "aqara-developer/data-export-api/stop-subdevice-join",
+                  "className": "api-method post"
+                },
+                {
+                  "type": "doc",
+                  "id": "aqara-developer/data-export-api/get-device-bind-result",
                   "className": "api-method post"
                 }
               ]

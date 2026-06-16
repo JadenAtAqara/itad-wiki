@@ -84,6 +84,35 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
+      label: "Gateway",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-developer/data-export-api/gateway",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/join-subdevice",
+          label: "开始子设备入网",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/stop-subdevice-join",
+          label: "停止网关配网",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-device-bind-result",
+          label: "查询子设备入网结果",
+          className: "api-method post",
+        },
+      ],
+    },
+    {
+      type: "category",
       label: "Automation",
       link: {
         type: "doc",
