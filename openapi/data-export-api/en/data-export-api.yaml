@@ -1594,7 +1594,10 @@ components:
         gatewayId:
           type: string
           nullable: true
-          description: The gateway ID bound to this device. If gatewayId equals deviceId, it means this device is a gateway itself.
+          description: |
+            The gateway ID to which this device is bound.
+            If `gatewayId` equals `deviceId`, it indicates that this device is itself a gateway.
+            If `gatewayId` is `null` or an empty string, it means the device is a direct-connected device or is not bound to any gateway.
         name:
           type: string
           description: Device name
@@ -2132,16 +2135,16 @@ components:
             - APIPushMatterBindInfo
           description: |
             Command codes for sub-device joining:
-            - APIEnableSubdeviceJoining: Standard Zigbee device joining (e.g. triggered by pressing a button to enter join mode)
-            - APIBindBleDeviceToHub: Zigbee device joining using MagicPair technology
-            - APIPushMatterBindInfo: Matter device joining   
+            - `APIEnableSubdeviceJoining`: Standard Zigbee device joining (e.g. triggered by pressing a button to enter join mode)
+            - `APIBindBleDeviceToHub`: Zigbee device joining using MagicPair technology
+            - `APIPushMatterBindInfo`: Matter device joining   
         data:
           type: object
           description: |
             Network joining parameters (JSON object). Depending on the commandCode, the required parameters are as follows:
-            - APIEnableSubdeviceJoining: No need to provide this field.
-            - APIBindBleDeviceToHub: Required. Data structure: {"shortAddr":65534,"mac":"54EF4410003604C9","manufacturerCode":4447,"fwVer":"0.0.0_0030","model":"lumi.light.acn014","did":"lumi.54ef4410003604c9","devType":142,"hdVer":1,"zbVer":"3","pid":"lumi1.54ef442dcd15"}
-            - APIPushMatterBindInfo: Required. Data structure: {"code":"11-digit Matter pairing code of the subdevice"}
+            - `APIEnableSubdeviceJoining`: No need to provide this field.
+            - `APIBindBleDeviceToHub`: Required. Data structure: {"shortAddr":65534,"mac":"54EF4410003604C9","manufacturerCode":4447,"fwVer":"0.0.0_0030","model":"lumi.light.acn014","did":"lumi.54ef4410003604c9","devType":142,"hdVer":1,"zbVer":"3","pid":"lumi1.54ef442dcd15"}
+            - `APIPushMatterBindInfo` s: Required. Data structure: {"code":"11-digit Matter pairing code of the subdevice"}
 
     SubdeviceJoinResponse:
       allOf:

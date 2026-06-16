@@ -1591,7 +1591,10 @@ components:
         gatewayId:
           type: string
           nullable: true
-          description: 此设备所绑定的网关 ID。如果gatewayId 等于 deviceId，表示这个设备自身是网关。
+          description: |
+            此设备所绑定的网关 ID。
+            如果 `gatewayId` 等于 `deviceId`，表示这个设备自身是网关。
+            如果 `gatewayId` 为 `null` 或空字符串，表示这个设备为直连设备或未绑定网关。
         name:
           type: string
           description: 设备名称
@@ -2128,16 +2131,16 @@ components:
             - APIPushMatterBindInfo
           description: |
             入网命令编码：
-            - APIEnableSubdeviceJoining: 标准 Zigbee 设备入网（例如通过按键触发入网模式）
-            - APIBindBleDeviceToHub: 基于 MagicPair 技术完成 Zigbee 设备入网
-            - APIPushMatterBindInfo: Matter 设备入网
+            - `APIEnableSubdeviceJoining`: 标准 Zigbee 设备入网（例如通过按键触发入网模式）
+            - `APIBindBleDeviceToHub`: 基于 MagicPair 技术完成 Zigbee 设备入网
+            - `APIPushMatterBindInfo`: Matter 设备入网
         data:
           type: object
           description: |
             入网参数（JSON 对象），根据不同的 commandCode，需传入的参数说明如下：
-            - APIEnableSubdeviceJoining: 无需传入此字段。
-            - APIBindBleDeviceToHub: 必填，数据结构为：{"shortAddr":65534,"mac":"54EF4410003604C9","manufacturerCode":4447,"fwVer":"0.0.0_0030","model":"lumi.light.acn014","did":"lumi.54ef4410003604c9","devType":142,"hdVer":1,"zbVer":"3","pid":"lumi1.54ef442dcd15"}，
-            - APIPushMatterBindInfo: 必填，数据结构为：{"code":"子设备 的 11 位 Matter 配对码"}
+            - `APIEnableSubdeviceJoining`: 无需传入此字段。
+            - `APIBindBleDeviceToHub`: 必填，数据结构为：{"shortAddr":65534,"mac":"54EF4410003604C9","manufacturerCode":4447,"fwVer":"0.0.0_0030","model":"lumi.light.acn014","did":"lumi.54ef4410003604c9","devType":142,"hdVer":1,"zbVer":"3","pid":"lumi1.54ef442dcd15"}，
+            - `APIPushMatterBindInfo`: 必填，数据结构为：{"code":"子设备 的 11 位 Matter 配对码"}
 
     SubdeviceJoinResponse:
       allOf:
