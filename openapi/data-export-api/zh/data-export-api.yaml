@@ -584,17 +584,17 @@ paths:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
-  # 子设备入网
+  # 开启网关子设备添加模式
   # ────────────────────────────────────────────────────────────────
   /gateways/subdevices/join:
     post:
       tags: [Gateway]
-      summary: 开始子设备入网
+      summary: 开启网关子设备添加模式
       description: |
-        调用本接口，可使 Zigbee 或 Matter 网关进入子设备配网模式，便于与子设备完成配对。
+        调用本接口，指定一个 Zigbee 网关进入子设备添加模式。
 
         :::tip
-        在开始之前，请确保子设备已处于配网模式。
+        在开始之前，请确保 Zigbee 子设备已处于配网模式。
         :::
       operationId: joinSubdevice
       x-skill-intent: gateway.subdevice.join
@@ -614,29 +614,6 @@ paths:
                 value:
                   gatewayId: "gateway001"
                   commandCode: APIEnableSubdeviceJoining
-              magicpairJoin:
-                summary: 基于 MagicPair 技术完成 Zigbee 设备入网
-                value:
-                  gatewayId: "gateway001"
-                  commandCode: APIBindBleDeviceToHub
-                  data:
-                    shortAddr: 65534
-                    mac: "54EF4410003604C9"
-                    manufacturerCode: 4447
-                    fwVer: "0.0.0_0030"
-                    model: "lumi.light.acn014"
-                    did: "lumi.54ef4410003604c9"
-                    devType: 142
-                    hdVer: 1
-                    zbVer: "3"
-                    pid: "lumi1.54ef442dcd15"
-              matterJoin:
-                summary: Matter 设备入网
-                value:
-                  gatewayId: "gateway001"
-                  commandCode: APIPushMatterBindInfo
-                  data:
-                    code: "04036408297"
       responses:
         '200':
           description: 成功
@@ -673,13 +650,13 @@ paths:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
-  # 子设备停止入网
+  # 关闭网关子设备添加模式
   # ────────────────────────────────────────────────────────────────
   /gateways/subdevices/join/stop:
     post:
       tags: [Gateway]
-      summary: 停止网关配网
-      description: 调用此接口，使网关退出配网模式，不再接受新的子设备加入网络。
+      summary: 关闭网关子设备添加模式
+      description: 调用此接口，指定一个 Zigbee 网关退出子设备添加模式。
       operationId: stopSubdeviceJoin
       x-skill-intent: gateway.subdevice.join.stop
       x-idempotent: true
@@ -2122,25 +2099,19 @@ components:
       properties:
         gatewayId:
           type: string
-          description: 网关设备ID
+          description: 网关设备 ID。
         commandCode:
           type: string
           enum:
             - APIEnableSubdeviceJoining
-            - APIBindBleDeviceToHub
-            - APIPushMatterBindInfo
           description: |
             入网命令编码：
-            - `APIEnableSubdeviceJoining`: 标准 Zigbee 设备入网（例如通过按键触发入网模式）
-            - `APIBindBleDeviceToHub`: 基于 MagicPair 技术完成 Zigbee 设备入网
-            - `APIPushMatterBindInfo`: Matter 设备入网
+            - `APIEnableSubdeviceJoining`: 标准 Zigbee 设备入网（例如通过按键触发入网模式）。
         data:
           type: object
           description: |
             入网参数（JSON 对象），根据不同的 commandCode，需传入的参数说明如下：
             - `APIEnableSubdeviceJoining`: 无需传入此字段。
-            - `APIBindBleDeviceToHub`: 必填，数据结构为：{"shortAddr":65534,"mac":"54EF4410003604C9","manufacturerCode":4447,"fwVer":"0.0.0_0030","model":"lumi.light.acn014","did":"lumi.54ef4410003604c9","devType":142,"hdVer":1,"zbVer":"3","pid":"lumi1.54ef442dcd15"}，
-            - `APIPushMatterBindInfo`: 必填，数据结构为：{"code":"子设备 的 11 位 Matter 配对码"}
 
     SubdeviceJoinResponse:
       allOf:

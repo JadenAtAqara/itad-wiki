@@ -585,18 +585,19 @@ paths:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
-  # Start Sub-device Joining
+  # Enable Gateway Sub-device Join Mode
   # ────────────────────────────────────────────────────────────────
   /gateways/subdevices/join:
     post:
       tags: [Gateway]
-      summary: Start Sub-device Joining
+      summary: Enable Sub-device Joining
       description: |
-        Call this API to start pairing a Zigbee or Matter gateway with a sub-device.
+        Call this API to make a specified Zigbee gateway enter subdevice join mode.
 
         :::tip
-        Before getting started, please ensure the sub-device is in pairing mode.
+        Before starting, please ensure that the Zigbee subdevice is already in pairing mode.
         :::
+ 
       operationId: joinSubdevice
       x-skill-intent: gateway.subdevice.join
       x-idempotent: false
@@ -615,29 +616,6 @@ paths:
                 value:
                   gatewayId: "gateway001"
                   commandCode: APIEnableSubdeviceJoining
-              magicpairJoin:
-                summary: Zigbee device pairing using MagicPair technology
-                value:
-                  gatewayId: "gateway001"
-                  commandCode: APIBindBleDeviceToHub
-                  data:
-                    shortAddr: 65534
-                    mac: "54EF4410003604C9"
-                    manufacturerCode: 4447
-                    fwVer: "0.0.0_0030"
-                    model: "lumi.light.acn014"
-                    did: "lumi.54ef4410003604c9"
-                    devType: 142
-                    hdVer: 1
-                    zbVer: "3"
-                    pid: "lumi1.54ef442dcd15"
-              matterJoin:
-                summary: Matter device pairing
-                value:
-                  gatewayId: "gateway001"
-                  commandCode: APIPushMatterBindInfo
-                  data:
-                    code: "04036408297"
       responses:
         '200':
           description: Request succeeded
@@ -674,13 +652,13 @@ paths:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
-  # Stop Sub-device Joining
+  # Disable Gateway Sub-device Join Mode
   # ────────────────────────────────────────────────────────────────
   /gateways/subdevices/join/stop:
     post:
       tags: [Gateway]
-      summary: Stop Gateway Pairing
-      description: Call this API to make the gateway exit pairing mode and no longer accept new sub-devices joining the network.
+      summary: Disable Sub-device Joining
+      description: Call this API to have a specified Zigbee gateway exit sub-device addition mode.
       operationId: stopSubdeviceJoin
       x-skill-intent: gateway.subdevice.join.stop
       x-idempotent: true
@@ -2131,20 +2109,14 @@ components:
           type: string
           enum:
             - APIEnableSubdeviceJoining
-            - APIBindBleDeviceToHub
-            - APIPushMatterBindInfo
           description: |
             Command codes for sub-device joining:
             - `APIEnableSubdeviceJoining`: Standard Zigbee device joining (e.g. triggered by pressing a button to enter join mode)
-            - `APIBindBleDeviceToHub`: Zigbee device joining using MagicPair technology
-            - `APIPushMatterBindInfo`: Matter device joining   
         data:
           type: object
           description: |
             Network joining parameters (JSON object). Depending on the commandCode, the required parameters are as follows:
             - `APIEnableSubdeviceJoining`: No need to provide this field.
-            - `APIBindBleDeviceToHub`: Required. Data structure: {"shortAddr":65534,"mac":"54EF4410003604C9","manufacturerCode":4447,"fwVer":"0.0.0_0030","model":"lumi.light.acn014","did":"lumi.54ef4410003604c9","devType":142,"hdVer":1,"zbVer":"3","pid":"lumi1.54ef442dcd15"}
-            - `APIPushMatterBindInfo` s: Required. Data structure: {"code":"11-digit Matter pairing code of the subdevice"}
 
     SubdeviceJoinResponse:
       allOf:

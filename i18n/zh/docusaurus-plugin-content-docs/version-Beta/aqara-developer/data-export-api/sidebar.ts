@@ -94,13 +94,13 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/join-subdevice",
-          label: "开始子设备入网",
+          label: "开启网关子设备添加模式",
           className: "api-method post",
         },
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/stop-subdevice-join",
-          label: "停止网关配网",
+          label: "关闭网关子设备添加模式",
           className: "api-method post",
         },
         {
