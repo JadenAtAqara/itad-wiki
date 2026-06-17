@@ -94,13 +94,13 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/join-subdevice",
-          label: "Start Sub-device Joining",
+          label: "Enable Sub-device Joining",
           className: "api-method post",
         },
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/stop-subdevice-join",
-          label: "Stop Gateway Pairing",
+          label: "Disable Sub-device Joining",
           className: "api-method post",
         },
         {
