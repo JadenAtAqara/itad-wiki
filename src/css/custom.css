@@ -123,6 +123,14 @@
    margin: 0;
    max-width: 28rem;
  }
+
+ html[lang="en-US"] .navbar-item--zh-only {
+   display: none !important;
+ }
+
+ html[lang="zh-Hans"] .navbar-item--zh-only {
+   display: inline-flex;
+ }
  
  @media (max-width: 996px) {
    .aqara-resource-card {
