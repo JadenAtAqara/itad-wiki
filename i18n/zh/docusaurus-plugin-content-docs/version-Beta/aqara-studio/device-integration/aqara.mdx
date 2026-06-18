@@ -1,28 +1,41 @@
 # Aqara Hub 接入
 
 :::tip
-本文档仅适用于 **网关融合形态**的 Aqara Studio。
+本文档仅适用于 **网关融合形态** 的 Aqara Studio。
 :::
 
-### 查看 Aqara Hub 设备
+本文说明如何将 Aqara Hub 设备接入 Aqara Studio。
+
+## 前提条件
+
+在开始之前，请确保待接入的 Aqara Hub 设备与 Aqara Studio 处于同一局域网。
+
+## 流程
 
 1. 在左侧侧边栏点击进入**设备管理**页面。选择 `Aqara Hub`，进入管理界面。
 
-    ![进入 Zigbee 管理](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-Zigbee.png)
+    ![进入 Aqara Hub 管理](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-SelectAqaraHub.png)
 
-2. 进入`添加设备`选项卡，在**选择网关**下拉框中选择需要绑定子设备的网关，并在**开启方式**中选择该网关的配网模式（支持**实时开启**或**定时开启**）。
+2. 进入`添加设备`选项卡，点击**发现设备**按钮，Aqara Studio 将会在局域网内搜索 Aqara Hub 设备。
 
-     点击**开启入网**按钮后，所选网关将进入配网状态，此时可让子设备进入配对模式以完成绑定。
+    ![发现 Aqara Hub 设备](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraHub-ClickDiscovery.png)
 
-    ![配置](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Zigbee-Configuration.png)
+3. 当 Aqara Studio 发现 Aqara Hub 设备后，将会在**发现设备列表**列表中显示该设备。
 
-3. 子设备绑定成功后，将在**已添加设备**列表中显示该子设备。
+    勾选待接入设备，点击中间的 **+** 按钮，即可添加该设备。
 
-### 如何添加其他类型的 Aqara 设备
+    ![发现 Aqara Hub 设备](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraHub-AddDevices.png)
+
+4. 设备添加成功后，会出现在右侧的**已添加设备列表**，并会实时同步显示在左侧设备树的 Aqara Hub 节点下。
+
+    ![Aqara Hub 设备添加成功](https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/AqaraHub-DevicesAdded.png)
+
+## 如何添加其他类型的 Aqara 设备
 
 如需接入不同协议的 Aqara 设备，请参考以下文档，按设备协议类型进行集成操作：
-- [接入 Zigbee 设备](./zigbee.mdx)
-- [接入 Matter 设备](./matter.mdx)
+- [Zigbee 设备接入](./zigbee.mdx)
+- [Matter 设备接入](./matter.mdx)
+- [Aqara Modbus 设备接入](./aqara-modbus.mdx)。
 
 ## 下一步
 
