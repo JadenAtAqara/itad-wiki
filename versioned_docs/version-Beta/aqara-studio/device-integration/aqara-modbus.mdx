@@ -1,1 +1,54 @@
 # Aqara Modbus
+
+This document explains how to connect Aqara Modbus devices to Aqara Studio.
+
+## What is Aqara Modbus 
+
+**Aqara Modbus** is Aqara's proprietary Modbus RTU communication protocol designed for wired intelligent scenarios. It is mainly used to support RS485 interface devices, enabling them to connect to the Aqara Studio local platform through a standardized wired bus.
+
+Based on Aqara's proprietary Modbus RTU protocol, related devices can achieve stable and reliable data reporting, status synchronization, parameter configuration, and automated linkage. This meets the requirements for high reliability, centralized management, and local control in project-based scenarios such as hotels, apartments, office buildings, and commercial spaces.
+
+## Comparison of Wired / Wireless / Wired+Wireless Solutions
+
+After integrating with the Aqara Modbus protocol, Aqara can further expand RS485 wired device access on top of its original Zigbee, Thread, Wi-Fi, and other wireless systems, forming a "wired + wireless" integrated local intelligent control solution.
+
+| Capability / Advantage        | Wired Solution | Wireless Solution | **Aqara Wired + Wireless Fusion Solution** |
+|------------------------------|:-------------:|:----------------:|:-----------------------------------------:|
+| Supports high reliability communication  | ✓ |                |   **✓**    |
+| Suitable for critical control links      | ✓ |                |   **✓**    |
+| Flexible installation                   |   |       ✓        |   **✓**    |
+| Easy to expand                          |   |       ✓        |   **✓**    |
+| Supports centralized management         | ✓ |                |   **✓**    |
+| Supports local control                  | ✓ |                |   **✓**    |
+| Supports automated linkage              | ✓ |                |   **✓**    |
+| Supports cross-protocol linkage         |   |       ✓        |   **✓**    |
+| Suitable for project-level delivery     | ✓ |                |   **✓**    |
+
+## Prerequisites
+
+Before you start, please make sure:
+- Your Aqara distribution box gateway (such as AX100M), edge hub (such as M300/GX300M), and your computer are all on the same local area network (LAN);
+- Your Aqara distribution box gateway has been connected to the edge hub's Aqara Studio;
+- You have connected the Aqara Modbus RTU device (such as AW110K) to the RS485 interface of the Aqara distribution box gateway. For wiring instructions, please refer to the respective device's electronic manual or consult technical support.
+
+## Add An Aqara Modbus Device
+
+1. In the left sidebar, navigate to the **Device Management** page and select `Aqara Modbus`.
+
+    ![Enter Aqara Modbus Management](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Devices-SelectAqaraModbus.png)
+
+2. Select an Aqara distribution box gateway (such as AX100M). You can choose how to activate it (“Activate Now”/“Scheduled Activation”). Click the **Activate Networking** button. The selected gateway will enter networking mode.
+
+    ![Click Activate Networking Button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/AqaraModbus-ClickDiscovery.png)
+
+    Once in networking mode, the Aqara distribution box gateway will automatically discover and add Aqara Modbus RTU devices (such as AW110K) connected to the RS485 bus. After networking is complete, the gateway will automatically exit networking mode.
+
+    ![Discover Aqara Modbus RTU Devices](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/AqaraModbus-DiscoverDevices.png)
+
+3. After the device is successfully added, it will appear in the **Added Devices List** on the right, and will also be updated in real time under the Aqara Modbus node in the device tree on the left.
+
+    ![Aqara Modbus Device Added Successfully](https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/en/AqaraModbus-AddedDevices.png)
+
+## Next Steps
+
+Now, you can [view details and control the device](./../device-management/basic-information.mdx), or [use the device in automation](./../automation.mdx).

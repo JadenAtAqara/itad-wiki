@@ -1,2 +1,54 @@
 # Aqara Modbus 设备接入
 
+本文说明如何将 Aqara Modbus 设备接入 Aqara Studio。
+
+## 什么是 Aqara Modbus 
+
+**Aqara Modbus** 是 Aqara 面向有线智能化场景推出的私有 Modbus RTU 通信协议，主要用于支持 RS485 接口设备通过标准化的有线总线方式接入 Aqara Studio 本地化平台。
+
+基于 Aqara 私有 Modbus RTU协议，相关设备可实现稳定可靠的数据上报、状态同步、参数配置及自动化联动，从而满足酒店、公寓、办公楼、商业空间等项目型场景中对高可靠性、集中管理和本地化控制的需求。
+
+## 有线 / 无线 / 有线+无线方案优势对比
+
+通过 Aqara Modbus 协议接入后，Aqara 可在原有 Zigbee、Thread、Wi-Fi 等无线设备体系基础上，进一步扩展 RS485 有线设备接入能力，形成“有线 + 无线”融合的本地化智能控制方案。
+
+| 能力 / 优势点           | 有线设备方案 | 无线设备方案 | **Aqara 有线 + 无线融合方案** |
+|------------------------|:-----------:|:-----------:|:-----------------------:|
+| 支持高可靠性通讯       | ✓ |           |   **✓**    |
+| 适合关键控制链路       | ✓ |           |   **✓**    |
+| 安装灵活               |   |     ✓     |   **✓**    |
+| 扩展方便               |   |     ✓     |   **✓**    |
+| 支持集中管理           | ✓ |           |   **✓**    |
+| 支持本地化控制         | ✓ |           |   **✓**    |
+| 支持自动化联动         | ✓ |           |   **✓**    |
+| 支持跨协议联动         |   |     ✓     |   **✓**    |
+| 适合项目级交付         | ✓ |           |   **✓**    |
+
+## 前提条件
+
+在开始之前，请确保：
+- 您的 Aqara 配电箱网关（例如 AX100M）、智慧边端（例如 M300/GX300M） 和 电脑处于同一局域网中；
+- 您的 Aqara 配电箱网关已接入到智慧边端的 Aqara Studio中
+- 您已将 Aqara Modbus RTU 设备（例如 AW110K）接入 Aqara 配电箱网关 RS485 接口。如需了解接线方式，请参考相关设备的电子说明书，或咨询技术支持。
+
+## 流程
+
+1. 在左侧侧边栏点击进入**设备管理**页面，选择 Aqara Modbus。
+
+    ![进入 Aqara Modbus 管理](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-SelectAqaraModbus.png)
+
+2. 选择 Aqara 配电箱网关（如 AX100M），开启方式可以选择“实时开启/定时开启”，点击**开启入网**按钮后，所选网关将进入配网状态。
+
+    ![点击开启入网按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraModbus-ClickDiscovery.png)
+
+    进入配网模式后，Aqara 配电箱网关将自动发现并添加 RS485 总线上已连接的 Aqara Modbus RTU 设备（如 AW110K）。入网流程完成后，网关会自动退出入网模式。
+
+    ![发现 Aqara Modbus RTU 设备](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraModbus-DiscoverDevices.png)
+
+3. 设备添加成功后，会出现在右侧的**已添加设备列表**，并会实时同步显示在左侧设备树的 Aqara Modbus 节点下。
+
+    ![Aqara Modbus 设备添加成功](https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/AqaraModbus-AddedDevices.png)
+
+## 下一步
+
+接下来，您可以直接 [查看该设备的详情和控制该设备](./../device-management/basic-information.mdx)，还可以利用该设备 [编排自动化逻辑](./../automation.mdx) 了。
