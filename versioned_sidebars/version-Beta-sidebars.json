@@ -45,18 +45,8 @@
                   "aqara-studio/device-integration/knx-ip",
                   "aqara-studio/device-integration/mqtt",
                   "aqara-studio/device-integration/http",
-                  {
-                    "type": "category",
-                    "label": "Virtual",
-                    "link": {
-                      "type": "generated-index",
-                      "keywords": ["virtual-devices"]
-                    },
-                    "items": [
-                      "aqara-studio/device-integration/virtual/infrared-equipment",
-                      "aqara-studio/device-integration/virtual/light-box"
-                    ]
-                  }
+                  "aqara-studio/device-integration/virtual/infrared-equipment",
+                  "aqara-studio/device-integration/virtual/light-box"
                 ]
               },
               {
