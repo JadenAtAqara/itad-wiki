@@ -184,10 +184,10 @@
    pointer-events: none;
    position: absolute;
    top: -0.5rem;
-   transform: translate(-50%, -100%);
+   transform: translate(-50%, -100%) translateX(var(--aqara-doc-tooltip-shift-x, 0px));
    transition: opacity 0.12s ease, transform 0.12s ease;
    white-space: normal;
-   z-index: 50;
+   z-index: 9999;
  }
 
  .aqara-doc-tooltip__bubble::after {
@@ -203,15 +203,38 @@
    width: 10px;
  }
 
+ .aqara-doc-tooltip__bubble--portal {
+   left: 0;
+   position: fixed;
+   top: 0;
+   transform: none;
+   opacity: 1;
+   pointer-events: none;
+   z-index: 9999;
+ }
+
+ .aqara-doc-tooltip__bubble--portal::after {
+   left: var(--aqara-doc-tooltip-arrow-x, 50%);
+ }
+
+ .aqara-doc-tooltip__bubble--portal.aqara-doc-tooltip__bubble--bottom::after {
+   border-bottom: 0;
+   border-right: 0;
+   border-left: 1px solid var(--ifm-toc-border-color);
+   border-top: 1px solid var(--ifm-toc-border-color);
+   top: 0;
+   transform: translate(-50%, -4px) rotate(45deg);
+ }
+
  .aqara-doc-tooltip:hover .aqara-doc-tooltip__bubble,
  .aqara-doc-tooltip__icon:focus-visible + .aqara-doc-tooltip__bubble {
    opacity: 1;
-   transform: translate(-50%, calc(-100% - 4px));
+   transform: translate(-50%, calc(-100% - 4px)) translateX(var(--aqara-doc-tooltip-shift-x, 0px));
  }
 
  .aqara-doc-tooltip--bottom .aqara-doc-tooltip__bubble {
    top: calc(100% + 0.5rem);
-   transform: translate(-50%, 0);
+   transform: translate(-50%, 0) translateX(var(--aqara-doc-tooltip-shift-x, 0px));
  }
 
  .aqara-doc-tooltip--bottom .aqara-doc-tooltip__bubble::after {
@@ -227,12 +250,12 @@
  .aqara-doc-tooltip--bottom .aqara-doc-tooltip__icon:focus-visible + .aqara-doc-tooltip__bubble,
  .aqara-doc-tooltip--open.aqara-doc-tooltip--bottom .aqara-doc-tooltip__bubble {
    opacity: 1;
-   transform: translate(-50%, 4px);
+   transform: translate(-50%, 4px) translateX(var(--aqara-doc-tooltip-shift-x, 0px));
  }
 
  .aqara-doc-tooltip--open .aqara-doc-tooltip__bubble {
    opacity: 1;
-   transform: translate(-50%, calc(-100% - 4px));
+   transform: translate(-50%, calc(-100% - 4px)) translateX(var(--aqara-doc-tooltip-shift-x, 0px));
  }
 
  .aqara-features-table {
