@@ -1,1 +1,63 @@
 # Infrared Equipment
+
+This document introduces how to integrate infrared devices into Aqara Studio, helping you conveniently manage and control infrared equipment via the Edge Hub M300.
+
+## Supported Types
+
+Currently, Aqara Studio supports the following types of infrared devices:
+- TV
+- Set-top box
+- DVD player
+- Air conditioner
+- Projector
+- Audio/Speaker
+- Fan
+- Camera
+- Smart light
+- Air purifier
+- Water heater
+- Custom
+
+## Integration
+
+The process for integrating an infrared device into Aqara Studio is as follows:
+1. In the left sidebar, click to enter the **Device Management** page. In the left device tree, click the "+" button.    
+    ![Click the add button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Devices-ClickAddButtonNew.png)
+2. In the pop-up window, select `Virtual` to add a Virtual device.
+3. Select `Virtual`, go to the `Add Device` tab, set the **Virtual Device Type** to **Infrared Equipment**, and set the **Name** of the device.   
+    ![Enter Add Device tab](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Virtual-AddDeviceTab.png)
+4. Select the **Infrared Device Type** and its brand.    
+5. Aqara Studio will start downloading all code libraries for devices of this brand and type.
+6. Once the download is complete, select the applicable code library, and select the **Debug Gateway or Device** (used to send infrared commands to control the infrared device to be integrated, such as the Edge Hub M300).
+7. Click an infrared command. The **debug gateway or device** above will **flash a blue light**. Observe whether the infrared device to be integrated responds or not.
+    If the device responds, it means this command can be used to control the device. Click the **Responsive** button.   
+    If the device does not respond, it means this command cannot control the device. Click the **No Response** button.   
+8. Besides using the preset infrared code libraries above, if the device requires more infrared commands, you can add new commands using the **Infrared Learning** feature.
+    Click the **Add function points** button to open the **Add Button** pop-up window.
+    
+    In the pop-up window, define the **Name** of this function point, then point the remote controller of the infrared device at the **debug gateway or device**, and press a button on the remote.    
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IR-AddKeyPopup.png" style={{ width: '60%' }} />
+
+    After successful learning, the pop-up will prompt **Functional learning successful**. Click the **Confirm** button to finish adding.   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IR-StudySuccess.png" style={{ width: '60%' }} />
+
+    Newly added function points will appear in the **Infrared learning function** area.   
+9. After adding all infrared commands, click the **Confirm** button to complete the device integration process.
+    ![Finish device integration](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IR-Confirm.png)
+
+## Gateway Deployment
+
+Completing the above device integration and infrared command addition does not mean you can immediately control this device. You still need to connect the infrared device to the **Debug Gateway or Device**. The process is as follows:
+1. Enter the infrared device's details page, and view the **Device Configuration** tab.
+2. Find **Associated configuration**, select the **delivery gateway**, and click the **Send and Save** button.
+3. After successful deployment, you can control the infrared device via Aqara Studio.
+
+:::tip
+After being delivered to the gateway, the infrared matching content will be automatically locked and cannot be modified again. Please confirm that the matching plan is accurate before issuing it.
+:::
+
+![Deploy to gateway](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IR-DeliverCodestoGateway.png)
+
+## Next Step
+
+Now, you can [view details and control the device](./../../device-management/basic-information.mdx), or [use the device in automation](./../../automation.mdx).
