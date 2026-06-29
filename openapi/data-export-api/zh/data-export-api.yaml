@@ -596,6 +596,206 @@ paths:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
+  # command下发设备并等待响应
+  # ────────────────────────────────────────────────────────────────
+  /devices/command/execute/await:
+    post:
+      tags: [Device]
+      summary: 向设备下发 Command 并等待响应
+      description: |
+        通过 command 控制设备，并在服务端获取设备响应。<br />
+        以下 command 可响应：<br />
+        `APIGetIrDeviceCategoriesForApp(40263)`  
+        `APIGetBrandsByCategoryForApp(40267)`  
+        `APIGetMatchTreeForApp(40268)`  
+        `APIClickIrKeyForApp(40273)`  
+        `APISaveMatchedRemoteInfoForApp(40292)`  
+        `SetIRDeviceInfo(40288)`  
+        `IRCodeMatchStatus(20591)`  
+        `APICreateIrVirtualDeviceForApp(40281)`  
+        `SendIrKey(40305)`
+        `APIStartIrLearningForApp(40280)`  
+        `IRLearnResult(20618)`  
+        `APIAddIrKeyForApp(40275)`    
+      operationId: executeDeviceCommandAwait
+      x-skill-intent: device.command.execute.await
+      x-idempotent: false
+      x-retryable: conditional
+      x-side-effects: device_state_change
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommandExecuteAwaitRequest'
+            examples:
+              executeCommandAwait:
+                value:
+                  data:
+                    - deviceId: "gateway001"
+                      endpointId: 1
+                      functionCode: NetworkCommissioning
+                      commandCode: TriggerZigbeeNetworkInfoUpload
+                      args:
+                        - fieldCode: InstallCode
+                          value: "F9B34846413AB5DE81B60E63E440"
+                        - fieldCode: MAC
+                          value: "54EF441000EB0CCF"
+                  timeoutMs: 5000
+      responses:
+        '200':
+          description: 成功（data 返回每条命令的执行及设备上报结果）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandExecuteAwaitResponse'
+              examples:
+                commandExecuteAwaitSuccess:
+                  value:
+                    type: ExecuteCommandAwaitResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecfa"
+                    code: 0
+                    message: success
+                    data:
+                      - deviceId: "gateway001"
+                        endpointId: 1
+                        functionCode: NetworkCommissioning
+                        commandCode: TriggerZigbeeNetworkInfoUpload
+                        code: 0
+                        message: success
+                        responded: true
+                        commandReportValue: "{\"result\":\"ok\"}"
+                        responseTime: 1710001234567
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 删除设备点位
+  # ────────────────────────────────────────────────────────────────
+  /devices/points/delete:
+    post:
+      tags: [Device]
+      summary: 删除设备点位
+      description: 按 deviceId、endpointId 与 functionCode 删除设备 object
+      operationId: deleteDevicePoint
+      x-skill-intent: device.point.delete
+      x-idempotent: true
+      x-retryable: conditional
+      x-side-effects: device_object_delete
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteDevicePointRequest'
+            examples:
+              deleteDevicePoint:
+                value:
+                  deviceId: "device-001"
+                  endpointId: 1
+                  functionCode: Output
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteDevicePointResponse'
+              examples:
+                deleteDevicePointSuccess:
+                  value:
+                    type: DeleteDeviceObjectResponse
+                    version: v1
+                    msgId: "1751609244329"
+                    code: 0
+                    message: success
+                    data: ""
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 添加虚拟设备
+  # ────────────────────────────────────────────────────────────────
+  /virtual-devices:
+    post:
+      tags: [Device]
+      summary: 添加虚拟设备
+      description: 添加一个红外类型或灯箱类型的虚拟设备。
+      operationId: addVirtualDevice
+      x-skill-intent: device.virtual.add
+      x-idempotent: false
+      x-retryable: conditional
+      x-side-effects: device_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VirtualDeviceAddRequest'
+            examples:
+              addIrVirtualDevice:
+                value:
+                  name: "Living Room IR Remote"
+                  virtualDeviceType: ir
+              addLightboxVirtualDevice:
+                value:
+                  name: "Living Room Lightbox"
+                  virtualDeviceType: lightbox
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualDeviceAddResponse'
+              examples:
+                addVirtualDeviceSuccess:
+                  value:
+                    type: VirtualDeviceAddResponse
+                    version: v1
+                    msgId: "1751609244330"
+                    code: 0
+                    message: success
+                    data:
+                      deviceId: "virtual-device-001"
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
   # 开启网关子设备添加模式
   # ────────────────────────────────────────────────────────────────
   /gateways/subdevices/join:
@@ -1687,6 +1887,74 @@ components:
         code: 0
         message: success
 
+    DeleteDevicePointRequest:
+      type: object
+      required: [deviceId, endpointId, functionCode]
+      properties:
+        deviceId:
+          type: string
+          description: 设备 ID。
+        endpointId:
+          type: integer
+          minimum: 0
+          description: 端点 ID。
+        functionCode:
+          type: string
+          description: 功能编码。
+
+    DeleteDevicePointResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: 删除成功后返回空字符串。
+              example: ""
+      example:
+        type: DeleteDeviceObjectResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000001c"
+        code: 0
+        message: success
+        data: ""
+
+    VirtualDeviceAddRequest:
+      type: object
+      required: [name, virtualDeviceType]
+      properties:
+        name:
+          type: string
+          description: 虚拟设备名称。
+        virtualDeviceType:
+          type: string
+          enum: [ir, lightbox]
+          description: 虚拟设备类型。<br />`ir` ：红外设备。<br />`lightbox` ：灯箱设备。
+
+    VirtualDeviceAddData:
+      type: object
+      required: [deviceId]
+      properties:
+        deviceId:
+          type: string
+          description: 新增的虚拟设备对应的设备ID。
+
+    VirtualDeviceAddResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/VirtualDeviceAddData'
+      example:
+        type: VirtualDeviceAddResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000001d"
+        code: 0
+        message: success
+        data:
+          deviceId: "virtual-device-001"
+
     Endpoint:
       type: object
       required: [endpointId, endpointName, deviceType, functions]
@@ -2153,6 +2421,77 @@ components:
         code: 0
         message: success
         data: []
+
+    CommandExecuteAwaitRequest:
+      allOf:
+        - $ref: '#/components/schemas/CommandExecuteRequest'
+        - type: object
+          properties:
+            timeoutMs:
+              type: integer
+              format: int32
+              description: 等待设备命令上报超时（毫秒）；不传使用服务端默认值。
+              minimum: 1000
+              maximum: 10000
+
+    CommandExecuteAwaitResult:
+      type: object
+      required: [deviceId, endpointId, functionCode, commandCode, code, message, responded]
+      properties:
+        deviceId:
+          type: string
+          description: 设备 ID。
+        endpointId:
+          type: integer
+          description: 端点 ID。
+        functionCode:
+          type: string
+          description: 功能编码。
+        commandCode:
+          type: string
+          description: 命令编码。
+        code:
+          type: integer
+          description: 执行结果码。
+        message:
+          type: string
+          description: 执行结果描述。
+        responded:
+          type: boolean
+          description: 是否收到设备该 command 的上报。
+        commandReportValue:
+          type: string
+          description: 设备该 command 的上报原始字符串，由调用端自行解析。
+        responseTime:
+          type: integer
+          format: int64
+          description: 设备 command 上报时间（毫秒时间戳）。
+
+    CommandExecuteAwaitResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/CommandExecuteAwaitResult'
+      example:
+        type: ExecuteCommandAwaitResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000001a"
+        code: 0
+        message: success
+        data:
+          - deviceId: "gateway001"
+            endpointId: 1
+            functionCode: NetworkCommissioning
+            commandCode: TriggerZigbeeNetworkInfoUpload
+            code: 0
+            message: success
+            responded: true
+            commandReportValue: "{\"result\":\"ok\"}"
+            responseTime: 1710001234567
 
     # ── Subdevice Join ────────────────────────────────────────────
     SubdeviceJoinRequest:

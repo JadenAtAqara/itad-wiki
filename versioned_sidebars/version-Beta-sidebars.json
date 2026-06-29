@@ -59,6 +59,7 @@
                   },
                   "items": [
                     "aqara-studio/device-management/basic-information",
+                    "aqara-studio/device-management/firmware-upgrade",
                     "aqara-studio/device-management/point-information",
                     "aqara-studio/device-management/history",
                     "aqara-studio/device-management/tags"
@@ -197,299 +198,333 @@
     "aqara-developer/introduction",
     {
       "type": "category",
-      "label": "Local API for Studio",
+      "label": "Local Studio Development",
       "items": [
-        "aqara-developer/data-export-api/introduction",
         {
           "type": "category",
-          "label": "HTTP",
-          "key": "local-api-http",
+          "label": "Local API for Studio",
           "items": [
-            "aqara-developer/data-export-api/getting-started-with-the-data-export-api",
-            "aqara-developer/data-export-api/try-api-online",
-            "aqara-developer/data-export-api/postman",        
+            "aqara-developer/data-export-api/introduction",
             {
               "type": "category",
-              "label": "Space",
-              "key": "local-api-space",
-              "link": {
-                "type": "doc",
-                "id": "aqara-developer/data-export-api/space"
-              },
-              "collapsed": false,
+              "label": "HTTP",
+              "key": "local-api-http",
               "items": [
+                "aqara-developer/data-export-api/getting-started-with-the-data-export-api",
+                "aqara-developer/data-export-api/try-api-online",
+                "aqara-developer/data-export-api/postman",        
                 {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/get-spaces",
-                  "className": "api-method get"
+                  "type": "category",
+                  "label": "Space",
+                  "key": "local-api-space",
+                  "link": {
+                    "type": "doc",
+                    "id": "aqara-developer/data-export-api/space"
+                  },
+                  "collapsed": false,
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-spaces",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/create-space",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/update-space-name",
+                      "className": "api-method post"
+                    }
+                  ]
                 },
                 {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/create-space",
-                  "className": "api-method post"
+                  "type": "category",
+                  "label": "Gateway",
+                  "key": "local-api-gateway",
+                  "link": {
+                    "type": "doc",
+                    "id": "aqara-developer/data-export-api/gateway"
+                  },
+                  "collapsed": false,
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/join-subdevice",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/stop-subdevice-join",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-device-bind-result",
+                      "className": "api-method post"
+                    }
+                  ]
                 },
                 {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/update-space-name",
-                  "className": "api-method post"
-                }
-              ]
-            },
-            {
-              "type": "category",
-              "label": "Gateway",
-              "key": "local-api-gateway",
-              "link": {
-                "type": "doc",
-                "id": "aqara-developer/data-export-api/gateway"
-              },
-              "collapsed": false,
-              "items": [
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/join-subdevice",
-                  "className": "api-method post"
+                  "type": "category",
+                  "label": "Device",
+                  "key": "local-api-device",
+                  "link": {
+                    "type": "doc",
+                    "id": "aqara-developer/data-export-api/device"
+                  },
+                  "collapsed": false,
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-device-types",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-devices",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-device-definitions",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/execute-device-trait",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-trait-values",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/execute-device-command",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/execute-device-command-await",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/delete-device-point",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/add-virtual-device",
+                      "className": "api-method post"
+                    }
+                  ]
                 },
                 {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/stop-subdevice-join",
-                  "className": "api-method post"
+                  "type": "category",
+                  "label": "Automation",
+                  "link": {
+                    "type": "doc",
+                    "id": "aqara-developer/data-export-api/automation"
+                  },
+                  "collapsed": false,
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-automation-capabilities",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/create-automation",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/query-automation-list",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/query-automation-details",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/update-automation",
+                      "className": "api-method patch"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/update-automation-status",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/update-automation-space",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/delete-automations",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/query-automation-manual-trigger-list",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/execute-automation-manual-trigger",
+                      "className": "api-method post"
+                    } 
+                  ]
                 },
                 {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/get-device-bind-result",
-                  "className": "api-method post"
-                }
-              ]
-            },
-            {
-              "type": "category",
-              "label": "Device",
-              "key": "local-api-device",
-              "link": {
-                "type": "doc",
-                "id": "aqara-developer/data-export-api/device"
-              },
-              "collapsed": false,
-              "items": [
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/get-device-types",
-                  "className": "api-method get"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/get-devices",
-                  "className": "api-method get"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/get-device-definitions",
-                  "className": "api-method get"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/execute-device-trait",
-                  "className": "api-method post"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/get-trait-values",
-                  "className": "api-method post"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/execute-device-command",
-                  "className": "api-method post"
-                }
-              ]
-            },
-            {
-              "type": "category",
-              "label": "Automation",
-              "link": {
-                "type": "doc",
-                "id": "aqara-developer/data-export-api/automation"
-              },
-              "collapsed": false,
-              "items": [
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/get-automation-capabilities",
-                  "className": "api-method get"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/create-automation",
-                  "className": "api-method post"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/query-automation-list",
-                  "className": "api-method get"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/query-automation-details",
-                  "className": "api-method get"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/update-automation",
-                  "className": "api-method patch"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/update-automation-status",
-                  "className": "api-method post"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/update-automation-space",
-                  "className": "api-method post"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/delete-automations",
-                  "className": "api-method post"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/query-automation-manual-trigger-list",
-                  "className": "api-method get"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/execute-automation-manual-trigger",
-                  "className": "api-method post"
-                } 
-              ]
-            },
-            {
-              "type": "category",
-              "label": "Studio",
-              "link": {
-                "type": "doc",
-                "id": "aqara-developer/data-export-api/studio"
-              },
-              "collapsed": false,
-              "items": [
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/data-export-api/get-studio-statistics",
-                  "className": "api-method get"
+                  "type": "category",
+                  "label": "Studio",
+                  "link": {
+                    "type": "doc",
+                    "id": "aqara-developer/data-export-api/studio"
+                  },
+                  "collapsed": false,
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-studio-statistics",
+                      "className": "api-method get"
+                    }
+                  ]
                 }
               ]
             }
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Features",
+          "items": [
+            "aqara-developer/local-studio-development/features/infrared-device-integration"
           ]
         }
       ]
     },
     {
       "type": "category",
-      "label": "Cloud API",
+      "label": "Cloud Development",
       "items": [
-        "aqara-developer/aiot-api/introduction",
         {
           "type": "category",
-          "label": "HTTP",
-          "key": "cloud-api-http",
+          "label": "Cloud API",
           "items": [
-            "aqara-developer/aiot-api/getting-started-with-the-aiot-api",
-            "aqara-developer/aiot-api/try-api-online",
+            "aqara-developer/aiot-api/introduction",
             {
               "type": "category",
-              "label": "Space",
-              "key": "cloud-api-space",
-              "link": {
-                "type": "doc",
-                "id": "aqara-developer/aiot-api/space"
-              },
-              "collapsed": false,
+              "label": "HTTP",
+              "key": "cloud-api-http",
               "items": [
+                "aqara-developer/aiot-api/getting-started-with-the-aiot-api",
+                "aqara-developer/aiot-api/try-api-online",
                 {
-                  "type": "doc",
-                  "id": "aqara-developer/aiot-api/get-spaces",
-                  "className": "api-method get"
+                  "type": "category",
+                  "label": "Space",
+                  "key": "cloud-api-space",
+                  "link": {
+                    "type": "doc",
+                    "id": "aqara-developer/aiot-api/space"
+                  },
+                  "collapsed": false,
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/aiot-api/get-spaces",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/aiot-api/create-space",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/aiot-api/update-space-name",
+                      "className": "api-method post"
+                    }
+                  ]
                 },
                 {
-                  "type": "doc",
-                  "id": "aqara-developer/aiot-api/create-space",
-                  "className": "api-method post"
+                  "type": "category",
+                  "label": "Device",
+                  "key": "cloud-api-device",
+                  "link": {
+                    "type": "doc",
+                    "id": "aqara-developer/aiot-api/device"
+                  },
+                  "collapsed": false,
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/aiot-api/get-device-types",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/aiot-api/get-devices",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/aiot-api/get-device-definitions",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/aiot-api/execute-device-trait",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/aiot-api/get-trait-values",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/aiot-api/execute-device-command",
+                      "className": "api-method post"
+                    }
+                  ]
                 },
                 {
-                  "type": "doc",
-                  "id": "aqara-developer/aiot-api/update-space-name",
-                  "className": "api-method post"
-                }
-              ]
-            },
-            {
-              "type": "category",
-              "label": "Device",
-              "key": "cloud-api-device",
-              "link": {
-                "type": "doc",
-                "id": "aqara-developer/aiot-api/device"
-              },
-              "collapsed": false,
-              "items": [
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/aiot-api/get-device-types",
-                  "className": "api-method get"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/aiot-api/get-devices",
-                  "className": "api-method get"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/aiot-api/get-device-definitions",
-                  "className": "api-method get"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/aiot-api/execute-device-trait",
-                  "className": "api-method post"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/aiot-api/get-trait-values",
-                  "className": "api-method post"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/aiot-api/execute-device-command",
-                  "className": "api-method post"
-                }
-              ]
-            },
-            {
-              "type": "category",
-              "label": "Subscription",
-              "link": {
-                "type": "doc",
-                "id": "aqara-developer/aiot-api/subscription"
-              },
-              "collapsed": false,
-              "items": [
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/aiot-api/mqtt-subscribe",
-                  "className": "api-method post"
-                },
-                {
-                  "type": "doc",
-                  "id": "aqara-developer/aiot-api/mqtt-unsubscribe",
-                  "className": "api-method post"
+                  "type": "category",
+                  "label": "Subscription",
+                  "link": {
+                    "type": "doc",
+                    "id": "aqara-developer/aiot-api/subscription"
+                  },
+                  "collapsed": false,
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/aiot-api/mqtt-subscribe",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/aiot-api/mqtt-unsubscribe",
+                      "className": "api-method post"
+                    }
+                  ]
                 }
               ]
             }
           ]
         }
-      ]      
+      ]
     }
 
   ],

@@ -1,0 +1,1180 @@
+# Infrared Device Integration
+
+本文描述如何通过 Studio 本地 API 将红外设备接入 Aqara Studio，从而通过网关下发红外指令控制红外设备。
+
+## 时序图
+
+## 流程
+
+### 1 创建红外设备
+
+通过 Studio 本地 API [`POST` /open/api/v1/virtual-devices](./../../data-export-api/add-virtual-device.api.mdx) 接口，创建一个红外设备，获取该红外设备 ID。
+
+### 2 查询设备模型定义
+
+通过 Studio 本地 API [`GET` /open/api/v1/devices/definitions](./../../data-export-api/get-device-definitions.api.mdx) 接口，传入红外设备 ID 及目标网关 ID，查询设备模型定义，以便获取后续操作所需的 **endpointId**、**functionCode** **commandCode**。
+
+常用 commandCode 说明如下： 
+
+| 类别       | 功能            | commandCode（括号内为 commandId）                  |
+|------------|-----------------|--------------------------------------------|
+| 红外设备   | 获取设备类型     | `APIGetIrDeviceCategoriesForApp(40263)`    |
+| 红外设备   | 获取品牌         | `APIGetBrandsByCategoryForApp(40267)`      |
+| 红外设备   | 获取匹配树       | `APIGetMatchTreeForApp(40268)`             |
+| 红外设备   | 试码             | `APIClickIrKeyForApp(40273)`               |
+| 红外设备   | 保存匹配         | `APISaveMatchedRemoteInfoForApp(40292)`    |
+| 红外设备   | 创建设备         | `APICreateIrVirtualDeviceForApp(40281)`    |
+| 网关       | 下载码库         | `SetIRDeviceInfo(40288)`                   |
+| 网关       | 等待状态         | `IRCodeMatchStatus(20591)`                 |
+| 网关       | 日常控制         | `SendIrKey(40305)` <br />**注意**：此 Command 仅在匹配完成后出现，因此，您需要在匹配完成后再次查询设备模型定义，才能获取到该 Command。                         |
+| 网关       | 读取学习结果     | `IRLearnResult(20618)`                     |
+
+以下为一个红外设备的设备详情示例：
+```json {15,20,24,30,46,110,140,183}
+{
+  "type": "GetDevicesResponse",
+  "version": "v1",
+  "msgId": "2",
+  "data": [
+    {
+      "deviceId": "virtual.1782388251128",
+      "name": "Test1",
+      "gatewayId": "",
+      "deviceTypesList": [
+        "IRDevice"
+      ],
+      "endpoints": [
+        {
+          "endpointId": 2,
+          "endpointName": "IRCoordination",
+          "deviceType": "IRDevice",
+          "functions": [
+            {
+              "functionCode": "IRCoordination",
+              "traits": [],
+              "commands": [
+                {
+                  "commandCode": "APIGetIrDeviceCategoriesForApp",
+                  "fields": [],
+                  "description": "获取红外设备类型列表",
+                  "pointName": "IR Remote Control Coordination - Get a list of infrared device types"
+                },
+                {
+                  "commandCode": "APIGetBrandsByCategoryForApp",
+                  "fields": [
+                    {
+                      "fieldCode": "CategoryId",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": true,
+                        "min": 1,
+                        "max": 13
+                      }
+                    }
+                  ],
+                  "description": "根据设备类型获取品牌列表",
+                  "pointName": "IR Remote Control Coordination - Get a list of brands based on device type"
+                },
+                {
+                  "commandCode": "APIGetMatchTreeForApp",
+                  "fields": [
+                    {
+                      "fieldCode": "Type",
+                      "parameter": {
+                        "type": "Enum",
+                        "mandatory": true,
+                        "supportedValues": [
+                          {
+                            "key": "CategoryTree",
+                            "value": "1"
+                          },
+                          {
+                            "key": "SpsCityTree",
+                            "value": "2"
+                          },
+                          {
+                            "key": "IptvTree",
+                            "value": "3"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "fieldCode": "CategoryId",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": true,
+                        "min": 1,
+                        "max": 13
+                      }
+                    },
+                    {
+                      "fieldCode": "BrandId",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": true,
+                        "min": 0,
+                        "max": 99999
+                      }
+                    },
+                    {
+                      "fieldCode": "CityId",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": false,
+                        "min": 0,
+                        "max": 999999
+                      }
+                    },
+                    {
+                      "fieldCode": "SpId",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": false,
+                        "min": 0,
+                        "max": 99999
+                      }
+                    }
+                  ],
+                  "description": "获取匹配树",
+                  "pointName": "IR Remote Control Coordination - Get matching tree information"
+                },
+                {
+                  "commandCode": "APIClickIrKeyForApp",
+                  "fields": [
+                    {
+                      "fieldCode": "Did",
+                      "parameter": {
+                        "type": "String",
+                        "mandatory": true
+                      }
+                    },
+                    {
+                      "fieldCode": "RemoteId",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": true,
+                        "min": 0,
+                        "max": 999999
+                      }
+                    },
+                    {
+                      "fieldCode": "KeyId",
+                      "parameter": {
+                        "type": "String",
+                        "mandatory": true
+                      }
+                    }
+                  ],
+                  "description": "key control",
+                  "pointName": "IR Remote Control Coordination - Click the remote control button"
+                },
+                {
+                  "commandCode": "APISaveMatchedRemoteInfoForApp",
+                  "fields": [
+                    {
+                      "fieldCode": "CategoryId",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": true,
+                        "min": 1,
+                        "max": 13
+                      }
+                    },
+                    {
+                      "fieldCode": "BrandId",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": false,
+                        "min": 0,
+                        "max": 99999
+                      }
+                    },
+                    {
+                      "fieldCode": "RemoteId",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": false,
+                        "min": 0,
+                        "max": 999999
+                      }
+                    },
+                    {
+                      "fieldCode": "SpId",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": false,
+                        "min": 0,
+                        "max": 99999
+                      }
+                    }
+                  ],
+                  "description": "save virtual brand info",
+                  "pointName": "IR Remote Control Coordination - Save Successfully Matched Remote Control Information"
+                },
+                {
+                  "commandCode": "APICreateIrVirtualDeviceForApp",
+                  "fields": [
+                    {
+                      "fieldCode": "ParentId",
+                      "parameter": {
+                        "type": "String",
+                        "mandatory": true
+                      }
+                    }
+                  ],
+                  "description": "创建本地化的红外码虚拟设备",
+                  "pointName": "IR Remote Control Coordination - Create a localized infrared code virtual device"
+                },
+                {
+                  "commandCode": "APIAddIrKeyForApp",
+                  "fields": [
+                    {
+                      "fieldCode": "KeyName",
+                      "parameter": {
+                        "type": "String",
+                        "mandatory": true
+                      }
+                    },
+                    {
+                      "fieldCode": "KeyId",
+                      "parameter": {
+                        "type": "String",
+                        "mandatory": true
+                      }
+                    },
+                    {
+                      "fieldCode": "IrCode",
+                      "parameter": {
+                        "type": "String",
+                        "mandatory": true
+                      }
+                    },
+                    {
+                      "fieldCode": "Freq",
+                      "parameter": {
+                        "type": "String",
+                        "mandatory": false
+                      }
+                    },
+                    {
+                      "fieldCode": "Len",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": false,
+                        "min": 0,
+                        "max": 2000
+                      }
+                    }
+                  ],
+                  "description": "遥控器增加按键",
+                  "pointName": "IR Remote Control Coordination - Add buttons to the remote control"
+                },
+                {
+                  "commandCode": "APIStartIrLearningForApp",
+                  "fields": [
+                    {
+                      "fieldCode": "ParentId",
+                      "parameter": {
+                        "type": "String",
+                        "mandatory": true
+                      }
+                    }
+                  ],
+                  "description": "开启红外学习",
+                  "pointName": "IR Remote Control Coordination - Start infrared code learning"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "code": 0,
+  "message": "success"
+}
+```
+
+以下为一个网关的设备详情示例：
+```json {19,24,253,137,187,172}
+{
+  "type": "GetDevicesResponse",
+  "version": "v1",
+  "msgId": "1",
+  "data": [
+    {
+      "deviceId": "lumi3.a61fca0f4da1a0bd",
+      "name": "Edge Hub M300",
+      "gatewayId": "lumi3.a61fca0f4da1a0bd",
+      "deviceTypesList": [
+        "Hub",
+        "SpaceSecurity",
+        "AirConditioner",
+        "IRDevice"
+      ],
+      "endpoints": [
+        ...
+        {
+          "endpointId": 5,
+          "endpointName": "IR Device",
+          "deviceType": "IRDevice",
+          "functions": [
+            {
+              "functionCode": "IRControl",
+              "traits": [
+                {
+                  "traitCode": "IRKey",
+                  "parameter": {
+                    "type": "Enum",
+                    "readable": false,
+                    "writable": true,
+                    "subscribable": false,
+                    "supportedValues": [
+                      {
+                        "key": "Reserved",
+                        "value": "0"
+                      },
+                      {
+                        "key": "Power",
+                        "value": "1"
+                      },
+                      {
+                        "key": "Mode",
+                        "value": "2"
+                      },
+                      {
+                        "key": "Temp+",
+                        "value": "3"
+                      },
+                      {
+                        "key": "Temp-",
+                        "value": "4"
+                      },
+                      {
+                        "key": "WindSpeed",
+                        "value": "5"
+                      },
+                      {
+                        "key": "P_KEY",
+                        "value": "9637"
+                      }
+                    ],
+                    "unit": ""
+                  },
+                  "value": "0",
+                  "time": 1782442722197,
+                  "pointName": "Infrared Commands"
+                },
+                {
+                  "traitCode": "IRType",
+                  "parameter": {
+                    "type": "Enum",
+                    "readable": true,
+                    "writable": true,
+                    "subscribable": true,
+                    "supportedValues": [
+                      {
+                        "key": "AirConditioner",
+                        "value": "0"
+                      },
+                      {
+                        "key": "TV",
+                        "value": "1"
+                      },
+                      {
+                        "key": "Fan",
+                        "value": "2"
+                      },
+                      {
+                        "key": "TVBox",
+                        "value": "3"
+                      },
+                      {
+                        "key": "Projector",
+                        "value": "4"
+                      },
+                      {
+                        "key": "SettopBox",
+                        "value": "5"
+                      },
+                      {
+                        "key": "DVD",
+                        "value": "6"
+                      },
+                      {
+                        "key": "Heater",
+                        "value": "7"
+                      },
+                      {
+                        "key": "AirPurifier",
+                        "value": "8"
+                      },
+                      {
+                        "key": "Speaker",
+                        "value": "9"
+                      },
+                      {
+                        "key": "Lighting",
+                        "value": "10"
+                      },
+                      {
+                        "key": "Camera",
+                        "value": "11"
+                      },
+                      {
+                        "key": "Customize",
+                        "value": "12"
+                      }
+                    ],
+                    "unit": ""
+                  },
+                  "value": "0",
+                  "time": 1782442722204,
+                  "pointName": "Infrared type"
+                },
+                {
+                  "traitCode": "IRCodeMatchStatus",
+                  "parameter": {
+                    "type": "Enum",
+                    "readable": true,
+                    "writable": false,
+                    "subscribable": true,
+                    "supportedValues": [
+                      {
+                        "key": "Default",
+                        "value": "0"
+                      },
+                      {
+                        "key": "MatchSuccess",
+                        "value": "1"
+                      },
+                      {
+                        "key": "MatchFailure",
+                        "value": "2"
+                      },
+                      {
+                        "key": "Redownload",
+                        "value": "3"
+                      },
+                      {
+                        "key": "DownloadSuccess",
+                        "value": "4"
+                      }
+                    ],
+                    "unit": ""
+                  },
+                  "value": "4",
+                  "time": 1782442722206,
+                  "pointName": "Infrared Code Match Status"
+                },
+                {
+                  "traitCode": "IRLearnResult",
+                  "parameter": {
+                    "type": "Struct",
+                    "readable": true,
+                    "writable": false,
+                    "subscribable": true,
+                    "unit": ""
+                  },
+                  "value": "",
+                  "time": 1782442722214,
+                  "pointName": "IR Learning Result"
+                }
+              ],
+              "commands": [
+                {
+                  "commandCode": "SendIRCode",
+                  "fields": [
+                    {
+                      "fieldCode": "Mode",
+                      "parameter": {
+                        "type": "Enum",
+                        "mandatory": true,
+                        "supportedValues": [
+                          {
+                            "key": "mode0",
+                            "value": "0"
+                          },
+                          {
+                            "key": "mode1",
+                            "value": "1"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "fieldCode": "BrandId",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": true
+                      }
+                    },
+                    {
+                      "fieldCode": "RemoteId",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": true
+                      }
+                    },
+                    {
+                      "fieldCode": "IRCode",
+                      "parameter": {
+                        "type": "String",
+                        "mandatory": false
+                      }
+                    },
+                    {
+                      "fieldCode": "IRCodeLength",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": false
+                      }
+                    },
+                    {
+                      "fieldCode": "ACKey",
+                      "parameter": {
+                        "type": "String",
+                        "mandatory": false
+                      }
+                    },
+                    {
+                      "fieldCode": "Frequency",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": true
+                      }
+                    }
+                  ],
+                  "description": "发送红外指令",
+                  "pointName": "Send infrared commands"
+                },
+                {
+                  "commandCode": "SetIRDeviceInfo",
+                  "fields": [
+                    {
+                      "fieldCode": "BrandId",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": true,
+                        "min": 0,
+                        "max": 4294967295,
+                        "step": 1
+                      }
+                    },
+                    {
+                      "fieldCode": "RemoteId",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": true,
+                        "min": 0,
+                        "max": 4294967295
+                      }
+                    },
+                    {
+                      "fieldCode": "ACMode",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": false,
+                        "min": 0,
+                        "max": 4294967295,
+                        "step": 1
+                      }
+                    },
+                    {
+                      "fieldCode": "ACType",
+                      "parameter": {
+                        "type": "Integer",
+                        "mandatory": false,
+                        "min": 0,
+                        "max": 4294967295,
+                        "step": 1
+                      }
+                    }
+                  ],
+                  "description": "配置红外设备信息",
+                  "pointName": "Configure infrared device information"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "code": 0,
+  "message": "success"
+}
+```
+
+### 3 匹配红外码库
+
+:::tip
+本节所有流程都是通过 Studio 本地 API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx) 接口，并传入不同的 `CommandCode` 完成。
+:::
+
+#### 3.1 获取设备类型
+接口：`APIGetIrDeviceCategoriesForApp(40263)`
+
+#### 3.2 获取品牌
+接口：`APIGetBrandsByCategoryForApp(40267)`
+
+#### 3.3 获取匹配树
+接口：`APIGetMatchTreeForApp(40268)`
+
+#### 3.4 试码
+接口：`APIClickIrKeyForApp(40273)`
+
+#### 3.5 保存匹配
+接口：`APISaveMatchedRemoteInfoForApp(40292)`
+
+#### 3.6 下载码库
+接口：`SetIRDeviceInfo(40288)`
+
+#### 3.7 等待状态
+接口：`IRCodeMatchStatus(20591)`
+
+#### 3.8 创建设备
+接口：`APICreateIrVirtualDeviceForApp(40281)`
+
+#### 3.9 日常控制
+接口：`SendIrKey(40305)`
+
+
+### 4 学习红外码
+
+:::tip
+本节所有流程都是通过 Studio 本地 API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx) 接口，并传入不同的 `CommandCode` 完成。
+:::
+
+#### 4.1 开启学习
+
+`APIStartIrLearningForApp(40280)`  
+
+#### 4.2 读取学习结果
+
+`IRLearnResult(20618)`  
+
+#### 4.3 保存学习按键
+
+`APIAddIrKeyForApp(40275)`  
+
+#### 4.4 创建设备时自动下发学习码
+
+`APICreateIrVirtualDeviceForApp(40281)`
+
+# 红外码匹配接口文档（含流程、输入输出与实际示例）
+
+---
+
+## 1. 匹配红外流程
+
+### 1.1 红外码库匹配流程
+
+1. 获取设备类型：`APIGetIrDeviceCategoriesForApp(40263)`  
+2. 获取品牌：`APIGetBrandsByCategoryForApp(40267)`  
+3. 获取匹配树：`APIGetMatchTreeForApp(40268)`  
+4. 试码：`APIClickIrKeyForApp(40273)`  
+5. 保存匹配：`APISaveMatchedRemoteInfoForApp(40292)`  
+6. 下载码库：`SetIRDeviceInfo(40288)`  
+7. 等待状态：`IRCodeMatchStatus(20591)`  
+8. 创建设备：`APICreateIrVirtualDeviceForApp(40281)`  
+9. 日常控制：`SendIrKey(40305)`
+
+### 1.2 学习码流程
+
+1. 开启学习：`APIStartIrLearningForApp(40280)`  
+2. 读取学习结果：`IRLearnResult(20618)`  
+3. 保存学习按键：`APIAddIrKeyForApp(40275)`  
+4. 创建设备时自动下发学习码
+
+---
+
+## 2. APIGetIrDeviceCategoriesForApp
+
+- CommandId: `40263`（原始描述）
+- 代码对应：`CategoryCommandPoint -> IrDeviceTypeFile.getDeviceTypeData()`
+- 文件路径：`D:\M300\stations\aqaraSys\irCode\deviceType\deviceType.json`
+
+### 输入参数
+
+无
+
+### 输出参数
+
+- `result`：`string`（JSON 字符串，设备类型数组）
+
+### 输入示例
+
+```json
+{}
+```
+
+### 实际输出示例（真实文件）
+
+```json
+[
+  { "id": 2, "code": "TV", "name": "电视", "model": "virtual.models.tv" },
+  { "id": 3, "code": "BOX", "name": "盒子", "model": "virtual.models.box" },
+  { "id": 4, "code": "DVD", "name": "DVD", "model": "virtual.models.dvd" },
+  { "id": 5, "code": "AC", "name": "空调", "model": "virtual.models.ac" },
+  { "id": 13, "code": "default", "name": "默认遥控器", "model": "virtual.models.default" }
+]
+```
+
+---
+
+## 3. APIGetBrandsByCategoryForApp
+
+- CommandId: `40267`
+- 代码对应：`GetBrandsByCategoryCommandPoint`
+- 文件路径：`D:\M300\stations\aqaraSys\irCode\category\<CategoryId>.json`
+
+### 输入参数
+
+- `CategoryId`：integer，必填，范围 `1..13`
+
+### 输出参数
+
+- `result`：`string`（JSON 字符串，品牌数组）
+
+### 输入示例
+
+```json
+{
+  "CategoryId": 5
+}
+```
+
+### 实际输出示例（真实文件 `category/5.json`）
+
+```json
+[
+  { "pinyin": "aokema", "brandId": 102, "name": "澳柯玛", "enName": "Aucma" },
+  { "pinyin": "aokesi", "brandId": 192, "name": "奥克斯", "enName": "Aux" },
+  { "pinyin": "boshi", "brandId": 572, "name": "博世", "enName": "BOSCH" }
+]
+```
+
+---
+
+## 4. APIGetMatchTreeForApp
+
+- CommandId: `40268`
+- 代码对应：`TreeCategoryCommandPoint`
+- 文件路径：
+  - CategoryTree：`...\matchTree\category\<CategoryId>\brand\<BrandId>`
+  - SpsCityTree：`...\matchTree\city\<CityId>\sp\<SpId>`
+  - IptvTree：`...\matchTree\iptv\<BrandId>`
+
+### 输入参数
+
+- `Type`：integer，必填
+  - `1` CategoryTree
+  - `2` SpsCityTree
+  - `3` IptvTree
+- `CategoryId`：integer，Type=1 时必填
+- `BrandId`：integer，Type=1/3 时必填
+- `CityId`：integer，Type=2 时必填
+- `SpId`：integer，Type=2 时必填
+
+### 输出参数
+
+- `result`：`string`（JSON 字符串，匹配树）
+
+### 输入示例（CategoryTree）
+
+```json
+{
+  "Type": 1,
+  "CategoryId": 2,
+  "BrandId": 1007
+}
+```
+
+### 实际输出示例A（无状态设备，TV）
+来源：`D:\M300\stations\aqaraSys\irCode\matchTree\category\2\brand\1007`
+
+```json
+{
+  "nodes": [
+    {
+      "cursor": 1,
+      "mismatched": 4,
+      "total": 16,
+      "controller_id": 5008,
+      "count": 15,
+      "matched": 2,
+      "id": 1,
+      "key": { "name": "POWER", "id": 1, "display_name": "电源" }
+    },
+    {
+      "cursor": 1,
+      "mismatched": 4,
+      "total": 16,
+      "controller_id": 5008,
+      "count": 15,
+      "matched": 3,
+      "id": 2,
+      "key": { "name": "VOL+", "id": 50, "display_name": "音量+" }
+    },
+    {
+      "cursor": 1,
+      "mismatched": 4,
+      "total": 16,
+      "controller_id": 5008,
+      "count": 15,
+      "id": 3,
+      "key": { "name": "VOL-", "id": 51, "display_name": "音量-" }
+    }
+  ],
+  "keys": [
+    { "name": "POWER", "id": 1, "display_name": "电源", "must_match": false },
+    { "name": "VOL+", "id": 50, "display_name": "音量+", "must_match": false },
+    { "name": "VOL-", "id": 51, "display_name": "音量-", "must_match": false },
+    { "name": "CH+", "id": 43, "display_name": "频道+", "must_match": false },
+    { "name": "CH-", "id": 44, "display_name": "频道-", "must_match": false },
+    { "name": "MUTE", "id": 106, "display_name": "静音", "must_match": false },
+    { "name": "BACK", "id": 116, "display_name": "返回", "must_match": false },
+    { "name": "NAVIGATE_DOWN", "id": 47, "display_name": "下", "must_match": false },
+    { "name": "OK", "id": 42, "display_name": "确认", "must_match": false }
+  ],
+  "category": { "name": "TV", "id": 2 },
+  "brand": { "name": "胜利", "en_name": "JVC", "id": 1007 },
+  "version": "20200820"
+}
+```
+
+### 实际输出示例B（有状态空调）
+来源：`D:\M300\stations\aqaraSys\irCode\matchTree\category\5\brand\102`
+
+```json
+{
+  "nodes": [
+    {
+      "cursor": 1,
+      "mismatched": 4,
+      "total": 19,
+      "controller_id": 1077,
+      "count": 18,
+      "matched": 2,
+      "id": 1,
+      "key": { "ac_key": "power_on" }
+    },
+    {
+      "cursor": 1,
+      "mismatched": 4,
+      "total": 19,
+      "controller_id": 1077,
+      "count": 18,
+      "matched": 3,
+      "id": 2,
+      "key": { "ac_key": "power_off" }
+    },
+    {
+      "cursor": 1,
+      "mismatched": 4,
+      "total": 19,
+      "controller_id": 1077,
+      "count": 18,
+      "id": 3,
+      "key": { "ac_key": "M0_T26_S1" }
+    }
+  ]
+}
+```
+
+---
+
+## 5. APIClickIrKeyForApp
+
+- CommandId: `40273`
+- 代码对应：`ClickIrKeyCommandPoint`
+- 码数据来源：`IrCodeFile.getIrCodeInfo(remoteId,keyId)` -> `remote/encrypt` 解密后读取
+
+### 输入参数
+
+- `Did`：string，必填（网关 did）
+- `RemoteId`：integer，必填
+- `KeyId`：string，必填
+
+### 输出参数
+
+- boolean：`true` 成功，`false` 失败
+
+### 输入示例
+
+```json
+{
+  "Did": "lumi3.xxxxxxxxx",
+  "RemoteId": 1077,
+  "KeyId": "power_on"
+}
+```
+
+### 实际输出示例
+
+```json
+true
+```
+
+### 网关下发 payload 实际结构（代码生成）
+
+```json
+{
+  "mode": 0,
+  "len": 804,
+  "ircode": "mcxmEwlk0msxmEsm0xmgAZTmWTWcTmWTGbAKkAh4CHgIeAhQA/gD+AP4A/gD+AP4OEA8+AP4A/gD+AP4KHgQeBR4FHgD+AP4A/goeCh4A/gUeAh4GPgD+AP4A/gD+AP4A/gD+AP4A/gD+AP4A/gD+AP4A/kPeIz4DPgEeAR8sMeKYA==",
+  "freq": 38000
+}
+```
+
+---
+
+## 6. APISaveMatchedRemoteInfoForApp
+
+- CommandId: `40292`
+- 代码对应：`SaveMatchedRemoteInfoCommandPoint`
+
+### 输入参数
+
+- `CategoryId`：integer，必填（1..13）
+- `BrandId`：integer，必填
+- `RemoteId`：integer，必填
+- `SpId`：integer，选填
+
+### 输出参数
+
+- boolean：是否保存并生成可用点位成功
+
+### 输入示例
+
+```json
+{
+  "CategoryId": 5,
+  "BrandId": 102,
+  "RemoteId": 1077,
+  "SpId": 0
+}
+```
+
+### 实际输出示例
+
+```json
+true
+```
+
+---
+
+## 7. SetIRDeviceInfo（原始流程中的网关下载码库）
+
+- CommandId: `40288`（原始描述）
+
+### 输入参数（原始描述）
+
+- `BrandId`：integer，必填
+- `RemoteId`：integer，必填
+- `ACMode`：integer，选填
+- `ACType`：integer，选填
+
+### 输出参数
+
+- 无显式返回体
+
+### 输入示例
+
+```json
+{
+  "BrandId": 102,
+  "RemoteId": 1077
+}
+```
+
+### 输出示例
+
+```json
+{}
+```
+
+---
+
+## 8. IRCodeMatchStatus
+
+- TraitId: `20591`（原始描述）
+
+### 输入参数
+
+无（读取/订阅 Trait）
+
+### 输出参数
+
+- integer 枚举：
+  - `0` Default
+  - `1` MatchSuccess
+  - `2` MatchFailure
+  - `3` Redownload
+  - `4` DownloadSuc
+
+### 输出示例
+
+```json
+4
+```
+
+---
+
+## 9. APICreateIrVirtualDeviceForApp
+
+- CommandId: `40281`
+- 代码对应：`CreateIrVirtualDeviceCommandPoint`
+
+### 输入参数
+
+- `ParentId`：string，必填（网关 did）
+
+### 输出参数
+
+- boolean：创建设备下发是否成功
+
+### 输入示例
+
+```json
+{
+  "ParentId": "lumi.gateway.xxxxxx"
+}
+```
+
+### 实际输出示例
+
+```json
+true
+```
+
+---
+
+## 10. SendIrKey
+
+- CommandId: `40305`
+- 代码对应：`IrDevice.addPointByKeyInfo` + `IrProxyExt.write`
+
+### 输入参数
+
+- 通过写按键点触发，无显式命令入参对象
+- 实际转发字段为该点绑定的 `keyId`
+
+### 输出参数
+
+- 写点成功/失败
+
+### 输入示例
+
+```json
+{
+  "pointName": "POWER",
+  "writeValue": "trigger"
+}
+```
+
+### 输出示例
+
+```json
+{
+  "success": true
+}
+```
+
+---
+
+## 11. APIStartIrLearningForApp
+
+- CommandId: `40280`
+- 代码对应：`StartIrLearningCommandPoint`
+
+### 输入参数
+
+- `ParentId`：string，必填
+
+### 输出参数
+
+- `string(JSON)`：`{"key":"<随机key>"}`
+
+### 输入示例
+
+```json
+{
+  "ParentId": "lumi.gateway.xxxxxx"
+}
+```
+
+### 实际输出示例
+
+```json
+{
+  "key": "1804396205"
+}
+```
+
+---
+
+## 12. IRLearnResult
+
+- TraitId: `20618`（原始描述）
+
+### 输入参数
+
+无（读取/订阅 Trait）
+
+### 输出参数
+
+- `ircode`: string
+- `key`: string
+- `len`: integer
+- `success`: integer
+
+### 输出示例（原始描述）
+
+```json
+{
+  "ircode": "SAiYp6CjOJF4nrAIuA14xzzENkpoAS00mM0AIMCkpiFYUyGlMCRQETBEQLopiB",
+  "key": "1804396205",
+  "len": 872,
+  "success": 0
+}
+```
+
+---
+
+## 13. APIAddIrKeyForApp
+
+- CommandId: `40275`
+- 代码对应：`AddIrKeyCommandPoint`
+
+### 输入参数
+
+- `KeyName`：string，必填
+- `KeyId`：string，必填
+- `IrCode`：string，必填
+- `Freq`：string，选填
+- `Len`：integer，选填（0..2000）
+
+### 输出参数
+
+- boolean：是否添加成功
+
+### 输入示例
+
+```json
+{
+  "KeyName": "POWER",
+  "KeyId": "1",
+  "IrCode": "SAiYp6CjOJF4nrAIuA14xzzENkpoAS00mM0AIMCkpiFYUyGlMCRQETBEQLopiB",
+  "Freq": "38000",
+  "Len": 872
+}
+```
+
+### 实际输出示例
+
+```json
+true
+```
