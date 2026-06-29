@@ -597,6 +597,206 @@ paths:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
+  # Send command to device and wait for response
+  # ────────────────────────────────────────────────────────────────
+  /devices/command/execute/await:
+    post:
+      tags: [Device]
+      summary: Send Command to Device and Wait for Response
+      description: |
+        Control the device via command and obtain the device's response from the server. <br />
+        The following commands can receive responses: <br />
+        `APIGetIrDeviceCategoriesForApp(40263)`  
+        `APIGetBrandsByCategoryForApp(40267)`  
+        `APIGetMatchTreeForApp(40268)`  
+        `APIClickIrKeyForApp(40273)`  
+        `APISaveMatchedRemoteInfoForApp(40292)`  
+        `SetIRDeviceInfo(40288)`  
+        `IRCodeMatchStatus(20591)`  
+        `APICreateIrVirtualDeviceForApp(40281)`  
+        `SendIrKey(40305)`
+        `APIStartIrLearningForApp(40280)`  
+        `IRLearnResult(20618)`  
+        `APIAddIrKeyForApp(40275)`     
+      operationId: executeDeviceCommandAwait
+      x-skill-intent: device.command.execute.await
+      x-idempotent: false
+      x-retryable: conditional
+      x-side-effects: device_state_change
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommandExecuteAwaitRequest'
+            examples:
+              executeCommandAwait:
+                value:
+                  data:
+                    - deviceId: "gateway001"
+                      endpointId: 1
+                      functionCode: NetworkCommissioning
+                      commandCode: TriggerZigbeeNetworkInfoUpload
+                      args:
+                        - fieldCode: InstallCode
+                          value: "F9B34846413AB5DE81B60E63E440"
+                        - fieldCode: MAC
+                          value: "54EF441000EB0CCF"
+                  timeoutMs: 5000
+      responses:
+        '200':
+          description: Request succeeded. The data field returns the execution and device report results for each command.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandExecuteAwaitResponse'
+              examples:
+                commandExecuteAwaitSuccess:
+                  value:
+                    type: ExecuteCommandAwaitResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecfa"
+                    code: 0
+                    message: success
+                    data:
+                      - deviceId: "gateway001"
+                        endpointId: 1
+                        functionCode: NetworkCommissioning
+                        commandCode: TriggerZigbeeNetworkInfoUpload
+                        code: 0
+                        message: success
+                        responded: true
+                        commandReportValue: "{\"result\":\"ok\"}"
+                        responseTime: 1710001234567
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Delete Device Point
+  # ────────────────────────────────────────────────────────────────
+  /devices/points/delete:
+    post:
+      tags: [Device]
+      summary: Delete A Function
+      description: Delete a function by deviceId, endpointId, and functionCode.
+      operationId: deleteDevicePoint
+      x-skill-intent: device.point.delete
+      x-idempotent: true
+      x-retryable: conditional
+      x-side-effects: device_object_delete
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteDevicePointRequest'
+            examples:
+              deleteDevicePoint:
+                value:
+                  deviceId: "device-001"
+                  endpointId: 1
+                  functionCode: Output
+      responses:
+        '200':
+          description: Request succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteDevicePointResponse'
+              examples:
+                deleteDevicePointSuccess:
+                  value:
+                    type: DeleteDeviceObjectResponse
+                    version: v1
+                    msgId: "1751609244329"
+                    code: 0
+                    message: success
+                    data: ""
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 添加虚拟设备
+  # ────────────────────────────────────────────────────────────────
+  /virtual-devices:
+    post:
+      tags: [Device]
+      summary: Add A Virtual Device
+      description: Add a virtual device of either IR type or lightbox type.
+      operationId: addVirtualDevice
+      x-skill-intent: device.virtual.add
+      x-idempotent: false
+      x-retryable: conditional
+      x-side-effects: device_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VirtualDeviceAddRequest'
+            examples:
+              addIrVirtualDevice:
+                value:
+                  name: "Living Room IR Remote"
+                  virtualDeviceType: ir
+              addLightboxVirtualDevice:
+                value:
+                  name: "Living Room Lightbox"
+                  virtualDeviceType: lightbox
+      responses:
+        '200':
+          description: Request succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualDeviceAddResponse'
+              examples:
+                addVirtualDeviceSuccess:
+                  value:
+                    type: VirtualDeviceAddResponse
+                    version: v1
+                    msgId: "1751609244330"
+                    code: 0
+                    message: success
+                    data:
+                      deviceId: "virtual-device-001"
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
   # Enable Gateway Sub-device Join Mode
   # ────────────────────────────────────────────────────────────────
   /gateways/subdevices/join:
@@ -922,7 +1122,7 @@ paths:
         - in: query
           name: needChildren
           required: false
-          description: 是否查询 spaceIds 指定空间的子空间内的自动化。仅当 spaceIds 参数有值时此参数才生效。
+          description: Whether to query automations under the specified list of space IDs. Only effective when the spaceIds parameter has a value.
           schema:
             type: boolean
             default: false
@@ -1691,6 +1891,74 @@ components:
         code: 0
         message: success
 
+    DeleteDevicePointRequest:
+      type: object
+      required: [deviceId, endpointId, functionCode]
+      properties:
+        deviceId:
+          type: string
+          description: Device ID
+        endpointId:
+          type: integer
+          minimum: 0
+          description: Endpoint ID
+        functionCode:
+          type: string
+          description: Function code
+
+    DeleteDevicePointResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: Empty string after successful deletion.
+              example: ""
+      example:
+        type: DeleteDeviceObjectResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000001c"
+        code: 0
+        message: success
+        data: ""
+
+    VirtualDeviceAddRequest:
+      type: object
+      required: [name, virtualDeviceType]
+      properties:
+        name:
+          type: string
+          description: Virtual device name
+        virtualDeviceType:
+          type: string
+          enum: [ir, lightbox]
+          description: "Virtual device type.<br />`ir`: Infrared device.<br />`lightbox`: Lightbox device."
+
+    VirtualDeviceAddData:
+      type: object
+      required: [deviceId]
+      properties:
+        deviceId:
+          type: string
+          description: Device ID of the newly added virtual device.
+
+    VirtualDeviceAddResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/VirtualDeviceAddData'
+      example:
+        type: VirtualDeviceAddResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000001d"
+        code: 0
+        message: success
+        data:
+          deviceId: "virtual-device-001"
+
     Endpoint:
       type: object
       required: [endpointId, endpointName, deviceType, functions]
@@ -2158,6 +2426,76 @@ components:
         message: success
         data: []
 
+    CommandExecuteAwaitRequest:
+      allOf:
+        - $ref: '#/components/schemas/CommandExecuteRequest'
+        - type: object
+          properties:
+            timeoutMs:
+              type: integer
+              format: int32
+              description: Timeout for waiting for device command report (milliseconds); if not provided, the server default is used.
+              minimum: 1000
+              maximum: 10000
+
+    CommandExecuteAwaitResult:
+      type: object
+      required: [deviceId, endpointId, functionCode, commandCode, code, message, responded]
+      properties:
+        deviceId:
+          type: string
+          description: Device ID.
+        endpointId:
+          type: integer
+          description: Endpoint ID.
+        functionCode:
+          type: string
+          description: Function code.
+        commandCode:
+          type: string
+          description: Command code.
+        code:
+          type: integer
+          description: Execution result code.
+        message:
+          type: string
+          description: Execution result description.
+        responded:
+          type: boolean
+          description: Whether the device has reported the command.
+        commandReportValue:
+          type: string
+          description: The original string of the device command report, parsed by the calling side.
+        responseTime:
+          type: integer
+          format: int64
+          description: The time of the device command report (milliseconds, UTC).
+
+    CommandExecuteAwaitResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/CommandExecuteAwaitResult'
+      example:
+        type: ExecuteCommandAwaitResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000001a"
+        code: 0
+        message: success
+        data:
+          - deviceId: "gateway001"
+            endpointId: 1
+            functionCode: NetworkCommissioning
+            commandCode: TriggerZigbeeNetworkInfoUpload
+            code: 0
+            message: success
+            responded: true
+            commandReportValue: "{\"result\":\"ok\"}"
+            responseTime: 1710001234567
 
     # ── Subdevice Join ────────────────────────────────────────────
     SubdeviceJoinRequest:

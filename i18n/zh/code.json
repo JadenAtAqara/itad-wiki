@@ -391,4 +391,29 @@
   "homepage.features.partner.description": {
     "message": "涵盖迁移指南、最佳实践与故障排查，支撑从集成到优化的每一步。"
   }
+  ,
+  "theme.CodeBlock.expandAllLines": {
+    "message": "展开全部 {totalLines} 行",
+    "description": "Tooltip for the expand-all button of collapsible code blocks."
+  },
+  "theme.CodeBlock.expandAllLinesLabel": {
+    "message": "展开全部 {totalLines} 行",
+    "description": "Label for the bottom expand bar of collapsible code blocks."
+  },
+  "theme.CodeBlock.expandCode": {
+    "message": "展开代码",
+    "description": "Tooltip for the expand button of collapsible code blocks when total line count is unknown."
+  },
+  "theme.CodeBlock.collapseHiddenLines": {
+    "message": "折叠 {hiddenLines} 行",
+    "description": "Tooltip for the collapse button of collapsible code blocks."
+  },
+  "theme.CodeBlock.collapseHiddenLinesLabel": {
+    "message": "折叠 {hiddenLines} 行",
+    "description": "Label for the bottom collapse bar of collapsible code blocks."
+  },
+  "theme.CodeBlock.collapseCode": {
+    "message": "折叠代码",
+    "description": "Tooltip for the collapse button of collapsible code blocks when hidden line count is unknown."
+  }
 }

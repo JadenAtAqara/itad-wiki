@@ -80,6 +80,24 @@ const sidebar: SidebarsConfig = {
           label: "通过 Command 控制设备",
           className: "api-method post",
         },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/execute-device-command-await",
+          label: "向设备下发 Command 并等待响应",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/delete-device-point",
+          label: "删除设备点位",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/add-virtual-device",
+          label: "添加虚拟设备",
+          className: "api-method post",
+        },
       ],
     },
     {

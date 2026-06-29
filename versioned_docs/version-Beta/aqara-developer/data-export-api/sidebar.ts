@@ -80,6 +80,24 @@ const sidebar: SidebarsConfig = {
           label: "Control Devices by Commands",
           className: "api-method post",
         },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/execute-device-command-await",
+          label: "Send Command to Device and Wait for Response",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/delete-device-point",
+          label: "Delete A Function",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/add-virtual-device",
+          label: "Add A Virtual Device",
+          className: "api-method post",
+        },
       ],
     },
     {

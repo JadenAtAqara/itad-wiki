@@ -118,5 +118,17 @@
   "sidebar.aqaraDeveloperSidebar.category.Automation": {
     "message": "自动化",
     "description": "The label for category 'Automation' in sidebar 'aqaraDeveloperSidebar'"
+  },
+  "sidebar.aqaraDeveloperSidebar.category.Local Studio Development": {
+    "message": "Studio 本地开发",
+    "description": "The label for category 'Local Studio Development' in sidebar 'aqaraDeveloperSidebar'"
+  },
+  "sidebar.aqaraDeveloperSidebar.category.Cloud Development": {
+    "message": "云开发",
+    "description": "The label for category 'Cloud Development' in sidebar 'aqaraDeveloperSidebar'"
+  },
+  "sidebar.aqaraDeveloperSidebar.category.Features": {
+    "message": "功能",
+    "description": "The label for category 'Features' in sidebar 'aqaraDeveloperSidebar'"
   }
 }
