@@ -79,13 +79,11 @@ Gateway-->>Studio: 执行结果
 Studio-->>App: ExecuteCommandResponse
 ```
 
-## 流程
-
-### 1 创建红外设备
+## 1 创建红外设备
 
 通过 Studio 本地 API [`POST` /open/api/v1/virtual-devices](./../../data-export-api/add-virtual-device.api.mdx) 接口，创建一个红外设备，获取该红外设备 ID。
 
-### 2 查询设备模型定义
+## 2 查询设备模型定义
 
 通过 Studio 本地 API [`GET` /open/api/v1/devices/definitions](./../../data-export-api/get-device-definitions.api.mdx) 接口，传入红外设备 ID 及目标网关 ID，查询设备模型定义，以便获取后续操作所需的 **endpointId**、**functionCode** **commandCode**。
 
@@ -684,10 +682,10 @@ Studio-->>App: ExecuteCommandResponse
 }
 ```
 
-### 3 匹配红外码库
+## 3 匹配红外码库
 
 
-#### 3.1 获取设备类型
+### 3.1 获取设备类型
 
 首先，需要为新建的红外设备指定设备类型（如空调、风扇等），以匹配您的实际红外设备类型。
 
@@ -759,7 +757,7 @@ Studio-->>App: ExecuteCommandResponse
 
 如果您选择**自定义**类型，请直接跳转至 [学习红外码](#4-学习红外码) 章节。
 
-#### 3.2 获取品牌
+### 3.2 获取品牌
 
 在确定红外设备类型后，下一步需获取该类型对应的品牌列表（如格力、美的等），用于后续红外码的匹配流程。
 
@@ -943,7 +941,7 @@ Studio-->>App: ExecuteCommandResponse
 ]
 ```
 
-#### 3.3 获取匹配树
+### 3.3 获取匹配树
 
 获取到您实际使用的红外设备品牌信息后，现在您需获取该品牌可以匹配的红外码。
 
@@ -1193,7 +1191,7 @@ Studio-->>App: ExecuteCommandResponse
   }
   ```
 
-#### 3.4 试码
+### 3.4 试码
 
 通过网关依次测试当前匹配树下**所有**红外指令，观察红外设备的响应情况。若发现某一组码库下的**全部指令**均可正常控制设备，则说明该码库适用于当前红外设备。
 
@@ -1201,8 +1199,8 @@ Studio-->>App: ExecuteCommandResponse
 | 参数名      | 类型     | 是否必填 | 说明         |
 |-------------|----------|----------|--------------|
 | Did         | string   | ✔       | 目标网关的设备 ID。    |
-| RemoteId    | integer  | ✔       | 红外码库 ID，即 [3.3 获取匹配树](#33_获取匹配树) 接口返回的 `controller_id`。         |
-| KeyId       | string   | ✔       | 红外指令 ID，即 [3.3 获取匹配树](#33_获取匹配树) 接口返回的 `nodes.key.ac_key`（有状态空调） 或 `nodes.key.id`（其他设备）。 |
+| RemoteId    | integer  | ✔       | 红外码库 ID，即 [3.3 获取匹配树](#33-获取匹配树) 接口返回的 `controller_id`。         |
+| KeyId       | string   | ✔       | 红外指令 ID，即 [3.3 获取匹配树](#33-获取匹配树) 接口返回的 `nodes.key.ac_key`（有状态空调） 或 `nodes.key.id`（其他设备）。 |
 
 以下为请求 Body（JSON）示例：
 ```json
@@ -1258,7 +1256,7 @@ Studio-->>App: ExecuteCommandResponse
 }
 ```
 
-#### 3.5 保存匹配
+### 3.5 保存匹配
 确认可用的码库后，您需要保存码库信息。
 
 请通过 Studio 本地 API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx) 接口，并设置 `commandCode` 为 `APISaveMatchedRemoteInfoForApp`，并在 `data.args` 数组内设置以下参数：
@@ -1322,7 +1320,7 @@ Studio-->>App: ExecuteCommandResponse
 }
 ```
 
-#### 3.6 下载码库
+### 3.6 下载码库
 
 您需要让**目标网关**下载码库，这样目标网关才能正常下发红外指令。
 
@@ -1384,7 +1382,7 @@ Studio-->>App: ExecuteCommandResponse
 }
 ```
 
-#### 3.7 查询下载结果
+### 3.7 查询下载结果
 
 当网关开始下载码库后，您主动查询下载结果，确认下载成功。
 
@@ -1431,11 +1429,11 @@ Studio-->>App: ExecuteCommandResponse
 }
 ```
 
-### 4 学习红外码
+## 4 学习红外码
 
 如果您的红外设备类型为 **自定义**，或者您匹配的红外码库没有所需的红外指令，您可以参考本章，使得网关学习红外指令。
 
-#### 4.1 开启学习
+### 4.1 开启学习
 
 首先，您需要让网关进入学习模式。
 
@@ -1494,7 +1492,7 @@ Studio-->>App: ExecuteCommandResponse
 
 获得 Key 后，拿起遥控器，对准网关，按下目标按键，让网关学习其红外指令。
 
-#### 4.2 读取学习结果
+### 4.2 读取学习结果
 
 `IRLearnResult(20618)`  
 
@@ -1546,7 +1544,7 @@ Studio-->>App: ExecuteCommandResponse
 }
 ```
 
-#### 4.3 保存学习按键
+### 4.3 保存学习按键
 
 `APIAddIrKeyForApp(40275)` 
 
@@ -1618,7 +1616,7 @@ Studio-->>App: ExecuteCommandResponse
 }
 ```
 
-### 5 向网关下发红外设备信息
+## 5 向网关下发红外设备信息
 
 当网关匹配红外码库或学习红外指令后，您需要向网关下发红外设备信息，这样网关才能正常下发红外指令。
 
@@ -1675,9 +1673,9 @@ Studio-->>App: ExecuteCommandResponse
 }
 ```
 
-### 6 控制设备
+## 6 控制设备
 
-#### 6.1 查询红外设备
+### 6.1 查询红外设备
 
 完成 [匹配红外码库](#3-匹配红外码库) 或 [学习红外码](#4-学习红外码) 流程后，需通过查询该红外设备的模型定义来获取可用的控制命令信息。
 
@@ -1751,7 +1749,7 @@ Studio-->>App: ExecuteCommandResponse
 }
 ```
 
-#### 6.2 日常控制
+### 6.2 日常控制
 
 当您完成 [查询红外设备](#61-查询红外设备) 后，您需要通过 `SendIrKey` 命令来让网关发送红外指令。
 

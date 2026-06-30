@@ -192,6 +192,14 @@
         "aqara-studio/javascript-for-http-integration",
         "aqara-studio/javascript-for-udp-tcp-integration"
       ]
+    },
+    {
+      "type": "category",
+      "label": "Product Manuals",
+      "items": [
+        "aqara-studio/product-manuals/general",
+        "aqara-studio/product-manuals/edge-hub-m300"
+      ]
     }
   ],
   "aqaraDeveloperSidebar": [
@@ -403,6 +411,13 @@
                 }
               ]
             }
+          ]
+        },
+        {
+          "type": "category",
+          "label": "SDK",
+          "items": [
+            "aqara-developer/local-studio-development/sdk/infrared/integration"
           ]
         },
         {

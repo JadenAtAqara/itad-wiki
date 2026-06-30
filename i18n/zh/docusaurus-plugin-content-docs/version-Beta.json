@@ -74,7 +74,11 @@
   "sidebar.aqaraStudioSidebar.category.Reference": {
     "message": "参考信息",
     "description": "The label for category 'Reference' in sidebar 'aqaraStudioSidebar'"
-  },  
+  },
+  "sidebar.aqaraStudioSidebar.category.Product Manuals": {
+    "message": "产品手册",
+    "description": "The label for category 'Product Manuals' in sidebar 'aqaraStudioSidebar'"
+  },
   "sidebar.aqaraDeveloperSidebar.category.Local API for Studio": {
     "message": "Studio 本地 API",
     "description": "The label for category 'Local API for Studio' in sidebar 'aqaraDeveloperSidebar'"

@@ -1,0 +1,325 @@
+# 集成红外遥控控制 SDK（含 UI）
+
+
+
+## 概述
+
+Studio 红外遥控（带 UI）SDK 是基于 React Native 插件 `rn_device_ir` 提供的完整红外遥控能力，面向 **Aqara Studio** 场景。宿主 App 通过 Lumi React Native SDK 加载插件 Bundle，并传入 Studio OpenAPI 鉴权信息与目标页面，即可在 App 内打开：
+
+- **红外设备创建流程**（选网关 → 命名 → 品类匹配 → 码库/学习 → 保存）
+- **红外设备控制页面**（按设备类型展示对应遥控 UI）
+- **Studio 调试入口**（仅开发联调使用，含登录与 OpenAPI 调试能力）
+
+SDK 内置 Aqara UX 设计的完整红外交互页面，宿主无需自行开发。
+
+### 获取示例工程及账号
+
+请联系 Aqara 技术支持获取示例工程、账号与密码。
+
+### 示例工程入口说明
+
+`AqaraStudioExample` 的 `MainActivity` 提供了四个典型操作：
+
+| 按钮 | 对应方法 | 说明 |
+| --- | --- | --- |
+| Init Native SDK | `init()` | 初始化 Lumi Core 与 RN 容器 |
+| Aqara Studio (Debug Use Only) | `debugAqaraStudio()` | 打开 Studio 登录调试页 |
+| Open IR Device Creation Page via API | `createIrDevice()` | 打开红外设备创建页（生产接入） |
+| Open IR Device Control Page via API | `controlIrDevice()` | 打开红外设备控制页（生产接入） |
+
+### 环境要求
+
+| 项 | 要求 |
+| --- | --- |
+| 最低 Android SDK | API 26（`minSdk 26`） |
+| 编译 SDK | API 36 |
+| Java | 11 |
+| Kotlin | 支持 |
+| 网络 | 手机需与 Aqara Studio 处于同一局域网；调试 HTTP 时需允许明文流量 |
+| Studio 侧 | 已部署并可访问 OpenAPI；需具备有效 `accessToken` / `refreshToken` / `clientId` |
+
+### 依赖版本
+
+| 依赖项 | 要求 |
+| --- | --- |
+| com.lumi.external:core | 2.2.48 |
+| com.lumi.sdk:reactnative | 8.0.43 |
+| com.lumi.sdk:reactnative-api | 8.0.43 |
+
+## 工程配置
+
+### Maven 仓库
+
+在 `settings.gradle` 中配置 Aqara Maven 仓库（示例使用测试环境）：
+
+```groovy title="settings.gradle"
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url 'https://public-maven.aqara.com/repository/lumi-release/'
+            credentials {
+                username = ''
+                password = ''
+            }
+        }
+    }
+}
+```
+
+:::tip
+生产环境为正式发布仓库地址，并与 SDK 提供方确认账号和密码。
+:::
+
+### 模块依赖
+
+在 `app/build.gradle` 中添加：
+
+```groovy title="app/build.gradle"
+dependencies {
+    implementation libs.lumi.sdk.core
+    implementation(libs.lumi.sdk.reactnative) {
+        exclude group: 'com.xuanyuan', module: 'opencv'
+    }
+    implementation libs.lumi.sdk.reactnative.api
+}
+```
+
+### AndroidManifest 配置
+
+若 Studio 地址为 HTTP 或需开启 OpenAPI 调试日志，建议在 `Application` 节点开启明文流量：
+
+```xml
+<application
+    android:usesCleartextTraffic="true"
+    ...>
+</application>
+```
+
+### RN Bundle 加载方式
+
+示例工程使用 **预制 Bundle** 模式，Bundle 随 `reactnative` SDK 一并下发，无需手动拷贝 JS 包：
+
+```kotlin
+LumiReactNativeManager.getInstance().init(
+    application,
+    LumiReactNativeManager.LumiReactNativeConfig.builder()
+        .viewRenderType(RNViewRenderType.STANDARD)
+        .bundleLoadType(RNBundleLoadType.PREFAB_ASSETS)
+        .bundleConfigLoadType(RNBundleConfigLoadType.PREFAB_ASSETS)
+        .build()
+)
+```
+
+插件标识固定为 **`rn_device_ir`**。若使用自定义 Bundle 分发策略，请与 SDK 团队确认 Bundle 放置路径与版本匹配规则。
+
+### 本地预载 RN Bundle
+
+请将示例工程 `assets` 目录下的 `lumi` 文件夹拷贝至宿主的 `assets` 目录中。
+
+## SDK 初始化
+
+在打开任何 RN 页面前，必须先完成 Core 与 RN 初始化。参考 `MainActivity.init()`：
+
+```kotlin
+private fun init() {
+    // 1. 初始化 Lumi Core
+    LumiCoreManager.getInstance().init(
+        application, true, LumiCoreManager
+            .LumiCoreSDKConfig.builder()
+            .sdkChannel("Aqara Studio")
+            .build()
+    )
+
+    // 2. 初始化 RN 容器
+    LumiReactNativeManager.getInstance().init(
+        application,
+        LumiReactNativeManager.LumiReactNativeConfig.builder()
+            .viewRenderType(RNViewRenderType.STANDARD)
+            .bundleLoadType(RNBundleLoadType.PREFAB_ASSETS)
+            .bundleConfigLoadType(RNBundleConfigLoadType.PREFAB_ASSETS)
+            .build()
+    )
+
+    // 3.（可选）注册 RN → Native 消息回调
+    LumiReactNativeManager.getInstance().registerRNMessageCallback(object : IRNMessageCallback {
+        override fun onHandleMessage(jsonMessage: String, promise: Promise?) {
+            // 处理插件回传消息
+        }
+    })
+}
+```
+
+## 启动 RN 页面
+
+统一通过 `LumiReactNativeManager.startRNPage` 打开插件页面：
+
+```kotlin
+LumiReactNativeManager.getInstance().startRNPage(
+    pluginName,   // 固定："rn_device_ir"
+    paramsJson,   // 启动参数 JSON 字符串
+    entrancePage  // 入口页面名称
+)
+```
+
+| 参数 | 类型 | 说明 |
+| --- | --- | --- |
+| `pluginName` | `String` | RN 插件名，固定传 `"rn_device_ir"` |
+| `paramsJson` | `String` | 页面启动参数的 JSON 字符串 |
+| `entrancePage` | `String` | 入口 Route 名称，见 [支持的入口页面](#支持的入口页面) |
+
+## 支持的入口页面
+
+| 入口页面 | 用途 | 推荐场景 |
+| --- | --- | --- |
+| `LoginStudioPage` | Studio 账号密码登录 + 调试首页 | **仅开发联调** |
+| `CreateIrDevicePage` | 红外虚拟设备创建（带完整 UI 流程） | **生产接入** |
+| `ControlIrDevicePage` | 直接进入红外遥控控制页 | **生产接入** |
+
+插件内部会根据 `entrancePage` 决定初始 Route（见 `Entry.tsx` 中 `getInitialRouteName`）。
+
+## 启动参数说明
+
+启动参数以 JSON 字符串传入，见 [启动 RN 页面](#启动-rn-页面)。
+
+### CreateIrDevicePage
+
+用于创建红外设备
+
+| 参数名 | 类型 | 必填 | 说明 | 示例 |
+| --- | --- | --- | --- | --- |
+| `studioHost` | `String` | 是 | Studio 服务地址，格式 `IP:Port` 或域名 | 192.168.1.1:80` |
+| `studioAccessToken` | `String` | 是 | OpenAPI 访问令牌 | openAPI 登录接口返回的字段 |
+| `studioRefreshToken` | `String` | 是 | OpenAPI 刷新令牌 | openAPI 登录接口返回的字段 |
+| `studioClientId` | `String` | 是 | OAuth Client ID | openAPI 登录接口返回的字段 |
+| `studioHttpDebug` | `Boolean` / `String` | 否 | 是否开启 OpenAPI 调试浮窗；`"true"` / `"1"` 为开启 | `"true"` |
+
+### ControlIrDevicePage
+| 参数名 | 类型 | 必填 | 说明 | 示例 |
+| --- | --- | --- | --- | --- |
+| `studioHost` | `String` | 是 | Studio 服务地址，格式 `IP:Port` 或域名 | 192.168.1.1:80 |
+| `studioAccessToken` | `String` | 是 | OpenAPI 访问令牌 | openAPI 登录接口返回的字段 |
+| `studioRefreshToken` | `String` | 是 | OpenAPI 刷新令牌 | openAPI 登录接口返回的字段 |
+| `studioClientId` | `String` | 是 | OAuth Client ID | openAPI 登录接口返回的字段 |
+| `studioDeviceId` | `String` | 是 | 红外设备Id | `Virtual.123456` |
+| `studioHttpDebug` | `Boolean` / `String` | 否 | 是否开启 OpenAPI 调试浮窗；`"true"` / `"1"` 为开启 | `"true"` |
+
+
+### LoginStudioPage（仅限Debug调试）
+
+| 参数名 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `studioHttpDebug` | `Boolean` / `String` | 否 | OpenAPI 调试浮窗 |
+
+该入口由用户在插件内输入 Studio 地址、账号、密码完成登录，**不建议在生产环境使用**。
+
+## 接入示例代码
+
+以下代码摘自 `AqaraStudioExample/app/src/main/java/com/example/aqarastudio/MainActivity.kt`，可直接对照示例工程阅读。
+
+### Studio 调试入口
+
+```kotlin
+private fun debugAqaraStudio() {
+    val jsonObject = JSONObject()
+    jsonObject.put("studioLang", "zh-CN")
+    jsonObject.put("studioHttpDebug", "true")
+    LumiReactNativeManager.getInstance().startRNPage(
+        "rn_device_ir",
+        Jsons.toJson(jsonObject),
+        "LoginStudioPage"
+    )
+}
+```
+
+### 打开红外设备创建页
+
+```kotlin
+private fun createIrDevice() {
+    val jsonObject = JSONObject()
+    jsonObject.put("studioHost", "192.168.1.100:8088")
+    jsonObject.put("studioAccessToken", "<your-access-token>")
+    jsonObject.put("studioRefreshToken", "<your-refresh-token>")
+    jsonObject.put("studioClientId", "<your-client-id>")
+    jsonObject.put("studioHttpDebug", "true")
+
+    LumiReactNativeManager.getInstance().startRNPage(
+        "rn_device_ir",
+        Jsons.toJson(jsonObject),
+        "CreateIrDevicePage",
+    )
+}
+```
+
+### 打开红外设备控制页
+
+```kotlin
+private fun controlIrDevice() {
+    val jsonObject = JSONObject()
+    jsonObject.put("studioHost", "192.168.1.100:8088")
+    jsonObject.put("studioAccessToken", "<your-access-token>")
+    jsonObject.put("studioRefreshToken", "<your-refresh-token>")
+    jsonObject.put("studioClientId", "<your-client-id>")
+    jsonObject.put("studioHttpDebug", "true")
+    jsonObject.put("studioDeviceId", "virtual.1782374537413")
+
+    LumiReactNativeManager.getInstance().startRNPage(
+        "rn_device_ir",
+        Jsons.toJson(jsonObject),
+        "ControlIrDevicePage",
+    )
+}
+```
+
+## 业务流程
+
+### 支持的红外品类
+
+插件根据物模型 `IRType` trait 或 `categoryId` 映射至以下控制页：
+
+| IRType Key | 品类 |
+| --- | --- |
+| airconditioner | 空调 |
+| tv | 电视 |
+| fan | 风扇 |
+| tvbox | 电视盒子 |
+| projector | 投影仪 |
+| dvd | DVD |
+| heater | 热水器 |
+| airpurifier | 空气净化器 |
+| speaker | 音响 |
+| lighting | 智能灯 |
+| camera | 相机 |
+| customize | 自定义 |
+
+
+## 鉴权信息获取
+
+生产接入时，宿主 App 需自行完成 Studio 用户鉴权，并将以下信息传入插件：
+
+- `studioHost`
+- `studioAccessToken`
+- `studioRefreshToken`
+- `studioClientId`
+
+获取方式取决于 Studio 部署的 OAuth / 登录方案，通常由 Studio 服务端或配套认证接口颁发。示例工程中的 Token 仅用于本地联调，**请勿在生产环境硬编码**。
+
+调试阶段也可使用 `LoginStudioPage` 在插件内完成账号密码登录，登录成功后插件会写入 OpenAPI Session，可在调试首页继续验证创建设备等能力。
+
+## 消息回调
+
+通过 `registerRNMessageCallback` 可接收插件向 Native 回传的 JSON 消息，便于宿主统一处理退出、埋点等事件：
+
+```kotlin
+LumiReactNativeManager.getInstance().registerRNMessageCallback(object : IRNMessageCallback {
+    override fun onHandleMessage(jsonMessage: String, promise: Promise?) {
+        Logs.e("RN Message: $jsonMessage")
+    }
+})
+```
+
+### 事件列表
+| 事件 | 说明 |
+| --- | --- |
+| action_access_success | 设备添加成功 |
