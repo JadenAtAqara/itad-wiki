@@ -4,7 +4,7 @@ This document introduces how to add HTTP devices and function points as well as 
 
 ## Script Introduction
 
-**You must implement the following 9 methods in this script** so that Aqara Studio can obtain all the information needed to initiate HTTP requests and instruct how to parse the response data into a standard format recognized by Aqara Studio.
+The script usually involves the following 9 functions. Implement them according to device capabilities. For static devices or static point lists, the corresponding build*Request functions may return null or an empty object.
 
 | Method | Description |
 | --- | --- |
@@ -161,7 +161,7 @@ function parseDiscoveryResponse(responseString) {
 
 ## buildDiscoverPointsRequest  
 
-Please return a request configuration object in this method to instruct Aqara Studio how to query the function points (points) of a specified device via HTTP API.
+Please return a request configuration object in this method to instruct Aqara Studio how to query the function points (points) of a specified device via HTTP API. If it returns `null`, an empty object, or an object without `path`, the platform does not send an HTTP request and directly calls `parseDiscoverPointsResponse()`.
 
 
 ### Parameter Description
@@ -233,16 +233,16 @@ To ensure Aqara Studio can correctly obtain function point information, you must
 |-----------|-------------|
 | pointId   | Data point ID. Please consult the device manufacturer to obtain the actual ID to allow Aqara Studio to discover this point. |
 | pointName | Name for the data point defined by you. |
-| pointType | Same as the `deviceType` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
+| devType | Same as the `deviceType` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
 | functionCode  | Same as the `functionCode` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
 | traitCode     | Same as the `traitCode` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
-| dataType  | Data point type. Supported values: <ul><li><code>bool</code>: Boolean</li><li><code>numerical</code>: Numeric</li><li><code>text</code>: Text</li></ul> |
+| dataType  | Data point type. Supported values: <ul><li><code>bool</code> / <code>boolean</code>: Boolean</li><li><code>numerical</code> / <code>number</code>: Numeric</li><li><code>enum</code>: Enumeration</li><li><code>text</code> / <code>string</code>: Text</li></ul> |
 | access    | Access mode of the resource. <ul><li>1: Read-only</li><li>2: Read-write</li></ul> |
 
 :::tip
 When adding new data points, you may choose one of the following approaches depending on your needs:
 
-- **Based on Aqara Spec**: You need to fill in fields such as `pointType`, `functionCode`, and `traitCode`, which enables the data point to be compatible with the Aqara Spec.
+- **Based on Aqara Spec**: You need to fill in fields such as `devType`, `functionCode`, and `traitCode`, which enables the data point to be compatible with the Aqara Spec.
 - **General Approach**: You only need to fill in the basic fields such as `dataType` and `access`.
 :::
 	
@@ -256,7 +256,7 @@ To ensure Aqara Studio can correctly obtain device information, you need to make
         {
             "pointId": "temperature",
             "pointName": "Temperature",
-            "pointType": "TemperatureSensor",
+            "devType": "TemperatureSensor",
             "functionCode": "Temperature",
             "traitCode": "CurrentTemperature"
         }
@@ -292,7 +292,7 @@ function parseDiscoverPointsResponse(responseString) {
     return list.map(item => ({
         pointId: item.pointId,
         pointName: item.pointName,
-        pointType: item.pointType,
+        devType: item.devType,
         functionCode: item.functionCode,
         traitCode: item.traitCode
     }));
@@ -301,14 +301,14 @@ function parseDiscoverPointsResponse(responseString) {
 
 ## buildReadRequest  
 
-When Aqara Studio needs to obtain status data (such as switch state, temperature, mode, etc.) from a device, it will invoke this function, passing in the target device ID (`deviceId`) and an array of the function point IDs to be read (`pointIds`).
+When Aqara Studio needs to obtain status data (such as switch state, temperature, mode, etc.) from a device, it will invoke this function, passing in the target device ID (`deviceId`) and the single function point ID to be read (`pointId`).
 
 In this function, please return a request configuration object that instructs Aqara Studio how to query the values of the specified device's function points via the HTTP API.
 
 
 ### Parameter Description
 
-It is recommended that this function accepts two string parameters to pass in the device ID and the list of function points.
+It is recommended that this function accepts two string parameters to pass in the device ID and point ID.
 
 
 ### Return Value
@@ -316,18 +316,16 @@ It is recommended that this function accepts two string parameters to pass in th
 To ensure Aqara Studio can properly obtain function point information, you need to make sure the buildReadRequest function returns data in the following format:
 
 ```json
-[
-    {
-        "path": "/device/read/temperature",
-        "method": "GET",
-        "headers": "",
-        "postParams": ""
-    }
-]
+{
+    "path": "/device/read/temperature",
+    "method": "GET",
+    "headers": "",
+    "postParams": ""
+}
 ```
 
 :::tip
-This function should return an array. If the device supports batch reading, the array can contain just one object. If the device does not support batch reading, you can generate multiple objects in the array based on the real points.
+The current code calls this function for one point at a time. The second parameter is `pointId`, and the return value is a single request object.
 :::
 
 Field description:
@@ -346,16 +344,14 @@ Please consult the official technical documentation for your device or contact t
 ### Example
 
 ```javascript
-function buildReadRequest(deviceId, pointIds) {
-    if (!deviceId || !Array.isArray(pointIds) || pointIds.length === 0) return [];
-    return pointIds.map(function(pointId) {
-        return {
-            path: `/device/read/${deviceId}/${pointId}`,
-            method: "GET",
-            headers: "",
-            postParams: ""
-        };
-    });
+function buildReadRequest(deviceId, pointId) {
+    if (!deviceId || !pointId) return {};
+    return {
+        path: `/device/read/${deviceId}/${pointId}`,
+        method: "GET",
+        headers: "",
+        postParams: ""
+    };
 }
 ```
 
@@ -368,7 +364,7 @@ In this function, please convert the raw data returned by the device into a func
 
 ### Parameter Description
 
-It is recommended that this function accepts two string parameters, which are used to pass in the device ID and the list of function points.
+It is recommended that this function accepts two string parameters, which are used to pass in the device ID and HTTP response string.
 
 
 ### Return Value
@@ -529,7 +525,7 @@ The return value should contain the following three fields:
 | points       | List\<Map\<String, String>>| A list of point information, representing multiple data points of the device.<br />Each point is a Map containing: <ul><li>**pointId**: Function point ID </li><li>**value**: Point value.</li></ul> |
 | responseMsg  | String                     | Response message, used to inform the device whether Aqara Studio has successfully received this data.                             |
 
-To ensure Aqara Studio can correctly obtain the data of the function points, you need to make sure that the parseReportResponse function returns data in the format shown in the following example:
+To ensure Aqara Studio can correctly obtain the data of the function points, you need to make sure that the parseReportRequest function returns data in the format shown in the following example:
 
 ```json
 {
@@ -575,7 +571,11 @@ function parseReportRequest(path, requestString) {
 
 The following code covers examples of the above 9 functions. Please adjust and optimize according to the actual interfaces and data formats of your device. Please do not directly copy as-is.
 
+The `globalThis` registrations in the example are dynamic: register only the functions you actually implement; functions that are not implemented do not need to be registered.
+
 ```javascript
+(function(){
+
 function buildDiscoveryRequest() {
     return {
         path: "/report/discoveryDevices",
@@ -630,22 +630,20 @@ function parseDiscoverPointsResponse(responseString) {
     return list.map(item => ({
         pointId: item.pointId,
         pointName: item.pointName,
-        pointType: item.pointType,
+        devType: item.devType,
         functionCode: item.functionCode,
         traitCode: item.traitCode
     }));
 }
 
-function buildReadRequest(deviceId, pointIds) {
-    if (!deviceId || !Array.isArray(pointIds) || pointIds.length === 0) return [];
-    return pointIds.map(function(pointId) {
-        return {
-            path: `/device/read/${deviceId}/${pointId}`,
-            method: "GET",
-            headers: "",
-            postParams: ""
-        };
-    });
+function buildReadRequest(deviceId, pointId) {
+    if (!deviceId || !pointId) return {};
+    return {
+        path: `/device/read/${deviceId}/${pointId}`,
+        method: "GET",
+        headers: "",
+        postParams: ""
+    };
 }
 
 function parseReadResponse(deviceId, responseString) {
@@ -714,4 +712,16 @@ function parseReportRequest(path, requestString) {
     }
     return { deviceId: deviceId, points: points, responseMsg: "" };
 }
+
+globalThis.buildDiscoveryRequest = buildDiscoveryRequest;
+globalThis.parseDiscoveryResponse = parseDiscoveryResponse;
+globalThis.buildDiscoverPointsRequest = buildDiscoverPointsRequest;
+globalThis.parseDiscoverPointsResponse = parseDiscoverPointsResponse;
+globalThis.buildReadRequest = buildReadRequest;
+globalThis.parseReadResponse = parseReadResponse;
+globalThis.buildWriteRequest = buildWriteRequest;
+globalThis.parseWriteResponse = parseWriteResponse;
+globalThis.parseReportRequest = parseReportRequest;
+
+})()
 ```

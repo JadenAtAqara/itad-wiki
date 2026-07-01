@@ -31,7 +31,7 @@ Depending on your protocol design, you will typically work with the following **
 | [parseReportRequest](#parsereportrequest) | Parses device-initiated point reports |
 
 :::tip
-Do not change the function names or parameter definitions.
+Do not change function names or parameter definitions. `build*Request` functions must return device protocol payloads, such as `Uint8Array`, `number[]`, hex strings, or plain strings. The platform converts the return value to bytes and sends it through TCP/UDP.
 :::
 
 :::tip
@@ -54,7 +54,7 @@ Only by understanding the above protocol details can you correctly build request
 
 ## buildDiscoveryRequest
 
-Return a `Uint8Array` that tells Aqara Studio how to send a device discovery request.
+Return a device protocol payload that can be converted to bytes. It tells Aqara Studio how to send a device discovery request.
 
 ### Parameters
 
@@ -78,7 +78,7 @@ function buildDiscoveryRequest(msgId) {
 
 ## buildDiscoverPointsRequest
 
-Return a `Uint8Array` that tells Aqara Studio how to send a point discovery request for a specified device.
+Return a device protocol payload that can be converted to bytes. It tells Aqara Studio how to send a point discovery request for a specified device. If the device points are static, this function can be omitted or return empty, and the platform calls `parseDiscoverPointsResponse(deviceId, undefined)`.
 
 ### Parameters
 
@@ -101,7 +101,7 @@ function buildDiscoverPointsRequest(msgId, deviceId) {
 
 ## buildProbeRequest
 
-Return a `Uint8Array` that tells Aqara Studio how to send a heartbeat probe request.
+Return a device protocol payload that can be converted to bytes. It tells Aqara Studio how to send a heartbeat probe request.
 
 ### Parameters
 
@@ -124,7 +124,7 @@ function buildProbeRequest(msgId, deviceId) {
 
 ## buildReadRequest
 
-Return a `Uint8Array` that tells Aqara Studio how to send a point read request.
+Return a device protocol payload that can be converted to bytes. It tells Aqara Studio how to send a point read request.
 
 ### Parameters
 
@@ -148,7 +148,7 @@ function buildReadRequest(msgId, deviceId, pointId) {
 
 ## buildWriteRequest
 
-Return a `Uint8Array` that tells Aqara Studio how to send a point write request.
+Return a device protocol payload that can be converted to bytes. It tells Aqara Studio how to send a point write request.
 
 ### Parameters
 
@@ -173,7 +173,7 @@ function buildWriteRequest(msgId, deviceId, pointId, value) {
 
 ## buildReportResponse
 
-Return a `Uint8Array` that tells Aqara Studio how to reply to a device report.
+Return a device protocol payload that can be converted to bytes. It tells Aqara Studio how to reply to a device report.
 
 If your protocol does not require a reply to report messages, this function can be omitted.
 
@@ -226,7 +226,7 @@ Fields:
 | totalLength | number | Total packet length, if you prefer using a fixed total length |
 
 :::tip
-Usually you configure either `lengthKnownAfterBytes + remainingBytes` or `totalLength`, depending on the packet format defined by your device protocol.
+`frameStartBytes`, `lengthKnownAfterBytes`, and `remainingBytes` are required; `totalLength` is optional. Usually you configure either `lengthKnownAfterBytes + remainingBytes` or `totalLength`, depending on the packet format defined by your device protocol.
 :::
 
 ### Example
@@ -254,7 +254,9 @@ After receiving a packet, Aqara Studio first calls this function. You should dec
 
 If `msgId` is returned, Aqara Studio prioritizes request matching by message ID.
 If `path` is returned, Aqara Studio dispatches directly to the specified parser function.
-If both are empty, Aqara Studio tries to match the previous request; if none exists, it falls back to `parseReportRequest`.
+If `path` is empty but `msgId` is not empty, the platform keeps the message for transaction matching.
+If both `path` and `msgId` are empty, the platform defaults to `parseReportRequest`.
+Other non-empty `path` values are handled as `parseReportRequest`.
 
 ### Parameters
 
@@ -383,12 +385,12 @@ Parse point information and return an array of point objects.
 
 ### Parameters
 
-Depending on the integration flow, this function typically works in one of two ways:
+This function receives the following parameters:
 
 | Name | Type | Description |
 | --- | --- | --- |
-| fromAcceptMessage | Uint8Array | Used when `buildDiscoverPointsRequest` is defined and the device returns a point discovery response |
-| deviceId | String | Used when `buildDiscoverPointsRequest` is not defined and the device ID is passed directly |
+| deviceId | String | Device ID. The platform always passes it as the first parameter. Required. |
+| fromAcceptMessage | Uint8Array \| undefined | Raw point discovery response passed as the second parameter when `buildDiscoverPointsRequest` is defined and a response is received. It may be empty when there is no dedicated point discovery request. |
 
 ### Return Value
 
@@ -399,9 +401,9 @@ Example:
     {
         "pointId": "p1",
         "pointName": "pn1",
-        "deviceType": "Light",
-        "function": "Output",
-        "trait": "OnOff"
+        "devType": "Light",
+        "functionCode": "Output",
+        "traitCode": "OnOff"
     },
     {
         "pointId": "p2",
@@ -418,20 +420,20 @@ Fields:
 | --- | --- | --- |
 | pointId | String | Unique point ID used for subsequent read/write operations |
 | pointName | String | Point display name |
-| deviceType | String | Aqara Spec device type |
-| function | String | Aqara Spec function code |
-| trait | String | Aqara Spec trait code |
-| dataType | String | Generic point data type: `enumeration`, `bool`, `numerical`, or `text` |
+| devType | String | Aqara Spec device type |
+| functionCode | String | Aqara Spec function code |
+| traitCode | String | Aqara Spec trait code |
+| dataType | String | Generic point data type: `enum`, `bool`, `numerical`, or `text` |
 | access | Int | Access permission bits: `bit1` read, `bit2` write, `bit3` report |
 
 :::tip
-If you define `deviceType`, `function`, and `trait` based on Aqara Spec, you may not need the generic `dataType` and `access` mode. If you do not use Aqara Spec, then `dataType` and `access` are required.
+If you define `devType`, `functionCode`, and `traitCode` based on Aqara Spec, you may not need the generic `dataType` and `access` mode. If you do not use Aqara Spec, then `dataType` and `access` are required.
 :::
 
 ### Example
 
 ```javascript
-function parseDiscoverPointsResponse(fromAcceptMessageOrDeviceId) {
+function parseDiscoverPointsResponse(deviceId, fromAcceptMessage) {
     return [
         {
             pointId: "sceneWrite",
@@ -666,7 +668,11 @@ function parseReportRequest(msg) {
 
 The following example shows a simplified UDP/TCP integration script structure. Adjust it according to your device protocol:
 
+The `globalThis` registrations in the example are dynamic: register only the functions you actually implement; functions that are not implemented do not need to be registered.
+
 ```javascript
+(function(){
+
 function buildDiscoveryRequest(msgId) {
     return Uint8Array.from(msgId + "#DEVICE_SCAN#\r\n", c => c.charCodeAt(0));
 }
@@ -731,7 +737,7 @@ function parseDiscoveryResponse(msg) {
     ];
 }
 
-function parseDiscoverPointsResponse(fromAcceptMessageOrDeviceId) {
+function parseDiscoverPointsResponse(deviceId, fromAcceptMessage) {
     return [
         {
             pointId: "sceneWrite",
@@ -805,4 +811,21 @@ function parseReportRequest(msg) {
         value: parts[1]
     };
 }
+
+globalThis.buildDiscoveryRequest = buildDiscoveryRequest;
+globalThis.buildDiscoverPointsRequest = buildDiscoverPointsRequest;
+globalThis.buildProbeRequest = buildProbeRequest;
+globalThis.buildReadRequest = buildReadRequest;
+globalThis.buildWriteRequest = buildWriteRequest;
+globalThis.buildReportResponse = buildReportResponse;
+globalThis.packetProcessConfig = packetProcessConfig;
+globalThis.dispatch = dispatch;
+globalThis.parseDiscoveryResponse = parseDiscoveryResponse;
+globalThis.parseDiscoverPointsResponse = parseDiscoverPointsResponse;
+globalThis.parseProbeResponse = parseProbeResponse;
+globalThis.parseReadResponse = parseReadResponse;
+globalThis.parseWriteResponse = parseWriteResponse;
+globalThis.parseReportRequest = parseReportRequest;
+
+})()
 ```

@@ -4,7 +4,8 @@ This document introduces how to use a JavaScript script in Aqara Studio to add d
 
 ## Script Overview
 
-The script **must** include the following 3 JavaScript methods:
+The script **must** include the following 4 JavaScript methods:
+- [parseDiscoveryResponse](#parsediscoveryresponse)
 - [parseDiscoverPointsResponse](#parsediscoverpointsresponse)
 - [parseReportRequest](#parsereportrequest)
 - [buildWriteRequest](#buildwriterequest)
@@ -13,9 +14,42 @@ The script **must** include the following 3 JavaScript methods:
 Do not modify the parameters or the input and output structures of these methods.
 :::
 
+## parseDiscoveryResponse
+
+This method declares the MQTT devices to be added to Aqara Studio.
+
+### Device Object Structure
+
+| Field Name | Description |
+|-----------|-------------|
+| deviceName | Device name. Optional; an empty value is treated as an empty string. |
+| deviceId | Device ID. Required. |
+| brokerEndpoint | MQTT Broker address. Required. |
+| brokerPort | MQTT Broker port. Required; the default port is `1883`. |
+| connectionType | Connection type. Required; the default value is `3`. Supported values: <ul><li>0: Anonymous</li><li>1: SSL anonymous</li><li>2: SSL username/password</li><li>3: Username/password without SSL</li></ul> |
+| username | Username. Required depending on `connectionType`. |
+| password | Password. Required depending on `connectionType`. |
+
+### Example
+
+```javascript
+function parseDiscoveryResponse() {
+	return [
+		{
+			deviceName: "TestDevice",
+			deviceId: "98CC4D189E60",
+			brokerEndpoint: "127.0.0.1",
+			brokerPort: 1883,
+			connectionType: 3,
+			username: "admin",
+			password: "public"
+		}
+	];
+}
+```
 ## parseDiscoverPointsResponse
 
-This method declares to Aqara Studio "which data points this device supports".
+This method declares to Aqara Studio "which data points this device supports". Aqara Studio passes `deviceId` as the first parameter when calling this function.
 
 You need to return an array containing one or more data point objects (such as `pointId`, etc.; for more details, please refer to [Point Object Structure](#point-object-structure)). Aqara Studio will call this function during the discovery process of data points, parse the return value, and thus identify all data points supported by the device, enabling seamless integration and control of these points.
 
@@ -25,31 +59,31 @@ You need to return an array containing one or more data point objects (such as `
 |-----------|-------------|
 | pointId   | Data point ID. Please consult the device manufacturer to obtain the actual ID to allow Aqara Studio to discover this point. |
 | pointName | Name for the data point defined by you. |
-| pointType | Same as the `deviceType` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
+| devType | Same as the `deviceType` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
 | functionCode  | Same as the `functionCode` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
 | traitraitCode     | Same as the `traitCode` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
-| dataType  | Data point type. Supported values: <ul><li><code>bool</code>: Boolean</li><li><code>numerical</code>: Numeric</li><li><code>text</code>: Text</li></ul> |
-| access    | Access mode of the resource. <ul><li>1: Read-only</li><li>2: Read-write</li></ul> |
+| dataType  | Data point type. Supported values: <ul><li><code>bool</code>: Boolean</li><li><code>numerical</code>: Numeric</li><li><code>enum</code>: Enumeration</li><li><code>text</code>: Text</li></ul> |
+| access    | Access capability bit mask. <ul><li>1: Readable</li><li>2: Writable</li><li>3: Readable and writable</li></ul> |
 | subTopic  | (**Only applicable for MQTT devices**) Aqara Studio subscribes to this topic to get the latest data for this point. Please fill in according to your device protocol or manufacturer documentation. |
 | pubTopic  | (**Only applicable for MQTT devices**) Aqara Studio sends control message data to this topic for the data point. Please fill in according to your device protocol or manufacturer documentation. (For read-only points, leave this field empty) |
 
 :::tip
 When adding new data points, you may choose one of the following approaches depending on your needs:
 
-- **Based on Aqara Spec**: You need to fill in fields such as `pointType`, `functionCode`, and `traitCode`, which enables the data point to be compatible with the Aqara Spec.
+- **Based on Aqara Spec**: You need to fill in fields such as `devType`, `functionCode`, and `traitCode`, which enables the data point to be compatible with the Aqara Spec.
 - **General Approach**: You only need to fill in the basic fields such as `dataType` and `access`.
 :::
 
 ### Example
 
 ```javascript
-function parseDiscoverPointsResponse() {
+function parseDiscoverPointsResponse(deviceId) {
 	return [
 		// Add points based on Aqara Spec
 		{
 			pointId: "1#Chiller Operation Status",
 			pointName: "1#Chiller Operation Status",
-			pointType: "AirConditioner",
+			devType: "AirConditioner",
 			functionCode: "Output",
 			traitCode: "OnOff",
 			subTopic: "/WEI-iEdge/realdata/xxx",
@@ -112,7 +146,7 @@ function parseReportRequest(pointId, jsonStr) {
 
 This method constructs the command string to control the device based on the data point ID to control and the value to set.
 
-When Aqara Studio needs to send a control command to a device (such as switch on or off the device, set temperature), it will call this function and pass in the target data point ID and the value to be set. The function must return a string that meets the control command format required by the device protocol, usually including device identifier, timestamp, and specific value fields.
+When Aqara Studio needs to send a control command to a device (such as switch on or off the device, set temperature), it will call this function and pass in the device ID, target data point ID, and value to be set. The function must return a string that meets the control command format required by the device protocol, usually including device identifier, timestamp, and specific value fields.
 
 Please construct the object structure within the function according to the actual acceptable message format of your device. For example, for an MQTT device, you may include fields like `node`, `group`, `timestamp`, and write the value corresponding to `pointId` in the `values` field.
 
@@ -121,7 +155,7 @@ Please construct the object structure within the function according to the actua
 ```javascript
 // Example: Control an MQTT device via a JSON string
 // The value parameter is automatically passed in by Aqara Studio; no need to manually declare or assign it
-function buildWriteRequest(pointId, value) {
+function buildWriteRequest(deviceId, pointId, value) {
 	try {
 		const obj = {
 			"node": "Chiller",
@@ -149,14 +183,32 @@ function buildWriteRequest(pointId, value) {
 
 Below is a complete example for adding data points for an MQTT device:
 
+The `globalThis` registrations in the example are dynamic: register only the functions you actually implement; functions that are not implemented do not need to be registered.
+
 ```javascript
-function parseDiscoverPointsResponse() {
+(function(){
+
+function parseDiscoveryResponse() {
+	return [
+		{
+			deviceName: "TestDevice",
+			deviceId: "98CC4D189E60",
+			brokerEndpoint: "127.0.0.1",
+			brokerPort: 1883,
+			connectionType: 3,
+			username: "admin",
+			password: "public"
+		}
+	];
+}
+
+function parseDiscoverPointsResponse(deviceId) {
 	return [
 		// Add points based on Aqara Spec
 		{
 			pointId: "1#Chiller Operation Status",
 			pointName: "1#Chiller Operation Status",
-			pointType: "AirConditioner",
+			devType: "AirConditioner",
 			functionCode: "Output",
 			traitCode: "OnOff",
 			subTopic: "/WEI-iEdge/realdata/xxx",
@@ -200,7 +252,7 @@ function parseReportRequest(pointId, jsonStr) {
 }
 
 // The value parameter is automatically passed in by Aqara Studio; no need to manually declare or assign it
-function buildWriteRequest(pointId, value) {
+function buildWriteRequest(deviceId, pointId, value) {
 	try {
 		const obj = {
 			"node": "Chiller",
@@ -222,4 +274,11 @@ function buildWriteRequest(pointId, value) {
 		return null;
 	}
 }
+
+globalThis.parseDiscoveryResponse = parseDiscoveryResponse;
+globalThis.parseDiscoverPointsResponse = parseDiscoverPointsResponse;
+globalThis.parseReportRequest = parseReportRequest;
+globalThis.buildWriteRequest = buildWriteRequest;
+
+})()
 ```
