@@ -41,6 +41,8 @@ tags:
     description: 自动化创建、编辑、查询、删除与能力查询接口
   - name: Studio
     description: Studio 统计信息查询接口
+  - name: EMS
+    description: 能源管理接口（能耗趋势查询、能耗总量查询）
 
 paths:
 
@@ -381,6 +383,155 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeviceDefinitionsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 查询设备匹配能力
+  # ────────────────────────────────────────────────────────────────
+  /devices/capabilities:
+    get:
+      tags: [Device]
+      summary: 查询设备匹配能力
+      description: |
+        查询单个设备中符合过滤条件的能力配置，只返回命中的定义与对应 trait 当前值，不返回设备全量定义。
+
+        :::tip   
+        - `functionCodes`、`traitCodes`、`commandCodes` 之间按 AND 关系组合；如需查询 trait 或 command 任一类能力，请分开请求，或按 `functionCodes` 查询完整 function 定义。
+        - 只传 `functionCodes`，不传 `traitCodes` 或 `commandCodes` 时：返回该 Function 下所有完整的 Trait 和 Command 定义（即全部叶子节点）。
+        - 传入 traitCodes 或 commandCodes 时：只返回匹配这些条件的 Trait 或 Command 叶子，未匹配的叶子不返回。command 没有当前值。
+        - 设备存在但能力未命中时，返回设备基础信息且 `endpoints=[]`；设备不存在或不可访问时，`data=null`。
+        :::
+
+      operationId: getMatchedDeviceCapabilities
+      x-skill-intent: device.capability.match
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - name: deviceId
+          in: query
+          required: true
+          description: 设备 ID。
+          schema:
+            type: string
+        - name: deviceTypesList
+          in: query
+          required: false
+          description: |
+            设备类型列表。用于先校验设备整体类型，再裁剪匹配 endpoint 类型。
+
+            :::tip
+            `deviceTypesList` 不能单独作为能力过滤条件。
+            :::
+
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - name: deviceTypesMatchMode
+          in: query
+          required: false
+          description: |
+            `deviceTypesList` 内多个设备类型的匹配方式。
+            `or`：设备命中任意一个类型。
+            `and`：设备必须同时命中全部类型。
+          schema:
+            type: string
+            enum: [or, and]
+            default: or
+          example: or
+        - name: functionCodes
+          in: query
+          required: false
+          description: |
+            functionCode 列表。
+            与 `traitCodes`、`commandCodes` 至少传一个。
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - name: functionCodesMatchMode
+          in: query
+          required: false
+          description: |
+            `functionCodes` 内多个值的匹配方式。
+            `or`：命中任意一个。
+            `and`：裁剪后的结果必须包含全部值。
+          schema:
+            type: string
+            enum: [or, and]
+            default: or
+          example: or
+        - name: traitCodes
+          in: query
+          required: false
+          description: |
+            traitCode 列表
+            与 `functionCodes`、`commandCodes` 至少传一个。
+            trait 命中时返回定义、当前值 value 与更新时间 time
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - name: traitCodesMatchMode
+          in: query
+          required: false
+          description: |
+            traitCodes 内多个值的匹配方式。
+            `and` 表示必须在同一个 function 内同时命中全部 trait。
+          schema:
+            type: string
+            enum: [or, and]
+            default: or
+          example: or
+        - name: commandCodes
+          in: query
+          required: false
+          description: |
+            commandCode 列表。
+            与 `traitCodes`、`functionCodes` 至少传一个。
+            command 只返回命令定义和字段定义，没有当前值。
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - name: commandCodesMatchMode
+          in: query
+          required: false
+          description: |
+            commandCodes 内多个值的匹配方式。
+            `and`：必须在同一个 function 内同时命中全部 command。
+          schema:
+            type: string
+            enum: [or, and]
+            default: or
+          example: or
+      responses:
+        '200':
+          description: 接口请求成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMatchedDeviceCapabilitiesResponse'
         '400':
           $ref: '#/components/responses/BadRequestResponse'
         '401':
@@ -796,6 +947,116 @@ paths:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
+  # 设备解绑
+  # ────────────────────────────────────────────────────────────────
+  /devices/unbind:
+    post:
+      tags: [Device]
+      summary: 设备解绑
+      description: 解绑一个指定设备。解绑成功后，您无法在 Aqara Studio 中看到该设备。
+      operationId: unbindDevice
+      x-skill-intent: device.unbind
+      x-idempotent: true
+      x-retryable: conditional
+      x-side-effects: device_binding_change
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceUnbindRequest'
+            examples:
+              unbindDevice:
+                value:
+                  deviceId: "device-001"
+      responses:
+        '200':
+          description: 接口请求成功。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceUnbindResponse'
+              examples:
+                unbindSuccess:
+                  value:
+                    type: DeviceUnbindResponse
+                    version: v1
+                    msgId: "1751609244328"
+                    code: 0
+                    message: success
+                    data: null
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 查询网关列表
+  # ────────────────────────────────────────────────────────────────
+  /gateways:
+    get:
+      tags: [Gateway]
+      summary: 查询网关列表
+      description: |
+        查询 Aqara Studio 内的所有 Matter 网关和 Zigbee网关
+
+        :::tip
+        Zigbee 网关并非支持所有 Zigbee 子设备。
+        :::
+
+      operationId: getGateways
+      x-skill-intent: gateway.list
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - name: state
+          in: query
+          description: 网关在线状态。
+          required: false
+          schema:
+            type: boolean
+        - name: protocols
+          in: query
+          description: 协议类型列表。URL 示例：`protocols=zigbee,matter` 或 `protocols=zigbee&protocols=matter`
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum: [zigbee, matter]
+          style: form
+          explode: true
+      responses:
+        '200':
+          description: 接口请求成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GatewaysResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
   # 开启网关子设备添加模式
   # ────────────────────────────────────────────────────────────────
   /gateways/subdevices/join:
@@ -808,6 +1069,7 @@ paths:
         :::tip
         在开始之前，请确保 Zigbee 子设备已处于配网模式。
         :::
+
       operationId: joinSubdevice
       x-skill-intent: gateway.subdevice.join
       x-idempotent: false
@@ -1224,9 +1486,11 @@ paths:
       summary: 编辑自动化
       description: |
         编辑自动化名称、启用状态、配置等。
+
         :::tip
         您可以编辑所有自动化的名称和启用状态，但是只能编辑 SCRIPT_JSON 自动化的配置。
         :::
+
       operationId: updateAutomation
       x-skill-intent: automation.update
       x-idempotent: false
@@ -1450,6 +1714,7 @@ paths:
       summary: 执行手动触发器
       description: |
         执行自动化内的手动触发器，从而启用后续的判断和执行。   
+
         :::tip
         手动触发器是用户可在自动化流程中添加、并通过主动操作来启动自动化执行的触发器。适用于需人工干预启动自动化场景，或在测试、调试自动化流程时即时触发流程的场景。
 
@@ -1457,6 +1722,7 @@ paths:
         1. 若通过 Aqara Studio Web 页面创建，可参考：[自动化 - Flow - 触发 - 手动触发](https://docs.aqara.com/zh/docs/aqara-studio/flow/trigger#%E6%89%8B%E5%8A%A8%E8%A7%A6%E5%8F%91)
         2. 若通过 API 创建自动化，请在 JSON 脚本内添加手动触发器，参考：[JSON 自动化脚本定义 - Starter - Manual](https://docs.aqara.com/zh/docs/aqara-studio/api-references/json-automation-script#manual)
         :::
+        
       operationId: executeAutomationManualTrigger
       x-skill-intent: automation.manual_trigger.execute
       x-idempotent: false
@@ -1534,6 +1800,274 @@ paths:
           $ref: '#/components/responses/TooManyRequestsResponse'
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 查询单设备能耗趋势
+  # ────────────────────────────────────────────────────────────────
+  /ems/trend/device:
+    post:
+      tags: [EMS]
+      summary: 查询单设备能耗趋势
+      description: |
+        按时间维度（1h/1d/month）统计指定设备在设定时间范围内的能耗趋势，返回每个时间段内的能耗值。
+
+        :::tip
+        仅可查询能够提供耗电量数据的设备。详情请参考 Aqara Studio 文档 [能耗管理](https://docs.aqara.com/zh/docs/aqara-studio/energy-management-system#%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6)。
+        :::
+
+      operationId: getEmsTrendDevice
+      x-skill-intent: ems.trend.device
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmsTrendDeviceRequest'
+            examples:
+              hourlyTrend:
+                value:
+                  startTime: 1704067200000
+                  endTime: 1704153600000
+                  deviceId: "device_001"
+                  dimension: "1h"
+      responses:
+        '200':
+          description: 请求发起成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmsDeviceTrendResponse'
+              examples:
+                hourlyTrendSuccess:
+                  value:
+                    type: EmsDeviceTrendResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f010"
+                    code: 0
+                    message: success
+                    data:
+                      - startTime: "2024010100"
+                        value: 1.5
+                      - startTime: "2024010101"
+                        value: 2.3
+                      - startTime: "2024010102"
+                        value: 0.8
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 查询单空间能耗趋势
+  # ────────────────────────────────────────────────────────────────
+  /ems/trend/space:
+    post:
+      tags: [EMS]
+      summary: 查询单空间能耗趋势
+      description: |        
+        按时间维度（1h/1d/month）统计指定空间内所有设备汇总的能耗趋势，返回每个时间段内的能耗值。
+
+        :::tip
+        仅汇总空间内能够提供耗电量数据的设备。详情请参考 Aqara Studio 文档 [能耗管理](https://docs.aqara.com/zh/docs/aqara-studio/energy-management-system#%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6)。
+        :::
+
+      operationId: getEmsTrendSpace
+      x-skill-intent: ems.trend.space
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmsTrendSpaceRequest'
+            examples:
+              dailyTrend:
+                value:
+                  startTime: 1704067200000
+                  endTime: 1706745600000
+                  spaceId: "room_001"
+                  dimension: "1d"
+      responses:
+        '200':
+          description: 请求发起成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmsSpaceTrendResponse'
+              examples:
+                dailyTrendSuccess:
+                  value:
+                    type: EmsSpaceTrendResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f011"
+                    code: 0
+                    message: success
+                    data:
+                      - startTime: "20240101"
+                        value: 12.5
+                      - startTime: "20240102"
+                        value: 15.3
+                      - startTime: "20240103"
+                        value: 9.8
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 查询单设备能耗总量
+  # ────────────────────────────────────────────────────────────────
+  /ems/total/device:
+    post:
+      tags: [EMS]
+      summary: 查询单设备能耗总量
+      description: |
+        查询指定设备在时间范围内的能耗总量（kWh）。
+
+        :::tip
+        仅可查询能够提供耗电量数据的设备。详情请参考 Aqara Studio 文档 [能耗管理](https://docs.aqara.com/zh/docs/aqara-studio/energy-management-system#%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6)。
+        :::
+
+      operationId: getEmsTotalDevice
+      x-skill-intent: ems.total.device
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmsTotalDeviceRequest'
+            examples:
+              deviceTotal:
+                value:
+                  startTime: 1704067200000
+                  endTime: 1704153600000
+                  deviceId: "device_001"
+      responses:
+        '200':
+          description: 接口请求成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmsDeviceTotalResponse'
+              examples:
+                deviceTotalSuccess:
+                  value:
+                    type: EmsDeviceTotalResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f012"
+                    code: 0
+                    message: success
+                    data:
+                      totalValue: 45.6
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 查询单空间能耗总量
+  # ────────────────────────────────────────────────────────────────
+  /ems/total/space:
+    post:
+      tags: [EMS]
+      summary: 查询单空间能耗总量
+      description: |
+        查询指定空间内所有设备汇总的能耗总量（kWh）。
+
+        :::tip
+        仅汇总空间内能够提供耗电量数据的设备。详情请参考 Aqara Studio 文档 [能耗管理](https://docs.aqara.com/zh/docs/aqara-studio/energy-management-system#%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6)。
+        :::
+
+      operationId: getEmsTotalSpace
+      x-skill-intent: ems.total.space
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmsTotalSpaceRequest'
+            examples:
+              spaceTotal:
+                value:
+                  startTime: 1704067200000
+                  endTime: 1706745600000
+                  spaceId: "home_001"
+      responses:
+        '200':
+          description: 接口调用成功。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmsSpaceTotalResponse'
+              examples:
+                spaceTotalSuccess:
+                  value:
+                    type: EmsSpaceTotalResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f013"
+                    code: 0
+                    message: success
+                    data:
+                      totalValue: 156.2
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailableResponse'
 
 # ══════════════════════════════════════════════════════════════════
 # Components
@@ -1613,6 +2147,18 @@ components:
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000006"
               code: 500
               message: "服务内部异常"
+    ServiceUnavailableResponse:
+      description: 服务不可用
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            example:
+              type: ErrorMessage
+              version: v1
+              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000007"
+              code: 503
+              message: "服务暂时不可用"
   
 
   securitySchemes:
@@ -1860,32 +2406,67 @@ components:
       example:
         type: GetDevicesResponse
         version: v1
-        msgId: "123"
-        data:
-          - deviceId: lumi3.86108040f2b03a4e
-            name: Hub
-            deviceTypesList:
-              - Hub
-            endpoints:
-              - endpointId: 0
-                endpointName: Root
-                deviceType: Root
-                functions:
-                  - functionCode: BasicInformation
-                    traits:
-                      - traitCode: FirmwareRevisionString
-                        parameter:
-                          type: String
-                          readable: true
-                          writable: false
-                          subscribable: true
-                          unit: ""
-                        value: "4.5.50_0021"
-                        time: 1780900703977
-                        pointName: Firmware version number
-                    commands: []
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000008"
         code: 0
         message: success
+        data:
+          - deviceId: "device-001"
+            gatewayId: "gateway-001"
+            name: "客厅灯"
+            deviceTypesList: ["light"]
+            endpoints: []
+
+    GetMatchedDeviceCapabilitiesResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/DeviceDefinition'
+              nullable: true
+      example:
+        type: GetMatchedDeviceCapabilitiesResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000009"
+        code: 0
+        message: success
+        data:
+          deviceId: "device-001"
+          gatewayId: "gateway-001"
+          name: "客厅灯"
+          deviceTypesList: ["light"]
+          endpoints:
+            - endpointId: 1
+              endpointName: "主灯"
+              deviceType: "light"
+              functions:
+                - functionCode: "ColorControl"
+                  traits:
+                    - traitCode: "ColorTemperature"
+                      parameter:
+                        type: "Integer"
+                        min: 153
+                        max: 500
+                        supportedValues: null
+                        unit: "mireds"
+                        step: 1
+                        readable: true
+                        writable: true
+                        subscribable: true
+                      value: 300
+                      time: 1710001234567
+                  commands:
+                    - commandCode: "MoveToXYColor"
+                      fields:
+                        - fieldCode: "ColorX"
+                          parameter:
+                            type: "Float"
+                            min: 0
+                            max: 1
+                            supportedValues: null
+                            unit: null
+                            step: 0.001
+                            mandatory: true
 
     DeleteDevicePointRequest:
       type: object
@@ -1954,6 +2535,32 @@ components:
         message: success
         data:
           deviceId: "virtual-device-001"
+
+    DeviceUnbindResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              nullable: true
+              description: 解绑成功后返回 null 或空字符串
+              example: ""
+      example:
+        type: DeviceUnbindResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000018"
+        code: 0
+        message: success
+        data: null
+
+    DeviceUnbindRequest:
+      type: object
+      required: [deviceId]
+      properties:
+        deviceId:
+          type: string
+          description: 解绑目标的设备 ID。
 
     Endpoint:
       type: object
@@ -2492,6 +3099,57 @@ components:
             responded: true
             commandReportValue: "{\"result\":\"ok\"}"
             responseTime: 1710001234567
+
+    # ── Gateway ──────────────────────────────────────────────────
+    GatewayInfo:
+      type: object
+      required: [deviceId, deviceName]
+      properties:
+        deviceId:
+          type: string
+          description: 网关设备 ID。
+        deviceName:
+          type: string
+          description: 网关设备名称。
+        supportZigbee:
+          type: boolean
+          description: 是否支持 Zigbee，缺省或 null 为不支持。
+        supportedMatterRoles:
+          type: integer
+          description: |
+            支持的 Matter 角色，缺少或 null 为不支持。
+            该字段为位掩码，使用 `supportedMatterRoles & 角色值 != 0` 判断是否支持对应角色：
+            - 1：Matter controller
+            - 2：Matter commissioner
+            - 4：Thread border router
+            - 8：Matter bridge
+            例如 `supportedMatterRoles & 2 != 0` 表示支持 Matter 子设备入网。
+          nullable: true
+        space:
+          $ref: '#/components/schemas/DeviceSpace'
+          nullable: true
+          description: 网关所在空间。
+
+    GatewaysResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/GatewayInfo'
+      example:
+        type: GetGatewaysResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000000e"
+        code: 0
+        message: success
+        data:
+          - deviceId: "gateway-001"
+            deviceName: "客厅网关M2"
+            supportZigbee: true
+            supportedMatterRoles: 1
 
     # ── Subdevice Join ────────────────────────────────────────────
     SubdeviceJoinRequest:
@@ -3175,6 +3833,195 @@ components:
         key:
           type: string
           description: 枚举显示文案
+
+    # ── EMS (Energy Management System) ────────────────────────────
+    EmsTrendDeviceRequest:
+      type: object
+      required: [startTime, endTime, deviceId, dimension]
+      properties:
+        startTime:
+          type: integer
+          format: int64
+          description: 起始时间（UTC 毫秒时间戳）。
+          example: 1704067200000
+        endTime:
+          type: integer
+          format: int64
+          description: 结束时间（UTC 毫秒时间戳）。
+          example: 1704153600000
+        deviceId:
+          type: string
+          description: 设备 ID。
+          example: "device_001"
+        dimension:
+          type: string
+          description: 聚合维度。
+          enum: ["1h", "1d", "month"]
+          example: "1h"
+
+    EmsTrendSpaceRequest:
+      type: object
+      required: [startTime, endTime, spaceId, dimension]
+      properties:
+        startTime:
+          type: integer
+          format: int64
+          description: 起始时间（UTC 毫秒时间戳）。
+          example: 1704067200000
+        endTime:
+          type: integer
+          format: int64
+          description: 结束时间（UTC 毫秒时间戳）。
+          example: 1706745600000
+        spaceId:
+          type: string
+          description: 空间ID（自动识别家庭或房间）。
+          example: "room_001"
+        dimension:
+          type: string
+          description: 聚合维度。
+          enum: ["1h", "1d", "month"]
+          example: "1d"
+
+    EmsTotalDeviceRequest:
+      type: object
+      required: [startTime, endTime, deviceId]
+      properties:
+        startTime:
+          type: integer
+          format: int64
+          description: 起始时间（UTC 毫秒时间戳）。
+          example: 1704067200000
+        endTime:
+          type: integer
+          format: int64
+          description: 结束时间（UTC 毫秒时间戳）。
+          example: 1704153600000
+        deviceId:
+          type: string
+          description: 设备 ID。
+          example: "device_001"
+
+    EmsTotalSpaceRequest:
+      type: object
+      required: [startTime, endTime, spaceId]
+      properties:
+        startTime:
+          type: integer
+          format: int64
+          description: 起始时间（UTC 毫秒时间戳）。
+          example: 1704067200000
+        endTime:
+          type: integer
+          format: int64
+          description: 结束时间（UTC 毫秒时间戳）。
+          example: 1706745600000
+        spaceId:
+          type: string
+          description: 空间 ID（自动识别家庭或房间）。
+          example: "home_001"
+
+    EmsTrendPoint:
+      type: object
+      required: [startTime, value]
+      properties:
+        startTime:
+          type: string
+          description: |
+            起始时间，格式取决于查询维度：
+            - 1h: yyyyMMddHH
+            - 1d: yyyyMMdd
+            - month: yyyyMM
+          example: "2024010100"
+        value:
+          type: number
+          format: double
+          description: 该时间范围内的能耗值（kWh）
+          example: 1.5
+
+    EmsTotalData:
+      type: object
+      required: [totalValue]
+      properties:
+        totalValue:
+          type: number
+          format: double
+          description: 时间范围内的能耗总量（kWh）。
+          example: 45.6
+
+    EmsDeviceTrendResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/EmsTrendPoint'
+      example:
+        type: EmsDeviceTrendResponse
+        version: v1
+        msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f010"
+        code: 0
+        message: success
+        data:
+          - startTime: "2024010100"
+            value: 1.5
+          - startTime: "2024010101"
+            value: 2.3
+
+    EmsSpaceTrendResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/EmsTrendPoint'
+      example:
+        type: EmsSpaceTrendResponse
+        version: v1
+        msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f011"
+        code: 0
+        message: success
+        data:
+          - startTime: "20240101"
+            value: 12.5
+          - startTime: "20240102"
+            value: 15.3
+
+    EmsDeviceTotalResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/EmsTotalData'
+      example:
+        type: EmsDeviceTotalResponse
+        version: v1
+        msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f012"
+        code: 0
+        message: success
+        data:
+          totalValue: 45.6
+
+    EmsSpaceTotalResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/EmsTotalData'
+      example:
+        type: EmsSpaceTotalResponse
+        version: v1
+        msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f013"
+        code: 0
+        message: success
+        data:
+          totalValue: 156.2
     
     StudioStatisticsDimension:
       type: string

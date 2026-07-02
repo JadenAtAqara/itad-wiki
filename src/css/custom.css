@@ -138,6 +138,19 @@
      padding: 1.5rem;
    }
  
+/* Sidebar: show full doc titles (no ellipsis/nowrap) */
+:where(.menu__link) {
+  min-width: 0;
+}
+
+:where(.menu__link) :where(span[title]) {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  display: inline !important;
+  word-break: break-word;
+}
+
    .aqara-resource-card__title {
      font-size: 1.6rem;
    }

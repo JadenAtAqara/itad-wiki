@@ -260,6 +260,11 @@
                   "items": [
                     {
                       "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-gateways",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
                       "id": "aqara-developer/data-export-api/join-subdevice",
                       "className": "api-method post"
                     },
@@ -302,6 +307,11 @@
                     },
                     {
                       "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-matched-device-capabilities",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
                       "id": "aqara-developer/data-export-api/execute-device-trait",
                       "className": "api-method post"
                     },
@@ -328,6 +338,11 @@
                     {
                       "type": "doc",
                       "id": "aqara-developer/data-export-api/add-virtual-device",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/unbind-device",
                       "className": "api-method post"
                     }
                   ]
@@ -406,6 +421,37 @@
                       "type": "doc",
                       "id": "aqara-developer/data-export-api/get-studio-statistics",
                       "className": "api-method get"
+                    }
+                  ]
+                },
+                {
+                  "type": "category",
+                  "label": "EMS",
+                  "link": {
+                    "type": "doc",
+                    "id": "aqara-developer/data-export-api/ems"
+                  },
+                  "collapsed": false,
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-ems-trend-device",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-ems-trend-space",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-ems-total-device",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-ems-total-space",
+                      "className": "api-method post"
                     }
                   ]
                 }
