@@ -198,7 +198,9 @@
       "label": "Product Manuals",
       "items": [
         "aqara-studio/product-manuals/general",
-        "aqara-studio/product-manuals/edge-hub-m300"
+        "aqara-studio/product-manuals/edge-hub-m300",
+        "aqara-studio/product-manuals/din-rail-hub-ax100m",
+        "aqara-studio/product-manuals/din-rail-hub-ax200m"
       ]
     }
   ],
