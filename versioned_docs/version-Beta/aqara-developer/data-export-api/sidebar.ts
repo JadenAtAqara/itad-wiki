@@ -64,6 +64,12 @@ const sidebar: SidebarsConfig = {
         },
         {
           type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-matched-device-capabilities",
+          label: "Query Device Matching Capabilities",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/execute-device-trait",
           label: "Control Devices by Traits",
           className: "api-method post",
@@ -98,6 +104,12 @@ const sidebar: SidebarsConfig = {
           label: "Add A Virtual Device",
           className: "api-method post",
         },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/unbind-device",
+          label: "Unbind A Device",
+          className: "api-method post",
+        },
       ],
     },
     {
@@ -109,6 +121,12 @@ const sidebar: SidebarsConfig = {
       },
       collapsed: false,
       items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-gateways",
+          label: "List Gateways",
+          className: "api-method get",
+        },
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/join-subdevice",
@@ -214,6 +232,41 @@ const sidebar: SidebarsConfig = {
           id: "version-Beta/aqara-developer/data-export-api/get-studio-statistics",
           label: "Get Studio Statistics",
           className: "api-method get",
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "EMS",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-developer/data-export-api/ems",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-ems-trend-device",
+          label: "Get Energy Consumption Trend of a Device",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-ems-trend-space",
+          label: "Get Energy Consumption Trend of a Space",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-ems-total-device",
+          label: "Get Energy Consumption of a Device",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-ems-total-space",
+          label: "Query Energy Consumption for a Space",
+          className: "api-method post",
         },
       ],
     },

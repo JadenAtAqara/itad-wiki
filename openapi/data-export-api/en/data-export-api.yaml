@@ -41,6 +41,8 @@ tags:
     description: APIs for automation creation, editing, query, deletion, and capability query
   - name: Studio
     description: Studio statistics query API
+  - name: EMS
+    description: Energy Management System APIs (energy consumption trend query, energy consumption total query)
 
 paths:
 
@@ -382,6 +384,155 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeviceDefinitionsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Query Device Matching Capabilities
+  # ────────────────────────────────────────────────────────────────
+  /devices/capabilities:
+    get:
+      tags: [Device]
+      summary: Query Device Matching Capabilities
+      description: |
+        Query the capabilities of a single device that meet the filter criteria. Only matched definitions and the current value for the corresponding traits will be returned. The full device definition will NOT be returned.
+
+        :::tip
+        - `functionCodes`, `traitCodes`, and `commandCodes` are combined using AND logic. To query for any trait or command capabilities, please send separate requests, or query the complete function definition using only `functionCodes`.
+        - If only `functionCodes` are provided and neither `traitCodes` nor `commandCodes` are passed: all complete Trait and Command definitions under that Function (i.e., all leaf nodes) are returned.
+        - If `traitCodes` or `commandCodes` are provided: only the Trait or Command leaves matching these criteria are returned; non-matching leaves are not returned. Commands do not include a current value.
+        - If the device exists but no capabilities match, basic device info is returned with `endpoints=[]`. If the device does not exist or cannot be accessed, `data=null`.
+        :::
+
+      operationId: getMatchedDeviceCapabilities
+      x-skill-intent: device.capability.match
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - name: deviceId
+          in: query
+          required: true
+          description: Device ID.
+          schema:
+            type: string
+        - name: deviceTypesList
+          in: query
+          required: false
+          description: |
+            List of device types. The API first verifies the overall type of the device, and then filters endpoints by type.   
+
+            :::tip
+            `deviceTypesList` cannot be used on its own as a capability filter.
+            :::
+
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - name: deviceTypesMatchMode
+          in: query
+          required: false
+          description: |
+            Match mode for multiple types in `deviceTypesList`:
+            - `or`: Device matches any of the types.
+            - `and`: Device must match all specified types simultaneously.
+          schema:
+            type: string
+            enum: [or, and]
+            default: or
+          example: or
+        - name: functionCodes
+          in: query
+          required: false
+          description: |
+            List of function codes.
+            At least one of `functionCodes`, `traitCodes`, or `commandCodes` must be provided.
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - name: functionCodesMatchMode
+          in: query
+          required: false
+          description: |
+            Match mode for multiple `functionCodes`:
+            - `or`: Match any.
+            - `and`: The result must contain all specified function codes.
+          schema:
+            type: string
+            enum: [or, and]
+            default: or
+          example: or
+        - name: traitCodes
+          in: query
+          required: false
+          description: |
+            List of trait codes.
+            At least one of `functionCodes`, `traitCodes`, or `commandCodes` must be provided.
+            If matched, will return the trait definition, current value, and last updated time.
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - name: traitCodesMatchMode
+          in: query
+          required: false
+          description: |
+            Match mode for multiple `traitCodes`:
+            - `and`: All traits must be matched within the same function.
+          schema:
+            type: string
+            enum: [or, and]
+            default: or
+          example: or
+        - name: commandCodes
+          in: query
+          required: false
+          description: |
+            List of command codes.
+            At least one of `functionCodes`, `traitCodes`, or `commandCodes` must be provided.
+            If matched, will only return the command and parameter definitions (no current values).
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - name: commandCodesMatchMode
+          in: query
+          required: false
+          description: |
+            Match mode for multiple `commandCodes`:
+            - `and`: All commands must be matched within the same function.
+          schema:
+            type: string
+            enum: [or, and]
+            default: or
+          example: or
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMatchedDeviceCapabilitiesResponse'
         '400':
           $ref: '#/components/responses/BadRequestResponse'
         '401':
@@ -783,6 +934,116 @@ paths:
                     message: success
                     data:
                       deviceId: "virtual-device-001"
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Unbind A Device
+  # ────────────────────────────────────────────────────────────────
+  /devices/unbind:
+    post:
+      tags: [Device]
+      summary: Unbind A Device
+      description: Unbind a specified device. After successful unbinding, you will no longer see this device in Aqara Studio.
+      operationId: unbindDevice
+      x-skill-intent: device.unbind
+      x-idempotent: true
+      x-retryable: conditional
+      x-side-effects: device_binding_change
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceUnbindRequest'
+            examples:
+              unbindDevice:
+                value:
+                  deviceId: "device-001"
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceUnbindResponse'
+              examples:
+                unbindSuccess:
+                  value:
+                    type: DeviceUnbindResponse
+                    version: v1
+                    msgId: "1751609244328"
+                    code: 0
+                    message: success
+                    data: null
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 查询网关列表
+  # ────────────────────────────────────────────────────────────────
+  /gateways:
+    get:
+      tags: [Gateway]
+      summary: List Gateways
+      description: |
+        Query all Matter gateways and Zigbee gateways in Aqara Studio.
+
+        :::tip
+        Not all Zigbee gateways support all Zigbee sub-devices.
+        :::
+        
+      operationId: getGateways
+      x-skill-intent: gateway.list
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - name: state
+          in: query
+          description: Gateway online status.
+          required: false
+          schema:
+            type: boolean
+        - name: protocols
+          in: query
+          description: "List of protocol types. URL example: `protocols=zigbee,matter`, or `protocols=zigbee&protocols=matter`."
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum: [zigbee, matter]
+          style: form
+          explode: true
+      responses:
+        '200':
+          description: Request succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GatewaysResponse'
         '400':
           $ref: '#/components/responses/BadRequestResponse'
         '401':
@@ -1227,9 +1488,11 @@ paths:
       summary: Edit An Automation
       description: |
         Edit automation name, enabled status, and configuration.
+
         :::tip
         You can edit the name and enabled status of all automations, but you can only edit the configuration for SCRIPT_JSON automations.
         :::
+
       operationId: updateAutomation
       x-skill-intent: automation.update
       x-idempotent: false
@@ -1453,6 +1716,7 @@ paths:
       summary: Execute A Manual Trigger
       description: |
         Execute a manual trigger within an automation to initiate subsequent conditions and actions.
+
         :::tip
         A manual trigger is a trigger that users can add to automation workflows and activate through user operation. It is suitable for scenarios where automation requires manual intervention to start, or for instant activation during testing and debugging.
 
@@ -1460,6 +1724,7 @@ paths:
         1. If created on the Aqara Studio Web page, refer to: [Automation - Flow - Trigger - Manual Trigger](https://docs.aqara.com/docs/aqara-studio/flow/trigger#manual-trigger)
         2. If created by API, add a manual trigger in your JSON script. See: [JSON Automation Script Definition - Starter - Manual](https://docs.aqara.com/docs/aqara-studio/api-references/json-automation-script#manual)
         :::
+
       operationId: executeAutomationManualTrigger
       x-skill-intent: automation.manual_trigger.execute
       x-idempotent: false
@@ -1537,6 +1802,274 @@ paths:
           $ref: '#/components/responses/TooManyRequestsResponse'
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Query Energy Consumption Trend of a Device
+  # ────────────────────────────────────────────────────────────────
+  /ems/trend/device:
+    post:
+      tags: [EMS]
+      summary: Get Energy Consumption Trend of a Device
+      description: |
+        Get the statistics of the energy consumption trend of a specified device within a set time interval, segmented by time dimension (1h/1d/month). The API returns the energy consumption value for each time segment.
+
+        :::tip
+        Only devices that provide energy consumption data can be queried. For details, refer to the Aqara Studio documentation on [Energy Management](https://docs.aqara.com/docs/aqara-studio/energy-management-system#prerequisites).
+        :::
+
+      operationId: getEmsTrendDevice
+      x-skill-intent: ems.trend.device
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmsTrendDeviceRequest'
+            examples:
+              hourlyTrend:
+                value:
+                  startTime: 1704067200000
+                  endTime: 1704153600000
+                  deviceId: "device_001"
+                  dimension: "1h"
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmsDeviceTrendResponse'
+              examples:
+                hourlyTrendSuccess:
+                  value:
+                    type: EmsDeviceTrendResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f010"
+                    code: 0
+                    message: success
+                    data:
+                      - startTime: "2024010100"
+                        value: 1.5
+                      - startTime: "2024010101"
+                        value: 2.3
+                      - startTime: "2024010102"
+                        value: 0.8
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Get the Energy Consumption Trend of a Space
+  # ────────────────────────────────────────────────────────────────
+  /ems/trend/space:
+    post:
+      tags: [EMS]
+      summary: Get Energy Consumption Trend of a Space
+      description: |
+        Get the total energy consumption trend for all devices within a specified space by a given time dimension (1h/1d/month). The API returns the energy consumption value for each time interval.
+
+        :::tip
+        Only devices within the space that provide energy consumption data will be included. For details, refer to the Aqara Studio documentation on [Energy Management](https://docs.aqara.com/docs/aqara-studio/energy-management-system#prerequisites).
+        :::
+
+      operationId: getEmsTrendSpace
+      x-skill-intent: ems.trend.space
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmsTrendSpaceRequest'
+            examples:
+              dailyTrend:
+                value:
+                  startTime: 1704067200000
+                  endTime: 1706745600000
+                  spaceId: "room_001"
+                  dimension: "1d"
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmsSpaceTrendResponse'
+              examples:
+                dailyTrendSuccess:
+                  value:
+                    type: EmsSpaceTrendResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f011"
+                    code: 0
+                    message: success
+                    data:
+                      - startTime: "20240101"
+                        value: 12.5
+                      - startTime: "20240102"
+                        value: 15.3
+                      - startTime: "20240103"
+                        value: 9.8
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Query total energy consumption of a single device
+  # ────────────────────────────────────────────────────────────────
+  /ems/total/device:
+    post:
+      tags: [EMS]
+      summary: Get Energy Consumption of a Device
+      description: |
+        Query the total energy consumption (kWh) of the specified device within the given time interval.
+
+        :::tip
+        Only devices that provide energy consumption data can be queried. For details, refer to the Aqara Studio documentation on [Energy Management](https://docs.aqara.com/docs/aqara-studio/energy-management-system#prerequisites).
+        :::
+
+      operationId: getEmsTotalDevice
+      x-skill-intent: ems.total.device
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmsTotalDeviceRequest'
+            examples:
+              deviceTotal:
+                value:
+                  startTime: 1704067200000
+                  endTime: 1704153600000
+                  deviceId: "device_001"
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmsDeviceTotalResponse'
+              examples:
+                deviceTotalSuccess:
+                  value:
+                    type: EmsDeviceTotalResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f012"
+                    code: 0
+                    message: success
+                    data:
+                      totalValue: 45.6
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Query total energy consumption for a space
+  # ────────────────────────────────────────────────────────────────
+  /ems/total/space:
+    post:
+      tags: [EMS]
+      summary: Query Energy Consumption for a Space
+      description: |
+        Query the total aggregated energy consumption (kWh) of all devices within the specified space.
+
+        :::tip
+        Only devices within the space that can provide energy consumption data will be included in the aggregation. For more details, see the Aqara Studio documentation [Energy Management](https://docs.aqara.com/docs/aqara-studio/energy-management-system#prerequisites).
+        :::
+        
+      operationId: getEmsTotalSpace
+      x-skill-intent: ems.total.space
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmsTotalSpaceRequest'
+            examples:
+              spaceTotal:
+                value:
+                  startTime: 1704067200000
+                  endTime: 1706745600000
+                  spaceId: "home_001"
+      responses:
+        '200':
+          description: Request succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmsSpaceTotalResponse'
+              examples:
+                spaceTotalSuccess:
+                  value:
+                    type: EmsSpaceTotalResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f013"
+                    code: 0
+                    message: success
+                    data:
+                      totalValue: 156.2
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailableResponse'
 
 # ══════════════════════════════════════════════════════════════════
 # Components
@@ -1616,6 +2149,18 @@ components:
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000006"
               code: 500
               message: "Internal server error"
+    ServiceUnavailableResponse:
+      description: Service unavailable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            example:
+              type: ErrorMessage
+              version: v1
+              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000007"
+              code: 503
+              message: "Service temporarily unavailable"
   
 
   securitySchemes:
@@ -1864,32 +2409,67 @@ components:
       example:
         type: GetDevicesResponse
         version: v1
-        msgId: "123"
-        data:
-          - deviceId: lumi3.86108040f2b03a4e
-            name: Hub
-            deviceTypesList:
-              - Hub
-            endpoints:
-              - endpointId: 0
-                endpointName: Root
-                deviceType: Root
-                functions:
-                  - functionCode: BasicInformation
-                    traits:
-                      - traitCode: FirmwareRevisionString
-                        parameter:
-                          type: String
-                          readable: true
-                          writable: false
-                          subscribable: true
-                          unit: ""
-                        value: "4.5.50_0021"
-                        time: 1780900703977
-                        pointName: Firmware version number
-                    commands: []
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000008"
         code: 0
         message: success
+        data:
+          - deviceId: "device-001"
+            gatewayId: "gateway-001"
+            name: "客厅灯"
+            deviceTypesList: ["light"]
+            endpoints: []
+
+    GetMatchedDeviceCapabilitiesResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/DeviceDefinition'
+              nullable: true
+      example:
+        type: GetMatchedDeviceCapabilitiesResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000009"
+        code: 0
+        message: success
+        data:
+          deviceId: "device-001"
+          gatewayId: "gateway-001"
+          name: "客厅灯"
+          deviceTypesList: ["light"]
+          endpoints:
+            - endpointId: 1
+              endpointName: "主灯"
+              deviceType: "light"
+              functions:
+                - functionCode: "ColorControl"
+                  traits:
+                    - traitCode: "ColorTemperature"
+                      parameter:
+                        type: "Integer"
+                        min: 153
+                        max: 500
+                        supportedValues: null
+                        unit: "mireds"
+                        step: 1
+                        readable: true
+                        writable: true
+                        subscribable: true
+                      value: 300
+                      time: 1710001234567
+                  commands:
+                    - commandCode: "MoveToXYColor"
+                      fields:
+                        - fieldCode: "ColorX"
+                          parameter:
+                            type: "Float"
+                            min: 0
+                            max: 1
+                            supportedValues: null
+                            unit: null
+                            step: 0.001
+                            mandatory: true
 
     DeleteDevicePointRequest:
       type: object
@@ -1958,6 +2538,32 @@ components:
         message: success
         data:
           deviceId: "virtual-device-001"
+
+    DeviceUnbindResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              nullable: true
+              description: After successful unbinding, return null or an empty string.
+              example: ""
+      example:
+        type: DeviceUnbindResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000018"
+        code: 0
+        message: success
+        data: null
+
+    DeviceUnbindRequest:
+      type: object
+      required: [deviceId]
+      properties:
+        deviceId:
+          type: string
+          description: Device ID to unbind.
 
     Endpoint:
       type: object
@@ -2496,6 +3102,57 @@ components:
             responded: true
             commandReportValue: "{\"result\":\"ok\"}"
             responseTime: 1710001234567
+
+    # ── Gateway ──────────────────────────────────────────────────
+    GatewayInfo:
+      type: object
+      required: [deviceId, deviceName]
+      properties:
+        deviceId:
+          type: string
+          description: Gateway device ID.
+        deviceName:
+          type: string
+          description: Gateway device name.
+        supportZigbee:
+          type: boolean
+          description: Whether it supports Zigbee. Default or null means that it does not support Zigbee.
+        supportedMatterRoles:
+          type: integer
+          description: |
+            Supported Matter roles. Missing or null means not supported.
+            This field is a bitmask. Use `supportedMatterRoles & <role value> != 0` to check if a specific role is supported:
+            - 1: Matter controller
+            - 2: Matter commissioner
+            - 4: Thread border router
+            - 8: Matter bridge
+            For example, `supportedMatterRoles & 2 != 0` means Matter sub-device commissioning is supported.
+          nullable: true
+        space:
+          $ref: '#/components/schemas/DeviceSpace'
+          nullable: true
+          description: Space where the gateway is located.
+     
+    GatewaysResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/GatewayInfo'
+      example:
+        type: GetGatewaysResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000000e"
+        code: 0
+        message: success
+        data:
+          - deviceId: "gateway-001"
+            deviceName: "Living Room Gateway M2"
+            supportZigbee: true
+            supportedMatterRoles: 1
 
     # ── Subdevice Join ────────────────────────────────────────────
     SubdeviceJoinRequest:
@@ -3177,6 +3834,195 @@ components:
         key:
           type: string
           description: Enum display text
+
+    # ── EMS (Energy Management System) ────────────────────────────
+    EmsTrendDeviceRequest:
+      type: object
+      required: [startTime, endTime, deviceId, dimension]
+      properties:
+        startTime:
+          type: integer
+          format: int64
+          description: Start time (UTC timestamp in milliseconds).
+          example: 1704067200000
+        endTime:
+          type: integer
+          format: int64
+          description: End time (UTC timestamp in milliseconds).
+          example: 1704153600000
+        deviceId:
+          type: string
+          description: Device ID.
+          example: "device_001"
+        dimension:
+          type: string
+          description: Aggregation dimension.
+          enum: ["1h", "1d", "month"]
+          example: "1h"
+
+    EmsTrendSpaceRequest:
+      type: object
+      required: [startTime, endTime, spaceId, dimension]
+      properties:
+        startTime:
+          type: integer
+          format: int64
+          description: Start time (UTC timestamp in milliseconds).
+          example: 1704067200000
+        endTime:
+          type: integer
+          format: int64
+          description: End time (UTC timestamp in milliseconds).
+          example: 1706745600000
+        spaceId:
+          type: string
+          description: Space ID (automatically identifies home or room).
+          example: "room_001"
+        dimension:
+          type: string
+          description: Aggregation dimension
+          enum: ["1h", "1d", "month"]
+          example: "1d"
+
+    EmsTotalDeviceRequest:
+      type: object
+      required: [startTime, endTime, deviceId]
+      properties:
+        startTime:
+          type: integer
+          format: int64
+          description: Start time (UTC timestamp in milliseconds).
+          example: 1704067200000
+        endTime:
+          type: integer
+          format: int64
+          description: End time (UTC timestamp in milliseconds).
+          example: 1704153600000
+        deviceId:
+          type: string
+          description: Device ID.
+          example: "device_001"
+
+    EmsTotalSpaceRequest:
+      type: object
+      required: [startTime, endTime, spaceId]
+      properties:
+        startTime:
+          type: integer
+          format: int64
+          description: Start time (UTC timestamp in milliseconds).
+          example: 1704067200000
+        endTime:
+          type: integer
+          format: int64
+          description: End time (UTC timestamp in milliseconds).
+          example: 1706745600000
+        spaceId:
+          type: string
+          description: Space ID (It would be automatically identified as home or room).
+          example: "home_001"
+
+    EmsTrendPoint:
+      type: object
+      required: [startTime, value]
+      properties:
+        startTime:
+          type: string
+          description: |
+            Start time, format depends on query dimension:
+            - 1h: yyyyMMddHH
+            - 1d: yyyyMMdd
+            - month: yyyyMM
+          example: "2024010100"
+        value:
+          type: number
+          format: double
+          description: Energy consumption value in kWh within the specified time interval
+          example: 1.5
+
+    EmsTotalData:
+      type: object
+      required: [totalValue]
+      properties:
+        totalValue:
+          type: number
+          format: double
+          description: Total energy consumption within the time interval (kWh).
+          example: 45.6
+
+    EmsDeviceTrendResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/EmsTrendPoint'
+      example:
+        type: EmsDeviceTrendResponse
+        version: v1
+        msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f010"
+        code: 0
+        message: success
+        data:
+          - startTime: "2024010100"
+            value: 1.5
+          - startTime: "2024010101"
+            value: 2.3
+
+    EmsSpaceTrendResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/EmsTrendPoint'
+      example:
+        type: EmsSpaceTrendResponse
+        version: v1
+        msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f011"
+        code: 0
+        message: success
+        data:
+          - startTime: "20240101"
+            value: 12.5
+          - startTime: "20240102"
+            value: 15.3
+
+    EmsDeviceTotalResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/EmsTotalData'
+      example:
+        type: EmsDeviceTotalResponse
+        version: v1
+        msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f012"
+        code: 0
+        message: success
+        data:
+          totalValue: 45.6
+
+    EmsSpaceTotalResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/EmsTotalData'
+      example:
+        type: EmsSpaceTotalResponse
+        version: v1
+        msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f013"
+        code: 0
+        message: success
+        data:
+          totalValue: 156.2
     
     StudioStatisticsDimension:
       type: string

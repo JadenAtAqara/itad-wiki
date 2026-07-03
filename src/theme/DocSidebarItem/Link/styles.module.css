@@ -1,0 +1,19 @@
+/**
+ * Override Docusaurus default sidebar link label clamping.
+ * Default theme clamps to 2 lines via `-webkit-line-clamp`.
+ */
+
+.menuExternalLink {
+  align-items: center;
+}
+
+.linkLabel {
+  overflow: visible;
+  display: inline;
+  line-clamp: initial;
+  -webkit-box-orient: initial;
+  -webkit-line-clamp: initial;
+  white-space: normal;
+  word-break: break-word;
+}
+

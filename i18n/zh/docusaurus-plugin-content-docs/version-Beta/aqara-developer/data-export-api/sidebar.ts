@@ -64,6 +64,12 @@ const sidebar: SidebarsConfig = {
         },
         {
           type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-matched-device-capabilities",
+          label: "查询设备匹配能力",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/execute-device-trait",
           label: "通过 Trait 控制设备",
           className: "api-method post",
@@ -98,6 +104,12 @@ const sidebar: SidebarsConfig = {
           label: "添加虚拟设备",
           className: "api-method post",
         },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/unbind-device",
+          label: "设备解绑",
+          className: "api-method post",
+        },
       ],
     },
     {
@@ -109,6 +121,12 @@ const sidebar: SidebarsConfig = {
       },
       collapsed: false,
       items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-gateways",
+          label: "查询网关列表",
+          className: "api-method get",
+        },
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/join-subdevice",
@@ -214,6 +232,41 @@ const sidebar: SidebarsConfig = {
           id: "version-Beta/aqara-developer/data-export-api/get-studio-statistics",
           label: "获取 Studio 统计信息",
           className: "api-method get",
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "EMS",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-developer/data-export-api/ems",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-ems-trend-device",
+          label: "查询单设备能耗趋势",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-ems-trend-space",
+          label: "查询单空间能耗趋势",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-ems-total-device",
+          label: "查询单设备能耗总量",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-ems-total-space",
+          label: "查询单空间能耗总量",
+          className: "api-method post",
         },
       ],
     },

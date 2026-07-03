@@ -1,0 +1,76 @@
+---
+id: get-ems-trend-device
+title: "查询单设备能耗趋势"
+description: "按时间维度（1h/1d/month）统计指定设备在设定时间范围内的能耗趋势，返回每个时间段内的能耗值。"
+sidebar_label: "查询单设备能耗趋势"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "post api-method"
+info_path: i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-developer/data-export-api/data-export-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"查询单设备能耗趋势"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/ems/trend/device"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+按时间维度（1h/1d/month）统计指定设备在设定时间范围内的能耗趋势，返回每个时间段内的能耗值。
+
+:::tip
+仅可查询能够提供耗电量数据的设备。详情请参考 Aqara Studio 文档 [能耗管理](https://docs.aqara.com/zh/docs/aqara-studio/energy-management-system#%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6)。
+:::
+
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["startTime","endTime","deviceId","dimension"],"properties":{"startTime":{"type":"integer","format":"int64","description":"起始时间（UTC 毫秒时间戳）。","example":1704067200000},"endTime":{"type":"integer","format":"int64","description":"结束时间（UTC 毫秒时间戳）。","example":1704153600000},"deviceId":{"type":"string","description":"设备 ID。","example":"device_001"},"dimension":{"type":"string","description":"聚合维度。","enum":["1h","1d","month"],"example":"1h"}},"title":"EmsTrendDeviceRequest"},"examples":{"hourlyTrend":{"value":{"startTime":1704067200000,"endTime":1704153600000,"deviceId":"device_001","dimension":"1h"}}}}}}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"请求发起成功","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"type":"array","items":{"type":"object","required":["startTime","value"],"properties":{"startTime":{"type":"string","description":"起始时间，格式取决于查询维度：\n- 1h: yyyyMMddHH\n- 1d: yyyyMMdd\n- month: yyyyMM\n","example":"2024010100"},"value":{"type":"number","format":"double","description":"该时间范围内的能耗值（kWh）","example":1.5}},"title":"EmsTrendPoint"}}}}],"example":{"type":"EmsDeviceTrendResponse","version":"v1","msgId":"2df2f431-a58d-4fdb-b39c-4f0d29e7f010","code":0,"message":"success","data":[{"startTime":"2024010100","value":1.5},{"startTime":"2024010101","value":2.3}]},"title":"EmsDeviceTrendResponse"},"examples":{"hourlyTrendSuccess":{"value":{"type":"EmsDeviceTrendResponse","version":"v1","msgId":"2df2f431-a58d-4fdb-b39c-4f0d29e7f010","code":0,"message":"success","data":[{"startTime":"2024010100","value":1.5},{"startTime":"2024010101","value":2.3},{"startTime":"2024010102","value":0.8}]}}}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 xxx 不能为空"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"token 已过期，请重新生成 token"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"无权限访问该资源"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"资源不存在"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"429":{"description":"请求频率过高","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000005","code":429,"message":"请求频率过高"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"服务内部异常"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"503":{"description":"服务不可用","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000007","code":503,"message":"服务暂时不可用"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      
