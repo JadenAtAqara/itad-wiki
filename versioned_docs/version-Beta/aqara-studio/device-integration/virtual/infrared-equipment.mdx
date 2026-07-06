@@ -26,12 +26,18 @@ The process for integrating an infrared device into Aqara Studio is as follows:
 2. In the pop-up window, select `Virtual` to add a Virtual device.
 3. Select `Virtual`, go to the `Add Device` tab, set the **Virtual Device Type** to **Infrared Equipment**, and set the **Name** of the device.   
     ![Enter Add Device tab](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Virtual-AddDeviceTab.png)
-4. Select the **Infrared Device Type** and its brand.    
+4. Select the **Infrared Device Type** and its brand.
+
+    If the device type is not in the list or is a custom device, select **Customize**. Then click **Next step** to start [infrared learning](#infrared-learning).
+    ![Select custom device type](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/IR-CustomDevice.png)
+    
 5. Aqara Studio will start downloading all code libraries for devices of this brand and type.
 6. Once the download is complete, select the applicable code library, and select the **Debug Gateway or Device** (used to send infrared commands to control the infrared device to be integrated, such as the Edge Hub M300).
 7. Click an infrared command. The **debug gateway or device** above will **flash a blue light**. Observe whether the infrared device to be integrated responds or not.
     If the device responds, it means this command can be used to control the device. Click the **Responsive** button.   
     If the device does not respond, it means this command cannot control the device. Click the **No Response** button.   
+
+<a id="infrared-learning"></a>    
 8. Besides using the preset infrared code libraries above, if the device requires more infrared commands, you can add new commands using the **Infrared Learning** feature.
     Click the **Add function points** button to open the **Add Button** pop-up window.
     

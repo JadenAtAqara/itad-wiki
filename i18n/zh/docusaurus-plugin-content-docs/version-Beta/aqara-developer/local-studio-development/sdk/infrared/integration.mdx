@@ -1,7 +1,5 @@
 # 集成红外遥控控制 SDK（含 UI）
 
-
-
 ## 概述
 
 Studio 红外遥控（带 UI）SDK 是基于 React Native 插件 `rn_device_ir` 提供的完整红外遥控能力，面向 **Aqara Studio** 场景。宿主 App 通过 Lumi React Native SDK 加载插件 Bundle，并传入 Studio OpenAPI 鉴权信息与目标页面，即可在 App 内打开：
@@ -35,8 +33,8 @@ SDK 内置 Aqara UX 设计的完整红外交互页面，宿主无需自行开发
 | 编译 SDK | API 36 |
 | Java | 11 |
 | Kotlin | 支持 |
-| 网络 | 手机需与 Aqara Studio 处于同一局域网；调试 HTTP 时需允许明文流量 |
-| Studio 侧 | 已部署并可访问 OpenAPI；需具备有效 `accessToken` / `refreshToken` / `clientId` |
+| 网络 | 手机需与 Aqara Studio 处于同一局域网；调试 HTTP 时需允许明文流量。 |
+| Studio 侧 | 已部署并可访问 OpenAPI；<br />已联系 Aqara 技术支持获取**登录**接口相关文档，从而获取有效 `accessToken`、`refreshToken` 和 `clientId`。 |
 
 ### 依赖版本
 
@@ -189,19 +187,19 @@ LumiReactNativeManager.getInstance().startRNPage(
 
 | 参数名 | 类型 | 必填 | 说明 | 示例 |
 | --- | --- | --- | --- | --- |
-| `studioHost` | `String` | 是 | Studio 服务地址，格式 `IP:Port` 或域名 | 192.168.1.1:80` |
-| `studioAccessToken` | `String` | 是 | OpenAPI 访问令牌 | openAPI 登录接口返回的字段 |
-| `studioRefreshToken` | `String` | 是 | OpenAPI 刷新令牌 | openAPI 登录接口返回的字段 |
-| `studioClientId` | `String` | 是 | OAuth Client ID | openAPI 登录接口返回的字段 |
-| `studioHttpDebug` | `Boolean` / `String` | 否 | 是否开启 OpenAPI 调试浮窗；`"true"` / `"1"` 为开启 | `"true"` |
+| `studioHost` | `String` | 是 | Studio 服务地址，格式 `IP:Port` 或域名。 | 192.168.1.1:80` |
+| `studioAccessToken` | `String` | 是 | OpenAPI 访问令牌，需从**登录接口**获取。 |  |
+| `studioRefreshToken` | `String` | 是 | OpenAPI 刷新令牌，需从**登录接口**获取。 |  |
+| `studioClientId` | `String` | 是 | OAuth Client ID，需从**登录接口**获取。 |  |
+| `studioHttpDebug` | `Boolean` / `String` | 否 | 是否开启 OpenAPI 调试浮窗；`"true"` / `"1"` 为开启。 | `"true"` |
 
 ### ControlIrDevicePage
 | 参数名 | 类型 | 必填 | 说明 | 示例 |
 | --- | --- | --- | --- | --- |
 | `studioHost` | `String` | 是 | Studio 服务地址，格式 `IP:Port` 或域名 | 192.168.1.1:80 |
-| `studioAccessToken` | `String` | 是 | OpenAPI 访问令牌 | openAPI 登录接口返回的字段 |
-| `studioRefreshToken` | `String` | 是 | OpenAPI 刷新令牌 | openAPI 登录接口返回的字段 |
-| `studioClientId` | `String` | 是 | OAuth Client ID | openAPI 登录接口返回的字段 |
+| `studioAccessToken` | `String` | 是 | OpenAPI 访问令牌，需从**登录接口**获取。 |  |
+| `studioRefreshToken` | `String` | 是 | OpenAPI 刷新令牌，需从**登录接口**获取。 |  |
+| `studioClientId` | `String` | 是 | OAuth Client ID，需从**登录接口**获取。 |  |
 | `studioDeviceId` | `String` | 是 | 红外设备Id | `Virtual.123456` |
 | `studioHttpDebug` | `Boolean` / `String` | 否 | 是否开启 OpenAPI 调试浮窗；`"true"` / `"1"` 为开启 | `"true"` |
 
