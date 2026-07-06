@@ -28,6 +28,10 @@
     ![进入添加设备标签页](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Virtual-AddDeviceTab.png)
 4. 选择该设备的**红外设备类型**，及其所属品牌。    
     ![选择红外设备类型](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-SelectTypeandBrand.png)
+
+    若该设备的类型未在列表中或为自定义设备，请选择**自定义**。随后点击**下一步**，进入 [红外学习流程](#红外学习流程)。
+    ![选择自定义设备类型](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-CustomDevice.png)
+    
 5. Aqara Studio 会开始下载该品牌的该类型设备的所有码库。
 6. 下载完成后，选择适用的码库，并选择**调试网关或设备**（用于发送红外指令控制待接入的红外设备，如智慧边端 M300）。
     ![选择码库和调试网关](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-SelectCodesandGateway.png)
@@ -35,6 +39,8 @@
     若设备响应，则说明该指令可用于控制该红外设备，单击**有响应**按钮。   
     若设备无响应，则说明该指令不可用于控制该红外设备，单击**无响应**按钮。   
     ![测试红外指令](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-TestCodes.png)
+
+<a id="红外学习流程"></a>    
 8. 除了使用上述预设的红外码库外，若设备有更多红外指令需求，可通过**红外学习**功能新增所需指令。
     单击**添加功能点**按钮，打开**添加按键**弹窗。
     ![单击添加功能点按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-AddFunctionPoint.png)   
