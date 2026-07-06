@@ -300,6 +300,15 @@ paths:
               type: string
           style: form
           explode: true
+        - name: deviceTypesMatchMode
+          in: query
+          description: "`deviceTypesList` 内多个设备类型的匹配方式；`or` 表示命中任意一个类型，`and` 表示必须同时命中全部类型。"
+          required: false
+          schema:
+            type: string
+            enum: [or, and]
+            default: or
+          example: or
         - name: deviceName
           in: query
           description: 设备名称模糊匹配（不区分大小写，空白值自动忽略）
@@ -350,6 +359,7 @@ paths:
                       pageSize: 200
                       data:
                         - deviceId: "device-001"
+                          gatewayId: "gateway-001"
                           deviceName: "客厅灯"
                           deviceTypesList: ["light"]
                           createTime: 1710001234567
@@ -640,137 +650,6 @@ paths:
                         commandCode: APIBindSubdeviceWithSecurityCode
                         code: 2201
                         message: invalid security code
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
-
-
-
-  # ────────────────────────────────────────────────────────────────
-  # MQTT 订阅 / 取消订阅
-  # ────────────────────────────────────────────────────────────────
-  /subscriptions/mqtt/subscribe:
-    post:
-      tags: [Subscription]
-      summary: 获取 MQTT 连接配置
-      description: |
-        调用此接口，传入指定的设备 ID，获取 MQTT 连接与 topic 订阅所需的信息，包括 Client ID、MQTT 服务地址、MQTT 服务端口、支持的协议、用户名、密钥等。 <br />
-        您可基于返回的客户端 ID 和特定规则，生成相关的 topic。加上其他返回的信息，通过第三方 MQTT 客户端连接 Aqara 提供的 MQTT Broker，订阅上述 topic，以实时获取指定设备的功能点值变化。
-      operationId: mqttSubscribe
-      x-skill-intent: subscription.mqtt.subscribe
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: subscription_create_or_refresh
-      parameters:
-        - $ref: '#/components/parameters/Accesstoken'
-        - $ref: '#/components/parameters/Appid'
-        - $ref: '#/components/parameters/Keyid'
-        - $ref: '#/components/parameters/Nonce'
-        - $ref: '#/components/parameters/Time'
-        - $ref: '#/components/parameters/Sign'
-        - $ref: '#/components/parameters/Lang'
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MqttSubscribeRequest'
-            examples:
-              subscribe:
-                value:
-                  deviceUniqueId: "device-unique-id-001"
-                  expiresIn: 7200
-      responses:
-        '200':
-          description: 请求发起成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MqttSubscribeResponse'
-              examples:
-                subscribeSuccess:
-                  value:
-                    type: MqttSubscribeResponse
-                    version: v4
-                    msgId: "2df2f431-xxxx-4fdb-xxxx-xxxxxxxx"
-                    code: 0
-                    message: success
-                    data:
-                      clientId: "omqt.studio_16xxxxxxxxxxx9"
-                      mqttHost: "mqtt.xxx.com"
-                      mqttPort: "1883"
-                      supportedProtocols: ["tcp"]
-                      secretId: "YmFzZTY0xxxxxxxxxxxxxxxxxxJldElk"
-                      secretKey: "YmFzZTY0xxxxxxxxxxxxxxxxxxxxxxleQ=="
-                      expiresIn: 7200
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
-  /subscriptions/mqtt/unsubscribe:
-    post:
-      tags: [Subscription]
-      summary: 使 MQTT 连接配置失效
-      description: |
-        调用此接口，传入指定的设备 ID，使该设备对应的 MQTT 连接配置失效。
-      operationId: mqttUnsubscribe
-      x-skill-intent: subscription.mqtt.unsubscribe
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: subscription_delete
-      parameters: 
-        - $ref: '#/components/parameters/Accesstoken'
-        - $ref: '#/components/parameters/Appid'
-        - $ref: '#/components/parameters/Keyid'
-        - $ref: '#/components/parameters/Nonce'
-        - $ref: '#/components/parameters/Time'
-        - $ref: '#/components/parameters/Sign'
-        - $ref: '#/components/parameters/Lang'
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MqttUnsubscribeRequest'
-            examples:
-              unsubscribe:
-                value:
-                  deviceUniqueId: "device-unique-id-001"
-      responses:
-        '200':
-          description: 请求发起成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MqttUnsubscribeResponse'
-              examples:
-                unsubscribeSuccess:
-                  value:
-                    type: MqttUnsubscribeResponse
-                    version: v4
-                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f002"
-                    code: 0
-                    message: success
-                    data: null
         '400':
           $ref: '#/components/responses/BadRequestResponse'
         '401':
@@ -1144,6 +1023,10 @@ components:
         deviceId:
           type: string
           description: 设备 ID。
+        gatewayId:
+          type: string
+          nullable: true
+          description: 所属网关 ID。
         deviceName:
           type: string
           description: 设备名称。
@@ -1183,7 +1066,14 @@ components:
       properties:
         deviceId:
           type: string
-          description: 设备 ID
+          description: 设备 ID。
+        gatewayId:
+          type: string
+          nullable: true
+          description: |
+            此设备所绑定的网关 ID。
+            如果 `gatewayId` 等于 `deviceId`，表示这个设备自身是网关。
+            如果 `gatewayId` 为 `null` 或空字符串，表示这个设备是不带子设备的直连网关或第三方接入设备。
         name:
           type: string
           description: 设备名称。
@@ -1213,6 +1103,7 @@ components:
         msgId: "123"
         data:
           - deviceId: lumi3.86108040f2b03a4e
+            gatewayId: lumi3.86108040f2b03a4e
             name: Hub
             deviceTypesList:
               - Hub
@@ -1233,7 +1124,7 @@ components:
                         value: "4.5.50_0021"
                         time: 1780900703977
                         pointName: Firmware version number
-                    commands: []
+                    commands: []         
         code: 0
         message: success
 
@@ -1769,6 +1660,7 @@ components:
           pageSize: 200
           data:
             - deviceId: "device-001"
+              gatewayId: "gateway-001"
               deviceName: "客厅灯"
               deviceTypesList: ["light"]
               createTime: 1710001234567
@@ -1777,72 +1669,3 @@ components:
                 parentSpaceId: "space-home-001"
                 spaceId: "space-room-001"
                 name: "客厅"
-
-    # ── MQTT ─────────────────────────────────────────────────────
-    MqttSubscribeRequest:
-      type: object
-      properties:
-        deviceUniqueId:
-          type: string
-          description: 设备唯一标识（设备 ID）。若不在此字段中配置设备 ID，也可在请求头（Header）的 `Device-Unique-Id` 字段中传递该信息。
-        expiresIn:
-          type: integer
-          format: int32
-          description: 有效期（秒），取值范围为 [7200, 604800]；不在范围内或不传时默认 7200。
-          minimum: 7200
-          maximum: 604800
-
-    MqttUnsubscribeRequest:
-      type: object
-      properties:
-        deviceUniqueId:
-          type: string
-          description: 设备唯一标识（设备 ID）。若不在此字段中配置设备 ID，也可在请求头（Header）的 `Device-Unique-Id` 字段中传递该信息。
-
-    MqttSubscribeData:
-      type: object
-      required: [clientId, mqttHost, mqttPort, supportedProtocols, secretId, secretKey, expiresIn]
-      properties:
-        clientId:
-          type: string
-          description: |
-            MQTT Client ID。获取此信息后，请按规则 `receive_${clientId}` 生成订阅 topic。<br />
-            示例：当 `clientId` 为 `omqt.studio_16ce93b6fc723f0d9f0dc02f4d4a2f15_123456789` 时，topic 为 `receive_omqt.studio_16ce93b6fc723f0d9f0dc02f4d4a2f15_123456789`。
-        mqttHost:
-          type: string
-          description: MQTT 服务地址。
-        mqttPort:
-          type: string
-          description: MQTT 服务端口。
-        supportedProtocols:
-          type: array
-          description: 支持的协议列表。
-          items:
-            type: string
-        secretId:
-          type: string
-          description: Base64 编码后的 MQTT 用户名。
-        secretKey:
-          type: string
-          description: Base64 编码后的 MQTT 密钥。
-        expiresIn:
-          type: integer
-          format: int32
-          description: 订阅有效期（秒）。
-
-    MqttSubscribeResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              $ref: '#/components/schemas/MqttSubscribeData'
-
-    MqttUnsubscribeResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              nullable: true
-              description: 固定返回 null。
