@@ -561,27 +561,6 @@
                       "className": "api-method post"
                     }
                   ]
-                },
-                {
-                  "type": "category",
-                  "label": "Subscription",
-                  "link": {
-                    "type": "doc",
-                    "id": "aqara-developer/aiot-api/subscription"
-                  },
-                  "collapsed": false,
-                  "items": [
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/aiot-api/mqtt-subscribe",
-                      "className": "api-method post"
-                    },
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/aiot-api/mqtt-unsubscribe",
-                      "className": "api-method post"
-                    }
-                  ]
                 }
               ]
             }
