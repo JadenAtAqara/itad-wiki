@@ -23,7 +23,11 @@
     "message": "虚拟设备接入",
     "description": "The label for category 'Virtual' in sidebar 'aqaraStudioSidebar'"
   },
-  "sidebar.aqaraStudioSidebar.category.Device Management": {
+  "sidebar.aqaraStudioSidebar.category.Device Export": {
+    "message": "设备转出",
+    "description": "The label for category 'Data Export' in sidebar 'aqaraStudioSidebar'"
+  },
+    "sidebar.aqaraStudioSidebar.category.Device Management": {
     "message": "设备管理",
     "description": "The label for category 'Device Management' in sidebar 'aqaraStudioSidebar'"
   },
