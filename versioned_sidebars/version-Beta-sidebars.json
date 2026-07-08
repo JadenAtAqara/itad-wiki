@@ -46,8 +46,21 @@
                   "aqara-studio/device-integration/knx-ip",
                   "aqara-studio/device-integration/mqtt",
                   "aqara-studio/device-integration/http",
+                  "aqara-studio/device-integration/sonos",
+                  "aqara-studio/device-integration/aqara-coap",
                   "aqara-studio/device-integration/virtual/infrared-equipment",
                   "aqara-studio/device-integration/virtual/light-box"
+                ]
+              },
+              {
+                "type": "category",
+                "label": "Device Export",
+                "link": {
+                  "type": "generated-index",
+                  "keywords": ["device-export"]
+                },
+                "items": [
+                  "aqara-studio/device-export/aiot"
                 ]
               },
               {
@@ -128,14 +141,16 @@
             "label": "Settings",
             "collapsed": false,
             "items": [
+              "aqara-studio/network-settings",
+              "aqara-studio/general-settings",
+              "aqara-studio/static-ip",
               "aqara-studio/wireless-connection",
-              "aqara-studio/factory-reset",
               "aqara-studio/cloud",  
               "aqara-studio/remote-access",
               "aqara-studio/system-update",
               "aqara-studio/technical-support",
               "aqara-studio/local-domain-name-access",
-              "aqara-studio/static-ip"
+              "aqara-studio/factory-reset"
               ]
           }
         ]      
