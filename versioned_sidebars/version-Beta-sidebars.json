@@ -155,6 +155,7 @@
           }
         ]      
     },
+    "aqara-studio/plugin-market",
     {
       "type": "category",
       "label": "Developer",
