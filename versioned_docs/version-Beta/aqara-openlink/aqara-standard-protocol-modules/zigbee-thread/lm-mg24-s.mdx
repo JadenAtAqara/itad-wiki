@@ -1,0 +1,227 @@
+# LM-MG24-S Module Specification
+
+## Overview
+
+The Aqara MG24 module solution is an ideal mesh IoT wireless connectivity option, built on the EFR32MG24 chip featuring a Cortex®-M33 core with a maximum operating frequency of 78.0 MHz, up to 1536 KB of Flash memory, and 256 KB of RAM. It supports development of wireless communication technologies such as Matter, OpenThread, and Zigbee, and includes reserved IPx antenna interface and PCB antenna interface.
+
+## List of Hardware Resources
+
+**Module size:** 18(±0.35) × 18(±0.35) × 5(±0.35) mm, surface-mounted 24-pin;  
+**Wide operating voltage range:** 2.0 V to 3.8 VDC  
+
+**Radio-frequency signal**
+- 2.4 GHz radio operation
+- -97.6 dBm sensitivity @ 1 Mbps GFSK
+- -94.8 dBm sensitivity @ 2 Mbps GFSK
+
+**Power consumption**
+- 4.4 mA RX current (1 Mbps GFSK) 
+- 5 mA TX current @ 0 dBm output power
+- 19.1 mA TX current @ 10 dBm output power
+- 156.8 mA TX current @ 19.5 dBm output power
+- 33.4 μA/MHz in Active Mode (EM0) at 39.0 MHz
+- 1.3 μA EM2 DeepSleep current (16 kB RAM retention and RTC running from LFRCO)
+
+## Introduction to the Hardware System
+
+![Hardware Schematic Diagram](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-Hardware.png)
+
+## Module Pin Layout and Application
+
+![Module pin layout and application](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-Pins.png)
+
+### General-purpose I/O port
+
+<table>
+  <thead>
+    <tr>
+      <th>Pin Name</th>
+      <th>Description</th>
+      <th>Special Instructions for Use as an Enabling Module</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PB05</td>
+      <td>GPIO</td>
+      <td>Reset user MCU, active low.</td>
+    </tr>
+    <tr>
+      <td>PB01</td>
+      <td>GPIO</td>
+      <td>As an ISP function, it connects to the I/O ports of the user's MCU and is used for OTA updates of the user's MCU.</td>
+    </tr>
+    <tr>
+      <td>PA05</td>
+      <td>Module UART TX</td>
+      <td rowspan="2">The communication interface connecting the user MCU.</td>
+    </tr>
+    <tr>
+      <td>PA06</td>
+      <td>Module UART RX</td>
+    </tr>
+    <tr>
+      <td>PB00</td>
+      <td>GPIO</td>
+      <td>Used as the wake-up port in low-power devices, this module enables the user MCU to be awakened. It needs to be connected to the external interrupt port of the user MCU, and an external 100K pull-up resistor should be connected. If the device is not a low-power device, it can be left unconnected.</td>
+    </tr>
+    <tr>
+      <td>PB03</td>
+      <td>GPIO</td>
+      <td>Used as the wake-up port in low-power devices, this module enables the user's MCU to be awakened. It needs to be connected to the external interrupt port of the user's MCU, and an external 100K pull-up resistor should be connected. If the device is not a low-power device, simply leave it unconnected.</td>
+    </tr>
+    <tr>
+      <td>PC01</td>
+      <td>FlASH_CLK</td>
+      <td rowspan="4">Used for modding and hacking - 4M FLASH.</td>
+    </tr>
+    <tr>
+      <td>PC05</td>
+      <td>FlASH_CS</td>
+    </tr>
+    <tr>
+      <td>PC00</td>
+      <td>FlASH_DI</td>
+    </tr>
+    <tr>
+      <td>PC04</td>
+      <td>FlASH_DO</td>
+    </tr>
+    <tr>
+      <td>ANT</td>
+      <td>2.4 GHz RF input/output</td>
+      <td>Built-in antenna mode antenna outlet.</td>
+    </tr>
+    <tr>
+      <td>VCC_3V3</td>
+      <td>Connect to Power</td>
+      <td>Module power supply 3.3V VCC.</td>
+    </tr>
+    <tr>
+      <td>GND</td>
+      <td>Connect to Ground</td>
+      <td>Module grounding GND.</td>
+    </tr>
+    <tr>
+      <td colspan="3">The other unused pins are left floating.</td>
+    </tr>
+  </tbody>
+</table>
+
+### Function debugging of I/O ports
+| Order Number | Pin Name | Functional Description |
+|------|----------|----------------------------------|
+| 1    | VCC      | Positive terminal of the power supply                         |
+| 2    | GND      | Negative terminal of the power supply                         |
+| 3    | RSTN     | Reset pin, the RESETn pin is internally pulled up to DVDD |
+| 4    | PA09     | GPIO                             |
+| 5    | PA08     | GPIO                             |
+| 6    | PA03     | GPIO                             |
+| 7    | PA02     | GPIO                             |
+| 8    | PA01     | GPIO                             |
+| 9    | NC       | The module does not have this pin; keep it floating            |
+| 10   | NC       | The module does not have this pin; keep it floating            |
+
+#### Packaging requirements
+
+Package name: CONNECT - PH - 2X5 - 1.27mm
+
+The numbering of the solder pads is uniformly arranged as follows:
+
+![Pic 1](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-Pic1.png)   
+![Pic 2](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-Pic2.png)
+
+:::tip
+The RSTN reset is internally pulled up, so an external pull-up resistor is no longer required. Connecting a pull-up resistor externally may create a leakage current path, increasing the module's standby current.
+:::
+
+### Absolute Maximum Ratings
+
+| Parameter                         | Symbol     | Min  | Max      | Unit  |
+|------------------------------------|------------|------|----------|-------|
+| Voltage on any supply pin          | VDDMAX     | -0.3 | 3.8      | V     |
+| Voltage ramp rate on any supply pin| VDDRAMPMAX | -    | 1.0      | V/us  |
+| DC voltage on any GPIO pin         | VDIGPIN    | -0.3 | VDD+0.3  | V     |
+
+## Reference Design Circuit
+
+![Circuit](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/en/LMMG24S-Circuit.png)
+
+## Module Size and Recommended Packaging
+
+### Schematic Diagram Packaging
+
+![Schematic diagram packaging](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-SchematicDiagramPackaging.png)
+
+### PCB Packaging
+
+Package name:BLE-Small-MG24Module. 
+
+![PCB1](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-PCB1.png)
+
+![PCB2](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-PCB2.png)
+
+Single pad size：1.6mm*0.8mm，Pad spacing 1.3mm
+
+## Attention
+
+### Flash Needs to be Reserved for Packaging on the Substrate.
+
+Aqara project generally has the requirement for external Flash expansion, and the corresponding required I/O ports are as shown in the table below.
+
+| Pin Name | Pin Attribute | Flash Interface Function |
+|---------|----------|-------------------|
+| PC01    | GPIO     | FLASH_CLK         |
+| PC05    | GPIO     | FLASH_CS          |
+| PC00    | GPIO     | FLASH_DI          |
+| PC04    | GPIO     | FLASH_DO          |
+
+The WP and HOLD signals of Flash can be pulled on the substrate. For the specific packaging and model of Flash that need to be reserved, please confirm with the hardware engineer of the Aqara.
+
+Reference design:
+
+![Flash reference](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-Flash.png)
+
+The table below lists the recommended flash models.
+
+| Type                | Vendor   | Memory Capacity | Specification                                              |
+|------------------------|----------|-----------|--------------------------------------------------|
+| ZB25VQ32ETJG           | ZbitSemi | 4M byte   | Nor Flash\32M-bit\2.3V-3.6V\SOP8-150mil\         |
+| ZB25VQ32DDJG           | ZbitSemi | 4M byte   | Nor Flash\32M-bit\2.3V~3.6V\DFN8 2*3mm\          |
+| ZB25VQ32DTJGR          | ZbitSemi | 4M byte   | Nor Flash\32M-bit\2.3V-3.6V\SOP8-150mil\         |
+| PY25Q32HB-SSH-KR-SF    | Puya     | 4M byte   | Nor Flash\32M-bit\2.3V~3.6V\-40~105℃\SOP8\       |
+| XT25F32FSOIGT          | XTX      | 4M byte   | Nor Flash\32M-bit\2.7V-3.6V\SOP8-150mil\         |
+
+### Two Antenna Design Methods
+
+The first type features IPEX generation sockets on the module, which can be snapped together.
+
+The second method involves using the top pins of the module to transmit the antenna signal to the bottom plate, and then designing the antenna form on the bottom plate.
+
+By adjusting the welding states of resistors R3 and R4, the antenna connection mode of the MG24 module can be selected: IPX antenna or external PCB antenna.
+
+| Antenna Solution   | R3   | R4   |
+|-----------|------|------|
+| IPX ANT   | ×    | √    |
+| PCB ANT   | √    | ×    |
+
+:::tip
+×: No wielding.
+√: Wielding.
+:::
+
+Schematic Diagram:
+
+![Schematic Diagram](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-Antenna.png)
+
+
+## Configuration options
+
+To better meet the requirements of different projects, this module offers the following hardware configurations for selection.
+
+| | Configuration Options | Applicable For |
+| -- | -- | -- |
+| Antenna method | <ul><li>1. PCB Antenna: Built-in printed antenna, no additional assembly required, low cost, suitable for compact overall design of the device.</li><li>2. IPX Antenna: Connects to an external FPC antenna or rod antenna via an IPX connector. The antenna position can be flexibly arranged, facilitating the optimization of RF performance.</li></ul> | <ul><li>1. PCB antenna: Suitable for products with limited space, simple antenna environment, and high requirements for production consistency (such as smart sockets, small household appliances).</li><li>2. IPX antenna: Suitable for scenarios where the outer casing is made of metal or is covered by a large screen, where long-distance transmission is required or where the on-site signal is complex (such as gateways, industrial sensors).</li></ul> | 
+| Radio-frequency power | <ul><li>10dBm: Lower power consumption, lower power supply requirements, suitable for short-range communication.</li><li>20dBm: Longer coverage distance, stronger ability to penetrate walls, but with higher transient current (requires DVDD 3.3V power supply).</li></ul> | <ul><li>10dBm: Suitable for devices with short transmission distances, those sensitive to the overall power consumption, or those powered by button batteries.</li><li>20dBm: Suitable for applications requiring long-range coverage or complex indoor environments (such as multi-story buildings, warehouses).</li></ul> | 
+| Power consumption configuration | <ul><li>With low-power inductor</li><li>Without low-power inductor</li></ul> | Low-power inductors are used in DC-DC power circuits, which can effectively reduce the static current of the module during deep sleep and receiving states, significantly enhancing the battery-powered device's endurance. | 
+| Crystal oscillator configuration | <ul><li>85℃ Crystal</li><li>105℃ Crystal</li></ul> | <ul><li>85°C Crystal Oscillator: Suitable for regular indoor and office environments.</li><li>105°C Crystal Oscillator: Applicable to equipment exposed to direct sunlight, around heating appliances, and inside car cabins, ensuring long-term reliability in high-temperature scenarios.</li></ul> |
