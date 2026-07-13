@@ -1,0 +1,224 @@
+# LM-MG24-S 模组规格书
+
+## 概述
+
+Aqara MG24-S 模块方案是理想的网状物联网无线连接方案，采用 EFR32MG24 芯片，使用 Cortex®-M33  内核，运行速度高达 78.0  MHz ，高达 1536kb  的 Flash 和 256kb  的 RAM ，能够支 持 Matter, OpenThread 和 Zigbee  等无线通信技术产品开发； 并预 留 IPx 天线接口和 PCB 天线接口。
+
+## 硬件资源列表
+
+模块尺寸 18(±0.35) * 18(±0.35) * 5(±0.35)mm，贴片 24pin。   
+
+宽工作电压范围 2.0 V to 3.8 VDC。   
+
+射频信号：   
+- 2.4 GHz radio operation
+- -97.6 dBm sensitivity @ 1 Mbps GFSK
+- -94.8 dBm sensitivity @ 2 Mbps GFSK
+
+功耗：   
+- 4.4 mA RX current (1 Mbps GFSK) 
+- 5 mA TX current @ 0 dBm output power
+- 19.1 mA TX current @ 10 dBm output power
+- 156.8 mA TX current @ 19.5 dBm output power
+- 33.4μA/MHz in Active Mode (EM0) at 39.0 MHz
+- 1.3μA EM2 DeepSleep current (16 kB RAM retention and RTC running from LFRCO)
+
+## 硬件系统简介
+
+![硬件原理图](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-Hardware.png)
+
+## 模块引脚分布及应用
+
+![模块引脚分布及应用](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-Pins.png)
+
+### 通用业务 IO 口
+
+<table>
+  <thead>
+    <tr>
+      <th>引脚名称</th>
+      <th>功能描述</th>
+      <th>作为赋能模组使用的特殊说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PB05</td>
+      <td>GPIO</td>
+      <td>复位用户 MCU 使用，低电平有效。</td>
+    </tr>
+    <tr>
+      <td>PB01</td>
+      <td>GPIO</td>
+      <td>作为ISP脚使用，连接用户MCU的IO口，对用户MCU OTA升级时使用。</td>
+    </tr>
+    <tr>
+      <td>PA05</td>
+      <td>模组UART TX</td>
+      <td rowspan="2">连接用户MCU的通信接口。</td>
+    </tr>
+    <tr>
+      <td>PA06</td>
+      <td>模组UART RX</td>
+    </tr>
+    <tr>
+      <td>PB00</td>
+      <td>GPIO</td>
+      <td>低功耗设备下作为唤醒口使用，赋能模块唤醒用户 MCU，需接用户 MCU 外部中断口，外部接 100K 上拉电阻；<br/>若设备为非低功耗设备，悬空即可。</td>
+    </tr>
+    <tr>
+      <td>PB03</td>
+      <td>GPIO</td>
+      <td>低功耗设备下作为唤醒口使用，赋能模块唤醒用户MCU，需接用户MCU外部中断口，外部接100K上拉电阻；<br/>若设备为非低功耗设备，悬空即可。</td>
+    </tr>
+    <tr>
+      <td>PC01</td>
+      <td>FlASH_CLK</td>
+      <td rowspan="4">用于模组外挂 4M FLASH。</td>
+    </tr>
+    <tr>
+      <td>PC05</td>
+      <td>FlASH_CS</td>
+    </tr>
+    <tr>
+      <td>PC00</td>
+      <td>FlASH_DI</td>
+    </tr>
+    <tr>
+      <td>PC04</td>
+      <td>FlASH_DO</td>
+    </tr>
+    <tr>
+      <td>ANT</td>
+      <td>2.4 GHz RF input/output</td>
+      <td>板载天线模式天线出口。</td>
+    </tr>
+    <tr>
+      <td>VCC_3V3</td>
+      <td>Connect to Power</td>
+      <td>模组供电 3.3V VCC。</td>
+    </tr>
+    <tr>
+      <td>GND</td>
+      <td>Connect to Ground</td>
+      <td>模组接地 GND。</td>
+    </tr>
+    <tr>
+      <td colspan="3">其他未使用的引脚都保持悬空。</td>
+    </tr>
+  </tbody>
+</table>
+
+### 功能调试IO口
+| 序号 | 引脚名称 | 功能描述                         |
+|------|----------|----------------------------------|
+| 1    | VCC      | 电源正极                         |
+| 2    | GND      | 电源负极                         |
+| 3    | RSTN     | 复位引脚，RESETn 引脚在内部上拉至DVDD |
+| 4    | PA09     | GPIO                             |
+| 5    | PA08     | GPIO                             |
+| 6    | PA03     | GPIO                             |
+| 7    | PA02     | GPIO                             |
+| 8    | PA01     | GPIO                             |
+| 9    | NC       | 模组无该引脚，保持悬空            |
+| 10   | NC       | 模组无该引脚，保持悬空            |
+
+#### 封装要求
+
+封装名：CONNECT-排针-2X5-1.27MM   
+焊盘编号统一排序如下：   
+![Pic 1](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-Pic1.png)   
+![Pic 2](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-Pic2.png)
+
+:::tip
+RSTN 复位已在内部上拉，外围电路不再需要接上拉电阻，若外部接上拉电阻会形成漏电回路，模组待机电流会变大。
+:::
+
+### 接口最大电压值
+| 参数           | 符号         | 最小值       | 最大值           | 单位   |
+| -------------- | ------------ | ------------ | ---------------- | ------ |
+| 电源电压       | VDDMAX       | -0.3         | 3.8              | V      |
+| 电源上升速率   | VDDRAMPMAX   | -            | 1.0              | V/us   |
+| GPIO上的直流电压 | VDIGPIN     | -0.3         | 电源电压+0.3     | V      |
+
+## 参考设计电路
+
+![Circuit](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-Circuit.png)
+
+## 模块尺寸及推荐封装
+
+### 原理图封装
+
+![Schematic diagram packaging](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-SchematicDiagramPackaging.png)
+
+### PCB 封装
+
+封装名：BLE-Small-MG24Module。
+
+![PCB1](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-PCB1.png)
+
+![PCB2](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-PCB2.png)
+
+单焊盘尺寸：1.6mm*0.8mm，焊盘间距 1.3mm
+
+## 特别注意
+
+### 底板上需预留 Flash 电路
+
+绿米项目基本都有外扩 Flash 需求，对应需要的 IO 口是：
+
+| 引脚名称 | 引脚属性 | Flash 接口功能     |
+|---------|----------|-------------------|
+| PC01    | GPIO     | FLASH_CLK         |
+| PC05    | GPIO     | FLASH_CS          |
+| PC00    | GPIO     | FLASH_DI          |
+| PC04    | GPIO     | FLASH_DO          |
+
+Flash 的 WP 和 HOLD 信号在底板上拉即可，具体 Flash 要预留的封装和型号，请与 Aqara 硬件工程师确认。
+
+底板端 Flash 参考设计：
+
+![Flash 参考](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-Flash.png)
+
+下表为推荐 Flash 型号：
+
+| Flash型号                | 生产厂家   | 容量       | 规格                                              |
+|------------------------|----------|-----------|--------------------------------------------------|
+| ZB25VQ32ETJG           | ZbitSemi | 4M byte   | Nor Flash\32M-bit\2.3V-3.6V\SOP8-150mil\         |
+| ZB25VQ32DDJG           | ZbitSemi | 4M byte   | Nor Flash\32M-bit\2.3V~3.6V\DFN8 2*3mm\          |
+| ZB25VQ32DTJGR          | ZbitSemi | 4M byte   | Nor Flash\32M-bit\2.3V-3.6V\SOP8-150mil\         |
+| PY25Q32HB-SSH-KR-SF    | Puya     | 4M byte   | Nor Flash\32M-bit\2.3V~3.6V\-40~105℃\SOP8\       |
+| XT25F32FSOIGT          | XTX      | 4M byte   | Nor Flash\32M-bit\2.7V-3.6V\SOP8-150mil\         |
+
+### 两种天线设计方式
+
+第一种在模组上有IPEX一代座子，可以扣合。
+
+第二种通过模组顶端 Pin，将天线信号给到底板端，在底板上再设计天线的形式。
+
+通过调整电阻R3和R4焊接状态可以选择MG24模块天线连接方式：IPX 天线、外接 PCB 天线；
+
+| 天线方案   | R3   | R4   |
+|-----------|------|------|
+| IPX天线   | ×    | √    |
+| PCB天线   | √    | ×    |
+
+:::tip
+×：不焊接。
+√：焊接。
+:::
+
+示意图：
+![示意图](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-Antenna.png)
+
+
+## 配置选项
+
+为了更好匹配不同项目需求，该模组有下列硬件配置可选
+
+| | 配置项 | 适用环境 |
+| -- | -- | -- |
+| 天线方式 | <ul><li>PCB天线：板载印刷天线，无需额外组装，成本低，适合结构紧凑的整机设计。</li><li>IPX天线：通过IPX连接器外接FPC天线或棒状天线，天线位置可灵活布置，便于优化射频性能。</li></ul> | <ul><li>PCB天线：适用于体积受限、天线环境简单、量产一致性要求较高的产品（如智能插座、小家电）。</li><li>IPX天线：适用于外壳金属/大屏遮挡、需远距离传输或现场信号复杂的场景（如网关、工业传感器）。</li></ul> | 
+| 射频功率 | <ul><li>10dBm：功耗更低，对电源要求低，适合近距离通信。</li><li>20dBm：覆盖距离更远，穿墙能力更强，但瞬态电流更大（需要DVDD3.3V供电）。</li></ul> | <ul><li>10dBm：适用于传输距离较近、对整机功耗敏感或使用纽扣电池供电的设备。</li><li>20dBm：适用于需要远距离覆盖或复杂室内环境（如多层楼宇、仓库）的应用。</li></ul> | 
+| 功耗配置 | <ul><li>带低功耗电感</li><li>不带低功耗电感</li></ul> | 低功耗电感用于DC-DC电源电路中，可有效降低模组在深度睡眠及接收状态下的静态电流，显著提升电池供电设备的续航能力。 | 
+| 晶振配置 | <ul><li>85℃晶振</li><li>105℃晶振</li></ul> | <ul><li>85°C晶振：适配室内家居、办公等常温场景。</li><li>105°C晶振：适用于户外暴晒设备、加热器具周边、汽车舱内、大功耗设备等高温场景，确保长期可靠性。</li></ul> |
