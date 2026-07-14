@@ -38,6 +38,10 @@ Do not change function names or parameter definitions. `build*Request` functions
 Not every function must be implemented in every project. For example, if your protocol does not require a reply to point reports, `buildReportResponse` can be omitted. If there is no dedicated point discovery request, `parseDiscoverPointsResponse` can return point information directly.
 :::
 
+## Console Logging
+
+Scripts can output diagnostic logs through `console.log`, `console.info`, `console.debug`, `console.warn`, and `console.error`. Multiple arguments are joined with spaces, while `warn` and `error` messages use the `[warn]` and `[error]` prefixes. Logs appear in the read-only `Console Content` field on the protocol configuration page and are limited to 2048 characters; older content is replaced when the limit is exceeded. Each script parser accepts up to 20 log entries per second; excess entries are discarded and summarized in the next time window. Each entry retains up to 512 characters and converts only the first 16 arguments. Do not log unconditionally inside loops or high-frequency message handlers; use a debug condition or sampled logging instead.
+
 ## Prerequisites
 
 Before writing the script, make sure you fully understand the target device’s UDP or TCP protocol details, including but not limited to:
@@ -243,6 +247,8 @@ function packetProcessConfig() {
 
 ## dispatch
 
+This function is required for TCP/UDP scripts.
+
 Implement the dispatch logic so Aqara Studio can determine which parser should process a given incoming packet.
 
 ### Behavior
@@ -316,7 +322,7 @@ function dispatch(fromAcceptMessage) {
 
 Parse the device discovery response and return an array of device objects.
 
-If `buildDiscoverPointsRequest` is not defined, Aqara Studio may also use this return value as the basis for point discovery, so make sure the returned structure is stable.
+If `buildDiscoveryRequest` is not defined, Aqara Studio may also use this return value as the basis for device discovery, so make sure the returned structure is stable.
 
 ### Parameters
 

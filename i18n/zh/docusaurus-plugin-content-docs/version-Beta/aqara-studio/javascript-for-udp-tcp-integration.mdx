@@ -38,6 +38,10 @@
 并非所有函数都必须在所有设备场景下实现。例如，如果您的设备不需要主动上报回复，`buildReportResponse` 可以不实现；如果没有独立的点位发现请求，也可通过 `parseDiscoverPointsResponse` 直接返回点信息。
 :::
 
+## 控制台日志
+
+脚本支持使用 `console.log`、`console.info`、`console.debug`、`console.warn` 和 `console.error` 输出调试日志。多个参数会以空格拼接，`warn` 和 `error` 日志分别带有 `[warn]` 和 `[error]` 前缀。日志显示在协议配置页的只读字段 `Console Content` 中，最多保留 2048 个字符；超出限制时旧内容会被替换。每个脚本解析器每秒最多接收 20 条日志，超出部分会被忽略并在下一时间窗口输出汇总提示；单条日志最多保留 512 个字符并转换前 16 个参数。请勿在循环或高频报文处理函数中无条件输出日志，调试时应使用条件开关或采样输出。
+
 ## 前提条件
 
 在编写脚本前，请先充分了解目标设备的 UDP 或 TCP 协议细节，包括但不限于：
@@ -253,6 +257,8 @@ function packetProcessConfig() {
 
 ## dispatch
 
+该函数是 TCP/UDP 脚本的必填函数。
+
 请在该函数中实现“报文分发逻辑”，以便 Aqara Studio 根据设备返回的字节报文判断应调用哪个解析函数。
 
 ### 作用说明
@@ -326,7 +332,7 @@ function dispatch(fromAcceptMessage) {
 
 请在该函数中解析设备发现响应报文，并返回设备信息对象数组。
 
-如果未定义 `buildDiscoverPointsRequest`，Aqara Studio 也可能直接使用该函数返回的数据作为点位发现依据，因此请确保返回结果结构稳定。
+如果未定义 `buildDiscoveryRequest`，Aqara Studio 也可能直接使用该函数返回的数据作为设备发现依据，因此请确保返回结果结构稳定。
 
 ### 入参说明
 

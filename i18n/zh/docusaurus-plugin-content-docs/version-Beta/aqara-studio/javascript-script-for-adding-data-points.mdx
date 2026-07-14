@@ -14,6 +14,10 @@
 请勿更改方法的参数及其输入输出结构。
 :::
 
+## 控制台日志
+
+脚本支持使用 `console.log`、`console.info`、`console.debug`、`console.warn` 和 `console.error` 输出调试日志。多个参数会以空格拼接，`warn` 和 `error` 日志分别带有 `[warn]` 和 `[error]` 前缀。日志显示在协议配置页的只读字段 `Console Content` 中，最多保留 2048 个字符；超出限制时旧内容会被替换。每个脚本解析器每秒最多接收 20 条日志，超出部分会被忽略并在下一时间窗口输出汇总提示；单条日志最多保留 512 个字符并转换前 16 个参数。请勿在循环或高频报文处理函数中无条件输出日志，调试时应使用条件开关或采样输出。
+
 ## parseDiscoveryResponse
 
 该方法 `parseDiscoveryResponse` 主要用于向 Aqara Studio 声明需要接入的 MQTT 设备的基本配置信息。
