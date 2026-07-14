@@ -6,24 +6,40 @@
 
 请参考 [插件市场](./../plugin-market.mdx) 文档，前往 [Aqara Builder](https://builder.aqara.com) 安装 `TCP Protocol Access` 插件。
 
-支持两种添加：脚本添加和手动添加
-这两种添加的使用场景
+## 添加 TCP 设备
 
-build：需要填写 udp 服务端 ip
-parse：没填 ip 就直接写死
+1. 在左侧侧边栏点击进入**设备管理**页面，在左侧设备树单击“+”按钮。
 
+    ![单击添加按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-ClickAddButton.png)
 
-
-## 添加 TCP 设备和功能点
-
-1. 在左侧侧边栏点击进入**设备管理**页面。
-2. 在左侧设备树单击“+”按钮，在弹窗中选择 `TCP`，以添加一个 TCP 节点。
+2. 在弹窗中选择 `TCP`，以添加一个 TCP 节点。
 3. 选择该 TCP 节点，进入管理界面。
-4. 进入 **脚本** 选项卡，按照 [JavaScript 脚本（适用于 UDP 和 TCP）](./../javascript-for-udp-tcp-integration.mdx) 的规范编写 JS 脚本，以指导 Aqara Studio 如何发现设备、添加与控制功能点等。
-6. 切换到 **添加设备** 选项卡，点击 **发现设备** 按钮，Aqara Studio 会根据您编写的脚本自动扫描并识别可接入的 TCP 设备，被发现的设备会在**发现设备列表**中展示。
+4. 进入 **脚本** 选项卡，按照 [JavaScript 脚本（适用于 UDP 和 TCP）](./../javascript-for-udp-tcp-integration.mdx) 的规范编写并保存 JS 脚本，以指导 Aqara Studio 如何发现设备、添加与控制功能点等。
+    ![编写 JS 脚本](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/UDP-JavaScript.png)
+5. 切换到 **添加设备** 选项卡，单击 ⚙ 图标。
+
+    ![单击齿轮图标](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/UDP-Gear.png)
+
+    （可选）在弹窗内填写 TCP 服务端的 IP 地址和端口号。该信息将用于 JS 脚本中的 [buildDiscoveryRequest](./../javascript-for-udp-tcp-integration.mdx#builddiscoveryrequest) 接口，指导 Aqara Studio 从指定地址自动发现所有 TCP 设备。
+    
+    ![配置服务端 IP 地址和 Port](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/UDP-DiscoveryConfiguration.png)
+
+    如果没有 TCP 服务端，可以跳过该设置。此时，建议在 JS 脚本中 [parseDiscoveryResponse](./../javascript-for-udp-tcp-integration.mdx#parsediscoveryresponse) 的返回结果里直接写明目标 TCP 设备的 IP 和端口号，实现设备的精准发现和接入。
+
+6. 点击 **发现设备** 按钮，Aqara Studio 会根据您编写的脚本自动扫描并识别可接入的 TCP 设备，被发现的设备会在**发现设备列表**中展示。
 7. 选中目标设备，点击中间的 **+** 按钮，即可将该设备添加至右侧的**已添加设备列表**，并会实时同步显示在左侧设备树的 TCP 节点下。
 
-    在左侧设备树展开该设备，即可查看其已识别的全部功能点。
+## 添加功能点
+
+1. 在设备树选择您新增的设备，进入其`功能点`选项卡，单击`添加功能点`按钮。
+
+    ![添加功能点](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/UDP-AddPoints.png)
+
+2. 在“添加功能点”页面，单击 **发现功能点** 按钮，Aqara Studio 即开始扫描发现该设备的功能点。 
+
+    ![发现功能点](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/UDP-DiscoverPoints.png)
+
+3. 勾选需要的点，单击中间 **+** 按钮，新增功能点会出现在右侧的**已添加功能点**列表，并同步显示在左侧设备树的相关设备下。
 
 ## 下一步
 
