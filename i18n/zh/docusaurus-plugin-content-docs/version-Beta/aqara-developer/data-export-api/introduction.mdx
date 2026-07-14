@@ -11,13 +11,25 @@ Aqara 数据转出 API 提供了一套丰富的接口，支持用户高效、安
 | 功能 | API 端点 | 请求方法 |
 | --- | --- | --- |
 | [查询空间列表](./get-spaces.api.mdx) | /open/api/v1/spaces | GET |
+| [创建空间](./create-space.api.mdx) | /open/api/v1/spaces | POST |
+| [修改空间名称](./update-space-name.api.mdx) | /open/api/v1/spaces/update | POST |
+| [删除空间](./delete-space.api.mdx) | /open/api/v1/spaces/delete | POST |
+
+### 网关
+
+| 功能 | API 端点 | 请求方法 |
+| --- | --- | --- |
+| [查询网关列表](./get-gateways.api.mdx) | /open/api/v1/gateways | GET |
+| [网关按入子设备](./join-subdevice.api.mdx) | /open/api/v1/gateways/subdevice/join | POST |
+| [停止网关子设备入网](./stop-subdevice-join.api.mdx) | /open/api/v1/gateways/subdevice/join/stop | POST |
+| [获取设备绑定结果](./get-device-bind-result.api.mdx) | /open/api/v1/gateways/subdevice/join/result | POST |
 
 ### 设备
 
 | 功能 | API 端点 | 请求方法 |
 | --- | --- | --- |
 | [查询设备类型列表](./get-device-types.api.mdx) | /open/api/v1/device-types | GET |
-| [查设备信息列表](./get-devices.api.mdx) | /open/api/v1/devices | GET |
+| [查询设备信息列表](./get-devices.api.mdx) | /open/api/v1/devices | GET |
 | [查询设备详细信息](./get-device-definitions.api.mdx) | /open/api/v1/devices/definitions | GET |
 | [通过 Trait 控制设备](./execute-device-trait.api.mdx) | /open/api/v1/devices/trait/execute | POST |
 | [查询 Trait 值](./get-trait-values.api.mdx) | /open/api/v1/devices/trait/read | POST |
