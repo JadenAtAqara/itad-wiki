@@ -264,6 +264,11 @@
                       "type": "doc",
                       "id": "aqara-developer/data-export-api/update-space-name",
                       "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/delete-space",
+                      "className": "api-method post"
                     }
                   ]
                 },
