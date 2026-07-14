@@ -108,7 +108,8 @@ The Aqara MG24 module solution is an ideal mesh IoT wireless connectivity option
   </tbody>
 </table>
 
-### Function debugging of I/O ports
+### Function Debugging of I/O ports
+
 | Order Number | Pin Name | Functional Description |
 |------|----------|----------------------------------|
 | 1    | VCC      | Positive terminal of the power supply                         |
@@ -122,7 +123,7 @@ The Aqara MG24 module solution is an ideal mesh IoT wireless connectivity option
 | 9    | NC       | The module does not have this pin; keep it floating            |
 | 10   | NC       | The module does not have this pin; keep it floating            |
 
-#### Packaging requirements
+#### Packaging Requirements
 
 Package name: CONNECT - PH - 2X5 - 1.27mm
 
@@ -206,7 +207,7 @@ By adjusting the welding states of resistors R3 and R4, the antenna connection m
 | PCB ANT   | √    | ×    |
 
 :::tip
-×: No wielding.
+×: No wielding.   
 √: Wielding.
 :::
 
@@ -215,13 +216,13 @@ Schematic Diagram:
 ![Schematic Diagram](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/zh/LMMG24S-Antenna.png)
 
 
-## Configuration options
+## Configuration Options
 
 To better meet the requirements of different projects, this module offers the following hardware configurations for selection.
 
 | | Configuration Options | Applicable For |
 | -- | -- | -- |
-| Antenna method | <ul><li>1. PCB Antenna: Built-in printed antenna, no additional assembly required, low cost, suitable for compact overall design of the device.</li><li>2. IPX Antenna: Connects to an external FPC antenna or rod antenna via an IPX connector. The antenna position can be flexibly arranged, facilitating the optimization of RF performance.</li></ul> | <ul><li>1. PCB antenna: Suitable for products with limited space, simple antenna environment, and high requirements for production consistency (such as smart sockets, small household appliances).</li><li>2. IPX antenna: Suitable for scenarios where the outer casing is made of metal or is covered by a large screen, where long-distance transmission is required or where the on-site signal is complex (such as gateways, industrial sensors).</li></ul> | 
+| Antenna method | <ul><li>PCB Antenna: Built-in printed antenna, no additional assembly required, low cost, suitable for compact overall design of the device.</li><li>IPX Antenna: Connects to an external FPC antenna or rod antenna via an IPX connector. The antenna position can be flexibly arranged, facilitating the optimization of RF performance.</li></ul> | <ul><li>PCB antenna: Suitable for products with limited space, simple antenna environment, and high requirements for production consistency (such as smart sockets, small household appliances).</li><li>IPX antenna: Suitable for scenarios where the outer casing is made of metal or is covered by a large screen, where long-distance transmission is required or where the on-site signal is complex (such as gateways, industrial sensors).</li></ul> | 
 | Radio-frequency power | <ul><li>10dBm: Lower power consumption, lower power supply requirements, suitable for short-range communication.</li><li>20dBm: Longer coverage distance, stronger ability to penetrate walls, but with higher transient current (requires DVDD 3.3V power supply).</li></ul> | <ul><li>10dBm: Suitable for devices with short transmission distances, those sensitive to the overall power consumption, or those powered by button batteries.</li><li>20dBm: Suitable for applications requiring long-range coverage or complex indoor environments (such as multi-story buildings, warehouses).</li></ul> | 
 | Power consumption configuration | <ul><li>With low-power inductor</li><li>Without low-power inductor</li></ul> | Low-power inductors are used in DC-DC power circuits, which can effectively reduce the static current of the module during deep sleep and receiving states, significantly enhancing the battery-powered device's endurance. | 
 | Crystal oscillator configuration | <ul><li>85℃ Crystal</li><li>105℃ Crystal</li></ul> | <ul><li>85°C Crystal Oscillator: Suitable for regular indoor and office environments.</li><li>105°C Crystal Oscillator: Applicable to equipment exposed to direct sunlight, around heating appliances, and inside car cabins, ensuring long-term reliability in high-temperature scenarios.</li></ul> |
