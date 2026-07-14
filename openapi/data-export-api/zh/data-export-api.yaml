@@ -182,6 +182,47 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
 
+  # 删除空间
+  /spaces/delete:
+    post:
+      tags: [Space]
+      summary: 删除空间
+      description: 根据空间 ID 删除空间，可选择是否删除子空间。
+      operationId: deleteSpace
+      x-skill-intent: space.delete
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: delete
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteSpaceRequest'
+            example:
+              spaceId: "space-livingroom-001"
+              deleteChildren: false
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteSpaceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
   # ────────────────────────────────────────────────────────────────
   # 查询DeviceType集合
   # ────────────────────────────────────────────────────────────────
@@ -2280,6 +2321,38 @@ components:
         type: UpdateSpaceNameResponse
         version: v1
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000007"
+        code: 0
+        message: success
+        data: ""
+
+    DeleteSpaceRequest:
+      type: object
+      required: [spaceId]
+      properties:
+        spaceId:
+          type: string
+          description: 空间 ID。
+        deleteChildren:
+          type: boolean
+          default: false
+          description: 是否同时删除子空间。
+      example:
+        spaceId: "space-livingroom-001"
+        deleteChildren: false
+
+    DeleteSpaceResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: 删除成功后返回空字符串。
+              example: ""
+      example:
+        type: DeleteSpaceResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000027"
         code: 0
         message: success
         data: ""

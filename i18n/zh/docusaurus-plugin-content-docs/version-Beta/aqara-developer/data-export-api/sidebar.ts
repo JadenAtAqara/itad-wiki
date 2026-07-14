@@ -33,6 +33,12 @@ const sidebar: SidebarsConfig = {
           label: "修改空间名称",
           className: "api-method post",
         },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/delete-space",
+          label: "删除空间",
+          className: "api-method post",
+        },
       ],
     },
     {

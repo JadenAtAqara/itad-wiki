@@ -183,6 +183,47 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
 
+  # Delete Space
+  /spaces/delete:
+    post:
+      tags: [Space]
+      summary: Delete A Space
+      description: Delete a space by space ID, optionally deleting child spaces.
+      operationId: deleteSpace
+      x-skill-intent: space.delete
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: delete
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteSpaceRequest'
+            example:
+              spaceId: "space-livingroom-001"
+              deleteChildren: false
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteSpaceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
   # ────────────────────────────────────────────────────────────────
   # DeviceType Collection Query
   # ────────────────────────────────────────────────────────────────
@@ -2283,6 +2324,38 @@ components:
         type: UpdateSpaceNameResponse
         version: v1
         msgId: "a1b2c3d4-e5f6-7890-abcd-000000000007"
+        code: 0
+        message: success
+        data: ""
+
+    DeleteSpaceRequest:
+      type: object
+      required: [spaceId]
+      properties:
+        spaceId:
+          type: string
+          description: Space ID.
+        deleteChildren:
+          type: boolean
+          default: false
+          description: Whether to delete child spaces.
+      example:
+        spaceId: "space-livingroom-001"
+        deleteChildren: false
+
+    DeleteSpaceResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: Empty string after successful deletion.
+              example: ""
+      example:
+        type: DeleteSpaceResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000027"
         code: 0
         message: success
         data: ""

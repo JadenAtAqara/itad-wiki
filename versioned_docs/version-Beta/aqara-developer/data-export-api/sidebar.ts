@@ -33,6 +33,12 @@ const sidebar: SidebarsConfig = {
           label: "Update A Space Name",
           className: "api-method post",
         },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/delete-space",
+          label: "Delete A Space",
+          className: "api-method post",
+        },
       ],
     },
     {
