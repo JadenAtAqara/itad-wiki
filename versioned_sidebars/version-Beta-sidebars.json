@@ -46,8 +46,21 @@
                   "aqara-studio/device-integration/knx-ip",
                   "aqara-studio/device-integration/mqtt",
                   "aqara-studio/device-integration/http",
+                  "aqara-studio/device-integration/sonos",
+                  "aqara-studio/device-integration/aqara-coap",
                   "aqara-studio/device-integration/virtual/infrared-equipment",
                   "aqara-studio/device-integration/virtual/light-box"
+                ]
+              },
+              {
+                "type": "category",
+                "label": "Device Export",
+                "link": {
+                  "type": "generated-index",
+                  "keywords": ["device-export"]
+                },
+                "items": [
+                  "aqara-studio/device-export/aiot"
                 ]
               },
               {
@@ -128,17 +141,21 @@
             "label": "Settings",
             "collapsed": false,
             "items": [
+              "aqara-studio/network-settings",
+              "aqara-studio/general-settings",
+              "aqara-studio/static-ip",
               "aqara-studio/wireless-connection",
-                "aqara-studio/cloud",  
-                "aqara-studio/remote-access",
-                "aqara-studio/system-update",
-                "aqara-studio/technical-support",
-                "aqara-studio/local-domain-name-access",
-                "aqara-studio/static-ip"
+              "aqara-studio/cloud",  
+              "aqara-studio/remote-access",
+              "aqara-studio/system-update",
+              "aqara-studio/technical-support",
+              "aqara-studio/local-domain-name-access",
+              "aqara-studio/factory-reset"
               ]
           }
         ]      
     },
+    "aqara-studio/plugin-market",
     {
       "type": "category",
       "label": "Developer",
@@ -198,7 +215,9 @@
       "label": "Product Manuals",
       "items": [
         "aqara-studio/product-manuals/general",
-        "aqara-studio/product-manuals/edge-hub-m300"
+        "aqara-studio/product-manuals/edge-hub-m300",
+        "aqara-studio/product-manuals/din-rail-hub-ax100m",
+        "aqara-studio/product-manuals/din-rail-hub-ax200m"
       ]
     }
   ],
@@ -245,6 +264,11 @@
                       "type": "doc",
                       "id": "aqara-developer/data-export-api/update-space-name",
                       "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/delete-space",
+                      "className": "api-method post"
                     }
                   ]
                 },
@@ -258,6 +282,11 @@
                   },
                   "collapsed": false,
                   "items": [
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-gateways",
+                      "className": "api-method get"
+                    },
                     {
                       "type": "doc",
                       "id": "aqara-developer/data-export-api/join-subdevice",
@@ -302,6 +331,11 @@
                     },
                     {
                       "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-matched-device-capabilities",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
                       "id": "aqara-developer/data-export-api/execute-device-trait",
                       "className": "api-method post"
                     },
@@ -328,6 +362,11 @@
                     {
                       "type": "doc",
                       "id": "aqara-developer/data-export-api/add-virtual-device",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/unbind-device",
                       "className": "api-method post"
                     }
                   ]
@@ -406,6 +445,37 @@
                       "type": "doc",
                       "id": "aqara-developer/data-export-api/get-studio-statistics",
                       "className": "api-method get"
+                    }
+                  ]
+                },
+                {
+                  "type": "category",
+                  "label": "EMS",
+                  "link": {
+                    "type": "doc",
+                    "id": "aqara-developer/data-export-api/ems"
+                  },
+                  "collapsed": false,
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-ems-trend-device",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-ems-trend-space",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-ems-total-device",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-ems-total-space",
+                      "className": "api-method post"
                     }
                   ]
                 }
@@ -513,27 +583,6 @@
                       "className": "api-method post"
                     }
                   ]
-                },
-                {
-                  "type": "category",
-                  "label": "Subscription",
-                  "link": {
-                    "type": "doc",
-                    "id": "aqara-developer/aiot-api/subscription"
-                  },
-                  "collapsed": false,
-                  "items": [
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/aiot-api/mqtt-subscribe",
-                      "className": "api-method post"
-                    },
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/aiot-api/mqtt-unsubscribe",
-                      "className": "api-method post"
-                    }
-                  ]
                 }
               ]
             }
@@ -546,8 +595,22 @@
   "aqaraLifeSidebar": [
     "aqara-life/overview"
   ],
-  "mcuStandardProtocolSidebar": [
-    "mcu-standard-protocol/overview",
-    "mcu-standard-protocol/aqara-empowerment-communication-protocol"
+  "aqaraOpenLinkSidebar": [
+    "aqara-openlink/overview",
+    "aqara-openlink/aqara-empowerment-communication-protocol",
+    {
+      "type": "category",
+      "label": "Aqara Standard Protocol Modules",
+      "items": [
+        {
+          "type": "category",
+          "label": "Zigbee/Thread",
+          "items": [
+            "aqara-openlink/aqara-standard-protocol-modules/zigbee-thread/lm-mg24",
+            "aqara-openlink/aqara-standard-protocol-modules/zigbee-thread/lm-mg24-s"
+          ]
+        }
+      ]
+    }
   ]
 }

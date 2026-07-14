@@ -1,0 +1,39 @@
+# Factory Reset
+
+This article explains how to [perform a factory reset](#perform-a-factory-reset) Aqara Studio, how to [restrict button operations](#restrict-button-operations), and how to [reset the accidental deletion prevention level](#reset-accidental-deletion-prevention-level).
+
+## Perform a Factory Reset
+
+Depending on your Aqara Studio [deployment model](./overview/introduction.mdx#what-are-the-deployment-models), choose one of the following methods to perform a factory reset:
+- For `Hub-Integrated` model, you can factory reset Aqara Studio either via the [Web page]](#web-operation) or by pressing the [physical button](#physical-button-operation) on an official Aqara Studio master device (such as Edge Hub M300).
+- For `Edge-Deployed` model, you can factory reset Aqara Studio on the [Web page](#web-operation).
+
+### Web Operation
+
+1. Click **Settings** in the left navigation bar. On the settings page, select **Local Settings** from the sidebar.
+2. Find **System Operation** on the page, click the **Factory Reset** button, and a confirmation box will pop up. In the confirmation box, click **Confirm** to restore Aqara Studio to factory settings.
+
+### Physical Button Operation
+
+Please refer to the manual of the official Aqara Studio master device (e.g., [Edge Hub M300](./product-manuals/edge-hub-m300.mdx)) to learn how to perform a factory reset on Aqara Studio using button operation.
+
+## Restrict Button Operations
+
+For Aqara Studio in `Hub-Integrated` mode, if you do not want others to restore settings via the [physical button](#physical-button-operation), you can restrict button operation by following these steps:
+1. In the left navigation bar, click **Devices**, select **AqaraHub**, and locate the required official Aqara Studio master device.
+2. Switch to the **Point** tab of that device, find the **Accidental Deletion Prevention Level Setting** trait, set the level to `Disable Factory Reset Only` or `Disable Reset Network and Factory Reset`, and click the **✓** button.
+![Set Accidental Deletion Prevention Level](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/FactoryReset-SetValue.png)
+
+In this way, when someone attempts to reset Aqara Studio to the factory settings via [physical button operations](#physical-button-operation), Aqara Studio will play a voice prompt: "Factory reset is disabled. You can enable it in Aqara Studio settings," and all configuration information will be retained.
+
+## Reset Accidental Deletion Prevention Level
+
+If you need to reset the accidental deletion prevention level, refer to the process in [Restrict Button Operation](#restrict-button-operations) and set the level to `Enable Reset Network and Factory Reset`.
+
+If you forget your password and cannot log in to Aqara Studio, please follow these steps:
+1. Contact Aqara support to obtain an SD card containing the reset file.
+2. Insert the SD card into the SD card slot of the official Aqara Studio master device (such as the Edge Hub M300).
+3. Power off the master device, and then power it on.
+4. Wait for the master device to detect and recognize the SD card.
+    - If the card matches successfully, the device will automatically reset the Accidental Deletion Prevention level to `Enable Reset Network and Factory Reset` (with no voice prompt), after which you can press the [physical button](#physical-button-operation) to reset Aqara Studio to the factory settings.
+    - If the card does not match and you cannot reset the prevention level, please contact Aqara support again to obtain the correct SD card.

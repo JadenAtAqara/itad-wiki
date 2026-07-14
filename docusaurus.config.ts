@@ -158,7 +158,7 @@ const config: Config = {
             { label: "Aqara Studio", to: "docs/aqara-studio/overview/introduction", activeBasePath: "docs/aqara-studio" },
             { label: "Aqara Developer", to: "docs/aqara-developer/introduction", activeBasePath: "docs/aqara-developer" },
             { label: "Aqara Life", to: "docs/aqara-life/overview", activeBasePath: "docs/aqara-life" },
-            { label: "MCU Standard Protocol", to: "docs/mcu-standard-protocol/overview", activeBasePath: "docs/mcu-standard-protocol" },
+            { label: "Aqara OpenLink", to: "docs/aqara-openlink/overview", activeBasePath: "docs/aqara-openlink" },
           ],
         },
 

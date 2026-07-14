@@ -18,12 +18,12 @@ This protocol continues to evolve. Version iteration follows the principle of fo
 This specification covers:
 
 - UART Hardware Interface requirements between Client and Server (see [Chapter 2](#chapter-2-hardware-interface))
-- Data Types, data frame encoding, and application Interaction formats (see [Chapter 3](#chapter-3-data-types-and-interaction-formats))
-- Serial Wake-up Mechanism, power-on startup, and Initialization Discovery flow for low-power devices (see [Chapter 4](#chapter-4-wake-up-and-initialization))
+- Data Types, data frame encoding, and application Interaction formats (see [Chapter 3](#chapter-3-data-types-and-interaction-format))
+- Power-on initialization flow, including Link Establishment, Profile Discovery, Server data sync, and Wake Signaling (see [Chapter 4](#chapter-4-initialization))
 - Profile model, Response, retry, and related implementation rules (see [Chapter 5](#chapter-5-profile-model-and-implementation-rules))
 - Attributes and Commands definitions for the Foundation Profile and product Profiles (see [Chapter 6](#chapter-6-foundation-profile-profile-id--0x0000) and [Chapter 7](#chapter-7-thermostat-profile-profile-id--0x1000))
 - Firmware online upgrade (OTA) sub-protocol (see [Chapter 6 Foundation Profile](#chapter-6-foundation-profile-profile-id--0x0000))
-- Serial message encoding and decoding examples (see [Appendix A](#appendix-a-serial-message-examples))
+- Serial message encoding and decoding examples (see [Appendix A](#appendix-a-uart-message-examples))
 
 This specification is intended for embedded firmware developers and provides the technical details required for interoperability.
 
@@ -41,13 +41,14 @@ In this protocol, the wireless empowerment module acts as the **Client**, and th
 
 #### UART Buffer Constraints
 
-The Client module's UART receive buffer size and transmit buffer size SHALL each be no less than **1024 bytes**. A complete AECP frame sent by the Server to the Client SHALL NOT exceed the Client receive buffer size. The complete AECP frame length is calculated from `SOF` through `Overall Checksum`, including the frame header, `Data Segment`, and checksum fields.
+The Client module's UART receive buffer size and transmit buffer size SHALL each be no less than **1024 bytes**. Both sides SHALL exchange UART buffer capability during link establishment (see [Link Establishment](#link-establishment)) and SHALL use the **smaller** of the two declared values as the **negotiated UART buffer size** to constrain subsequent AECP single-frame lengths. Each side's declared value SHALL NOT be less than 1024 bytes; therefore the negotiated result SHALL NOT be less than 1024 bytes. The complete AECP frame length is calculated from `SOF` through `Overall Checksum`, including the frame header, `Data Segment`, and checksum fields.
+
 
 | Receive buffer size | Transmit buffer size | Notes |
 | --- | --- | --- |
 | Minimum 1024 bytes | Minimum 1024 bytes | If the firmware version supports file transfer functions, the maximum buffer size is determined by the maximum single-packet file data length used during file transfer. |
 
-If the complete packet length sent by the Server to the Client exceeds the Client receive buffer size, receive overflow, packet loss, or parsing failure may occur, resulting in abnormal data communication. When designing Attributes reports, Commands parameters, and IAP OTA fragment lengths, implementers SHALL use the receive buffer size of the target Client platform as the upper limit for a single AECP frame length. This constraint applies only to AECP communication frames defined by this protocol, and does not apply to the firmware transfer process carried by XMODEM during BootLoader OTA.
+If the complete AECP frame length exceeds the negotiated UART buffer size, receive overflow, packet loss, or parsing failure may occur. When designing attribute reports, command parameters, and IAP OTA fragment lengths, implementers SHALL use the negotiated UART buffer size as the upper limit for a single-frame length. This constraint applies only to AECP communication frames defined by this protocol, and does not apply to the firmware transfer process carried by XMODEM during BootLoader OTA.
 
 #### Design Principles
 
@@ -65,9 +66,9 @@ Logically, AECP can be divided into four layers. From bottom to top, each layer 
 
 | Layer              | Responsibility                                                                | Corresponding Sections                                                                                                                                                          |
 | ------------------ | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Physical Layer     | UART electrical characteristics and timing, low-power wake-up signals         | [Chapter 2](#chapter-2-hardware-interface), [Chapter 4](#chapter-4-wake-up-and-initialization)                                                                                 |
-| Frame Layer        | Frame structure, field encoding, byte order, HCS, and CRC checks              | [Chapter 3](#chapter-3-data-types-and-interaction-formats)                                                                                                                     |
-| Transaction Layer  | Operation Code semantics, request and Response pairing, Seq correlation, timeout, and retry | [Chapter 3](#chapter-3-data-types-and-interaction-formats), [Chapter 5](#chapter-5-profile-model-and-implementation-rules)                                            |
+| Physical Layer     | UART electrical characteristics and timing, Wake Pin and Wake Signaling         | [Chapter 2](#chapter-2-hardware-interface), [Chapter 4](#chapter-4-initialization)                                                                                 |
+| Frame Layer        | Frame structure, field encoding, byte order, HCS, and CRC checks              | [Chapter 3](#chapter-3-data-types-and-interaction-format)                                                                                                                     |
+| Transaction Layer  | Operation Code semantics, request and Response pairing, Seq correlation, timeout, and retry | [Chapter 3](#chapter-3-data-types-and-interaction-format), [Chapter 5](#chapter-5-profile-model-and-implementation-rules)                                            |
 | Application Layer  | Attributes, Commands, Profiles, and OTA sub-protocols                         | [Chapter 5](#chapter-5-profile-model-and-implementation-rules), [Chapter 6](#chapter-6-foundation-profile-profile-id--0x0000), [Chapter 7](#chapter-7-thermostat-profile-profile-id--0x1000) |
 
 #### Core Concepts and Interaction Model
@@ -105,6 +106,11 @@ Attributes Interaction follows a symmetric and closed set of operations. Centere
 | Conformance | Implementation requirement marker. **M** (Mandatory) = the item SHALL be implemented; **O** (Optional) = the item MAY be implemented. |
 | Profile ID | A 2-byte field in the data frame header (formerly Device Type) that identifies the functional domain to which the frame belongs, rather than only distinguishing product type. |
 | OTA | Over-The-Air firmware online upgrade. This protocol defines two Upgrade Methods: IAP OTA and BootLoader OTA. |
+| Wake Pin             | Hardware pin, active low. Client and Server each provide one for the peer to pull low during Wake Signaling. See Chapter 2. |
+| Wake Signaling       | The complete process before UART communication: active-low assertion on the peer's Wake Pin, T0 wait, UART transfer, and pin release. See [Wake Ssignaling](#wake-signaling). |
+| Link Establishment   | The first AECP interaction after power-on. Client sends `LinkEstablishmentRequest(ClientUartBufferSize)`; Server returns `LinkEstablishmentResponse(LowPowerFeature, ServerUartBufferSize)`. See [Link Establishment](#link-establishment). |
+| Profile Discovery    | The process in which Client READs Server Profiles and attribute initial values; Client sends `ProfileDiscoveryComplete` when done. See [Profile Discovery](#profile-discovery). |
+| LowPowerFeature      | Parameter in `LinkEstablishmentResponse`; negotiates Wake Signaling enablement; **enabled by default before negotiation**; `Normal` means negotiation disables it. See [LowPowerFeature](#lowpowerfeature). |
 
 ### Abbreviations
 
@@ -151,14 +157,13 @@ The only exception is the OTA Header inside the OTA firmware file. The OTA Heade
 - Binary values use the `0b` prefix, for example, `0b00000001`.
 - Byte lengths use `N bytes`, for example, `2 bytes`.
 
-<a id="ref_FieldNotation"></a>
 #### Field Notation Convention 
 
 Attributes tables, Commands tables, and parameter tables in this specification SHALL use the column meanings defined below. Later chapters do not repeat these column definitions.
 
 | Column | Meaning |
 | --- | --- |
-| `ID` / `Attribute ID` / `Command ID` | Item identifier. In an Attributes table it indicates Attribute ID; in a Commands table it indicates Command ID; in a parameter table it indicates the parameter sequence number or Parameter ID. |
+| `ID` / `Attribute ID` / `Command ID` | Item identifier. In an Attributes table it indicates Attribute ID; in a Commands table it indicates Command ID. |
 | `Name` / `Name` | Item name, using an English identifier. |
 | `Type` / `Type` | Data Type. Values SHALL come from the Data Types chapter or the Data Types defined by the corresponding Profile. |
 | `Constraint` / `Constraint` | Numeric value range, length, fixed value, or value constraint. "No additional constraints" means only the base Data Type constraints apply. |
@@ -169,9 +174,8 @@ Attributes tables, Commands tables, and parameter tables in this specification S
 | `Direction` / `Direction` | Valid Commands Initiator, as defined by the Commands table. |
 | `Response` / `Response` | Commands Response method. It may be `ACKNOWLEDGE`, a paired COMMAND name, or `N` (no Response). |
 | `Description` / `Description` / `Description` | Brief description of the item. |
-| `Octets` | Number of Raw Data bytes occupied by each field in COMMAND Payload Format. Variable-length fields SHALL specify how length is calculated. |
-| `Data Type` | Data Type of each field in COMMAND Payload Format. |
-| `Field Name` | Name of each field in COMMAND Payload Format. |
+| `Order` / `Parameter Order`         | Sequence number of the parameter in the Data Segment immediately after Cmd ID, starting from `1`; lower numbers are encoded first. This number defines order only and is not an on-wire field. |
+| `Parameter Details` / `Parameters`  | Parameter definition table for a COMMAND: lists Parameter Order, Name, Type, Constraint, and Default. Raw Data length is determined by Type (see [Data Types Overview](#data-types-overview)). Encoding rules are defined in [COMMAND (OPC = 0x9)](#command-opc--0x9). |
 
 ## Chapter 2 Hardware Interface
 
@@ -195,7 +199,7 @@ Serial communication between the Client and the Server shall use the following p
 At least the following connections are required between Client and Server:
 
 - **TXD / RXD**: Serial data lines. Client TXD connects to Server RXD, and Client RXD connects to Server TXD, using a cross connection.
-- **wake pin (Wake Pin)**: Bidirectional wake-up signal for low-power devices (see Chapter 3). The Client and the Server each provide one wake pin so that each side can be woken by the other side.
+- **wake pin (Wake Pin)**: Bidirectional wake-up signal for low-power devices (Wake Signaling uses this pin; see [Wake Signaling](#wake-signaling)). The Client and the Server each provide one wake pin so that each side can be woken by the other side.
 - **BootLoader Entry GPIO**: If the device declares support for BootLoader OTA, it SHALL provide a hardware entry path controlled by the Client so that the Server can enter BootLoader through a GPIO, reset pin, or Boot selection pin.
 - **Power (VCC / GND)**: Both Client and Server use DC 3.3 V power and share a common ground.
 
@@ -208,21 +212,18 @@ Specific pin numbers vary by Client product model. Refer to the corresponding Cl
 - The logic level of all digital I/O pins (TXD, RXD, wake pin, and BootLoader Entry GPIO) is 3.3 V CMOS.
 - Avoid direct connection to 5 V logic systems. If Server is a 5 V system, a level-shifting circuit is required.
 
-<a id="ref_DataTypesAndInteractionFormat"></a>
 
-## Chapter 3 Data Types and Interaction Format {#chapter-3-data-types-and-interaction-formats} 
+## Chapter 3 Data Types and Interaction Format
 
 This chapter first defines the AECP application interaction model and frame structure, then defines Data Segment and checksum encoding rules, and finally defines Data Type and Status. Specific Attributes, Commands, enumerations, and value ranges are defined by each Profile.
 
 ### Interaction Model 
 
-<a id="ref_FrameFormat"></a>
-
 This section defines the AECP on-wire data frame format, Operation Code semantics, transaction matching rules, and application-layer interaction model. Specific Attributes, Commands, enumerations, and value ranges are defined by each Profile.
 
 #### Frame Structure Overview
 
-An AECP data frame consists of a fixed header (7 bytes), a variable-length Data Segment, and a trailing checksum:
+An AECP complete frame consists of a fixed header (8 bytes), a variable-length Data Segment, and a fixed trailing CRC checksum (2 bytes). Excluding the Data Segment, the fixed overhead is 10 bytes.
 
 ```
 +-------+------------+-------+-------+---------+-------+------------------+-------+
@@ -238,8 +239,8 @@ An AECP data frame consists of a fixed header (7 bytes), a variable-length Data 
 | Seq | 1 byte | Sequence, the transaction sequence number, used for response matching, retransmission deduplication, and transaction association. |
 | OPC | 1 byte | Operation Code, which defines the message type, direction, and Data Segment format. |
 | D-Len | 2 bytes | Data Length, the byte length of the Data Segment, Big-Endian. |
-| HCS | 1 byte | Header Checksum, covering the 7 bytes from SOF through D-Len. |
-| - | N bytes | Data Segment, whose format is determined by OPC. |
+| HCS        | 1 byte  | Header Checksum, the last byte of the frame header; checksum over the 7 bytes from SOF through D-Len. |
+| -          | N bytes | Data Segment, whose format is determined by OPC; N = D-Len. |
 | CRC | 2 bytes | Overall Checksum, CRC16-Modbus, covering the Data Segment, Big-Endian. |
 
 :::tip
@@ -253,8 +254,6 @@ Profile ID, D-Len, and CRC all use **Big-Endian** encoding, with the most signif
 SOF is fixed to `0x55` and identifies the start of a frame. The receiver SHALL use `0x55` as the frame synchronization marker.
 
 ##### Profile ID - Functional Profile Identifier 
-
-<a id="ref_ProfileID"></a>
 
 Profile ID is a 2-byte Big-Endian unsigned integer that identifies the **Functional Profile** to which this frame belongs. The receiver SHALL combine Profile ID with Attribute ID or Command ID to fully interpret the frame semantics.
 
@@ -275,8 +274,6 @@ Seq is a 1-byte unsigned integer used to associate request frames with response 
 - When a receiver receives a retransmitted frame with the same Seq and the same payload, it SHOULD process it idempotently and return a response with the same semantics.
 
 ##### OPC - Operation Code 
-
-<a id="ref_OpCodes"></a>
 
 OPC is 1 byte and defines the message type, direction, and target of the frame:
 
@@ -299,17 +296,17 @@ Except for 0x9 (COMMAND), all OPC values are Attribute operations and the Data S
 
 D-Len is a 2-byte Big-Endian unsigned integer that represents the byte length of the Data Segment. When the Data Segment is empty, D-Len = `0`.
 
-When constructing any AECP frame, the sender SHALL ensure that the complete frame length satisfies both the sender UART transmit buffer constraint and the receiver UART receive buffer constraint. The complete frame length is calculated as follows:
+When constructing any AECP frame, the sender SHALL ensure that the complete frame length does NOT exceed the UART buffer size negotiated during link establishment. The complete frame length is calculated as follows:
 
 ```
 Complete Frame Length = 10 + D-Len
 ```
 
-The fixed overhead of `10 bytes` consists of `SOF`, `Profile ID`, `Seq`, `OPC`, `D-Len`, `HCS`, and `Overall Checksum`. See [UART Buffer Constraints](#uart-buffer-constraints) for UART buffer requirements.
+The fixed overhead of `10 bytes` equals the 8-byte frame header (SOF through HCS) plus the 2-byte Overall Checksum. The negotiated UART buffer size SHALL be `min(ClientUartBufferSize, ServerUartBufferSize)`. Each side's declared value SHALL NOT be less than 1024 bytes; the negotiated result SHALL NOT be less than 1024 bytes. See [Link Establishment](#link-establishment) for negotiation rules. See [UART Buffer Constraints](#uart-buffer-constraints) for UART buffer requirements.
 
 ##### HCS - Header Checksum
 
-HCS is 1 byte and covers the 7 bytes from SOF through D-Len, inclusive. It is used to verify header integrity.
+HCS is 1 byte and is the last byte of the frame header. Its checksum range covers the 7 bytes from SOF through D-Len, inclusive, and is used to verify header integrity.
 
 Calculation method (two's-complement sum):
 
@@ -321,12 +318,10 @@ HCS = (~Sum + 1) & 0xFF
 ```
 
 :::tip
-CRC (Overall Checksum) uses a different checksum algorithm. See [Overall Checksum](#overall-checksum--overall-checksum).
+CRC (Overall Checksum) uses a different checksum algorithm. See [Overall Checksum](#overall-checksum).
 :::
 
 #### Application Interaction Model 
-
-<a id="ref_InteractionModel"></a>
 
 AECP divides application interactions into four categories: Server Attribute read/write, Server Attribute reporting, Client Attribute query/reporting, and Command interaction. In Profile Attribute tables, `Side` and `Access` determine whether an Attribute supports the corresponding operation, and `Conformance` determines whether the Attribute must be implemented. In Profile Command tables, `Direction` determines the legal Initiator of a Command.
 
@@ -416,7 +411,7 @@ REPORT and Server-initiated COMMAND are Server-originated transactions, and the 
 
 ##### Status Usage
 
-Status encoding is defined in [Status](#status--return-status). Status has different scopes in different OPC values:
+Status encoding is defined in [Status](#status---return-status). Status has different scopes in different OPC values:
 
 | Frame Type | Status Scope | Description |
 | --- | --- | --- |
@@ -428,15 +423,11 @@ When a per-Attribute Status is not `0x00`, the corresponding Attribute Block SHA
 
 ### Encoding Rules
 
-<a id="ref_DataSegmentFormat"></a>
-
 #### Data Segment Encoding Rules 
-
-<a id="ref_DataSegmentFormat"></a>
 
 This section defines the Data Segment layout corresponding to each OPC. When multiple Attributes are present, their Attribute Blocks are placed contiguously in sequence.
 
-Every Data Segment layout in this section SHALL follow UART Buffer Constraints. When filling Attribute Blocks, Command parameters, or variable-length Raw Data, the sender SHALL ensure that `10 + D-Len` does not exceed the sender UART transmit buffer size and does not exceed the receiver UART receive buffer size. If the content to be sent cannot fit in a single frame, the sender SHALL use the fragmentation, paging, or repeated interaction mechanism defined by the corresponding Profile, and SHALL NOT directly send a frame that exceeds buffer capacity.
+Every Data Segment layout in this section SHALL follow UART buffer constraints. When filling Attribute Blocks, Command parameters, or variable-length Raw Data, the sender SHALL ensure that `10 + D-Len` does NOT exceed the UART buffer size negotiated during link establishment (the smaller of the two declared values, which SHALL NOT be less than 1024 bytes). If the content to be sent cannot fit in a single frame, the sender SHALL use the fragmentation, paging, or repeated interaction mechanism defined by the corresponding Profile, and SHALL NOT directly send a frame that exceeds buffer capacity.
 
 ##### READ (OPC = 0x1)
 
@@ -596,20 +587,20 @@ Data Segment (No parameters):
 ```
 
 ```
-Data Segment (with parameters):
-+------------+--------------+--------------+-----+--------------+
-|   Cmd ID   | Param 0 Data | Param 1 Data | ... | Param N Data |
-|   (2 B)    |    (N B)     |    (N B)     |     |    (N B)     |
-+------------+--------------+--------------+-----+--------------+
+Data Segment (with parameters, OtaPrepare example):
++------------+-----------+--------------+-----------+--------+
+|   Cmd ID   | Data Type | FirmwareSize | Data Type | Crc16  |
+|   (2 B)    | (1 B)     | (4 B)        | (1 B)     | (4 B)  |
++------------+-----------+--------------+-----------+--------+
 ```
 
-Parameters SHALL be ordered by ascending `ID` in the `Parameter Details` table for this Command in the corresponding Profile. COMMAND parameters do not carry Data Type and do not carry a parameter count field. Parameter type, length, order, and constraints are all defined by the Command table.
+Each parameter SHALL be encoded as `Data Type (1 B) + Raw Data (N B)`. Raw Data uses the same encoding as the Data field in a WRITE attribute block (without Attribute ID). Parameters SHALL be ordered by ascending **Parameter Order** in the **Parameters** table for this Command in the corresponding Profile. No parameter count field is carried.
 
 - **Command without parameters**: D-Len = `2`; the Data Segment contains only Cmd ID.
-- **Command with parameters**: D-Len = `2 + sum(sizeof(param_i))`.
-- Parameter name, order, type, length, and constraints are determined by the Profile Command definition.
+- **Command with parameters**: D-Len = `2 + sum(1 + sizeof(raw_i))`.
+- Parameter name, order, type, and constraints are defined by the **Parameter Details** table in the Profile command definition; Raw Data length is determined by the type definition in [Data Types Overview](#data-types-overview).
 
-#### Overall Checksum - Overall Checksum {#overall-checksum--overall-checksum}
+#### Overall Checksum
 
 CRC is a 2-byte Big-Endian unsigned integer that uses the **CRC16-Modbus** algorithm and covers all bytes of the Data Segment.
 
@@ -651,8 +642,6 @@ The initial value for CRC16-Modbus is `0xFFFF`. It is different from CRC16/XMODE
 This section defines all Data Types used in the Data Segment and their byte encoding rules, including each type's semantics, value range, on-wire format, and operation return Status codes.
 
 #### Data Types Overview 
-
-<a id="ref_DataType"></a>
 
 `Data Type` is a 1-byte field that identifies the Raw Data type and length calculation method. This document consistently uses `Data Type` for this field.
 
@@ -711,8 +700,6 @@ bool represents a Boolean value and occupies 1 byte.
 
 #### enum8 (Data Type = 0x30) 
 
-<a id="ref_Enum8"></a>
-
 enum8 is an 8-bit enumeration type that occupies 1 byte. Its encoding is the same as uint8, but its semantics are a **set of named constants**: each valid value corresponds to a named state or option.
 
 ##### Values
@@ -743,8 +730,6 @@ If an Attribute has type `OtaStatusEnum8`, and that enumeration defines `0x02 = 
 
 #### enum16 (Data Type = 0x31) 
 
-<a id="ref_Enum16"></a>
-
 enum16 is a 16-bit enumeration type that occupies 2 bytes. Its encoding is the same as uint16, but its semantics are a **set of named constants**. enum16 SHALL be used when enumeration values exceed `0xFF` or when a Profile explicitly requires a larger reserved enumeration space.
 
 ##### Values
@@ -766,8 +751,6 @@ enum16 uses 2-byte Big-Endian encoding:
 ```
 
 #### enum32 (Data Type = 0x32) 
-
-<a id="ref_Enum32"></a>
 
 enum32 is a 32-bit enumeration type that occupies 4 bytes. Its encoding is the same as uint32, but its semantics are a **set of named constants**. enum32 SHALL be used when the enumeration space needs stable cross-system allocation or when enumeration values exceed `0xFFFF`.
 
@@ -791,8 +774,6 @@ enum32 uses 4-byte Big-Endian encoding:
 
 #### enum64 (Data Type = 0x33) 
 
-<a id="ref_Enum64"></a>
-
 enum64 is a 64-bit enumeration type that occupies 8 bytes. Its encoding is the same as uint64, but its semantics are a **set of named constants**. enum64 SHALL be used when the enumeration space needs stable cross-system allocation or when enumeration values exceed `0xFFFFFFFF`.
 
 ##### Values
@@ -814,8 +795,6 @@ enum64 uses 8-byte Big-Endian encoding:
 ```
 
 #### map8 / map16 / map32 / map64 
-
-<a id="ref_MapTypes"></a>
 
 map types express a set of Boolean states that may be true at the same time; they are also called bitmaps or bitmasks. Unlike enum types, where values represent mutually exclusive options, map types represent combinations of multiple bits.
 
@@ -989,8 +968,6 @@ Example:
 | `1.0` | `0x3FF0000000000000` | `3F F0 00 00 00 00 00 00` |
 | `-1.0` | `0xBFF0000000000000` | `BF F0 00 00 00 00 00 00` |
 
-<a id="ref_OctetStringEncoding"></a>
-
 #### octstr (Data Type = 0x41) 
 
 octstr is a variable-length byte string that may carry any binary content, such as a device ID, version string, or firmware data fragment.
@@ -1017,8 +994,6 @@ Raw Data consists of a 1-byte Length prefix followed by the actual byte content:
 | `05 48 45 4C 4C 4F` | `Length = 5`; the following 5 bytes decode as the ASCII string `HELLO`. |
 
 #### Structure (Data Type = 0x4C) 
-
-<a id="ref_StructureEncoding"></a>
 
 Structure is used to transmit multiple data members of different types in a single Attribute, avoiding multiple interactions. Each member has its own Data Type and data body.
 
@@ -1047,8 +1022,6 @@ The member count range of Structure is **1 ~ 15**, and a member SHALL NOT nest a
 
 #### string (Data Type = 0x42) 
 
-<a id="ref_CharacterStringEncoding"></a>
-
 string is a variable-length character string, and its Raw Data uses UTF-8 encoding. Unlike octstr, the content of string SHALL be a valid UTF-8 byte sequence.
 
 ##### Encoding Format
@@ -1073,8 +1046,6 @@ Raw Data consists of a 1-byte Length prefix followed by the actual UTF-8 byte co
 | `05 48 45 4C 4C 4F` | `Length = 5`; the following 5 bytes decode as the UTF-8 string `HELLO`. |
 
 #### list (Data Type = 0x48) 
-
-<a id="ref_listEncoding"></a>
 
 list is used to transmit multiple elements of the **same Data Type** in a single Attribute or Command parameter. The difference between list and Structure is that all elements in a list have the same type, while each member in a Structure may use a different type.
 
@@ -1105,7 +1076,7 @@ The element count of list is at most **65535**. To avoid parsing complexity, the
 | `20 00 03 0A 14 1E` | `Element Data Type = 0x20` (uint8), `Element Count = 3`, element values are `10`, `20`, and `30` in order. |
 | `21 00 02 00 64 01 2C` | `Element Data Type = 0x21` (uint16), `Element Count = 2`, element values are `100` and `300` in order. |
 
-#### Status - Return Status {#status--return-status}
+#### Status - Return Status
 
 `Status` is 1 byte and is carried in ACKNOWLEDGE, READ_RESPONSE, WRITE_RESPONSE, and QUERY_RESPONSE frames. It indicates a per-Attribute or frame-level operation result.
 
@@ -1128,7 +1099,7 @@ Status values are divided by applicable interaction. Per-Attribute Status is use
 | 0x22 | HeaderChecksumError | Frame-level parsing | Header Checksum verification failed. |
 | 0x23 | OverallChecksumError | Frame-level parsing | Overall Checksum verification failed. |
 | 0x24 | MalformedDataSegment | Frame-level parsing | Data Segment format is invalid, for example, field truncation, incomplete Attribute Block, or unparseable parameter length. |
-| 0x25 | DiscoveryInProgress | QUERY / REPORT / COMMAND | Client has not completed initialization Discovery and temporarily does not accept Server-initiated data synchronization. Server SHOULD wait until `InitDiscoveryComplete` is complete before retrying. |
+| 0x25 | ProfileDiscoveryInProgress | QUERY / REPORT / COMMAND | Client has not completed Profile Discovery and temporarily does not accept Server-initiated data synchronization. Server SHOULD wait until `ProfileDiscoveryComplete` ACK before retrying. |
 | 0x30 | OtaVersionMismatch | OTA COMMAND / OTA Attribute interaction | Firmware version mismatch, or the target upgrade version is not allowed. |
 | 0x31 | OtaImageSizeError | OTA COMMAND / OTA Attribute interaction | Firmware image length error. |
 | 0x32 | OtaImageCrcError | OTA COMMAND / OTA Attribute interaction | Firmware image CRC verification failed. |
@@ -1142,141 +1113,175 @@ Status values are divided by applicable interaction. Per-Attribute Status is use
 Except for `0x00` (Success), all other values are considered error returns. An implementation may use `status != 0x00` to determine whether the operation succeeded.
 :::
 
-## Chapter 4 Wake-up and Initialization 
+## Chapter 4 Initialization
 
-<a id="ref_WakeAndInitialization"></a>
+This chapter defines the initialization flow after Client and Server power on, including link establishment, Profile discovery, Server data synchronization, and Wake Signaling rules.
 
-This chapter defines the Wake-up Mechanism for low-power scenarios, as well as Initialization Discovery, Attributes synchronization, and the entry into Normal Operation after the Client and Server power on.
+### Overview
 
-### Wake-up Mechanism
+After power-on, Client SHALL execute initialization in the following three stages in order:
 
-When a device enters sleep mode for low-power standby, its serial data receive capability may be limited. Therefore, before the Client and Server communicate over UART, they need to use the Wake-up Mechanism to ensure that the peer is ready before transmitting data. After data transmission is complete, the wake-up signal is released, and the peer may return to the low-power state.
+1. **Link establishment**: Client sends `LinkEstablishmentRequest(ClientUartBufferSize)`; Server returns `LinkEstablishmentResponse(LowPowerFeature, ServerUartBufferSize)` to negotiate whether Wake Signaling is enabled and to exchange UART buffer capability; both sides use the smaller declared value as the AECP single-frame upper limit (>= 1024 bytes). **Before negotiation completes**, Wake Signaling is **enabled by default**; after negotiation, it is disabled only when Server returns `Normal`.
+2. **Profile discovery**: Client READs Server Profiles and attribute initial values, then sends `ProfileDiscoveryComplete`; Profile discovery completes after Server ACK.
+3. **Server data synchronization**: Server QUERYs Client attributes or REPORTs Server attributes as needed; initialization completes afterward and Normal Operation begins.
 
-:::tip
-Non-low-power devices do not need to implement the Wake-up Mechanism described in this chapter. They may ignore the wake pin and perform serial communication directly.
-:::
+**Before both sides complete `LowPowerFeature` negotiation**, Wake Signaling is enabled by default; during negotiation, the sender **SHALL** perform Wake Signaling.
 
-#### Active-low Wake-up
+### Core Concepts
 
-This protocol uses an **active-low** wake-up signal. The waking side activates the target device by pulling the target device's wake pin low, starts data transmission after the target device is ready, and pulls the wake pin high after transmission is complete. When no data transmission is in progress, the wake pin SHALL remain high.
+#### Link Establishment
 
-##### Timing
+Link Establishment is the first AECP interaction process after power-on and is used to negotiate whether Wake Signaling is enabled (`LowPowerFeature`) and to exchange UART buffer capability (`ClientUartBufferSize`, `ServerUartBufferSize`). Before negotiation completes, Wake Signaling is enabled by default.
 
-The following figure shows the complete timing of a single wake-up and data transmission:
+**Completion criterion:** Client receives `LinkEstablishmentResponse` and caches `LowPowerFeature`, `ServerUartBufferSize`, and the negotiated UART buffer size; Server caches `ClientUartBufferSize` and the negotiated UART buffer size.
 
-![Wake-up Timing Diagram](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/en/wake_timing.svg)
+**Interaction:**
 
-| Parameter | Name | Description |
-| --- | --- | --- |
-| T0 | Wait time | The time the waking side waits after pulling the wake pin low for the target device to complete wake-up preparation. Serial data transmission starts only after T0 ends. |
-| T1 | Total duration of one wake-up | The complete duration from pulling the wake pin low to pulling it high again, that is, T0 plus the total data transmission time. |
+- Client **SHALL** send `LinkEstablishmentRequest(ClientUartBufferSize)` as the first AECP frame after power-on; see [ClientUartBufferSizeAttr](#clientuartbuffersize) for `ClientUartBufferSize` semantics; the value SHALL NOT be less than 1024 bytes; **SHALL** perform Wake Signaling before sending (enabled by default before negotiation).
+- Server **SHALL** return `LinkEstablishmentResponse(LowPowerFeature, ServerUartBufferSize)`; see [ServerUartBufferSizeAttr](#serveruartbuffersize) for `ServerUartBufferSize` semantics; the value SHALL NOT be less than 1024 bytes; **SHALL** perform Wake Signaling before sending.
 
-##### Client Wakes Server
+After link establishment completes, both sides SHALL compute and cache the **negotiated UART buffer size**:
 
-When the Client needs to send data to the Server, the Client pulls the Server wake pin low:
+....
+Negotiated UART buffer size = min(ClientUartBufferSize, ServerUartBufferSize)
+....
 
-- **Recommended T0 value**: 5 ms.
-- **T1**: No fixed requirement; determined by the actual data transmission duration.
+The negotiated result SHALL NOT be less than 1024 bytes. For subsequent AECP frames in either direction, the complete frame length (see [Interaction Model](#interaction-model)) SHALL NOT exceed the negotiated UART buffer size.
 
-##### Server Wakes Client
+**Before Link Establishment negotiation completes:** Wake Signaling is enabled by default; during negotiation, the sender **SHALL** perform Wake Signaling.
 
-When the Server needs to send data to the Client, the Server pulls the Client wake pin low:
+#### Profile Discovery
 
-- **Fixed T0 value**: 20 ms (fixed in the current version and not dynamically configurable through Commands).
-- The Client SHALL complete serial receive preparation within T0.
+Profile Discovery is the process in which Client reads the Server capability view, including Profile discovery, attribute list reading, and attribute initial value reading.
 
-#### Timeout Handling
+**Completion criterion:** Client sends `ProfileDiscoveryComplete` and Server returns `ACKNOWLEDGE(Status=0x00)`.
 
-When waiting for a peer response, the sender SHALL set the timeout to **100 ms**. For retry behavior after timeout, see [Retry Mechanism](#retry-mechanism).
+Client SHALL complete Server product Profile discovery, attribute list reading, and attribute initial value reading before sending `ProfileDiscoveryComplete`. Server SHALL support Foundation Profile (`0x0000`) by default and SHALL declare only one product Profile.
 
-#### Development Recommendations
-
-- The wake pin drive capability should meet the input threshold requirements of the target device.
-- After data transmission is complete, release the wake pin promptly by pulling it high, to avoid preventing the peer from returning to the low-power state due to a long low-level hold.
-- If the system does not require low-power functionality, the wake pin may be tied high and wake-up timing may be omitted.
-
-### Startup Initialization Flow
-
-This section describes the startup flow after the Client and Server power on, including wake-up timing, Client-led capability reads, initialization completion notification, Server Data Synchronization, and entry into Normal Operation.
-
-#### Startup Flow Overview
-
-After power-on, the Client and Server execute the following stages in order:
-
-| Stage | Name | Description |
-| --- | --- | --- |
-| Stage 1 | Wake-up | The sender performs wake-up timing as needed and confirms that the receiver's UART is ready. |
-| Stage 2 | Initialization Discovery | The Client reads the unique product Profile of the Server, the Attributes list, and the initial Attributes values. |
-| Stage 3 | Discovery Completion Notification | The Client sends `InitDiscoveryComplete`; after Server ACK, the initialization data synchronization window opens. |
-| Stage 4 | Server Data Synchronization | The Server QUERYs Client Attributes or REPORTs Server Attributes as needed; the Client returns QUERY_RESPONSE or ACKNOWLEDGE. |
-| Stage 5 | Normal Operation | The Client and Server enter normal Attributes read/write and Commands Interaction. |
-
-#### Stage 2 - Initialization Discovery
-
-The Client SHALL complete Server product Profile discovery, Attributes list reads, and initial Attributes value reads before entering later initialization stages. The Server SHALL support the Foundation Profile (`0x0000`) by default and SHALL support only one product Profile. The product Profile is declared by a Server Attribute in the Foundation Profile. The Server Attributes list for each Profile is declared by that Profile's `ServerAttributeList` (Attribute ID `0xFFFB`).
-
-The recommended order is:
+**Recommended READ order:**
 
 1. Use `Profile ID = 0x0000` to READ `ServerAttributeList` (Attribute ID `0xFFFB`).
 2. Use `Profile ID = 0x0000` to READ `ProductProfileID` (Attribute ID `0x1007`).
-3. Use `Profile ID = ProductProfileID` to READ the `ServerAttributeList` (Attribute ID `0xFFFB`) of the product Profile.
-4. Use `Profile ID = 0x0000` to READ Server Attributes in the Foundation Profile that need initialization.
-5. Use `Profile ID = ProductProfileID` to READ Server Attributes in the product Profile that need initialization.
+3. Use `Profile ID = ProductProfileID` to READ the product Profile's `ServerAttributeList` (Attribute ID `0xFFFB`).
+4. Use `Profile ID = 0x0000` to READ Foundation Profile Server attributes that require initialization.
+5. Use `Profile ID = ProductProfileID` to READ product Profile Server attributes that require initialization.
 
-The Client SHALL use `Profile ID = 0x0000` to read the following Foundation Server Attributes:
-
-| Attribute ID | Name | Description |
-| --- | --- | --- |
-| `0xFFFB` | ServerAttributeList | List of Attribute IDs actually supported by the Server under the Foundation Profile. |
-| `0x1007` | ProductProfileID | Unique product Profile of the Server. The Foundation Profile (`0x0000`) is supported by default and is not declared through this attribute. |
-
-The Client SHALL first read the Foundation Profile `ServerAttributeList` (Attribute ID `0xFFFB`), then read `ProductProfileID`. The Client SHALL then use `Profile ID = ProductProfileID` to read the `ServerAttributeList` (Attribute ID `0xFFFB`) of that product Profile. Discovery results are used to determine the Server Attributes actually supported under the Foundation Profile and product Profile.
-
-The Client SHALL separately read the Server Attributes that need initialization in the Foundation Profile and product Profile:
-
-- Use `Profile ID = 0x0000` to READ Server Attributes in the Foundation Profile that need initialization.
-- Use `Profile ID = ProductProfileID` to READ Server Attributes in the product Profile that need initialization.
-
-The Client SHALL NOT access Attributes not declared by `ServerAttributeList` during product Profile initialization reads.
-
-After completing the initial Attributes value reads, the Client SHALL initiate subsequent READ/WRITE/COMMAND operations according to the product Profile document and the `ServerAttributeList` result.
-
-#### Stage 3 - Discovery Completion Notification
-
-After completing Initialization Discovery, the Client SHALL send the `InitDiscoveryComplete` Command to notify the Server:
-
-The Client SHALL use `Profile ID = 0x0000` to send `COMMAND InitDiscoveryComplete`. After the Server returns `ACKNOWLEDGE(Status=0x00)`, initialization control transfers to the Server and the initialization data synchronization window opens. The Server MAY then start to QUERY Client Attributes and MAY REPORT Server Attributes according to its Attributes reporting policy.
-
-Before receiving `InitDiscoveryComplete` and returning `ACKNOWLEDGE(Status=0x00)`, the Server SHALL NOT proactively initiate initialization data synchronization, including QUERY Client Attributes, REPORT Server Attributes, or sending Server -> Client COMMAND used to synchronize business data. The Client may still proactively read initial Server Attributes values through READ during Stage 2.
-
-#### Stage 4 - Server Data Synchronization
-
-The Server MAY use QUERY to pull Client Attributes (Side = C) that it needs, and MAY use REPORT to proactively synchronize the initial state or changed state of Server Attributes (Side = S). After receiving QUERY, the Client SHALL return the current value through QUERY_RESPONSE. After receiving REPORT, the Client SHALL confirm through ACKNOWLEDGE:
+Client SHALL use `Profile ID = 0x0000` to read the following Foundation Server attributes:
 
 | Attribute ID | Name | Description |
 | --- | --- | --- |
-| 0x0000 | ProtocolVersion | Server pulls the AECP version supported by the Client |
-| 0x0001 | ModuleFirmwareVersion | Server pulls the Client firmware version for logging and version management |
-| 0x0002 | ModuleUniqueID | Server pulls the device unique identifier |
-| 0x0003 | PairingStatus | Server pulls the current pairing state |
-| 0x0004 | NetworkStatus | Server pulls the current network connection state (offline/connecting/online) |
-| 0x0005 | LocalTime | Server pulls the current local time |
-| 0x0006 | ModuleSupportedProductProfileList | Server pulls the list of product Profile IDs supported by the Client |
-| 0x0007 | ClientUartBufferSize | Server pulls the Client UART buffer size |
+| `0xFFFB` | ServerAttributeList | List of Attribute IDs actually supported by Server under Foundation Profile. |
+| `0x1007` | ProductProfileID | Unique product Profile of Server. |
 
-The Server SHALL NOT QUERY Client Attributes or REPORT Server Attributes before receiving `InitDiscoveryComplete` and returning `ACKNOWLEDGE(Status=0x00)`. If the Client has not completed Discovery, the Client MAY return `DiscoveryInProgress` for early QUERY, REPORT, or Server -> Client data synchronization COMMAND messages.
+Client SHALL NOT access attributes not declared in `ServerAttributeList` during product Profile initialization reads.
 
-#### Stage 5 - Normal Operation
+When `LowPowerFeature=LowPower`, Client **SHALL** perform Wake Signaling before each Client→Server READ.
 
-After completing Stages 1 through 4, the Client and Server enter Normal Operation:
+#### LowPowerFeature
 
-- **Client as needed**: READ/WRITE Server Attributes and send COMMAND to trigger actions.
-- **Server proactively**: REPORT Attributes changes, such as temperature changes, fault alarms, and heartbeats, and QUERY Client Attributes, such as pulling the latest timestamp. Server-initiated synchronization SHALL occur only after the ACK for `InitDiscoveryComplete` has completed.
-- **Both sides**: Perform wake-up timing as needed before communication, for example when the Server is a low-power device.
+`LowPowerFeature` is a parameter carried by `LinkEstablishmentResponse`, with type `LowPowerFeatureEnum8` (see [LowPowerFeatureEnum8](#lowpowerfeatureenum8)), used to negotiate whether Wake Signaling is enabled. **Before both sides complete negotiation, Wake Signaling is enabled by default**; Server returning `Normal` means negotiation disables Wake Signaling.
 
-#### Complete Startup Timing Diagram
+| Value | Name | Description |
+| --- | --- | --- |
+| `0x00` | Normal | Negotiation disables Wake Signaling; after link establishment completes, both sides communicate directly over UART. |
+| `0x01` | LowPower | **Default (before negotiation)**. Keeps Wake Signaling enabled; after link establishment completes, the sender **SHALL** perform Wake Signaling before each UART communication. |
 
-![Wake-up and Initialization Startup Flow](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/en/initialization_sequence.svg)
+The `LowPowerFeature` reported by Server **SHALL** match the actual low-power capability of the product. Products without low-power sleep and Wake Pin mechanism **SHALL** return `Normal`. If such products tie Wake Pin high per [Hardware Interface, Chapter 2](#chapter-2-hardware-interface), the Wake Signaling requirement during link establishment negotiation **SHALL** be considered satisfied (no actual signaling).
+
+#### Wake Signaling
+
+Wake Signaling is the complete process in which the sender, before UART communication, uses the peer's **Wake Pin** (see [Hardware Interface, Chapter 2](#chapter-2-hardware-interface)) to perform **active-low assertion → T0 wait → UART transfer → pin release**.
+
+This protocol uses an **active-low** Wake Pin signal. When no data is being transferred, Wake Pin **SHALL** remain high.
+
+**Enable rules:**
+
+- **Default before negotiation**: Before both sides complete `LowPowerFeature` negotiation, Wake Signaling is enabled by default.
+- **During link establishment negotiation**: Because Wake Signaling is enabled by default before negotiation, the sender **SHALL** perform Wake Signaling.
+- **Negotiation result `Normal`**: Wake Signaling disabled; both sides use UART directly.
+- **Negotiation result `LowPower` (default)**: Wake Signaling remains enabled; the sender **SHALL** perform Wake Signaling before each UART communication (Client→Server and Server→Client).
+
+![Wake Signaling Timing Diagram](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/en/wake_timing.svg)
+
+| Parameter | Name | Description |
+| --- | --- | --- |
+| T0 | Wait time | After Wake Pin is pulled low, the sender waits for the receiver to complete UART receive preparation. Serial data transmission starts after T0 elapses. |
+| T1 | Total signaling duration | Complete duration from Wake Pin pulled low to pulled high again, that is, T0 plus all data transmission time. |
+
+##### Client → Server
+
+When Client needs to send data to Server, Client pulls Server's Wake Pin low:
+
+- **Recommended T0**: 5 ms.
+- **T1**: No fixed requirement; determined by actual data transmission duration.
+
+##### Server → Client
+
+When Server needs to send data to Client, Server pulls Client's Wake Pin low:
+
+- **Fixed T0**: 20 ms (fixed in the current version; dynamic configuration by command is not supported).
+- Client **SHALL** complete serial receive preparation within T0.
+
+##### Timeout Handling
+
+When the sender waits for a peer response, the timeout **SHALL** be set to **100 ms**. Retransmission behavior after timeout is defined in [Retry Mechanism](#retry-mechanism).
+
+##### Implementation Notes
+
+- Wake Pin drive capability SHALL meet the input threshold requirements of the target device.
+- After data transmission completes, Wake Pin SHOULD be released (pulled high) promptly to avoid preventing the peer from returning to low-power state.
+- If low-power functionality is not required, Wake Pin MAY be tied high permanently and Wake Signaling omitted.
+
+### Power-on Initialization Flow
+
+#### Flow Overview
+
+After power-on, Client and Server execute the following three stages in order:
+
+| Stage | Name | Description |
+| --- | --- | --- |
+| Stage 1 | Link establishment | Negotiate `LowPowerFeature` and exchange UART buffer capability; use the smaller declared value as the single-frame upper limit (>= 1024 bytes); Wake Signaling enabled by default before negotiation; sender **SHALL** use Wake Signaling during negotiation; disabled when result is `Normal` |
+| Stage 2 | Profile discovery | Client READ Profile/attributes; `ProfileDiscoveryComplete` and Server ACK |
+| Stage 3 | Server data synchronization | Server QUERY Client attributes or REPORT Server attributes as needed; initialization completes |
+
+#### Link establishment
+
+After power-on, Client **SHALL** first perform link establishment (see [Link Establishment](#link-establishment)):
+
+1. Client **SHALL** perform Wake Signaling before sending `LinkEstablishmentRequest(ClientUartBufferSize)` (enabled by default before negotiation).
+2. Server **SHALL** perform Wake Signaling before returning `LinkEstablishmentResponse(LowPowerFeature, ServerUartBufferSize)`.
+3. Client caches `LowPowerFeature`, `ServerUartBufferSize`, and the negotiated UART buffer size; Server caches `ClientUartBufferSize` and the negotiated UART buffer size; link establishment negotiation completes. Wake Signaling is enabled by default before negotiation; disabled only when negotiation result is `Normal`.
+
+#### Profile discovery
+
+After link establishment completes, Client **SHALL** perform Profile discovery (see [Profile Discovery](#profile-discovery)), read the Server capability view and attribute initial values in the recommended READ order, then send `ProfileDiscoveryComplete`.
+
+When triggered by `ProfileDiscoveryRequest`, Client **SHALL** redo Profile discovery only (**SHALL NOT** redo link establishment).
+
+Client **SHALL** send `ProfileDiscoveryComplete` with `Profile ID = 0x0000`. After Server returns `ACKNOWLEDGE(Status=0x00)`, Profile discovery completes. Before Server receives `ProfileDiscoveryComplete` and ACKs it, it **SHALL NOT** proactively initiate QUERY, REPORT, or Server → Client COMMAND used to synchronize service data.
+
+#### Server data synchronization
+
+After Profile discovery completes, Server MAY QUERY Client attributes it needs (Side = C) and MAY REPORT Server attributes (Side = S). Client **SHALL** return current values by QUERY_RESPONSE upon QUERY; Client **SHALL** confirm by ACKNOWLEDGE upon REPORT:
+
+| Attribute ID | Name | Description |
+| --- | --- | --- |
+| 0x0000 | ProtocolVersion | Server retrieves AECP version supported by Client |
+| 0x0001 | ModuleFirmwareVersion | Server retrieves Client firmware version |
+| 0x0002 | ModuleUniqueID | Server retrieves unique device identifier |
+| 0x0003 | PairingStatus | Server retrieves current pairing state |
+| 0x0004 | NetworkStatus | Server retrieves current network connection state |
+| 0x0005 | LocalTime | Server retrieves current local time |
+| 0x0006 | ModuleSupportedProductProfileList | Server retrieves product Profile ID list supported by Client |
+| 0x0007 | ClientUartBufferSize | Server retrieves Client UART buffer size |
+
+If Client has not completed Profile discovery, Client MAY return `ProfileDiscoveryInProgress` for prematurely arriving QUERY, REPORT, or Server → Client data synchronization COMMAND messages.
+
+After Server data synchronization completes, Client and Server enter Normal Operation; whether subsequent UART communication uses Wake Signaling remains governed by `LowPowerFeature` determined in Stage 1.
+
+### Complete Startup Sequence Diagram
+
+![Initialization Startup Flow](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/en/initialization_sequence.svg)
 
 ## Chapter 5 Profile Model and Implementation Rules
 
@@ -1284,9 +1289,7 @@ This chapter defines the AECP **Profile** model, as well as the Response Mechani
 
 A Profile is an application-layer organizational unit of the protocol. Each Profile consists of a group of related **Attributes (Attribute)** and **Commands (Command)**, and is uniquely identified by Profile ID (uint16).
 
-The Profile ID in the frame header declares the functional domain to which the frame operation belongs. The Server SHALL support the Foundation Profile (`0x0000`) by default and SHALL declare only one product Profile. After completing Initialization Discovery, the Client may switch communication between the Foundation Profile and that product Profile.
-
-<a id="ref_ProfileIDNamespace"></a>
+The Profile ID in the frame header declares the functional domain to which the frame operation belongs. The Server SHALL support the Foundation Profile (`0x0000`) by default and SHALL declare only one product Profile. After Profile Discovery completes (`ProfileDiscoveryComplete` ACK), the Client may switch communication between the Foundation Profile and that product Profile.
 
 ### Profile ID Namespace
 
@@ -1339,17 +1342,35 @@ Each Operation Code has a defined Response requirement. Except for COMMAND messa
 
 When waiting for a response, the sender SHALL set the timeout to **100 ms**.
 
-### Initialization Discovery Rules
+### Initialization Rules
 
-During the power-on initialization stage, the Client SHALL initiate Discovery first and read the unique product Profile of the Server. Discovery SHALL use `Profile ID = 0x0000` to send READ and read the `ProductProfileID` Attribute defined in the Foundation Profile.
+Power-on initialization SHALL be Client-led and executed in the order Link Establishment → Profile Discovery → Server data sync (see [Chapter 4](#chapter-4-initialization) for details).
 
-The Foundation Profile (`0x0000`) is a mandatory capability supported by default and is not declared through `ProductProfileID`. `ProductProfileID` declares only the single product Profile of the Server.
+#### Link Establishment
 
-After completing Discovery, the Client SHALL send the `InitDiscoveryComplete` Command. Before the Server receives this command and returns `ACKNOWLEDGE(Status=0x00)`, it SHALL NOT proactively initiate initialization data synchronization, including QUERY Client Attributes, REPORT Server Attributes, or sending Server -> Client COMMAND used to synchronize business data. If the Client has not completed Discovery, the Client MAY return `DiscoveryInProgress` for early Server-initiated synchronization requests. After the Server returns `ACKNOWLEDGE(Status=0x00)`, initialization control transfers to the Server, and the Server MAY QUERY Client Attributes or REPORT Server Attributes as needed.
+* Client **SHALL** send `LinkEstablishmentRequest(ClientUartBufferSize)` as the first AECP interaction after power-on to negotiate `LowPowerFeature` and declare Client UART buffer capability; **SHALL** perform Wake Signaling before sending (enabled by default before negotiation).
+* Server **SHALL** return `LinkEstablishmentResponse(LowPowerFeature, ServerUartBufferSize)`; **SHALL** perform Wake Signaling before sending.
+* After link establishment completes, both sides SHALL compute the negotiated UART buffer size `min(ClientUartBufferSize, ServerUartBufferSize)` and use it to constrain subsequent single-frame lengths; each declared value SHALL NOT be less than 1024 bytes.
+* Before both sides complete `LowPowerFeature` negotiation, Wake Signaling is enabled by default; during negotiation, the sender **SHALL** perform Wake Signaling.
+
+#### Profile Discovery
+
+* Client **SHALL** READ Server Profiles and attribute initial values after Link Establishment completes.
+* When `LowPowerFeature=LowPower`, Client **SHALL** perform Wake Signaling before each Client→Server READ.
+* After Profile Discovery completes, Client **SHALL** send `ProfileDiscoveryComplete`.
+
+#### Server Data Sync
+
+* After Profile Discovery completes, Server MAY QUERY Client attributes and MAY REPORT Server attributes.
+* Client **SHALL** return QUERY_RESPONSE to QUERY and ACKNOWLEDGE to REPORT.
+
+#### Server Synchronization Constraints
+
+Before Server receives `ProfileDiscoveryComplete` and returns `ACKNOWLEDGE(Status=0x00)`, it **SHALL NOT** proactively QUERY Client attributes, REPORT Server attributes, or send Server → Client COMMAND used to synchronize service data. If Client has not completed Profile Discovery, Client MAY return `ProfileDiscoveryInProgress` for early Server-initiated synchronization requests. After ACK completes, Server MAY QUERY or REPORT as needed.
+
+When triggered by `ProfileDiscoveryRequest`, Client **SHALL** redo Profile Discovery only (**SHALL NOT** redo Link Establishment).
 
 Subsequent Client READ, WRITE, or COMMAND operations SHALL be based on the product Profile definition corresponding to `ProductProfileID`. If the Client accesses an Attribute or Command not defined by that Profile, the Server SHOULD return a non-zero Status.
-
-<a id="ref_retry"></a>
 
 ### Retry Mechanism
 
@@ -1360,8 +1381,6 @@ When the sender times out without receiving a Response, it SHALL start the retry
 - After all three retransmissions time out, the sender MAY record an error and notify the upper-layer application. The specific handling policy is determined by the product implementation.
 
 ### Attributes ID Namespace
-
-<a id="ref_AttributeID"></a>
 
 The Data Type of `Attribute ID` is `uint16`, with value range `0x0000 ~ 0xFFFF`, and it is **unique within its owning Profile**. The same Attribute ID value in different Profiles may have different semantics. Full address = **Profile ID (frame header) + Attribute ID**.
 
@@ -1375,8 +1394,6 @@ Attribute IDs for all Profiles SHALL follow the segments in the table below. Und
 | `0xFFFB ~ 0xFFFF` | Global Attributes range. The current specification defines `0xFFFB ServerAttributeList`; each Profile SHALL define this Attribute. Other IDs are Reserved for future global Attributes. |
 
 ### Commands ID Namespace
-
-<a id="ref_CommandID"></a>
 
 The Data Type of `Command ID` is `uint16`, with value range `0x0001 ~ 0xFFFF`, and it is **unique within its owning Profile**. Complete Commands identifier = **Profile ID (frame header) + Command ID**. `0x0000` SHALL be Reserved and SHALL NOT be used as a valid Command ID.
 
@@ -1407,7 +1424,7 @@ Attributes, Commands, enumerations, bitmaps, and parameter tables for specific P
 - [Foundation Profile (0x0000)](#chapter-6-foundation-profile-profile-id--0x0000)
 - [Thermostat Profile (0x1000)](#chapter-7-thermostat-profile-profile-id--0x1000)
 
-## Chapter 6 Foundation Profile (Profile ID = 0x0000) {#chapter-6-foundation-profile-profile-id--0x0000}
+## Chapter 6 Foundation Profile (Profile ID = 0x0000)
 
 Foundation Profile is the base functional profile that all device types must implement. It contains base attributes, base commands, and firmware upgrade capabilities. The Profile ID of all Foundation Profile frames SHALL be `0x0000`.
 
@@ -1417,11 +1434,7 @@ The column meanings of all attribute, command, and parameter tables in this chap
 
 ### Data Types
 
-<a id="ref_FoundationDataTypes"></a>
-
 #### PairingStatusEnum8
-
-<a id="ref_PairingStatusEnum8"></a>
 
 `PairingStatusEnum8` defines the Client pairing window and network admission state. The underlying type of this enum is enum8.
 
@@ -1433,8 +1446,6 @@ The column meanings of all attribute, command, and parameter tables in this chap
 
 #### NetworkStatusEnum8
 
-<a id="ref_NetworkStatusEnum8"></a>
-
 `NetworkStatusEnum8` defines the Client network connection state. The underlying type of this enum is enum8.
 
 | Value | Name | Description |
@@ -1443,7 +1454,7 @@ The column meanings of all attribute, command, and parameter tables in this chap
 | 0x01 | Online | Client is connected to an available network and can perform normal network communication and service synchronization. |
 | 0x02 | Connecting | Client is trying to join the network, restore connectivity, or perform network authentication; network capability is not yet available. |
 
-#### OtaUpgradeMethodEnum8 {#ref_OtaUpgradeMethodEnum8}
+#### OtaUpgradeMethodEnum8
 
 `OtaUpgradeMethodEnum8` defines the firmware upgrade methods supported by Server. The underlying type of this enum is enum8.
 
@@ -1454,8 +1465,6 @@ The column meanings of all attribute, command, and parameter tables in this chap
 | 0x02 | BootLoaderOta | Server supports BootLoader OTA. |
 
 #### HardwareFaultMap32
-
-<a id="ref_HardwareFaultMap32"></a>
 
 `HardwareFaultMap32` defines Server hardware fault bits. The underlying type of this map is map32. A corresponding bit set to `1` indicates that the fault is active.
 
@@ -1473,7 +1482,7 @@ The column meanings of all attribute, command, and parameter tables in this chap
 | 9 | NonVolatileMemoryFault | Non-volatile memory fault. |
 | 10 | PhysicalTamperDetected | Physical tamper detected. |
 
-#### OtaStatusEnum8 {#ref_OtaStatusEnum8}
+#### OtaStatusEnum8
 
 `OtaStatusEnum8` defines Server OTA progress state. The underlying type of this enum is enum8.
 
@@ -1484,8 +1493,7 @@ The column meanings of all attribute, command, and parameter tables in this chap
 | 0x02 | VerifyFailed | Firmware verification failed. |
 | 0x03 | Complete | OTA image has been verified and applied. |
 
-#### OtaAbortReasonEnum8 {#ref_OtaAbortReasonEnum8}
-
+#### OtaAbortReasonEnum8
 `OtaAbortReasonEnum8` defines the reason why Server actively aborts OTA. The underlying type of this enum is enum8.
 
 | Value | Name | Description |
@@ -1499,9 +1507,16 @@ The column meanings of all attribute, command, and parameter tables in this chap
 | 0x06 | UnsupportedImage | Firmware image type, version, or hardware condition does not match. |
 | 0x07 | InvalidState | The current Server state does not allow OTA to continue. |
 
-### Client Attributes
+#### LowPowerFeatureEnum8
 
-<a id="ref_ClientAttributes"></a>
+`LowPowerFeatureEnum8` defines the low-power feature of Server. The underlying type of this enum is enum8. Client obtains this value through `LinkEstablishmentResponse` (see [Chapter 4](#chapter-4-initialization)) to negotiate whether Wake Signaling is enabled. **Before both sides complete negotiation, Wake Signaling is enabled by default**.
+
+| Value    | Name            | Description
+|:-----:|:------------|:------------------------------------------|
+| 0x00  | Normal          | Negotiation disables Wake Signaling; after link establishment completes, both sides communicate directly over UART. |
+| 0x01  | LowPower        | **Default (before negotiation)**. Keeps Wake Signaling enabled; after link establishment completes, both sides **SHALL** perform Wake Signaling before UART communication. |
+
+### Client Attributes
 
 | ID | Name | Type | Constraint | Default | Access | Side | Conformance | Description |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -1514,29 +1529,21 @@ The column meanings of all attribute, command, and parameter tables in this chap
 | 0x0006 | ModuleSupportedProductProfileList | list[uint16] | Non-reserved Profile ID | - | Q | C | M | product Profile list supported by Client. |
 | 0x0007 | ClientUartBufferSize | uint16 | >= 1024 bytes | 1024 | Q | C | M | Client UART buffer size. |
 
-#### ProtocolVersion Attributes
-
-<a id="ref_ProtocolVersionAttr"></a>
+#### ProtocolVersion
 
 `ProtocolVersion` is maintained by Client and declares the AECP version supported by Client. The version number SHALL increment from `0`; the default value of the current version is `0x0000`.
 
 When Server needs to determine Client protocol compatibility, it SHALL retrieve this attribute by QUERY, and Client SHALL return the current value by QUERY_RESPONSE.
 
-#### ModuleFirmwareVersion Attributes
-
-<a id="ref_ModuleFirmwareVersionAttr"></a>
+#### ModuleFirmwareVersion
 
 `ModuleFirmwareVersion` is maintained by Client. When Server needs to obtain the Client firmware version, it MAY retrieve this attribute by QUERY, and Client SHALL return the current value by QUERY_RESPONSE.
 
-#### ModuleUniqueID Attributes
-
-<a id="ref_ModuleUniqueIDAttr"></a>
+#### ModuleUniqueID
 
 `ModuleUniqueID` is maintained by Client. When Server needs to obtain the unique identifier of Client, it MAY retrieve this attribute by QUERY, and Client SHALL return the current value by QUERY_RESPONSE.
 
-#### PairingStatus Attributes
-
-<a id="ref_PairingStatusAttr"></a>
+#### PairingStatus
 
 `PairingStatus` is maintained by Client. When Server needs to obtain the current pairing state, it SHALL retrieve this attribute by QUERY, and Client SHALL return the current value by QUERY_RESPONSE.
 
@@ -1544,9 +1551,7 @@ When the pairing state changes, Client SHOULD proactively synchronize the latest
 
 Valid values are defined in [PairingStatusEnum8](#pairingstatusenum8).
 
-#### NetworkStatus Attributes
-
-<a id="ref_NetworkStatusAttr"></a>
+#### NetworkStatus
 
 `NetworkStatus` is maintained by Client. When Server needs to obtain the current network state, it MAY retrieve this attribute by QUERY, and Client SHALL return the current value by QUERY_RESPONSE.
 
@@ -1554,33 +1559,25 @@ When the network state changes, such as becoming online or offline, Client SHOUL
 
 Valid values are defined in [NetworkStatusEnum8](#networkstatusenum8).
 
-#### LocalTime Attributes
-
-<a id="ref_LocalTimeAttr"></a>
+#### LocalTime
 
 `LocalTime` is maintained by Client. The value is Unix Epoch time in seconds, counted from `1970-01-01 00:00:00 UTC`.
 
 When Server needs a network synchronization timestamp, it MAY retrieve this attribute by QUERY. Client SHALL return the latest available local time in QUERY_RESPONSE.
 
-#### ModuleSupportedProductProfileList Attributes
-
-<a id="ref_ModuleSupportedProductProfileListAttr"></a>
+#### ModuleSupportedProductProfileList
 
 `ModuleSupportedProductProfileList` is maintained by Client and declares the list of product Profile IDs that Client supports for parsing and interaction.
 
 The attribute type is `list[uint16]`. List elements SHALL be sorted by Profile ID in ascending order. Foundation Profile (`0x0000`) is mandatory for all Client implementations, is not declared through this attribute, and SHALL NOT appear in this list.
 
-#### ClientUartBufferSize Attributes
-
-<a id="ref_ClientUartBufferSizeAttr"></a>
+#### ClientUartBufferSize
 
 `ClientUartBufferSize` is maintained by Client and declares the Client UART receive and transmit buffer size, in bytes.
 
-The attribute type is `uint16`, and the default value is `1024`. The Client UART receive buffer and transmit buffer SHALL both be no smaller than this value. If the receive and transmit buffer sizes differ, this attribute SHALL use the smaller value as the available single-frame length capability.
+The attribute type is `uint16`, and the default value is `1024`. The Client UART receive buffer and transmit buffer SHALL both be no smaller than this value. If the receive and transmit buffer sizes differ, this attribute SHALL use the smaller value as the available single-frame length capability. During link establishment, Client SHALL carry a `ClientUartBufferSize` parameter in `LinkEstablishmentRequest` that is consistent with this attribute.
 
 ### Server Attributes
-
-<a id="ref_ServerAttributes"></a>
 
 | ID | Name | Type | Constraint | Default | Access | Side | Conformance | Description |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -1588,82 +1585,62 @@ The attribute type is `uint16`, and the default value is `1024`. The Client UART
 | 0x1001 | ProductID | uint16 | 1 ~ 0xFFFF | 0x0000 | R/RP | S | M | product ID. |
 | 0x1002 | ServerHardwareVersion | uint16 | 1 ~ 0xFFFF | 0x0001 | R/RP | S | M | Server hardware version. |
 | 0x1003 | ServerSoftwareVersion | uint16 | 1 ~ 0xFFFF | 0x0001 | R/RP | S | M | Server firmware version. |
-| 0x1004 | OtaUpgradeMethod | [OtaUpgradeMethodEnum8](#ref_OtaUpgradeMethodEnum8) | See enum | 0x00 | R/RP | S | M | OTA Upgrade Method. |
-| 0x1005 | OtaStatus | [OtaStatusEnum8](#ref_OtaStatusEnum8) | See enum | 0x00 | RP | S | O | OTA status. |
+| 0x1004 | OtaUpgradeMethod | [OtaUpgradeMethodEnum8](#otaupgrademethodenum8) | See enum | 0x00 | R/RP | S | M | OTA Upgrade Method. |
+| 0x1005 | OtaStatus | [OtaStatusEnum8](#otastatusenum8) | See enum | 0x00 | RP | S | O | OTA status. |
 | 0x1006 | HardwareFault | [HardwareFaultMap32](#hardwarefaultmap32) | See map | - | R/RP | S | O | hardware fault bitmap. |
 | 0x1007 | ProductProfileID | uint16 | Non-reserved Profile ID | - | R/RP | S | M | unique product Profile of Server. |
 | 0x1008 | ServerUartBufferSize | uint16 | >= 1024 bytes | 1024 | R/RP | S | M | Server UART buffer size. |
 | 0xFFFB | ServerAttributeList | list[uint16] | No additional constraints | - | R/RP | S | M | list of attributes supported by Server. |
 
-#### VendorID Attributes
-
-<a id="ref_VendorIDAttr"></a>
+#### VendorID
 
 `VendorID` identifies the device manufacturer ID. Server SHALL support Client READ access to this attribute.
 
-#### ProductID Attributes
-
-<a id="ref_ProductIDAttr"></a>
+#### ProductID
 
 `ProductID` identifies the device product ID. Server SHALL support Client READ access to this attribute.
 
-#### ServerHardwareVersion Attributes
-
-<a id="ref_ServerHardwareVersionAttr"></a>
+#### ServerHardwareVersion
 
 `ServerHardwareVersion` identifies the Server hardware version. Server SHALL support Client READ access to this attribute.
 
-#### ServerSoftwareVersion Attributes
-
-<a id="ref_ServerSoftwareVersionAttr"></a>
+#### ServerSoftwareVersion
 
 `ServerSoftwareVersion` identifies the Server firmware version. Server SHALL support Client READ access to this attribute.
 
 After OTA completes and the new firmware starts successfully, Server SHALL report the latest value of this attribute by REPORT.
 
-#### OtaUpgradeMethod Attributes
+#### OtaUpgradeMethod
 
-<a id="ref_OtaUpgradeMethodAttr"></a>
-
-`OtaUpgradeMethod` declares the firmware upgrade method supported by Server.Valid values are defined in [OtaUpgradeMethodEnum8](#ref_OtaUpgradeMethodEnum8).
+`OtaUpgradeMethod` declares the firmware upgrade method supported by Server.Valid values are defined in [OtaUpgradeMethodEnum8](#otaupgrademethodenum8).
 
 Before initiating any OTA flow, Client SHALL first READ this attribute and select IAP OTA, BootLoader OTA, or abandon OTA according to the upgrade method returned by Server.
 
-#### HardwareFault Attributes
-
-<a id="ref_HardwareFaultAttr"></a>
+#### HardwareFault
 
 `HardwareFault` is maintained by Server. Client MAY READ this attribute. When any fault bit changes, Server SHOULD REPORT this attribute.
 
 Bit definitions are provided in [HardwareFaultMap32](#hardwarefaultmap32).
 
-#### ProductProfileID Attributes
-
-<a id="ref_ProductProfileIDAttr"></a>
+#### ProductProfileID
 
 `ProductProfileID` declares the unique product Profile supported by Server. Foundation Profile (`0x0000`) is mandatory by default for all devices and is not declared through this attribute.
 
 Server SHALL declare only one non-reserved product Profile ID. The value range of Profile IDs is provided in [Profile ID Namespace](#profile-id-namespace). If the device implements Thermostat Profile, the value is `0x1000`.
 
-#### ServerUartBufferSize Attributes
-
-<a id="ref_ServerUartBufferSizeAttr"></a>
+#### ServerUartBufferSize
 
 `ServerUartBufferSize` is maintained by Server and declares the Server UART receive and transmit buffer size, in bytes.
 
-The attribute type is `uint16`, and the default value is `1024`. The Server UART receive buffer and transmit buffer SHALL both be no smaller than this value. If the receive and transmit buffer sizes differ, this attribute SHALL use the smaller value as the available single-frame length capability.
+The attribute type is `uint16`, and the default value is `1024`. The Server UART receive buffer and transmit buffer SHALL both be no smaller than this value. If the receive and transmit buffer sizes differ, this attribute SHALL use the smaller value as the available single-frame length capability. During link establishment, Server SHALL carry a `ServerUartBufferSize` parameter in `LinkEstablishmentResponse` that is consistent with this attribute.
 
-#### OtaStatus Attributes
-
-<a id="ref_OtaStatusAttr"></a>
+#### OtaStatus
 
 `OtaStatus` is maintained by Server. When OTA status changes, Server SHOULD REPORT this attribute.
 
-Valid values are defined in [OtaStatusEnum8](#ref_OtaStatusEnum8).
+Valid values are defined in [OtaStatusEnum8](#otastatusenum8).
 
-#### ServerAttributeList Attributes
-
-<a id="ref_FoundationServerAttributeListAttr"></a>
+#### ServerAttributeList
 
 `ServerAttributeList` declares the list of Attribute IDs actually supported by Server under Foundation Profile.
 
@@ -1671,13 +1648,11 @@ The attribute type is `list[uint16]`.List elements SHALL be sorted by Attribute 
 
 ### Foundation Commands
 
-<a id="ref_CommonCommands"></a>
-
 The following commands belong to Foundation Profile and apply to all device types. Firmware-upgrade-related commands are also part of Foundation Profile capabilities and are defined in the same command table.
 
 | ID | Name | Direction | Response | Conformance | Description |
 | --- | --- | --- | --- | --- | --- |
-| 0x0001 | InitDiscoveryComplete | Client → Server | ACKNOWLEDGE | M | Notifies Server that Initialization Discovery has completed. |
+| 0x0001 | ProfileDiscoveryComplete | Client → Server | ACKNOWLEDGE           | M           | Notifies Server that Profile Discovery has completed. |
 | 0x0002 | NetworkResetNotify | Client → Server | ACKNOWLEDGE | M | Client notifies Server that the wireless side received a network reset request. |
 | 0x0003 | FactoryResetNotify | Client → Server | ACKNOWLEDGE | M | Client notifies Server that the wireless side received a factory reset request. |
 | 0x0004 | NetworkResetRequest | Server → Client | ACKNOWLEDGE | M | Server requests Client to reset the network. |
@@ -1685,6 +1660,10 @@ The following commands belong to Foundation Profile and apply to all device type
 | 0x0006 | EnterPairingMode | Server → Client | ACKNOWLEDGE | M | Server requests Client to enter pairing mode. |
 | 0x0007 | ExitPairingMode | Server → Client | ACKNOWLEDGE | M | Server requests Client to exit pairing mode. |
 | 0x0008 | Identify | Client → Server | ACKNOWLEDGE | M | Physical identification indication. |
+| 0x0009 | ConnectionControlRequest | Server → Client | ACKNOWLEDGE           | O           | Server requests Client to enable or disable the wireless connection. |
+| 0x000A | ProfileDiscoveryRequest        | Server → Client | ACKNOWLEDGE           | M           | Server requests Client to restart Profile Discovery. |
+| 0x000B | LinkEstablishmentRequest    | Client → Server | LinkEstablishmentResponse | M       | Client initiates link establishment and declares Client UART buffer size. |
+| 0x000C | LinkEstablishmentResponse   | Server → Client | N                     | M           | Server returns low-power feature and Server UART buffer size. |
 | 0x0020 | OtaPrepare | Client → Server | ACKNOWLEDGE | O | Declares that the firmware image is ready. |
 | 0x0021 | OtaCancel | Client → Server | ACKNOWLEDGE | O | Cancels the upgrade. |
 | 0x0022 | OtaChunkRequest | Server → Client | OtaChunkData | O | Requests a firmware chunk. |
@@ -1693,82 +1672,126 @@ The following commands belong to Foundation Profile and apply to all device type
 | 0x0025 | OtaApplyResponse | Client → Server | N | O | Confirms that Server may switch the image. |
 | 0x0026 | OtaAbortNotify | Server → Client | ACKNOWLEDGE | O | Server actively aborts the upgrade. |
 
-#### InitDiscoveryComplete Commands
+Parameterized commands define parameters in the **Parameters** table of each command. Data Segment encoding rules are defined in [COMMAND (OPC = 0x9)](#command-opc--0x9).
 
-<a id="ref_InitDiscoveryCompleteCommand"></a>
+#### LinkEstablishmentRequest Command
 
-This command is sent by Client after it has read the initial values of `ProductProfileID`, `ServerAttributeList`, and Server attributes. It notifies Server that the Client-side Initialization Discovery stage has completed and that Server can start proactive data synchronization.
+This command is sent by the Client as the first AECP interaction after power-on to initiate Link Establishment (see [Link Establishment](#link-establishment)). The Client **SHALL** declare its UART buffer capability during link establishment; both sides **SHALL** use the smaller declared value as the AECP single-frame upper limit. The Client **SHALL** perform Wake Signaling before sending (enabled by default before negotiation).
 
-After Server receives this command and returns `ACKNOWLEDGE(Status=0x00)`, it MAY start QUERY operations to retrieve Client attributes and MAY REPORT Server attributes according to the attribute reporting policy. If Server initiates QUERY, REPORT, or a Server → Client COMMAND used to synchronize service data before receiving this command, Client MAY return `DiscoveryInProgress`.
+##### Parameters
+
+| Parameter Order | Name               | Type    | Constraint      | Default |
+|:--------------:|--------------------|---------|----------------|---------|
+| 1              | ClientUartBufferSize | uint16 | ≥ 1024 bytes   | —       |
+
+##### Field Descriptions
+
+- **ClientUartBufferSize**: Declares the Client UART receive and transmit buffer capability, in bytes, with the same semantics as the Client attribute of the same name (see [ClientUartBufferSize Attribute](#clientuartbuffersize)). The Client UART receive buffer and transmit buffer **SHALL** both be no smaller than this value. If the two buffer sizes differ, this parameter **SHALL** use the smaller value.
+
+#### LinkEstablishmentResponse
+
+This command is sent by the Server in response to `LinkEstablishmentRequest` to report the Server's low-power feature and UART buffer capability. Both sides SHALL use the smaller declared value as the AECP single-frame upper limit. This command is a paired return command; the Client does **not** return ACKNOWLEDGE upon receiving it.
+
+#### Parameters
+
+| Parameter Order | Name                | Type                      | Constraint         | Default  |
+|:---------------:|---------------------|---------------------------|--------------------|----------|
+| 1               | LowPowerFeature     | LowPowerFeatureEnum8[^1]  | See enum           | —        |
+| 2               | ServerUartBufferSize| uint16                    | ≥ 1024 bytes       | —        |
+
+[^1]: See [LowPowerFeatureEnum8](#lowpowerfeatureenum8).
+
+#### Field Descriptions
+
+- **LowPowerFeature**: Indicates the Server's low-power feature and negotiates whether Wake Signaling is enabled. Valid values are defined in [LowPowerFeatureEnum8](#lowpowerfeatureenum8).  
+  **Before both sides complete negotiation, Wake Signaling is enabled by default**; the Server returning `Normal` means negotiation disables Wake Signaling (see [LowPowerFeature](#lowpowerfeature)). The `LowPowerFeature` reported by Server **SHALL** match the actual low-power capability of the product. Products without low-power sleep and Wake Pin mechanism **SHALL** return `Normal`.
+
+- **ServerUartBufferSize**: Indicates the Server's UART receive and transmit buffer capability, in bytes, with the same semantics as the homonymous Server attribute (see [ServerUartBufferSize Attribute](#serveruartbuffersize)). The Server UART receive buffer and transmit buffer SHALL both be **no smaller than this value**. If the two buffer sizes differ, this parameter SHALL use the **smaller value**.
+
+#### ProfileDiscoveryComplete
+
+This command is sent by Client after completing Profile Discovery (see [Chapter 4](#chapter-4-initialization)). It notifies Server that the Client-side Profile Discovery stage has completed and that Server can start proactive data synchronization.
+
+After Server receives this command and returns `ACKNOWLEDGE(Status=0x00)`, it MAY start QUERY operations to retrieve Client attributes and MAY REPORT Server attributes according to the attribute reporting policy. If Server initiates QUERY, REPORT, or a Server → Client COMMAND used to synchronize service data before receiving this command, Client MAY return `ProfileDiscoveryInProgress`.
 
 This command has no parameters.
 
-#### NetworkResetNotify Commands
+#### ProfileDiscoveryRequest
 
-<a id="ref_NetworkResetNotifyCommand"></a>
+This command is sent by Server to request Client to restart Profile Discovery (see [Profile Discovery](#profile-discovery)). Typical use cases include Server capability changes or updates to Profile or `ServerAttributeList` that require Client to re-read Server attributes and refresh its capability view.
+
+After accepting this command, Client SHALL return the execution result by ACKNOWLEDGE and restart Profile Discovery by reading `ProductProfileID`, the `ServerAttributeList` of Foundation Profile and the product Profile, and the initial values of Server attributes that require initialization. After Client completes Profile Discovery again, it SHALL send `ProfileDiscoveryComplete` again.
+
+While Client is performing rediscovery, Client MAY return `ProfileDiscoveryInProgress` for proactively initiated QUERY, REPORT, or Server → Client COMMAND messages from Server. After Server receives ACKNOWLEDGE for `ProfileDiscoveryRequest`, it SHALL treat Client as not having completed Profile Discovery, and SHALL NOT proactively QUERY Client attributes or REPORT Server attributes until it receives the new `ProfileDiscoveryComplete` and returns `ACKNOWLEDGE(Status=0x00)`.
+
+This command has no parameters.
+
+#### NetworkResetNotify
 
 This command is sent by Client after the wireless side receives a network reset request. It notifies Server to synchronously perform actions such as local network-state cleanup, service-state reset, or user indication.
 
 This command has no parameters.
 
-#### FactoryResetNotify Commands
+#### FactoryResetNotify
 
 This command is sent by Client after the wireless side receives a factory reset request. It notifies Server to erase locally persisted user parameters and runtime parameters and restore factory state.
 
 This command has no parameters.
 
-#### NetworkResetRequest Commands
-
-<a id="ref_NetworkResetRequestCommand"></a>
+#### NetworkResetRequest
 
 This command is sent by Server when a local network reset flow is triggered. It requests Client to clear wireless-network-related state and leave the current network.
 
 This command has no parameters.
 
-#### FactoryResetRequest Commands
-
-<a id="ref_FactoryResetRequestCommand"></a>
+#### FactoryResetRequest
 
 This command is sent by Server when a local factory reset flow is triggered. It requests Client to clear wireless network state, user binding state, and other wireless-side persistent state related to factory restoration.
 
 This command has no parameters.
 
-#### EnterPairingMode Commands
+#### EnterPairingMode
 
 This command is sent by Server to request Client to open the pairing window and enter pairing mode. After accepting the request, Client SHOULD update `PairingStatus` and synchronize it by NOTIFY when the state changes.
 
 This command has no parameters.
 
-#### ExitPairingMode Commands
-
-<a id="ref_ExitPairingModeCommand"></a>
+#### ExitPairingMode
 
 This command is sent by Server to request Client to close the pairing window and exit pairing mode. After accepting the request, Client SHOULD update `PairingStatus` and synchronize it by NOTIFY when the state changes.
 
 This command has no parameters.
 
-#### Identify Commands
+#### ConnectionControlRequest
 
-<a id="ref_IdentifyCommand"></a>
+This command is sent by Server to request Client to enable or disable the wireless connection. After accepting the request, Client SHALL return the execution result by ACKNOWLEDGE.
+
+##### Parameters
+
+| Parameter Order | Name    | Type  | Constraint                        | Default |
+|:--------------:|:--------|:------|:----------------------------------|:--------|
+| 1              | Enabled | bool  | `0x00` = false, `0x01` = true     | —       |
+
+##### Field Descriptions
+
+* `Enabled = true`: Client SHALL enable RF transceiver functionality and attempt to join the wireless network. While connecting, Client SHOULD update `NetworkStatus` to `Connecting`. After connection succeeds, Client SHOULD update it to `Online` and synchronize it by NOTIFY when the state changes.
+* `Enabled = false`: Client SHALL disable RF transceiver functionality and disconnect from the wireless network. Client SHOULD update `NetworkStatus` to `Offline` and synchronize it by NOTIFY when the state changes.
+
+#### Identify
 
 This command requests Server to perform a physical identification action, such as blinking an LED or sounding a buzzer.
 
-Command Payload Format:
+##### Parameters
 
-| Field | Value |
-| --- | --- |
-| Octets | 2 |
-| Data Type | uint16 |
-| Field Name | Duration |
-| Default | - |
+| Parameter Order | Name | Type | Constraint | Default |
+|:--------------:|:--------|:------|:-------------------------------|:------|
+| 1 | Duration | uint16 | No additional constraints | — |
 
-#### Duration Field
+##### Field Descriptions
 
 `Duration` specifies the duration of the identification action, in seconds. A value of `0` means stopping the current identification action.
 
 ### Firmware Upgrade (OTA)
-
-<a id="ref_OTA"></a>
 
 Foundation Profile defines two firmware upgrade methods:
 
@@ -1799,108 +1822,85 @@ IAP OTA uses a **Client declares the image, Server actively pulls chunks** flow.
 
 Client SHALL use the commands in this section only when `OtaUpgradeMethod = IapOta`.
 
-##### OtaPrepare Commands
-
-<a id="ref_OtaPrepareCommand"></a>
+##### OtaPrepare
 
 This command notifies Server that Client is ready to provide the firmware image. Server enters the chunk-pull stage only after ACKNOWLEDGE returns `Status = 0x00`.
 
-Command Payload Format:
+###### Parameters
 
-| Field | FirmwareSize | Crc16 |
-| --- | --- | --- |
-| Octets | 4 | 4 |
-| Data Type | uint32 | uint32 |
-| Field Name | FirmwareSize | Crc16 |
-| Default | - | - |
+| Parameter Order | Name | Type | Constraint | Default |
+| -- | -- | -- | -- | -- |
+| 1 | FirmwareSize | uint32 | No additional constraints | — |
+| 2 | Crc16 | uint32 | No additional constraints | — |
 
-Field Descriptions:
+###### Field Descriptions
 
 - `FirmwareSize`: firmware body size, in bytes, excluding the OTA Header.
 - `Crc16`: CRC16/XMODEM checksum value of the firmware body.
 
-##### OtaCancel Commands
-
-<a id="ref_OtaCancelCommand"></a>
+##### OtaCancel
 
 This command cancels the current OTA flow. After accepting this command, Server SHALL reset the OTA state machine.
 
 This command has no parameters.
 
-##### OtaChunkRequest Commands
-
-<a id="ref_OtaChunkRequestCommand"></a>
+##### OtaChunkRequest
 
 This command is sent by Server to request a specified firmware chunk from Client.
 
-Command Payload Format:
+###### Parameters
 
-| Field | Offset | Length |
-| --- | --- | --- |
-| Octets | 4 | 1 |
-| Data Type | uint32 | uint8 |
-| Field Name | Offset | Length |
-| Default | - | - |
-
-Field Descriptions:
-
+| Parameter Order | Name | Type | Constraint | Default |
+|:--------------:|:--------|:------|:-------------------------------|:------|
+| 1 | Offset | uint32 | No additional constraints | — |
+| 2 | Length | uint8 | `1 ~ 255` | — |
+###### Field Descriptions
 - `Offset`: requested data offset, in bytes.
 - `Length`: requested data length, value range `1 ~ 255`.
 
-##### OtaChunkData Commands
-
-<a id="ref_OtaChunkDataCommand"></a>
+##### OtaChunkData
 
 This command returns the firmware chunk requested by `OtaChunkRequest`. This command is a paired return command, and Server does not return ACKNOWLEDGE after receiving it.
 
-Command Payload Format:
+###### Parameters
 
-| Field | Offset | Data |
-| --- | --- | --- |
-| Octets | 4 | `1 + Length` |
-| Data Type | uint32 | octstr |
-| Field Name | Offset | Data |
-| Default | - | - |
+| Parameter Order | Name | Type | Constraint | Default
+| -- | -- | -- | -- | -- |
+| 1 | Offset | uint32 | No additional constraints | — |
+| 2 | Data | octstr | Length is chunk size, 1 ~ 255 | — |
 
-Field Descriptions:
+###### Field Descriptions
 
 - `Offset`: firmware data offset, in bytes.
 - `Data`: firmware data chunk, encoded as octstr. The following byte content has a maximum length of 255.
 
-##### OtaApplyRequest Commands
-
-<a id="ref_OtaApplyRequestCommand"></a>
+##### OtaApplyRequest
 
 This command is sent by Server after firmware image reception completes and verification succeeds. It notifies Client that the image can be applied and requests Client to confirm whether Server is allowed to switch the image. Client SHALL respond with `OtaApplyResponse`.
 
 This command has no parameters.
 
-##### OtaApplyResponse Commands
-
-<a id="ref_OtaApplyResponseCommand"></a>
+##### OtaApplyResponse
 
 This command indicates that Client has confirmed that Server may switch the image. This command is a paired return command, and Server does not return ACKNOWLEDGE after receiving it. After receiving `OtaApplyResponse`, Server SHALL start switching the image and reboot.
 
 This command has no parameters.
 
-##### OtaAbortNotify Commands
-
-<a id="ref_OtaAbortNotifyCommand"></a>
+##### OtaAbortNotify
 
 This command is sent by Server when OTA encounters an unrecoverable error. Client SHALL ACKNOWLEDGE this command and reset the OTA state machine.
 
-Command Payload Format:
+###### Parameters
 
-| Field | Value |
-| --- | --- |
-| Octets | 1 |
-| Data Type | [OtaAbortReasonEnum8](#ref_OtaAbortReasonEnum8) |
-| Field Name | Reason |
-| Default | - |
+[width="100%", cols="^10,^20,^24,^20,^10", options="header"]
+|===
+| Parameter Order | Name | Type | Constraint | Default
 
-Field Descriptions:
+| 1 | Reason | [OtaAbortReasonEnum8](#otaabortreasonenum8) | See enum | — |
 
-- `Reason`: abort reason. Valid values are defined in [OtaAbortReasonEnum8](#ref_OtaAbortReasonEnum8).
+###### Field Descriptions
+
+- `Reason`: abort reason. Valid values are defined in [OtaAbortReasonEnum8](#otaabortreasonenum8).
 
 ##### Normal IAP OTA Flow
 
@@ -1912,7 +1912,7 @@ The normal IAP OTA flow consists of seven stages:
 4. **Apply confirmation stage**: After verification succeeds, Server sends `OtaApplyRequest`. After Client returns `OtaApplyResponse`, Server SHALL start switching the image and reboot.
 5. **Server version confirmation stage**: After Server switches to the new image and re-enters the application, it SHALL report the latest value of `ServerSoftwareVersion` by REPORT. Client SHALL check whether the version is the target version and return `ACKNOWLEDGE(Status=0x00)` for confirmation.
 6. **Client OTA stage**: After Client confirms that Server OTA succeeded, it SHALL perform its own OTA. Server OTA and Client OTA SHALL be upgraded as a pair to ensure firmware version compatibility between both sides.
-7. **Service rediscovery stage**: After Client OTA completes and Client reboots, Client SHALL perform Initialization Discovery again, reading `ProductProfileID`, each Profile's `ServerAttributeList`, and the current values of discovered Server attributes. After Client completes rediscovery, it SHALL send `InitDiscoveryComplete` again. Before Server returns `ACKNOWLEDGE(Status=0x00)`, it SHALL NOT proactively QUERY Client attributes or REPORT Server attributes. After ACK completes, Server MAY restart proactive data synchronization to ensure that Server's updated capabilities and Client's updated protocol stack capabilities are synchronized again.
+7. **Re-initialization stage**: After Client OTA completes and Client reboots, Client SHALL perform Link Establishment and Profile Discovery again (see [Chapter 4](#chapter-4-initialization)), reading `ProductProfileID`, each Profile's `ServerAttributeList`, and the current values of discovered Server attributes. After Client completes rediscovery, it SHALL send `ProfileDiscoveryComplete` again. Before Server returns `ACKNOWLEDGE(Status=0x00)`, it SHALL NOT proactively QUERY Client attributes or REPORT Server attributes. After ACK completes, Server MAY restart proactive data synchronization to ensure that Server's updated capabilities and Client's updated protocol stack capabilities are synchronized again.
 
 ![IAP OTA upgrade flow](https://itad-aqara-docs-1300889962.aqara.com/dev/img/mcu-standard-protocol/en/iap_ota_sequence.svg)
 
@@ -1966,11 +1966,9 @@ The normal BootLoader OTA flow consists of seven stages:
 4. **Verification and image switch stage**: After Server receives the complete firmware through XMODEM and completes verification, it resets itself or jumps to the new image.
 5. **Server version confirmation stage**: After Server re-enters the application, it SHALL report the latest value of `ServerSoftwareVersion` by REPORT. Client SHALL check whether the version is the target version and return `ACKNOWLEDGE(Status=0x00)` for confirmation.
 6. **Client OTA stage**: After Client confirms that Server OTA succeeded, it SHALL perform its own OTA. Server OTA and Client OTA SHALL be upgraded as a pair to ensure firmware version compatibility between both sides.
-7. **Service rediscovery stage**: After Client OTA completes and Client reboots, Client SHALL perform Initialization Discovery again, reading `ProductProfileID`, each Profile's `ServerAttributeList`, and the current values of discovered Server attributes. After Client completes rediscovery, it SHALL send `InitDiscoveryComplete` again. Before Server returns `ACKNOWLEDGE(Status=0x00)`, it SHALL NOT proactively QUERY Client attributes or REPORT Server attributes. After ACK completes, Server MAY restart proactive data synchronization to ensure that Server's updated capabilities and Client's updated protocol stack capabilities are synchronized again.
+7. **Re-initialization stage**: After Client OTA completes and Client reboots, Client SHALL perform Link Establishment and Profile Discovery again (see [Chapter 4](#chapter-4-initialization)), reading `ProductProfileID`, each Profile's `ServerAttributeList`, and the current values of discovered Server attributes. After Client completes rediscovery, it SHALL send `ProfileDiscoveryComplete` again. Before Server returns `ACKNOWLEDGE(Status=0x00)`, it SHALL NOT proactively QUERY Client attributes or REPORT Server attributes. After ACK completes, Server MAY restart proactive data synchronization to ensure that Server's updated capabilities and Client's updated protocol stack capabilities are synchronized again.
 
 After BootLoader OTA enters the Server upgrade process, Client SHALL use the `ServerSoftwareVersion` REPORT as the basis for determining Server OTA success. If Client does not receive the REPORT within the timeout period, or if the received version is not the target version, Client SHALL retry the Server OTA flow, up to **3 times**. If Server OTA success still cannot be confirmed after 3 retries, Client SHALL terminate the current OTA and SHALL NOT start its own OTA.
-
-<a id="ref_OTAHeader"></a>
 
 #### OTA Header Format
 
@@ -1999,8 +1997,6 @@ The types in the following table are OTA Header file field types, not AECP Data 
 | 48 | imageFileName | Utf8String[48] | 48 B | Image file name, UTF-8 string, padded with NULL at the end. |
 | 96 | reserved | Reserved[28] | 28 B | Reserved field. SHALL be filled with `0x00`. |
 | 124 | headerCrc16 | Uint32LE | 4 B | Header CRC16/XMODEM checksum value, covering Offset 0 through 123. |
-
-<a id="ref_crc16xmodem"></a>
 
 #### CRC16/XMODEM Implementation
 
@@ -2033,9 +2029,7 @@ uint16_t imageFileCrc16(uint16_t u16Crc, const uint8_t *buf, uint32_t u32len)
 The initial value of CRC16/XMODEM is `0x0000`, which differs from CRC16-Modbus (Overall Checksum uses `0xFFFF`). Do not mix them.
 :::
 
-<a id="ref_ThermostatProfile"></a>
-
-## Chapter 7 Thermostat Profile (Profile ID = 0x1000) {#chapter-7-thermostat-profile-profile-id--0x1000}
+## Chapter 7 Thermostat Profile (Profile ID = 0x1000)
 
 Thermostat Profile defines thermostat-specific attributes and commands, and applies to communication frames whose header Profile ID is `0x1000`.
 
@@ -2047,7 +2041,7 @@ The column meanings of all attribute tables in this chapter follow [Chapter 1 Fi
 
 ### Data Types
 
-#### ThermostatSystemModeEnum8 {#ref_ThermostatSystemModeEnum8}
+#### ThermostatSystemModeEnum8
 
 `ThermostatSystemModeEnum8` defines the basic operating mode of a thermostat. The underlying type of this enum is enum8.
 
@@ -2058,7 +2052,7 @@ The column meanings of all attribute tables in this chapter follow [Chapter 1 Fi
 | 0x02 | Cool | Cooling mode. |
 | 0x03 | Heat | Heating mode. |
 
-#### KeypadLockoutEnum8 {#ref_KeypadLockoutEnum8}
+#### KeypadLockoutEnum8
 
 `KeypadLockoutEnum8` defines the local keypad lockout state. The underlying type of this enum is enum8.
 
@@ -2067,7 +2061,7 @@ The column meanings of all attribute tables in this chapter follow [Chapter 1 Fi
 | 0x00 | Unlocked | Keypad lock is disabled. |
 | 0x01 | Locked | Keypad lock enabled. |
 
-#### TemperatureDisplayModeEnum8 {#ref_TemperatureDisplayModeEnum8}
+#### TemperatureDisplayModeEnum8
 
 `TemperatureDisplayModeEnum8` defines the temperature display unit. The underlying type of this enum is enum8.
 
@@ -2080,12 +2074,12 @@ The column meanings of all attribute tables in this chapter follow [Chapter 1 Fi
 
 | ID | Name | Type | Constraint | Default | Access | Side | Conformance | Description |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0x1000 | SystemMode | [ThermostatSystemModeEnum8](#ref_ThermostatSystemModeEnum8) | See enum | 0x00 | R/W/RP | S | M | basic operating mode. |
+| 0x1000 | SystemMode | [ThermostatSystemModeEnum8](#thermostatsystemmodeenum8) | See enum | 0x00 | R/W/RP | S | M | basic operating mode. |
 | 0x1001 | OccupiedHeatingSetpoint | int16 | Device capability range | - | R/W/RP | S | M | heating setpoint. |
 | 0x1002 | LocalTemperature | int16 | 0.01degC | - | R/RP | S | M | measured ambient temperature. |
 | 0x1003 | LocalTemperatureCalibration | int8 | 0.1degC | 0 | R/W/RP | S | M | local temperature calibration. |
-| 0x1004 | KeypadLockout | [KeypadLockoutEnum8](#ref_KeypadLockoutEnum8) | See enum | 0x00 | R/W/RP | S | O | keypad lockout state. |
-| 0x1005 | TemperatureDisplayMode | [TemperatureDisplayModeEnum8](#ref_TemperatureDisplayModeEnum8) | See enum | 0x00 | R/W/RP | S | O | temperature display unit. |
+| 0x1004 | KeypadLockout | [KeypadLockoutEnum8](#keypadlockoutenum8) | See enum | 0x00 | R/W/RP | S | O | keypad lockout state. |
+| 0x1005 | TemperatureDisplayMode | [TemperatureDisplayModeEnum8](#temperaturedisplaymodeenum8) | See enum | 0x00 | R/W/RP | S | O | temperature display unit. |
 | 0x1006 | FrostProtectionEnabled | bool | true / false | false | R/W/RP | S | O | frost protection enable switch. |
 | 0x1007 | FrostProtectionTemperature | int16 | 0.01degC | - | R/W/RP | S | O | frost protection trigger temperature. |
 | 0x1008 | WindowDetectionEnabled | bool | true / false | false | R/W/RP | S | O | open-window detection enable switch. |
@@ -2095,15 +2089,11 @@ The column meanings of all attribute tables in this chapter follow [Chapter 1 Fi
 
 #### SystemMode
 
-<a id="ref_SystemModeAttr"></a>
-
 `SystemMode` represents the current basic operating mode of the thermostat. Client MAY WRITE this attribute to switch the operating mode. Server SHALL REPORT this attribute after the mode changes.
 
-Valid values are defined in [ThermostatSystemModeEnum8](#ref_ThermostatSystemModeEnum8).
+Valid values are defined in [ThermostatSystemModeEnum8](#thermostatsystemmodeenum8).
 
 #### OccupiedHeatingSetpoint
-
-<a id="ref_OccupiedHeatingSetpointAttr"></a>
 
 `OccupiedHeatingSetpoint` represents the occupied heating target temperature, in units of 0.01degC. For example, `2650` means 26.50degC, and `-900` means -9.00degC.
 
@@ -2111,15 +2101,11 @@ Client MAY WRITE this attribute to modify the heating target temperature. Server
 
 #### LocalTemperature
 
-<a id="ref_LocalTemperatureAttr"></a>
-
 `LocalTemperature` represents the ambient temperature measured by the Server sensor, in units of 0.01degC. For example, `2650` means 26.50degC.
 
 This attribute is maintained by Server, Client MAY READ, Server SHALL REPORT when temperature changes satisfy the product reporting policy.
 
 #### LocalTemperatureCalibration
-
-<a id="ref_LocalTemperatureCalibrationAttr"></a>
 
 `LocalTemperatureCalibration` represents the local temperature calibration offset, in units of 0.1degC. For example, `20` means +2.0degC.
 
@@ -2127,67 +2113,51 @@ Final local temperature = `LocalTemperature` + `LocalTemperatureCalibration`. Cl
 
 #### KeypadLockout
 
-<a id="ref_KeypadLockoutAttr"></a>
-
 `KeypadLockout` represents the local keypad lockout state.Client MAY WRITE this attribute to enable or disable keypad lockout.
 
-Valid values are defined in [KeypadLockoutEnum8](#ref_KeypadLockoutEnum8).
+Valid values are defined in [KeypadLockoutEnum8](#keypadlockoutenum8).
 
 #### TemperatureDisplayMode
 
-<a id="ref_TemperatureDisplayModeAttr"></a>
-
 `TemperatureDisplayMode` represents the temperature display unit. Client MAY WRITE this attribute to switch the display unit.
 
-Valid values are defined in [TemperatureDisplayModeEnum8](#ref_TemperatureDisplayModeEnum8).
+Valid values are defined in [TemperatureDisplayModeEnum8](#temperaturedisplaymodeenum8).
 
 #### FrostProtectionEnabled
-
-<a id="ref_FrostProtectionEnabledAttr"></a>
 
 `FrostProtectionEnabled` indicates whether frost protection is enabled. `true` means enabled, `false` means disabled.
 
 #### FrostProtectionTemperature
 
-<a id="ref_FrostProtectionTemperatureAttr"></a>
-
 `FrostProtectionTemperature` represents the frost protection trigger temperature, in units of 0.01degC. When ambient temperature is lower than this value and frost protection is enabled, Server MAY automatically start heating for frost protection.
 
 #### WindowDetectionEnabled
-
-<a id="ref_WindowDetectionEnabledAttr"></a>
 
 `WindowDetectionEnabled` indicates whether open-window detection is enabled. `true` means enabled, `false` means disabled.
 
 #### ActiveCurrent
 
-<a id="ref_ActiveCurrentAttr"></a>
-
 `ActiveCurrent` represents the current, in mA. Server SHOULD REPORT this attribute according to the product-defined period or change policy.
 
 #### ActivePower
-
-<a id="ref_ActivePowerAttr"></a>
 
 `ActivePower` represents the current power, in mW. Server SHOULD REPORT this attribute according to the product-defined period or change policy.
 
 #### ServerAttributeList
 
-<a id="ref_ThermostatServerAttributeListAttr"></a>
-
 `ServerAttributeList` declares the Attribute ID list actually supported by Server under Thermostat Profile.
 
 The attribute type is `list[uint16]`. List elements SHALL be sorted by Attribute ID in ascending order and include `ServerAttributeList`'s own Attribute ID `0xFFFB`.
 
-## Appendix A: UART Message Examples {#appendix-a-serial-message-examples}
+## Appendix A: UART Message Examples
 
-This appendix provides complete UART Message Examples for three typical Interaction scenarios, including byte-by-byte annotations, to help implementers verify frame construction and parsing logic.
+This appendix provides complete UART message examples for typical interaction scenarios, including byte-by-byte annotations, to help implementers verify frame construction and parsing logic.
 
 ### Example Scenario Description
 
-The following examples are all based on `Profile ID = 0x0000` (Foundation Profile). Frames sent by the Client are marked as **CLIENT SEND**, and frames sent by the Server are marked as **SERVER SEND**.
+The following examples are based on the Foundation Profile (`Profile ID = 0x0000`; Thermostat example uses `0x1000`). Frames sent by the Client are marked **CLIENT SEND**; frames sent by the Server are marked **SERVER SEND**.
 
-### Example A: READ and READ_RESPONSE
+### READ and READ_RESPONSE
 
 #### Attributes Definition
 
@@ -2221,15 +2191,7 @@ The last 2 bytes `A8 56` are the Overall Checksum.
 
 Complete frame (Hex): `55 00 00 01 02 00 06 A2 10 03 00 21 00 63 A8 56`
 
-#### Parsing Notes
-
-- `OPC = 0x01` corresponds to READ.
-- `OPC = 0x02` corresponds to READ_RESPONSE.
-- `Status = 0x00` indicates success.
-- `Data Type = 0x21` indicates uint16.
-- `Data = 0x0063` = 99 (decimal), meaning the Server firmware version is `99`.
-
-### Example B: REPORT and ACKNOWLEDGE
+### REPORT and ACKNOWLEDGE
 
 #### Attributes Definition
 
@@ -2263,9 +2225,165 @@ The last 2 bytes `40 BF` are the Overall Checksum.
 
 Complete frame (Hex): `55 00 00 08 06 00 01 9C 00 40 BF`
 
-#### Parsing Notes
+### WRITE and WRITE_RESPONSE
 
-- `OPC = 0x05` corresponds to REPORT.
-- `Data Type = 0x30` indicates enum8.
-- `Data = 0x02` indicates `OtaStatus = VerifyFailed`.
-- `Status = 0x00` in ACKNOWLEDGE indicates that the Client has successfully received and accepted the REPORT frame.
+#### Attributes Definition
+
+Profile ID = `0x1000` (Thermostat Profile).
+
+| Attribute ID | Name | Data Type | Side | Access | Description |
+| --- | --- | --- | --- | --- | --- |
+| 0x1000 | SystemMode | enum8 | C | W | System mode. |
+
+#### Frame Content
+
+**WRITE Frame (CLIENT SEND)**
+
+| Field | SOF | Profile ID | Seq | OPC | D-Len | HCS | Attr ID | Data Type | Data |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Length | 1 B | 2 B | 1 B | 1 B | 2 B | 1 B | 2 B | 1 B | 1 B |
+| Value (Hex) | `55` | `10 00` | `02` | `03` | `00 04` | `92` | `10 00` | `30` | `03` |
+
+The last 2 bytes `E5 50` are the Overall Checksum.
+
+Complete frame (Hex): `55 10 00 02 03 00 04 92 10 00 30 03 E5 50`
+
+---
+
+**WRITE_RESPONSE Frame (SERVER SEND)**
+
+| Field | SOF | Profile ID | Seq | OPC | D-Len | HCS | Attr ID | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Length | 1 B | 2 B | 1 B | 1 B | 2 B | 1 B | 2 B | 1 B |
+| Value (Hex) | `55` | `10 00` | `02` | `04` | `00 03` | `92` | `10 00` | `00` |
+
+The last 2 bytes `05 70` are the Overall Checksum.
+
+Complete frame (Hex): `55 10 00 02 04 00 03 92 10 00 00 05 70`
+
+### QUERY and QUERY_RESPONSE
+
+#### Attributes Definition
+
+| Attribute ID | Name | Data Type | Side | Access | Description |
+| --- | --- | --- | --- | --- | --- |
+| 0x0000 | ProductProfileID | uint16 | C | Q | Client product Profile ID. |
+
+#### Frame Content
+
+**QUERY Frame (SERVER SEND)**
+
+| Field | SOF | Profile ID | Seq | OPC | D-Len | HCS | Attribute ID |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Length | 1 B | 2 B | 1 B | 1 B | 2 B | 1 B | 2 B |
+| Value (Hex) | `55` | `00 00` | `03` | `07` | `00 02` | `9F` | `00 00` |
+
+The last 2 bytes `B0 01` are the Overall Checksum.
+
+Complete frame (Hex): `55 00 00 03 07 00 02 9F 00 00 B0 01`
+
+---
+
+**QUERY_RESPONSE Frame (CLIENT SEND)**
+
+| Field | SOF | Profile ID | Seq | OPC | D-Len | HCS | Attr ID | Status | Data Type | Data |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Length | 1 B | 2 B | 1 B | 1 B | 2 B | 1 B | 2 B | 1 B | 1 B | 2 B |
+| Value (Hex) | `55` | `00 00` | `03` | `08` | `00 06` | `9A` | `00 00` | `00` | `21` | `00 00` |
+
+The last 2 bytes `11 50` are the Overall Checksum.
+
+Complete frame (Hex): `55 00 00 03 08 00 06 9A 00 00 00 21 00 00 11 50`
+
+### COMMAND
+
+#### InitDiscoveryComplete and ACKNOWLEDGE
+
+**COMMAND Frame (CLIENT SEND)**
+
+| Field | SOF | Profile ID | Seq | OPC | D-Len | HCS | Cmd ID |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Length | 1 B | 2 B | 1 B | 1 B | 2 B | 1 B | 2 B |
+| Value (Hex) | `55` | `00 00` | `04` | `09` | `00 02` | `9C` | `00 01` |
+
+The last 2 bytes `70 C0` are the Overall Checksum.
+
+Complete frame (Hex): `55 00 00 04 09 00 02 9C 00 01 70 C0`
+
+---
+
+**ACKNOWLEDGE Frame (SERVER SEND)**
+
+| Field | SOF | Profile ID | Seq | OPC | D-Len | HCS | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Length | 1 B | 2 B | 1 B | 1 B | 2 B | 1 B | 1 B |
+| Value (Hex) | `55` | `00 00` | `04` | `06` | `00 01` | `A0` | `00` |
+
+The last 2 bytes `40 BF` are the Overall Checksum.
+
+Complete frame (Hex): `55 00 00 04 06 00 01 A0 00 40 BF`
+
+#### OtaChunkRequest and OtaChunkData (Paired Response)
+
+Each command parameter is encoded as `Data Type (1 B) + Raw Data`.
+
+**OtaChunkRequest Frame (SERVER SEND)**
+
+| Field | SOF | Profile ID | Seq | OPC | D-Len | HCS | Cmd ID | Offset Type | Offset | Length Type | Length |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Length | 1 B | 2 B | 1 B | 1 B | 2 B | 1 B | 2 B | 1 B | 4 B | 1 B | 1 B |
+| Value (Hex) | `55` | `00 00` | `06` | `09` | `00 09` | `93` | `00 22` | `23` | `00 00 00 00` | `20` | `04` |
+
+The last 2 bytes `F0 83` are the Overall Checksum.
+
+Complete frame (Hex): `55 00 00 06 09 00 09 93 00 22 23 00 00 00 00 20 04 F0 83`
+
+---
+
+**OtaChunkData Frame (CLIENT SEND, Response = N)**
+
+| Field | SOF | Profile ID | Seq | OPC | D-Len | HCS | Cmd ID | Offset Type | Offset | Data Type | Data (octstr) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Length | 1 B | 2 B | 1 B | 1 B | 2 B | 1 B | 2 B | 1 B | 4 B | 1 B | 6 B |
+| Value (Hex) | `55` | `00 00` | `06` | `09` | `00 0D` | `8F` | `00 23` | `23` | `00 00 00 00` | `41` | `04 DE AD BE EF` |
+
+The last 2 bytes `E0 47` are the Overall Checksum.
+
+Complete frame (Hex): `55 00 00 06 09 00 0D 8F 00 23 23 00 00 00 00 41 04 DE AD BE EF E0 47`
+
+- `OtaChunkData` reuses the `Seq` from `OtaChunkRequest` (both `0x06` in this example).
+- The Server does not return ACKNOWLEDGE after receiving `OtaChunkData`.
+
+### NOTIFY and ACKNOWLEDGE
+
+#### Attributes Definition
+
+| Attribute ID | Name | Data Type | Side | Access | Description |
+| --- | --- | --- | --- | --- | --- |
+| 0x0003 | NetworkStatus | enum8 | C | N | Network status. |
+
+#### Frame Content
+
+**NOTIFY Frame (CLIENT SEND)**
+
+| Field | SOF | Profile ID | Seq | OPC | D-Len | HCS | Attr ID | Data Type | Data |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Length | 1 B | 2 B | 1 B | 1 B | 2 B | 1 B | 2 B | 1 B | 1 B |
+| Value (Hex) | `55` | `00 00` | `05` | `0A` | `00 04` | `98` | `00 03` | `30` | `01` |
+
+The last 2 bytes `E4 25` are the Overall Checksum.
+
+Complete frame (Hex): `55 00 00 05 0A 00 04 98 00 03 30 01 E4 25`
+
+---
+
+**ACKNOWLEDGE Frame (SERVER SEND)**
+
+| Field | SOF | Profile ID | Seq | OPC | D-Len | HCS | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Length | 1 B | 2 B | 1 B | 1 B | 2 B | 1 B | 1 B |
+| Value (Hex) | `55` | `00 00` | `05` | `06` | `00 01` | `9F` | `00` |
+
+The last 2 bytes `40 BF` are the Overall Checksum.
+
+Complete frame (Hex): `55 00 00 05 06 00 01 9F 00 40 BF`

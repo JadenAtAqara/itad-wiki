@@ -303,6 +303,15 @@ paths:
               type: string
           style: form
           explode: true
+        - name: deviceTypesMatchMode
+          in: query
+          description: "The match mode for multiple device types in `deviceTypesList`; `or` means at least one type matches, `and` means all types must match."
+          required: false
+          schema:
+            type: string
+            enum: [or, and]
+            default: or
+          example: or
         - name: deviceName
           in: query
           description: Device name fuzzy matching (case-insensitive, blank values are automatically ignored)
@@ -353,6 +362,7 @@ paths:
                       pageSize: 200
                       data:
                         - deviceId: "device-001"
+                          gatewayId: "gateway-001"
                           deviceName: "Living Room Light"
                           deviceTypesList: ["light"]
                           createTime: 1710001234567
@@ -643,134 +653,6 @@ paths:
                         commandCode: APIBindSubdeviceWithSecurityCode
                         code: 2201
                         message: invalid security code
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
-  # ────────────────────────────────────────────────────────────────
-  # MQTT Subscription / Unsubscription
-  # ────────────────────────────────────────────────────────────────
-  /subscriptions/mqtt/subscribe:
-    post:
-      tags: [Subscription]
-      summary: Get MQTT Connection Configuration
-      description: |
-        Call this API, providing the specified device ID, to obtain the necessary information for MQTT connection and topic subscription, including Client ID, MQTT host address, MQTT port, supported protocols, username, secret key, etc.<br />        
-        Based on the returned client ID and specific rules, you can generate the corresponding topics. Together with the other returned information, use a third-party MQTT client to connect to Aqara's MQTT Broker and subscribe to these topics to receive real-time updates of the specified device's function point value changes.
-      operationId: mqttSubscribe
-      x-skill-intent: subscription.mqtt.subscribe
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: subscription_create_or_refresh
-      parameters:
-        - $ref: '#/components/parameters/Accesstoken'
-        - $ref: '#/components/parameters/Appid'
-        - $ref: '#/components/parameters/Keyid'
-        - $ref: '#/components/parameters/Nonce'
-        - $ref: '#/components/parameters/Time'
-        - $ref: '#/components/parameters/Sign'
-        - $ref: '#/components/parameters/Lang'
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MqttSubscribeRequest'
-            examples:
-              subscribe:
-                value:
-                  deviceUniqueId: "device-unique-id-001"
-                  expiresIn: 7200
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MqttSubscribeResponse'
-              examples:
-                subscribeSuccess:
-                  value:
-                    type: MqttSubscribeResponse
-                    version: v4
-                    msgId: "2df2f431-xxxx-4fdb-xxxx-xxxxxxxx"
-                    code: 0
-                    message: success
-                    data:
-                      clientId: "omqt.studio_16xxxxxxxxxxx9"
-                      mqttHost: "mqtt.xxx.com"
-                      mqttPort: "1883"
-                      supportedProtocols: ["tcp"]
-                      secretId: "YmFzZTY0xxxxxxxxxxxxxxxxxxJldElk"
-                      secretKey: "YmFzZTY0xxxxxxxxxxxxxxxxxxxxxxleQ=="
-                      expiresIn: 7200
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
-  /subscriptions/mqtt/unsubscribe:
-    post:
-      tags: [Subscription]
-      summary: Invalidate MQTT Connection Configuration
-      description: |
-        Call this API, providing the specified device ID, to invalidate the MQTT connection configuration related to the device.
-      operationId: mqttUnsubscribe
-      x-skill-intent: subscription.mqtt.unsubscribe
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: subscription_delete
-      parameters:
-        - $ref: '#/components/parameters/Accesstoken'
-        - $ref: '#/components/parameters/Appid'
-        - $ref: '#/components/parameters/Keyid'
-        - $ref: '#/components/parameters/Nonce'
-        - $ref: '#/components/parameters/Time'
-        - $ref: '#/components/parameters/Sign'
-        - $ref: '#/components/parameters/Lang'
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MqttUnsubscribeRequest'
-            examples:
-              unsubscribe:
-                value:
-                  deviceUniqueId: "device-unique-id-001"
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MqttUnsubscribeResponse'
-              examples:
-                unsubscribeSuccess:
-                  value:
-                    type: MqttUnsubscribeResponse
-                    version: v4
-                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f002"
-                    code: 0
-                    message: success
-                    data: null
         '400':
           $ref: '#/components/responses/BadRequestResponse'
         '401':
@@ -1145,6 +1027,10 @@ components:
         deviceId:
           type: string
           description: Device ID
+        gatewayId:
+          type: string
+          nullable: true
+          description: Gateway ID
         deviceName:
           type: string
           description: Device name
@@ -1181,6 +1067,13 @@ components:
         deviceId:
           type: string
           description: Device ID
+        gatewayId:
+          type: string
+          nullable: true
+          description: |
+            The gateway ID to which this device is bound.
+            If `gatewayId` equals `deviceId`, it indicates that this device is itself a gateway.
+            If `gatewayId` is `null` or an empty string, it means this device is a directly connected gateway without subdevices or a third-party integrated device.
         name:
           type: string
           description: Device name
@@ -1209,6 +1102,7 @@ components:
         msgId: "123"
         data:
           - deviceId: lumi3.86108040f2b03a4e
+            gatewayId: lumi3.86108040f2b03a4e
             name: Hub
             deviceTypesList:
               - Hub
@@ -1751,6 +1645,7 @@ components:
           pageSize: 200
           data:
             - deviceId: "device-001"
+              gatewayId: "gateway-001"
               deviceName: "Living Room Light"
               deviceTypesList: ["light"]
               createTime: 1710001234567
@@ -1759,72 +1654,3 @@ components:
                 parentSpaceId: "space-home-001"
                 spaceId: "space-room-001"
                 name: "Living Room"
-
-    # ── MQTT ─────────────────────────────────────────────────────        
-    MqttSubscribeRequest:
-      type: object
-      properties:
-        deviceUniqueId:
-          type: string
-          description: Device ID. If not configured in this field, you can also pass this information in the `Device-Unique-Id` field of the request header (Header).
-        expiresIn:
-          type: integer
-          format: int32
-          description: Subscription expiration time (seconds). Valid values are [7200, 604800]; if not within the range or not provided, the default is 7200.
-          minimum: 7200
-          maximum: 604800
-
-    MqttUnsubscribeRequest:
-      type: object
-      properties:
-        deviceUniqueId:
-          type: string
-          description: Device ID. If not configured in this field, you can also pass this information in the `Device-Unique-Id` field of the request header (Header).
-
-    MqttSubscribeData:
-      type: object
-      required: [clientId, mqttHost, mqttPort, supportedProtocols, secretId, secretKey, expiresIn]
-      properties:
-        clientId:
-          type: string
-          description: |
-            MQTT Client ID. After obtaining this information, please generate the corresponding topic according to the rule `receive_${clientId}`.<br />
-            Example: When `clientId` is `omqt.studio_16ce93b6fc723f0d9f0dc02f4d4a2f15_123456789`, the topic is `receive_omqt.studio_16ce93b6fc723f0d9f0dc02f4d4a2f15_123456789`.
-        mqttHost:
-          type: string
-          description: MQTT host address.
-        mqttPort:
-          type: string
-          description: MQTT port.
-        supportedProtocols:
-          type: array
-          description: Supported protocols list.
-          items:
-            type: string
-        secretId:
-          type: string
-          description: Base64-encoded MQTT username.
-        secretKey:
-          type: string
-          description: Base64-encoded MQTT secret key.
-        expiresIn:
-          type: integer
-          format: int32
-          description: Subscription expiration time (seconds).
-
-    MqttSubscribeResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              $ref: '#/components/schemas/MqttSubscribeData'
-
-    MqttUnsubscribeResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              nullable: true
-              description: null (fixed)

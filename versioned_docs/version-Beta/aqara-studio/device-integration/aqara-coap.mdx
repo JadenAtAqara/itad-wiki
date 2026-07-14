@@ -1,0 +1,54 @@
+# Aqara Coap
+
+本文适用于将 Aqara 网关（不包括 Aqara Studio 子网关与官方标准主机）接入 Aqara Studio。
+
+将 Aqara 网关接入 Aqara Studio 后，仅需为其子设备进行配网，子设备也会同步接入，无需单独添加。
+
+## 前提条件
+
+在开始之前，请确保您拥有任意 Aqara 网关设备。
+
+## 安装插件
+
+请参考 [插件市场](./../plugin-market.mdx) 文档，前往 [Aqara Builder](https://builder.aqara.com) 安装 `AqaraCoap` 插件。
+
+## 导入五元组
+
+1. 在左侧侧边栏点击进入**设备管理**页面。在左侧设备树单击“+”按钮。   
+    ![单击添加按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-ClickAddButton.png)
+
+2. 在弹窗中选择 `AqaraCoap`。   
+3. 在左侧侧边栏选择 `AqaraCoap`，切换到 **导入五元组** 选项卡。
+4. 联系** Aqara 商务人员** 获取待接入 Aqara Studio 的 **网关本身** 的五元组信息文件（JSON）。
+    :::tip
+    只需提供网关的五元组信息，不需要其子设备的五元组信息
+    :::
+5. 上传该文件，Aqara Studio 会自动解析文件内容，等待设备入网。
+
+## 下载 Aqara Tool
+
+请通过 [此链接](https://cdn.aqara.com/cdn/luoshu/mainland/static/app/AqaraTool_v6.0.4.100_20260601-aqaraSysH5Main-release.apk) 下载并安装 Aqara Studio Tool App（目前仅支持 Android）。
+
+## 添加 Aqara Coap 设备
+
+1. 启动 Aqara，填写所需的网络登录信息：
+    | 参数 | 说明 | 示例 |
+    | -- | -- | ----------------------------------------- |
+    | BaseUrl      | 总是包含协议（如 http:// 或 https://），后面紧跟主机（IP 地址或域名），并可能包含端口和路径。它是完整的服务入口地址。 | `http://10.10.24.83:8000`（IP 地址 + 端口）<br/>`https://xxx.yyy.com/zzz/`（域名 + 路径） |
+    | FastLinkUrl  | 总是仅包含主机部分（IP 地址或域名），不包含协议、端口和路径。它是一个简化标识，通常用于内部快速访问或与其他默认配置（如默认协议、端口）组合使用。 | `10.10.24.83`（IP 地址）<br/>`xxx.yyy.com`（域名） |
+    | CountryCode  | 国家代码，如中国为 `CN`。如需获取完整 Country Code 列表，请检索 WiFi Country Code。 | `CN` |
+    
+    ![Aqara Tool 登录](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraCoap-ToolLogin.jpg)
+
+3. 登录成功后，检索待接入的 Aqara 网关。   
+    ![Aqara Tool 检索网关](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraCoap-SearchGateways.jpg)
+
+    选择该网关，并根据页面提示添加 Aqara 网关。   
+    ![Aqara Tool 选择网关](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraCoap-SelectGateway.jpg)
+
+4. 网关添加完成后，根据该网关的设备说明书，进入配网模式。  
+5. 待子设备入网成功后，设备信息会自动显示在右侧侧边栏的 <code>Aqara</code> 目录中，无需手动添加功能点，Aqara Studio 会自动识别。
+
+## 下一步
+
+接下来，您可以直接 [查看该设备的详情和控制该设备](./../device-management/basic-information.mdx)，还可以利用该设备 [编排自动化逻辑](./../automation.mdx) 了。
