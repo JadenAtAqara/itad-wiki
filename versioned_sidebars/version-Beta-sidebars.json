@@ -46,6 +46,8 @@
                   "aqara-studio/device-integration/knx-ip",
                   "aqara-studio/device-integration/mqtt",
                   "aqara-studio/device-integration/http",
+                  "aqara-studio/device-integration/tcp",
+                  "aqara-studio/device-integration/udp",
                   "aqara-studio/device-integration/sonos",
                   "aqara-studio/device-integration/aqara-coap",
                   "aqara-studio/device-integration/virtual/infrared-equipment",
