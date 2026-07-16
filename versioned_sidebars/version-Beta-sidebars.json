@@ -143,8 +143,6 @@
             "label": "Settings",
             "collapsed": false,
             "items": [
-              "aqara-studio/network-settings",
-              "aqara-studio/general-settings",
               "aqara-studio/static-ip",
               "aqara-studio/wireless-connection",
               "aqara-studio/cloud",  
