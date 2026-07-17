@@ -12,7 +12,7 @@ Check the table to find the function you need:
 
 | Category | Function/Constant Name | Syntax & Parameter Description | Function Description | Typical Mapping Scenario (Example) |
 | --- | --- | --- | --- | --- |
-| Utility | Linear Mapping | linear(x, inMin, inMax, outMin, outMax) | Linearly maps the input value from the original range to the target range. | Map ADC raw value (0~1023) to temperature (-40~125°C): `linear(source.value, 0, 1023, -40, 125)` |
+| Utility | Linear Mapping | linear(x, inMin, inMax, outMin, outMax) | Linearly maps the input value from the original range to the target range. | Map ADC raw value [0, 1023] to temperature [-40, 125]: `linear(source.value, 0, 1023, -40, 125)` |
 | Utility | Range Segmented Mapping | mapRange(x, thresholds, outputValues) | Returns the corresponding discrete value based on which segment the input falls into. `thresholds` is an ascending array of breakpoints; `outputValues` length = breakpoints count + 1. | Map temperature range to level: `mapRange(source.value, [0,20,40], [0,1,2,3])` |
 | Utility | Deadband/Hysteresis | deadband(x, center, halfWidth, neutral) | Returns a neutral value within `[center-halfWidth, center+halfWidth]` to suppress minor fluctuations. | Filter sensor noise: `deadband(source.value, 0, 0.5, 0)` |
 | Utility | Clamping | clamp(x, min, max) | Restricts the value within boundaries (uses `Math.min`/`Math.max` internally). | Limit percentage output range: `clamp(source.value, 0, 100)` |

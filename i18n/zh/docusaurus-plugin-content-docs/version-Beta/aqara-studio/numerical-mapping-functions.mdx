@@ -12,7 +12,7 @@
 
 | 类别 | 函数/常量名 | 语法与参数说明 | 功能说明 | 典型映射场景（示例） |
 | --- | --- | --- | --- | --- |
-| 扩展工具 | 线性映射 | linear(x, inMin, inMax, outMin, outMax) | 将输入值从原始范围线性映射到目标范围。 | ADC原始值(0~1023) 映射为温度(-40~125℃)：`linear(source.value, 0, 1023, -40, 125)` |
+| 扩展工具 | 线性映射 | linear(x, inMin, inMax, outMin, outMax) | 将输入值从原始范围线性映射到目标范围。 | ADC原始值 [0, 1023] 映射为温度 [-40, 125]：`linear(source.value, 0, 1023, -40, 125)` |
 | 扩展工具 | 区间分段映射 | mapRange(x, thresholds, outputValues) | 根据输入值落在哪个区间，返回对应的离散值。`thresholds`为升序断点数组，`outputValues`长度=断点数+1。 | 将温度区间映射为等级：`mapRange(source.value, [0,20,40], [0,1,2,3])` |
 | 扩展工具 | 死区/滞回 | deadband(x, center, halfWidth, neutral) | 在 `[center-halfWidth, center+halfWidth]` 范围内返回中性值，抑制微小波动。 | 过滤传感器噪声：`deadband(source.value, 0, 0.5, 0)` |
 | 扩展工具 | 钳位 | clamp(x, min, max) | 将数值限制在上下边界内（内部组合了 `Math.min`/`Math.max`）。 | 限制百分比输出范围：`clamp(source.value, 0, 100)` |
