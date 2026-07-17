@@ -1,0 +1,46 @@
+# Numerical Mapping Functions
+
+This document lists all numerical mapping functions available when integrating the following protocol devices and configuring function points, with detailed descriptions of the syntax and parameters for each function:
+
+- [Modbus TCP](./device-integration/modbus-tcp.mdx)
+- [BACnet](./device-integration/bacnet.mdx)
+- [KNX IP](./device-integration/knx-ip.mdx)
+
+## Function List
+
+Check the table to find the function you need:
+
+| Category | Function/Constant Name | Syntax & Parameter Description | Function Description | Typical Mapping Scenario (Example) |
+| --- | --- | --- | --- | --- |
+| Utility | Linear Mapping | linear(x, inMin, inMax, outMin, outMax) | Linearly maps the input value from the original range to the target range. | Map ADC raw value (0~1023) to temperature (-40~125°C): `linear(source.value, 0, 1023, -40, 125)` |
+| Utility | Range Segmented Mapping | mapRange(x, thresholds, outputValues) | Returns the corresponding discrete value based on which segment the input falls into. `thresholds` is an ascending array of breakpoints; `outputValues` length = breakpoints count + 1. | Map temperature range to level: `mapRange(source.value, [0,20,40], [0,1,2,3])` |
+| Utility | Deadband/Hysteresis | deadband(x, center, halfWidth, neutral) | Returns a neutral value within `[center-halfWidth, center+halfWidth]` to suppress minor fluctuations. | Filter sensor noise: `deadband(source.value, 0, 0.5, 0)` |
+| Utility | Clamping | clamp(x, min, max) | Restricts the value within boundaries (uses `Math.min`/`Math.max` internally). | Limit percentage output range: `clamp(source.value, 0, 100)` |
+| Power & Exponential | Power | Math.pow(x, y) | Returns x to the power of y. | Calculate square: `Math.pow(source.value, 2)` |
+| Power & Exponential | Square Root | Math.sqrt(x) | Returns the square root of x. | Calculate side length from area. |
+| Power & Exponential | Cube Root | Math.cbrt(x) | Returns the cube root of x. | Calculate side length from volume. |
+| Power & Exponential | Exponential | Math.exp(x) | Returns e raised to the power of x. | Linearization fitting for thermistor. |
+| Power & Exponential | High Precision exp(x)-1 | Math.expm1(x) | Returns e^x - 1 (precisely handles very small values). | High precision small signal amplification. |
+| Logarithm | Natural Logarithm | Math.log(x) | Returns the natural logarithm of x (base e). | Audio/signal decibel calculation. |
+| Logarithm | Common Logarithm | Math.log10(x) | Returns the base 10 logarithm of x. | **Common**: Convert linear value to logarithmic scale (sound pressure level dB). |
+| Logarithm | Base-2 Logarithm | Math.log2(x) | Returns the base 2 logarithm of x. | Image/information theory related conversions. |
+| Logarithm | High Precision log(1+x) | Math.log1p(x) | Returns ln(1+x) (precisely handles x≈0). | Process tiny signals close to zero. |
+| Rounding | Round | Math.round(x) | Rounds to the nearest integer. | **Common**: Output control value must be an integer. |
+| Rounding | Floor | Math.floor(x) | Rounds down (towards -Infinity). | Group number calculation. |
+| Rounding | Ceil | Math.ceil(x) | Rounds up (towards +Infinity). | Calculate minimal container quantity required. |
+| Rounding | Truncate | Math.trunc(x) | Truncates the decimal part directly (rounds towards zero). | Discard decimals, keep integer part only. |
+| Rounding | Single Precision Float | Math.fround(x) | Returns the nearest 32-bit single precision float. | Simulate low precision floating-point devices (rarely used). |
+| Trigonometric | Sine/Cosine/Tangent | Math.sin(x), Math.cos(x), Math.tan(x) | Standard trigonometric functions (input in radians). | Vibration analysis, angle sensor conversion. |
+| Trigonometric | Arc Sine/Arc Cosine | Math.asin(x), Math.acos(x) | Returns radians (-π/2 ~ π/2 or 0 ~ π). | Reverse phase angle from ratio. |
+| Trigonometric | Arc Tangent | Math.atan(x) | Returns radians (-π/2 ~ π/2). | Calculate slope angle from gradient. |
+| Trigonometric | Quadrant Arc Tangent | Math.atan2(y, x) | Returns the angle from X axis to point (x, y) (-π ~ π). | **Important**: Calculate direction angle of resultant vector. |
+| Hyperbolic | Hyperbolic Sine/Cosine/Tangent | Math.sinh(x), Math.cosh(x), Math.tanh(x) | Standard hyperbolic functions. | Complex physical models (e.g. catenary calculation). |
+| Hyperbolic | Inverse Hyperbolic Functions | Math.asinh(x), Math.acosh(x), Math.atanh(x) | Inverse hyperbolic functions. | Signal filtering modeling. |
+| Extrema & Sign | Absolute Value | Math.abs(x) | Returns the absolute value. | **Common**: Calculate deviation (actual value vs. target value). |
+| Extrema & Sign | Sign Function | Math.sign(x) | Returns 1, -1, 0 (positive, negative, zero). | Judge the direction of value change (up/down). |
+| Extrema & Sign | Max/Min | Math.max(args...), Math.min(args...) | Returns the maximum/minimum value among arguments. | **Common**: Used with range limiting. |
+| Geometry & Vector | Euclidean Norm | Math.hypot(x, y, ...) | Returns the square root of the sum of the squares of all arguments. | Calculate resultant speed or distance in 2D/3D space. |
+| Constant | π (PI) | Math.PI | Pi ≈ 3.14159. | Degrees to radians: `degrees * Math.PI / 180`. |
+| Constant | Euler's Number | Math.E | Euler's number ≈ 2.71828. | Base for exponentiation. |
+| Constant | Logarithm Base Constants | Math.LN2 (ln2), Math.LN10 (ln10) | Natural logarithms of 2 and 10. | Conversion between different logarithmic bases. |
+| Constant | Square Root Constants | Math.SQRT2 (√2), Math.SQRT1_2 (1/√2) | Common geometry constants. | Normalization factor calculation. |

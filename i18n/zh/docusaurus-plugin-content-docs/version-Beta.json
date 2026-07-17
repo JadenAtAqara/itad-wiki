@@ -79,6 +79,10 @@
     "message": "参考信息",
     "description": "The label for category 'Reference' in sidebar 'aqaraStudioSidebar'"
   },
+  "sidebar.aqaraStudioSidebar.category.JavaScript for Integration": {
+    "message": "设备集成脚本",
+    "description": "The label for category 'JavaScript for Integration' in sidebar 'aqaraStudioSidebar'"
+  },
   "sidebar.aqaraStudioSidebar.category.Product Manuals": {
     "message": "产品手册",
     "description": "The label for category 'Product Manuals' in sidebar 'aqaraStudioSidebar'"
