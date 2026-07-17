@@ -149,6 +149,7 @@
               "aqara-studio/remote-access",
               "aqara-studio/system-update",
               "aqara-studio/technical-support",
+              "aqara-studio/local-firmware-library",
               "aqara-studio/local-domain-name-access",
               "aqara-studio/factory-reset"
               ]
@@ -205,9 +206,16 @@
       "type": "category",
       "label": "Reference",
       "items": [
-        "aqara-studio/javascript-script-for-adding-data-points",
-        "aqara-studio/javascript-for-http-integration",
-        "aqara-studio/javascript-for-udp-tcp-integration"
+        {
+          "type": "category",
+          "label": "JavaScript for Integration",
+          "items": [
+            "aqara-studio/javascript-for-mqtt-integration",
+            "aqara-studio/javascript-for-http-integration",
+            "aqara-studio/javascript-for-udp-tcp-integration"
+          ]
+        },
+        "aqara-studio/numerical-mapping-functions"
       ]
     },
     {
