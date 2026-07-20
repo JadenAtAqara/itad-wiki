@@ -241,6 +241,7 @@ To ensure Aqara Studio can correctly obtain function point information, you must
 | functionCode  | Same as the `functionCode` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
 | traitCode     | Same as the `traitCode` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
 | dataType  | Data point type. Supported values: <ul><li><code>bool</code> / <code>boolean</code>: Boolean</li><li><code>numerical</code> / <code>number</code>: Numeric</li><li><code>enum</code>: Enumeration</li><li><code>text</code> / <code>string</code>: Text</li></ul> |
+| enumRange | Enumeration options. Required only when a general data point uses `dataType: "enum"`. The array must not be empty. Each item contains an integer `value` and a string `label`; both must be unique, and `label` must not be empty. |
 | access    | Access mode of the resource. <ul><li>1: Read-only</li><li>2: Read-write</li></ul> |
 
 :::tip
@@ -276,6 +277,16 @@ To ensure Aqara Studio can correctly obtain device information, you need to make
             "pointName": "Temperature",
             "dataType": "numerical",
             "access": "1"
+        },
+        {
+            "pointId": "mode",
+            "pointName": "Operating Mode",
+            "dataType": "enum",
+            "enumRange": [
+                { "value": 0, "label": "Off" },
+                { "value": 1, "label": "Auto" }
+            ],
+            "access": "2"
         }
     ]
     ```

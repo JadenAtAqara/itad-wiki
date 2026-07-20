@@ -67,6 +67,7 @@ You need to return an array containing one or more data point objects (such as `
 | functionCode  | Same as the `functionCode` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
 | traitraitCode     | Same as the `traitCode` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
 | dataType  | Data point type. Supported values: <ul><li><code>bool</code>: Boolean</li><li><code>numerical</code>: Numeric</li><li><code>enum</code>: Enumeration</li><li><code>text</code>: Text</li></ul> |
+| enumRange | Enumeration options. Required only when a general data point uses `dataType: "enum"`. The array must not be empty. Each item contains an integer `value` and a string `label`; both must be unique, and `label` must not be empty. |
 | access    | Access capability bit mask. <ul><li>1: Readable</li><li>2: Writable</li><li>3: Readable and writable</li></ul> |
 | subTopic  | (**Only applicable for MQTT devices**) Aqara Studio subscribes to this topic to get the latest data for this point. Please fill in according to your device protocol or manufacturer documentation. |
 | pubTopic  | (**Only applicable for MQTT devices**) Aqara Studio sends control message data to this topic for the data point. Please fill in according to your device protocol or manufacturer documentation. (For read-only points, leave this field empty) |
@@ -99,6 +100,18 @@ function parseDiscoverPointsResponse(deviceId) {
 			pointName: "1#Chiller On/Off Read",
 			dataType: "bool",
 			access: 1,
+			subTopic: "/WEI-iEdge/realdata/xxx",
+			pubTopic: "/WEI-iEdge/write/req/xxx"
+		},
+		{
+			pointId: "1#Chiller Operating Mode",
+			pointName: "1#Chiller Operating Mode",
+			dataType: "enum",
+			enumRange: [
+				{ value: 0, label: "Off" },
+				{ value: 1, label: "Cooling" }
+			],
+			access: 3,
 			subTopic: "/WEI-iEdge/realdata/xxx",
 			pubTopic: "/WEI-iEdge/write/req/xxx"
 		},

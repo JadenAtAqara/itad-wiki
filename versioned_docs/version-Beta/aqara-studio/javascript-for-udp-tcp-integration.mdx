@@ -430,6 +430,7 @@ Fields:
 | functionCode | String | Aqara Spec function code |
 | traitCode | String | Aqara Spec trait code |
 | dataType | String | Generic point data type: `enum`, `bool`, `numerical`, or `text` |
+| enumRange | Array | Enumeration options. Required only when a general point uses `dataType: "enum"`. The array must not be empty. Each item contains an integer `value` and a string `label`; both must be unique, and `label` must not be empty. |
 | access | Int | Access permission bits: `bit1` read, `bit2` write, `bit3` report |
 
 :::tip
@@ -452,6 +453,16 @@ function parseDiscoverPointsResponse(deviceId, fromAcceptMessage) {
             pointName: "Scene Listen",
             dataType: "text",
             access: 1
+        },
+        {
+            pointId: "operatingMode",
+            pointName: "Operating Mode",
+            dataType: "enum",
+            enumRange: [
+                { value: 0, label: "Off" },
+                { value: 1, label: "Auto" }
+            ],
+            access: 3
         }
     ];
 }
