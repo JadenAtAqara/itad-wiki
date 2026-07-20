@@ -1,0 +1,159 @@
+# Trait Codes
+
+The table below summarizes all trait codes supported by Aqara devices.
+
+| trait_code | trait_name | Trait Type | Unit | Readable | Writable | Reportable |
+|---|---|---|---|---|---|---|
+| CODetected | Carbon Monoxide Detection State | boolean |  | ✔ | ✘ | ✔ |
+| ExpressedState | Alarm Status | enum |  | ✔ | ✘ | ✔ |
+| WindSetting | Wind Type | enum |  | ✔ | ✔ | ✔ |
+| AirflowDirection | Airflow Direction | enum |  | ✔ | ✔ | ✔ |
+| FanSpeed | Fan Speed | number | % | ✔ | ✔ | ✔ |
+| AirQuality | Air Quality Level | enum |  | ✔ | ✘ | ✔ |
+| BooleanState | Boolean State | boolean |  | ✔ | ✘ | ✔ |
+| MatterVendorID | Matter Vendor ID | string |  | ✔ | ✘ | ✔ |
+| FreshAirMode | Fresh Air Mode | enum |  | ✔ | ✔ | ✔ |
+| InvertedRotationAngle | Inverted Rotation Angle | number | ° | ✘ | ✘ | ✔ |
+| ConnectionStatus | Connection Status | enum |  | ✔ | ✘ | ✔ |
+| ScreenBrightness | Screen Brightness | number | % | ✔ | ✔ | ✔ |
+| TemperatureUIDisplayMode | Temperature UI Display Mode | enum |  | ✔ | ✔ | ✔ |
+| BatReplacementNeeded | Battery Replacement Needed | boolean |  | ✔ | ✘ | ✔ |
+| BatQuantity | Battery Quantity | number |  | ✔ | ✘ | ✔ |
+| Rechargeable | Rechargeable | boolean |  | ✔ | ✘ | ✔ |
+| CircuitCurrent | Circuit Current | number | A | ✔ | ✘ | ✔ |
+| P2PCaptureEnabled | P2P Capture Enabled | boolean |  | ✔ | ✔ | ✔ |
+| MotorOperationStatus | Motor Operation Status | enum |  | ✔ | ✘ | ✔ |
+| MotorDirectionReversed | Motor Direction Reversed | boolean |  | ✔ | ✔ | ✔ |
+| MotorControllability | Motor Controllable | boolean |  | ✔ | ✘ | ✔ |
+| CurrentValveState | Current Valve State | enum |  | ✔ | ✘ | ✔ |
+| Condition | Filter Remaining Life | number | % | ✔ | ✘ | ✔ |
+| ChangeIndication | Filter Life Status | enum |  | ✔ | ✘ | ✔ |
+| FilterType | Filter Type | enum |  | ✔ | ✘ | ✔ |
+| OperationalState | Device Status | enum |  | ✔ | ✘ | ✔ |
+| CurrentFlow | Current Flow | number | m³/h | ✔ | ✘ | ✔ |
+| CurrentMode | Current Mode | enum |  | ✔ | ✘ | ✔ |
+| ChangeToModeResponse | Change Mode Response | enum |  | ✔ | ✘ | ✔ |
+| VacuumOperationalState | Robot Vacuum State | enum |  | ✔ | ✘ | ✔ |
+| RefrigeratorAlarm | Refrigerator Alarm | other |  | ✔ | ✘ | ✔ |
+| EvseState | EVSE Gun State | enum |  | ✔ | ✘ | ✔ |
+| EvseSupplyState | EVSE Supply State | enum |  | ✔ | ✘ | ✔ |
+| ChargingEnabledUntil | Charging Allowed Until | number | A | ✔ | ✘ | ✔ |
+| MaxChargeCurrent | Max Charge Current | number | A | ✔ | ✘ | ✔ |
+| BatteryCapacity | Battery Capacity | number |  | ✔ | ✘ | ✔ |
+| MinChargeCurrent | Min Charge Current | number | A | ✔ | ✘ | ✔ |
+| SetTemperature | Set Temperature | number | °C | ✔ | ✔ | ✔ |
+| SetTemperatureLevel | Set Temperature Level | number |  | ✔ | ✔ | ✔ |
+| MediaInput | Media Source | enum |  | ✔ | ✔ | ✔ |
+| SetBack | Temperature Offset | number | °C | ✔ | ✔ | ✔ |
+| OpenAngle | Opening Angle | number |  | ✔ | ✘ | ✔ |
+| BSSID | BSSID | string |  | ✔ | ✘ | ✔ |
+| CurrentTemperatureCalibration | Temperature Calibration | number | °C | ✔ | ✔ | ✔ |
+| HeaterCoolerButtonEvent | Thermostat Button Event | enum |  | ✔ | ✘ | ✔ |
+| HeaterCoolerPolarity | Thermostat Polarity Setting | enum |  | ✔ | ✔ | ✔ |
+| SelfCheck | Alarm Self-Check | boolean |  | ✔ | ✔ | ✔ |
+| FirmwareRevision | Firmware Version | string |  | ✔ | ✘ | ✔ |
+| SerialNumber | Serial Number | string |  | ✔ | ✘ | ✔ |
+| VendorName | Vendor Name | string |  | ✔ | ✘ | ✔ |
+| VendorID | Vendor ID | string |  | ✔ | ✘ | ✔ |
+| ProductName | Product Name | string |  | ✔ | ✘ | ✔ |
+| Reachable | Connection Status | boolean |  | ✔ | ✘ | ✔ |
+| HardwareVersion | Hardware Version | string |  | ✔ | ✘ | ✔ |
+| Mac | MAC Address | string |  | ✔ | ✘ | ✔ |
+| DeviceID | Device ID | string |  | ✔ | ✘ | ✔ |
+| EndpointName | Device or Card Name | string |  | ✔ | ✔ | ✔ |
+| OnOff | On / Off State | boolean |  | ✔ | ✔ | ✔ |
+| CurrentLevel | Current Level | number | % | ✔ | ✔ | ✔ |
+| CurrentX | X Value | number |  | ✔ | ✔ | ✔ |
+| CurrentY | Y Value | number |  | ✔ | ✔ | ✔ |
+| ColorTemperature | Color Temperature | number |  | ✔ | ✔ | ✔ |
+| ButtonEvent | Button Event | enum |  | ✘ | ✘ | ✔ |
+| CameraActiveStatus | Camera Sleep Status | boolean |  | ✔ | ✔ | ✔ |
+| CurrentPositionPercentage | Current Position Percentage | number | % | ✔ | ✘ | ✔ |
+| TargetPositionPercentage | Target Position Percentage | number | % | ✘ | ✔ | ✔ |
+| IRType | IR Type | enum |  | ✔ | ✔ | ✔ |
+| IRBrand | IR Brand | number |  | ✔ | ✔ | ✔ |
+| CurrentVoltage | Voltage Value | number | V | ✔ | ✘ | ✔ |
+| CurrentPower | Power Value | number | W | ✔ | ✘ | ✔ |
+| CumulativeEnergyConsumption | Cumulative Energy Consumption | number | W·h | ✔ | ✘ | ✔ |
+| HeaterCoolerMode | Heat/Cool Mode | enum |  | ✔ | ✔ | ✔ |
+| HeatingTemperature | Heating Temperature | number | °C | ✔ | ✔ | ✔ |
+| CoolingTemperature | Cooling Temperature | number | °C | ✔ | ✔ | ✔ |
+| FanMode | Fan Mode | enum |  | ✔ | ✔ | ✔ |
+| RockSetting | Swing Mode | enum |  | ✔ | ✔ | ✔ |
+| CurrentHumidity | Humidity | number | % | ✔ | ✘ | ✔ |
+| CurrentPlaybackState | Playback State | enum |  | ✔ | ✘ | ✔ |
+| PlaybackDuration | Duration | number | ms | ✔ | ✘ | ✔ |
+| SampledPosition | Playback Progress | number | ms | ✔ | ✘ | ✔ |
+| PlaybackMode | Playback Mode | enum |  | ✔ | ✔ | ✔ |
+| MediaInformation | Media Information | string |  | ✔ | ✘ | ✔ |
+| Volume | Volume | number | % | ✔ | ✔ | ✔ |
+| Mute | Mute | boolean |  | ✔ | ✔ | ✔ |
+| LockState | Lock Status | enum |  | ✔ | ✘ | ✔ |
+| DoorState | Door Status | enum |  | ✔ | ✘ | ✔ |
+| IRKey | IR Command | enum |  | ✘ | ✔ | ✘ |
+| BatPercentRemaining | Battery Percentage Remaining | number | % | ✔ | ✘ | ✔ |
+| SweeperState | Sweeper State | enum |  | ✔ | ✘ | ✔ |
+| VOCDensity | VOC Concentration | number | ppb | ✔ | ✘ | ✔ |
+| VOCQuality | VOC Level | enum |  | ✔ | ✘ | ✔ |
+| CurrentPressure | Pressure | number | kPa | ✔ | ✘ | ✔ |
+| PM2.5Density | PM2.5 Concentration | number | ug/m³ | ✔ | ✘ | ✔ |
+| PM2.5Level | PM2.5 Level | enum |  | ✔ | ✘ | ✔ |
+| PM1.0Density | PM1.0 Concentration | number | ug/m³ | ✔ | ✘ | ✔ |
+| PM10Density | PM10 Concentration | number | ug/m³ | ✔ | ✘ | ✔ |
+| CO2Density | CO2 Concentration | number | ppm | ✔ | ✘ | ✔ |
+| CO2Level | CO2 Level | enum |  | ✔ | ✘ | ✔ |
+| CurrentIlluminance | Illuminance | number | lux | ✔ | ✘ | ✔ |
+| ContactSensorState | Contact State | boolean |  | ✔ | ✘ | ✔ |
+| SmokeDensity | Smoke Concentration | number | OBS%/FT | ✔ | ✘ | ✔ |
+| SmokeDetected | Smoke Detection State | boolean |  | ✔ | ✘ | ✔ |
+| GasDensity | Gas Concentration | number | %LEL | ✔ | ✘ | ✔ |
+| GasDetected | Gas Detection State | boolean |  | ✔ | ✘ | ✔ |
+| SleepState | Sleep State | enum |  | ✔ | ✘ | ✔ |
+| SleepQuality | Sleep Quality | number |  | ✔ | ✘ | ✔ |
+| OnBed | On Bed State | boolean |  | ✔ | ✘ | ✔ |
+| SleepStage | Sleep Stage | enum |  | ✔ | ✘ | ✔ |
+| LeakState | Leak State | boolean |  | ✔ | ✘ | ✔ |
+| Occupancy | Occupancy State | boolean |  | ✔ | ✘ | ✔ |
+| OccupancySensorType | Occupancy Sensor Type | enum |  | ✔ | ✘ | ✔ |
+| MotionDetected | Motion Detection | enum |  | ✘ | ✘ | ✔ |
+| RotationAngle | Rotation Angle | number |  | ✘ | ✘ | ✔ |
+| RotationDirection | Rotation Direction | enum |  | ✘ | ✘ | ✔ |
+| RotationEvent | Rotation Event | enum |  | ✘ | ✘ | ✔ |
+| CubeEvent | Cube Event | enum |  | ✘ | ✘ | ✔ |
+| VibrationEvent | Vibration Event | enum |  | ✘ | ✘ | ✔ |
+| SmokeDensitydB | Smoke Concentration (dB) | number | dB/m | ✔ | ✘ | ✔ |
+| CurrentR | Red Value | number |  | ✔ | ✔ | ✔ |
+| CurrentG | Green Value | number |  | ✔ | ✔ | ✔ |
+| CurrentB | Blue Value | number |  | ✔ | ✔ | ✔ |
+| EndpointArrayDynamic | Dynamic Endpoint Array | other |  | ✔ | ✘ | ✔ |
+| Feed | Feeding | enum |  | ✔ | ✘ | ✔ |
+| AttitudeDetected | Posture Detection | enum |  | ✔ | ✘ | ✔ |
+| TargetPlaybackState | Target Playback State | enum |  | ✔ | ✔ | ✔ |
+| EnableRemoteControl | Remote Control Enabled | boolean |  | ✔ | ✔ | ✔ |
+| HardwareVersionString | Hardware Version (string) | string |  | ✔ | ✘ | ✔ |
+| FirmwareRevisionString | Firmware Version (string) | string |  | ✔ | ✘ | ✔ |
+| ProductID | Product ID | number |  | ✔ | ✘ | ✔ |
+| MinPINCodeLength | Minimum PINCode Length | number |  | ✔ | ✘ | ✔ |
+| MinRFIDCodeLength | Minimum RFID Length | number |  | ✔ | ✘ | ✔ |
+| OperatingMode | Operating Mode | enum |  | ✔ | ✘ | ✔ |
+| ActuatorEnabled | Actuator Enabled | boolean |  | ✔ | ✘ | ✔ |
+| ReverseIdentify | Reverse Identify | number |  | ✘ | ✘ | ✔ |
+| Hue | Hue | number | ° | ✔ | ✔ | ✔ |
+| Saturation | Saturation | number | % | ✔ | ✔ | ✔ |
+| MinHeatCoolDeadBand | Min Heat/Cool Deadband | number | °C | ✔ | ✔ | ✔ |
+| Channel | Wireless Channel | number |  | ✔ | ✘ | ✔ |
+| ExtendedPANID | Network ExtendedPANID | number |  | ✔ | ✘ | ✔ |
+| WindowCoveringMotorsBinding | Curtain Motors Unified Control | boolean |  | ✔ | ✔ | ✔ |
+| CurrentRotationAngle | Current Curtain Rotation Angle | number | ° | ✔ | ✘ | ✔ |
+| TargetRotationAngle | Target Curtain Rotation Angle | number | ° | ✔ | ✔ | ✔ |
+| CurrentGarageDoorState | Current Garage Door State | enum |  | ✔ | ✘ | ✔ |
+| TargetGarageDoorState | Target Garage Door State | enum |  | ✔ | ✔ | ✔ |
+| HoldRotationAngle | Hold Rotation Angle | number | ° | ✘ | ✘ | ✔ |
+| ModeCount | Mode Count | number |  | ✔ | ✘ | ✔ |
+| PlaybackSampledPosition | Current Media Playback Position | number | ms | ✔ | ✔ | ✔ |
+| SelectedMediaOutputSource | Current Media Output Source | enum |  | ✔ | ✔ | ✔ |
+| LockOperation | Lock Operation (Event) Report | other |  | ✘ | ✘ | ✔ |
+| DoorLockAlarm | Door Lock Alarm (Event) Report | other |  | ✘ | ✘ | ✔ |
+| LockUserChange | Lock User Change Report | other |  | ✘ | ✘ | ✔ |
+| ModelValue | Model Value | string |  | ✔ | ✘ | ✔ |
+

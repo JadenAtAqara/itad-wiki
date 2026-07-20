@@ -1,6 +1,6 @@
-# Aqara Specification
+# 设备类型
 
-## deviceType List
+## Overview
 
 | deviceType | description |
 | --- | --- |
@@ -108,13 +108,38 @@
 
 ## TemperatureControlledCabinet
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Temperature | CurrentTemperature |
-| TemperatureControl | SetTemperatureLevel |
-| TemperatureControl | SetTemperature |
-| TemperatureControl | ChangeTemperatureLevel |
-| TemperatureControl | ChangeTemperature |
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>description</th>
+    <th>trait/commandCode</th>
+    <th>trait 或 command</th>
+  </tr>
+  <tr>
+    <td>Temperature</td>
+    <td>测量并上报环境温度，提供当前温度值及有效量程等属性。</td>
+    <td>CurrentTemperature</td>
+    <td>trait</td>
+  </tr>
+  <tr>
+    <td rowspan="4">TemperatureControl</td>
+    <td rowspan="4">提供温度设定与调节能力，用于恒温设备的目标温度控制。</td>
+    <td>SetTemperatureLevel</td>
+    <td>trait</td>
+  </tr>
+  <tr>
+    <td>SetTemperature</td>
+    <td>trait</td>
+  </tr>
+  <tr>
+    <td>ChangeTemperatureLevel</td>
+    <td>command</td>
+  </tr>
+  <tr>
+    <td>ChangeTemperature</td>
+    <td>command</td>
+  </tr>
+</table>
 
 ## PackageDetector
 
