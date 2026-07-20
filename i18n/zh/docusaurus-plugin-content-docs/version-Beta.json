@@ -146,5 +146,9 @@
   "sidebar.aqaraOpenLinkSidebar.category.Aqara Standard Protocol Modules": {
     "message": "Aqara 标准协议模组",
     "description": "The label for category 'Aqara Standard Protocol Modules' in sidebar 'aqaraOpenLinkSidebar'"
+  },
+  "sidebar.aqaraDeveloperSidebar.category.Aqara Data Model Specification": {
+    "message": "Aqara 物模型规范",
+    "description": "The label for category 'Aqara Data Model Specification' in sidebar 'aqaraDeveloperSidebar'"
   }
 }

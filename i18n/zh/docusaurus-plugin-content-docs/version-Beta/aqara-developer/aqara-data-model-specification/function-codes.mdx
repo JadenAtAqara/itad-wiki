@@ -1,0 +1,4975 @@
+# 功能代码
+
+## 概览
+
+| functionCode | 说明 |
+| --- | --- |
+| [Descriptor](#descriptor) |  |
+| [BasicInformation](#basicinformation) |  |
+| [EndpointLabel](#endpointlabel) |  |
+| [CameraCoordination](#cameracoordination) |  |
+| [GeneralConfiguration](#generalconfiguration) |  |
+| [EcosystemInformation](#ecosysteminformation) |  |
+| [EnergyManagement](#energymanagement) |  |
+| [HubCoordination](#hubcoordination) |  |
+| [SceneCoordination](#scenecoordination) |  |
+| [PowerSource](#powersource) |  |
+| [WakeupCoordination](#wakeupcoordination) |  |
+| [CentralHubCoordination](#centralhubcoordination) |  |
+| [SecurityGuardCoordination](#securityguardcoordination) |  |
+| [OTACoordination](#otacoordination) |  |
+| [LockCoordination](#lockcoordination) |  |
+| [DeviceAnomalyMonitoring](#deviceanomalymonitoring) |  |
+| [GeneralDiagnostics](#generaldiagnostics) |  |
+| [RingtoneCoordination](#ringtonecoordination) |  |
+| [ZigbeeNetworkDiagnostics](#zigbeenetworkdiagnostics) |  |
+| [MatterCoordination](#mattercoordination) |  |
+| [ScreenCoordination](#screencoordination) |  |
+| [CommLinkCoordination](#commlinkcoordination) |  |
+| [IftttCoordination](#iftttcoordination) |  |
+| [NetworkManagement](#networkmanagement) |  |
+| [Identify](#identify) |  |
+| [LightBoxCoordination](#lightboxcoordination) |  |
+| [IRCoordination](#ircoordination) |  |
+| [NetworkCommissioning](#networkcommissioning) |  |
+| [ConfigurationCoordination](#configurationcoordination) |  |
+| [CloudStorageCoordination](#cloudstoragecoordination) |  |
+| [StudioCoordination](#studiocoordination) |  |
+| [Temperature](#temperature) |  |
+| [TemperatureControl](#temperaturecontrol) |  |
+| [PackageRecognition](#packagerecognition) |  |
+| [FaceRecognition](#facerecognition) |  |
+| [HumanPresence](#humanpresence) |  |
+| [HumanRecognition](#humanrecognition) |  |
+| [AirQuality](#airquality) |  |
+| [AttitudeDetection](#attitudedetection) |  |
+| [Lifter](#lifter) |  |
+| [Binding](#binding) |  |
+| [PetFeeder](#petfeeder) |  |
+| [Button](#button) |  |
+| [Output](#output) |  |
+| [IRControl](#ircontrol) |  |
+| [HeaterCooler](#heatercooler) |  |
+| [Vibration](#vibration) |  |
+| [Cube](#cube) |  |
+| [Knob](#knob) |  |
+| [BinaryOutputObject](#binaryoutputobject) |  |
+| [AnalogInputObject](#analoginputobject) |  |
+| [MediaPlayback](#mediaplayback) |  |
+| [MediaInput](#mediainput) |  |
+| [FlameDetection](#flamedetection) |  |
+| [OperationalState](#operationalstate) |  |
+| [RefrigeratorState](#refrigeratorstate) |  |
+| [Mode](#mode) |  |
+| [BridgedConfiguration](#bridgedconfiguration) |  |
+| [MultiStateInputObject](#multistateinputobject) |  |
+| [MARSConfiguration](#marsconfiguration) |  |
+| [ScreenUserInterface](#screenuserinterface) |  |
+| [CustomizedConfiguration](#customizedconfiguration) |  |
+| [HEPAFilterMonitoring](#hepafiltermonitoring) |  |
+| [ActivatedCarbonFilterMonitoring](#activatedcarbonfiltermonitoring) |  |
+| [FanControl](#fancontrol) |  |
+| [HeartMonitoring](#heartmonitoring) |  |
+| [Pressure](#pressure) |  |
+| [MultiStateOutputObject](#multistateoutputobject) |  |
+| [Contact](#contact) |  |
+| [Doorbell](#doorbell) |  |
+| [WaterFreezeDetector](#waterfreezedetector) |  |
+| [Speaker](#speaker) |  |
+| [DoorLock](#doorlock) |  |
+| [CO2](#co2) |  |
+| [VacuumOperationalState](#vacuumoperationalstate) |  |
+| [ValveControl](#valvecontrol) |  |
+| [ScreenDisplay](#screendisplay) |  |
+| [Illuminance](#illuminance) |  |
+| [Camera](#camera) |  |
+| [Gas](#gas) |  |
+| [GestureRecognition](#gesturerecognition) |  |
+| [BreathingMonitoring](#breathingmonitoring) |  |
+| [CharacterStringValueObject](#characterstringvalueobject) |  |
+| [Sweeper](#sweeper) |  |
+| [EVSE](#evse) |  |
+| [CO](#co) |  |
+| [Lighting](#lighting) |  |
+| [LevelControl](#levelcontrol) |  |
+| [ColorControl](#colorcontrol) |  |
+| [PanTilt](#pantilt) |  |
+| [WindowCovering](#windowcovering) |  |
+| [Flow](#flow) |  |
+| [OccupancySensing](#occupancysensing) |  |
+| [RainSensor](#rainsensor) |  |
+| [Smoke](#smoke) |  |
+| [FreshAirControl](#freshaircontrol) |  |
+| [AnalogOutputObject](#analogoutputobject) |  |
+| [Location](#location) |  |
+| [PetRecognition](#petrecognition) |  |
+| [ParticulateMatter](#particulatematter) |  |
+| [OnOffSensor](#onoffsensor) |  |
+| [SoundDetection](#sounddetection) |  |
+| [Ringtone](#ringtone) |  |
+| [BridgeConfiguration](#bridgeconfiguration) |  |
+| [MatterBridgeCommissioning](#matterbridgecommissioning) |  |
+| [GarageDoorOpener](#garagedooropener) |  |
+| [RelativeHumidity](#relativehumidity) |  |
+| [Sleep](#sleep) |  |
+| [BinaryInputObject](#binaryinputobject) |  |
+| [WaterLeak](#waterleak) |  |
+| [VehicleDetection](#vehicledetection) |  |
+
+## Descriptor
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+    <th>Trait 或 Command？</th>
+  </tr>
+  <tr>
+    <td rowspan="9">Descriptor</td>
+    <td><a href="./trait-codes#supportedendpointdynamic">SupportedEndpointDynamic</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#endpointcount">EndpointCount</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#endpointstructure">EndpointStructure</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#endpointdevicetypes">EndpointDeviceTypes</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#endpointdynamiccount">EndpointDynamicCount</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#endpointarraydynamic">EndpointArrayDynamic</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#endpointarray">EndpointArray</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#endpointfunctions">EndpointFunctions</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#selectedendpointdynamic">SelectedEndpointDynamic</a></td>
+    <td>Trait</td>
+  </tr>
+</table>
+
+## BasicInformation
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+    <th>Trait 或 Command？</th>
+  </tr>
+  <tr>
+    <td rowspan="26">BasicInformation</td>
+    <td><a href="./trait-codes#productname">ProductName</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#partnumber">PartNumber</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#blversion">BLVersion</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#manufacturerchipid">ManufacturerChipID</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#supportedmatterroles">SupportedMatterRoles</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#hardwareversionstring">HardwareVersionString</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#hubconnectionstatus">HubConnectionStatus</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#devicexcode">DeviceXCode</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#matterspecificationversion">MatterSpecificationVersion</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#vendorname">VendorName</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#firmwarerevisionstring">FirmwareRevisionString</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#deviceid">DeviceID</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#vendorid">VendorID</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#mcuversion">MCUVersion</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#productid">ProductID</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#configurationflag">ConfigurationFlag</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#modelvalue">ModelValue</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#hardwareversion">HardwareVersion</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#mac">Mac</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#radarversion">RadarVersion</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#serialnumber">SerialNumber</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#configurationversion">ConfigurationVersion</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#reachable">Reachable</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#firmwarerevision">FirmwareRevision</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#chiptemperature">ChipTemperature</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#location">Location</a></td>
+    <td>Trait</td>
+  </tr>
+</table>
+
+## EndpointLabel
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+    <th>Trait 或 Command？</th>
+  </tr>
+  <tr>
+    <td rowspan="8">EndpointLabel</td>
+    <td><a href="./trait-codes#endpointtag">EndpointTag</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#endpointname">EndpointName</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#endpointappliancetype">EndpointApplianceType</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#endpointroom">EndpointRoom</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#endpointvisibility">EndpointVisibility</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#endpointicon">EndpointIcon</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#endpointstatistics">EndpointStatistics</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#endpointroomname">EndpointRoomName</a></td>
+    <td>Trait</td>
+  </tr>
+</table>
+
+## CameraCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+    <th>Trait 或 Command？</th>
+  </tr>
+  <tr>
+    <td rowspan="11">CameraCoordination</td>
+    <td><a href="./command-codes#apiunbindwifisubdevice">APIUnbindWiFiSubdevice</a></td>
+    <td>Command</td>
+  </tr>
+  <tr>
+    <td><a href="./command-codes#apicheckcardataconsistency">APICheckCarDataConsistency</a></td>
+    <td>Command</td>
+  </tr>
+  <tr>
+    <td><a href="./command-codes#apibindwifisubdevice">APIBindWiFiSubdevice</a></td>
+    <td>Command</td>
+  </tr>
+  <tr>
+    <td><a href="./command-codes#apioperatebridgeddevice">APIOperateBridgedDevice</a></td>
+    <td>Command</td>
+  </tr>
+  <tr>
+    <td><a href="./command-codes#apidevicecameracall">APIDeviceCameraCall</a></td>
+    <td>Command</td>
+  </tr>
+  <tr>
+    <td><a href="./command-codes#apioperatecameraup">APIOperateCameraUp</a></td>
+    <td>Command</td>
+  </tr>
+  <tr>
+    <td><a href="./command-codes#apiissuetokenforwebrtccall">APIIssueTokenForWebRTCCall</a></td>
+    <td>Command</td>
+  </tr>
+  <tr>
+    <td><a href="./command-codes#apioperatecameradown">APIOperateCameraDown</a></td>
+    <td>Command</td>
+  </tr>
+  <tr>
+    <td><a href="./command-codes#apigetsignallingserveraddress">APIGetSignallingServerAddress</a></td>
+    <td>Command</td>
+  </tr>
+  <tr>
+    <td><a href="./command-codes#apireportcameraextevents">APIReportCameraExtEvents</a></td>
+    <td>Command</td>
+  </tr>
+  <tr>
+    <td><a href="./command-codes#apicheckfacedataconsistency">APICheckFaceDataConsistency</a></td>
+    <td>Command</td>
+  </tr>
+</table>
+
+## GeneralConfiguration
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+    <th>Trait 或 Command？</th>
+  </tr>
+  <tr>
+    <td rowspan="16">GeneralConfiguration</td>
+    <td><a href="./trait-codes#voicelanguage">VoiceLanguage</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#energysavingenable">EnergySavingEnable</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#currentsensitivitylevel">CurrentSensitivityLevel</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#transmissionpowersetting">TransmissionPowerSetting</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#hubarktechenable">HubArkTechEnable</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#beepenable">BeepEnable</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#nightlightmode">NightLightMode</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#outputinterlockflag">OutputInterlockFlag</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#activitydetectionmodesetting">ActivityDetectionModeSetting</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#timezone">TimeZone</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#numberofsensitivitylevelissupported">NumberOfSensitivityLevelIsSupported</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#pollingtime">PollingTime</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#installationorientationconfiguration">InstallationOrientationConfiguration</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#detectionmodesetting">DetectionModeSetting</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#lightingmodesetting">LightingModeSetting</a></td>
+    <td>Trait</td>
+  </tr>
+  <tr>
+    <td><a href="./trait-codes#resetmode">ResetMode</a></td>
+    <td>Trait</td>
+  </tr>
+</table>
+
+## EcosystemInformation
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="5">EcosystemInformation</td>
+    <td>MagicPairPayload</td>
+  </tr>
+  <tr>
+    <td>SupportedEcosystem</td>
+  </tr>
+  <tr>
+    <td>MatterPayload</td>
+  </tr>
+  <tr>
+    <td>HomeKitPayload</td>
+  </tr>
+  <tr>
+    <td>BoundEcosystem</td>
+  </tr>
+</table>
+
+## EnergyManagement
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="28">EnergyManagement</td>
+    <td>CurrentVoltage</td>
+  </tr>
+  <tr>
+    <td>CircuitCurrent</td>
+  </tr>
+  <tr>
+    <td>CumulativeEnergyConsumption</td>
+  </tr>
+  <tr>
+    <td>CurrentPower</td>
+  </tr>
+  <tr>
+    <td>CurrentVoltage</td>
+  </tr>
+  <tr>
+    <td>CircuitCurrent</td>
+  </tr>
+  <tr>
+    <td>CumulativeEnergyConsumption</td>
+  </tr>
+  <tr>
+    <td>CurrentPower</td>
+  </tr>
+  <tr>
+    <td>CurrentVoltage</td>
+  </tr>
+  <tr>
+    <td>CircuitCurrent</td>
+  </tr>
+  <tr>
+    <td>CumulativeEnergyConsumption</td>
+  </tr>
+  <tr>
+    <td>CurrentPower</td>
+  </tr>
+  <tr>
+    <td>CurrentVoltage</td>
+  </tr>
+  <tr>
+    <td>CircuitCurrent</td>
+  </tr>
+  <tr>
+    <td>CumulativeEnergyConsumption</td>
+  </tr>
+  <tr>
+    <td>CurrentPower</td>
+  </tr>
+  <tr>
+    <td>CurrentVoltage</td>
+  </tr>
+  <tr>
+    <td>CircuitCurrent</td>
+  </tr>
+  <tr>
+    <td>CumulativeEnergyConsumption</td>
+  </tr>
+  <tr>
+    <td>CurrentPower</td>
+  </tr>
+  <tr>
+    <td>CurrentVoltage</td>
+  </tr>
+  <tr>
+    <td>CircuitCurrent</td>
+  </tr>
+  <tr>
+    <td>CumulativeEnergyConsumption</td>
+  </tr>
+  <tr>
+    <td>CurrentPower</td>
+  </tr>
+  <tr>
+    <td>CurrentVoltage</td>
+  </tr>
+  <tr>
+    <td>CircuitCurrent</td>
+  </tr>
+  <tr>
+    <td>CumulativeEnergyConsumption</td>
+  </tr>
+  <tr>
+    <td>CurrentPower</td>
+  </tr>
+</table>
+## HubCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="53">HubCoordination</td>
+    <td>APIUnbindHubDown</td>
+  </tr>
+  <tr>
+    <td>APIUploadDeviceInfo</td>
+  </tr>
+  <tr>
+    <td>APIReportDeviceResponse</td>
+  </tr>
+  <tr>
+    <td>APIGetSubdeviceConfig</td>
+  </tr>
+  <tr>
+    <td>APICheckHubDataConsistency</td>
+  </tr>
+  <tr>
+    <td>APICheckHubLocalSync</td>
+  </tr>
+  <tr>
+    <td>APIGetLoginRandomCode</td>
+  </tr>
+  <tr>
+    <td>APIGetRandomJoinCode</td>
+  </tr>
+  <tr>
+    <td>APIClearHubConfig</td>
+  </tr>
+  <tr>
+    <td>APISyncDataCloudToHub</td>
+  </tr>
+  <tr>
+    <td>APIReportSubdeviceModel</td>
+  </tr>
+  <tr>
+    <td>APIClearLocalData</td>
+  </tr>
+  <tr>
+    <td>APINotifyConfigChange</td>
+  </tr>
+  <tr>
+    <td>APIGetVoiceFileUrl</td>
+  </tr>
+  <tr>
+    <td>APIDisableSubdeviceJoining</td>
+  </tr>
+  <tr>
+    <td>APIAskOtherHubToken</td>
+  </tr>
+  <tr>
+    <td>APISubdeviceKeepAlive</td>
+  </tr>
+  <tr>
+    <td>APIBindBleDeviceToHub</td>
+  </tr>
+  <tr>
+    <td>APIReportHeartbeat</td>
+  </tr>
+  <tr>
+    <td>APIGetInstallCode</td>
+  </tr>
+  <tr>
+    <td>APIReportPropertyExamination</td>
+  </tr>
+  <tr>
+    <td>APIBindSubdeviceWithSecurityCode</td>
+  </tr>
+  <tr>
+    <td>APIStartHubProvisioning</td>
+  </tr>
+  <tr>
+    <td>APIReportHubLocalInfo</td>
+  </tr>
+  <tr>
+    <td>APIUnsubscribeDeviceResource</td>
+  </tr>
+  <tr>
+    <td>APIReportHubLocalConfig</td>
+  </tr>
+  <tr>
+    <td>APICheckHubConfig</td>
+  </tr>
+  <tr>
+    <td>APIPushHubConfig</td>
+  </tr>
+  <tr>
+    <td>APIQueryDeviceResMultiExtGbk</td>
+  </tr>
+  <tr>
+    <td>APIReportExceptionLog</td>
+  </tr>
+  <tr>
+    <td>APINotifySubdeviceReadResult</td>
+  </tr>
+  <tr>
+    <td>APISubscribeDeviceResource</td>
+  </tr>
+  <tr>
+    <td>APIReportCommandExecResult</td>
+  </tr>
+  <tr>
+    <td>APIGetWeatherData</td>
+  </tr>
+  <tr>
+    <td>APIConnectHub</td>
+  </tr>
+  <tr>
+    <td>APIUnbindHubUp</td>
+  </tr>
+  <tr>
+    <td>APISyncTokenDown</td>
+  </tr>
+  <tr>
+    <td>APIRefreshHubToken</td>
+  </tr>
+  <tr>
+    <td>APIRpcDebugCommand</td>
+  </tr>
+  <tr>
+    <td>APISyncSubdeviceList</td>
+  </tr>
+  <tr>
+    <td>APIRegisterDirectDevice</td>
+  </tr>
+  <tr>
+    <td>APINotifyNoSubdevice</td>
+  </tr>
+  <tr>
+    <td>APIExecuteSubstituteCommand</td>
+  </tr>
+  <tr>
+    <td>APIRunFunctionInstruction</td>
+  </tr>
+  <tr>
+    <td>APIUnbindSubdeviceDown</td>
+  </tr>
+  <tr>
+    <td>APIUnbindSubdeviceUp</td>
+  </tr>
+  <tr>
+    <td>APIEnableSubdeviceJoining</td>
+  </tr>
+  <tr>
+    <td>APIUploadLogFileEvent</td>
+  </tr>
+  <tr>
+    <td>APIGetSubdeviceServiceConfig</td>
+  </tr>
+  <tr>
+    <td>APIQueryDeviceResMultiExt</td>
+  </tr>
+  <tr>
+    <td>APITriggerSubdeviceRead</td>
+  </tr>
+  <tr>
+    <td>APIBindSubdeviceNoAuth</td>
+  </tr>
+  <tr>
+    <td>APISetSubdeviceMixing</td>
+  </tr>
+</table>
+## SceneCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="6">SceneCoordination</td>
+    <td>APICheckLocalSceneSync</td>
+  </tr>
+  <tr>
+    <td>APIDownloadLocalScene</td>
+  </tr>
+  <tr>
+    <td>APIRunScene</td>
+  </tr>
+  <tr>
+    <td>APIDeleteLocalScene</td>
+  </tr>
+  <tr>
+    <td>APIRunLocalScene</td>
+  </tr>
+  <tr>
+    <td>APIDownloadCentralScene</td>
+  </tr>
+</table>
+## PowerSource
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="66">PowerSource</td>
+    <td>CurrentVoltage</td>
+  </tr>
+  <tr>
+    <td>BatReplacementDescription</td>
+  </tr>
+  <tr>
+    <td>BatChargeState</td>
+  </tr>
+  <tr>
+    <td>BatReplaceability</td>
+  </tr>
+  <tr>
+    <td>PowerMode</td>
+  </tr>
+  <tr>
+    <td>BatPercentRemaining</td>
+  </tr>
+  <tr>
+    <td>WiredPresent</td>
+  </tr>
+  <tr>
+    <td>Rechargeable</td>
+  </tr>
+  <tr>
+    <td>StateOfLowBat</td>
+  </tr>
+  <tr>
+    <td>BatReplacementNeeded</td>
+  </tr>
+  <tr>
+    <td>BatQuantity</td>
+  </tr>
+  <tr>
+    <td>CurrentVoltage</td>
+  </tr>
+  <tr>
+    <td>BatReplacementDescription</td>
+  </tr>
+  <tr>
+    <td>BatChargeState</td>
+  </tr>
+  <tr>
+    <td>BatReplaceability</td>
+  </tr>
+  <tr>
+    <td>PowerMode</td>
+  </tr>
+  <tr>
+    <td>BatPercentRemaining</td>
+  </tr>
+  <tr>
+    <td>WiredPresent</td>
+  </tr>
+  <tr>
+    <td>Rechargeable</td>
+  </tr>
+  <tr>
+    <td>StateOfLowBat</td>
+  </tr>
+  <tr>
+    <td>BatReplacementNeeded</td>
+  </tr>
+  <tr>
+    <td>BatQuantity</td>
+  </tr>
+  <tr>
+    <td>CurrentVoltage</td>
+  </tr>
+  <tr>
+    <td>BatReplacementDescription</td>
+  </tr>
+  <tr>
+    <td>BatChargeState</td>
+  </tr>
+  <tr>
+    <td>BatReplaceability</td>
+  </tr>
+  <tr>
+    <td>PowerMode</td>
+  </tr>
+  <tr>
+    <td>BatPercentRemaining</td>
+  </tr>
+  <tr>
+    <td>WiredPresent</td>
+  </tr>
+  <tr>
+    <td>Rechargeable</td>
+  </tr>
+  <tr>
+    <td>StateOfLowBat</td>
+  </tr>
+  <tr>
+    <td>BatReplacementNeeded</td>
+  </tr>
+  <tr>
+    <td>BatQuantity</td>
+  </tr>
+  <tr>
+    <td>CurrentVoltage</td>
+  </tr>
+  <tr>
+    <td>BatReplacementDescription</td>
+  </tr>
+  <tr>
+    <td>BatChargeState</td>
+  </tr>
+  <tr>
+    <td>BatReplaceability</td>
+  </tr>
+  <tr>
+    <td>PowerMode</td>
+  </tr>
+  <tr>
+    <td>BatPercentRemaining</td>
+  </tr>
+  <tr>
+    <td>WiredPresent</td>
+  </tr>
+  <tr>
+    <td>Rechargeable</td>
+  </tr>
+  <tr>
+    <td>StateOfLowBat</td>
+  </tr>
+  <tr>
+    <td>BatReplacementNeeded</td>
+  </tr>
+  <tr>
+    <td>BatQuantity</td>
+  </tr>
+  <tr>
+    <td>CurrentVoltage</td>
+  </tr>
+  <tr>
+    <td>BatReplacementDescription</td>
+  </tr>
+  <tr>
+    <td>BatChargeState</td>
+  </tr>
+  <tr>
+    <td>BatReplaceability</td>
+  </tr>
+  <tr>
+    <td>PowerMode</td>
+  </tr>
+  <tr>
+    <td>BatPercentRemaining</td>
+  </tr>
+  <tr>
+    <td>WiredPresent</td>
+  </tr>
+  <tr>
+    <td>Rechargeable</td>
+  </tr>
+  <tr>
+    <td>StateOfLowBat</td>
+  </tr>
+  <tr>
+    <td>BatReplacementNeeded</td>
+  </tr>
+  <tr>
+    <td>BatQuantity</td>
+  </tr>
+  <tr>
+    <td>CurrentVoltage</td>
+  </tr>
+  <tr>
+    <td>BatReplacementDescription</td>
+  </tr>
+  <tr>
+    <td>BatChargeState</td>
+  </tr>
+  <tr>
+    <td>BatReplaceability</td>
+  </tr>
+  <tr>
+    <td>PowerMode</td>
+  </tr>
+  <tr>
+    <td>BatPercentRemaining</td>
+  </tr>
+  <tr>
+    <td>WiredPresent</td>
+  </tr>
+  <tr>
+    <td>Rechargeable</td>
+  </tr>
+  <tr>
+    <td>StateOfLowBat</td>
+  </tr>
+  <tr>
+    <td>BatReplacementNeeded</td>
+  </tr>
+  <tr>
+    <td>BatQuantity</td>
+  </tr>
+</table>
+## WakeupCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>WakeupCoordination</td>
+    <td>APIGetWakeupUrl</td>
+  </tr>
+</table>
+## CentralHubCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="5">CentralHubCoordination</td>
+    <td>APIInquiryCentralBroker</td>
+  </tr>
+  <tr>
+    <td>APIHubPassthroughDataDown</td>
+  </tr>
+  <tr>
+    <td>APIEnableCentralHubFunction</td>
+  </tr>
+  <tr>
+    <td>APIHubPassthroughDataUp</td>
+  </tr>
+  <tr>
+    <td>APIInquiryCentralEnableState</td>
+  </tr>
+</table>
+## SecurityGuardCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="7">SecurityGuardCoordination</td>
+    <td>APIDeleteSecurityLocal</td>
+  </tr>
+  <tr>
+    <td>APISyncSecurityLanInfo</td>
+  </tr>
+  <tr>
+    <td>APICheckSecurityEnableConsistency</td>
+  </tr>
+  <tr>
+    <td>APIConfirmSecurityAlert</td>
+  </tr>
+  <tr>
+    <td>APICheckSecurityConfigConsistency</td>
+  </tr>
+  <tr>
+    <td>APIEnableSecurity</td>
+  </tr>
+  <tr>
+    <td>APIRepairSecurityEnable</td>
+  </tr>
+</table>
+## OTACoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="6">OTACoordination</td>
+    <td>APIReportOtaDeviceListState</td>
+  </tr>
+  <tr>
+    <td>APIReportOtaResult</td>
+  </tr>
+  <tr>
+    <td>APIReportOtaProgress</td>
+  </tr>
+  <tr>
+    <td>APICancelOtaUpgrade</td>
+  </tr>
+  <tr>
+    <td>APIInquiryFirmwareInfo</td>
+  </tr>
+  <tr>
+    <td>APIUpgradeDeviceFirmware</td>
+  </tr>
+</table>
+## LockCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="4">LockCoordination</td>
+    <td>APILockPassthroughUpstream</td>
+  </tr>
+  <tr>
+    <td>APILockPassthroughDownstream</td>
+  </tr>
+  <tr>
+    <td>APIAssistDeviceCrypto</td>
+  </tr>
+  <tr>
+    <td>APIReportLockExtEvents</td>
+  </tr>
+</table>
+## DeviceAnomalyMonitoring
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="20">DeviceAnomalyMonitoring</td>
+    <td>LoadSafetyManagement</td>
+  </tr>
+  <tr>
+    <td>VoltageSafetyManagement</td>
+  </tr>
+  <tr>
+    <td>CurrentSafetyManagement</td>
+  </tr>
+  <tr>
+    <td>OverCurrentResponseSetting</td>
+  </tr>
+  <tr>
+    <td>TemperatureSafetyManagement</td>
+  </tr>
+  <tr>
+    <td>LoadSafetyManagement</td>
+  </tr>
+  <tr>
+    <td>VoltageSafetyManagement</td>
+  </tr>
+  <tr>
+    <td>CurrentSafetyManagement</td>
+  </tr>
+  <tr>
+    <td>OverCurrentResponseSetting</td>
+  </tr>
+  <tr>
+    <td>TemperatureSafetyManagement</td>
+  </tr>
+  <tr>
+    <td>LoadSafetyManagement</td>
+  </tr>
+  <tr>
+    <td>VoltageSafetyManagement</td>
+  </tr>
+  <tr>
+    <td>CurrentSafetyManagement</td>
+  </tr>
+  <tr>
+    <td>OverCurrentResponseSetting</td>
+  </tr>
+  <tr>
+    <td>TemperatureSafetyManagement</td>
+  </tr>
+  <tr>
+    <td>LoadSafetyManagement</td>
+  </tr>
+  <tr>
+    <td>VoltageSafetyManagement</td>
+  </tr>
+  <tr>
+    <td>CurrentSafetyManagement</td>
+  </tr>
+  <tr>
+    <td>OverCurrentResponseSetting</td>
+  </tr>
+  <tr>
+    <td>TemperatureSafetyManagement</td>
+  </tr>
+</table>
+## GeneralDiagnostics
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="11">GeneralDiagnostics</td>
+    <td>RebootCount</td>
+  </tr>
+  <tr>
+    <td>RebootReason</td>
+  </tr>
+  <tr>
+    <td>UpTime</td>
+  </tr>
+  <tr>
+    <td>NetworkInterfaces</td>
+  </tr>
+  <tr>
+    <td>AntiDeletionSetting</td>
+  </tr>
+  <tr>
+    <td>AntiDeletionLevelSetting</td>
+  </tr>
+  <tr>
+    <td>ActiveHardwareFaults</td>
+  </tr>
+  <tr>
+    <td>DebugInfo</td>
+  </tr>
+  <tr>
+    <td>FreeMemory</td>
+  </tr>
+  <tr>
+    <td>AntiDeletionNotification</td>
+  </tr>
+  <tr>
+    <td>Reboot</td>
+  </tr>
+</table>
+## RingtoneCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">RingtoneCoordination</td>
+    <td>APIDownloadMusic</td>
+  </tr>
+  <tr>
+    <td>APICheckLocalMusicSync</td>
+  </tr>
+  <tr>
+    <td>APIDeleteMusic</td>
+  </tr>
+</table>
+## ZigbeeNetworkDiagnostics
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="52">ZigbeeNetworkDiagnostics</td>
+    <td>RoutingAgingCountThreshold</td>
+  </tr>
+  <tr>
+    <td>PreOperationMode</td>
+  </tr>
+  <tr>
+    <td>NWKRetransmissionCount</td>
+  </tr>
+  <tr>
+    <td>ZigbeeTotalMessageInOneHour</td>
+  </tr>
+  <tr>
+    <td>ZigbeeCoordMac</td>
+  </tr>
+  <tr>
+    <td>APSRetransmissionCount</td>
+  </tr>
+  <tr>
+    <td>ZigbeeResentMessageInOneHour</td>
+  </tr>
+  <tr>
+    <td>PANID</td>
+  </tr>
+  <tr>
+    <td>ZigbeeExtendedPANID</td>
+  </tr>
+  <tr>
+    <td>ZigbeeGeneralDiagnostics</td>
+  </tr>
+  <tr>
+    <td>MessageTransmissionFailureCountThreshold</td>
+  </tr>
+  <tr>
+    <td>EnableNWKACK</td>
+  </tr>
+  <tr>
+    <td>RebootReason</td>
+  </tr>
+  <tr>
+    <td>ZigbeeKeySeqNumber</td>
+  </tr>
+  <tr>
+    <td>LQI</td>
+  </tr>
+  <tr>
+    <td>ZigbeeFrameCounter</td>
+  </tr>
+  <tr>
+    <td>Channel</td>
+  </tr>
+  <tr>
+    <td>CCAMode</td>
+  </tr>
+  <tr>
+    <td>ZigbeeNextHopMac</td>
+  </tr>
+  <tr>
+    <td>EnableAPSACK</td>
+  </tr>
+  <tr>
+    <td>MACRetransmissionCount</td>
+  </tr>
+  <tr>
+    <td>ZigbeeFailedMessageInOneHour</td>
+  </tr>
+  <tr>
+    <td>ZigbeeNeighborTableInfo</td>
+  </tr>
+  <tr>
+    <td>CurOperationMode</td>
+  </tr>
+  <tr>
+    <td>ZigbeeAvgSuccessfulResendCount</td>
+  </tr>
+  <tr>
+    <td>ZigbeeCoordNetworkKey</td>
+  </tr>
+  <tr>
+    <td>RoutingAgingCountThreshold</td>
+  </tr>
+  <tr>
+    <td>PreOperationMode</td>
+  </tr>
+  <tr>
+    <td>NWKRetransmissionCount</td>
+  </tr>
+  <tr>
+    <td>ZigbeeTotalMessageInOneHour</td>
+  </tr>
+  <tr>
+    <td>ZigbeeCoordMac</td>
+  </tr>
+  <tr>
+    <td>APSRetransmissionCount</td>
+  </tr>
+  <tr>
+    <td>ZigbeeResentMessageInOneHour</td>
+  </tr>
+  <tr>
+    <td>PANID</td>
+  </tr>
+  <tr>
+    <td>ZigbeeExtendedPANID</td>
+  </tr>
+  <tr>
+    <td>ZigbeeGeneralDiagnostics</td>
+  </tr>
+  <tr>
+    <td>MessageTransmissionFailureCountThreshold</td>
+  </tr>
+  <tr>
+    <td>EnableNWKACK</td>
+  </tr>
+  <tr>
+    <td>RebootReason</td>
+  </tr>
+  <tr>
+    <td>ZigbeeKeySeqNumber</td>
+  </tr>
+  <tr>
+    <td>LQI</td>
+  </tr>
+  <tr>
+    <td>ZigbeeFrameCounter</td>
+  </tr>
+  <tr>
+    <td>Channel</td>
+  </tr>
+  <tr>
+    <td>CCAMode</td>
+  </tr>
+  <tr>
+    <td>ZigbeeNextHopMac</td>
+  </tr>
+  <tr>
+    <td>EnableAPSACK</td>
+  </tr>
+  <tr>
+    <td>MACRetransmissionCount</td>
+  </tr>
+  <tr>
+    <td>ZigbeeFailedMessageInOneHour</td>
+  </tr>
+  <tr>
+    <td>ZigbeeNeighborTableInfo</td>
+  </tr>
+  <tr>
+    <td>CurOperationMode</td>
+  </tr>
+  <tr>
+    <td>ZigbeeAvgSuccessfulResendCount</td>
+  </tr>
+  <tr>
+    <td>ZigbeeCoordNetworkKey</td>
+  </tr>
+</table>
+## MatterCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="9">MatterCoordination</td>
+    <td>APIPushMatterBindInfo</td>
+  </tr>
+  <tr>
+    <td>APIUnbindMatterDeviceDown</td>
+  </tr>
+  <tr>
+    <td>APIReportDeviceAqaraSpecModel</td>
+  </tr>
+  <tr>
+    <td>APISyncAqaraSpecDataToCloud</td>
+  </tr>
+  <tr>
+    <td>APIGenNextMatterNodeId</td>
+  </tr>
+  <tr>
+    <td>APIGenHomeMatterNoc</td>
+  </tr>
+  <tr>
+    <td>APIStartBindMatterDeviceToHub</td>
+  </tr>
+  <tr>
+    <td>APIUnbindMatterDeviceUP</td>
+  </tr>
+  <tr>
+    <td>APIQueryMatterJoinLimit</td>
+  </tr>
+</table>
+## ScreenCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="5">ScreenCoordination</td>
+    <td>APICloudToPanelDownstream</td>
+  </tr>
+  <tr>
+    <td>APIPanelUpstreamRequest</td>
+  </tr>
+  <tr>
+    <td>APICheckPanelConfigConsistency</td>
+  </tr>
+  <tr>
+    <td>APISyncPositionDown</td>
+  </tr>
+  <tr>
+    <td>APIPushPanelConfig</td>
+  </tr>
+</table>
+## CommLinkCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">CommLinkCoordination</td>
+    <td>APIReportLinkConsuming</td>
+  </tr>
+  <tr>
+    <td>APICheckLinkConsuming</td>
+  </tr>
+</table>
+## IftttCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="15">IftttCoordination</td>
+    <td>APIUnsubscribeIftttResChange</td>
+  </tr>
+  <tr>
+    <td>APIEnableAutomation</td>
+  </tr>
+  <tr>
+    <td>APIDeleteIftttLocal</td>
+  </tr>
+  <tr>
+    <td>APIPushCentralAutomation</td>
+  </tr>
+  <tr>
+    <td>APIRunCloudAction</td>
+  </tr>
+  <tr>
+    <td>APIGetSunriseSunsetByLatLon</td>
+  </tr>
+  <tr>
+    <td>APIEnableCentralAutomation</td>
+  </tr>
+  <tr>
+    <td>APIDeleteCentralAutomation</td>
+  </tr>
+  <tr>
+    <td>APIQueryIftttRes</td>
+  </tr>
+  <tr>
+    <td>APISubscribeIftttResChange</td>
+  </tr>
+  <tr>
+    <td>APIEnableIfttt</td>
+  </tr>
+  <tr>
+    <td>APIQueryHolidayList</td>
+  </tr>
+  <tr>
+    <td>APIPublishResourceChange</td>
+  </tr>
+  <tr>
+    <td>APICheckLocalIftttSync</td>
+  </tr>
+  <tr>
+    <td>APIDownloadIftttLocal</td>
+  </tr>
+</table>
+## NetworkManagement
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">NetworkManagement</td>
+    <td>LanAccessAddress</td>
+  </tr>
+  <tr>
+    <td>RemoteProxyAccessEnable</td>
+  </tr>
+  <tr>
+    <td>InternetAccessAddress</td>
+  </tr>
+</table>
+## Identify
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="12">Identify</td>
+    <td>IdentifyType</td>
+  </tr>
+  <tr>
+    <td>ReverseIdentify</td>
+  </tr>
+  <tr>
+    <td>IdentifyTime</td>
+  </tr>
+  <tr>
+    <td>Identify</td>
+  </tr>
+  <tr>
+    <td>IdentifyType</td>
+  </tr>
+  <tr>
+    <td>ReverseIdentify</td>
+  </tr>
+  <tr>
+    <td>IdentifyTime</td>
+  </tr>
+  <tr>
+    <td>Identify</td>
+  </tr>
+  <tr>
+    <td>IdentifyType</td>
+  </tr>
+  <tr>
+    <td>ReverseIdentify</td>
+  </tr>
+  <tr>
+    <td>IdentifyTime</td>
+  </tr>
+  <tr>
+    <td>Identify</td>
+  </tr>
+</table>
+## LightBoxCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>LightBoxCoordination</td>
+    <td>APIPushLightBoxConfig</td>
+  </tr>
+</table>
+## IRCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="11">IRCoordination</td>
+    <td>APIGetIrCode</td>
+  </tr>
+  <tr>
+    <td>APISaveLearnedIrKey</td>
+  </tr>
+  <tr>
+    <td>APIQueryIrLearningCode</td>
+  </tr>
+  <tr>
+    <td>APIStartIrCodeLearning</td>
+  </tr>
+  <tr>
+    <td>APIReportIrLearningResult</td>
+  </tr>
+  <tr>
+    <td>APIGetIrCodeTarget</td>
+  </tr>
+  <tr>
+    <td>APIQueryIrCodeLibrary</td>
+  </tr>
+  <tr>
+    <td>APIGetIrCodeDownloadUrl</td>
+  </tr>
+  <tr>
+    <td>APIDeleteLearnedIrCode</td>
+  </tr>
+  <tr>
+    <td>APISendIrButtonPress</td>
+  </tr>
+  <tr>
+    <td>APISyncIrLearningCodes</td>
+  </tr>
+</table>
+## NetworkCommissioning
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="25">NetworkCommissioning</td>
+    <td>AddOrUpdateZigbeeNetwork</td>
+  </tr>
+  <tr>
+    <td>HomeStationCredentials</td>
+  </tr>
+  <tr>
+    <td>ConfigStaticIPAddr</td>
+  </tr>
+  <tr>
+    <td>WiFiChannel</td>
+  </tr>
+  <tr>
+    <td>ChildDeviceProvisioningState</td>
+  </tr>
+  <tr>
+    <td>ZigbeeDiagnostics</td>
+  </tr>
+  <tr>
+    <td>ZigbeeAuthRandcode</td>
+  </tr>
+  <tr>
+    <td>ZigbeeAuthRandcodeResponse</td>
+  </tr>
+  <tr>
+    <td>WiFiDiagnostics</td>
+  </tr>
+  <tr>
+    <td>AddOrUpdateZigbeeNetworkResponse</td>
+  </tr>
+  <tr>
+    <td>MagicPairKeychain</td>
+  </tr>
+  <tr>
+    <td>ConnectToHomeStationResponse</td>
+  </tr>
+  <tr>
+    <td>SupportedNetwork</td>
+  </tr>
+  <tr>
+    <td>AddOrUpdateThreadNetworkResponse</td>
+  </tr>
+  <tr>
+    <td>TriggerZigbeeNetworkInfoUpload</td>
+  </tr>
+  <tr>
+    <td>SlaveAddress</td>
+  </tr>
+  <tr>
+    <td>ThreadDiagnostics</td>
+  </tr>
+  <tr>
+    <td>ScanWiFiNetworks</td>
+  </tr>
+  <tr>
+    <td>AddOrUpdateThreadNetwork</td>
+  </tr>
+  <tr>
+    <td>ScanWiFiNetworksResponse</td>
+  </tr>
+  <tr>
+    <td>AddOrUpdateWiFiNetwork</td>
+  </tr>
+  <tr>
+    <td>AddOrUpdateWiFiNetworkResponse</td>
+  </tr>
+  <tr>
+    <td>ConnectToHomeStation</td>
+  </tr>
+  <tr>
+    <td>AuthenticationStatus</td>
+  </tr>
+  <tr>
+    <td>WiFiRSSI</td>
+  </tr>
+</table>
+## ConfigurationCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="8">ConfigurationCoordination</td>
+    <td>APISyncConfiguration</td>
+  </tr>
+  <tr>
+    <td>APIWriteFunctionResource</td>
+  </tr>
+  <tr>
+    <td>APIPushSubscribedResource</td>
+  </tr>
+  <tr>
+    <td>APIReportConfiguration</td>
+  </tr>
+  <tr>
+    <td>APIReportThingModelDetail</td>
+  </tr>
+  <tr>
+    <td>APIGetConfiguration</td>
+  </tr>
+  <tr>
+    <td>APIDeleteConfiguration</td>
+  </tr>
+  <tr>
+    <td>APIPushConfiguration</td>
+  </tr>
+</table>
+## CloudStorageCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>CloudStorageCoordination</td>
+    <td>APIRequestCloudStorageResource</td>
+  </tr>
+</table>
+## StudioCoordination
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="11">StudioCoordination</td>
+    <td>APIGetStudioBackupUploadUrl</td>
+  </tr>
+  <tr>
+    <td>APILoginByAuthCode</td>
+  </tr>
+  <tr>
+    <td>APIGetAuthCode</td>
+  </tr>
+  <tr>
+    <td>APIDeleteStudioBackup</td>
+  </tr>
+  <tr>
+    <td>APIGetPositionByDeviceId</td>
+  </tr>
+  <tr>
+    <td>APIGetStudioBackupInfo</td>
+  </tr>
+  <tr>
+    <td>APIGetUserDeviceList</td>
+  </tr>
+  <tr>
+    <td>APILoginByGuardCode</td>
+  </tr>
+  <tr>
+    <td>APIReportStudioInfo</td>
+  </tr>
+  <tr>
+    <td>APIConfirmStudioBackupSuccess</td>
+  </tr>
+  <tr>
+    <td>APIGetProxyServerInfo</td>
+  </tr>
+</table>
+## Temperature
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">Temperature</td>
+    <td>CurrentTemperature</td>
+  </tr>
+  <tr>
+    <td>CurrentTemperature</td>
+  </tr>
+</table>
+## TemperatureControl
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="4">TemperatureControl</td>
+    <td>SetTemperatureLevel</td>
+  </tr>
+  <tr>
+    <td>SetTemperature</td>
+  </tr>
+  <tr>
+    <td>ChangeTemperatureLevel</td>
+  </tr>
+  <tr>
+    <td>ChangeTemperature</td>
+  </tr>
+</table>
+## PackageRecognition
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>PackageRecognition</td>
+    <td>PackageRecognitionReport</td>
+  </tr>
+</table>
+## FaceRecognition
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>FaceRecognition</td>
+    <td>FaceIDReport</td>
+  </tr>
+</table>
+## HumanPresence
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="5">HumanPresence</td>
+    <td>HoldTime</td>
+  </tr>
+  <tr>
+    <td>ResetPresence</td>
+  </tr>
+  <tr>
+    <td>ActivityDetected</td>
+  </tr>
+  <tr>
+    <td>PresenceConfiguration</td>
+  </tr>
+  <tr>
+    <td>Presence</td>
+  </tr>
+</table>
+## HumanRecognition
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>HumanRecognition</td>
+    <td>HumanRecognitionReport</td>
+  </tr>
+</table>
+## AirQuality
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="6">AirQuality</td>
+    <td>VOCDensity</td>
+  </tr>
+  <tr>
+    <td>AirQuality</td>
+  </tr>
+  <tr>
+    <td>VOCQuality</td>
+  </tr>
+  <tr>
+    <td>VOCDensity</td>
+  </tr>
+  <tr>
+    <td>AirQuality</td>
+  </tr>
+  <tr>
+    <td>VOCQuality</td>
+  </tr>
+</table>
+## AttitudeDetection
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>AttitudeDetection</td>
+    <td>AttitudeDetected</td>
+  </tr>
+</table>
+## Lifter
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="16">Lifter</td>
+    <td>GoToMaxPositionPercentage</td>
+  </tr>
+  <tr>
+    <td>AutoControl</td>
+  </tr>
+  <tr>
+    <td>GoToPositionPercentage</td>
+  </tr>
+  <tr>
+    <td>GoToMinPositionPercentage</td>
+  </tr>
+  <tr>
+    <td>TripTime</td>
+  </tr>
+  <tr>
+    <td>TargetPositionPercentage</td>
+  </tr>
+  <tr>
+    <td>CurrentPositionPercentage</td>
+  </tr>
+  <tr>
+    <td>StopMotion</td>
+  </tr>
+  <tr>
+    <td>GoToMaxPositionPercentage</td>
+  </tr>
+  <tr>
+    <td>AutoControl</td>
+  </tr>
+  <tr>
+    <td>GoToPositionPercentage</td>
+  </tr>
+  <tr>
+    <td>GoToMinPositionPercentage</td>
+  </tr>
+  <tr>
+    <td>TripTime</td>
+  </tr>
+  <tr>
+    <td>TargetPositionPercentage</td>
+  </tr>
+  <tr>
+    <td>CurrentPositionPercentage</td>
+  </tr>
+  <tr>
+    <td>StopMotion</td>
+  </tr>
+</table>
+## Binding
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="6">Binding</td>
+    <td>Binding</td>
+  </tr>
+  <tr>
+    <td>SupportedBindingDeviceTypes</td>
+  </tr>
+  <tr>
+    <td>SupportedBindingFunctions</td>
+  </tr>
+  <tr>
+    <td>Binding</td>
+  </tr>
+  <tr>
+    <td>SupportedBindingDeviceTypes</td>
+  </tr>
+  <tr>
+    <td>SupportedBindingFunctions</td>
+  </tr>
+</table>
+## PetFeeder
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>PetFeeder</td>
+    <td>Feed</td>
+  </tr>
+</table>
+## Button
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="4">Button</td>
+    <td>LocalControlDisabled</td>
+  </tr>
+  <tr>
+    <td>ButtonEvent</td>
+  </tr>
+  <tr>
+    <td>LocalControlDisabled</td>
+  </tr>
+  <tr>
+    <td>ButtonEvent</td>
+  </tr>
+</table>
+## Output
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="168">Output</td>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>OutputSwitchingType</td>
+  </tr>
+  <tr>
+    <td>OnOff</td>
+  </tr>
+  <tr>
+    <td>OutputInterlockFlag</td>
+  </tr>
+  <tr>
+    <td>OutputNodeMode</td>
+  </tr>
+  <tr>
+    <td>Off</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+  <tr>
+    <td>On</td>
+  </tr>
+</table>
+## IRControl
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">IRControl</td>
+    <td>SendIRCode</td>
+  </tr>
+  <tr>
+    <td>IRKey</td>
+  </tr>
+  <tr>
+    <td>IRType</td>
+  </tr>
+</table>
+## HeaterCooler
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="108">HeaterCooler</td>
+    <td>CoolingTemperature</td>
+  </tr>
+  <tr>
+    <td>CurrentHumidity</td>
+  </tr>
+  <tr>
+    <td>ClearActivePreset</td>
+  </tr>
+  <tr>
+    <td>CurrentTemperature</td>
+  </tr>
+  <tr>
+    <td>Preset</td>
+  </tr>
+  <tr>
+    <td>SetActivePreset</td>
+  </tr>
+  <tr>
+    <td>SetBack</td>
+  </tr>
+  <tr>
+    <td>PresetTypes</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerMode</td>
+  </tr>
+  <tr>
+    <td>ActivePresetHandle</td>
+  </tr>
+  <tr>
+    <td>HeatingTemperature</td>
+  </tr>
+  <tr>
+    <td>NumberOfPresets</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerButtonEvent</td>
+  </tr>
+  <tr>
+    <td>MinHeatCoolDeadBand</td>
+  </tr>
+  <tr>
+    <td>CurrentTemperatureCalibration</td>
+  </tr>
+  <tr>
+    <td>TemperatureUIDisplayMode</td>
+  </tr>
+  <tr>
+    <td>AntiFreezeTemperature</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerPolarity</td>
+  </tr>
+  <tr>
+    <td>CoolingTemperature</td>
+  </tr>
+  <tr>
+    <td>CurrentHumidity</td>
+  </tr>
+  <tr>
+    <td>ClearActivePreset</td>
+  </tr>
+  <tr>
+    <td>CurrentTemperature</td>
+  </tr>
+  <tr>
+    <td>Preset</td>
+  </tr>
+  <tr>
+    <td>SetActivePreset</td>
+  </tr>
+  <tr>
+    <td>SetBack</td>
+  </tr>
+  <tr>
+    <td>PresetTypes</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerMode</td>
+  </tr>
+  <tr>
+    <td>ActivePresetHandle</td>
+  </tr>
+  <tr>
+    <td>HeatingTemperature</td>
+  </tr>
+  <tr>
+    <td>NumberOfPresets</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerButtonEvent</td>
+  </tr>
+  <tr>
+    <td>MinHeatCoolDeadBand</td>
+  </tr>
+  <tr>
+    <td>CurrentTemperatureCalibration</td>
+  </tr>
+  <tr>
+    <td>TemperatureUIDisplayMode</td>
+  </tr>
+  <tr>
+    <td>AntiFreezeTemperature</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerPolarity</td>
+  </tr>
+  <tr>
+    <td>CoolingTemperature</td>
+  </tr>
+  <tr>
+    <td>CurrentHumidity</td>
+  </tr>
+  <tr>
+    <td>ClearActivePreset</td>
+  </tr>
+  <tr>
+    <td>CurrentTemperature</td>
+  </tr>
+  <tr>
+    <td>Preset</td>
+  </tr>
+  <tr>
+    <td>SetActivePreset</td>
+  </tr>
+  <tr>
+    <td>SetBack</td>
+  </tr>
+  <tr>
+    <td>PresetTypes</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerMode</td>
+  </tr>
+  <tr>
+    <td>ActivePresetHandle</td>
+  </tr>
+  <tr>
+    <td>HeatingTemperature</td>
+  </tr>
+  <tr>
+    <td>NumberOfPresets</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerButtonEvent</td>
+  </tr>
+  <tr>
+    <td>MinHeatCoolDeadBand</td>
+  </tr>
+  <tr>
+    <td>CurrentTemperatureCalibration</td>
+  </tr>
+  <tr>
+    <td>TemperatureUIDisplayMode</td>
+  </tr>
+  <tr>
+    <td>AntiFreezeTemperature</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerPolarity</td>
+  </tr>
+  <tr>
+    <td>CoolingTemperature</td>
+  </tr>
+  <tr>
+    <td>CurrentHumidity</td>
+  </tr>
+  <tr>
+    <td>ClearActivePreset</td>
+  </tr>
+  <tr>
+    <td>CurrentTemperature</td>
+  </tr>
+  <tr>
+    <td>Preset</td>
+  </tr>
+  <tr>
+    <td>SetActivePreset</td>
+  </tr>
+  <tr>
+    <td>SetBack</td>
+  </tr>
+  <tr>
+    <td>PresetTypes</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerMode</td>
+  </tr>
+  <tr>
+    <td>ActivePresetHandle</td>
+  </tr>
+  <tr>
+    <td>HeatingTemperature</td>
+  </tr>
+  <tr>
+    <td>NumberOfPresets</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerButtonEvent</td>
+  </tr>
+  <tr>
+    <td>MinHeatCoolDeadBand</td>
+  </tr>
+  <tr>
+    <td>CurrentTemperatureCalibration</td>
+  </tr>
+  <tr>
+    <td>TemperatureUIDisplayMode</td>
+  </tr>
+  <tr>
+    <td>AntiFreezeTemperature</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerPolarity</td>
+  </tr>
+  <tr>
+    <td>CoolingTemperature</td>
+  </tr>
+  <tr>
+    <td>CurrentHumidity</td>
+  </tr>
+  <tr>
+    <td>ClearActivePreset</td>
+  </tr>
+  <tr>
+    <td>CurrentTemperature</td>
+  </tr>
+  <tr>
+    <td>Preset</td>
+  </tr>
+  <tr>
+    <td>SetActivePreset</td>
+  </tr>
+  <tr>
+    <td>SetBack</td>
+  </tr>
+  <tr>
+    <td>PresetTypes</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerMode</td>
+  </tr>
+  <tr>
+    <td>ActivePresetHandle</td>
+  </tr>
+  <tr>
+    <td>HeatingTemperature</td>
+  </tr>
+  <tr>
+    <td>NumberOfPresets</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerButtonEvent</td>
+  </tr>
+  <tr>
+    <td>MinHeatCoolDeadBand</td>
+  </tr>
+  <tr>
+    <td>CurrentTemperatureCalibration</td>
+  </tr>
+  <tr>
+    <td>TemperatureUIDisplayMode</td>
+  </tr>
+  <tr>
+    <td>AntiFreezeTemperature</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerPolarity</td>
+  </tr>
+  <tr>
+    <td>CoolingTemperature</td>
+  </tr>
+  <tr>
+    <td>CurrentHumidity</td>
+  </tr>
+  <tr>
+    <td>ClearActivePreset</td>
+  </tr>
+  <tr>
+    <td>CurrentTemperature</td>
+  </tr>
+  <tr>
+    <td>Preset</td>
+  </tr>
+  <tr>
+    <td>SetActivePreset</td>
+  </tr>
+  <tr>
+    <td>SetBack</td>
+  </tr>
+  <tr>
+    <td>PresetTypes</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerMode</td>
+  </tr>
+  <tr>
+    <td>ActivePresetHandle</td>
+  </tr>
+  <tr>
+    <td>HeatingTemperature</td>
+  </tr>
+  <tr>
+    <td>NumberOfPresets</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerButtonEvent</td>
+  </tr>
+  <tr>
+    <td>MinHeatCoolDeadBand</td>
+  </tr>
+  <tr>
+    <td>CurrentTemperatureCalibration</td>
+  </tr>
+  <tr>
+    <td>TemperatureUIDisplayMode</td>
+  </tr>
+  <tr>
+    <td>AntiFreezeTemperature</td>
+  </tr>
+  <tr>
+    <td>HeaterCoolerPolarity</td>
+  </tr>
+</table>
+## Vibration
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="20">Vibration</td>
+    <td>TiltAngleDeviation</td>
+  </tr>
+  <tr>
+    <td>StationaryState</td>
+  </tr>
+  <tr>
+    <td>InitialTiltAngle</td>
+  </tr>
+  <tr>
+    <td>EventReportInterval</td>
+  </tr>
+  <tr>
+    <td>ObjectOrientationEnable</td>
+  </tr>
+  <tr>
+    <td>StationaryTiltAngle</td>
+  </tr>
+  <tr>
+    <td>PeakTiltAngle</td>
+  </tr>
+  <tr>
+    <td>ObjectMotionDetectionEnable</td>
+  </tr>
+  <tr>
+    <td>ObjectOrientationState</td>
+  </tr>
+  <tr>
+    <td>VibrationEvent</td>
+  </tr>
+  <tr>
+    <td>TiltAngleDeviation</td>
+  </tr>
+  <tr>
+    <td>StationaryState</td>
+  </tr>
+  <tr>
+    <td>InitialTiltAngle</td>
+  </tr>
+  <tr>
+    <td>EventReportInterval</td>
+  </tr>
+  <tr>
+    <td>ObjectOrientationEnable</td>
+  </tr>
+  <tr>
+    <td>StationaryTiltAngle</td>
+  </tr>
+  <tr>
+    <td>PeakTiltAngle</td>
+  </tr>
+  <tr>
+    <td>ObjectMotionDetectionEnable</td>
+  </tr>
+  <tr>
+    <td>ObjectOrientationState</td>
+  </tr>
+  <tr>
+    <td>VibrationEvent</td>
+  </tr>
+</table>
+## Cube
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="8">Cube</td>
+    <td>CubeWorkModeSetting</td>
+  </tr>
+  <tr>
+    <td>TopFace</td>
+  </tr>
+  <tr>
+    <td>CubeEvent</td>
+  </tr>
+  <tr>
+    <td>TopFaceChanged</td>
+  </tr>
+  <tr>
+    <td>CubeWorkModeSetting</td>
+  </tr>
+  <tr>
+    <td>TopFace</td>
+  </tr>
+  <tr>
+    <td>CubeEvent</td>
+  </tr>
+  <tr>
+    <td>TopFaceChanged</td>
+  </tr>
+</table>
+## Knob
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="14">Knob</td>
+    <td>HoldRotationInterval</td>
+  </tr>
+  <tr>
+    <td>RotationEvent</td>
+  </tr>
+  <tr>
+    <td>RotationDirection</td>
+  </tr>
+  <tr>
+    <td>InvertedRotationAngle</td>
+  </tr>
+  <tr>
+    <td>RotationAngle</td>
+  </tr>
+  <tr>
+    <td>RotationInterval</td>
+  </tr>
+  <tr>
+    <td>HoldRotationAngle</td>
+  </tr>
+  <tr>
+    <td>HoldRotationInterval</td>
+  </tr>
+  <tr>
+    <td>RotationEvent</td>
+  </tr>
+  <tr>
+    <td>RotationDirection</td>
+  </tr>
+  <tr>
+    <td>InvertedRotationAngle</td>
+  </tr>
+  <tr>
+    <td>RotationAngle</td>
+  </tr>
+  <tr>
+    <td>RotationInterval</td>
+  </tr>
+  <tr>
+    <td>HoldRotationAngle</td>
+  </tr>
+</table>
+## BinaryOutputObject
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>BinaryOutputObject</td>
+    <td>BinaryOutputPV</td>
+  </tr>
+</table>
+## AnalogInputObject
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>AnalogInputObject</td>
+    <td>AnalogInputPV</td>
+  </tr>
+</table>
+## MediaPlayback
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="80">MediaPlayback</td>
+    <td>Pause</td>
+  </tr>
+  <tr>
+    <td>TargetPlaybackState</td>
+  </tr>
+  <tr>
+    <td>Stop</td>
+  </tr>
+  <tr>
+    <td>MediaInformation</td>
+  </tr>
+  <tr>
+    <td>PlaybackDuration</td>
+  </tr>
+  <tr>
+    <td>MediaPlaybackCommand</td>
+  </tr>
+  <tr>
+    <td>CurrentPlaybackState</td>
+  </tr>
+  <tr>
+    <td>PlaybackMode</td>
+  </tr>
+  <tr>
+    <td>Rewind</td>
+  </tr>
+  <tr>
+    <td>SampledPosition</td>
+  </tr>
+  <tr>
+    <td>Play</td>
+  </tr>
+  <tr>
+    <td>StartOver</td>
+  </tr>
+  <tr>
+    <td>PlaySpecificList</td>
+  </tr>
+  <tr>
+    <td>LoginState</td>
+  </tr>
+  <tr>
+    <td>FastForward</td>
+  </tr>
+  <tr>
+    <td>Next</td>
+  </tr>
+  <tr>
+    <td>Previous</td>
+  </tr>
+  <tr>
+    <td>PlaybackSampledPosition</td>
+  </tr>
+  <tr>
+    <td>SelectedMediaOutputSource</td>
+  </tr>
+  <tr>
+    <td>SelectedSource</td>
+  </tr>
+  <tr>
+    <td>Pause</td>
+  </tr>
+  <tr>
+    <td>TargetPlaybackState</td>
+  </tr>
+  <tr>
+    <td>Stop</td>
+  </tr>
+  <tr>
+    <td>MediaInformation</td>
+  </tr>
+  <tr>
+    <td>PlaybackDuration</td>
+  </tr>
+  <tr>
+    <td>MediaPlaybackCommand</td>
+  </tr>
+  <tr>
+    <td>CurrentPlaybackState</td>
+  </tr>
+  <tr>
+    <td>PlaybackMode</td>
+  </tr>
+  <tr>
+    <td>Rewind</td>
+  </tr>
+  <tr>
+    <td>SampledPosition</td>
+  </tr>
+  <tr>
+    <td>Play</td>
+  </tr>
+  <tr>
+    <td>StartOver</td>
+  </tr>
+  <tr>
+    <td>PlaySpecificList</td>
+  </tr>
+  <tr>
+    <td>LoginState</td>
+  </tr>
+  <tr>
+    <td>FastForward</td>
+  </tr>
+  <tr>
+    <td>Next</td>
+  </tr>
+  <tr>
+    <td>Previous</td>
+  </tr>
+  <tr>
+    <td>PlaybackSampledPosition</td>
+  </tr>
+  <tr>
+    <td>SelectedMediaOutputSource</td>
+  </tr>
+  <tr>
+    <td>SelectedSource</td>
+  </tr>
+  <tr>
+    <td>Pause</td>
+  </tr>
+  <tr>
+    <td>TargetPlaybackState</td>
+  </tr>
+  <tr>
+    <td>Stop</td>
+  </tr>
+  <tr>
+    <td>MediaInformation</td>
+  </tr>
+  <tr>
+    <td>PlaybackDuration</td>
+  </tr>
+  <tr>
+    <td>MediaPlaybackCommand</td>
+  </tr>
+  <tr>
+    <td>CurrentPlaybackState</td>
+  </tr>
+  <tr>
+    <td>PlaybackMode</td>
+  </tr>
+  <tr>
+    <td>Rewind</td>
+  </tr>
+  <tr>
+    <td>SampledPosition</td>
+  </tr>
+  <tr>
+    <td>Play</td>
+  </tr>
+  <tr>
+    <td>StartOver</td>
+  </tr>
+  <tr>
+    <td>PlaySpecificList</td>
+  </tr>
+  <tr>
+    <td>LoginState</td>
+  </tr>
+  <tr>
+    <td>FastForward</td>
+  </tr>
+  <tr>
+    <td>Next</td>
+  </tr>
+  <tr>
+    <td>Previous</td>
+  </tr>
+  <tr>
+    <td>PlaybackSampledPosition</td>
+  </tr>
+  <tr>
+    <td>SelectedMediaOutputSource</td>
+  </tr>
+  <tr>
+    <td>SelectedSource</td>
+  </tr>
+  <tr>
+    <td>Pause</td>
+  </tr>
+  <tr>
+    <td>TargetPlaybackState</td>
+  </tr>
+  <tr>
+    <td>Stop</td>
+  </tr>
+  <tr>
+    <td>MediaInformation</td>
+  </tr>
+  <tr>
+    <td>PlaybackDuration</td>
+  </tr>
+  <tr>
+    <td>MediaPlaybackCommand</td>
+  </tr>
+  <tr>
+    <td>CurrentPlaybackState</td>
+  </tr>
+  <tr>
+    <td>PlaybackMode</td>
+  </tr>
+  <tr>
+    <td>Rewind</td>
+  </tr>
+  <tr>
+    <td>SampledPosition</td>
+  </tr>
+  <tr>
+    <td>Play</td>
+  </tr>
+  <tr>
+    <td>StartOver</td>
+  </tr>
+  <tr>
+    <td>PlaySpecificList</td>
+  </tr>
+  <tr>
+    <td>LoginState</td>
+  </tr>
+  <tr>
+    <td>FastForward</td>
+  </tr>
+  <tr>
+    <td>Next</td>
+  </tr>
+  <tr>
+    <td>Previous</td>
+  </tr>
+  <tr>
+    <td>PlaybackSampledPosition</td>
+  </tr>
+  <tr>
+    <td>SelectedMediaOutputSource</td>
+  </tr>
+  <tr>
+    <td>SelectedSource</td>
+  </tr>
+</table>
+## MediaInput
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="6">MediaInput</td>
+    <td>SelectInput</td>
+  </tr>
+  <tr>
+    <td>MediaInput</td>
+  </tr>
+  <tr>
+    <td>SelectInput</td>
+  </tr>
+  <tr>
+    <td>MediaInput</td>
+  </tr>
+  <tr>
+    <td>SelectInput</td>
+  </tr>
+  <tr>
+    <td>MediaInput</td>
+  </tr>
+</table>
+## FlameDetection
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>FlameDetection</td>
+    <td>FlameDetected</td>
+  </tr>
+</table>
+## OperationalState
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="24">OperationalState</td>
+    <td>Pause</td>
+  </tr>
+  <tr>
+    <td>OperationalError</td>
+  </tr>
+  <tr>
+    <td>Start</td>
+  </tr>
+  <tr>
+    <td>Stop</td>
+  </tr>
+  <tr>
+    <td>OperationalState</td>
+  </tr>
+  <tr>
+    <td>Resume</td>
+  </tr>
+  <tr>
+    <td>Pause</td>
+  </tr>
+  <tr>
+    <td>OperationalError</td>
+  </tr>
+  <tr>
+    <td>Start</td>
+  </tr>
+  <tr>
+    <td>Stop</td>
+  </tr>
+  <tr>
+    <td>OperationalState</td>
+  </tr>
+  <tr>
+    <td>Resume</td>
+  </tr>
+  <tr>
+    <td>Pause</td>
+  </tr>
+  <tr>
+    <td>OperationalError</td>
+  </tr>
+  <tr>
+    <td>Start</td>
+  </tr>
+  <tr>
+    <td>Stop</td>
+  </tr>
+  <tr>
+    <td>OperationalState</td>
+  </tr>
+  <tr>
+    <td>Resume</td>
+  </tr>
+  <tr>
+    <td>Pause</td>
+  </tr>
+  <tr>
+    <td>OperationalError</td>
+  </tr>
+  <tr>
+    <td>Start</td>
+  </tr>
+  <tr>
+    <td>Stop</td>
+  </tr>
+  <tr>
+    <td>OperationalState</td>
+  </tr>
+  <tr>
+    <td>Resume</td>
+  </tr>
+</table>
+## RefrigeratorState
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>RefrigeratorState</td>
+    <td>RefrigeratorAlarm</td>
+  </tr>
+</table>
+## Mode
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="12">Mode</td>
+    <td>CurrentMode</td>
+  </tr>
+  <tr>
+    <td>ChangeToMode</td>
+  </tr>
+  <tr>
+    <td>ChangeToModeResponse</td>
+  </tr>
+  <tr>
+    <td>CurrentMode</td>
+  </tr>
+  <tr>
+    <td>ChangeToMode</td>
+  </tr>
+  <tr>
+    <td>ChangeToModeResponse</td>
+  </tr>
+  <tr>
+    <td>CurrentMode</td>
+  </tr>
+  <tr>
+    <td>ChangeToMode</td>
+  </tr>
+  <tr>
+    <td>ChangeToModeResponse</td>
+  </tr>
+  <tr>
+    <td>CurrentMode</td>
+  </tr>
+  <tr>
+    <td>ChangeToMode</td>
+  </tr>
+  <tr>
+    <td>ChangeToModeResponse</td>
+  </tr>
+</table>
+## BridgedConfiguration
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>BridgedConfiguration</td>
+    <td>BridgeDeviceID</td>
+  </tr>
+</table>
+## MultiStateInputObject
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>MultiStateInputObject</td>
+    <td>MultiStateInputPV</td>
+  </tr>
+</table>
+## MARSConfiguration
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">MARSConfiguration</td>
+    <td>PulseDuration</td>
+  </tr>
+  <tr>
+    <td>LoadType</td>
+  </tr>
+  <tr>
+    <td>LinkageDeviceList</td>
+  </tr>
+</table>
+## ScreenUserInterface
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="7">ScreenUserInterface</td>
+    <td>ThemeID</td>
+  </tr>
+  <tr>
+    <td>Allpages</td>
+  </tr>
+  <tr>
+    <td>MaxPageNum</td>
+  </tr>
+  <tr>
+    <td>ScreenWidth</td>
+  </tr>
+  <tr>
+    <td>DataVersion</td>
+  </tr>
+  <tr>
+    <td>ThemeVersion</td>
+  </tr>
+  <tr>
+    <td>ScreenHeight</td>
+  </tr>
+</table>
+## CustomizedConfiguration
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">CustomizedConfiguration</td>
+    <td>EnableIndicator</td>
+  </tr>
+  <tr>
+    <td>StartUpOnOff</td>
+  </tr>
+</table>
+## HEPAFilterMonitoring
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">HEPAFilterMonitoring</td>
+    <td>Condition</td>
+  </tr>
+  <tr>
+    <td>ChangeIndication</td>
+  </tr>
+  <tr>
+    <td>ResetCondition</td>
+  </tr>
+</table>
+## ActivatedCarbonFilterMonitoring
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">ActivatedCarbonFilterMonitoring</td>
+    <td>Condition</td>
+  </tr>
+  <tr>
+    <td>ChangeIndication</td>
+  </tr>
+  <tr>
+    <td>ResetCondition</td>
+  </tr>
+</table>
+## FanControl
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="35">FanControl</td>
+    <td>WindSetting</td>
+  </tr>
+  <tr>
+    <td>AirflowDirection</td>
+  </tr>
+  <tr>
+    <td>FanMode</td>
+  </tr>
+  <tr>
+    <td>FanSpeed</td>
+  </tr>
+  <tr>
+    <td>RockSetting</td>
+  </tr>
+  <tr>
+    <td>WindSetting</td>
+  </tr>
+  <tr>
+    <td>AirflowDirection</td>
+  </tr>
+  <tr>
+    <td>FanMode</td>
+  </tr>
+  <tr>
+    <td>FanSpeed</td>
+  </tr>
+  <tr>
+    <td>RockSetting</td>
+  </tr>
+  <tr>
+    <td>WindSetting</td>
+  </tr>
+  <tr>
+    <td>AirflowDirection</td>
+  </tr>
+  <tr>
+    <td>FanMode</td>
+  </tr>
+  <tr>
+    <td>FanSpeed</td>
+  </tr>
+  <tr>
+    <td>RockSetting</td>
+  </tr>
+  <tr>
+    <td>WindSetting</td>
+  </tr>
+  <tr>
+    <td>AirflowDirection</td>
+  </tr>
+  <tr>
+    <td>FanMode</td>
+  </tr>
+  <tr>
+    <td>FanSpeed</td>
+  </tr>
+  <tr>
+    <td>RockSetting</td>
+  </tr>
+  <tr>
+    <td>WindSetting</td>
+  </tr>
+  <tr>
+    <td>AirflowDirection</td>
+  </tr>
+  <tr>
+    <td>FanMode</td>
+  </tr>
+  <tr>
+    <td>FanSpeed</td>
+  </tr>
+  <tr>
+    <td>RockSetting</td>
+  </tr>
+  <tr>
+    <td>WindSetting</td>
+  </tr>
+  <tr>
+    <td>AirflowDirection</td>
+  </tr>
+  <tr>
+    <td>FanMode</td>
+  </tr>
+  <tr>
+    <td>FanSpeed</td>
+  </tr>
+  <tr>
+    <td>RockSetting</td>
+  </tr>
+  <tr>
+    <td>WindSetting</td>
+  </tr>
+  <tr>
+    <td>AirflowDirection</td>
+  </tr>
+  <tr>
+    <td>FanMode</td>
+  </tr>
+  <tr>
+    <td>FanSpeed</td>
+  </tr>
+  <tr>
+    <td>RockSetting</td>
+  </tr>
+</table>
+## HeartMonitoring
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>HeartMonitoring</td>
+    <td>HeartRate</td>
+  </tr>
+</table>
+## Pressure
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">Pressure</td>
+    <td>CurrentPressure</td>
+  </tr>
+  <tr>
+    <td>CurrentPressure</td>
+  </tr>
+</table>
+## MultiStateOutputObject
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>MultiStateOutputObject</td>
+    <td>MultiStateOutputPV</td>
+  </tr>
+</table>
+## Contact
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">Contact</td>
+    <td>ContactSensorState</td>
+  </tr>
+  <tr>
+    <td>OpenAngle</td>
+  </tr>
+</table>
+## Doorbell
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">Doorbell</td>
+    <td>ButtonEvent</td>
+  </tr>
+  <tr>
+    <td>Volume</td>
+  </tr>
+</table>
+## WaterFreezeDetector
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>WaterFreezeDetector</td>
+    <td>BooleanState</td>
+  </tr>
+</table>
+## Speaker
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="15">Speaker</td>
+    <td>StepValue</td>
+  </tr>
+  <tr>
+    <td>Volume</td>
+  </tr>
+  <tr>
+    <td>Mute</td>
+  </tr>
+  <tr>
+    <td>StepValue</td>
+  </tr>
+  <tr>
+    <td>Volume</td>
+  </tr>
+  <tr>
+    <td>Mute</td>
+  </tr>
+  <tr>
+    <td>StepValue</td>
+  </tr>
+  <tr>
+    <td>Volume</td>
+  </tr>
+  <tr>
+    <td>Mute</td>
+  </tr>
+  <tr>
+    <td>StepValue</td>
+  </tr>
+  <tr>
+    <td>Volume</td>
+  </tr>
+  <tr>
+    <td>Mute</td>
+  </tr>
+  <tr>
+    <td>StepValue</td>
+  </tr>
+  <tr>
+    <td>Volume</td>
+  </tr>
+  <tr>
+    <td>Mute</td>
+  </tr>
+</table>
+## DoorLock
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="28">DoorLock</td>
+    <td>LockOperation</td>
+  </tr>
+  <tr>
+    <td>UnboltDoor</td>
+  </tr>
+  <tr>
+    <td>SupportedRemoteFeatures</td>
+  </tr>
+  <tr>
+    <td>SetWeekDaySchedule</td>
+  </tr>
+  <tr>
+    <td>QuietUnlockDoor</td>
+  </tr>
+  <tr>
+    <td>GetYearDaySchedule</td>
+  </tr>
+  <tr>
+    <td>NumberOfCredentialsSupportedPerUser</td>
+  </tr>
+  <tr>
+    <td>LockOperationError</td>
+  </tr>
+  <tr>
+    <td>NumberOfTotalUsersSupported</td>
+  </tr>
+  <tr>
+    <td>DoorState</td>
+  </tr>
+  <tr>
+    <td>NumberOfYearDaySchedulesSupportedPerUser</td>
+  </tr>
+  <tr>
+    <td>LockState</td>
+  </tr>
+  <tr>
+    <td>ClearWeekDaySchedule</td>
+  </tr>
+  <tr>
+    <td>GetUser</td>
+  </tr>
+  <tr>
+    <td>UnlockDoor</td>
+  </tr>
+  <tr>
+    <td>EnableRemoteControl</td>
+  </tr>
+  <tr>
+    <td>NumberOfPINUsersSupported</td>
+  </tr>
+  <tr>
+    <td>SetYearDaySchedule</td>
+  </tr>
+  <tr>
+    <td>GetWeekDaySchedule</td>
+  </tr>
+  <tr>
+    <td>LockUserChange</td>
+  </tr>
+  <tr>
+    <td>RemoteControlWithAuthCode</td>
+  </tr>
+  <tr>
+    <td>DoorLockAlarm</td>
+  </tr>
+  <tr>
+    <td>RemoteUnlock</td>
+  </tr>
+  <tr>
+    <td>NumberOfRFIDUsersSupported</td>
+  </tr>
+  <tr>
+    <td>LockDoor</td>
+  </tr>
+  <tr>
+    <td>ClearYearDaySchedule</td>
+  </tr>
+  <tr>
+    <td>QuietLockDoor</td>
+  </tr>
+  <tr>
+    <td>NumberOfWeekDaySchedulesSupportedPerUser</td>
+  </tr>
+</table>
+## CO2
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">CO2</td>
+    <td>CO2Level</td>
+  </tr>
+  <tr>
+    <td>CO2Density</td>
+  </tr>
+</table>
+## VacuumOperationalState
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="7">VacuumOperationalState</td>
+    <td>GoHome</td>
+  </tr>
+  <tr>
+    <td>VacuumOperationalError</td>
+  </tr>
+  <tr>
+    <td>Pause</td>
+  </tr>
+  <tr>
+    <td>Start</td>
+  </tr>
+  <tr>
+    <td>Stop</td>
+  </tr>
+  <tr>
+    <td>VacuumOperationalState</td>
+  </tr>
+  <tr>
+    <td>Resume</td>
+  </tr>
+</table>
+## ValveControl
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="5">ValveControl</td>
+    <td>CurrentValveState</td>
+  </tr>
+  <tr>
+    <td>DefaultOpenDuration</td>
+  </tr>
+  <tr>
+    <td>Close</td>
+  </tr>
+  <tr>
+    <td>RemainingDuration</td>
+  </tr>
+  <tr>
+    <td>Open</td>
+  </tr>
+</table>
+## ScreenDisplay
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>ScreenDisplay</td>
+    <td>ScreenBrightness</td>
+  </tr>
+</table>
+## Illuminance
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">Illuminance</td>
+    <td>SamplingInterval</td>
+  </tr>
+  <tr>
+    <td>CurrentIlluminance</td>
+  </tr>
+</table>
+## Camera
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="10">Camera</td>
+    <td>CameraActiveStatus</td>
+  </tr>
+  <tr>
+    <td>CameraRTSPURL</td>
+  </tr>
+  <tr>
+    <td>P2PCaptureStatus</td>
+  </tr>
+  <tr>
+    <td>CameraRTSPEnable</td>
+  </tr>
+  <tr>
+    <td>P2PCaptureEnabled</td>
+  </tr>
+  <tr>
+    <td>CameraActiveStatus</td>
+  </tr>
+  <tr>
+    <td>CameraRTSPURL</td>
+  </tr>
+  <tr>
+    <td>P2PCaptureStatus</td>
+  </tr>
+  <tr>
+    <td>CameraRTSPEnable</td>
+  </tr>
+  <tr>
+    <td>P2PCaptureEnabled</td>
+  </tr>
+</table>
+## Gas
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="10">Gas</td>
+    <td>CurrentSensitivityLevel</td>
+  </tr>
+  <tr>
+    <td>GasDensity</td>
+  </tr>
+  <tr>
+    <td>SelfCheck</td>
+  </tr>
+  <tr>
+    <td>Mute</td>
+  </tr>
+  <tr>
+    <td>GasDetected</td>
+  </tr>
+  <tr>
+    <td>CurrentSensitivityLevel</td>
+  </tr>
+  <tr>
+    <td>GasDensity</td>
+  </tr>
+  <tr>
+    <td>SelfCheck</td>
+  </tr>
+  <tr>
+    <td>Mute</td>
+  </tr>
+  <tr>
+    <td>GasDetected</td>
+  </tr>
+</table>
+## GestureRecognition
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>GestureRecognition</td>
+    <td>GestureRecognitionReport</td>
+  </tr>
+</table>
+## BreathingMonitoring
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>BreathingMonitoring</td>
+    <td>BreathingRate</td>
+  </tr>
+</table>
+## CharacterStringValueObject
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>CharacterStringValueObject</td>
+    <td>CharStringValuePV</td>
+  </tr>
+</table>
+## Sweeper
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="5">Sweeper</td>
+    <td>ContinueCleaning</td>
+  </tr>
+  <tr>
+    <td>SweeperState</td>
+  </tr>
+  <tr>
+    <td>PauseCleaning</td>
+  </tr>
+  <tr>
+    <td>StartCleaning</td>
+  </tr>
+  <tr>
+    <td>StopCleaning</td>
+  </tr>
+</table>
+## EVSE
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="12">EVSE</td>
+    <td>EvseSupplyState</td>
+  </tr>
+  <tr>
+    <td>MinChargeCurrent</td>
+  </tr>
+  <tr>
+    <td>EvseState</td>
+  </tr>
+  <tr>
+    <td>ChargingEnabledUntil</td>
+  </tr>
+  <tr>
+    <td>BatteryCapacity</td>
+  </tr>
+  <tr>
+    <td>VehicleID</td>
+  </tr>
+  <tr>
+    <td>EvseFaultState</td>
+  </tr>
+  <tr>
+    <td>BatPercentRemaining</td>
+  </tr>
+  <tr>
+    <td>EnableCharging</td>
+  </tr>
+  <tr>
+    <td>MaxChargeCurrent</td>
+  </tr>
+  <tr>
+    <td>CurrentFlow</td>
+  </tr>
+  <tr>
+    <td>DisableCharging</td>
+  </tr>
+</table>
+## CO
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="6">CO</td>
+    <td>ExpressedState</td>
+  </tr>
+  <tr>
+    <td>CODetected</td>
+  </tr>
+  <tr>
+    <td>SelfTestRequest</td>
+  </tr>
+  <tr>
+    <td>ExpressedState</td>
+  </tr>
+  <tr>
+    <td>CODetected</td>
+  </tr>
+  <tr>
+    <td>SelfTestRequest</td>
+  </tr>
+</table>
+## Lighting
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="17">Lighting</td>
+    <td>BuiltInEffects</td>
+  </tr>
+  <tr>
+    <td>PreviewEffect</td>
+  </tr>
+  <tr>
+    <td>MaxUserDefinedEffects</td>
+  </tr>
+  <tr>
+    <td>CurrentEffectID</td>
+  </tr>
+  <tr>
+    <td>CommitConfiguration</td>
+  </tr>
+  <tr>
+    <td>EnterInstallMode</td>
+  </tr>
+  <tr>
+    <td>UpdateUserDefinedEffect</td>
+  </tr>
+  <tr>
+    <td>RemoveUserDefinedEffect</td>
+  </tr>
+  <tr>
+    <td>GetEffectData</td>
+  </tr>
+  <tr>
+    <td>StartEffect</td>
+  </tr>
+  <tr>
+    <td>EffectInfo</td>
+  </tr>
+  <tr>
+    <td>AddUserDefinedEffect</td>
+  </tr>
+  <tr>
+    <td>MaxEffectNameLength</td>
+  </tr>
+  <tr>
+    <td>StopPreview</td>
+  </tr>
+  <tr>
+    <td>NaturalLightGamut</td>
+  </tr>
+  <tr>
+    <td>UserDefinedEffects</td>
+  </tr>
+  <tr>
+    <td>PreviewTransition</td>
+  </tr>
+</table>
+## LevelControl
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="7">LevelControl</td>
+    <td>StepBrightness</td>
+  </tr>
+  <tr>
+    <td>OnTransitionTime</td>
+  </tr>
+  <tr>
+    <td>SetBrightness</td>
+  </tr>
+  <tr>
+    <td>StepBrightnessWithOnOff</td>
+  </tr>
+  <tr>
+    <td>SetBrightnessWithOnOff</td>
+  </tr>
+  <tr>
+    <td>CurrentLevel</td>
+  </tr>
+  <tr>
+    <td>OffTransitionTime</td>
+  </tr>
+</table>
+## ColorControl
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="28">ColorControl</td>
+    <td>MoveToXYColor</td>
+  </tr>
+  <tr>
+    <td>CurrentY</td>
+  </tr>
+  <tr>
+    <td>ColorMode</td>
+  </tr>
+  <tr>
+    <td>WhitePointXY</td>
+  </tr>
+  <tr>
+    <td>ColorTemperature</td>
+  </tr>
+  <tr>
+    <td>LEDICQuantity</td>
+  </tr>
+  <tr>
+    <td>ColorRGB</td>
+  </tr>
+  <tr>
+    <td>ColorXY</td>
+  </tr>
+  <tr>
+    <td>Hue</td>
+  </tr>
+  <tr>
+    <td>StartUpXYColor</td>
+  </tr>
+  <tr>
+    <td>MoveToHueSaturationBrightness</td>
+  </tr>
+  <tr>
+    <td>LightingMusicSyncMode</td>
+  </tr>
+  <tr>
+    <td>StartUpColorTemperature</td>
+  </tr>
+  <tr>
+    <td>LightingDynamicSceneMode</td>
+  </tr>
+  <tr>
+    <td>Saturation</td>
+  </tr>
+  <tr>
+    <td>CurrentG</td>
+  </tr>
+  <tr>
+    <td>MoveToHueAndSaturation</td>
+  </tr>
+  <tr>
+    <td>MoveToColorTemperatureBrightness</td>
+  </tr>
+  <tr>
+    <td>CurrentB</td>
+  </tr>
+  <tr>
+    <td>LightingMusicSyncEnable</td>
+  </tr>
+  <tr>
+    <td>MoveToXYColorBrightness</td>
+  </tr>
+  <tr>
+    <td>StepColorTemperature</td>
+  </tr>
+  <tr>
+    <td>MoveToColorTemperature</td>
+  </tr>
+  <tr>
+    <td>CurrentX</td>
+  </tr>
+  <tr>
+    <td>ColorPointRGBXY</td>
+  </tr>
+  <tr>
+    <td>LEDICProtocol</td>
+  </tr>
+  <tr>
+    <td>LEDType</td>
+  </tr>
+  <tr>
+    <td>CurrentR</td>
+  </tr>
+</table>
+## PanTilt
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>PanTilt</td>
+    <td>PanTiltDirectionControl</td>
+  </tr>
+</table>
+## WindowCovering
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="37">WindowCovering</td>
+    <td>MotorSpeedPercentage</td>
+  </tr>
+  <tr>
+    <td>WindowCoveringCategory</td>
+  </tr>
+  <tr>
+    <td>WindowCoveringMotorsBinding</td>
+  </tr>
+  <tr>
+    <td>UnconfiguredTravelControlPermission</td>
+  </tr>
+  <tr>
+    <td>LimitPointSetting</td>
+  </tr>
+  <tr>
+    <td>ObstacleLimitMarkingBlockTime</td>
+  </tr>
+  <tr>
+    <td>MotorSpeedSetting</td>
+  </tr>
+  <tr>
+    <td>ManualPullStartStopEnabled</td>
+  </tr>
+  <tr>
+    <td>CurrentRotationAngle</td>
+  </tr>
+  <tr>
+    <td>ObstacleLimitSensitivity</td>
+  </tr>
+  <tr>
+    <td>TripTime</td>
+  </tr>
+  <tr>
+    <td>TravelConfigured</td>
+  </tr>
+  <tr>
+    <td>CurrentPositionPercentage</td>
+  </tr>
+  <tr>
+    <td>StopMotion</td>
+  </tr>
+  <tr>
+    <td>MotorControllability</td>
+  </tr>
+  <tr>
+    <td>RotationControl</td>
+  </tr>
+  <tr>
+    <td>MotorDirectionReversed</td>
+  </tr>
+  <tr>
+    <td>GoToPositionRotationPercentage</td>
+  </tr>
+  <tr>
+    <td>StepPosition</td>
+  </tr>
+  <tr>
+    <td>WindowCoveringType</td>
+  </tr>
+  <tr>
+    <td>ObstacleLimitAutoReboundEnable</td>
+  </tr>
+  <tr>
+    <td>GoToPositionPercentage</td>
+  </tr>
+  <tr>
+    <td>GoToMinPositionPercentage</td>
+  </tr>
+  <tr>
+    <td>ManualPullEvent</td>
+  </tr>
+  <tr>
+    <td>TargetPositionPercentage</td>
+  </tr>
+  <tr>
+    <td>TargetRotationAngle</td>
+  </tr>
+  <tr>
+    <td>GoToMaxPositionPercentage</td>
+  </tr>
+  <tr>
+    <td>WindowCoveringOpenOrientation</td>
+  </tr>
+  <tr>
+    <td>MotorOperationStatus</td>
+  </tr>
+  <tr>
+    <td>AutoControl</td>
+  </tr>
+  <tr>
+    <td>ManualPullStartEnabled</td>
+  </tr>
+  <tr>
+    <td>LimitPointCount</td>
+  </tr>
+  <tr>
+    <td>TargetPositionRotationPercentage</td>
+  </tr>
+  <tr>
+    <td>CurrentPositionRotationPercentage</td>
+  </tr>
+  <tr>
+    <td>ManualPullStopEnabled</td>
+  </tr>
+  <tr>
+    <td>ObstacleLimitMarkingEnable</td>
+  </tr>
+  <tr>
+    <td>ManualPullAdaptiveSpeedEnabled</td>
+  </tr>
+</table>
+## Flow
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>Flow</td>
+    <td>CurrentFlow</td>
+  </tr>
+</table>
+## OccupancySensing
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="10">OccupancySensing</td>
+    <td>HoldTime</td>
+  </tr>
+  <tr>
+    <td>DurationOccupiedWithinOneWeek</td>
+  </tr>
+  <tr>
+    <td>Occupancy</td>
+  </tr>
+  <tr>
+    <td>DurationOccupiedWithinOneDay</td>
+  </tr>
+  <tr>
+    <td>OccupancySensorType</td>
+  </tr>
+  <tr>
+    <td>HoldTime</td>
+  </tr>
+  <tr>
+    <td>DurationOccupiedWithinOneWeek</td>
+  </tr>
+  <tr>
+    <td>Occupancy</td>
+  </tr>
+  <tr>
+    <td>DurationOccupiedWithinOneDay</td>
+  </tr>
+  <tr>
+    <td>OccupancySensorType</td>
+  </tr>
+</table>
+## RainSensor
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>RainSensor</td>
+    <td>BooleanState</td>
+  </tr>
+</table>
+## Smoke
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="15">Smoke</td>
+    <td>ExpressedState</td>
+  </tr>
+  <tr>
+    <td>FireProductIdentification</td>
+  </tr>
+  <tr>
+    <td>SmokeDensitydB</td>
+  </tr>
+  <tr>
+    <td>SmokeChamberContamination</td>
+  </tr>
+  <tr>
+    <td>AlarmError</td>
+  </tr>
+  <tr>
+    <td>SelfCheck</td>
+  </tr>
+  <tr>
+    <td>SmokeState</td>
+  </tr>
+  <tr>
+    <td>TriggerWarning</td>
+  </tr>
+  <tr>
+    <td>SelfTestRequest</td>
+  </tr>
+  <tr>
+    <td>AlarmsEnabled</td>
+  </tr>
+  <tr>
+    <td>ContaminationState</td>
+  </tr>
+  <tr>
+    <td>Mute</td>
+  </tr>
+  <tr>
+    <td>SmokeDensity</td>
+  </tr>
+  <tr>
+    <td>SmokeDetected</td>
+  </tr>
+  <tr>
+    <td>EnableHeartbeatIndicator</td>
+  </tr>
+</table>
+## FreshAirControl
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">FreshAirControl</td>
+    <td>FreshAirMode</td>
+  </tr>
+  <tr>
+    <td>FreshAirMode</td>
+  </tr>
+</table>
+## AnalogOutputObject
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>AnalogOutputObject</td>
+    <td>AnalogOutputPV</td>
+  </tr>
+</table>
+## Location
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>Location</td>
+    <td>MotionDetected</td>
+  </tr>
+</table>
+## PetRecognition
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>PetRecognition</td>
+    <td>PetRecognitionReport</td>
+  </tr>
+</table>
+## ParticulateMatter
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="4">ParticulateMatter</td>
+    <td>PM1.0Density</td>
+  </tr>
+  <tr>
+    <td>PM2.5Density</td>
+  </tr>
+  <tr>
+    <td>PM2.5Level</td>
+  </tr>
+  <tr>
+    <td>PM10Density</td>
+  </tr>
+</table>
+## OnOffSensor
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>OnOffSensor</td>
+    <td>BooleanState</td>
+  </tr>
+</table>
+## SoundDetection
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>SoundDetection</td>
+    <td>AnomalySoundDetected</td>
+  </tr>
+</table>
+## Ringtone
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="4">Ringtone</td>
+    <td>RingtonePlayVolume</td>
+  </tr>
+  <tr>
+    <td>RingtonePlayIndex</td>
+  </tr>
+  <tr>
+    <td>RingtonePlayStatus</td>
+  </tr>
+  <tr>
+    <td>RingtonePlayDuration</td>
+  </tr>
+</table>
+## BridgeConfiguration
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">BridgeConfiguration</td>
+    <td>BridgedNodeList</td>
+  </tr>
+  <tr>
+    <td>SupportedHubCapability</td>
+  </tr>
+</table>
+## MatterBridgeCommissioning
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="9">MatterBridgeCommissioning</td>
+    <td>MatterBridgeSupported</td>
+  </tr>
+  <tr>
+    <td>MatterDACState</td>
+  </tr>
+  <tr>
+    <td>MatterOnboardingPayload</td>
+  </tr>
+  <tr>
+    <td>MatterManufacturerList</td>
+  </tr>
+  <tr>
+    <td>RemoveOneMatterManufacturer</td>
+  </tr>
+  <tr>
+    <td>RemoveAllMatterManufacturer</td>
+  </tr>
+  <tr>
+    <td>MatterBindState</td>
+  </tr>
+  <tr>
+    <td>MatterPairingState</td>
+  </tr>
+  <tr>
+    <td>MatterPairingSwitch</td>
+  </tr>
+</table>
+## GarageDoorOpener
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">GarageDoorOpener</td>
+    <td>TargetGarageDoorState</td>
+  </tr>
+  <tr>
+    <td>Toggle</td>
+  </tr>
+  <tr>
+    <td>CurrentGarageDoorState</td>
+  </tr>
+</table>
+## RelativeHumidity
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>RelativeHumidity</td>
+    <td>CurrentHumidity</td>
+  </tr>
+</table>
+## Sleep
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td rowspan="4">Sleep</td>
+    <td>SleepQuality</td>
+  </tr>
+  <tr>
+    <td>SleepStage</td>
+  </tr>
+  <tr>
+    <td>SleepState</td>
+  </tr>
+  <tr>
+    <td>OnBed</td>
+  </tr>
+</table>
+## BinaryInputObject
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>BinaryInputObject</td>
+    <td>BinaryInputPV</td>
+  </tr>
+</table>
+## WaterLeak
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>WaterLeak</td>
+    <td>LeakState</td>
+  </tr>
+</table>
+## VehicleDetection
+
+<table>
+  <tr>
+    <th>functionCode</th>
+    <th>trait/commandCode</th>
+  </tr>
+  <tr>
+    <td>VehicleDetection</td>
+    <td>VehicleDetected</td>
+  </tr>
+</table>
