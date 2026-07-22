@@ -605,7 +605,8 @@
         "aqara-developer/aqara-data-model-specification/device-types",
         "aqara-developer/aqara-data-model-specification/function-codes",
         "aqara-developer/aqara-data-model-specification/trait-codes",
-        "aqara-developer/aqara-data-model-specification/command-codes"
+        "aqara-developer/aqara-data-model-specification/command-codes",
+        "aqara-developer/aqara-data-model-specification/data-types"
       ]
     }
   ],
