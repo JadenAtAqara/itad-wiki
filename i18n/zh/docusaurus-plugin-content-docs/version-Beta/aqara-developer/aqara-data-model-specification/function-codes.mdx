@@ -4,4074 +4,5105 @@
 
 | functionCode | 说明 |
 | --- | --- |
-| [Descriptor](#descriptor) |  |
-| [BasicInformation](#basicinformation) |  |
-| [EndpointLabel](#endpointlabel) |  |
-| [CameraCoordination](#cameracoordination) |  |
-| [GeneralConfiguration](#generalconfiguration) |  |
-| [EcosystemInformation](#ecosysteminformation) |  |
-| [EnergyManagement](#energymanagement) |  |
-| [HubCoordination](#hubcoordination) |  |
-| [SceneCoordination](#scenecoordination) |  |
-| [PowerSource](#powersource) |  |
-| [WakeupCoordination](#wakeupcoordination) |  |
-| [CentralHubCoordination](#centralhubcoordination) |  |
-| [SecurityGuardCoordination](#securityguardcoordination) |  |
-| [OTACoordination](#otacoordination) |  |
-| [LockCoordination](#lockcoordination) |  |
-| [DeviceAnomalyMonitoring](#deviceanomalymonitoring) |  |
-| [GeneralDiagnostics](#generaldiagnostics) |  |
-| [RingtoneCoordination](#ringtonecoordination) |  |
-| [ZigbeeNetworkDiagnostics](#zigbeenetworkdiagnostics) |  |
-| [MatterCoordination](#mattercoordination) |  |
-| [ScreenCoordination](#screencoordination) |  |
-| [CommLinkCoordination](#commlinkcoordination) |  |
-| [IftttCoordination](#iftttcoordination) |  |
-| [NetworkManagement](#networkmanagement) |  |
-| [Identify](#identify) |  |
-| [LightBoxCoordination](#lightboxcoordination) |  |
-| [IRCoordination](#ircoordination) |  |
-| [NetworkCommissioning](#networkcommissioning) |  |
-| [ConfigurationCoordination](#configurationcoordination) |  |
-| [CloudStorageCoordination](#cloudstoragecoordination) |  |
-| [StudioCoordination](#studiocoordination) |  |
-| [Temperature](#temperature) |  |
-| [TemperatureControl](#temperaturecontrol) |  |
-| [PackageRecognition](#packagerecognition) |  |
-| [FaceRecognition](#facerecognition) |  |
-| [HumanPresence](#humanpresence) |  |
-| [HumanRecognition](#humanrecognition) |  |
-| [AirQuality](#airquality) |  |
-| [AttitudeDetection](#attitudedetection) |  |
-| [Lifter](#lifter) |  |
-| [Binding](#binding) |  |
-| [PetFeeder](#petfeeder) |  |
-| [Button](#button) |  |
-| [Output](#output) |  |
-| [IRControl](#ircontrol) |  |
-| [HeaterCooler](#heatercooler) |  |
-| [Vibration](#vibration) |  |
-| [Cube](#cube) |  |
-| [Knob](#knob) |  |
-| [BinaryOutputObject](#binaryoutputobject) |  |
-| [AnalogInputObject](#analoginputobject) |  |
-| [MediaPlayback](#mediaplayback) |  |
-| [MediaInput](#mediainput) |  |
-| [FlameDetection](#flamedetection) |  |
-| [OperationalState](#operationalstate) |  |
-| [RefrigeratorState](#refrigeratorstate) |  |
-| [Mode](#mode) |  |
-| [BridgedConfiguration](#bridgedconfiguration) |  |
-| [MultiStateInputObject](#multistateinputobject) |  |
-| [MARSConfiguration](#marsconfiguration) |  |
-| [ScreenUserInterface](#screenuserinterface) |  |
-| [CustomizedConfiguration](#customizedconfiguration) |  |
-| [HEPAFilterMonitoring](#hepafiltermonitoring) |  |
-| [ActivatedCarbonFilterMonitoring](#activatedcarbonfiltermonitoring) |  |
-| [FanControl](#fancontrol) |  |
-| [HeartMonitoring](#heartmonitoring) |  |
-| [Pressure](#pressure) |  |
-| [MultiStateOutputObject](#multistateoutputobject) |  |
-| [Contact](#contact) |  |
-| [Doorbell](#doorbell) |  |
-| [WaterFreezeDetector](#waterfreezedetector) |  |
-| [Speaker](#speaker) |  |
-| [DoorLock](#doorlock) |  |
-| [CO2](#co2) |  |
-| [VacuumOperationalState](#vacuumoperationalstate) |  |
-| [ValveControl](#valvecontrol) |  |
-| [ScreenDisplay](#screendisplay) |  |
-| [Illuminance](#illuminance) |  |
-| [Camera](#camera) |  |
-| [Gas](#gas) |  |
-| [GestureRecognition](#gesturerecognition) |  |
-| [BreathingMonitoring](#breathingmonitoring) |  |
-| [CharacterStringValueObject](#characterstringvalueobject) |  |
-| [Sweeper](#sweeper) |  |
-| [EVSE](#evse) |  |
-| [CO](#co) |  |
-| [Lighting](#lighting) |  |
-| [LevelControl](#levelcontrol) |  |
-| [ColorControl](#colorcontrol) |  |
-| [PanTilt](#pantilt) |  |
-| [WindowCovering](#windowcovering) |  |
-| [Flow](#flow) |  |
-| [OccupancySensing](#occupancysensing) |  |
-| [RainSensor](#rainsensor) |  |
-| [Smoke](#smoke) |  |
-| [FreshAirControl](#freshaircontrol) |  |
-| [AnalogOutputObject](#analogoutputobject) |  |
-| [Location](#location) |  |
-| [PetRecognition](#petrecognition) |  |
-| [ParticulateMatter](#particulatematter) |  |
-| [OnOffSensor](#onoffsensor) |  |
-| [SoundDetection](#sounddetection) |  |
-| [Ringtone](#ringtone) |  |
-| [BridgeConfiguration](#bridgeconfiguration) |  |
-| [MatterBridgeCommissioning](#matterbridgecommissioning) |  |
-| [GarageDoorOpener](#garagedooropener) |  |
-| [RelativeHumidity](#relativehumidity) |  |
-| [Sleep](#sleep) |  |
-| [BinaryInputObject](#binaryinputobject) |  |
-| [WaterLeak](#waterleak) |  |
-| [VehicleDetection](#vehicledetection) |  |
+| [Descriptor](#descriptor) | 描述设备端点组成与能力结构，包括端点列表、设备类型、Server/Client 集群等信息。 |
+| [BasicInformation](#basicinformation) | 提供设备基本信息，包括厂商、产品型号、固件版本、序列号、在线状态等基础属性。 |
+| [EndpointLabel](#endpointlabel) | 管理端点的可见性与展示信息，如名称、房间、图标、标签等，用于前端展示与组织。 |
+| [CameraCoordination](#cameracoordination) | 处理摄像机复杂业务逻辑，包括 WebRTC 通话、云台控制、识别数据同步及扩展事件。 |
+| [GeneralConfiguration](#generalconfiguration) | 提供通用设备配置项，如灵敏度、延时、默认参数等设备级设置。 |
+| [EcosystemInformation](#ecosysteminformation) | 描述设备所接入的生态平台信息，如 HomeKit、Matter Fabric 等绑定状态。 |
+| [EnergyManagement](#energymanagement) | 管理设备电量与能耗信息，包括电量百分比、功耗统计及低电告警等。 |
+| [HubCoordination](#hubcoordination) | 作为网关核心协同模块，管理子设备入网、配置、心跳、令牌及各类代理服务。 |
+| [SceneCoordination](#scenecoordination) | 管理智能场景（自动化规则）生命周期，包括同步、删除、触发执行及一致性校验。 |
+| [PowerSource](#powersource) | 描述设备供电来源与电池状态，包括电量、充电状态、电池类型等信息。 |
+| [WakeupCoordination](#wakeupcoordination) | 为支持远程唤醒的低功耗设备获取唤醒服务地址或令牌。 |
+| [CentralHubCoordination](#centralhubcoordination) | 管理中枢网关高级能力，包括中枢启用、Broker 信息及数据透传通道。 |
+| [SecurityGuardCoordination](#securityguardcoordination) | 管理家庭空间安防警戒能力，包括警戒启停、告警确认及本地/云端配置同步。 |
+| [OTACoordination](#otacoordination) | 管理 OTA 固件升级协同流程，包括任务下发、进度上报、结果反馈及版本查询。 |
+| [LockCoordination](#lockcoordination) | 处理智能门锁扩展业务，包括专用透传通道、加解密协助及扩展事件上报。 |
+| [DeviceAnomalyMonitoring](#deviceanomalymonitoring) | 持续监测设备运行参数，及时发现并上报异常或故障状态。 |
+| [GeneralDiagnostics](#generaldiagnostics) | 提供通用诊断信息，包括运行时间、重启次数、网络接口及硬件故障等。 |
+| [RingtoneCoordination](#ringtonecoordination) | 管理网关本地铃声/音乐文件，包括下载、删除及与云端库的一致性校验。 |
+| [ZigbeeNetworkDiagnostics](#zigbeenetworkdiagnostics) | 提供 Zigbee 网络诊断能力，包括信道、PAN、邻居及路由等信息。 |
+| [MatterCoordination](#mattercoordination) | 集中管理 Matter 协议相关协同操作，包括入网、绑定、数据同步及证书管理。 |
+| [ScreenCoordination](#screencoordination) | 管理智能场景面板交互，包括配置下发、状态查询及云端/面板双向透传。 |
+| [CommLinkCoordination](#commlinkcoordination) | 监测网关与云端通信链路质量，执行耗时探测并上报结果。 |
+| [IftttCoordination](#iftttcoordination) | 作为自动化规则协同中心，管理 IFTTT/本地自动化规则的同步、订阅与执行。 |
+| [NetworkManagement](#networkmanagement) | 作为设备网络连接与访问策略的核心控制模块，管理远程代理及访问地址。 |
+| [Identify](#identify) | 提供设备识别能力，可通过指示灯闪烁、声音等方式帮助用户定位物理设备。 |
+| [LightBoxCoordination](#lightboxcoordination) | 管理智能灯箱设备的配置下发，控制展示内容与效果。 |
+| [IRCoordination](#ircoordination) | 管理网关红外学习与发射，包括码库同步、虚拟遥控器创建及按键控制。 |
+| [NetworkCommissioning](#networkcommissioning) | 提供网络配网能力，支持 Wi-Fi、Thread 等网络的扫描、连接与配置。 |
+| [ConfigurationCoordination](#configurationcoordination) | 通过组播或批量方式管理通用功能配置、资源订阅及位置信息同步。 |
+| [CloudStorageCoordination](#cloudstoragecoordination) | 管理云录像/云存业务资源配置，获取存储配额及上传凭证等信息。 |
+| [StudioCoordination](#studiocoordination) | 管理网关与 Aqara Studio 开发环境的集成，包括账号认证、项目备份与设备同步。 |
+| [Temperature](#temperature) | 测量并上报环境温度，提供当前温度值及有效量程等属性。 |
+| [TemperatureControl](#temperaturecontrol) | 提供温度设定与调节能力，用于恒温设备的目标温度控制。 |
+| [PackageRecognition](#packagerecognition) | 自动识别画面中的包裹，在投递或取走时可发送提醒并记录事件。 |
+| [FaceRecognition](#facerecognition) | 采集人脸特征并与本地库比对，上报人脸识别结果及匹配信息。 |
+| [HumanPresence](#humanpresence) | 检测空间内人体存在，支持人数统计、轨迹及身份关联等高级感知能力。 |
+| [HumanRecognition](#humanrecognition) | 利用视觉等算法实时检测画面中的人形目标，区分人体与其他物体并上报事件。 |
+| [AirQuality](#airquality) | 监测并上报空气质量指标，如 AQI 或综合空气质量等级。 |
+| [AttitudeDetection](#attitudedetection) | 检测设备姿态或倾斜角度变化，上报姿态异常或角度信息。 |
+| [Lifter](#lifter) | 提供升降类设备的行程控制，支持设定目标位置、停止及状态查询。 |
+| [Binding](#binding) | 表示端点与一个或多个其他本地或远程 Endpoint 之间的持久绑定关系。 |
+| [PetFeeder](#petfeeder) | 提供宠物喂食控制能力，包括出粮份数、喂食计划及余量状态。 |
+| [Button](#button) | 描述按钮类输入设备的事件上报，包括单击、长按、多击等动作识别。 |
+| [Output](#output) | 提供开关输出控制能力，支持读取和控制负载的通断状态。 |
+| [IRControl](#ircontrol) | 提供红外发射控制能力，用于控制空调、电视等传统红外家电。 |
+| [HeaterCooler](#heatercooler) | 提供制冷/制热控制能力，包括目标温度、运行模式、风速等暖通参数。 |
+| [Vibration](#vibration) | 检测振动或动静变化，上报移动、倾斜、跌落等事件。 |
+| [Cube](#cube) | 描述魔方控制器的手势识别，包括翻转、旋转、摇一摇等动作及面识别。 |
+| [Knob](#knob) | 描述旋钮类输入设备的旋转角度、按压及组合动作事件。 |
+| [BinaryOutputObject](#binaryoutputobject) | 驱动二元执行器输出，如继电器、接触器、电磁阀或警号。 |
+| [AnalogInputObject](#analoginputobject) | 以只读方式采集连续变化的模拟量输入（如电压、温度模拟信号）。 |
+| [MediaPlayback](#mediaplayback) | 提供媒体播放控制能力，包括播放、暂停、切歌、音量及播放状态管理。 |
+| [MediaInput](#mediainput) | 描述媒体输入源管理与切换，支持选择当前播放源及输入列表。 |
+| [FlameDetection](#flamedetection) | 通过图像或传感器算法检测可见火焰，即时上报火情事件以便早期预警。 |
+| [OperationalState](#operationalstate) | 描述设备当前运行状态，如空闲、运行中、暂停、故障等。 |
+| [RefrigeratorState](#refrigeratorstate) | 描述冰箱运行状态，包括空闲、制冷、除霜、故障等。 |
+| [Mode](#mode) | 提供设备特性模式接口，支持在多种预定义模式间切换。 |
+| [BridgedConfiguration](#bridgedconfiguration) | 描述被桥接子设备的配置信息，用于 Matter/Zigbee 桥接场景。 |
+| [MultiStateInputObject](#multistateinputobject) | 采集多状态离散输入，表示 N 种状态之一。 |
+| [MARSConfiguration](#marsconfiguration) | 提供智能负载（MARS）相关配置，用于负载识别与智能配电管理。 |
+| [ScreenUserInterface](#screenuserinterface) | 管理屏端用户界面配置，包括页面布局、卡片、主题及展示数据。 |
+| [CustomizedConfiguration](#customizedconfiguration) | 提供厂商或用户自定义扩展配置项的读写能力。 |
+| [HEPAFilterMonitoring](#hepafiltermonitoring) | 监测 HEPA 滤芯使用情况、剩余寿命及更换提醒。 |
+| [ActivatedCarbonFilterMonitoring](#activatedcarbonfiltermonitoring) | 监测活性炭滤芯使用情况、剩余寿命及更换提醒。 |
+| [FanControl](#fancontrol) | 提供风扇转速与模式控制，支持档位调节及运行状态读取。 |
+| [HeartMonitoring](#heartmonitoring) | 利用传感器持续或周期性测量用户心率，记录并分析心脏健康相关数据。 |
+| [Pressure](#pressure) | 测量并上报大气压力或系统压力值。 |
+| [MultiStateOutputObject](#multistateoutputobject) | 输出多状态离散控制命令，如 HVAC 模式或灯光场景切换。 |
+| [Contact](#contact) | 检测接触/门磁类二元状态，上报打开或关闭状态及可选角度信息。 |
+| [Doorbell](#doorbell) | 提供门铃相关能力，包括呼叫事件上报及与室内铃铛/中继的联动。 |
+| [WaterFreezeDetector](#waterfreezedetector) | 用于检测管道或环境中是否存在结冰风险，并在达到阈值时上报水冻结相关事件。 |
+| [Speaker](#speaker) | 描述设备扬声器输出能力，包括音量控制及静音等音频输出属性。 |
+| [DoorLock](#doorlock) | 提供智能门锁核心能力，包括锁状态、用户/凭证管理、开锁/上锁及告警事件。 |
+| [CO2](#co2) | 测量并上报环境中二氧化碳浓度。 |
+| [VacuumOperationalState](#vacuumoperationalstate) | 描述扫地机器人当前运行状态，如清扫中、回充中、充电中等。 |
+| [ValveControl](#valvecontrol) | 提供阀门自动控制或手动控制能力，用于精确调节水/气流量。 |
+| [ScreenDisplay](#screendisplay) | 管理屏幕显示相关硬件属性，如分辨率、亮度、背光及显示状态。 |
+| [Illuminance](#illuminance) | 测量并上报环境光照度（lux）。 |
+| [Camera](#camera) | 管理摄像机基础能力，包括设备状态、模式切换、图像加密及云端相关能力。 |
+| [Gas](#gas) | 检测可燃气体或有害气体泄漏并上报告警事件。 |
+| [GestureRecognition](#gesturerecognition) | 实时分析手势动作，将预定义手势转换为控制指令。 |
+| [BreathingMonitoring](#breathingmonitoring) | 利用传感器持续或周期性测量用户呼吸频率与模式，支持健康监测。 |
+| [CharacterStringValueObject](#characterstringvalueobject) | 定义以字符串形式表示的数据对象及其外部可见特性。 |
+| [Sweeper](#sweeper) | 提供扫地机器人基础控制，包括启动清扫、暂停、回充等操作与状态反馈。 |
+| [EVSE](#evse) | 提供电动汽车供电设备（EVSE）控制能力，包括充电启停、电流限制及充电状态。 |
+| [CO](#co) | 提供一氧化碳浓度监测与报警相关能力，用于检测环境中的一氧化碳泄漏并及时告警。 |
+| [Lighting](#lighting) | 本 Function 提供对灯光动态效果的激活与控制能力。服务端提供可由不同来源驱动的效果列表，客户端可从中选择并触发。 动态灯效既可用于支持 Color Control Function 的灯具，也可用于仅支持 Level Control Function 的灯具（例如可调光灯）。 效果的具体实现属于厂商自定义范围。不同厂商设备即使使用相同 EffectID，也不保证表示同一种效果；同一厂商可在不同设备复用同一 EffectID 以表达一致实现。 |
+| [LevelControl](#levelcontrol) | 提供亮度等级调节能力，支持设置/读取当前亮度、步进调光、以及与开关联动或解耦的调光控制。 |
+| [ColorControl](#colorcontrol) | 提供颜色控制能力，支持通过 HSV、XY 与色温模式调节灯光颜色，并支持与亮度命令组合下发。 本 Function 提供灯光颜色调节接口。颜色定义遵循 CIE 1931 色彩空间，核心控制方式为 x、y 色度坐标（对应 ColorXY / CurrentX / CurrentY）。 此外，颜色可选通过 ColorTemperature（色温）或 Hue + Saturation 方式控制；Hue 与 Saturation 建议按 HSV（HSB）模型解释。RGB/W 原色点能力可用于扩展颜色表达范围。 本 Function 不负责亮度控制；亮度由 LevelControl Function 提供。联动控制时，LevelControl 中的亮度值应按“当前颜色下可达到最大光强的比例”解释。 |
+| [PanTilt](#pantilt) | 提供云台（Pan/Tilt/Zoom）控制能力，包括预置位、校准及相对/绝对移动。 |
+| [WindowCovering](#windowcovering) | 本 Function 提供窗帘、卷帘、百叶帘等窗饰设备的开合控制、倾斜控制、目标位置管理与运行状态反馈能力。 除标准开合/倾斜控制外，本 Function 还包含 Aqara 扩展能力：场景管理（内置/自定义场景的启动、读取、预览、增删改）、手动校准、远程配对、电机映射交换与增强模式状态。 客户端应结合 TravelConfigured、MotorControllability、MotorOperationStatus、EnhanceMode 等 Trait 判断设备当前可控性与操作阶段，避免在不满足条件时下发无效命令。 |
+| [Flow](#flow) | 测量并上报液体或气体的流量速率。 |
+| [OccupancySensing](#occupancysensing) | 检测空间内是否有人存在，上报占用/空闲状态及保持时间等参数。 |
+| [RainSensor](#rainsensor) | 用于检测降雨状态，上报是否正在下雨及雨量相关信息。 |
+| [Smoke](#smoke) | 检测烟雾并上报报警事件，支持灵敏度、自检及静音等相关配置。 |
+| [FreshAirControl](#freshaircontrol) | 提供新风系统控制能力，支持引入室外空气并进行风量、模式等调节。 |
+| [AnalogOutputObject](#analogoutputobject) | 提供可写的连续模拟量输出控制信号。 |
+| [Location](#location) | 提供设备或目标的位置信息上报与查询能力。 |
+| [PetRecognition](#petrecognition) | 识别画面中的猫、狗等宠物个体，上报宠物出现或相关识别事件。 |
+| [ParticulateMatter](#particulatematter) | 监测并上报颗粒物浓度（如 PM2.5、PM10）。 |
+| [OnOffSensor](#onoffsensor) | 用于检测二元开关量输入状态，上报开/关或触发/未触发等离散状态。 |
+| [SoundDetection](#sounddetection) | 通过麦克风采集环境声音，识别特定声音类型（如玻璃破碎、婴儿哭声）并告警。 |
+| [Ringtone](#ringtone) | 提供铃声与音乐播放控制，支持选曲、音量/时长调节及播放状态监测。 |
+| [BridgeConfiguration](#bridgeconfiguration) | 管理网关桥接配置，描述子设备接入、桥接能力及网络拓扑相关信息。 |
+| [MatterBridgeCommissioning](#matterbridgecommissioning) | 管理 Matter Bridge 向第三方 Matter 生态分享桥接设备的能力。 |
+| [GarageDoorOpener](#garagedooropener) | 提供车库门控制与状态反馈，包括开/关/停止及位置状态。 |
+| [RelativeHumidity](#relativehumidity) | 测量并上报环境相对湿度，提供当前湿度值及有效量程等属性。 |
+| [Sleep](#sleep) | 监测睡眠相关状态，上报睡眠阶段、时长或质量等指标。 |
+| [BinaryInputObject](#binaryinputobject) | 采集二元状态输入，如门磁、开关等 true/false 或 active/inactive 量。 |
+| [WaterLeak](#waterleak) | 检测水浸事件，在检测到漏水时及时上报告警。 |
+| [VehicleDetection](#vehicledetection) | 检测监控区域内的车辆出现，上报车辆存在事件供安防或自动化使用。 |
 
 ## Descriptor
+
+描述设备端点组成与能力结构，包括端点列表、设备类型、Server/Client 集群等信息。
 
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="9">Descriptor</td>
     <td><a href="./trait-codes#supportedendpointdynamic">SupportedEndpointDynamic</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#endpointcount">EndpointCount</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#endpointstructure">EndpointStructure</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#endpointdevicetypes">EndpointDeviceTypes</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#endpointdynamiccount">EndpointDynamicCount</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#endpointarraydynamic">EndpointArrayDynamic</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#endpointarray">EndpointArray</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#endpointfunctions">EndpointFunctions</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#selectedendpointdynamic">SelectedEndpointDynamic</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## BasicInformation
 
+提供设备基本信息，包括厂商、产品型号、固件版本、序列号、在线状态等基础属性。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="26">BasicInformation</td>
     <td><a href="./trait-codes#productname">ProductName</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#partnumber">PartNumber</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#blversion">BLVersion</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#manufacturerchipid">ManufacturerChipID</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#supportedmatterroles">SupportedMatterRoles</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#hardwareversionstring">HardwareVersionString</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#hubconnectionstatus">HubConnectionStatus</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#devicexcode">DeviceXCode</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#matterspecificationversion">MatterSpecificationVersion</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#vendorname">VendorName</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#firmwarerevisionstring">FirmwareRevisionString</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#deviceid">DeviceID</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#vendorid">VendorID</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#mcuversion">MCUVersion</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#productid">ProductID</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#configurationflag">ConfigurationFlag</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#modelvalue">ModelValue</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#hardwareversion">HardwareVersion</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#mac">Mac</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#radarversion">RadarVersion</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#serialnumber">SerialNumber</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#configurationversion">ConfigurationVersion</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#reachable">Reachable</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#firmwarerevision">FirmwareRevision</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#chiptemperature">ChipTemperature</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#location">Location</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## EndpointLabel
 
+管理端点的可见性与展示信息，如名称、房间、图标、标签等，用于前端展示与组织。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="8">EndpointLabel</td>
     <td><a href="./trait-codes#endpointtag">EndpointTag</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#endpointname">EndpointName</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#endpointappliancetype">EndpointApplianceType</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#endpointroom">EndpointRoom</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#endpointvisibility">EndpointVisibility</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#endpointicon">EndpointIcon</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#endpointstatistics">EndpointStatistics</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#endpointroomname">EndpointRoomName</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## CameraCoordination
 
+处理摄像机复杂业务逻辑，包括 WebRTC 通话、云台控制、识别数据同步及扩展事件。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="11">CameraCoordination</td>
     <td><a href="./command-codes#apiunbindwifisubdevice">APIUnbindWiFiSubdevice</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apicheckcardataconsistency">APICheckCarDataConsistency</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apibindwifisubdevice">APIBindWiFiSubdevice</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apioperatebridgeddevice">APIOperateBridgedDevice</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apidevicecameracall">APIDeviceCameraCall</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apioperatecameraup">APIOperateCameraUp</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiissuetokenforwebrtccall">APIIssueTokenForWebRTCCall</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apioperatecameradown">APIOperateCameraDown</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetsignallingserveraddress">APIGetSignallingServerAddress</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apireportcameraextevents">APIReportCameraExtEvents</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apicheckfacedataconsistency">APICheckFaceDataConsistency</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## GeneralConfiguration
 
+提供通用设备配置项，如灵敏度、延时、默认参数等设备级设置。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="16">GeneralConfiguration</td>
     <td><a href="./trait-codes#voicelanguage">VoiceLanguage</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#energysavingenable">EnergySavingEnable</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#currentsensitivitylevel">CurrentSensitivityLevel</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#transmissionpowersetting">TransmissionPowerSetting</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#hubarktechenable">HubArkTechEnable</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#beepenable">BeepEnable</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#nightlightmode">NightLightMode</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#outputinterlockflag">OutputInterlockFlag</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#activitydetectionmodesetting">ActivityDetectionModeSetting</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#timezone">TimeZone</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#numberofsensitivitylevelissupported">NumberOfSensitivityLevelIsSupported</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#pollingtime">PollingTime</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#installationorientationconfiguration">InstallationOrientationConfiguration</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#detectionmodesetting">DetectionModeSetting</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#lightingmodesetting">LightingModeSetting</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#resetmode">ResetMode</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## EcosystemInformation
 
+描述设备所接入的生态平台信息，如 HomeKit、Matter Fabric 等绑定状态。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="5">EcosystemInformation</td>
     <td><a href="./trait-codes#magicpairpayload">MagicPairPayload</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#supportedecosystem">SupportedEcosystem</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#matterpayload">MatterPayload</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#homekitpayload">HomeKitPayload</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#boundecosystem">BoundEcosystem</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## EnergyManagement
 
+管理设备电量与能耗信息，包括电量百分比、功耗统计及低电告警等。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="4">EnergyManagement</td>
     <td><a href="./trait-codes#currentvoltage">CurrentVoltage</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#circuitcurrent">CircuitCurrent</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#cumulativeenergyconsumption">CumulativeEnergyConsumption</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#currentpower">CurrentPower</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## HubCoordination
 
+作为网关核心协同模块，管理子设备入网、配置、心跳、令牌及各类代理服务。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="53">HubCoordination</td>
     <td><a href="./command-codes#apiunbindhubdown">APIUnbindHubDown</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiuploaddeviceinfo">APIUploadDeviceInfo</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apireportdeviceresponse">APIReportDeviceResponse</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetsubdeviceconfig">APIGetSubdeviceConfig</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apicheckhubdataconsistency">APICheckHubDataConsistency</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apicheckhublocalsync">APICheckHubLocalSync</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetloginrandomcode">APIGetLoginRandomCode</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetrandomjoincode">APIGetRandomJoinCode</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiclearhubconfig">APIClearHubConfig</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apisyncdatacloudtohub">APISyncDataCloudToHub</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apireportsubdevicemodel">APIReportSubdeviceModel</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiclearlocaldata">APIClearLocalData</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apinotifyconfigchange">APINotifyConfigChange</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetvoicefileurl">APIGetVoiceFileUrl</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apidisablesubdevicejoining">APIDisableSubdeviceJoining</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiaskotherhubtoken">APIAskOtherHubToken</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apisubdevicekeepalive">APISubdeviceKeepAlive</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apibindbledevicetohub">APIBindBleDeviceToHub</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apireportheartbeat">APIReportHeartbeat</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetinstallcode">APIGetInstallCode</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apireportpropertyexamination">APIReportPropertyExamination</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apibindsubdevicewithsecuritycode">APIBindSubdeviceWithSecurityCode</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apistarthubprovisioning">APIStartHubProvisioning</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apireporthublocalinfo">APIReportHubLocalInfo</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiunsubscribedeviceresource">APIUnsubscribeDeviceResource</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apireporthublocalconfig">APIReportHubLocalConfig</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apicheckhubconfig">APICheckHubConfig</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apipushhubconfig">APIPushHubConfig</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiquerydeviceresmultiextgbk">APIQueryDeviceResMultiExtGbk</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apireportexceptionlog">APIReportExceptionLog</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apinotifysubdevicereadresult">APINotifySubdeviceReadResult</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apisubscribedeviceresource">APISubscribeDeviceResource</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apireportcommandexecresult">APIReportCommandExecResult</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetweatherdata">APIGetWeatherData</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiconnecthub">APIConnectHub</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiunbindhubup">APIUnbindHubUp</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apisynctokendown">APISyncTokenDown</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apirefreshhubtoken">APIRefreshHubToken</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apirpcdebugcommand">APIRpcDebugCommand</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apisyncsubdevicelist">APISyncSubdeviceList</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiregisterdirectdevice">APIRegisterDirectDevice</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apinotifynosubdevice">APINotifyNoSubdevice</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiexecutesubstitutecommand">APIExecuteSubstituteCommand</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apirunfunctioninstruction">APIRunFunctionInstruction</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiunbindsubdevicedown">APIUnbindSubdeviceDown</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiunbindsubdeviceup">APIUnbindSubdeviceUp</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apienablesubdevicejoining">APIEnableSubdeviceJoining</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiuploadlogfileevent">APIUploadLogFileEvent</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetsubdeviceserviceconfig">APIGetSubdeviceServiceConfig</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiquerydeviceresmultiext">APIQueryDeviceResMultiExt</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apitriggersubdeviceread">APITriggerSubdeviceRead</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apibindsubdevicenoauth">APIBindSubdeviceNoAuth</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apisetsubdevicemixing">APISetSubdeviceMixing</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## SceneCoordination
 
+管理智能场景（自动化规则）生命周期，包括同步、删除、触发执行及一致性校验。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="6">SceneCoordination</td>
     <td><a href="./command-codes#apichecklocalscenesync">APICheckLocalSceneSync</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apidownloadlocalscene">APIDownloadLocalScene</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apirunscene">APIRunScene</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apideletelocalscene">APIDeleteLocalScene</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apirunlocalscene">APIRunLocalScene</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apidownloadcentralscene">APIDownloadCentralScene</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## PowerSource
 
+描述设备供电来源与电池状态，包括电量、充电状态、电池类型等信息。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="12">PowerSource</td>
     <td><a href="./trait-codes#currentvoltage">CurrentVoltage</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#batreplacementdescription">BatReplacementDescription</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#batchargestate">BatChargeState</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#batreplaceability">BatReplaceability</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#powermode">PowerMode</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#batpercentremaining">BatPercentRemaining</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#wiredpresent">WiredPresent</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#rechargeable">Rechargeable</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#stateoflowbat">StateOfLowBat</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#batreplacementneeded">BatReplacementNeeded</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#batquantity">BatQuantity</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## WakeupCoordination
 
+为支持远程唤醒的低功耗设备获取唤醒服务地址或令牌。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>WakeupCoordination</td>
     <td><a href="./command-codes#apigetwakeupurl">APIGetWakeupUrl</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## CentralHubCoordination
 
+管理中枢网关高级能力，包括中枢启用、Broker 信息及数据透传通道。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="5">CentralHubCoordination</td>
     <td><a href="./command-codes#apiinquirycentralbroker">APIInquiryCentralBroker</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apihubpassthroughdatadown">APIHubPassthroughDataDown</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apienablecentralhubfunction">APIEnableCentralHubFunction</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apihubpassthroughdataup">APIHubPassthroughDataUp</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiinquirycentralenablestate">APIInquiryCentralEnableState</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## SecurityGuardCoordination
 
+管理家庭空间安防警戒能力，包括警戒启停、告警确认及本地/云端配置同步。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="7">SecurityGuardCoordination</td>
     <td><a href="./command-codes#apideletesecuritylocal">APIDeleteSecurityLocal</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apisyncsecuritylaninfo">APISyncSecurityLanInfo</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apichecksecurityenableconsistency">APICheckSecurityEnableConsistency</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiconfirmsecurityalert">APIConfirmSecurityAlert</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apichecksecurityconfigconsistency">APICheckSecurityConfigConsistency</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apienablesecurity">APIEnableSecurity</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apirepairsecurityenable">APIRepairSecurityEnable</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## OTACoordination
 
+管理 OTA 固件升级协同流程，包括任务下发、进度上报、结果反馈及版本查询。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="6">OTACoordination</td>
     <td><a href="./command-codes#apireportotadeviceliststate">APIReportOtaDeviceListState</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apireportotaresult">APIReportOtaResult</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apireportotaprogress">APIReportOtaProgress</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apicancelotaupgrade">APICancelOtaUpgrade</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiinquiryfirmwareinfo">APIInquiryFirmwareInfo</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiupgradedevicefirmware">APIUpgradeDeviceFirmware</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## LockCoordination
 
+处理智能门锁扩展业务，包括专用透传通道、加解密协助及扩展事件上报。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="4">LockCoordination</td>
     <td><a href="./command-codes#apilockpassthroughupstream">APILockPassthroughUpstream</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apilockpassthroughdownstream">APILockPassthroughDownstream</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiassistdevicecrypto">APIAssistDeviceCrypto</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apireportlockextevents">APIReportLockExtEvents</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## DeviceAnomalyMonitoring
 
+持续监测设备运行参数，及时发现并上报异常或故障状态。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="5">DeviceAnomalyMonitoring</td>
     <td><a href="./trait-codes#loadsafetymanagement">LoadSafetyManagement</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#voltagesafetymanagement">VoltageSafetyManagement</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#currentsafetymanagement">CurrentSafetyManagement</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#overcurrentresponsesetting">OverCurrentResponseSetting</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#temperaturesafetymanagement">TemperatureSafetyManagement</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## GeneralDiagnostics
 
+提供通用诊断信息，包括运行时间、重启次数、网络接口及硬件故障等。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="11">GeneralDiagnostics</td>
     <td><a href="./trait-codes#rebootcount">RebootCount</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#rebootreason">RebootReason</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#uptime">UpTime</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#networkinterfaces">NetworkInterfaces</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#antideletionsetting">AntiDeletionSetting</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#antideletionlevelsetting">AntiDeletionLevelSetting</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#activehardwarefaults">ActiveHardwareFaults</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#debuginfo">DebugInfo</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#freememory">FreeMemory</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#antideletionnotification">AntiDeletionNotification</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#reboot">Reboot</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## RingtoneCoordination
 
+管理网关本地铃声/音乐文件，包括下载、删除及与云端库的一致性校验。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="3">RingtoneCoordination</td>
     <td><a href="./command-codes#apidownloadmusic">APIDownloadMusic</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apichecklocalmusicsync">APICheckLocalMusicSync</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apideletemusic">APIDeleteMusic</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## ZigbeeNetworkDiagnostics
 
+提供 Zigbee 网络诊断能力，包括信道、PAN、邻居及路由等信息。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="26">ZigbeeNetworkDiagnostics</td>
     <td><a href="./trait-codes#routingagingcountthreshold">RoutingAgingCountThreshold</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#preoperationmode">PreOperationMode</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#nwkretransmissioncount">NWKRetransmissionCount</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#zigbeetotalmessageinonehour">ZigbeeTotalMessageInOneHour</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#zigbeecoordmac">ZigbeeCoordMac</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#apsretransmissioncount">APSRetransmissionCount</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#zigbeeresentmessageinonehour">ZigbeeResentMessageInOneHour</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#panid">PANID</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#zigbeeextendedpanid">ZigbeeExtendedPANID</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#zigbeegeneraldiagnostics">ZigbeeGeneralDiagnostics</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#messagetransmissionfailurecountthreshold">MessageTransmissionFailureCountThreshold</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#enablenwkack">EnableNWKACK</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#rebootreason">RebootReason</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#zigbeekeyseqnumber">ZigbeeKeySeqNumber</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#lqi">LQI</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#zigbeeframecounter">ZigbeeFrameCounter</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#channel">Channel</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#ccamode">CCAMode</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#zigbeenexthopmac">ZigbeeNextHopMac</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#enableapsack">EnableAPSACK</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#macretransmissioncount">MACRetransmissionCount</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#zigbeefailemessageinonehour">ZigbeeFailedMessageInOneHour</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#zigbeeneighbortableinfo">ZigbeeNeighborTableInfo</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#curopoperationmode">CurOperationMode</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#zigbeeavgsuccessfulresendcount">ZigbeeAvgSuccessfulResendCount</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#zigbeecoordnetworkkey">ZigbeeCoordNetworkKey</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## MatterCoordination
 
+集中管理 Matter 协议相关协同操作，包括入网、绑定、数据同步及证书管理。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="9">MatterCoordination</td>
     <td><a href="./command-codes#apipushmatterbindinfo">APIPushMatterBindInfo</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiunbindmatterdevicedown">APIUnbindMatterDeviceDown</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apireportdeviceaqaraspecmodel">APIReportDeviceAqaraSpecModel</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apisyncaqaraspecdatatocloud">APISyncAqaraSpecDataToCloud</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigennextmatternodeid">APIGenNextMatterNodeId</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigenhomematternoc">APIGenHomeMatterNoc</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apistartbindmatterdevicetohub">APIStartBindMatterDeviceToHub</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiunbindmatterdeviceup">APIUnbindMatterDeviceUP</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiquerymatterjoinlimit">APIQueryMatterJoinLimit</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## ScreenCoordination
 
+管理智能场景面板交互，包括配置下发、状态查询及云端/面板双向透传。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="5">ScreenCoordination</td>
     <td><a href="./command-codes#apicloudtopaneldownstream">APICloudToPanelDownstream</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apipanelupstreamrequest">APIPanelUpstreamRequest</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apicheckpanelconfigconsistency">APICheckPanelConfigConsistency</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apisyncpositiondown">APISyncPositionDown</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apipushpanelconfig">APIPushPanelConfig</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## CommLinkCoordination
 
+监测网关与云端通信链路质量，执行耗时探测并上报结果。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="2">CommLinkCoordination</td>
     <td><a href="./command-codes#apireportlinkconsuming">APIReportLinkConsuming</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apichecklinkconsuming">APICheckLinkConsuming</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## IftttCoordination
 
+作为自动化规则协同中心，管理 IFTTT/本地自动化规则的同步、订阅与执行。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="15">IftttCoordination</td>
     <td><a href="./command-codes#apiunsubscribeiftttreschange">APIUnsubscribeIftttResChange</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apienableautomation">APIEnableAutomation</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apideleteiftttlocal">APIDeleteIftttLocal</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apipushcentralautomation">APIPushCentralAutomation</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiruncloudaction">APIRunCloudAction</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetsunrisesunsetbylatlon">APIGetSunriseSunsetByLatLon</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apienablecentralautomation">APIEnableCentralAutomation</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apideletecentralautomation">APIDeleteCentralAutomation</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiqueryiftttres">APIQueryIftttRes</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apisubscribeiftttreschange">APISubscribeIftttResChange</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apienableifttt">APIEnableIfttt</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiqueryholidaylist">APIQueryHolidayList</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apipublishresourcechange">APIPublishResourceChange</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apichecklocaliftttsync">APICheckLocalIftttSync</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apidownloadiftttlocal">APIDownloadIftttLocal</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## NetworkManagement
 
+作为设备网络连接与访问策略的核心控制模块，管理远程代理及访问地址。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="3">NetworkManagement</td>
     <td><a href="./trait-codes#lanaccessaddress">LanAccessAddress</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#remoteproxyaccessenable">RemoteProxyAccessEnable</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#internetaccessaddress">InternetAccessAddress</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## Identify
 
+提供设备识别能力，可通过指示灯闪烁、声音等方式帮助用户定位物理设备。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="4">Identify</td>
     <td><a href="./trait-codes#identifytype">IdentifyType</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#reverseidentify">ReverseIdentify</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#identifytime">IdentifyTime</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./command-codes#identify">Identify</a></td>
     <td>Command</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## LightBoxCoordination
 
+管理智能灯箱设备的配置下发，控制展示内容与效果。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>LightBoxCoordination</td>
     <td><a href="./command-codes#apipushlightboxconfig">APIPushLightBoxConfig</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## IRCoordination
 
+管理网关红外学习与发射，包括码库同步、虚拟遥控器创建及按键控制。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
-    <td rowspan="11">IRCoordination</td>
+    <td rowspan="10">IRCoordination</td>
     <td><a href="./command-codes#apigetircode">APIGetIrCode</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apisavelearnedirkey">APISaveLearnedIrKey</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiqueryirlearningcode">APIQueryIrLearningCode</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apistartircodelearning">APIStartIrCodeLearning</a></td>
     <td>Command</td>
-  </tr>
-  <tr>
-    <td><a href="./command-codes#apireportirlearningresult">APIReportIrLearningResult</a></td>
-    <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetircodetarget">APIGetIrCodeTarget</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiqueryircodelibrary">APIQueryIrCodeLibrary</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetircodedownloadurl">APIGetIrCodeDownloadUrl</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apideletelearnedircode">APIDeleteLearnedIrCode</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apisendirbuttonpress">APISendIrButtonPress</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apisyncirlearningcodes">APISyncIrLearningCodes</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## NetworkCommissioning
 
+提供网络配网能力，支持 Wi-Fi、Thread 等网络的扫描、连接与配置。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="25">NetworkCommissioning</td>
     <td><a href="./command-codes#addorupdatezigbeenetwork">AddOrUpdateZigbeeNetwork</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
-    <tr>
+  <tr>
     <td><a href="./command-codes#addorupdatezigbeenetworkresponse">AddOrUpdateZigbeeNetworkResponse</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#homestationcredentials">HomeStationCredentials</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#configstaticipaddr">ConfigStaticIPAddr</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#wifichannel">WiFiChannel</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#childdeviceprovisioningstate">ChildDeviceProvisioningState</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#zigbeediagnostics">ZigbeeDiagnostics</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#zigbeeauthrandcode">ZigbeeAuthRandcode</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#zigbeeauthrandcoderesponse">ZigbeeAuthRandcodeResponse</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#wifidiagnostics">WiFiDiagnostics</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#magicpairkeychain">MagicPairKeychain</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#connecttohomestationresponse">ConnectToHomeStationResponse</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#supportednetwork">SupportedNetwork</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="./command-codes#addorupdatethreadnetwork">AddOrUpdateThreadNetwork</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#addorupdatethreadnetworkresponse">AddOrUpdateThreadNetworkResponse</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#triggerzigbeenetworkinfoupload">TriggerZigbeeNetworkInfoUpload</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#slaveaddress">SlaveAddress</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#threaddiagnostics">ThreadDiagnostics</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#scanwifinetworks">ScanWiFiNetworks</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#scanwifinetworksresponse">ScanWiFiNetworksResponse</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#addorupdatewifinetwork">AddOrUpdateWiFiNetwork</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#addorupdatewifinetworkresponse">AddOrUpdateWiFiNetworkResponse</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#connecttohomestation">ConnectToHomeStation</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#authenticationstatus">AuthenticationStatus</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./trait-codes#wifirssi">WiFiRSSI</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## ConfigurationCoordination
 
+通过组播或批量方式管理通用功能配置、资源订阅及位置信息同步。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="8">ConfigurationCoordination</td>
     <td><a href="./command-codes#apisyncconfiguration">APISyncConfiguration</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiwritefunctionresource">APIWriteFunctionResource</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apipushsubscribedresource">APIPushSubscribedResource</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apireportconfiguration">APIReportConfiguration</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apireportthingmodeldetail">APIReportThingModelDetail</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetconfiguration">APIGetConfiguration</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apideleteconfiguration">APIDeleteConfiguration</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apipushconfiguration">APIPushConfiguration</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## CloudStorageCoordination
 
+管理云录像/云存业务资源配置，获取存储配额及上传凭证等信息。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>CloudStorageCoordination</td>
     <td><a href="./command-codes#apirequestcloudstorageresource">APIRequestCloudStorageResource</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## StudioCoordination
 
+管理网关与 Aqara Studio 开发环境的集成，包括账号认证、项目备份与设备同步。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="11">StudioCoordination</td>
     <td><a href="./command-codes#apigetstudiobackupuploadurl">APIGetStudioBackupUploadUrl</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiloginbyauthcode">APILoginByAuthCode</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetauthcode">APIGetAuthCode</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apideletestudiobackup">APIDeleteStudioBackup</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetpositionbydeviceid">APIGetPositionByDeviceId</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetstudiobackupinfo">APIGetStudioBackupInfo</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetuserdevicelist">APIGetUserDeviceList</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiloginbyguardcode">APILoginByGuardCode</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apireportstudioinfo">APIReportStudioInfo</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apiconfirmstudiobackupsuccess">APIConfirmStudioBackupSuccess</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="./command-codes#apigetproxyserverinfo">APIGetProxyServerInfo</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## Temperature
 
+测量并上报环境温度，提供当前温度值及有效量程等属性。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>Temperature</td>
     <td><a href="../aqara-data-model-specification/trait-codes#currenttemperature">CurrentTemperature</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## TemperatureControl
 
+提供温度设定与调节能力，用于恒温设备的目标温度控制。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="4">TemperatureControl</td>
     <td><a href="../aqara-data-model-specification/trait-codes#settemperaturelevel">SetTemperatureLevel</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#settemperature">SetTemperature</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#changetemperaturelevel">ChangeTemperatureLevel</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#changetemperature">ChangeTemperature</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## PackageRecognition
 
+自动识别画面中的包裹，在投递或取走时可发送提醒并记录事件。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>PackageRecognition</td>
     <td><a href="../aqara-data-model-specification/trait-codes#packagerecognitionreport">PackageRecognitionReport</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## FaceRecognition
 
+采集人脸特征并与本地库比对，上报人脸识别结果及匹配信息。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>FaceRecognition</td>
     <td><a href="../aqara-data-model-specification/trait-codes#faceidreport">FaceIDReport</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## HumanPresence
 
+检测空间内人体存在，支持人数统计、轨迹及身份关联等高级感知能力。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="5">HumanPresence</td>
     <td><a href="../aqara-data-model-specification/trait-codes#holdtime">HoldTime</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#resetpresence">ResetPresence</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#activitydetected">ActivityDetected</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#presenceconfiguration">PresenceConfiguration</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#presence">Presence</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## HumanRecognition
 
+利用视觉等算法实时检测画面中的人形目标，区分人体与其他物体并上报事件。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>HumanRecognition</td>
     <td><a href="../aqara-data-model-specification/trait-codes#humanrecognitionreport">HumanRecognitionReport</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## AirQuality
 
+监测并上报空气质量指标，如 AQI 或综合空气质量等级。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="3">AirQuality</td>
     <td><a href="../aqara-data-model-specification/trait-codes#vocdensity">VOCDensity</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#airquality">AirQuality</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#vocquality">VOCQuality</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## AttitudeDetection
 
+检测设备姿态或倾斜角度变化，上报姿态异常或角度信息。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>AttitudeDetection</td>
     <td><a href="../aqara-data-model-specification/trait-codes#attitudedetected">AttitudeDetected</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## Lifter
 
+提供升降类设备的行程控制，支持设定目标位置、停止及状态查询。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="8">Lifter</td>
     <td><a href="../aqara-data-model-specification/command-codes#gotomaxpositionpercentage">GoToMaxPositionPercentage</a></td>
     <td>Command</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#autocontrol">AutoControl</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#gotopositionpercentage">GoToPositionPercentage</a></td>
     <td>Command</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#gotominpositionpercentage">GoToMinPositionPercentage</a></td>
     <td>Command</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#triptime">TripTime</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#targetpositionpercentage">TargetPositionPercentage</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currentpositionpercentage">CurrentPositionPercentage</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#stopmotion">StopMotion</a></td>
     <td>Command</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## Binding
 
+表示端点与一个或多个其他本地或远程 Endpoint 之间的持久绑定关系。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="3">Binding</td>
     <td><a href="../aqara-data-model-specification/trait-codes#binding">Binding</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#supportedbindingdevicetypes">SupportedBindingDeviceTypes</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#supportedbindingfunctions">SupportedBindingFunctions</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## PetFeeder
 
+提供宠物喂食控制能力，包括出粮份数、喂食计划及余量状态。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>PetFeeder</td>
     <td><a href="../aqara-data-model-specification/trait-codes#feed">Feed</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## Button
 
+描述按钮类输入设备的事件上报，包括单击、长按、多击等动作识别。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="2">Button</td>
     <td><a href="../aqara-data-model-specification/trait-codes#localcontroldisabled">LocalControlDisabled</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#buttonevent">ButtonEvent</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## Output
 
+提供开关输出控制能力，支持读取和控制负载的通断状态。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="9">Output</td>
     <td><a href="../aqara-data-model-specification/command-codes#toggle">Toggle</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#outputswitchingtype">OutputSwitchingType</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#onoff">OnOff</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#outputinterlockflag">OutputInterlockFlag</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#outputnodemode">OutputNodeMode</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#off">Off</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#startuponoff">StartUpOnOff</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#on">On</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## IRControl
 
+提供红外发射控制能力，用于控制空调、电视等传统红外家电。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="3">IRControl</td>
     <td><a href="../aqara-data-model-specification/command-codes#sendircode">SendIRCode</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#irkey">IRKey</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#irtype">IRType</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## HeaterCooler
 
+提供制冷/制热控制能力，包括目标温度、运行模式、风速等暖通参数。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="18">HeaterCooler</td>
     <td><a href="../aqara-data-model-specification/trait-codes#coolingtemperature">CoolingTemperature</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currenthumidity">CurrentHumidity</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#clearactivepreset">ClearActivePreset</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currenttemperature">CurrentTemperature</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#preset">Preset</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#setactivepreset">SetActivePreset</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#setback">SetBack</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#presettypes">PresetTypes</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#heatercoolermode">HeaterCoolerMode</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#activepresethandle">ActivePresetHandle</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#heatingtemperature">HeatingTemperature</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#numberofpresets">NumberOfPresets</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#heatercoolerbuttonevent">HeaterCoolerButtonEvent</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#minheatcooldeadband">MinHeatCoolDeadBand</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currenttemperaturecalibration">CurrentTemperatureCalibration</a></td>
     <td>Trait</td>
+    <td></td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#temperatureuidisplaymode">TemperatureUIDisplayMode</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#antifreezetemperature">AntiFreezeTemperature</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#heatercoolerpolarity">HeaterCoolerPolarity</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## Vibration
 
+检测振动或动静变化，上报移动、倾斜、跌落等事件。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="10">Vibration</td>
     <td><a href="../aqara-data-model-specification/trait-codes#tiltangledeviation">TiltAngleDeviation</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#stationarystate">StationaryState</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#initialtiltangle">InitialTiltAngle</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#eventreportinterval">EventReportInterval</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#objectorientationenable">ObjectOrientationEnable</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#stationarytiltangle">StationaryTiltAngle</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#peaktiltangle">PeakTiltAngle</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#objectmotiondetectionenable">ObjectMotionDetectionEnable</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#objectorientationstate">ObjectOrientationState</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#vibrationevent">VibrationEvent</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## Cube
 
+描述魔方控制器的手势识别，包括翻转、旋转、摇一摇等动作及面识别。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="4">Cube</td>
     <td><a href="../aqara-data-model-specification/trait-codes#cubeworkmodesetting">CubeWorkModeSetting</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#topface">TopFace</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#cubeevent">CubeEvent</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#topfacechanged">TopFaceChanged</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## Knob
 
+描述旋钮类输入设备的旋转角度、按压及组合动作事件。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="7">Knob</td>
     <td><a href="../aqara-data-model-specification/trait-codes#holdrotationinterval">HoldRotationInterval</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#rotationevent">RotationEvent</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#rotationdirection">RotationDirection</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#invertedrotationangle">InvertedRotationAngle</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#rotationangle">RotationAngle</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#rotationinterval">RotationInterval</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#holdrotationangle">HoldRotationAngle</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## BinaryOutputObject
 
+驱动二元执行器输出，如继电器、接触器、电磁阀或警号。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>BinaryOutputObject</td>
     <td><a href="../aqara-data-model-specification/trait-codes#binaryoutputpv">BinaryOutputPV</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## AnalogInputObject
 
+以只读方式采集连续变化的模拟量输入（如电压、温度模拟信号）。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>AnalogInputObject</td>
     <td><a href="../aqara-data-model-specification/trait-codes#analoginputpv">AnalogInputPV</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## MediaPlayback
 
+提供媒体播放控制能力，包括播放、暂停、切歌、音量及播放状态管理。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="20">MediaPlayback</td>
     <td><a href="../aqara-data-model-specification/command-codes#pause">Pause</a></td>
     <td>Command</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#targetplaybackstate">TargetPlaybackState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#stop">Stop</a></td>
     <td>Command</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#mediainformation">MediaInformation</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#playbackduration">PlaybackDuration</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#mediaplaybackcommand">MediaPlaybackCommand</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currentplaybackstate">CurrentPlaybackState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#playbackmode">PlaybackMode</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#rewind">Rewind</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#sampledposition">SampledPosition</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#play">Play</a></td>
     <td>Command</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#startover">StartOver</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#playspecificlist">PlaySpecificList</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#loginstate">LoginState</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#fastforward">FastForward</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#next">Next</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#previous">Previous</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#playbacksampledposition">PlaybackSampledPosition</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#selectedmediaoutputsource">SelectedMediaOutputSource</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#selectedsource">SelectedSource</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## MediaInput
 
+描述媒体输入源管理与切换，支持选择当前播放源及输入列表。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="2">MediaInput</td>
     <td><a href="../aqara-data-model-specification/command-codes#selectinput">SelectInput</a></td>
     <td>Command</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#mediainput">MediaInput</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## FlameDetection
 
+通过图像或传感器算法检测可见火焰，即时上报火情事件以便早期预警。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>FlameDetection</td>
     <td><a href="../aqara-data-model-specification/trait-codes#flamedetected">FlameDetected</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## OperationalState
 
+描述设备当前运行状态，如空闲、运行中、暂停、故障等。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="6">OperationalState</td>
     <td><a href="../aqara-data-model-specification/command-codes#pause">Pause</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#operationalerror">OperationalError</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#start">Start</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#stop">Stop</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#operationalstate">OperationalState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#resume">Resume</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## RefrigeratorState
 
+描述冰箱运行状态，包括空闲、制冷、除霜、故障等。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>RefrigeratorState</td>
     <td><a href="../aqara-data-model-specification/trait-codes#refrigeratoralarm">RefrigeratorAlarm</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## Mode
 
+提供设备特性模式接口，支持在多种预定义模式间切换。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="3">Mode</td>
     <td><a href="../aqara-data-model-specification/trait-codes#currentmode">CurrentMode</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#changetomode">ChangeToMode</a></td>
     <td>Command</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#changetomoderesponse">ChangeToModeResponse</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## BridgedConfiguration
 
+描述被桥接子设备的配置信息，用于 Matter/Zigbee 桥接场景。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>BridgedConfiguration</td>
     <td><a href="../aqara-data-model-specification/trait-codes#bridgedeviceid">BridgeDeviceID</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## MultiStateInputObject
 
+采集多状态离散输入，表示 N 种状态之一。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>MultiStateInputObject</td>
     <td><a href="../aqara-data-model-specification/trait-codes#multistateinputpv">MultiStateInputPV</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## MARSConfiguration
 
+提供智能负载（MARS）相关配置，用于负载识别与智能配电管理。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="2">MARSConfiguration</td>
     <td><a href="../aqara-data-model-specification/trait-codes#pulseduration">PulseDuration</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#loadtype">LoadType</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## ScreenUserInterface
 
+管理屏端用户界面配置，包括页面布局、卡片、主题及展示数据。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="7">ScreenUserInterface</td>
     <td><a href="../aqara-data-model-specification/trait-codes#themeid">ThemeID</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#allpages">Allpages</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#maxpagenum">MaxPageNum</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#screenwidth">ScreenWidth</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#dataversion">DataVersion</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#themeversion">ThemeVersion</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#screenheight">ScreenHeight</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## CustomizedConfiguration
 
+提供厂商或用户自定义扩展配置项的读写能力。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="2">CustomizedConfiguration</td>
-    <td>EnableIndicator</td>
+    <td><a href="./trait-codes#enableindicator">EnableIndicator</a></td>
+    <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
-    <td>StartUpOnOff</td>
+    <td><a href="./trait-codes#startuponoff">StartUpOnOff</a></td>
+    <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## HEPAFilterMonitoring
 
+监测 HEPA 滤芯使用情况、剩余寿命及更换提醒。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="3">HEPAFilterMonitoring</td>
     <td><a href="../aqara-data-model-specification/trait-codes#condition">Condition</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#changeindication">ChangeIndication</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#resetcondition">ResetCondition</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## ActivatedCarbonFilterMonitoring
 
+监测活性炭滤芯使用情况、剩余寿命及更换提醒。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="3">ActivatedCarbonFilterMonitoring</td>
     <td><a href="../aqara-data-model-specification/trait-codes#condition">Condition</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#changeindication">ChangeIndication</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#resetcondition">ResetCondition</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## FanControl
 
+提供风扇转速与模式控制，支持档位调节及运行状态读取。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="5">FanControl</td>
     <td><a href="../aqara-data-model-specification/trait-codes#windsetting">WindSetting</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#airflowdirection">AirflowDirection</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#fanmode">FanMode</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#fanspeed">FanSpeed</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#rocksetting">RockSetting</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## HeartMonitoring
 
+利用传感器持续或周期性测量用户心率，记录并分析心脏健康相关数据。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>HeartMonitoring</td>
     <td><a href="../aqara-data-model-specification/trait-codes#heartrate">HeartRate</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## Pressure
 
+测量并上报大气压力或系统压力值。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>Pressure</td>
     <td><a href="../aqara-data-model-specification/trait-codes#currentpressure">CurrentPressure</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## MultiStateOutputObject
 
+输出多状态离散控制命令，如 HVAC 模式或灯光场景切换。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>MultiStateOutputObject</td>
     <td><a href="../aqara-data-model-specification/trait-codes#multistateoutputpv">MultiStateOutputPV</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## Contact
 
+检测接触/门磁类二元状态，上报打开或关闭状态及可选角度信息。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="2">Contact</td>
     <td><a href="../aqara-data-model-specification/trait-codes#contactsensorstate">ContactSensorState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#openangle">OpenAngle</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## Doorbell
 
+提供门铃相关能力，包括呼叫事件上报及与室内铃铛/中继的联动。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="2">Doorbell</td>
     <td><a href="../aqara-data-model-specification/trait-codes#buttonevent">ButtonEvent</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#volume">Volume</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## WaterFreezeDetector
 
+用于检测管道或环境中是否存在结冰风险，并在达到阈值时上报水冻结相关事件。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>WaterFreezeDetector</td>
     <td><a href="../aqara-data-model-specification/trait-codes#booleanstate">BooleanState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## Speaker
 
+描述设备扬声器输出能力，包括音量控制及静音等音频输出属性。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="3">Speaker</td>
     <td><a href="../aqara-data-model-specification/trait-codes#stepvalue">StepValue</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#volume">Volume</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#mute">Mute</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## DoorLock
 
+提供智能门锁核心能力，包括锁状态、用户/凭证管理、开锁/上锁及告警事件。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="28">DoorLock</td>
     <td><a href="../aqara-data-model-specification/trait-codes#lockoperation">LockOperation</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#unboltdoor">UnboltDoor</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#supportedremotefeatures">SupportedRemoteFeatures</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#setweekdayschedule">SetWeekDaySchedule</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#quietunlockdoor">QuietUnlockDoor</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#getyeardayschedule">GetYearDaySchedule</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#numberofcredentialssupportedperuser">NumberOfCredentialsSupportedPerUser</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#lockoperationerror">LockOperationError</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#numberoftotaluserssupported">NumberOfTotalUsersSupported</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#doorstate">DoorState</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#numberofyeardayschedulessupportedperuser">NumberOfYearDaySchedulesSupportedPerUser</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#lockstate">LockState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#clearweekdayschedule">ClearWeekDaySchedule</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#getuser">GetUser</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#unlockdoor">UnlockDoor</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#enableremotecontrol">EnableRemoteControl</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#numberofpinuserssupported">NumberOfPINUsersSupported</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#setyeardayschedule">SetYearDaySchedule</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#getweekdayschedule">GetWeekDaySchedule</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#lockuserchange">LockUserChange</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#remotecontrolwithauthcode">RemoteControlWithAuthCode</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#doorlockalarm">DoorLockAlarm</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#remoteunlock">RemoteUnlock</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#numberofrfiduserssupported">NumberOfRFIDUsersSupported</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#lockdoor">LockDoor</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#clearyeardayschedule">ClearYearDaySchedule</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#quietlockdoor">QuietLockDoor</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#numberofweekdayschedulessupportedperuser">NumberOfWeekDaySchedulesSupportedPerUser</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## CO2
 
+测量并上报环境中二氧化碳浓度。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="2">CO2</td>
     <td><a href="../aqara-data-model-specification/trait-codes#co2level">CO2Level</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#co2density">CO2Density</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## VacuumOperationalState
 
+描述扫地机器人当前运行状态，如清扫中、回充中、充电中等。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="7">VacuumOperationalState</td>
     <td><a href="../aqara-data-model-specification/command-codes#gohome">GoHome</a></td>
     <td>Command</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#vacuumoperationalerror">VacuumOperationalError</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#pause">Pause</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#start">Start</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#stop">Stop</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#vacuumoperationalstate">VacuumOperationalState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#resume">Resume</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## ValveControl
 
+提供阀门自动控制或手动控制能力，用于精确调节水/气流量。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="5">ValveControl</td>
     <td><a href="../aqara-data-model-specification/trait-codes#currentvalvestate">CurrentValveState</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#defaultopenduration">DefaultOpenDuration</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#close">Close</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#remainingduration">RemainingDuration</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#open">Open</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## ScreenDisplay
 
+管理屏幕显示相关硬件属性，如分辨率、亮度、背光及显示状态。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>ScreenDisplay</td>
     <td><a href="../aqara-data-model-specification/trait-codes#screenbrightness">ScreenBrightness</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## Illuminance
 
+测量并上报环境光照度（lux）。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="2">Illuminance</td>
     <td><a href="../aqara-data-model-specification/trait-codes#samplinginterval">SamplingInterval</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currentilluminance">CurrentIlluminance</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## Camera
 
+管理摄像机基础能力，包括设备状态、模式切换、图像加密及云端相关能力。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="5">Camera</td>
     <td><a href="../aqara-data-model-specification/trait-codes#cameraactivestatus">CameraActiveStatus</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#camerartspurl">CameraRTSPURL</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#p2pcapturestatus">P2PCaptureStatus</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#camerartspenable">CameraRTSPEnable</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#p2pcaptureenabled">P2PCaptureEnabled</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## Gas
 
+检测可燃气体或有害气体泄漏并上报告警事件。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="5">Gas</td>
     <td><a href="../aqara-data-model-specification/trait-codes#currentsensitivitylevel">CurrentSensitivityLevel</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#gasdensity">GasDensity</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#selfcheck">SelfCheck</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#mute">Mute</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#gasdetected">GasDetected</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## GestureRecognition
 
+实时分析手势动作，将预定义手势转换为控制指令。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>GestureRecognition</td>
     <td><a href="../aqara-data-model-specification/trait-codes#gesturerecognitionreport">GestureRecognitionReport</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## BreathingMonitoring
 
+利用传感器持续或周期性测量用户呼吸频率与模式，支持健康监测。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>BreathingMonitoring</td>
     <td><a href="../aqara-data-model-specification/trait-codes#breathingrate">BreathingRate</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## CharacterStringValueObject
 
+定义以字符串形式表示的数据对象及其外部可见特性。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>CharacterStringValueObject</td>
     <td><a href="../aqara-data-model-specification/trait-codes#charstringvaluepv">CharStringValuePV</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## Sweeper
 
+提供扫地机器人基础控制，包括启动清扫、暂停、回充等操作与状态反馈。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="5">Sweeper</td>
     <td><a href="../aqara-data-model-specification/command-codes#continuecleaning">ContinueCleaning</a></td>
     <td>Command</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#sweeperstate">SweeperState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#pausecleaning">PauseCleaning</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#startcleaning">StartCleaning</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#stopcleaning">StopCleaning</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## EVSE
 
+提供电动汽车供电设备（EVSE）控制能力，包括充电启停、电流限制及充电状态。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="12">EVSE</td>
     <td><a href="../aqara-data-model-specification/trait-codes#evsesupplystate">EvseSupplyState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#minchargecurrent">MinChargeCurrent</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#evsestate">EvseState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#chargingenableuntil">ChargingEnabledUntil</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#batterycapacity">BatteryCapacity</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#vehicleid">VehicleID</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#evsefaultstate">EvseFaultState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#batpercentremaining">BatPercentRemaining</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#enablecharging">EnableCharging</a></td>
     <td>Command</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#maxchargecurrent">MaxChargeCurrent</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currentflow">CurrentFlow</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#disablecharging">DisableCharging</a></td>
     <td>Command</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## CO
 
+提供一氧化碳浓度监测与报警相关能力，用于检测环境中的一氧化碳泄漏并及时告警。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="3">CO</td>
     <td><a href="../aqara-data-model-specification/trait-codes#expressedstate">ExpressedState</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#codetected">CODetected</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#selftestrequest">SelfTestRequest</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## Lighting
 
+本 Function 提供对灯光动态效果的激活与控制能力。服务端提供可由不同来源驱动的效果列表，客户端可从中选择并触发。
+
+动态灯效既可用于支持 Color Control Function 的灯具，也可用于仅支持 Level Control Function 的灯具（例如可调光灯）。
+
+效果的具体实现属于厂商自定义范围。不同厂商设备即使使用相同 EffectID，也不保证表示同一种效果；同一厂商可在不同设备复用同一 EffectID 以表达一致实现。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="14">Lighting</td>
     <td><a href="../aqara-data-model-specification/trait-codes#builtineffects">BuiltInEffects</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#previeweffect">PreviewEffect</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#maxuserdefineeffects">MaxUserDefinedEffects</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currenteffectid">CurrentEffectID</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#updateuserdefineeffect">UpdateUserDefinedEffect</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#removeuserdefineeffect">RemoveUserDefinedEffect</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#geteffectdata">GetEffectData</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#starteffect">StartEffect</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#effectinfo">EffectInfo</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#adduserdefineeffect">AddUserDefinedEffect</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#maxeffectnamelength">MaxEffectNameLength</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#stoppreview">StopPreview</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#userdefineeffects">UserDefinedEffects</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#previewtransition">PreviewTransition</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## LevelControl
 
+提供亮度等级调节能力，支持设置/读取当前亮度、步进调光、以及与开关联动或解耦的调光控制。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="7">LevelControl</td>
     <td><a href="../aqara-data-model-specification/command-codes#stepbrightness">StepBrightness</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#ontransitiontime">OnTransitionTime</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#setbrightness">SetBrightness</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#stepbrightnesswithonoff">StepBrightnessWithOnOff</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#setbrightnesswithonoff">SetBrightnessWithOnOff</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currentlevel">CurrentLevel</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#offtransitiontime">OffTransitionTime</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## ColorControl
 
+提供颜色控制能力，支持通过 HSV、XY 与色温模式调节灯光颜色，并支持与亮度命令组合下发。
+
+本 Function 提供灯光颜色调节接口。颜色定义遵循 CIE 1931 色彩空间，核心控制方式为 x、y 色度坐标（对应 ColorXY / CurrentX / CurrentY）。
+此外，颜色可选通过 ColorTemperature（色温）或 Hue + Saturation 方式控制；Hue 与 Saturation 建议按 HSV（HSB）模型解释。RGB/W 原色点能力可用于扩展颜色表达范围。
+本 Function 不负责亮度控制；亮度由 LevelControl Function 提供。联动控制时，LevelControl 中的亮度值应按“当前颜色下可达到最大光强的比例”解释。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="28">ColorControl</td>
     <td><a href="../aqara-data-model-specification/command-codes#movetoxycolor">MoveToXYColor</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currenty">CurrentY</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#colormode">ColorMode</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#whitepointxy">WhitePointXY</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#colortemperature">ColorTemperature</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#ledicquantity">LEDICQuantity</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#colorrgb">ColorRGB</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#colorxy">ColorXY</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#hue">Hue</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#startupxycolor">StartUpXYColor</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#movetohuesaturationbrightness">MoveToHueSaturationBrightness</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#lightingmusicsyncmode">LightingMusicSyncMode</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#startupcolortemperature">StartUpColorTemperature</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#lightingdynamicscenemode">LightingDynamicSceneMode</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#saturation">Saturation</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currentg">CurrentG</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#movetohueandsaturation">MoveToHueAndSaturation</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#movetocolortemperaturebrightness">MoveToColorTemperatureBrightness</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currentb">CurrentB</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#lightingmusicsyncenable">LightingMusicSyncEnable</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#movetoxycolorbrightness">MoveToXYColorBrightness</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#stepcolortemperature">StepColorTemperature</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#movetocolortemperature">MoveToColorTemperature</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currentx">CurrentX</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#colorpointrgbxy">ColorPointRGBXY</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#ledicprotocol">LEDICProtocol</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#ledtype">LEDType</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currentr">CurrentR</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## PanTilt
 
+提供云台（Pan/Tilt/Zoom）控制能力，包括预置位、校准及相对/绝对移动。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>PanTilt</td>
     <td><a href="../aqara-data-model-specification/command-codes#pantiltdirectioncontrol">PanTiltDirectionControl</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## WindowCovering
 
+本 Function 提供窗帘、卷帘、百叶帘等窗饰设备的开合控制、倾斜控制、目标位置管理与运行状态反馈能力。
+
+除标准开合/倾斜控制外，本 Function 还包含 Aqara 扩展能力：场景管理（内置/自定义场景的启动、读取、预览、增删改）、手动校准、远程配对、电机映射交换与增强模式状态。
+
+客户端应结合 TravelConfigured、MotorControllability、MotorOperationStatus、EnhanceMode 等 Trait 判断设备当前可控性与操作阶段，避免在不满足条件时下发无效命令。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="37">WindowCovering</td>
     <td><a href="../aqara-data-model-specification/trait-codes#motorspeedpercentage">MotorSpeedPercentage</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#windowcoveringcategory">WindowCoveringCategory</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#windowcoveringmotorsbinding">WindowCoveringMotorsBinding</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#unconfiguredtravelcontrolpermission">UnconfiguredTravelControlPermission</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#limitpointsetting">LimitPointSetting</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#obstaclelimitmarkingblocktime">ObstacleLimitMarkingBlockTime</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#motorspeedsetting">MotorSpeedSetting</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#manualpullstartstopenabled">ManualPullStartStopEnabled</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currentrotationangle">CurrentRotationAngle</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#obstaclelimitsensitivity">ObstacleLimitSensitivity</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#triptime">TripTime</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#travelconfigured">TravelConfigured</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currentpositionpercentage">CurrentPositionPercentage</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#stopmotion">StopMotion</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#motorcontrollability">MotorControllability</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#rotationcontrol">RotationControl</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#motordirectionreversed">MotorDirectionReversed</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#gotopositionrotationpercentage">GoToPositionRotationPercentage</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#stepposition">StepPosition</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#windowcoveringtype">WindowCoveringType</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#obstaclelimitautoreboundenable">ObstacleLimitAutoReboundEnable</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#gotopositionpercentage">GoToPositionPercentage</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#gotominpositionpercentage">GoToMinPositionPercentage</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#manualpullevent">ManualPullEvent</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#targetpositionpercentage">TargetPositionPercentage</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#targetrotationangle">TargetRotationAngle</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#gotomaxpositionpercentage">GoToMaxPositionPercentage</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#windowcoveringopenorientation">WindowCoveringOpenOrientation</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#motoroperationstatus">MotorOperationStatus</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#autocontrol">AutoControl</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#manualpullstartenabled">ManualPullStartEnabled</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#limitpointcount">LimitPointCount</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#targetpositionrotationpercentage">TargetPositionRotationPercentage</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currentpositionrotationpercentage">CurrentPositionRotationPercentage</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#manualpullstopenabled">ManualPullStopEnabled</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#obstaclelimitmarkingenable">ObstacleLimitMarkingEnable</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#manualpulladaptivespeedenabled">ManualPullAdaptiveSpeedEnabled</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## Flow
 
+测量并上报液体或气体的流量速率。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>Flow</td>
     <td><a href="../aqara-data-model-specification/trait-codes#currentflow">CurrentFlow</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## OccupancySensing
 
+检测空间内是否有人存在，上报占用/空闲状态及保持时间等参数。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="5">OccupancySensing</td>
     <td><a href="../aqara-data-model-specification/trait-codes#holdtime">HoldTime</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#durationoccupiedwithinoneweek">DurationOccupiedWithinOneWeek</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#occupancy">Occupancy</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#durationoccupiedwithinoneday">DurationOccupiedWithinOneDay</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#occupancysensortype">OccupancySensorType</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## RainSensor
 
+用于检测降雨状态，上报是否正在下雨及雨量相关信息。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>RainSensor</td>
     <td><a href="../aqara-data-model-specification/trait-codes#booleanstate">BooleanState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## Smoke
 
+检测烟雾并上报报警事件，支持灵敏度、自检及静音等相关配置。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="15">Smoke</td>
     <td><a href="../aqara-data-model-specification/trait-codes#expressedstate">ExpressedState</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#fireproductidentification">FireProductIdentification</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#smokedensitydb">SmokeDensitydB</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#smokechambercontamination">SmokeChamberContamination</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#alarmerror">AlarmError</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#selfcheck">SelfCheck</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#smokestate">SmokeState</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#triggerwarning">TriggerWarning</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#selftestrequest">SelfTestRequest</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#alarmsenabled">AlarmsEnabled</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#contaminationstate">ContaminationState</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#mute">Mute</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#smokedensity">SmokeDensity</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#smokedetected">SmokeDetected</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#enableheartbeatindicator">EnableHeartbeatIndicator</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## FreshAirControl
 
+提供新风系统控制能力，支持引入室外空气并进行风量、模式等调节。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>FreshAirControl</td>
     <td><a href="../aqara-data-model-specification/trait-codes#freshairmode">FreshAirMode</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## AnalogOutputObject
 
+提供可写的连续模拟量输出控制信号。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>AnalogOutputObject</td>
     <td><a href="../aqara-data-model-specification/trait-codes#analogoutputpv">AnalogOutputPV</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## Location
 
+提供设备或目标的位置信息上报与查询能力。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>Location</td>
     <td><a href="../aqara-data-model-specification/trait-codes#motiondetected">MotionDetected</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## PetRecognition
 
+识别画面中的猫、狗等宠物个体，上报宠物出现或相关识别事件。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>PetRecognition</td>
     <td><a href="../aqara-data-model-specification/trait-codes#petrecognitionreport">PetRecognitionReport</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## ParticulateMatter
 
+监测并上报颗粒物浓度（如 PM2.5、PM10）。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="4">ParticulateMatter</td>
     <td><a href="../aqara-data-model-specification/trait-codes#pm10density">PM1.0Density</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#pm25density">PM2.5Density</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#pm25level">PM2.5Level</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#pm10density-1">PM10Density</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## OnOffSensor
 
+用于检测二元开关量输入状态，上报开/关或触发/未触发等离散状态。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
-    <th>Trait 或 Command</th>
+    <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>OnOffSensor</td>
     <td><a href="../aqara-data-model-specification/trait-codes#booleanstate">BooleanState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## SoundDetection
 
+通过麦克风采集环境声音，识别特定声音类型（如玻璃破碎、婴儿哭声）并告警。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>SoundDetection</td>
     <td><a href="../aqara-data-model-specification/trait-codes#anomalysounddetected">AnomalySoundDetected</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## Ringtone
 
+提供铃声与音乐播放控制，支持选曲、音量/时长调节及播放状态监测。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="4">Ringtone</td>
     <td><a href="../aqara-data-model-specification/trait-codes#ringtoneplayvolume">RingtonePlayVolume</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#ringtoneplayindex">RingtonePlayIndex</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#ringtoneplaystatus">RingtonePlayStatus</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#ringtoneplayduration">RingtonePlayDuration</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
 </table>
 
 ## BridgeConfiguration
 
+管理网关桥接配置，描述子设备接入、桥接能力及网络拓扑相关信息。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="2">BridgeConfiguration</td>
     <td><a href="../aqara-data-model-specification/trait-codes#bridgednodelist">BridgedNodeList</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#supportedhubcapability">SupportedHubCapability</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## MatterBridgeCommissioning
 
+管理 Matter Bridge 向第三方 Matter 生态分享桥接设备的能力。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="9">MatterBridgeCommissioning</td>
     <td><a href="../aqara-data-model-specification/trait-codes#matterbridgesupported">MatterBridgeSupported</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#matterdacstate">MatterDACState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#matteronboardingpayload">MatterOnboardingPayload</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#mattermanufacturerlist">MatterManufacturerList</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#removeonemattermanufacturer">RemoveOneMatterManufacturer</a></td>
     <td>Command</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#removeallmattermanufacturer">RemoveAllMatterManufacturer</a></td>
     <td>Command</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#matterbindstate">MatterBindState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#matterpairingstate">MatterPairingState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#matterpairingswitch">MatterPairingSwitch</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## GarageDoorOpener
 
+提供车库门控制与状态反馈，包括开/关/停止及位置状态。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="3">GarageDoorOpener</td>
     <td><a href="../aqara-data-model-specification/trait-codes#targetgaragedoorstate">TargetGarageDoorState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/command-codes#toggle">Toggle</a></td>
     <td>Command</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#currentgaragedoorstate">CurrentGarageDoorState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## RelativeHumidity
 
+测量并上报环境相对湿度，提供当前湿度值及有效量程等属性。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>RelativeHumidity</td>
     <td><a href="../aqara-data-model-specification/trait-codes#currenthumidity">CurrentHumidity</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
-
 ## Sleep
+
+监测睡眠相关状态，上报睡眠阶段、时长或质量等指标。
 
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td rowspan="4">Sleep</td>
     <td><a href="../aqara-data-model-specification/trait-codes#sleepquality">SleepQuality</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#sleepstage">SleepStage</a></td>
     <td>Trait</td>
+    <td>O</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#sleepstate">SleepState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
   <tr>
     <td><a href="../aqara-data-model-specification/trait-codes#onbed">OnBed</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## BinaryInputObject
 
+采集二元状态输入，如门磁、开关等 true/false 或 active/inactive 量。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>BinaryInputObject</td>
     <td><a href="../aqara-data-model-specification/trait-codes#binaryinputpv">BinaryInputPV</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## WaterLeak
 
+检测水浸事件，在检测到漏水时及时上报告警。
+
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>WaterLeak</td>
     <td><a href="../aqara-data-model-specification/trait-codes#leakstate">LeakState</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
 
 ## VehicleDetection
+
+检测监控区域内的车辆出现，上报车辆存在事件供安防或自动化使用。
 
 <table>
   <tr>
     <th>functionCode</th>
     <th>trait/commandCode</th>
     <th>Trait 或 Command？</th>
+    <th>Conformance</th>
   </tr>
   <tr>
     <td>VehicleDetection</td>
     <td><a href="../aqara-data-model-specification/trait-codes#vehicledetected">VehicleDetected</a></td>
     <td>Trait</td>
+    <td>M</td>
   </tr>
 </table>
