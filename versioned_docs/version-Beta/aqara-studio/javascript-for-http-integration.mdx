@@ -242,7 +242,16 @@ To ensure Aqara Studio can correctly obtain function point information, you must
 | traitCode | Corresponds to `traitCode` in the Aqara Data Model Specification. For the specific available values, please refer to [Trait Codes](../aqara-developer/aqara-data-model-specification/trait-codes.mdx). |
 | dataType  | Data point type. Supported values: <ul><li><code>bool</code> / <code>boolean</code>: Boolean</li><li><code>numerical</code> / <code>number</code>: Numeric</li><li><code>enum</code>: Enumeration</li><li><code>text</code> / <code>string</code>: Text</li></ul> |
 | enumRange | Enumeration options. Required only when a general data point uses `dataType: "enum"`. The array must not be empty. Each item contains an integer `value` and a string `label`; both must be unique, and `label` must not be empty. |
+| min | Minimum value for a general numeric data point. Effective only when `dataType` is `numerical` / `number`; `minimum` can also be used as an alias. |
+| max | Maximum value for a general numeric data point. Effective only when `dataType` is `numerical` / `number`; `maximum` can also be used as an alias. |
+| step | Step value for a general numeric data point. It must be greater than 0. Effective only when `dataType` is `numerical` / `number`; `resolution` can also be used as an alias. |
+| precision | Precision value for a general numeric data point. It must be greater than or equal to 0. Effective only when `dataType` is `numerical` / `number`. |
+| decimals | Number of decimal places for a general numeric data point. It must be an integer greater than or equal to 0. Effective only when `dataType` is `numerical` / `number`. |
 | access    | Access mode of the resource. <ul><li>1: Read-only</li><li>2: Read-write</li></ul> |
+
+:::note
+For `numerical` / `number` points, when Aqara Studio calls `buildWriteRequest`, it formats the write value by `decimals` first; if `decimals` is not configured, it infers decimal places from `step` / `resolution`. To avoid binary floating-point artifacts such as `0.30000030249357224`, explicitly configure `decimals` or `step` for points that write fractional values. `precision` only describes precision and is not used as the decimal-place truncation rule for outgoing write payloads.
+:::
 
 :::tip
 When adding new data points, you may choose one of the following approaches depending on your needs:
@@ -276,6 +285,11 @@ To ensure Aqara Studio can correctly obtain device information, you need to make
             "pointId": "temperature",
             "pointName": "Temperature",
             "dataType": "numerical",
+            "min": -20,
+            "max": 50,
+            "step": 0.1,
+            "precision": 0.1,
+            "decimals": 1,
             "access": "1"
         },
         {

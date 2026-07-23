@@ -68,9 +68,18 @@ You need to return an array containing one or more data point objects (such as `
 | traitCode | Corresponds to `traitCode` in the Aqara Data Model Specification. For the specific available values, please refer to [Trait Codes](../aqara-developer/aqara-data-model-specification/trait-codes.mdx). |
 | dataType  | Data point type. Supported values: <ul><li><code>bool</code>: Boolean</li><li><code>numerical</code>: Numeric</li><li><code>enum</code>: Enumeration</li><li><code>text</code>: Text</li></ul> |
 | enumRange | Enumeration options. Required only when a general data point uses `dataType: "enum"`. The array must not be empty. Each item contains an integer `value` and a string `label`; both must be unique, and `label` must not be empty. |
+| min | Minimum value for a general numeric data point. Effective only when `dataType` is `numerical`; `minimum` can also be used as an alias. |
+| max | Maximum value for a general numeric data point. Effective only when `dataType` is `numerical`; `maximum` can also be used as an alias. |
+| step | Step value for a general numeric data point. It must be greater than 0. Effective only when `dataType` is `numerical`; `resolution` can also be used as an alias. |
+| precision | Precision value for a general numeric data point. It must be greater than or equal to 0. Effective only when `dataType` is `numerical`. |
+| decimals | Number of decimal places for a general numeric data point. It must be an integer greater than or equal to 0. Effective only when `dataType` is `numerical`. |
 | access    | Access capability bit mask. <ul><li>1: Readable</li><li>2: Writable</li><li>3: Readable and writable</li></ul> |
 | subTopic  | (**Only applicable for MQTT devices**) Aqara Studio subscribes to this topic to get the latest data for this point. Please fill in according to your device protocol or manufacturer documentation. |
 | pubTopic  | (**Only applicable for MQTT devices**) Aqara Studio sends control message data to this topic for the data point. Please fill in according to your device protocol or manufacturer documentation. (For read-only points, leave this field empty) |
+
+:::note
+For `numerical` points, when Aqara Studio calls `buildWriteRequest`, it formats the write value by `decimals` first; if `decimals` is not configured, it infers decimal places from `step` / `resolution`. To avoid binary floating-point artifacts such as `0.30000030249357224`, explicitly configure `decimals` or `step` for points that write fractional values. `precision` only describes precision and is not used as the decimal-place truncation rule for outgoing write payloads.
+:::
 
 :::tip
 When adding new data points, you may choose one of the following approaches depending on your needs:
@@ -119,6 +128,11 @@ function parseDiscoverPointsResponse(deviceId) {
 			pointId: "1#Chiller Outlet Water Temp Set Read",
 			pointName: "1#Chiller Outlet Water Temp Set Read",
 			dataType: "numerical",
+			min: -20,
+			max: 50,
+			step: 0.1,
+			precision: 0.1,
+			decimals: 1,
 			access: 2,
 			subTopic: "/WEI-iEdge/realdata/xxx",
 			pubTopic: "/WEI-iEdge/write/req/xxx"
@@ -127,6 +141,11 @@ function parseDiscoverPointsResponse(deviceId) {
 			pointId: "1#Chiller Cooling Capacity Percentage",
 			pointName: "1#Chiller Cooling Capacity Percentage",
 			dataType: "numerical",
+			min: 0,
+			max: 100,
+			step: 1,
+			precision: 1,
+			decimals: 0,
 			access: 2,
 			subTopic: "/WEI-iEdge/realdata/xxx",
 			pubTopic: "/WEI-iEdge/write/req/xxx"
