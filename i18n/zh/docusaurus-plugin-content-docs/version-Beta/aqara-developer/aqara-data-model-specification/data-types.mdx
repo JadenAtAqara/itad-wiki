@@ -40,7 +40,7 @@ AddOrUpdateThreadNetwork Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | OperationalDataset | octetString | M | 参数。 |
+| 0 | OperationalDataset | octetString | 必选 | 参数。 |
 
 ## AddOrUpdateThreadNetworkResponse Command Structure
 
@@ -48,7 +48,7 @@ AddOrUpdateThreadNetworkResponse Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | StatusCodes | uint8 | M | 参数。 |
+| 0 | StatusCodes | uint8 | 必选 | 参数。 |
 
 ## AddOrUpdateWiFiNetwork Command Structure
 
@@ -56,12 +56,12 @@ AddOrUpdateWiFiNetwork Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | SSID | characterString | O | 参数。 |
-| 1 | Credentials | characterString | O | 参数。 |
-| 2 | Encryption | uint8 | O | 参数。 |
-| 3 | CountryDomain | characterString | O | 参数。 |
-| 4 | Bindkey | characterString | O | 参数。 |
-| 5 | TimeZone | characterString | O | 参数。 |
+| 0 | SSID | characterString | 可选 | 参数。 |
+| 1 | Credentials | characterString | 可选 | 参数。 |
+| 2 | Encryption | uint8 | 可选 | 参数。 |
+| 3 | CountryDomain | characterString | 可选 | 参数。 |
+| 4 | Bindkey | characterString | 可选 | 参数。 |
+| 5 | TimeZone | characterString | 可选 | 参数。 |
 
 ## AddOrUpdateWiFiNetworkResponse Command Structure
 
@@ -69,7 +69,7 @@ AddOrUpdateWiFiNetworkResponse Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | StatusCodes | uint8 | M | 参数。 |
+| 0 | StatusCodes | uint8 | 必选 | 参数。 |
 
 ## AddOrUpdateZigbeeNetwork Command Structure
 
@@ -77,11 +77,11 @@ AddOrUpdateZigbeeNetwork Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Channel | uint8 | M | 参数。 |
-| 1 | ExtendedPANID | octetString | M | 参数。 |
-| 2 | NetworkKey | octetString | M | 参数。 |
-| 3 | NetworkName | characterString | O | 参数。 |
-| 4 | PANID | uint16 | M | 参数。 |
+| 0 | Channel | uint8 | 必选 | 参数。 |
+| 1 | ExtendedPANID | octetString | 必选 | 参数。 |
+| 2 | NetworkKey | octetString | 必选 | 参数。 |
+| 3 | NetworkName | characterString | 可选 | 参数。 |
+| 4 | PANID | uint16 | 必选 | 参数。 |
 
 ## AddOrUpdateZigbeeNetworkResponse Command Structure
 
@@ -89,7 +89,7 @@ AddOrUpdateZigbeeNetworkResponse Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | StatusCodes | uint8 | M | 参数。 |
+| 0 | StatusCodes | uint8 | 必选 | 参数。 |
 
 ## AddressingModeEnum8
 
@@ -108,8 +108,8 @@ AddUserDefinedEffect Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | EffectName | characterString | M | 新增场景名称，UTF-8 字节长度不得超过 MaxEffectNameLength。 |
-| 1 | EffectData | characterString | M | 新增场景的原始数据，编码格式应与 EffectData 规范一致。 |
+| 0 | EffectName | characterString | 必选 | 新增场景名称，UTF-8 字节长度不得超过 MaxEffectNameLength。 |
+| 1 | EffectData | characterString | 必选 | 新增场景的原始数据，编码格式应与 EffectData 规范一致。 |
 
 ## AirflowDirectionEnum8
 
@@ -151,10 +151,10 @@ AddUserDefinedEffect Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | WidgetID | uint16 | M | 控件 ID。 |
-| 1 | WidgetPosition | [WidgetPositionStructure](./data-types#widgetpositionstructure) | M | 控件位置与尺寸。 |
-| 2 | WidgetMode | enum8 | M | 控件模式：0=Basic，1=Lighting-ColorTempControl，2=Lighting-BrightnessControl，3=Lighting-ColorControl，4=AirCondition-TemperatureControl，5=AirCondition-FanSpeed，6=WindowCovering-Operation，7=DoorLock-Operation。 |
-| 3 | AssociatedDeviceInfo | [AssociatedDeviceInfoStructure](./data-types#associateddeviceinfostructure) | M | 关联设备信息。 |
+| 0 | WidgetID | uint16 | 必选 | 控件 ID。 |
+| 1 | WidgetPosition | [WidgetPositionStructure](./data-types#widgetpositionstructure) | 必选 | 控件位置与尺寸。 |
+| 2 | WidgetMode | enum8 | 必选 | 控件模式：0=Basic，1=Lighting-ColorTempControl，2=Lighting-BrightnessControl，3=Lighting-ColorControl，4=AirCondition-TemperatureControl，5=AirCondition-FanSpeed，6=WindowCovering-Operation，7=DoorLock-Operation。 |
+| 3 | AssociatedDeviceInfo | [AssociatedDeviceInfoStructure](./data-types#associateddeviceinfostructure) | 必选 | 关联设备信息。 |
 
 ## AnomalySoundDetectedEnum8
 
@@ -203,13 +203,13 @@ AddUserDefinedEffect Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | DeviceName | characterString | M | 关联设备名称。 |
-| 1 | DeviceTypeID | uint16 | M | Aqara 设备类型 ID。 |
-| 2 | DeviceIcon | characterString | M | 设备图标。 |
-| 3 | DeviceID | characterString | M | 目标设备 Device ID。 |
-| 4 | EndPointID | uint16 | M | 目标 Endpoint ID。 |
-| 5 | ParentID | characterString | O | 父设备 Device ID；同一 Matter 控制器下可省略。 |
-| 6 | ModelValue | characterString | O | 非 Matter 设备的模型值；场景无需设置。 |
+| 0 | DeviceName | characterString | 必选 | 关联设备名称。 |
+| 1 | DeviceTypeID | uint16 | 必选 | Aqara 设备类型 ID。 |
+| 2 | DeviceIcon | characterString | 必选 | 设备图标。 |
+| 3 | DeviceID | characterString | 必选 | 目标设备 Device ID。 |
+| 4 | EndPointID | uint16 | 必选 | 目标 Endpoint ID。 |
+| 5 | ParentID | characterString | 可选 | 父设备 Device ID；同一 Matter 控制器下可省略。 |
+| 6 | ModelValue | characterString | 可选 | 非 Matter 设备的模型值；场景无需设置。 |
 
 ## AttitudeDetectedEnum8
 
@@ -261,12 +261,12 @@ AddUserDefinedEffect Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | DeviceID | characterString | M | 目标设备的 Device ID。最大长度 32 字节。 |
-| 1 | ParentID | characterString | O | 目标设备所属父设备 Device ID。若与绑定方处于同一首选 Matter 控制器，则无需设置。最大长度 32 字节。 |
-| 2 | GroupID | uint32 | O | 绑定目标为设备组时 SHALL 设置（Conformance: GROUP）。 |
-| 3 | ModelValue | characterString | O | 针对非 Matter 设备 SHALL 设置目标模型值（Conformance: !MATTER）。最大长度 32 字节。 |
-| 4 | EndPointID | uint32 | M | 目标设备的 Endpoint ID。 |
-| 5 | DeviceTypeID | uint32 | M | 目标设备的 Aqara Device Type ID。 |
+| 0 | DeviceID | characterString | 必选 | 目标设备的 Device ID。最大长度 32 字节。 |
+| 1 | ParentID | characterString | 可选 | 目标设备所属父设备 Device ID。若与绑定方处于同一首选 Matter 控制器，则无需设置。最大长度 32 字节。 |
+| 2 | GroupID | uint32 | 可选 | 绑定目标为设备组时 SHALL 设置（Conformance: GROUP）。 |
+| 3 | ModelValue | characterString | 可选 | 针对非 Matter 设备 SHALL 设置目标模型值（Conformance: !MATTER）。最大长度 32 字节。 |
+| 4 | EndPointID | uint32 | 必选 | 目标设备的 Endpoint ID。 |
+| 5 | DeviceTypeID | uint32 | 必选 | 目标设备的 Aqara Device Type ID。 |
 
 ## BuiltInEffectsTraitPresentValueStructure
 
@@ -274,8 +274,8 @@ AddUserDefinedEffect Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | EffectID | uint8 | M | 内置场景 ID。 |
-| 1 | BuiltInEffectLabelID | enum8 | M | 内置场景标签 ID。 |
+| 0 | EffectID | uint8 | 必选 | 内置场景 ID。 |
+| 1 | BuiltInEffectLabelID | enum8 | 必选 | 内置场景标签 ID。 |
 
 ## ButtonEventEnum8
 
@@ -313,7 +313,7 @@ ChangeTemperature Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | SetTemperature | float | M | 设置温度；默认值为 `20`。 |
+| 0 | SetTemperature | float | 必选 | 设置温度；默认值为 `20`。 |
 
 ## ChangeTemperatureLevel Command Structure
 
@@ -321,7 +321,7 @@ ChangeTemperatureLevel Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | SetTemperatureLevel | uint8 | M | 设置温度等级；默认值为 `0`。 |
+| 0 | SetTemperatureLevel | uint8 | 必选 | 设置温度等级；默认值为 `0`。 |
 
 ## ChangeToMode Command Structure
 
@@ -329,7 +329,7 @@ ChangeToMode Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | CurrentMode | uint16 | M | 当前模式。 |
+| 0 | CurrentMode | uint16 | 必选 | 当前模式。 |
 
 ## ChangeToModeResponseEnum16
 
@@ -365,8 +365,8 @@ ClearWeekDaySchedule Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | WeekDayIndex | uint8 | M | 工作日索引；默认值为 `1`。 |
-| 1 | UserIndex | uint16 | M | 用户索引；默认值为 `1`。 |
+| 0 | WeekDayIndex | uint8 | 必选 | 工作日索引；默认值为 `1`。 |
+| 1 | UserIndex | uint16 | 必选 | 用户索引；默认值为 `1`。 |
 
 ## ClearYearDaySchedule Command Structure
 
@@ -374,8 +374,8 @@ ClearYearDaySchedule Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | YearDayIndex | uint8 | M | 年日序号；默认值为 `1`。 |
-| 1 | UserIndex | uint16 | M | 用户索引；默认值为 `1`。 |
+| 0 | YearDayIndex | uint8 | 必选 | 年日序号；默认值为 `1`。 |
+| 1 | UserIndex | uint16 | 必选 | 用户索引；默认值为 `1`。 |
 
 ## CO2LevelEnum8
 
@@ -403,12 +403,12 @@ ClearYearDaySchedule Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | ColorPointRX | uint16 | M | 该参数表示设备当前红色原色点在 CIE xyY 色彩空间中定义的归一化色度值 x。x 与 ColorPointRX 属性满足关系：x = ColorPointRX / 65536（ColorPointRX 取值范围为 0 至 65279，含边界）。 |
-| 1 | ColorPointRY | uint16 | M | 该参数表示设备当前红色原色点在 CIE xyY 色彩空间中定义的归一化色度值 y。y 与 ColorPointRY 属性满足关系：y = ColorPointRY / 65536（ColorPointRY 取值范围为 0 至 65279，含边界）。 |
-| 2 | ColorPointGX | uint16 | M | 该参数表示设备当前绿色原色点在 CIE xyY 色彩空间中定义的归一化色度值 x。x 与 ColorPointGX 属性满足关系：x = ColorPointGX / 65536（ColorPointGX 取值范围为 0 至 65279，含边界）。 |
-| 3 | ColorPointGY | uint16 | M | 该参数表示设备当前绿色原色点在 CIE xyY 色彩空间中定义的归一化色度值 y。y 与 ColorPointGY 属性满足关系：y = ColorPointGY / 65536（ColorPointGY 取值范围为 0 至 65279，含边界）。 |
-| 4 | ColorPointBX | uint16 | M | 该参数表示设备当前蓝色原色点在 CIE xyY 色彩空间中定义的归一化色度值 x。x 与 ColorPointBX 属性满足关系：x = ColorPointBX / 65536（ColorPointBX 取值范围为 0 至 65279，含边界）。 |
-| 5 | ColorPointBY | uint16 | M | 该参数表示设备当前蓝色原色点在 CIE xyY 色彩空间中定义的归一化色度值 y。y 与 ColorPointBY 属性满足关系：y = ColorPointBY / 65536（ColorPointBY 取值范围为 0 至 65279，含边界）。 |
+| 0 | ColorPointRX | uint16 | 必选 | 该参数表示设备当前红色原色点在 CIE xyY 色彩空间中定义的归一化色度值 x。x 与 ColorPointRX 属性满足关系：x = ColorPointRX / 65536（ColorPointRX 取值范围为 0 至 65279，含边界）。 |
+| 1 | ColorPointRY | uint16 | 必选 | 该参数表示设备当前红色原色点在 CIE xyY 色彩空间中定义的归一化色度值 y。y 与 ColorPointRY 属性满足关系：y = ColorPointRY / 65536（ColorPointRY 取值范围为 0 至 65279，含边界）。 |
+| 2 | ColorPointGX | uint16 | 必选 | 该参数表示设备当前绿色原色点在 CIE xyY 色彩空间中定义的归一化色度值 x。x 与 ColorPointGX 属性满足关系：x = ColorPointGX / 65536（ColorPointGX 取值范围为 0 至 65279，含边界）。 |
+| 3 | ColorPointGY | uint16 | 必选 | 该参数表示设备当前绿色原色点在 CIE xyY 色彩空间中定义的归一化色度值 y。y 与 ColorPointGY 属性满足关系：y = ColorPointGY / 65536（ColorPointGY 取值范围为 0 至 65279，含边界）。 |
+| 4 | ColorPointBX | uint16 | 必选 | 该参数表示设备当前蓝色原色点在 CIE xyY 色彩空间中定义的归一化色度值 x。x 与 ColorPointBX 属性满足关系：x = ColorPointBX / 65536（ColorPointBX 取值范围为 0 至 65279，含边界）。 |
+| 5 | ColorPointBY | uint16 | 必选 | 该参数表示设备当前蓝色原色点在 CIE xyY 色彩空间中定义的归一化色度值 y。y 与 ColorPointBY 属性满足关系：y = ColorPointBY / 65536（ColorPointBY 取值范围为 0 至 65279，含边界）。 |
 
 ## ConfigStaticIPAddr Command Structure
 
@@ -416,13 +416,13 @@ ConfigStaticIPAddr Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | IPAddress | characterString | O | IP 地址，字符串（最大长度 32）。示例：`192.168.1.100`。 |
-| 1 | SubnetMask | characterString | O | 子网掩码，字符串（最大长度 32）。示例：`255.255.255.0`。 |
-| 2 | DefaultGateway | characterString | O | 默认网关，字符串（最大长度 32）。示例：`192.168.1.1`。 |
-| 3 | PrimaryDNS | characterString | O | 首选 DNS，字符串（最大长度 32）。示例：`8.8.8.8`。 |
-| 4 | SecondaryDNS | characterString | O | 备选 DNS，字符串（最大长度 32）。示例：`8.8.4.4`。 |
-| 5 | InterfaceName | characterString | O | 接口名称，字符串（最大长度 32）。示例：`eth0`。为空时表示应用于所有网络接口。 |
-| 6 | AddressingMode | enum8 | O | 地址分配模式。`0` 表示切换为 DHCP 获取 IP（此时 `IPAddress`、`SubnetMask`、`PrimaryDNS`、`DefaultGateway`、`SecondaryDNS` 参数会被忽略）；`1` 表示静态 IP 模式（可配置上述网络参数）。若该字段不存在，默认按静态 IP 模式处理。 |
+| 0 | IPAddress | characterString | 可选 | IP 地址，字符串（最大长度 32）。示例：`192.168.1.100`。 |
+| 1 | SubnetMask | characterString | 可选 | 子网掩码，字符串（最大长度 32）。示例：`255.255.255.0`。 |
+| 2 | DefaultGateway | characterString | 可选 | 默认网关，字符串（最大长度 32）。示例：`192.168.1.1`。 |
+| 3 | PrimaryDNS | characterString | 可选 | 首选 DNS，字符串（最大长度 32）。示例：`8.8.8.8`。 |
+| 4 | SecondaryDNS | characterString | 可选 | 备选 DNS，字符串（最大长度 32）。示例：`8.8.4.4`。 |
+| 5 | InterfaceName | characterString | 可选 | 接口名称，字符串（最大长度 32）。示例：`eth0`。为空时表示应用于所有网络接口。 |
+| 6 | AddressingMode | enum8 | 可选 | 地址分配模式。`0` 表示切换为 DHCP 获取 IP（此时 `IPAddress`、`SubnetMask`、`PrimaryDNS`、`DefaultGateway`、`SecondaryDNS` 参数会被忽略）；`1` 表示静态 IP 模式（可配置上述网络参数）。若该字段不存在，默认按静态 IP 模式处理。 |
 
 ## ConfigurationVersionTraitPresentValueStructure
 
@@ -430,8 +430,8 @@ ConfigStaticIPAddr Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | ConfigurationVersion | uint32 | M | 设备配置版本号。 |
-| 1 | ThingModelMd5 | characterString | M | 物模型 MD5 校验值。 |
+| 0 | ConfigurationVersion | uint32 | 必选 | 设备配置版本号。 |
+| 1 | ThingModelMd5 | characterString | 必选 | 物模型 MD5 校验值。 |
 
 ## ConnectToHomeStation Command Structure
 
@@ -439,8 +439,8 @@ ConnectToHomeStation Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | SSID | characterString | M | SSID。 |
-| 1 | Credentials | characterString | M | 凭证。 |
+| 0 | SSID | characterString | 必选 | SSID。 |
+| 1 | Credentials | characterString | 必选 | 凭证。 |
 
 ## ConnectToHomeStationResponse Command Structure
 
@@ -448,7 +448,7 @@ ConnectToHomeStationResponse Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | ConnectToHomeStationResponse | enum8 | M | 连接家庭基站反馈。 |
+| 0 | ConnectToHomeStationResponse | enum8 | 必选 | 连接家庭基站反馈。 |
 
 ## CubeEventEnum8
 
@@ -551,7 +551,7 @@ ConnectToHomeStationResponse Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | AlarmCode | enum8 | M | 门锁告警类型。 |
+| 0 | AlarmCode | enum8 | 必选 | 门锁告警类型。 |
 
 ## DoorStateEnum8
 
@@ -572,9 +572,9 @@ ConnectToHomeStationResponse Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | EffectID | uint8 | M | 场景 ID。 |
-| 1 | EffectData | characterString | M | 场景数据。 |
-| 2 | EffectName | characterString | M | 场景名称。 |
+| 0 | EffectID | uint8 | 必选 | 场景 ID。 |
+| 1 | EffectData | characterString | 必选 | 场景数据。 |
+| 2 | EffectName | characterString | 必选 | 场景名称。 |
 
 ## EndpointStructureNodeStructure
 
@@ -582,8 +582,8 @@ ConnectToHomeStationResponse Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | EndpointId | uint16 | M | Endpoint ID。 |
-| 1 | ChildEndpoints | list[[EndpointStructureNodeStructure](./data-types#endpointstructurenodestructure)] | O | 子 Endpoint 节点列表，用于表达嵌套层级。 |
+| 0 | EndpointId | uint16 | 必选 | Endpoint ID。 |
+| 1 | ChildEndpoints | list[[EndpointStructureNodeStructure](./data-types#endpointstructurenodestructure)] | 可选 | 子 Endpoint 节点列表，用于表达嵌套层级。 |
 
 ## EndpointStructureTraitPresentValueStructure
 
@@ -591,8 +591,8 @@ ConnectToHomeStationResponse Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | EndpointId | uint16 | M | 根 Endpoint ID。 |
-| 1 | ChildEndpoints | list[[EndpointStructureNodeStructure](./data-types#endpointstructurenodestructure)] | O | 子 Endpoint 层级结构。 |
+| 0 | EndpointId | uint16 | 必选 | 根 Endpoint ID。 |
+| 1 | ChildEndpoints | list[[EndpointStructureNodeStructure](./data-types#endpointstructurenodestructure)] | 可选 | 子 Endpoint 层级结构。 |
 
 ## EvseFaultStateEnum32
 
@@ -682,6 +682,17 @@ ConnectToHomeStationResponse Command 的参数结构体。
 | --- | --- | --- |
 | 0x01 | RemoteFeeding | 喂养 |
 
+##  FilterTypeEnum8
+
+该枚举定义 FilterType Trait 的 Present Value 有效取值。
+
+| 取值  | 名称               | 说明     |
+|-------|--------------------|----------|
+| 0x00  | HEPA               | HEPA     |
+| 0x01  | Activated Carbon   | 活性炭   |
+| 0x02  | Photocatalytic     | 光触媒   |
+| 0x03  | UV                 | 紫外线   |
+
 ## FlameDetectedEnum8
 
 该枚举定义 FlameDetected Trait 的 Present Value 有效取值。
@@ -729,7 +740,7 @@ GetEffectData Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | EffectID | uint8 | M | 待读取场景数据的场景 ID，应存在于 BuiltIn 或 UserDefined 列表中。 |
+| 0 | EffectID | uint8 | 必选 | 待读取场景数据的场景 ID，应存在于 BuiltIn 或 UserDefined 列表中。 |
 
 ## GetWeekDaySchedule Command Structure
 
@@ -737,8 +748,8 @@ GetWeekDaySchedule Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | WeekDayIndex | uint8 | M | 工作日索引；默认值为 `1`。 |
-| 1 | UserIndex | uint16 | M | 用户索引；默认值为 `1`。 |
+| 0 | WeekDayIndex | uint8 | 必选 | 工作日索引；默认值为 `1`。 |
+| 1 | UserIndex | uint16 | 必选 | 用户索引；默认值为 `1`。 |
 
 ## GetYearDaySchedule Command Structure
 
@@ -746,8 +757,8 @@ GetYearDaySchedule Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | YearDayIndex | uint8 | M | 年日序号；默认值为 `1`。 |
-| 1 | UserIndex | uint16 | M | 用户索引；默认值为 `1`。 |
+| 0 | YearDayIndex | uint8 | 必选 | 年日序号；默认值为 `1`。 |
+| 1 | UserIndex | uint16 | 必选 | 用户索引；默认值为 `1`。 |
 
 ## GoToPositionPercentage Command Structure
 
@@ -755,8 +766,8 @@ GoToPositionPercentage Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | PositionPercentage | float | M | 开合比。 |
-| 1 | TransitionTime | uint32 | O | 时间。 |
+| 0 | PositionPercentage | float | 必选 | 开合比。 |
+| 1 | TransitionTime | uint32 | 可选 | 时间。 |
 
 ## GoToPositionRotationPercentage Command Structure
 
@@ -764,7 +775,7 @@ GoToPositionRotationPercentage Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | RotationPercentage | float | M | 倾斜旋转百分比。 |
+| 0 | RotationPercentage | float | 必选 | 倾斜旋转百分比。 |
 
 ## HeaterCoolerButtonEventEnum8
 
@@ -826,8 +837,8 @@ GoToPositionRotationPercentage Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | QRCode | characterString | M | 配对二维码原始字符串数据。 |
-| 1 | DigitalPairingCode | characterString | M | 8 位数字配对码。 |
+| 0 | QRCode | characterString | 必选 | 配对二维码原始字符串数据。 |
+| 1 | DigitalPairingCode | characterString | 必选 | 8 位数字配对码。 |
 
 ## HomeStationCredentialsTraitPresentValueStructure
 
@@ -835,8 +846,8 @@ GoToPositionRotationPercentage Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | SSID | characterString | M | 家庭基站 SSID。 |
-| 1 | Credentials | characterString | M | 家庭基站连接凭证。 |
+| 0 | SSID | characterString | 必选 | 家庭基站 SSID。 |
+| 1 | Credentials | characterString | 必选 | 家庭基站连接凭证。 |
 
 ## HubConnectionStatusEnum8
 
@@ -861,7 +872,7 @@ Identify Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | IdentifyTime | float | M | 设备继续自识别的剩余时间，单位为秒。值为 `0` 时，设备 MAY 使用默认识别时长。 |
+| 0 | IdentifyTime | float | 必选 | 设备继续自识别的剩余时间，单位为秒。值为 `0` 时，设备 MAY 使用默认识别时长。 |
 
 ## IdentifyTypeEnum8
 
@@ -1020,7 +1031,7 @@ LockDoor Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Code | characterString | O | 参数。 |
+| 0 | Code | characterString | 可选 | 参数。 |
 
 ## LockOperationErrorTraitPresentValueStructure
 
@@ -1028,13 +1039,13 @@ LockDoor Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | LockOperationType | enum8 | M | 执行的门锁操作类型。 |
-| 1 | OperationSource | enum8 | M | 门锁操作来源。 |
-| 2 | OperationError | enum8 | M | 操作失败原因。 |
-| 3 | UserIndex | uint16 | M | 执行门锁操作的用户索引。 |
-| 4 | FabricID | uint64 | M | 执行门锁操作的 fabric ID。 |
-| 5 | SourceNode | uint64 | M | 执行门锁操作的 node ID。 |
-| 6 | Credentials | list[Struct] | O | 执行门锁操作时使用的凭证列表；无凭证时可为空。 |
+| 0 | LockOperationType | enum8 | 必选 | 执行的门锁操作类型。 |
+| 1 | OperationSource | enum8 | 必选 | 门锁操作来源。 |
+| 2 | OperationError | enum8 | 必选 | 操作失败原因。 |
+| 3 | UserIndex | uint16 | 必选 | 执行门锁操作的用户索引。 |
+| 4 | FabricID | uint64 | 必选 | 执行门锁操作的 fabric ID。 |
+| 5 | SourceNode | uint64 | 必选 | 执行门锁操作的 node ID。 |
+| 6 | Credentials | list[Struct] | 可选 | 执行门锁操作时使用的凭证列表；无凭证时可为空。 |
 
 ## LockOperationTraitPresentValueStructure
 
@@ -1042,13 +1053,13 @@ LockDoor Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | LockOperationType | enum8 | M | 执行的门锁操作类型。 |
-| 1 | OperationSource | enum8 | M | 门锁操作来源。 |
-| 2 | UserSource | enum8 | O | UserId 与 CredentialId 的来源。省略时默认 Lock Local。 |
-| 3 | UserId | uint32 | O | 用户唯一标识。 |
-| 4 | CredentialId | uint32 | O | 凭证唯一标识。 |
-| 5 | MatterVendorId | uint16 | O | 当 OperationSource 为 Remote(Matter Ecosystem) 时表示 Matter Vendor ID。 |
-| 6 | LockPosition | enum8 | O | 门锁操作位置。 |
+| 0 | LockOperationType | enum8 | 必选 | 执行的门锁操作类型。 |
+| 1 | OperationSource | enum8 | 必选 | 门锁操作来源。 |
+| 2 | UserSource | enum8 | 可选 | UserId 与 CredentialId 的来源。省略时默认 Lock Local。 |
+| 3 | UserId | uint32 | 可选 | 用户唯一标识。 |
+| 4 | CredentialId | uint32 | 可选 | 凭证唯一标识。 |
+| 5 | MatterVendorId | uint16 | 可选 | 当 OperationSource 为 Remote(Matter Ecosystem) 时表示 Matter Vendor ID。 |
+| 6 | LockPosition | enum8 | 可选 | 门锁操作位置。 |
 
 ## LockStateEnum8
 
@@ -1066,13 +1077,13 @@ LockDoor Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | LockDataType | enum8 | M | 被变更的数据类型。 |
-| 1 | DataOperationType | enum8 | M | 数据操作类型。 |
-| 2 | OperationSource | enum8 | M | 执行操作的来源。 |
-| 3 | UserIndex | uint16 | M | 执行门锁操作的用户索引。 |
-| 4 | FabricID | uint64 | M | 执行门锁操作的 fabric ID。 |
-| 5 | SourceNode | uint64 | M | 执行门锁操作的 node ID。 |
-| 6 | DataIndex | uint16 | O | 被变更项目在 LockDataType 对应列表中的索引。 |
+| 0 | LockDataType | enum8 | 必选 | 被变更的数据类型。 |
+| 1 | DataOperationType | enum8 | 必选 | 数据操作类型。 |
+| 2 | OperationSource | enum8 | 必选 | 执行操作的来源。 |
+| 3 | UserIndex | uint16 | 必选 | 执行门锁操作的用户索引。 |
+| 4 | FabricID | uint64 | 必选 | 执行门锁操作的 fabric ID。 |
+| 5 | SourceNode | uint64 | 必选 | 执行门锁操作的 node ID。 |
+| 6 | DataIndex | uint16 | 可选 | 被变更项目在 LockDataType 对应列表中的索引。 |
 
 ## MagicPairPayloadTraitPresentValueStructure
 
@@ -1080,8 +1091,8 @@ LockDoor Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | QRCode | characterString | M | 配对二维码原始字符串数据。 |
-| 1 | DigitalPairingCode | characterString | M | 8 位数字配对码。 |
+| 0 | QRCode | characterString | 必选 | 配对二维码原始字符串数据。 |
+| 1 | DigitalPairingCode | characterString | 必选 | 8 位数字配对码。 |
 
 ## ManualPullEventEnum32
 
@@ -1130,8 +1141,8 @@ LockDoor Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | QRCode | characterString | M | 配对二维码原始字符串数据。 |
-| 1 | DigitalPairingCode | characterString | M | 11 或 21 位数字配对码。 |
+| 0 | QRCode | characterString | 必选 | 配对二维码原始字符串数据。 |
+| 1 | DigitalPairingCode | characterString | 必选 | 11 或 21 位数字配对码。 |
 
 ## MediaPlaybackCommand Command Structure
 
@@ -1139,9 +1150,9 @@ MediaPlaybackCommand Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | MediaType | enum8 | M | 媒体类型；默认值为 `0`。 |
-| 1 | Command | characterString | O | 命令内容。 |
-| 2 | Title | characterString | O | 媒体名称。 |
+| 0 | MediaType | enum8 | 必选 | 媒体类型；默认值为 `0`。 |
+| 1 | Command | characterString | 可选 | 命令内容。 |
+| 2 | Title | characterString | 可选 | 媒体名称。 |
 
 ## MotionDetectedEnum8
 
@@ -1186,9 +1197,9 @@ MoveToColorTemperature Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | ColorTemperature | uint32 | M | 色温。 |
-| 1 | Time | int32 | O | 时间。 |
-| 2 | ExecuteIfOff | boolean | O | 关灯时是否执行命令。 |
+| 0 | ColorTemperature | uint32 | 必选 | 色温。 |
+| 1 | Time | int32 | 可选 | 时间。 |
+| 2 | ExecuteIfOff | boolean | 可选 | 关灯时是否执行命令。 |
 
 ## MoveToColorTemperatureBrightness Command Structure
 
@@ -1196,10 +1207,10 @@ MoveToColorTemperatureBrightness Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | ColorTemperature | uint32 | M | 色温。 |
-| 1 | Level | float | M | 亮度；默认值为 `50`。 |
-| 2 | Time | int32 | O | 时间。 |
-| 3 | ExecuteIfOff | boolean | O | 关灯时是否执行命令。 |
+| 0 | ColorTemperature | uint32 | 必选 | 色温。 |
+| 1 | Level | float | 必选 | 亮度；默认值为 `50`。 |
+| 2 | Time | int32 | 可选 | 时间。 |
+| 3 | ExecuteIfOff | boolean | 可选 | 关灯时是否执行命令。 |
 
 ## MoveToHueAndSaturation Command Structure
 
@@ -1207,10 +1218,10 @@ MoveToHueAndSaturation Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Hue | float | M | Hue。 |
-| 1 | Saturation | float | M | 饱和度。 |
-| 2 | Time | int32 | O | 时间。 |
-| 3 | ExecuteIfOff | boolean | O | 关灯时是否执行命令。 |
+| 0 | Hue | float | 必选 | Hue。 |
+| 1 | Saturation | float | 必选 | 饱和度。 |
+| 2 | Time | int32 | 可选 | 时间。 |
+| 3 | ExecuteIfOff | boolean | 可选 | 关灯时是否执行命令。 |
 
 ## MoveToHueSaturationBrightness Command Structure
 
@@ -1218,11 +1229,11 @@ MoveToHueSaturationBrightness Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Hue | float | M | Hue。 |
-| 1 | Saturation | float | M | 饱和度。 |
-| 2 | Level | float | M | 亮度；默认值为 `50`。 |
-| 3 | Time | int32 | O | 时间。 |
-| 4 | ExecuteIfOff | boolean | O | 关灯时是否执行命令。 |
+| 0 | Hue | float | 必选 | Hue。 |
+| 1 | Saturation | float | 必选 | 饱和度。 |
+| 2 | Level | float | 必选 | 亮度；默认值为 `50`。 |
+| 3 | Time | int32 | 可选 | 时间。 |
+| 4 | ExecuteIfOff | boolean | 可选 | 关灯时是否执行命令。 |
 
 ## MoveToXYColor Command Structure
 
@@ -1230,10 +1241,10 @@ MoveToXYColor Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | ColorX | uint16 | M | 颜色X值。 |
-| 1 | ColorY | uint16 | M | 颜色Y值。 |
-| 2 | Time | int32 | O | 时间。 |
-| 3 | ExecuteIfOff | boolean | O | 关灯时是否执行命令。 |
+| 0 | ColorX | uint16 | 必选 | 颜色X值。 |
+| 1 | ColorY | uint16 | 必选 | 颜色Y值。 |
+| 2 | Time | int32 | 可选 | 时间。 |
+| 3 | ExecuteIfOff | boolean | 可选 | 关灯时是否执行命令。 |
 
 ## MoveToXYColorBrightness Command Structure
 
@@ -1241,11 +1252,11 @@ MoveToXYColorBrightness Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | ColorX | uint16 | M | 颜色X值。 |
-| 1 | ColorY | uint16 | M | 颜色Y值。 |
-| 2 | Level | float | M | 亮度；默认值为 `50`。 |
-| 3 | Time | int32 | O | 时间。 |
-| 4 | ExecuteIfOff | boolean | O | 关灯时是否执行命令。 |
+| 0 | ColorX | uint16 | 必选 | 颜色X值。 |
+| 1 | ColorY | uint16 | 必选 | 颜色Y值。 |
+| 2 | Level | float | 必选 | 亮度；默认值为 `50`。 |
+| 3 | Time | int32 | 可选 | 时间。 |
+| 4 | ExecuteIfOff | boolean | 可选 | 关灯时是否执行命令。 |
 
 ## NetworkInterfacesTraitPresentValueStructure
 
@@ -1253,24 +1264,24 @@ MoveToXYColorBrightness Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Name | characterString | O | 网络接口的人类可读或系统级标识（如 `eth0`、`wlan0`），用于在设备操作系统内唯一标识该接口并用于配置或诊断引用。 |
-| 1 | IsOperational | boolean | M | 指示该网络接口当前是否可正常收发数据。通常需同时满足链路可用、已分配 IP 地址、路由可达等条件。 |
-| 2 | OffPremiseServicesReachableIPv4 | boolean | O | 指示设备是否可通过该接口使用 IPv4 访问外部（网外）服务（如云端地址）；`true` 表示具备 IPv4 外网连通性。 |
-| 3 | OffPremiseServicesReachableIPv6 | boolean | O | 指示设备是否可通过该接口使用 IPv6 访问外部（网外）服务；`true` 表示具备 IPv6 外网连通性。 |
-| 4 | HardwareAddress | characterString | M | MAC 地址字符串，最大长度 24。应为 48 位 IEEE MAC 或 64 位 IEEE MAC（EUI-64），采用大端/显示顺序（左侧为高位字节），示例：`00:1A:2B:3C:4D:5E`、`00:1A:2B:FF:FE:3C:4D:5E`。 |
-| 5 | IPv4Addresses | list[characterString] | O | IPv4 地址列表，元素类型为字符串（最大长度 16），示例：`192.168.2.235`。 |
-| 6 | IPv6Addresses | list[characterString] | O | IPv6 地址列表，元素类型为字符串（最大长度 40），示例：`2001:DB8:0:0:8:800:200C:417A`。 |
-| 7 | Type | [InterfaceTypeEnum8](./data-types#interfacetypeenum8) | M | 接口类型。 |
-| 8 | RSSI | int8 | O | 接收信号强度指示值（dBm），通常为负值（如 `-30`）。 |
-| 9 | AddressingMode | [AddressingModeEnum8](./data-types#addressingmodeenum8) | O | 指示该接口当前 IP 地址配置模式。 |
-| 10 | SSID | characterString | O | 当前连接 Wi-Fi 的网络名称（Service Set Identifier）。示例：`Home_2.4G`。 |
-| 11 | BSSID | characterString | O | 当前连接接入点（AP）的 BSSID（MAC 地址）。示例：`34:AB:37:12:CD:EF`。 |
-| 12 | RouterMAC | characterString | O | 当前上联网关/路由器的 MAC 地址。示例：`9C:3D:CF:AA:BB:CC`。 |
-| 13 | Channel | uint8 | O | 当前 Wi-Fi 工作信道（Chanel/Channel）。示例：`1`、`6`、`11`、`149`。 |
-| 14 | SubnetMask | characterString | O | 子网掩码/前缀信息，字符串（最大长度 32）。IPv4 场景填子网掩码（示例：`255.255.255.0`）；IPv6 场景建议填前缀长度表示（示例：`64`），未知或不适用可留空。 |
-| 15 | DefaultGateway | characterString | O | 默认网关地址，字符串（最大长度 32）。可填 IPv4 或 IPv6 网关地址，示例：`192.168.1.1`、`fe80::1`。 |
-| 16 | PrimaryDNS | characterString | O | 首选 DNS，字符串（最大长度 32）。可填 IPv4 或 IPv6 DNS 地址，示例：`8.8.8.8`、`2001:4860:4860::8888`。 |
-| 17 | SecondaryDNS | characterString | O | 备选 DNS，字符串（最大长度 32）。可填 IPv4 或 IPv6 DNS 地址，示例：`8.8.4.4`、`2001:4860:4860::8844`。 |
+| 0 | Name | characterString | 可选 | 网络接口的人类可读或系统级标识（如 `eth0`、`wlan0`），用于在设备操作系统内唯一标识该接口并用于配置或诊断引用。 |
+| 1 | IsOperational | boolean | 必选 | 指示该网络接口当前是否可正常收发数据。通常需同时满足链路可用、已分配 IP 地址、路由可达等条件。 |
+| 2 | OffPremiseServicesReachableIPv4 | boolean | 可选 | 指示设备是否可通过该接口使用 IPv4 访问外部（网外）服务（如云端地址）；`true` 表示具备 IPv4 外网连通性。 |
+| 3 | OffPremiseServicesReachableIPv6 | boolean | 可选 | 指示设备是否可通过该接口使用 IPv6 访问外部（网外）服务；`true` 表示具备 IPv6 外网连通性。 |
+| 4 | HardwareAddress | characterString | 必选 | MAC 地址字符串，最大长度 24。应为 48 位 IEEE MAC 或 64 位 IEEE MAC（EUI-64），采用大端/显示顺序（左侧为高位字节），示例：`00:1A:2B:3C:4D:5E`、`00:1A:2B:FF:FE:3C:4D:5E`。 |
+| 5 | IPv4Addresses | list[characterString] | 可选 | IPv4 地址列表，元素类型为字符串（最大长度 16），示例：`192.168.2.235`。 |
+| 6 | IPv6Addresses | list[characterString] | 可选 | IPv6 地址列表，元素类型为字符串（最大长度 40），示例：`2001:DB8:0:0:8:800:200C:417A`。 |
+| 7 | Type | [InterfaceTypeEnum8](./data-types#interfacetypeenum8) | 必选 | 接口类型。 |
+| 8 | RSSI | int8 | 可选 | 接收信号强度指示值（dBm），通常为负值（如 `-30`）。 |
+| 9 | AddressingMode | [AddressingModeEnum8](./data-types#addressingmodeenum8) | 可选 | 指示该接口当前 IP 地址配置模式。 |
+| 10 | SSID | characterString | 可选 | 当前连接 Wi-Fi 的网络名称（Service Set Identifier）。示例：`Home_2.4G`。 |
+| 11 | BSSID | characterString | 可选 | 当前连接接入点（AP）的 BSSID（MAC 地址）。示例：`34:AB:37:12:CD:EF`。 |
+| 12 | RouterMAC | characterString | 可选 | 当前上联网关/路由器的 MAC 地址。示例：`9C:3D:CF:AA:BB:CC`。 |
+| 13 | Channel | uint8 | 可选 | 当前 Wi-Fi 工作信道（Chanel/Channel）。示例：`1`、`6`、`11`、`149`。 |
+| 14 | SubnetMask | characterString | 可选 | 子网掩码/前缀信息，字符串（最大长度 32）。IPv4 场景填子网掩码（示例：`255.255.255.0`）；IPv6 场景建议填前缀长度表示（示例：`64`），未知或不适用可留空。 |
+| 15 | DefaultGateway | characterString | 可选 | 默认网关地址，字符串（最大长度 32）。可填 IPv4 或 IPv6 网关地址，示例：`192.168.1.1`、`fe80::1`。 |
+| 16 | PrimaryDNS | characterString | 可选 | 首选 DNS，字符串（最大长度 32）。可填 IPv4 或 IPv6 DNS 地址，示例：`8.8.8.8`、`2001:4860:4860::8888`。 |
+| 17 | SecondaryDNS | characterString | 可选 | 备选 DNS，字符串（最大长度 32）。可填 IPv4 或 IPv6 DNS 地址，示例：`8.8.4.4`、`2001:4860:4860::8844`。 |
 
 ## NightLightModeEnum8
 
@@ -1317,6 +1328,18 @@ MoveToXYColorBrightness Command 的参数结构体。
 | 0x03 | PhysicalContact | 物理接触 |
 | 0x04 | Radar | 雷达 |
 | 0x05 | Vision | 视觉 |
+
+## OperatingModeEnum8
+
+该枚举定义 OperatingMode Trait 的 Present Value 有效取值。
+
+| 取值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Normal | Normal |
+| 0x01 | Vacation | Vacation |
+| 0x02 | Privacy | Privacy |
+| 0x03 | NoRemoteLockUnlock | NoRemoteLockUnlock |
+| 0x04 | Passage | Passage |
 
 ## OperationalErrorEnum16
 
@@ -1387,7 +1410,7 @@ PanTiltDirectionControl Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Direction | uint8 | M | 方向。 |
+| 0 | Direction | uint8 | 必选 | 方向。 |
 
 ## PetRecognitionReportEnum16
 
@@ -1454,11 +1477,11 @@ PanTiltDirectionControl Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | HubList | list[characterString] | M | 网关的 Device ID 列表。 |
-| 1 | Events | Struct | O | 事件配置，包含 DeviceID 和 ResList。 |
-| 2 | States | Struct | O | 状态配置，包含 DeviceID 和 ResList。 |
-| 3 | Entries | characterString | O | 入口配置。 |
-| 4 | Config | uint32 | O | 配置项，例如 DetDuration、UnKnownDuration。 |
+| 0 | HubList | list[characterString] | 必选 | 网关的 Device ID 列表。 |
+| 1 | Events | Struct | 可选 | 事件配置，包含 DeviceID 和 ResList。 |
+| 2 | States | Struct | 可选 | 状态配置，包含 DeviceID 和 ResList。 |
+| 3 | Entries | characterString | 可选 | 入口配置。 |
+| 4 | Config | uint32 | 可选 | 配置项，例如 DetDuration、UnKnownDuration。 |
 
 ## PresenceEnum8
 
@@ -1476,12 +1499,12 @@ PanTiltDirectionControl Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | PresetHandle | characterString | M | 预设句柄。 |
-| 1 | PresetScenario | enum8 | M | 预设场景：1=Occupied，2=Unoccupied，3=Sleep，4=Wake，5=Vacation，6=GoingToSleep；7–254=Reserved。 |
-| 2 | Name | characterString | O | 预设名称；若为 null 则省略该字段。 |
-| 3 | CoolingSetpoint | float | O | 制冷设定温度，默认 26。 |
-| 4 | HeatingSetpoint | float | O | 制热设定温度，默认 20。 |
-| 5 | BuiltIn | boolean | M | 是否为内置预设，默认 false。 |
+| 0 | PresetHandle | characterString | 必选 | 预设句柄。 |
+| 1 | PresetScenario | enum8 | 必选 | 预设场景：1=Occupied，2=Unoccupied，3=Sleep，4=Wake，5=Vacation，6=GoingToSleep；7–254=Reserved。 |
+| 2 | Name | characterString | 可选 | 预设名称；若为 null 则省略该字段。 |
+| 3 | CoolingSetpoint | float | 可选 | 制冷设定温度，默认 26。 |
+| 4 | HeatingSetpoint | float | 可选 | 制热设定温度，默认 20。 |
+| 5 | BuiltIn | boolean | 必选 | 是否为内置预设，默认 false。 |
 
 ## PreviewEffect Command Structure
 
@@ -1489,7 +1512,7 @@ PreviewEffect Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | EffectData | characterString | M | 待预览场景的原始数据。编码格式应与新增/更新用户自定义场景一致。 |
+| 0 | EffectData | characterString | 必选 | 待预览场景的原始数据。编码格式应与新增/更新用户自定义场景一致。 |
 
 ## PreviewTransition Command Structure
 
@@ -1497,10 +1520,10 @@ PreviewTransition Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | OnTransitionTime | uint16 | M | 开灯过渡时间，单位为 100 毫秒。示例：10 表示 1 秒。 |
-| 1 | OffTransitionTime | uint16 | M | 关灯过渡时间，单位为 100 毫秒。示例：10 表示 1 秒。 |
-| 2 | DimmingCurvature | float | M | 预览使用的调光曲线幂值。值越大，低亮区停留越久。 |
-| 3 | InitialBrightness | uint8 | M | 预览使用的初始亮度百分比，取值范围与 InitialBrightness Trait 约束一致。 |
+| 0 | OnTransitionTime | uint16 | 必选 | 开灯过渡时间，单位为 100 毫秒。示例：10 表示 1 秒。 |
+| 1 | OffTransitionTime | uint16 | 必选 | 关灯过渡时间，单位为 100 毫秒。示例：10 表示 1 秒。 |
+| 2 | DimmingCurvature | float | 必选 | 预览使用的调光曲线幂值。值越大，低亮区停留越久。 |
+| 3 | InitialBrightness | uint8 | 必选 | 预览使用的初始亮度百分比，取值范围与 InitialBrightness Trait 约束一致。 |
 
 ## Reboot Command Structure
 
@@ -1508,8 +1531,8 @@ Reboot Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | RebootType | enum8 | M | 重启方式。 |
-| 1 | Delay | uint32 | O | 延迟时长；默认值为 `0`。 |
+| 0 | RebootType | enum8 | 必选 | 重启方式。 |
+| 1 | Delay | uint32 | 可选 | 延迟时长；默认值为 `0`。 |
 
 ## RebootReasonEnum8
 
@@ -1531,7 +1554,7 @@ RemoveUserDefinedEffect Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | EffectID | uint8 | M | 待删除场景 ID。应为已存在且可删除的 UserDefined 场景。 |
+| 0 | EffectID | uint8 | 必选 | 待删除场景 ID。应为已存在且可删除的 UserDefined 场景。 |
 
 ## ResetModeEnum8
 
@@ -1605,7 +1628,7 @@ RotationControl Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Direction | enum8 | M | 方向。 |
+| 0 | Direction | enum8 | 必选 | 方向。 |
 
 ## RotationDirectionEnum8
 
@@ -1664,7 +1687,7 @@ SelectInput Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | MediaInput | uint8 | M | 输入源；默认值为 `0`。 |
+| 0 | MediaInput | uint8 | 必选 | 输入源；默认值为 `0`。 |
 
 ## SendIRCode Command Structure
 
@@ -1672,13 +1695,13 @@ SendIRCode Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Mode | enum8 | M | 模式。 |
-| 1 | BrandId | uint32 | M | 品牌DI。 |
-| 2 | RemoteId | uint32 | M | 遥控器ID。 |
-| 3 | IRCode | characterString | O | 红外压缩码。 |
-| 4 | IRCodeLength | uint16 | O | 红外原始数据长度。 |
-| 5 | ACKey | characterString | O | 空调状态数据。 |
-| 6 | Frequency | uint32 | M | 红外发射频率。 |
+| 0 | Mode | enum8 | 必选 | 模式。 |
+| 1 | BrandId | uint32 | 必选 | 品牌DI。 |
+| 2 | RemoteId | uint32 | 必选 | 遥控器ID。 |
+| 3 | IRCode | characterString | 可选 | 红外压缩码。 |
+| 4 | IRCodeLength | uint16 | 可选 | 红外原始数据长度。 |
+| 5 | ACKey | characterString | 可选 | 空调状态数据。 |
+| 6 | Frequency | uint32 | 必选 | 红外发射频率。 |
 
 ## SetActivePreset Command Structure
 
@@ -1686,7 +1709,7 @@ SetActivePreset Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | PresetHandle | characterString | M | 预设操作。 |
+| 0 | PresetHandle | characterString | 必选 | 预设操作。 |
 
 ## SetBrightness Command Structure
 
@@ -1694,9 +1717,9 @@ SetBrightness Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Level | float | M | 目标亮度百分比。 |
-| 1 | Time | int32 | O | 过渡时长；为空时由设备按默认策略执行。 |
-| 2 | ExecuteIfOff | boolean | O | 关灯状态下是否仍执行本命令（不改变开关联动语义）。 |
+| 0 | Level | float | 必选 | 目标亮度百分比。 |
+| 1 | Time | int32 | 可选 | 过渡时长；为空时由设备按默认策略执行。 |
+| 2 | ExecuteIfOff | boolean | 可选 | 关灯状态下是否仍执行本命令（不改变开关联动语义）。 |
 
 ## SetBrightnessWithOnOff Command Structure
 
@@ -1704,8 +1727,8 @@ SetBrightnessWithOnOff Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Level | float | M | 目标亮度百分比。 |
-| 1 | Time | int32 | O | 过渡时长；为空时由设备按默认策略执行。 |
+| 0 | Level | float | 必选 | 目标亮度百分比。 |
+| 1 | Time | int32 | 可选 | 过渡时长；为空时由设备按默认策略执行。 |
 
 ## SetWeekDaySchedule Command Structure
 
@@ -1713,13 +1736,13 @@ SetWeekDaySchedule Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | WeekDayIndex | uint8 | M | 工作日索引；默认值为 `1`。 |
-| 1 | UserIndex | uint16 | M | 用户索引；默认值为 `1`。 |
-| 2 | DaysMask | enum8 | M | 日期掩码。 |
-| 3 | StartHour | uint8 | M | 开始小时；默认值为 `0`。 |
-| 4 | StartMinute | uint8 | M | 开始分钟；默认值为 `0`。 |
-| 5 | EndHour | uint8 | M | 结束小时；默认值为 `0`。 |
-| 6 | EndMinute | uint8 | M | 结束分钟；默认值为 `0`。 |
+| 0 | WeekDayIndex | uint8 | 必选 | 工作日索引；默认值为 `1`。 |
+| 1 | UserIndex | uint16 | 必选 | 用户索引；默认值为 `1`。 |
+| 2 | DaysMask | enum8 | 必选 | 日期掩码。 |
+| 3 | StartHour | uint8 | 必选 | 开始小时；默认值为 `0`。 |
+| 4 | StartMinute | uint8 | 必选 | 开始分钟；默认值为 `0`。 |
+| 5 | EndHour | uint8 | 必选 | 结束小时；默认值为 `0`。 |
+| 6 | EndMinute | uint8 | 必选 | 结束分钟；默认值为 `0`。 |
 
 ## SetYearDaySchedule Command Structure
 
@@ -1727,10 +1750,10 @@ SetYearDaySchedule Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | YearDayIndex | uint8 | M | 年日序号；默认值为 `1`。 |
-| 1 | UserIndex | uint16 | M | 用户索引；默认值为 `1`。 |
-| 2 | LocalStartTime | uint64 | M | 本地开始时间。 |
-| 3 | LocalEndTime | uint64 | M | 本地结束时间。 |
+| 0 | YearDayIndex | uint8 | 必选 | 年日序号；默认值为 `1`。 |
+| 1 | UserIndex | uint16 | 必选 | 用户索引；默认值为 `1`。 |
+| 2 | LocalStartTime | uint64 | 必选 | 本地开始时间。 |
+| 3 | LocalEndTime | uint64 | 必选 | 本地结束时间。 |
 
 ## SleepStageEnum8
 
@@ -1777,7 +1800,7 @@ StartEffect Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | EffectID | enum8 | M | 待启动场景 ID，应为设备当前支持的 BuiltIn 或 UserDefined 场景。 |
+| 0 | EffectID | enum8 | 必选 | 待启动场景 ID，应为设备当前支持的 BuiltIn 或 UserDefined 场景。 |
 
 ## StartUpOnOffEnum8
 
@@ -1817,9 +1840,9 @@ StepBrightness Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Size | float | M | 亮度步进增量，正值上调、负值下调。 |
-| 1 | Time | int32 | O | 过渡时长；为空时由设备按默认策略执行。 |
-| 2 | ExecuteIfOff | boolean | O | 关灯状态下是否仍执行本命令（不改变开关联动语义）。 |
+| 0 | Size | float | 必选 | 亮度步进增量，正值上调、负值下调。 |
+| 1 | Time | int32 | 可选 | 过渡时长；为空时由设备按默认策略执行。 |
+| 2 | ExecuteIfOff | boolean | 可选 | 关灯状态下是否仍执行本命令（不改变开关联动语义）。 |
 
 ## StepBrightnessWithOnOff Command Structure
 
@@ -1827,8 +1850,8 @@ StepBrightnessWithOnOff Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Size | float | M | 亮度步进增量，正值上调、负值下调。 |
-| 1 | Time | int32 | O | 过渡时长；为空时由设备按默认策略执行。 |
+| 0 | Size | float | 必选 | 亮度步进增量，正值上调、负值下调。 |
+| 1 | Time | int32 | 可选 | 过渡时长；为空时由设备按默认策略执行。 |
 
 ## StepColorTemperature Command Structure
 
@@ -1836,9 +1859,9 @@ StepColorTemperature Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Size | int32 | M | 增量值。 |
-| 1 | Time | int32 | O | 时间。 |
-| 2 | ExecuteIfOff | boolean | O | 关灯时是否执行命令。 |
+| 0 | Size | int32 | 必选 | 增量值。 |
+| 1 | Time | int32 | 可选 | 时间。 |
+| 2 | ExecuteIfOff | boolean | 可选 | 关灯时是否执行命令。 |
 
 ## StepPosition Command Structure
 
@@ -1846,8 +1869,8 @@ StepPosition Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Size | float | M | 增量值。 |
-| 1 | Time | int32 | O | 时间。 |
+| 0 | Size | float | 必选 | 增量值。 |
+| 1 | Time | int32 | 可选 | 时间。 |
 
 ## SweeperStateEnum8
 
@@ -1910,22 +1933,22 @@ StepPosition Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Channel | uint8 | M | The Thread network radio channel。 |
-| 1 | ExtendedPANID | uint64 | M | The Thread network extended PAN identifier。 |
-| 2 | NetworkKey | octetString | M | The Thread network key。 |
-| 3 | NetworkName | characterString | M | The Thread network name。 |
-| 4 | PANID | uint16 | M | The Thread network PAN identifier。 |
-| 5 | PSKc | octetString | M | The Thread network pre-shared key for the Commissioner。 |
-| 6 | ActiveTimeStamp | uint64 | M | Active timestamp。 |
-| 7 | SecurityPolicy | characterString | M | Security policy。 |
-| 8 | OperationalDataset | octetString | M | Thread Network Parameters dataset。 |
-| 9 | RSSI | int8 | O | RSSI for the Thread network client in dBm。 |
-| 10 | LQI | uint8 | O | Link quality indicator。 |
-| 11 | BorderAgentID | octetString | O | Identifier of an active Thread network Border Agent。 |
-| 12 | MeshLocalPrefix | characterString | O | Prefix of all interfaces reachable within the same Thread network。 |
-| 13 | CommissionerCredential | characterString | O | UTF-8 Commissioner Credential, 6 to 255 characters。 |
-| 14 | Version | characterString | O | OpenThread Version。 |
-| 15 | Role | uint8 | O | Thread Role bit mask。 |
+| 0 | Channel | uint8 | 必选 | The Thread network radio channel。 |
+| 1 | ExtendedPANID | uint64 | 必选 | The Thread network extended PAN identifier。 |
+| 2 | NetworkKey | octetString | 必选 | The Thread network key。 |
+| 3 | NetworkName | characterString | 必选 | The Thread network name。 |
+| 4 | PANID | uint16 | 必选 | The Thread network PAN identifier。 |
+| 5 | PSKc | octetString | 必选 | The Thread network pre-shared key for the Commissioner。 |
+| 6 | ActiveTimeStamp | uint64 | 必选 | Active timestamp。 |
+| 7 | SecurityPolicy | characterString | 必选 | Security policy。 |
+| 8 | OperationalDataset | octetString | 必选 | Thread Network Parameters dataset。 |
+| 9 | RSSI | int8 | 可选 | RSSI for the Thread network client in dBm。 |
+| 10 | LQI | uint8 | 可选 | Link quality indicator。 |
+| 11 | BorderAgentID | octetString | 可选 | Identifier of an active Thread network Border Agent。 |
+| 12 | MeshLocalPrefix | characterString | 可选 | Prefix of all interfaces reachable within the same Thread network。 |
+| 13 | CommissionerCredential | characterString | 可选 | UTF-8 Commissioner Credential, 6 to 255 characters。 |
+| 14 | Version | characterString | 可选 | OpenThread Version。 |
+| 15 | Role | uint8 | 可选 | Thread Role bit mask。 |
 
 ## TopFaceChangedEnum8
 
@@ -1959,7 +1982,7 @@ TriggerWarning Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Warning | enum8 | M | 警告。 |
+| 0 | Warning | enum8 | 必选 | 警告。 |
 
 ## TriggerZigbeeNetworkInfoUpload Command Structure
 
@@ -1967,8 +1990,8 @@ TriggerZigbeeNetworkInfoUpload Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | InstallCode | characterString | M | 安装代码。 |
-| 1 | MAC | characterString | M | MAC地址。 |
+| 0 | InstallCode | characterString | 必选 | 安装代码。 |
+| 1 | MAC | characterString | 必选 | MAC地址。 |
 
 ## UnboltDoor Command Structure
 
@@ -1976,7 +1999,7 @@ UnboltDoor Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Code | characterString | O | 编码。 |
+| 0 | Code | characterString | 可选 | 编码。 |
 
 ## UnlockDoor Command Structure
 
@@ -1984,7 +2007,7 @@ UnlockDoor Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Code | characterString | O | 解锁密钥。 |
+| 0 | Code | characterString | 可选 | 解锁密钥。 |
 
 ## UpdateUserDefinedEffect Command Structure
 
@@ -1992,8 +2015,8 @@ UpdateUserDefinedEffect Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | EffectID | uint8 | M | 待更新场景 ID。应为已存在 UserDefined 场景。 |
-| 1 | EffectData | characterString | M | 更新后的场景数据，编码格式应与 EffectData 规范一致。 |
+| 0 | EffectID | uint8 | 必选 | 待更新场景 ID。应为已存在 UserDefined 场景。 |
+| 1 | EffectData | characterString | 必选 | 更新后的场景数据，编码格式应与 EffectData 规范一致。 |
 
 ## UserDefinedEffectsTraitPresentValueStructure
 
@@ -2001,8 +2024,8 @@ UpdateUserDefinedEffect Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | EffectID | uint8 | M | 用户自定义场景 ID。 |
-| 1 | EffectName | characterString | M | 场景名称。 |
+| 0 | EffectID | uint8 | 必选 | 用户自定义场景 ID。 |
+| 1 | EffectName | characterString | 必选 | 场景名称。 |
 
 ## VacuumOperationalErrorEnum16
 
@@ -2113,8 +2136,8 @@ UpdateUserDefinedEffect Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | WhitePointX | uint16 | M | 该参数表示设备当前白点在 CIE xyY 色彩空间中定义的归一化色度值 x。x 与 WhitePointX 属性满足关系：x = WhitePointX / 65536（WhitePointX 取值范围为 0 至 65279，含边界）。 |
-| 1 | WhitePointY | uint16 | M | 该参数表示设备当前白点在 CIE xyY 色彩空间中定义的归一化色度值 y。y 与 WhitePointY 属性满足关系：y = WhitePointY / 65536（WhitePointY 取值范围为 0 至 65279，含边界）。 |
+| 0 | WhitePointX | uint16 | 必选 | 该参数表示设备当前白点在 CIE xyY 色彩空间中定义的归一化色度值 x。x 与 WhitePointX 属性满足关系：x = WhitePointX / 65536（WhitePointX 取值范围为 0 至 65279，含边界）。 |
+| 1 | WhitePointY | uint16 | 必选 | 该参数表示设备当前白点在 CIE xyY 色彩空间中定义的归一化色度值 y。y 与 WhitePointY 属性满足关系：y = WhitePointY / 65536（WhitePointY 取值范围为 0 至 65279，含边界）。 |
 
 ## WidgetPositionStructure
 
@@ -2122,10 +2145,10 @@ UpdateUserDefinedEffect Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | x | uint16 | M | 控件 X 坐标。 |
-| 1 | y | uint16 | M | 控件 Y 坐标。 |
-| 2 | width | uint16 | M | 控件宽度。 |
-| 3 | height | uint16 | M | 控件高度。 |
+| 0 | x | uint16 | 必选 | 控件 X 坐标。 |
+| 1 | y | uint16 | 必选 | 控件 Y 坐标。 |
+| 2 | width | uint16 | 必选 | 控件宽度。 |
+| 3 | height | uint16 | 必选 | 控件高度。 |
 
 ## WiFiDiagnosticsTraitPresentValueStructure
 
@@ -2133,18 +2156,18 @@ UpdateUserDefinedEffect Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | BSSID | characterString | M | The Wi-Fi BSSID。 |
-| 1 | Encryption | uint8 | O | 0: No Encryption；1: WEP；2: WPA；3: WPA/WPA2；4: WPA2；5: WPA3。 |
-| 2 | Version | uint8 | O | The Wi-Fi Version：0:a，1:b，2:g，3:n，4:ac，5:ax。 |
-| 3 | Channel | uint8 | M | The Wi-Fi network Channel。 |
-| 4 | RSSI | int8 | M | RSSI for the WiFi network client in dBm。 |
-| 5 | NetworkName | characterString | M | The Wi-Fi network name。 |
-| 6 | IPV4Address | characterString | O | IPV4 Address。 |
-| 7 | IPV6Address | characterString | O | IPV6 Address。 |
-| 8 | SubnetMask | characterString | O | Subnet mask。 |
-| 9 | Gateway | characterString | O | Gateway address。 |
-| 10 | DNS | characterString | O | DNS server。 |
-| 11 | AlternateDNS | characterString | O | Backup DNS server。 |
+| 0 | BSSID | characterString | 必选 | The Wi-Fi BSSID。 |
+| 1 | Encryption | uint8 | 可选 | 0: No Encryption；1: WEP；2: WPA；3: WPA/WPA2；4: WPA2；5: WPA3。 |
+| 2 | Version | uint8 | 可选 | The Wi-Fi Version：0:a，1:b，2:g，3:n，4:ac，5:ax。 |
+| 3 | Channel | uint8 | 必选 | The Wi-Fi network Channel。 |
+| 4 | RSSI | int8 | 必选 | RSSI for the WiFi network client in dBm。 |
+| 5 | NetworkName | characterString | 必选 | The Wi-Fi network name。 |
+| 6 | IPV4Address | characterString | 可选 | IPV4 Address。 |
+| 7 | IPV6Address | characterString | 可选 | IPV6 Address。 |
+| 8 | SubnetMask | characterString | 可选 | Subnet mask。 |
+| 9 | Gateway | characterString | 可选 | Gateway address。 |
+| 10 | DNS | characterString | 可选 | DNS server。 |
+| 11 | AlternateDNS | characterString | 可选 | Backup DNS server。 |
 
 ## WindowCoveringCategoryEnum8
 
@@ -2230,10 +2253,10 @@ UpdateUserDefinedEffect Command 的参数结构体。
 
 | 结构体成员序号 | 字段名 | 类型 | 必须 | 说明 |
 | --- | --- | --- | --- | --- |
-| 0 | Channel | uint8 | M | Zigbee radio channel。 |
-| 1 | ExtendedPANID | uint64 | M | Zigbee extended PAN identifier。 |
-| 2 | NetworkKey | octetString | M | Zigbee network key。 |
-| 3 | NetworkName | characterString | M | Zigbee network name。 |
-| 4 | PANID | uint16 | M | Zigbee PAN identifier。 |
-| 5 | RSSI | int8 | O | RSSI for the Zigbee network client in dBm。 |
-| 6 | LQI | uint8 | O | Link quality indicator。 |
+| 0 | Channel | uint8 | 必选 | Zigbee radio channel。 |
+| 1 | ExtendedPANID | uint64 | 必选 | Zigbee extended PAN identifier。 |
+| 2 | NetworkKey | octetString | 必选 | Zigbee network key。 |
+| 3 | NetworkName | characterString | 必选 | Zigbee network name。 |
+| 4 | PANID | uint16 | 必选 | Zigbee PAN identifier。 |
+| 5 | RSSI | int8 | 可选 | RSSI for the Zigbee network client in dBm。 |
+| 6 | LQI | uint8 | 可选 | Link quality indicator。 |
