@@ -426,9 +426,9 @@ Fields:
 | --- | --- | --- |
 | pointId | String | Unique point ID used for subsequent read/write operations |
 | pointName | String | Point display name |
-| devType | String | Aqara Spec device type |
-| functionCode | String | Aqara Spec function code |
-| traitCode | String | Aqara Spec trait code |
+| devType | String | Corresponds to `deviceType` in the Aqara Data Model Specification. For the specific available values, please refer to [Device Types](../aqara-developer/aqara-data-model-specification/device-types.mdx). |
+| functionCode | String | Corresponds to `functionCode` in the Aqara Data Model Specification. For the specific available values, please refer to [Function Codes](../aqara-developer/aqara-data-model-specification/function-codes.mdx). |
+| traitCode | String | Corresponds to `traitCode` in the Aqara Data Model Specification. For the specific available values, please refer to [Trait Codes](../aqara-developer/aqara-data-model-specification/trait-codes.mdx). |
 | dataType | String | Generic point data type: `enum`, `bool`, `numerical`, or `text` |
 | enumRange | Array | Enumeration options. Required only when a general point uses `dataType: "enum"`. The array must not be empty. Each item contains an integer `value` and a string `label`; both must be unique, and `label` must not be empty. |
 | access | Int | Access permission bits: `bit1` read, `bit2` write, `bit3` report |

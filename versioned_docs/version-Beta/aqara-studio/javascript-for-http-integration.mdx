@@ -237,9 +237,9 @@ To ensure Aqara Studio can correctly obtain function point information, you must
 |-----------|-------------|
 | pointId   | Data point ID. Please consult the device manufacturer to obtain the actual ID to allow Aqara Studio to discover this point. |
 | pointName | Name for the data point defined by you. |
-| devType | Same as the `deviceType` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
-| functionCode  | Same as the `functionCode` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
-| traitCode     | Same as the `traitCode` in Aqara Spec. Please refer to Aqara Spec documentation for the specific value. |
+| devType | Corresponds to `deviceType` in the Aqara Data Model Specification. For the specific available values, please refer to [Device Types](../aqara-developer/aqara-data-model-specification/device-types.mdx). |
+| functionCode | Corresponds to `functionCode` in the Aqara Data Model Specification. For the specific available values, please refer to [Function Codes](../aqara-developer/aqara-data-model-specification/function-codes.mdx). |
+| traitCode | Corresponds to `traitCode` in the Aqara Data Model Specification. For the specific available values, please refer to [Trait Codes](../aqara-developer/aqara-data-model-specification/trait-codes.mdx). |
 | dataType  | Data point type. Supported values: <ul><li><code>bool</code> / <code>boolean</code>: Boolean</li><li><code>numerical</code> / <code>number</code>: Numeric</li><li><code>enum</code>: Enumeration</li><li><code>text</code> / <code>string</code>: Text</li></ul> |
 | enumRange | Enumeration options. Required only when a general data point uses `dataType: "enum"`. The array must not be empty. Each item contains an integer `value` and a string `label`; both must be unique, and `label` must not be empty. |
 | access    | Access mode of the resource. <ul><li>1: Read-only</li><li>2: Read-write</li></ul> |
