@@ -1,10 +1,14 @@
 # MQTT
 
-This guide will show you how to integrate MQTT protocol devices into Aqara Studio by writing JS scripts according to the [Aqara Data Model Specification](../../aqara-developer/aqara-data-model-specification/core-concepts.mdx), enabling device discovery, addition, and control of function points.
+This guide will show you how to integrate MQTT protocol devices into Aqara Studio by writing JS scripts, and how to map device function points according to the **Aqara Data Model Specification**, enabling device discovery, addition, and control of function points.
 
 ## Prerequisites
 
 Before you begin, please ensure that the MQTT device to be integrated is already connected to an MQTT Broker.
+
+## Learn and Write JavaScript Scripts
+
+Please refer to the [JavaScript script (for MQTT)](./../javascript-for-mqtt-integration.mdx) guide to write a JavaScript script that complies with the **Aqara Data Model Specification**. This script instructs Aqara Studio how to discover devices, and add and control function points.
 
 ## Install the Plugin
 
@@ -26,7 +30,7 @@ Please refer to the [Plugin Market](./../plugin-market.mdx) instruction, and go 
     | Broker Port | ✔ | Port number of the MQTT Broker the device connects to |
     | Connection Type | ✘ | Authentication/security type for the MQTT client connection. Supported values: <ul><li>Anonymous</li><li>Anonymous Over SSL</li><li>Use Login Over SSL</li><li>User Login None SSL</li></ul> |
 
-5. Switch to the **Script** tab and refer to the [JavaScript script (for MQTT)](./../javascript-for-mqtt-integration.mdx) specification to write a JS script that complies with the **Aqara Data Model Specification**. This will enable device onboarding, discovery, addition, and function point control, ensuring that your MQTT device can be correctly recognized and managed by Aqara Studio. After completing it, click **Save and Continue**.
+5. Paste the [JavaScript script you wrote](#learn-and-write-javascript-scripts) into the code editor, ensuring that the MQTT device and its function points can be correctly recognized and managed by Aqara Studio. After completing it, click **Save and Continue**.
 6. Click the **Discover Points** button. Aqara Studio will automatically detect the device's data points based on your script.
 7. In the **Discovered Points** list, check the required points and click the middle **+** button. Newly added data points will appear in the **Added Points** list on the right and will also be shown under the corresponding device in the left device tree.
 

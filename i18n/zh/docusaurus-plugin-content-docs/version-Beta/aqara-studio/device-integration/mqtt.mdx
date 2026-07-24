@@ -1,10 +1,14 @@
 # MQTT 设备接入
 
-本文将指导您如何通过编写 JS 脚本，将 MQTT 协议设备依照 [Aqara 物模型规范](../../aqara-developer/aqara-data-model-specification/core-concepts.mdx) 接入 Aqara Studio，实现设备的发现、添加及功能点控制等操作。
+本文将指导您如何通过编写 JS 脚本，将 MQTT 协议设备接入 Aqara Studio 以及将设备功能点按照 **Aqara 物模型规范** 完成映射，实现设备的发现、添加及功能点控制等操作。
 
 ## 前提条件
 
 在开始之前，请确保待接入的 MQTT 设备已接入 1 个 MQTT Broker。
+
+## 学习并编写 JavaScript 脚本
+
+请参考 [JavaScript 脚本（适用于 MQTT）](./../javascript-for-mqtt-integration.mdx) 的编写方法，编写符合 **Aqara 物模型规范** 的 JavaScript 脚本。此脚本将用于指导 Aqara Studio 如何发现设备、添加与控制功能点等。
 
 ## 安装插件
 
@@ -26,7 +30,7 @@
     | 代理服务器端口 | ✔ | 填写设备所连接的 MQTT Broker 端口号。 |
     | 连接类型 | ✘ | MQTT 客户端连接时的认证/安全类型，支持以下：<ul><li>匿名</li><li>通过 SSL 匿名</li><li>通过 SSL 用户登录</li><li>用户登录无 SSL</li></ul> |
 
-5. 请根据实际设备，参照 [JavaScript 脚本（适用于 MQTT）](./../javascript-for-mqtt-integration.mdx) 的规范，编写符合 **Aqara 物模型规范** 的 JS 脚本，实现设备接入、发现、添加及功能点控制，确保您的 MQTT 设备能够被 Aqara Studio 正确识别和管理。完成后点击 **保存并继续**。
+5. 将 [编写好的 JavaScript 脚本](#学习并编写-javascript-脚本) 粘贴到代码框中，确保 MQTT 设备及其功能点能被 Aqara Studio 正确识别和管理。完成后点击 **保存并继续**。
 6. 单击 **发现功能点** 按钮，Aqara Studio 会根据脚本自动发现设备的功能点。
 7. 在 **发现功能点列表** 勾选需要的点，单击中间 **+** 按钮，新增功能点会出现在右侧的**已添加功能点**列表，并同步显示在左侧设备树的相关设备下。
 
