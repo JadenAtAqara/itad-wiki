@@ -1,6 +1,10 @@
 # TCP 设备接入
 
-本文将指导您如何通过编写 JS 脚本，将 TCP 协议设备依照 [Aqara 物模型规范](../../aqara-developer/aqara-data-model-specification/core-concepts.mdx) 接入 Aqara Studio，实现设备的发现、添加及功能点控制等操作。
+本文将指导您如何通过编写 JS 脚本，将 TCP 协议设备接入 Aqara Studio 以及将设备功能点按照 **Aqara 物模型规范** 完成映射，实现设备的发现、添加及功能点控制等操作。
+
+## 学习并编写 JavaScript 脚本
+
+请参考 [JavaScript 脚本（适用于 UDP 和 TCP）](./../javascript-for-udp-tcp-integration.mdx) 的编写方法，编写符合 **Aqara 物模型规范** 的 JavaScript 脚本。此脚本将用于指导 Aqara Studio 如何发现设备、添加与控制功能点等。
 
 ## 安装插件
 
@@ -16,7 +20,7 @@
 3. 选择该 TCP 节点，进入管理界面。
     ![TCP 协议管理页面](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-Management.png)
 
-4. 进入 **脚本** 选项卡，参考 [JavaScript 脚本（适用于 UDP 和 TCP）](./../javascript-for-udp-tcp-integration.mdx) 的规范，编写符合 **Aqara 物模型规范** 的 JS 脚本，实现设备接入、发现、添加及功能点控制，确保您的 TCP 设备能够被 Aqara Studio 正确识别和管理。
+4. 进入 **脚本** 选项卡，将 [编写好的 JavaScript 脚本](#学习并编写-javascript-脚本) 粘贴到代码框中，确保 TCP 设备及其功能点能被 Aqara Studio 正确识别和管理。
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/UDP-JavaScript.png" alt="编写 JS 脚本" style={{width: '70%'}} />
     
 5. 切换到 **添加设备** 选项卡。   
