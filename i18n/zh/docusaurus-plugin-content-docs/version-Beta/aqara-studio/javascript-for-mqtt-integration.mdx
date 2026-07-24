@@ -85,7 +85,7 @@ function parseDiscoveryResponse() {
 | precision | 数值型通用功能点的精度值，必须大于等于 0。仅当 `dataType` 为 `numerical` 时生效。 |
 | decimals | 数值型通用功能点的小数位数，必须为大于等于 0 的整数。仅当 `dataType` 为 `numerical` 时生效。 |
 | access    | 读写能力标识，<ul><li>1：可读</li><li>2：可写</li><li>3：可读可写</li></ul>                                 |
-| subTopic  | （**仅适用于 MQTT 设备**）Aqara Studio 通过订阅该 Topic 获取功能点的最新数据。具体 Topic 请根据设备协议或厂商文档填写。  |
+| subTopic  | （**仅适用于 MQTT 设备**）Aqara Studio 通过订阅该 Topic 获取功能点的最新数据。具体 Topic 请根据设备协议或厂商文档填写；需要同时接收多个上行主题时，可按 MQTT 规范填写 `+` 或 `#` 通配符。  |
 | pubTopic  | （**仅适用于 MQTT 设备**）Aqara Studio 通过向此 Topic 发送消息数据控制功能点。具体 Topic 请根据设备协议或厂商文档填写。（对于仅可读的功能点，此字段留空）        |
 
 :::note
@@ -231,13 +231,27 @@ function buildWriteRequest(deviceId, pointId, value) {
 
 示例中的 `globalThis` 注册是动态的：脚本实际实现了哪些函数，就只注册哪些函数；未实现的函数不需要注册。
 
+:::note
+曼顿 MQTT 协议中，`/status/json` 是周期性状态上报，`/event/json` 是状态改变时上报，`/resp/json` 是设备对 `/cmd/json` 的指令回复。若希望控制后更快刷新点位，可以将点位订阅配置为 `/dev/MTS/{DEVID}/+/json`，并在 `parseReportRequest` 中同时识别 `status`、`event` 和 `resp` 报文；`resp` 只能代表命令回复，最终状态仍以 `event/status` 上报为准。
+:::
+
 ```javascript
-(function(){
+(function() {
+	var DEVICE_ID = "98CC4D189E60";
+	var CATE = "MTS";
+	var SUB_TOPIC = "/dev/" + CATE + "/" + DEVICE_ID + "/+/json";
+	var PUB_TOPIC = "/dev/" + CATE + "/" + DEVICE_ID + "/cmd/json";
+	var GATEWAY_DST_ID = 43008827855272960;
+
+	var nextPackIdValue = 180289391;
+	var pendingWrites = {};
+	var pendingPackIds = [];
+
 	function parseDiscoveryResponse() {
 		return [
 			{
-				deviceName: "TestDevice",
-				deviceId: "98CC4D189E60",
+				deviceName: "曼顿空开",
+				deviceId: DEVICE_ID,
 				brokerEndpoint: "127.0.0.1",
 				brokerPort: 1883,
 				connectionType: 3,
@@ -249,66 +263,129 @@ function buildWriteRequest(deviceId, pointId, value) {
 
 	function parseDiscoverPointsResponse(deviceId) {
 		return [
-			// 基于通用方式接入功能点
 			{
 				pointId: "busAddr1.on",
 				pointName: "开关1",
 				dataType: "bool",
-				access: 2,
-				subTopic: "/dev/MTS/98CC4D189E60/status/json",
-				pubTopic: "/dev/MTS/98CC4D189E60/cmd/json"
+				access: 3,
+				subTopic: SUB_TOPIC,
+				pubTopic: PUB_TOPIC
 			},
 			{
 				pointId: "busAddr2.on",
 				pointName: "开关2",
 				dataType: "bool",
-				access: 2,
-				subTopic: "/dev/MTS/98CC4D189E60/status/json",
-				pubTopic: "/dev/MTS/98CC4D189E60/cmd/json"
+				access: 3,
+				subTopic: SUB_TOPIC,
+				pubTopic: PUB_TOPIC
 			}
 		];
 	}
 
 	function parseReportRequest(pointId, jsonStr) {
 		try {
-			const obj = JSON.parse(jsonStr);
-			const match = /^busAddr(\d+)\.on$/.exec(pointId);
-			if (!match || !Array.isArray(obj.data)) {
+			var busAddr = getPointBusAddr(pointId);
+			if (busAddr === null) {
 				return null;
 			}
 
-			const busAddr = parseInt(match[1], 10);
-			for (const item of obj.data) {
-				const state = item && item.mcbComSta;
-				if (state && Number(state.busAddr) === busAddr && state.on !== undefined && state.on !== null) {
-					return String(state.on);
-				}
+			var obj = JSON.parse(jsonStr);
+			var statusValue = parseStatusValue(busAddr, obj);
+			if (statusValue !== null) {
+				return statusValue;
 			}
-			return null;
+
+			var eventValue = parseEventValue(busAddr, obj, jsonStr);
+			if (eventValue !== null) {
+				return eventValue;
+			}
+
+			return parseCommandResponseValue(busAddr, obj);
 		} catch (e) {
 			return null;
 		}
 	}
 
-        // value 参数由 Aqara Studio 自动传入，无需手动声明或赋值。
-        function buildWriteRequest(deviceId, pointId, value) {
+	function parseStatusValue(busAddr, obj) {
+		var data = obj && Array.isArray(obj.data) ? obj.data : [];
+		for (var i = 0; i < data.length; i++) {
+			var item = data[i] || {};
+			var state = item.mcbComSta || item["mcbComSta "];
+			if (state && sameBusAddr(state.busAddr, busAddr) && state.on !== undefined && state.on !== null) {
+				return normalizeOnValue(state.on);
+			}
+
+			if (sameBusAddr(item.busAddr, busAddr) && item.on !== undefined && item.on !== null) {
+				return normalizeOnValue(item.on);
+			}
+		}
+		return null;
+	}
+
+	function parseEventValue(busAddr, obj, jsonStr) {
+		var data = obj && Array.isArray(obj.data) ? obj.data : [];
+		var rawDevIds = extractRawDevIds(jsonStr);
+
+		for (var i = 0; i < data.length; i++) {
+			var item = data[i] || {};
+			if (!isEventItem(item)) {
+				continue;
+			}
+
+			var eventBusAddr = resolveEventBusAddr(item, rawDevIds[i]);
+			if (eventBusAddr === null || eventBusAddr !== busAddr) {
+				continue;
+			}
+
+			var value = eventToOnValue(item);
+			if (value !== null) {
+				return value;
+			}
+		}
+		return null;
+	}
+
+	function parseCommandResponseValue(busAddr, obj) {
+		if (!obj || Number(obj.method) !== 13 || Number(obj.msgCode) !== 120 || obj.packID === undefined) {
+			return null;
+		}
+
+		var key = String(obj.packID);
+		var pending = pendingWrites[key];
+		if (!pending || Number(pending.busAddr) !== busAddr) {
+			return null;
+		}
+
+		delete pendingWrites[key];
+		if (Number(obj.retCode) >= 200 && Number(obj.retCode) < 300) {
+			return pending.value;
+		}
+		return null;
+	}
+
+	function buildWriteRequest(deviceId, pointId, value) {
 		try {
-			const match = /^busAddr(\d+)\.on$/.exec(pointId);
-			if (!match) {
+			var busAddr = getPointBusAddr(pointId);
+			if (busAddr === null) {
 				return null;
 			}
 
-			const busAddr = parseInt(match[1], 10);
-			const isOn = value === true || value === 1 || value === "1" || value === "true" || value === "on";
-			const obj = {
+			var isOn = isOnValue(value);
+			var packID = nextPackId();
+			rememberPendingWrite(packID, busAddr, isOn ? "1" : "0");
+
+			var obj = {
 				method: 3,
-				dstID: 43008827855272960,
+				packID: packID,
+				dstID: GATEWAY_DST_ID,
 				msgCode: 120,
 				timeMS: 0,
+				priority: 2,
 				data: [
 					{
 						tag: 305,
 						cmd: isOn ? "do_turn_on" : "do_turn_off",
+						count: 1,
 						busAddr: [busAddr]
 					}
 				]
@@ -319,10 +396,146 @@ function buildWriteRequest(deviceId, pointId, value) {
 		}
 	}
 
-    globalThis.parseDiscoveryResponse = parseDiscoveryResponse;
-    globalThis.parseDiscoverPointsResponse = parseDiscoverPointsResponse;
-    globalThis.buildWriteRequest = buildWriteRequest;
-    globalThis.parseReportRequest = parseReportRequest;
-	return null	
-})()
+	function getPointBusAddr(pointId) {
+		var match = /^busAddr(\d+)\.on$/.exec(pointId || "");
+		if (!match) {
+			return null;
+		}
+		var busAddr = parseInt(match[1], 10);
+		return isValidBusAddr(busAddr) ? busAddr : null;
+	}
+
+	function sameBusAddr(value, busAddr) {
+		return Number(value) === busAddr;
+	}
+
+	function isValidBusAddr(value) {
+		return Number(value) >= 1 && Number(value) <= 120;
+	}
+
+	function isOnValue(value) {
+		if (value === true || value === 1) {
+			return true;
+		}
+		var text = String(value).toLowerCase();
+		return text === "1" || text === "true" || text === "on";
+	}
+
+	function normalizeOnValue(value) {
+		if (value === true) {
+			return "1";
+		}
+		if (value === false) {
+			return "0";
+		}
+		var text = String(value).toLowerCase();
+		if (text === "true" || text === "on" || text === "1") {
+			return "1";
+		}
+		if (text === "false" || text === "off" || text === "0") {
+			return "0";
+		}
+		var numberValue = Number(value);
+		if (isNaN(numberValue)) {
+			return null;
+		}
+		return numberValue === 0 ? "0" : "1";
+	}
+
+	function isEventItem(item) {
+		return item && (
+			item.eCode !== undefined ||
+			item.eInfo !== undefined ||
+			item.eSN !== undefined ||
+			item.eResult !== undefined
+		);
+	}
+
+	function eventToOnValue(item) {
+		var code = Number(item.eCode !== undefined ? item.eCode : item.code);
+		if (code === 33) {
+			return "0";
+		}
+		if (code === 34) {
+			return "1";
+		}
+
+		var info = String(item.eInfo || item.info || "");
+		if (info.indexOf("分闸") >= 0) {
+			return "0";
+		}
+		if (info.indexOf("合闸") >= 0) {
+			return "1";
+		}
+		return null;
+	}
+
+	function resolveEventBusAddr(item, rawDevId) {
+		var fields = ["busAddr", "addr", "devAddr"];
+		for (var i = 0; i < fields.length; i++) {
+			var value = item[fields[i]];
+			if (value !== undefined && value !== null && isValidBusAddr(Number(value))) {
+				return Number(value);
+			}
+		}
+		return busAddrFromDevId(item.devID, rawDevId);
+	}
+
+	function busAddrFromDevId(value, rawValue) {
+		var text = rawValue !== undefined && rawValue !== null ? String(rawValue) : String(value);
+		if (!/^\d+$/.test(text)) {
+			return null;
+		}
+		if (text.length <= 3) {
+			var smallValue = Number(text);
+			return isValidBusAddr(smallValue) ? smallValue : null;
+		}
+		var lowByte = decimalStringMod(text, 256);
+		return isValidBusAddr(lowByte) ? lowByte : null;
+	}
+
+	function decimalStringMod(text, mod) {
+		var result = 0;
+		for (var i = 0; i < text.length; i++) {
+			result = (result * 10 + (text.charCodeAt(i) - 48)) % mod;
+		}
+		return result;
+	}
+
+	function extractRawDevIds(jsonStr) {
+		var result = [];
+		var regex = /"devID"\s*:\s*"?(\d+)"?/g;
+		var match;
+		while ((match = regex.exec(jsonStr)) !== null) {
+			result.push(match[1]);
+		}
+		return result;
+	}
+
+	function nextPackId() {
+		nextPackIdValue += 1;
+		if (nextPackIdValue > 999999999) {
+			nextPackIdValue = 180289392;
+		}
+		return nextPackIdValue;
+	}
+
+	function rememberPendingWrite(packID, busAddr, value) {
+		var key = String(packID);
+		pendingWrites[key] = {
+			busAddr: busAddr,
+			value: value
+		};
+		pendingPackIds.push(key);
+		while (pendingPackIds.length > 32) {
+			delete pendingWrites[pendingPackIds.shift()];
+		}
+	}
+
+	globalThis.parseDiscoveryResponse = parseDiscoveryResponse;
+	globalThis.parseDiscoverPointsResponse = parseDiscoverPointsResponse;
+	globalThis.buildWriteRequest = buildWriteRequest;
+	globalThis.parseReportRequest = parseReportRequest;
+	return null;
+})();
 ```
