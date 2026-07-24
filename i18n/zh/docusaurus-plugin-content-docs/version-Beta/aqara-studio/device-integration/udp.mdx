@@ -1,6 +1,6 @@
 # UDP 设备接入
 
-本文说明如何将 UDP 设备接入 Aqara Studio。
+本文将指导您如何通过编写 JS 脚本，将 UDP 协议设备依照 [Aqara 物模型规范](../../aqara-developer/aqara-data-model-specification/core-concepts.mdx) 接入 Aqara Studio，实现设备的发现、添加及功能点控制等操作。
 
 ## 安装插件
 
@@ -16,7 +16,7 @@
 3. 选择该 UDP 节点，进入管理界面。   
     ![UDP 协议管理页面](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/UDP-Management.png)
 
-4. 进入 **脚本** 选项卡，按照 [JavaScript 脚本（适用于 UDP 和 TCP）](./../javascript-for-udp-tcp-integration.mdx) 的规范编写并保存 JS 脚本，以指导 Aqara Studio 如何发现设备、添加与控制功能点等。
+4. 进入 **脚本** 选项卡，参考 [JavaScript 脚本（适用于 UDP 和 TCP）](./../javascript-for-udp-tcp-integration.mdx) 的规范，编写符合 **Aqara 物模型规范** 的 JS 脚本，实现设备接入、发现、添加及功能点控制，确保您的 UDP 设备能够被 Aqara Studio 正确识别和管理。
     ![编写 JS 脚本](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/UDP-JavaScript.png)
 5. 切换到 **添加设备** 选项卡。
     ![切换至添加设备选项卡](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-AddDevice.png)

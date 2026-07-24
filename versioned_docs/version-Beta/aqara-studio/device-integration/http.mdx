@@ -1,6 +1,6 @@
 # HTTP
 
-This document explains how to connect HTTP devices to Aqara Studio.
+This guide will show you how to integrate HTTP devices into Aqara Studio by writing JS scripts according to the [Aqara Data Model Specification](../../aqara-developer/aqara-data-model-specification/core-concepts.mdx), enabling device discovery, addition, and control of function points.
 
 ## Prerequisites
 
@@ -24,7 +24,7 @@ Please refer to the [Plugin Market](./../plugin-market.mdx) instruction, and go 
     | Port                   | The network port on which the device receives and processes HTTP requests. |
     | Enable/Disable Network | If disabled, the device on this network will be unavailable. |
 
-5. Switch to the **Script** tab, and create a JS script compliant with the [JavaScript for HTTP Integration](./../javascript-for-http-integration.mdx) guidelines, enabling Aqara Studio to discover devices, add function points, and control them automatically.
+5. Switch to the **Script** tab and refer to the [JavaScript script (for HTTP)](./../javascript-for-http-integration.mdx) specification to write a JS script that complies with the **Aqara Data Model Specification**. This will enable device onboarding, discovery, addition, and function point control, ensuring that your HTTP device can be correctly recognized and managed by Aqara Studio.
 6. Switch to the **Add Device** tab, and click the **Discover Devices** button. Aqara Studio will automatically scan for and identify the HTTP device that can be integrated based on your script. The discovered device will appear in the **Added Device List**.
 7. Select the target device and click the **+** button in the center to add the device to the **Added Device List** on the right, and it will also be displayed in real time under the HTTP node in the device tree on the left.
 

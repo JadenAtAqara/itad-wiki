@@ -1,1896 +1,1681 @@
-# 设备类型
+# Device Types
 
 ## Overview
 
 | deviceType | description |
 | --- | --- |
-| [TemperatureControlledCabinet](#temperaturecontrolledcabinet) | 温控容器 |
-| [PackageDetector](#packagedetector) | 包裹检测器 |
-| [FaceScanner](#facescanner) | 人脸识别器 |
-| [HumanDetector](#humandetector) | 人形检测器 |
-| [TVOCSensor](#tvocsensor) | TVOC传感器 |
-| [AttitudeDetector](#attitudedetector) | 姿态检测 |
-| [SmartBed](#smartbed) | 床 |
-| [AirConditionerController](#airconditionercontroller) | 空调控制器 |
-| [PetFeeder](#petfeeder) | 喂食器 |
-| [Button](#button) | 无线开关 |
-| [ClotheDryingMachine](#clothedryingmachine) | 晾衣机 |
-| [Cooktop](#cooktop) | 炉灶 |
-| [CookSurface](#cooksurface) | 烹饪台面 |
-| [IRDevice](#irdevice) | 红外设备 |
-| [MultiActionDetector](#multiactiondetector) | 多动作感知器 |
-| [MicrowaveOven](#microwaveoven) | 微波炉 |
-| [BinaryOutputDevice](#binaryoutputdevice) | 二进制输出型设备 |
-| [AnalogInputDevice](#analoginputdevice) | 模拟输入型设备 |
-| [CastingVideoPlayer](#castingvideoplayer) | 投屏视频播放器 |
-| [FireAlarm](#firealarm) | 火灾报警器 |
-| [Root](#root) | 根节点 |
-| [Dishwasher](#dishwasher) | 洗碗机 |
-| [Refrigerator](#refrigerator) | 冰箱 |
-| [VibrationSensor](#vibrationsensor) | 动静贴 |
-| [BridgedNode](#bridgednode) | 桥接设备 |
-| [MultiStateInputDevice](#multistateinputdevice) | 多状态输入型设备 |
-| [Switch](#switch) | 开关 |
-| [AirPurifier](#airpurifier) | 空气净化器 |
-| [HeartMonitor](#heartmonitor) | 心脏监测器 |
-| [SolarPower](#solarpower) | 太阳能 |
-| [PressureSensor](#pressuresensor) | 压力传感器 |
-| [MultiStateOutputDevice](#multistateoutputdevice) | 多状态输出型设备 |
-| [ContactSensor](#contactsensor) | 门窗传感器 |
-| [ExtractorHood](#extractorhood) | 抽油烟机 |
-| [Doorbell](#doorbell) | 门铃 |
-| [Outlet](#outlet) | 插座 |
-| [WaterFreezeDetector](#waterfreezedetector) | 水冻结探测器 |
-| [Speaker](#speaker) | 音箱 |
-| [DoorLock](#doorlock) | 门锁 |
-| [CO2Sensor](#co2sensor) | CO2传感器 |
-| [RoboticVacuumCleaner](#roboticvacuumcleaner) | 扫地机器人 |
-| [GeneralValve](#generalvalve) | 阀门 |
-| [TemperatureSensor](#temperaturesensor) | 温度传感器 |
-| [Panel](#panel) | 面板 |
-| [IlluminanceSensor](#illuminancesensor) | 光照度传感器 |
-| [VideoDoorbell](#videodoorbell) | 可视门铃 |
-| [AtmosphericPressureSensor](#atmosphericpressuresensor) | 大气压 |
-| [BatteryStorage](#batterystorage) | 电池储存 |
-| [BathroomHeater](#bathroomheater) | 浴霸 |
-| [LPGAlarm](#lpgalarm) | 液化石油气报警器 |
-| [GestureSensor](#gesturesensor) | 手势传感器 |
-| [Cube](#cube) | 魔方 |
-| [BreathingMonitor](#breathingmonitor) | 呼吸监测器 |
-| [Projector](#projector) | 投影仪 |
-| [CharStringValueDevice](#charstringvaluedevice) | 字符串型设备 |
-| [TV](#tv) | 电视 |
-| [SweepingRobot](#sweepingrobot) | 扫地机器人 |
-| [BasicVideoPlayer](#basicvideoplayer) | 基础视频播放器 |
-| [ElectricVehicleSupplyEquipment](#electricvehiclesupplyequipment) | 电动车充电桩 |
-| [NaturalGasAlarm](#naturalgasalarm) | 天然气报警器 |
-| [COAlarm](#coalarm) | 一氧化碳报警器 |
-| [Light](#light) | 灯 |
-| [Valve](#valve) | 阀门 |
-| [Camera](#camera) | 摄像头 |
-| [HeatPump](#heatpump) | 热泵 |
-| [WindowCovering](#windowcovering) | 窗帘 |
-| [FlowSensor](#flowsensor) | 流量传感器 |
-| [Public](#public) | 公共节点 |
-| [OccupancySensor](#occupancysensor) | 人体存在传感器 |
-| [RainSensor](#rainsensor) | 雨水传感器 |
-| [Pump](#pump) | 泵 |
-| [SmokeAlarm](#smokealarm) | 烟雾报警器 |
-| [Knob](#knob) | 旋钮开关 |
-| [Ventilation](#ventilation) | 新风 |
-| [AnalogOutputDevice](#analogoutputdevice) | 模拟输出型设备 |
-| [LocationSensor](#locationsensor) | 位置传感器 |
-| [PetMonitor](#petmonitor) | 宠物监测器 |
-| [ParticulateMatterSensor](#particulatemattersensor) | 颗粒物传感器 |
-| [ElectricalSensor](#electricalsensor) | 电气参数传感器 |
-| [OnOffSensor](#onoffsensor) | 开关传感器 |
-| [SoundSensor](#soundsensor) | 声音传感器 |
-| [Hub](#hub) | 网关 |
-| [GarageDoor](#garagedoor) | 车库门 |
-| [Oven](#oven) | 蒸/烤箱 |
-| [MotionSensor](#motionsensor) | 人体传感器 |
-| [HumiditySensor](#humiditysensor) | 湿度传感器 |
-| [SleepMonitor](#sleepmonitor) | 睡眠监测器 |
-| [LaundryDryer](#laundrydryer) | 干衣机 |
-| [BinaryInputDevice](#binaryinputdevice) | 二进制输入型设备 |
-| [Thermostat](#thermostat) | 温控器 |
-| [FloorHeating](#floorheating) | 地暖 |
-| [AirQualitySensor](#airqualitysensor) | 空气质量传感器 |
-| [ModeSelector](#modeselector) | 模式选择器 |
-| [AirConditioner](#airconditioner) | 空调 |
-| [VideoRemoteControl](#videoremotecontrol) | 视频远程控制 |
-| [WaterLeakSensor](#waterleaksensor) | 水浸传感器 |
-| [WaterHeater](#waterheater) | 热水器 |
-| [Fan](#fan) | 风扇 |
-| [LaundryWasher](#laundrywasher) | 洗衣机 |
-| [ThermostatController](#thermostatcontroller) | 温控器控制器 |
-| [VehicleDetector](#vehicledetector) | 车辆检测器 |
+| [Root](#root) | Root node |
+| [Public](#public) | Public node |
+| [TemperatureControlledCabinet](#temperaturecontrolledcabinet) | Temperature-controlled cabinet |
+| [PackageDetector](#packagedetector) | Package detector |
+| [FaceScanner](#facescanner) | Face recognition device |
+| [HumanDetector](#humandetector) | Human-form detector |
+| [TVOCSensor](#tvocsensor) | TVOC sensor |
+| [AttitudeDetector](#attitudedetector) | Attitude detector |
+| [SmartBed](#smartbed) | Bed |
+| [AirConditionerController](#airconditionercontroller) | Air conditioner controller |
+| [PetFeeder](#petfeeder) | Pet feeder |
+| [Button](#button) | Wireless switch |
+| [ClotheDryingMachine](#clothedryingmachine) | Clothes drying rack |
+| [Cooktop](#cooktop) | Cooktop |
+| [CookSurface](#cooksurface) | Cooking surface |
+| [IRDevice](#irdevice) | Infrared device |
+| [MultiActionDetector](#multiactiondetector) | Multi-action detector |
+| [MicrowaveOven](#microwaveoven) | Microwave oven |
+| [BinaryOutputDevice](#binaryoutputdevice) | Binary output device |
+| [AnalogInputDevice](#analoginputdevice) | Analog input device |
+| [CastingVideoPlayer](#castingvideoplayer) | Cast video player |
+| [FireAlarm](#firealarm) | Fire alarm |
+| [Dishwasher](#dishwasher) | Dishwasher |
+| [Refrigerator](#refrigerator) | Refrigerator |
+| [VibrationSensor](#vibrationsensor) | Vibration sensor |
+| [BridgedNode](#bridgednode) | Bridged device |
+| [MultiStateInputDevice](#multistateinputdevice) | Multi-state input device |
+| [Switch](#switch) | Switch |
+| [AirPurifier](#airpurifier) | Air purifier |
+| [HeartMonitor](#heartmonitor) | Heart monitor |
+| [SolarPower](#solarpower) | Solar power |
+| [PressureSensor](#pressuresensor) | Pressure sensor |
+| [MultiStateOutputDevice](#multistateoutputdevice) | Multi-state output device |
+| [ContactSensor](#contactsensor) | Door and window sensor |
+| [ExtractorHood](#extractorhood) | Range hood |
+| [Doorbell](#doorbell) | Doorbell |
+| [Outlet](#outlet) | Outlet |
+| [WaterFreezeDetector](#waterfreezedetector) | Water freeze detector |
+| [Speaker](#speaker) | Speaker |
+| [DoorLock](#doorlock) | Door lock |
+| [CO2Sensor](#co2sensor) | CO2 sensor |
+| [RoboticVacuumCleaner](#roboticvacuumcleaner) | Robotic vacuum cleaner |
+| [GeneralValve](#generalvalve) | Valve |
+| [TemperatureSensor](#temperaturesensor) | Temperature sensor |
+| [Panel](#panel) | Panel |
+| [IlluminanceSensor](#illuminancesensor) | Illuminance sensor |
+| [VideoDoorbell](#videodoorbell) | Video doorbell |
+| [AtmosphericPressureSensor](#atmosphericpressuresensor) | Atmospheric pressure sensor |
+| [BatteryStorage](#batterystorage) | Battery storage |
+| [BathroomHeater](#bathroomheater) | Bathroom heater |
+| [LPGAlarm](#lpgalarm) | Liquefied petroleum gas alarm |
+| [GestureSensor](#gesturesensor) | Gesture sensor |
+| [Cube](#cube) | Cube controller |
+| [BreathingMonitor](#breathingmonitor) | Breathing monitor |
+| [Projector](#projector) | Projector |
+| [CharStringValueDevice](#charstringvaluedevice) | Character string value device |
+| [TV](#tv) | Television |
+| [SweepingRobot](#sweepingrobot) | Robotic vacuum cleaner |
+| [BasicVideoPlayer](#basicvideoplayer) | Basic video player |
+| [ElectricVehicleSupplyEquipment](#electricvehiclesupplyequipment) | Electric vehicle charging station |
+| [NaturalGasAlarm](#naturalgasalarm) | Natural gas alarm |
+| [COAlarm](#coalarm) | Carbon monoxide alarm |
+| [Light](#light) | Light |
+| [Valve](#valve) | Valve |
+| [Camera](#camera) | Camera |
+| [HeatPump](#heatpump) | Heat pump |
+| [WindowCovering](#windowcovering) | Window covering |
+| [FlowSensor](#flowsensor) | Flow sensor |
+| [OccupancySensor](#occupancysensor) | Occupancy sensor |
+| [RainSensor](#rainsensor) | Rain sensor |
+| [Pump](#pump) | Pump |
+| [SmokeAlarm](#smokealarm) | Smoke alarm |
+| [Knob](#knob) | Knob switch |
+| [Ventilation](#ventilation) | Fresh air system |
+| [AnalogOutputDevice](#analogoutputdevice) | Analog output device |
+| [LocationSensor](#locationsensor) | Location sensor |
+| [PetMonitor](#petmonitor) | Pet monitor |
+| [ParticulateMatterSensor](#particulatemattersensor) | Particulate matter sensor |
+| [ElectricalSensor](#electricalsensor) | Electrical parameter sensor |
+| [OnOffSensor](#onoffsensor) | On/off sensor |
+| [SoundSensor](#soundsensor) | Sound sensor |
+| [Hub](#hub) | Hub |
+| [GarageDoor](#garagedoor) | Garage door |
+| [Oven](#oven) | Steam/oven |
+| [MotionSensor](#motionsensor) | Motion sensor |
+| [HumiditySensor](#humiditysensor) | Humidity sensor |
+| [SleepMonitor](#sleepmonitor) | Sleep monitor |
+| [LaundryDryer](#laundrydryer) | Laundry dryer |
+| [BinaryInputDevice](#binaryinputdevice) | Binary input device |
+| [Thermostat](#thermostat) | Thermostat |
+| [FloorHeating](#floorheating) | Floor heating |
+| [AirQualitySensor](#airqualitysensor) | Air quality sensor |
+| [ModeSelector](#modeselector) | Mode selector |
+| [AirConditioner](#airconditioner) | Air conditioner |
+| [VideoRemoteControl](#videoremotecontrol) | Video remote control |
+| [WaterLeakSensor](#waterleaksensor) | Water leak sensor |
+| [WaterHeater](#waterheater) | Water heater |
+| [Fan](#fan) | Fan |
+| [LaundryWasher](#laundrywasher) | Washing machine |
+| [ThermostatController](#thermostatcontroller) | Thermostat controller |
+| [VehicleDetector](#vehicledetector) | Vehicle detector |
+
+## Root
+
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">Root</td>
+    <td><a href="./function-codes#descriptor">Descriptor</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#basicinformation">BasicInformation</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#endpointlabel">EndpointLabel</a></td>
+  </tr>
+</table>
+
+## Public
+
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="28">Public</td>
+    <td><a href="./function-codes#cameracoordination">CameraCoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#generalconfiguration">GeneralConfiguration</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#ecosysteminformation">EcosystemInformation</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#energymanagement">EnergyManagement</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#hubcoordination">HubCoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#scenecoordination">SceneCoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#powersource">PowerSource</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#wakeupcoordination">WakeupCoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#centralhubcoordination">CentralHubCoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#securityguardcoordination">SecurityGuardCoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#otacoordination">OTACoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#lockcoordination">LockCoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#deviceanomalymonitoring">DeviceAnomalyMonitoring</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#generaldiagnostics">GeneralDiagnostics</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#ringtonecoordination">RingtoneCoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#zigbeenetworkdiagnostics">ZigbeeNetworkDiagnostics</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#mattercoordination">MatterCoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#screencoordination">ScreenCoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#commlinkcoordination">CommLinkCoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#iftttcoordination">IftttCoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#networkmanagement">NetworkManagement</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#identify">Identify</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#lightboxcoordination">LightBoxCoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#ircoordination">IRCoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#networkcommissioning">NetworkCommissioning</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#configurationcoordination">ConfigurationCoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#cloudstoragecoordination">CloudStorageCoordination</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#studiocoordination">StudioCoordination</a></td>
+  </tr>
+</table>
 
 ## TemperatureControlledCabinet
 
 <table>
   <tr>
+    <th>deviceType</th>
     <th>functionCode</th>
-    <th>description</th>
-    <th>trait/commandCode</th>
-    <th>trait 或 command</th>
   </tr>
   <tr>
-    <td>Temperature</td>
-    <td>测量并上报环境温度，提供当前温度值及有效量程等属性。</td>
-    <td>CurrentTemperature</td>
-    <td>trait</td>
+    <td rowspan="2">TemperatureControlledCabinet</td>
+    <td><a href="./function-codes#temperature">Temperature</a></td>
   </tr>
   <tr>
-    <td rowspan="4">TemperatureControl</td>
-    <td rowspan="4">提供温度设定与调节能力，用于恒温设备的目标温度控制。</td>
-    <td>SetTemperatureLevel</td>
-    <td>trait</td>
-  </tr>
-  <tr>
-    <td>SetTemperature</td>
-    <td>trait</td>
-  </tr>
-  <tr>
-    <td>ChangeTemperatureLevel</td>
-    <td>command</td>
-  </tr>
-  <tr>
-    <td>ChangeTemperature</td>
-    <td>command</td>
+    <td><a href="./function-codes#temperaturecontrol">TemperatureControl</a></td>
   </tr>
 </table>
 
 ## PackageDetector
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| PackageRecognition | PackageRecognitionReport |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>PackageDetector</td>
+    <td><a href="./function-codes#packagerecognition">PackageRecognition</a></td>
+  </tr>
+</table>
 
 ## FaceScanner
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| FaceRecognition | FaceIDReport |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>FaceScanner</td>
+    <td><a href="./function-codes#facerecognition">FaceRecognition</a></td>
+  </tr>
+</table>
 
 ## HumanDetector
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| HumanPresence | HoldTime |
-| HumanPresence | ResetPresence |
-| HumanPresence | ActivityDetected |
-| HumanPresence | PresenceConfiguration |
-| HumanPresence | Presence |
-| HumanRecognition | HumanRecognitionReport |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">HumanDetector</td>
+    <td><a href="./function-codes#humanpresence">HumanPresence</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#humanrecognition">HumanRecognition</a></td>
+  </tr>
+</table>
 
 ## TVOCSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| AirQuality | VOCDensity |
-| AirQuality | AirQuality |
-| AirQuality | VOCQuality |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>TVOCSensor</td>
+    <td><a href="./function-codes#airquality">AirQuality</a></td>
+  </tr>
+</table>
 
 ## AttitudeDetector
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| AttitudeDetection | AttitudeDetected |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>AttitudeDetector</td>
+    <td><a href="./function-codes#attitudedetection">AttitudeDetection</a></td>
+  </tr>
+</table>
 
 ## SmartBed
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Lifter | GoToMaxPositionPercentage |
-| Lifter | AutoControl |
-| Lifter | GoToPositionPercentage |
-| Lifter | GoToMinPositionPercentage |
-| Lifter | TripTime |
-| Lifter | TargetPositionPercentage |
-| Lifter | CurrentPositionPercentage |
-| Lifter | StopMotion |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>SmartBed</td>
+    <td><a href="./function-codes#lifter">Lifter</a></td>
+  </tr>
+</table>
 
 ## AirConditionerController
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Binding | Binding |
-| Binding | SupportedBindingDeviceTypes |
-| Binding | SupportedBindingFunctions |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>AirConditionerController</td>
+    <td><a href="./function-codes#binding">Binding</a></td>
+  </tr>
+</table>
 
 ## PetFeeder
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| PetFeeder | Feed |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>PetFeeder</td>
+    <td><a href="./function-codes#petfeeder">PetFeeder</a></td>
+  </tr>
+</table>
 
 ## Button
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Button | LocalControlDisabled |
-| Button | ButtonEvent |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>Button</td>
+    <td><a href="./function-codes#button">Button</a></td>
+  </tr>
+</table>
 
 ## ClotheDryingMachine
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Lifter | GoToMaxPositionPercentage |
-| Lifter | AutoControl |
-| Lifter | GoToPositionPercentage |
-| Lifter | GoToMinPositionPercentage |
-| Lifter | TripTime |
-| Lifter | TargetPositionPercentage |
-| Lifter | CurrentPositionPercentage |
-| Lifter | StopMotion |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>ClotheDryingMachine</td>
+    <td><a href="./function-codes#lifter">Lifter</a></td>
+  </tr>
+</table>
 
 ## Cooktop
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>Cooktop</td>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+</table>
 
 ## CookSurface
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>CookSurface</td>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+</table>
 
 ## IRDevice
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| IRControl | SendIRCode |
-| IRControl | IRKey |
-| IRControl | IRType |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
-| HeaterCooler | CoolingTemperature |
-| HeaterCooler | CurrentHumidity |
-| HeaterCooler | ClearActivePreset |
-| HeaterCooler | CurrentTemperature |
-| HeaterCooler | Preset |
-| HeaterCooler | SetActivePreset |
-| HeaterCooler | SetBack |
-| HeaterCooler | PresetTypes |
-| HeaterCooler | HeaterCoolerMode |
-| HeaterCooler | ActivePresetHandle |
-| HeaterCooler | HeatingTemperature |
-| HeaterCooler | NumberOfPresets |
-| HeaterCooler | HeaterCoolerButtonEvent |
-| HeaterCooler | MinHeatCoolDeadBand |
-| HeaterCooler | CurrentTemperatureCalibration |
-| HeaterCooler | TemperatureUIDisplayMode |
-| HeaterCooler | AntiFreezeTemperature |
-| HeaterCooler | HeaterCoolerPolarity |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">IRDevice</td>
+    <td><a href="./function-codes#ircontrol">IRControl</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#heatercooler">HeaterCooler</a></td>
+  </tr>
+</table>
 
 ## MultiActionDetector
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Vibration | TiltAngleDeviation |
-| Vibration | StationaryState |
-| Vibration | InitialTiltAngle |
-| Vibration | EventReportInterval |
-| Vibration | ObjectOrientationEnable |
-| Vibration | StationaryTiltAngle |
-| Vibration | PeakTiltAngle |
-| Vibration | ObjectMotionDetectionEnable |
-| Vibration | ObjectOrientationState |
-| Vibration | VibrationEvent |
-| Cube | CubeWorkModeSetting |
-| Cube | TopFace |
-| Cube | CubeEvent |
-| Cube | TopFaceChanged |
-| Knob | HoldRotationInterval |
-| Knob | RotationEvent |
-| Knob | RotationDirection |
-| Knob | InvertedRotationAngle |
-| Knob | RotationAngle |
-| Knob | RotationInterval |
-| Knob | HoldRotationAngle |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">MultiActionDetector</td>
+    <td><a href="./function-codes#vibration">Vibration</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#cube">Cube</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#knob">Knob</a></td>
+  </tr>
+</table>
 
 ## MicrowaveOven
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>MicrowaveOven</td>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+</table>
 
 ## BinaryOutputDevice
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| BinaryOutputObject | BinaryOutputPV |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>BinaryOutputDevice</td>
+    <td><a href="./function-codes#binaryoutputobject">BinaryOutputObject</a></td>
+  </tr>
+</table>
 
 ## AnalogInputDevice
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| AnalogInputObject | AnalogInputPV |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>AnalogInputDevice</td>
+    <td><a href="./function-codes#analoginputobject">AnalogInputObject</a></td>
+  </tr>
+</table>
 
 ## CastingVideoPlayer
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| MediaPlayback | Pause |
-| MediaPlayback | TargetPlaybackState |
-| MediaPlayback | Stop |
-| MediaPlayback | MediaInformation |
-| MediaPlayback | PlaybackDuration |
-| MediaPlayback | MediaPlaybackCommand |
-| MediaPlayback | CurrentPlaybackState |
-| MediaPlayback | PlaybackMode |
-| MediaPlayback | Rewind |
-| MediaPlayback | SampledPosition |
-| MediaPlayback | Play |
-| MediaPlayback | StartOver |
-| MediaPlayback | PlaySpecificList |
-| MediaPlayback | LoginState |
-| MediaPlayback | FastForward |
-| MediaPlayback | Next |
-| MediaPlayback | Previous |
-| MediaPlayback | PlaybackSampledPosition |
-| MediaPlayback | SelectedMediaOutputSource |
-| MediaPlayback | SelectedSource |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
-| MediaInput | SelectInput |
-| MediaInput | MediaInput |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">CastingVideoPlayer</td>
+    <td><a href="./function-codes#mediaplayback">MediaPlayback</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#mediainput">MediaInput</a></td>
+  </tr>
+</table>
 
 ## FireAlarm
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| FlameDetection | FlameDetected |
-
-## Root
-
-| functionCode | trait/commandCode |
-| --- | --- |
-| Descriptor | SupportedEndpointDynamic |
-| Descriptor | EndpointCount |
-| Descriptor | EndpointStructure |
-| Descriptor | EndpointDeviceTypes |
-| Descriptor | EndpointDynamicCount |
-| Descriptor | EndpointArrayDynamic |
-| Descriptor | EndpointArray |
-| Descriptor | EndpointFunctions |
-| Descriptor | SelectedEndpointDynamic |
-| BasicInformation | ProductName |
-| BasicInformation | PartNumber |
-| BasicInformation | BLVersion |
-| BasicInformation | ManufacturerChipID |
-| BasicInformation | SupportedMatterRoles |
-| BasicInformation | HardwareVersionString |
-| BasicInformation | HubConnectionStatus |
-| BasicInformation | DeviceXCode |
-| BasicInformation | MatterSpecificationVersion |
-| BasicInformation | VendorName |
-| BasicInformation | FirmwareRevisionString |
-| BasicInformation | DeviceID |
-| BasicInformation | VendorID |
-| BasicInformation | MCUVersion |
-| BasicInformation | ProductID |
-| BasicInformation | ConfigurationFlag |
-| BasicInformation | ModelValue |
-| BasicInformation | HardwareVersion |
-| BasicInformation | Mac |
-| BasicInformation | RadarVersion |
-| BasicInformation | SerialNumber |
-| BasicInformation | ConfigurationVersion |
-| BasicInformation | Reachable |
-| BasicInformation | FirmwareRevision |
-| BasicInformation | ChipTemperature |
-| BasicInformation | Location |
-| EndpointLabel | EndpointTag |
-| EndpointLabel | EndpointName |
-| EndpointLabel | EndpointApplianceType |
-| EndpointLabel | EndpointRoom |
-| EndpointLabel | EndpointVisibility |
-| EndpointLabel | EndpointIcon |
-| EndpointLabel | EndpointStatistics |
-| EndpointLabel | EndpointRoomName |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>FireAlarm</td>
+    <td><a href="./function-codes#flamedetection">FlameDetection</a></td>
+  </tr>
+</table>
 
 ## Dishwasher
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| OperationalState | Pause |
-| OperationalState | OperationalError |
-| OperationalState | Start |
-| OperationalState | Stop |
-| OperationalState | OperationalState |
-| OperationalState | Resume |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>Dishwasher</td>
+    <td><a href="./function-codes#operationalstate">OperationalState</a></td>
+  </tr>
+</table>
 
 ## Refrigerator
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| RefrigeratorState | RefrigeratorAlarm |
-| Mode | CurrentMode |
-| Mode | ChangeToMode |
-| Mode | ChangeToModeResponse |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">Refrigerator</td>
+    <td><a href="./function-codes#refrigeratorstate">RefrigeratorState</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#mode">Mode</a></td>
+  </tr>
+</table>
 
 ## VibrationSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Vibration | TiltAngleDeviation |
-| Vibration | StationaryState |
-| Vibration | InitialTiltAngle |
-| Vibration | EventReportInterval |
-| Vibration | ObjectOrientationEnable |
-| Vibration | StationaryTiltAngle |
-| Vibration | PeakTiltAngle |
-| Vibration | ObjectMotionDetectionEnable |
-| Vibration | ObjectOrientationState |
-| Vibration | VibrationEvent |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>VibrationSensor</td>
+    <td><a href="./function-codes#vibration">Vibration</a></td>
+  </tr>
+</table>
 
 ## BridgedNode
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| BridgedConfiguration | BridgeDeviceID |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>BridgedNode</td>
+    <td><a href="./function-codes#bridgedconfiguration">BridgedConfiguration</a></td>
+  </tr>
+</table>
 
 ## MultiStateInputDevice
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| MultiStateInputObject | MultiStateInputPV |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>MultiStateInputDevice</td>
+    <td><a href="./function-codes#multistateinputobject">MultiStateInputObject</a></td>
+  </tr>
+</table>
 
 ## Switch
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| MARSConfiguration | PulseDuration |
-| MARSConfiguration | LoadType |
-| MARSConfiguration | LinkageDeviceList |
-| EnergyManagement | CurrentVoltage |
-| EnergyManagement | CircuitCurrent |
-| EnergyManagement | CumulativeEnergyConsumption |
-| EnergyManagement | CurrentPower |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
-| ScreenUserInterface | ThemeID |
-| ScreenUserInterface | Allpages |
-| ScreenUserInterface | MaxPageNum |
-| ScreenUserInterface | ScreenWidth |
-| ScreenUserInterface | DataVersion |
-| ScreenUserInterface | ThemeVersion |
-| ScreenUserInterface | ScreenHeight |
-| CustomizedConfiguration | EnableIndicator |
-| CustomizedConfiguration | StartUpOnOff |
-| DeviceAnomalyMonitoring | LoadSafetyManagement |
-| DeviceAnomalyMonitoring | VoltageSafetyManagement |
-| DeviceAnomalyMonitoring | CurrentSafetyManagement |
-| DeviceAnomalyMonitoring | OverCurrentResponseSetting |
-| DeviceAnomalyMonitoring | TemperatureSafetyManagement |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="6">Switch</td>
+    <td><a href="./function-codes#marsconfiguration">MARSConfiguration</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#energymanagement">EnergyManagement</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#screenuserinterface">ScreenUserInterface</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#customizedconfiguration">CustomizedConfiguration</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#deviceanomalymonitoring">DeviceAnomalyMonitoring</a></td>
+  </tr>
+</table>
 
 ## AirPurifier
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| HEPAFilterMonitoring | Condition |
-| HEPAFilterMonitoring | ChangeIndication |
-| HEPAFilterMonitoring | ResetCondition |
-| ActivatedCarbonFilterMonitoring | Condition |
-| ActivatedCarbonFilterMonitoring | ChangeIndication |
-| ActivatedCarbonFilterMonitoring | ResetCondition |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
-| FanControl | WindSetting |
-| FanControl | AirflowDirection |
-| FanControl | FanMode |
-| FanControl | FanSpeed |
-| FanControl | RockSetting |
-| Identify | IdentifyType |
-| Identify | ReverseIdentify |
-| Identify | IdentifyTime |
-| Identify | Identify |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="5">AirPurifier</td>
+    <td><a href="./function-codes#hepafiltermonitoring">HEPAFilterMonitoring</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#activatedcarbonfiltermonitoring">ActivatedCarbonFilterMonitoring</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#fancontrol">FanControl</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#identify">Identify</a></td>
+  </tr>
+</table>
 
 ## HeartMonitor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| HeartMonitoring | HeartRate |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>HeartMonitor</td>
+    <td><a href="./function-codes#heartmonitoring">HeartMonitoring</a></td>
+  </tr>
+</table>
 
 ## SolarPower
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| PowerSource | CurrentVoltage |
-| PowerSource | BatReplacementDescription |
-| PowerSource | BatChargeState |
-| PowerSource | BatReplaceability |
-| PowerSource | PowerMode |
-| PowerSource | BatPercentRemaining |
-| PowerSource | WiredPresent |
-| PowerSource | Rechargeable |
-| PowerSource | StateOfLowBat |
-| PowerSource | BatReplacementNeeded |
-| PowerSource | BatQuantity |
-| EnergyManagement | CurrentVoltage |
-| EnergyManagement | CircuitCurrent |
-| EnergyManagement | CumulativeEnergyConsumption |
-| EnergyManagement | CurrentPower |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">SolarPower</td>
+    <td><a href="./function-codes#powersource">PowerSource</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#energymanagement">EnergyManagement</a></td>
+  </tr>
+</table>
 
 ## PressureSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Pressure | CurrentPressure |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>PressureSensor</td>
+    <td><a href="./function-codes#pressure">Pressure</a></td>
+  </tr>
+</table>
 
 ## MultiStateOutputDevice
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| MultiStateOutputObject | MultiStateOutputPV |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>MultiStateOutputDevice</td>
+    <td><a href="./function-codes#multistateoutputobject">MultiStateOutputObject</a></td>
+  </tr>
+</table>
 
 ## ContactSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Contact | ContactSensorState |
-| Contact | OpenAngle |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>ContactSensor</td>
+    <td><a href="./function-codes#contact">Contact</a></td>
+  </tr>
+</table>
 
 ## ExtractorHood
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| FanControl | WindSetting |
-| FanControl | AirflowDirection |
-| FanControl | FanMode |
-| FanControl | FanSpeed |
-| FanControl | RockSetting |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>ExtractorHood</td>
+    <td><a href="./function-codes#fancontrol">FanControl</a></td>
+  </tr>
+</table>
 
 ## Doorbell
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Doorbell | ButtonEvent |
-| Doorbell | Volume |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>Doorbell</td>
+    <td><a href="./function-codes#doorbell">Doorbell</a></td>
+  </tr>
+</table>
 
 ## Outlet
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| EnergyManagement | CurrentVoltage |
-| EnergyManagement | CircuitCurrent |
-| EnergyManagement | CumulativeEnergyConsumption |
-| EnergyManagement | CurrentPower |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
-| DeviceAnomalyMonitoring | LoadSafetyManagement |
-| DeviceAnomalyMonitoring | VoltageSafetyManagement |
-| DeviceAnomalyMonitoring | CurrentSafetyManagement |
-| DeviceAnomalyMonitoring | OverCurrentResponseSetting |
-| DeviceAnomalyMonitoring | TemperatureSafetyManagement |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">Outlet</td>
+    <td><a href="./function-codes#energymanagement">EnergyManagement</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#deviceanomalymonitoring">DeviceAnomalyMonitoring</a></td>
+  </tr>
+</table>
 
 ## WaterFreezeDetector
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| WaterFreezeDetector | BooleanState |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>WaterFreezeDetector</td>
+    <td><a href="./function-codes#waterfreezedetector">WaterFreezeDetector</a></td>
+  </tr>
+</table>
 
 ## Speaker
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| MediaPlayback | Pause |
-| MediaPlayback | TargetPlaybackState |
-| MediaPlayback | Stop |
-| MediaPlayback | MediaInformation |
-| MediaPlayback | PlaybackDuration |
-| MediaPlayback | MediaPlaybackCommand |
-| MediaPlayback | CurrentPlaybackState |
-| MediaPlayback | PlaybackMode |
-| MediaPlayback | Rewind |
-| MediaPlayback | SampledPosition |
-| MediaPlayback | Play |
-| MediaPlayback | StartOver |
-| MediaPlayback | PlaySpecificList |
-| MediaPlayback | LoginState |
-| MediaPlayback | FastForward |
-| MediaPlayback | Next |
-| MediaPlayback | Previous |
-| MediaPlayback | PlaybackSampledPosition |
-| MediaPlayback | SelectedMediaOutputSource |
-| MediaPlayback | SelectedSource |
-| Speaker | StepValue |
-| Speaker | Volume |
-| Speaker | Mute |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">Speaker</td>
+    <td><a href="./function-codes#mediaplayback">MediaPlayback</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#speaker">Speaker</a></td>
+  </tr>
+</table>
 
 ## DoorLock
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| DoorLock | LockOperation |
-| DoorLock | UnboltDoor |
-| DoorLock | SupportedRemoteFeatures |
-| DoorLock | SetWeekDaySchedule |
-| DoorLock | QuietUnlockDoor |
-| DoorLock | GetYearDaySchedule |
-| DoorLock | NumberOfCredentialsSupportedPerUser |
-| DoorLock | LockOperationError |
-| DoorLock | NumberOfTotalUsersSupported |
-| DoorLock | DoorState |
-| DoorLock | NumberOfYearDaySchedulesSupportedPerUser |
-| DoorLock | LockState |
-| DoorLock | ClearWeekDaySchedule |
-| DoorLock | GetUser |
-| DoorLock | UnlockDoor |
-| DoorLock | EnableRemoteControl |
-| DoorLock | NumberOfPINUsersSupported |
-| DoorLock | SetYearDaySchedule |
-| DoorLock | GetWeekDaySchedule |
-| DoorLock | LockUserChange |
-| DoorLock | RemoteControlWithAuthCode |
-| DoorLock | DoorLockAlarm |
-| DoorLock | RemoteUnlock |
-| DoorLock | NumberOfRFIDUsersSupported |
-| DoorLock | LockDoor |
-| DoorLock | ClearYearDaySchedule |
-| DoorLock | QuietLockDoor |
-| DoorLock | NumberOfWeekDaySchedulesSupportedPerUser |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>DoorLock</td>
+    <td><a href="./function-codes#doorlock">DoorLock</a></td>
+  </tr>
+</table>
 
 ## CO2Sensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| CO2 | CO2Level |
-| CO2 | CO2Density |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>CO2Sensor</td>
+    <td><a href="./function-codes#co2">CO2</a></td>
+  </tr>
+</table>
 
 ## RoboticVacuumCleaner
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Mode | CurrentMode |
-| Mode | ChangeToMode |
-| Mode | ChangeToModeResponse |
-| VacuumOperationalState | GoHome |
-| VacuumOperationalState | VacuumOperationalError |
-| VacuumOperationalState | Pause |
-| VacuumOperationalState | Start |
-| VacuumOperationalState | Stop |
-| VacuumOperationalState | VacuumOperationalState |
-| VacuumOperationalState | Resume |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">RoboticVacuumCleaner</td>
+    <td><a href="./function-codes#mode">Mode</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#vacuumoperationalstate">VacuumOperationalState</a></td>
+  </tr>
+</table>
 
 ## GeneralValve
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Identify | IdentifyType |
-| Identify | ReverseIdentify |
-| Identify | IdentifyTime |
-| Identify | Identify |
-| ValveControl | CurrentValveState |
-| ValveControl | DefaultOpenDuration |
-| ValveControl | Close |
-| ValveControl | RemainingDuration |
-| ValveControl | Open |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">GeneralValve</td>
+    <td><a href="./function-codes#identify">Identify</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#valvecontrol">ValveControl</a></td>
+  </tr>
+</table>
 
 ## TemperatureSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Temperature | CurrentTemperature |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>TemperatureSensor</td>
+    <td><a href="./function-codes#temperature">Temperature</a></td>
+  </tr>
+</table>
 
 ## Panel
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| ScreenDisplay | ScreenBrightness |
-| Speaker | StepValue |
-| Speaker | Volume |
-| Speaker | Mute |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">Panel</td>
+    <td><a href="./function-codes#screendisplay">ScreenDisplay</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#speaker">Speaker</a></td>
+  </tr>
+</table>
 
 ## IlluminanceSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Illuminance | SamplingInterval |
-| Illuminance | CurrentIlluminance |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>IlluminanceSensor</td>
+    <td><a href="./function-codes#illuminance">Illuminance</a></td>
+  </tr>
+</table>
 
 ## VideoDoorbell
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Camera | CameraActiveStatus |
-| Camera | CameraRTSPURL |
-| Camera | P2PCaptureStatus |
-| Camera | CameraRTSPEnable |
-| Camera | P2PCaptureEnabled |
-| Speaker | StepValue |
-| Speaker | Volume |
-| Speaker | Mute |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">VideoDoorbell</td>
+    <td><a href="./function-codes#camera">Camera</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#speaker">Speaker</a></td>
+  </tr>
+</table>
 
 ## AtmosphericPressureSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Pressure | CurrentPressure |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>AtmosphericPressureSensor</td>
+    <td><a href="./function-codes#pressure">Pressure</a></td>
+  </tr>
+</table>
 
 ## BatteryStorage
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| PowerSource | CurrentVoltage |
-| PowerSource | BatReplacementDescription |
-| PowerSource | BatChargeState |
-| PowerSource | BatReplaceability |
-| PowerSource | PowerMode |
-| PowerSource | BatPercentRemaining |
-| PowerSource | WiredPresent |
-| PowerSource | Rechargeable |
-| PowerSource | StateOfLowBat |
-| PowerSource | BatReplacementNeeded |
-| PowerSource | BatQuantity |
-| EnergyManagement | CurrentVoltage |
-| EnergyManagement | CircuitCurrent |
-| EnergyManagement | CumulativeEnergyConsumption |
-| EnergyManagement | CurrentPower |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">BatteryStorage</td>
+    <td><a href="./function-codes#powersource">PowerSource</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#energymanagement">EnergyManagement</a></td>
+  </tr>
+</table>
 
 ## BathroomHeater
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
-| HeaterCooler | CoolingTemperature |
-| HeaterCooler | CurrentHumidity |
-| HeaterCooler | ClearActivePreset |
-| HeaterCooler | CurrentTemperature |
-| HeaterCooler | Preset |
-| HeaterCooler | SetActivePreset |
-| HeaterCooler | SetBack |
-| HeaterCooler | PresetTypes |
-| HeaterCooler | HeaterCoolerMode |
-| HeaterCooler | ActivePresetHandle |
-| HeaterCooler | HeatingTemperature |
-| HeaterCooler | NumberOfPresets |
-| HeaterCooler | HeaterCoolerButtonEvent |
-| HeaterCooler | MinHeatCoolDeadBand |
-| HeaterCooler | CurrentTemperatureCalibration |
-| HeaterCooler | TemperatureUIDisplayMode |
-| HeaterCooler | AntiFreezeTemperature |
-| HeaterCooler | HeaterCoolerPolarity |
-| FanControl | WindSetting |
-| FanControl | AirflowDirection |
-| FanControl | FanMode |
-| FanControl | FanSpeed |
-| FanControl | RockSetting |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">BathroomHeater</td>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#heatercooler">HeaterCooler</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#fancontrol">FanControl</a></td>
+  </tr>
+</table>
 
 ## LPGAlarm
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Gas | CurrentSensitivityLevel |
-| Gas | GasDensity |
-| Gas | SelfCheck |
-| Gas | Mute |
-| Gas | GasDetected |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>LPGAlarm</td>
+    <td><a href="./function-codes#gas">Gas</a></td>
+  </tr>
+</table>
 
 ## GestureSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| GestureRecognition | GestureRecognitionReport |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>GestureSensor</td>
+    <td><a href="./function-codes#gesturerecognition">GestureRecognition</a></td>
+  </tr>
+</table>
 
 ## Cube
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Cube | CubeWorkModeSetting |
-| Cube | TopFace |
-| Cube | CubeEvent |
-| Cube | TopFaceChanged |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>Cube</td>
+    <td><a href="./function-codes#cube">Cube</a></td>
+  </tr>
+</table>
 
 ## BreathingMonitor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| BreathingMonitoring | BreathingRate |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>BreathingMonitor</td>
+    <td><a href="./function-codes#breathingmonitoring">BreathingMonitoring</a></td>
+  </tr>
+</table>
 
 ## Projector
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>Projector</td>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+</table>
 
 ## CharStringValueDevice
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| CharacterStringValueObject | CharStringValuePV |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>CharStringValueDevice</td>
+    <td><a href="./function-codes#characterstringvalueobject">CharacterStringValueObject</a></td>
+  </tr>
+</table>
 
 ## TV
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>TV</td>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+</table>
 
 ## SweepingRobot
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Sweeper | ContinueCleaning |
-| Sweeper | SweeperState |
-| Sweeper | PauseCleaning |
-| Sweeper | StartCleaning |
-| Sweeper | StopCleaning |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>SweepingRobot</td>
+    <td><a href="./function-codes#sweeper">Sweeper</a></td>
+  </tr>
+</table>
 
 ## BasicVideoPlayer
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| MediaPlayback | Pause |
-| MediaPlayback | TargetPlaybackState |
-| MediaPlayback | Stop |
-| MediaPlayback | MediaInformation |
-| MediaPlayback | PlaybackDuration |
-| MediaPlayback | MediaPlaybackCommand |
-| MediaPlayback | CurrentPlaybackState |
-| MediaPlayback | PlaybackMode |
-| MediaPlayback | Rewind |
-| MediaPlayback | SampledPosition |
-| MediaPlayback | Play |
-| MediaPlayback | StartOver |
-| MediaPlayback | PlaySpecificList |
-| MediaPlayback | LoginState |
-| MediaPlayback | FastForward |
-| MediaPlayback | Next |
-| MediaPlayback | Previous |
-| MediaPlayback | PlaybackSampledPosition |
-| MediaPlayback | SelectedMediaOutputSource |
-| MediaPlayback | SelectedSource |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
-| MediaInput | SelectInput |
-| MediaInput | MediaInput |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">BasicVideoPlayer</td>
+    <td><a href="./function-codes#mediaplayback">MediaPlayback</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#mediainput">MediaInput</a></td>
+  </tr>
+</table>
 
 ## ElectricVehicleSupplyEquipment
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| EVSE | EvseSupplyState |
-| EVSE | MinChargeCurrent |
-| EVSE | EvseState |
-| EVSE | ChargingEnabledUntil |
-| EVSE | BatteryCapacity |
-| EVSE | VehicleID |
-| EVSE | EvseFaultState |
-| EVSE | BatPercentRemaining |
-| EVSE | EnableCharging |
-| EVSE | MaxChargeCurrent |
-| EVSE | CurrentFlow |
-| EVSE | DisableCharging |
-| Mode | CurrentMode |
-| Mode | ChangeToMode |
-| Mode | ChangeToModeResponse |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">ElectricVehicleSupplyEquipment</td>
+    <td><a href="./function-codes#evse">EVSE</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#mode">Mode</a></td>
+  </tr>
+</table>
 
 ## NaturalGasAlarm
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Gas | CurrentSensitivityLevel |
-| Gas | GasDensity |
-| Gas | SelfCheck |
-| Gas | Mute |
-| Gas | GasDetected |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>NaturalGasAlarm</td>
+    <td><a href="./function-codes#gas">Gas</a></td>
+  </tr>
+</table>
 
 ## COAlarm
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| PowerSource | CurrentVoltage |
-| PowerSource | BatReplacementDescription |
-| PowerSource | BatChargeState |
-| PowerSource | BatReplaceability |
-| PowerSource | PowerMode |
-| PowerSource | BatPercentRemaining |
-| PowerSource | WiredPresent |
-| PowerSource | Rechargeable |
-| PowerSource | StateOfLowBat |
-| PowerSource | BatReplacementNeeded |
-| PowerSource | BatQuantity |
-| CO | ExpressedState |
-| CO | CODetected |
-| CO | SelfTestRequest |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">COAlarm</td>
+    <td><a href="./function-codes#powersource">PowerSource</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#co">CO</a></td>
+  </tr>
+</table>
 
 ## Light
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Lighting | BuiltInEffects |
-| Lighting | PreviewEffect |
-| Lighting | MaxUserDefinedEffects |
-| Lighting | CurrentEffectID |
-| Lighting | CommitConfiguration |
-| Lighting | EnterInstallMode |
-| Lighting | UpdateUserDefinedEffect |
-| Lighting | RemoveUserDefinedEffect |
-| Lighting | GetEffectData |
-| Lighting | StartEffect |
-| Lighting | EffectInfo |
-| Lighting | AddUserDefinedEffect |
-| Lighting | MaxEffectNameLength |
-| Lighting | StopPreview |
-| Lighting | NaturalLightGamut |
-| Lighting | UserDefinedEffects |
-| Lighting | PreviewTransition |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
-| LevelControl | StepBrightness |
-| LevelControl | OnTransitionTime |
-| LevelControl | SetBrightness |
-| LevelControl | StepBrightnessWithOnOff |
-| LevelControl | SetBrightnessWithOnOff |
-| LevelControl | CurrentLevel |
-| LevelControl | OffTransitionTime |
-| DeviceAnomalyMonitoring | LoadSafetyManagement |
-| DeviceAnomalyMonitoring | VoltageSafetyManagement |
-| DeviceAnomalyMonitoring | CurrentSafetyManagement |
-| DeviceAnomalyMonitoring | OverCurrentResponseSetting |
-| DeviceAnomalyMonitoring | TemperatureSafetyManagement |
-| ColorControl | MoveToXYColor |
-| ColorControl | CurrentY |
-| ColorControl | ColorMode |
-| ColorControl | WhitePointXY |
-| ColorControl | ColorTemperature |
-| ColorControl | LEDICQuantity |
-| ColorControl | ColorRGB |
-| ColorControl | ColorXY |
-| ColorControl | Hue |
-| ColorControl | StartUpXYColor |
-| ColorControl | MoveToHueSaturationBrightness |
-| ColorControl | LightingMusicSyncMode |
-| ColorControl | StartUpColorTemperature |
-| ColorControl | LightingDynamicSceneMode |
-| ColorControl | Saturation |
-| ColorControl | CurrentG |
-| ColorControl | MoveToHueAndSaturation |
-| ColorControl | MoveToColorTemperatureBrightness |
-| ColorControl | CurrentB |
-| ColorControl | LightingMusicSyncEnable |
-| ColorControl | MoveToXYColorBrightness |
-| ColorControl | StepColorTemperature |
-| ColorControl | MoveToColorTemperature |
-| ColorControl | CurrentX |
-| ColorControl | ColorPointRGBXY |
-| ColorControl | LEDICProtocol |
-| ColorControl | LEDType |
-| ColorControl | CurrentR |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="5">Light</td>
+    <td><a href="./function-codes#lighting">Lighting</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#levelcontrol">LevelControl</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#deviceanomalymonitoring">DeviceAnomalyMonitoring</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#colorcontrol">ColorControl</a></td>
+  </tr>
+</table>
 
 ## Valve
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>Valve</td>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+</table>
 
 ## Camera
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| PanTilt | PanTiltDirectionControl |
-| Camera | CameraActiveStatus |
-| Camera | CameraRTSPURL |
-| Camera | P2PCaptureStatus |
-| Camera | CameraRTSPEnable |
-| Camera | P2PCaptureEnabled |
-| Speaker | StepValue |
-| Speaker | Volume |
-| Speaker | Mute |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">Camera</td>
+    <td><a href="./function-codes#pantilt">PanTilt</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#camera">Camera</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#speaker">Speaker</a></td>
+  </tr>
+</table>
 
 ## HeatPump
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| PowerSource | CurrentVoltage |
-| PowerSource | BatReplacementDescription |
-| PowerSource | BatChargeState |
-| PowerSource | BatReplaceability |
-| PowerSource | PowerMode |
-| PowerSource | BatPercentRemaining |
-| PowerSource | WiredPresent |
-| PowerSource | Rechargeable |
-| PowerSource | StateOfLowBat |
-| PowerSource | BatReplacementNeeded |
-| PowerSource | BatQuantity |
-| EnergyManagement | CurrentVoltage |
-| EnergyManagement | CircuitCurrent |
-| EnergyManagement | CumulativeEnergyConsumption |
-| EnergyManagement | CurrentPower |
-| HeaterCooler | CoolingTemperature |
-| HeaterCooler | CurrentHumidity |
-| HeaterCooler | ClearActivePreset |
-| HeaterCooler | CurrentTemperature |
-| HeaterCooler | Preset |
-| HeaterCooler | SetActivePreset |
-| HeaterCooler | SetBack |
-| HeaterCooler | PresetTypes |
-| HeaterCooler | HeaterCoolerMode |
-| HeaterCooler | ActivePresetHandle |
-| HeaterCooler | HeatingTemperature |
-| HeaterCooler | NumberOfPresets |
-| HeaterCooler | HeaterCoolerButtonEvent |
-| HeaterCooler | MinHeatCoolDeadBand |
-| HeaterCooler | CurrentTemperatureCalibration |
-| HeaterCooler | TemperatureUIDisplayMode |
-| HeaterCooler | AntiFreezeTemperature |
-| HeaterCooler | HeaterCoolerPolarity |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">HeatPump</td>
+    <td><a href="./function-codes#powersource">PowerSource</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#energymanagement">EnergyManagement</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#heatercooler">HeaterCooler</a></td>
+  </tr>
+</table>
 
 ## WindowCovering
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| WindowCovering | MotorSpeedPercentage |
-| WindowCovering | WindowCoveringCategory |
-| WindowCovering | WindowCoveringMotorsBinding |
-| WindowCovering | UnconfiguredTravelControlPermission |
-| WindowCovering | LimitPointSetting |
-| WindowCovering | ObstacleLimitMarkingBlockTime |
-| WindowCovering | MotorSpeedSetting |
-| WindowCovering | ManualPullStartStopEnabled |
-| WindowCovering | CurrentRotationAngle |
-| WindowCovering | ObstacleLimitSensitivity |
-| WindowCovering | TripTime |
-| WindowCovering | TravelConfigured |
-| WindowCovering | CurrentPositionPercentage |
-| WindowCovering | StopMotion |
-| WindowCovering | MotorControllability |
-| WindowCovering | RotationControl |
-| WindowCovering | MotorDirectionReversed |
-| WindowCovering | GoToPositionRotationPercentage |
-| WindowCovering | StepPosition |
-| WindowCovering | WindowCoveringType |
-| WindowCovering | ObstacleLimitAutoReboundEnable |
-| WindowCovering | GoToPositionPercentage |
-| WindowCovering | GoToMinPositionPercentage |
-| WindowCovering | ManualPullEvent |
-| WindowCovering | TargetPositionPercentage |
-| WindowCovering | TargetRotationAngle |
-| WindowCovering | GoToMaxPositionPercentage |
-| WindowCovering | WindowCoveringOpenOrientation |
-| WindowCovering | MotorOperationStatus |
-| WindowCovering | AutoControl |
-| WindowCovering | ManualPullStartEnabled |
-| WindowCovering | LimitPointCount |
-| WindowCovering | TargetPositionRotationPercentage |
-| WindowCovering | CurrentPositionRotationPercentage |
-| WindowCovering | ManualPullStopEnabled |
-| WindowCovering | ObstacleLimitMarkingEnable |
-| WindowCovering | ManualPullAdaptiveSpeedEnabled |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>WindowCovering</td>
+    <td><a href="./function-codes#windowcovering">WindowCovering</a></td>
+  </tr>
+</table>
 
 ## FlowSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Flow | CurrentFlow |
-
-## Public
-
-| functionCode | trait/commandCode |
-| --- | --- |
-| CameraCoordination | APIUnbindWiFiSubdevice |
-| CameraCoordination | APICheckCarDataConsistency |
-| CameraCoordination | APIBindWiFiSubdevice |
-| CameraCoordination | APIOperateBridgedDevice |
-| CameraCoordination | APIDeviceCameraCall |
-| CameraCoordination | APIOperateCameraUp |
-| CameraCoordination | APIIssueTokenForWebRTCCall |
-| CameraCoordination | APIOperateCameraDown |
-| CameraCoordination | APIGetSignallingServerAddress |
-| CameraCoordination | APIReportCameraExtEvents |
-| CameraCoordination | APICheckFaceDataConsistency |
-| GeneralConfiguration | VoiceLanguage |
-| GeneralConfiguration | EnergySavingEnable |
-| GeneralConfiguration | CurrentSensitivityLevel |
-| GeneralConfiguration | TransmissionPowerSetting |
-| GeneralConfiguration | HubArkTechEnable |
-| GeneralConfiguration | BeepEnable |
-| GeneralConfiguration | NightLightMode |
-| GeneralConfiguration | OutputInterlockFlag |
-| GeneralConfiguration | ActivityDetectionModeSetting |
-| GeneralConfiguration | TimeZone |
-| GeneralConfiguration | NumberOfSensitivityLevelIsSupported |
-| GeneralConfiguration | PollingTime |
-| GeneralConfiguration | InstallationOrientationConfiguration |
-| GeneralConfiguration | DetectionModeSetting |
-| GeneralConfiguration | LightingModeSetting |
-| GeneralConfiguration | ResetMode |
-| EcosystemInformation | MagicPairPayload |
-| EcosystemInformation | SupportedEcosystem |
-| EcosystemInformation | MatterPayload |
-| EcosystemInformation | HomeKitPayload |
-| EcosystemInformation | BoundEcosystem |
-| EnergyManagement | CurrentVoltage |
-| EnergyManagement | CircuitCurrent |
-| EnergyManagement | CumulativeEnergyConsumption |
-| EnergyManagement | CurrentPower |
-| HubCoordination | APIUnbindHubDown |
-| HubCoordination | APIUploadDeviceInfo |
-| HubCoordination | APIReportDeviceResponse |
-| HubCoordination | APIGetSubdeviceConfig |
-| HubCoordination | APICheckHubDataConsistency |
-| HubCoordination | APICheckHubLocalSync |
-| HubCoordination | APIGetLoginRandomCode |
-| HubCoordination | APIGetRandomJoinCode |
-| HubCoordination | APIClearHubConfig |
-| HubCoordination | APISyncDataCloudToHub |
-| HubCoordination | APIReportSubdeviceModel |
-| HubCoordination | APIClearLocalData |
-| HubCoordination | APINotifyConfigChange |
-| HubCoordination | APIGetVoiceFileUrl |
-| HubCoordination | APIDisableSubdeviceJoining |
-| HubCoordination | APIAskOtherHubToken |
-| HubCoordination | APISubdeviceKeepAlive |
-| HubCoordination | APIBindBleDeviceToHub |
-| HubCoordination | APIReportHeartbeat |
-| HubCoordination | APIGetInstallCode |
-| HubCoordination | APIReportPropertyExamination |
-| HubCoordination | APIBindSubdeviceWithSecurityCode |
-| HubCoordination | APIStartHubProvisioning |
-| HubCoordination | APIReportHubLocalInfo |
-| HubCoordination | APIUnsubscribeDeviceResource |
-| HubCoordination | APIReportHubLocalConfig |
-| HubCoordination | APICheckHubConfig |
-| HubCoordination | APIPushHubConfig |
-| HubCoordination | APIQueryDeviceResMultiExtGbk |
-| HubCoordination | APIReportExceptionLog |
-| HubCoordination | APINotifySubdeviceReadResult |
-| HubCoordination | APISubscribeDeviceResource |
-| HubCoordination | APIReportCommandExecResult |
-| HubCoordination | APIGetWeatherData |
-| HubCoordination | APIConnectHub |
-| HubCoordination | APIUnbindHubUp |
-| HubCoordination | APISyncTokenDown |
-| HubCoordination | APIRefreshHubToken |
-| HubCoordination | APIRpcDebugCommand |
-| HubCoordination | APISyncSubdeviceList |
-| HubCoordination | APIRegisterDirectDevice |
-| HubCoordination | APINotifyNoSubdevice |
-| HubCoordination | APIExecuteSubstituteCommand |
-| HubCoordination | APIRunFunctionInstruction |
-| HubCoordination | APIUnbindSubdeviceDown |
-| HubCoordination | APIUnbindSubdeviceUp |
-| HubCoordination | APIEnableSubdeviceJoining |
-| HubCoordination | APIUploadLogFileEvent |
-| HubCoordination | APIGetSubdeviceServiceConfig |
-| HubCoordination | APIQueryDeviceResMultiExt |
-| HubCoordination | APITriggerSubdeviceRead |
-| HubCoordination | APIBindSubdeviceNoAuth |
-| HubCoordination | APISetSubdeviceMixing |
-| SceneCoordination | APICheckLocalSceneSync |
-| SceneCoordination | APIDownloadLocalScene |
-| SceneCoordination | APIRunScene |
-| SceneCoordination | APIDeleteLocalScene |
-| SceneCoordination | APIRunLocalScene |
-| SceneCoordination | APIDownloadCentralScene |
-| PowerSource | CurrentVoltage |
-| PowerSource | BatReplacementDescription |
-| PowerSource | BatChargeState |
-| PowerSource | BatReplaceability |
-| PowerSource | PowerMode |
-| PowerSource | BatPercentRemaining |
-| PowerSource | WiredPresent |
-| PowerSource | Rechargeable |
-| PowerSource | StateOfLowBat |
-| PowerSource | BatReplacementNeeded |
-| PowerSource | BatQuantity |
-| WakeupCoordination | APIGetWakeupUrl |
-| CentralHubCoordination | APIInquiryCentralBroker |
-| CentralHubCoordination | APIHubPassthroughDataDown |
-| CentralHubCoordination | APIEnableCentralHubFunction |
-| CentralHubCoordination | APIHubPassthroughDataUp |
-| CentralHubCoordination | APIInquiryCentralEnableState |
-| SecurityGuardCoordination | APIDeleteSecurityLocal |
-| SecurityGuardCoordination | APISyncSecurityLanInfo |
-| SecurityGuardCoordination | APICheckSecurityEnableConsistency |
-| SecurityGuardCoordination | APIConfirmSecurityAlert |
-| SecurityGuardCoordination | APICheckSecurityConfigConsistency |
-| SecurityGuardCoordination | APIEnableSecurity |
-| SecurityGuardCoordination | APIRepairSecurityEnable |
-| OTACoordination | APIReportOtaDeviceListState |
-| OTACoordination | APIReportOtaResult |
-| OTACoordination | APIReportOtaProgress |
-| OTACoordination | APICancelOtaUpgrade |
-| OTACoordination | APIInquiryFirmwareInfo |
-| OTACoordination | APIUpgradeDeviceFirmware |
-| LockCoordination | APILockPassthroughUpstream |
-| LockCoordination | APILockPassthroughDownstream |
-| LockCoordination | APIAssistDeviceCrypto |
-| LockCoordination | APIReportLockExtEvents |
-| DeviceAnomalyMonitoring | LoadSafetyManagement |
-| DeviceAnomalyMonitoring | VoltageSafetyManagement |
-| DeviceAnomalyMonitoring | CurrentSafetyManagement |
-| DeviceAnomalyMonitoring | OverCurrentResponseSetting |
-| DeviceAnomalyMonitoring | TemperatureSafetyManagement |
-| GeneralDiagnostics | RebootCount |
-| GeneralDiagnostics | RebootReason |
-| GeneralDiagnostics | UpTime |
-| GeneralDiagnostics | NetworkInterfaces |
-| GeneralDiagnostics | AntiDeletionSetting |
-| GeneralDiagnostics | AntiDeletionLevelSetting |
-| GeneralDiagnostics | ActiveHardwareFaults |
-| GeneralDiagnostics | DebugInfo |
-| GeneralDiagnostics | FreeMemory |
-| GeneralDiagnostics | AntiDeletionNotification |
-| GeneralDiagnostics | Reboot |
-| RingtoneCoordination | APIDownloadMusic |
-| RingtoneCoordination | APICheckLocalMusicSync |
-| RingtoneCoordination | APIDeleteMusic |
-| ZigbeeNetworkDiagnostics | RoutingAgingCountThreshold |
-| ZigbeeNetworkDiagnostics | PreOperationMode |
-| ZigbeeNetworkDiagnostics | NWKRetransmissionCount |
-| ZigbeeNetworkDiagnostics | ZigbeeTotalMessageInOneHour |
-| ZigbeeNetworkDiagnostics | ZigbeeCoordMac |
-| ZigbeeNetworkDiagnostics | APSRetransmissionCount |
-| ZigbeeNetworkDiagnostics | ZigbeeResentMessageInOneHour |
-| ZigbeeNetworkDiagnostics | PANID |
-| ZigbeeNetworkDiagnostics | ZigbeeExtendedPANID |
-| ZigbeeNetworkDiagnostics | ZigbeeGeneralDiagnostics |
-| ZigbeeNetworkDiagnostics | MessageTransmissionFailureCountThreshold |
-| ZigbeeNetworkDiagnostics | EnableNWKACK |
-| ZigbeeNetworkDiagnostics | RebootReason |
-| ZigbeeNetworkDiagnostics | ZigbeeKeySeqNumber |
-| ZigbeeNetworkDiagnostics | LQI |
-| ZigbeeNetworkDiagnostics | ZigbeeFrameCounter |
-| ZigbeeNetworkDiagnostics | Channel |
-| ZigbeeNetworkDiagnostics | CCAMode |
-| ZigbeeNetworkDiagnostics | ZigbeeNextHopMac |
-| ZigbeeNetworkDiagnostics | EnableAPSACK |
-| ZigbeeNetworkDiagnostics | MACRetransmissionCount |
-| ZigbeeNetworkDiagnostics | ZigbeeFailedMessageInOneHour |
-| ZigbeeNetworkDiagnostics | ZigbeeNeighborTableInfo |
-| ZigbeeNetworkDiagnostics | CurOperationMode |
-| ZigbeeNetworkDiagnostics | ZigbeeAvgSuccessfulResendCount |
-| ZigbeeNetworkDiagnostics | ZigbeeCoordNetworkKey |
-| MatterCoordination | APIPushMatterBindInfo |
-| MatterCoordination | APIUnbindMatterDeviceDown |
-| MatterCoordination | APIReportDeviceAqaraSpecModel |
-| MatterCoordination | APISyncAqaraSpecDataToCloud |
-| MatterCoordination | APIGenNextMatterNodeId |
-| MatterCoordination | APIGenHomeMatterNoc |
-| MatterCoordination | APIStartBindMatterDeviceToHub |
-| MatterCoordination | APIUnbindMatterDeviceUP |
-| MatterCoordination | APIQueryMatterJoinLimit |
-| ScreenCoordination | APICloudToPanelDownstream |
-| ScreenCoordination | APIPanelUpstreamRequest |
-| ScreenCoordination | APICheckPanelConfigConsistency |
-| ScreenCoordination | APISyncPositionDown |
-| ScreenCoordination | APIPushPanelConfig |
-| CommLinkCoordination | APIReportLinkConsuming |
-| CommLinkCoordination | APICheckLinkConsuming |
-| IftttCoordination | APIUnsubscribeIftttResChange |
-| IftttCoordination | APIEnableAutomation |
-| IftttCoordination | APIDeleteIftttLocal |
-| IftttCoordination | APIPushCentralAutomation |
-| IftttCoordination | APIRunCloudAction |
-| IftttCoordination | APIGetSunriseSunsetByLatLon |
-| IftttCoordination | APIEnableCentralAutomation |
-| IftttCoordination | APIDeleteCentralAutomation |
-| IftttCoordination | APIQueryIftttRes |
-| IftttCoordination | APISubscribeIftttResChange |
-| IftttCoordination | APIEnableIfttt |
-| IftttCoordination | APIQueryHolidayList |
-| IftttCoordination | APIPublishResourceChange |
-| IftttCoordination | APICheckLocalIftttSync |
-| IftttCoordination | APIDownloadIftttLocal |
-| NetworkManagement | LanAccessAddress |
-| NetworkManagement | RemoteProxyAccessEnable |
-| NetworkManagement | InternetAccessAddress |
-| Identify | IdentifyType |
-| Identify | ReverseIdentify |
-| Identify | IdentifyTime |
-| Identify | Identify |
-| LightBoxCoordination | APIPushLightBoxConfig |
-| IRCoordination | APIGetIrCode |
-| IRCoordination | APISaveLearnedIrKey |
-| IRCoordination | APIQueryIrLearningCode |
-| IRCoordination | APIStartIrCodeLearning |
-| IRCoordination | APIReportIrLearningResult |
-| IRCoordination | APIGetIrCodeTarget |
-| IRCoordination | APIQueryIrCodeLibrary |
-| IRCoordination | APIGetIrCodeDownloadUrl |
-| IRCoordination | APIDeleteLearnedIrCode |
-| IRCoordination | APISendIrButtonPress |
-| IRCoordination | APISyncIrLearningCodes |
-| NetworkCommissioning | AddOrUpdateZigbeeNetwork |
-| NetworkCommissioning | HomeStationCredentials |
-| NetworkCommissioning | ConfigStaticIPAddr |
-| NetworkCommissioning | WiFiChannel |
-| NetworkCommissioning | ChildDeviceProvisioningState |
-| NetworkCommissioning | ZigbeeDiagnostics |
-| NetworkCommissioning | ZigbeeAuthRandcode |
-| NetworkCommissioning | ZigbeeAuthRandcodeResponse |
-| NetworkCommissioning | WiFiDiagnostics |
-| NetworkCommissioning | AddOrUpdateZigbeeNetworkResponse |
-| NetworkCommissioning | MagicPairKeychain |
-| NetworkCommissioning | ConnectToHomeStationResponse |
-| NetworkCommissioning | SupportedNetwork |
-| NetworkCommissioning | AddOrUpdateThreadNetworkResponse |
-| NetworkCommissioning | TriggerZigbeeNetworkInfoUpload |
-| NetworkCommissioning | SlaveAddress |
-| NetworkCommissioning | ThreadDiagnostics |
-| NetworkCommissioning | ScanWiFiNetworks |
-| NetworkCommissioning | AddOrUpdateThreadNetwork |
-| NetworkCommissioning | ScanWiFiNetworksResponse |
-| NetworkCommissioning | AddOrUpdateWiFiNetwork |
-| NetworkCommissioning | AddOrUpdateWiFiNetworkResponse |
-| NetworkCommissioning | ConnectToHomeStation |
-| NetworkCommissioning | AuthenticationStatus |
-| NetworkCommissioning | WiFiRSSI |
-| ConfigurationCoordination | APISyncConfiguration |
-| ConfigurationCoordination | APIWriteFunctionResource |
-| ConfigurationCoordination | APIPushSubscribedResource |
-| ConfigurationCoordination | APIReportConfiguration |
-| ConfigurationCoordination | APIReportThingModelDetail |
-| ConfigurationCoordination | APIGetConfiguration |
-| ConfigurationCoordination | APIDeleteConfiguration |
-| ConfigurationCoordination | APIPushConfiguration |
-| CloudStorageCoordination | APIRequestCloudStorageResource |
-| StudioCoordination | APIGetStudioBackupUploadUrl |
-| StudioCoordination | APILoginByAuthCode |
-| StudioCoordination | APIGetAuthCode |
-| StudioCoordination | APIDeleteStudioBackup |
-| StudioCoordination | APIGetPositionByDeviceId |
-| StudioCoordination | APIGetStudioBackupInfo |
-| StudioCoordination | APIGetUserDeviceList |
-| StudioCoordination | APILoginByGuardCode |
-| StudioCoordination | APIReportStudioInfo |
-| StudioCoordination | APIConfirmStudioBackupSuccess |
-| StudioCoordination | APIGetProxyServerInfo |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>FlowSensor</td>
+    <td><a href="./function-codes#flow">Flow</a></td>
+  </tr>
+</table>
 
 ## OccupancySensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| OccupancySensing | HoldTime |
-| OccupancySensing | DurationOccupiedWithinOneWeek |
-| OccupancySensing | Occupancy |
-| OccupancySensing | DurationOccupiedWithinOneDay |
-| OccupancySensing | OccupancySensorType |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>OccupancySensor</td>
+    <td><a href="./function-codes#occupancysensing">OccupancySensing</a></td>
+  </tr>
+</table>
 
 ## RainSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| RainSensor | BooleanState |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>RainSensor</td>
+    <td><a href="./function-codes#rainsensor">RainSensor</a></td>
+  </tr>
+</table>
 
 ## Pump
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>Pump</td>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+</table>
 
 ## SmokeAlarm
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| PowerSource | CurrentVoltage |
-| PowerSource | BatReplacementDescription |
-| PowerSource | BatChargeState |
-| PowerSource | BatReplaceability |
-| PowerSource | PowerMode |
-| PowerSource | BatPercentRemaining |
-| PowerSource | WiredPresent |
-| PowerSource | Rechargeable |
-| PowerSource | StateOfLowBat |
-| PowerSource | BatReplacementNeeded |
-| PowerSource | BatQuantity |
-| Smoke | ExpressedState |
-| Smoke | FireProductIdentification |
-| Smoke | SmokeDensitydB |
-| Smoke | SmokeChamberContamination |
-| Smoke | AlarmError |
-| Smoke | SelfCheck |
-| Smoke | SmokeState |
-| Smoke | TriggerWarning |
-| Smoke | SelfTestRequest |
-| Smoke | AlarmsEnabled |
-| Smoke | ContaminationState |
-| Smoke | Mute |
-| Smoke | SmokeDensity |
-| Smoke | SmokeDetected |
-| Smoke | EnableHeartbeatIndicator |
-| CO | ExpressedState |
-| CO | CODetected |
-| CO | SelfTestRequest |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">SmokeAlarm</td>
+    <td><a href="./function-codes#powersource">PowerSource</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#smoke">Smoke</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#co">CO</a></td>
+  </tr>
+</table>
 
 ## Knob
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Button | LocalControlDisabled |
-| Button | ButtonEvent |
-| Knob | HoldRotationInterval |
-| Knob | RotationEvent |
-| Knob | RotationDirection |
-| Knob | InvertedRotationAngle |
-| Knob | RotationAngle |
-| Knob | RotationInterval |
-| Knob | HoldRotationAngle |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">Knob</td>
+    <td><a href="./function-codes#button">Button</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#knob">Knob</a></td>
+  </tr>
+</table>
 
 ## Ventilation
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| FreshAirControl | FreshAirMode |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
-| FanControl | WindSetting |
-| FanControl | AirflowDirection |
-| FanControl | FanMode |
-| FanControl | FanSpeed |
-| FanControl | RockSetting |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">Ventilation</td>
+    <td><a href="./function-codes#freshaircontrol">FreshAirControl</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#fancontrol">FanControl</a></td>
+  </tr>
+</table>
 
 ## AnalogOutputDevice
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| AnalogOutputObject | AnalogOutputPV |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>AnalogOutputDevice</td>
+    <td><a href="./function-codes#analogoutputobject">AnalogOutputObject</a></td>
+  </tr>
+</table>
 
 ## LocationSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Location | MotionDetected |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>LocationSensor</td>
+    <td><a href="./function-codes#location">Location</a></td>
+  </tr>
+</table>
 
 ## PetMonitor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| PetRecognition | PetRecognitionReport |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>PetMonitor</td>
+    <td><a href="./function-codes#petrecognition">PetRecognition</a></td>
+  </tr>
+</table>
 
 ## ParticulateMatterSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| ParticulateMatter | PM1.0Density |
-| ParticulateMatter | PM2.5Density |
-| ParticulateMatter | PM2.5Level |
-| ParticulateMatter | PM10Density |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>ParticulateMatterSensor</td>
+    <td><a href="./function-codes#particulatematter">ParticulateMatter</a></td>
+  </tr>
+</table>
 
 ## ElectricalSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| EnergyManagement | CurrentVoltage |
-| EnergyManagement | CircuitCurrent |
-| EnergyManagement | CumulativeEnergyConsumption |
-| EnergyManagement | CurrentPower |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>ElectricalSensor</td>
+    <td><a href="./function-codes#energymanagement">EnergyManagement</a></td>
+  </tr>
+</table>
 
 ## OnOffSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| OnOffSensor | BooleanState |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>OnOffSensor</td>
+    <td><a href="./function-codes#onoffsensor">OnOffSensor</a></td>
+  </tr>
+</table>
 
 ## SoundSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| SoundDetection | AnomalySoundDetected |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>SoundSensor</td>
+    <td><a href="./function-codes#sounddetection">SoundDetection</a></td>
+  </tr>
+</table>
 
 ## Hub
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| ZigbeeNetworkDiagnostics | RoutingAgingCountThreshold |
-| ZigbeeNetworkDiagnostics | PreOperationMode |
-| ZigbeeNetworkDiagnostics | NWKRetransmissionCount |
-| ZigbeeNetworkDiagnostics | ZigbeeTotalMessageInOneHour |
-| ZigbeeNetworkDiagnostics | ZigbeeCoordMac |
-| ZigbeeNetworkDiagnostics | APSRetransmissionCount |
-| ZigbeeNetworkDiagnostics | ZigbeeResentMessageInOneHour |
-| ZigbeeNetworkDiagnostics | PANID |
-| ZigbeeNetworkDiagnostics | ZigbeeExtendedPANID |
-| ZigbeeNetworkDiagnostics | ZigbeeGeneralDiagnostics |
-| ZigbeeNetworkDiagnostics | MessageTransmissionFailureCountThreshold |
-| ZigbeeNetworkDiagnostics | EnableNWKACK |
-| ZigbeeNetworkDiagnostics | RebootReason |
-| ZigbeeNetworkDiagnostics | ZigbeeKeySeqNumber |
-| ZigbeeNetworkDiagnostics | LQI |
-| ZigbeeNetworkDiagnostics | ZigbeeFrameCounter |
-| ZigbeeNetworkDiagnostics | Channel |
-| ZigbeeNetworkDiagnostics | CCAMode |
-| ZigbeeNetworkDiagnostics | ZigbeeNextHopMac |
-| ZigbeeNetworkDiagnostics | EnableAPSACK |
-| ZigbeeNetworkDiagnostics | MACRetransmissionCount |
-| ZigbeeNetworkDiagnostics | ZigbeeFailedMessageInOneHour |
-| ZigbeeNetworkDiagnostics | ZigbeeNeighborTableInfo |
-| ZigbeeNetworkDiagnostics | CurOperationMode |
-| ZigbeeNetworkDiagnostics | ZigbeeAvgSuccessfulResendCount |
-| ZigbeeNetworkDiagnostics | ZigbeeCoordNetworkKey |
-| Ringtone | RingtonePlayVolume |
-| Ringtone | RingtonePlayIndex |
-| Ringtone | RingtonePlayStatus |
-| Ringtone | RingtonePlayDuration |
-| BridgeConfiguration | BridgedNodeList |
-| BridgeConfiguration | SupportedHubCapability |
-| MatterBridgeCommissioning | MatterBridgeSupported |
-| MatterBridgeCommissioning | MatterDACState |
-| MatterBridgeCommissioning | MatterOnboardingPayload |
-| MatterBridgeCommissioning | MatterManufacturerList |
-| MatterBridgeCommissioning | RemoveOneMatterManufacturer |
-| MatterBridgeCommissioning | RemoveAllMatterManufacturer |
-| MatterBridgeCommissioning | MatterBindState |
-| MatterBridgeCommissioning | MatterPairingState |
-| MatterBridgeCommissioning | MatterPairingSwitch |
-| Speaker | StepValue |
-| Speaker | Volume |
-| Speaker | Mute |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="5">Hub</td>
+    <td><a href="./function-codes#zigbeenetworkdiagnostics">ZigbeeNetworkDiagnostics</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#ringtone">Ringtone</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#bridgeconfiguration">BridgeConfiguration</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#matterbridgecommissioning">MatterBridgeCommissioning</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#speaker">Speaker</a></td>
+  </tr>
+</table>
 
 ## GarageDoor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| GarageDoorOpener | TargetGarageDoorState |
-| GarageDoorOpener | Toggle |
-| GarageDoorOpener | CurrentGarageDoorState |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>GarageDoor</td>
+    <td><a href="./function-codes#garagedooropener">GarageDoorOpener</a></td>
+  </tr>
+</table>
 
 ## Oven
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| OperationalState | Pause |
-| OperationalState | OperationalError |
-| OperationalState | Start |
-| OperationalState | Stop |
-| OperationalState | OperationalState |
-| OperationalState | Resume |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>Oven</td>
+    <td><a href="./function-codes#operationalstate">OperationalState</a></td>
+  </tr>
+</table>
 
 ## MotionSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| OccupancySensing | HoldTime |
-| OccupancySensing | DurationOccupiedWithinOneWeek |
-| OccupancySensing | Occupancy |
-| OccupancySensing | DurationOccupiedWithinOneDay |
-| OccupancySensing | OccupancySensorType |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>MotionSensor</td>
+    <td><a href="./function-codes#occupancysensing">OccupancySensing</a></td>
+  </tr>
+</table>
 
 ## HumiditySensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| RelativeHumidity | CurrentHumidity |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>HumiditySensor</td>
+    <td><a href="./function-codes#relativehumidity">RelativeHumidity</a></td>
+  </tr>
+</table>
 
 ## SleepMonitor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Sleep | SleepQuality |
-| Sleep | SleepStage |
-| Sleep | SleepState |
-| Sleep | OnBed |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>SleepMonitor</td>
+    <td><a href="./function-codes#sleep">Sleep</a></td>
+  </tr>
+</table>
 
 ## LaundryDryer
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| OperationalState | Pause |
-| OperationalState | OperationalError |
-| OperationalState | Start |
-| OperationalState | Stop |
-| OperationalState | OperationalState |
-| OperationalState | Resume |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>LaundryDryer</td>
+    <td><a href="./function-codes#operationalstate">OperationalState</a></td>
+  </tr>
+</table>
 
 ## BinaryInputDevice
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| BinaryInputObject | BinaryInputPV |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>BinaryInputDevice</td>
+    <td><a href="./function-codes#binaryinputobject">BinaryInputObject</a></td>
+  </tr>
+</table>
 
 ## Thermostat
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| HeaterCooler | CoolingTemperature |
-| HeaterCooler | CurrentHumidity |
-| HeaterCooler | ClearActivePreset |
-| HeaterCooler | CurrentTemperature |
-| HeaterCooler | Preset |
-| HeaterCooler | SetActivePreset |
-| HeaterCooler | SetBack |
-| HeaterCooler | PresetTypes |
-| HeaterCooler | HeaterCoolerMode |
-| HeaterCooler | ActivePresetHandle |
-| HeaterCooler | HeatingTemperature |
-| HeaterCooler | NumberOfPresets |
-| HeaterCooler | HeaterCoolerButtonEvent |
-| HeaterCooler | MinHeatCoolDeadBand |
-| HeaterCooler | CurrentTemperatureCalibration |
-| HeaterCooler | TemperatureUIDisplayMode |
-| HeaterCooler | AntiFreezeTemperature |
-| HeaterCooler | HeaterCoolerPolarity |
-| FanControl | WindSetting |
-| FanControl | AirflowDirection |
-| FanControl | FanMode |
-| FanControl | FanSpeed |
-| FanControl | RockSetting |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">Thermostat</td>
+    <td><a href="./function-codes#heatercooler">HeaterCooler</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#fancontrol">FanControl</a></td>
+  </tr>
+</table>
 
 ## FloorHeating
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
-| HeaterCooler | CoolingTemperature |
-| HeaterCooler | CurrentHumidity |
-| HeaterCooler | ClearActivePreset |
-| HeaterCooler | CurrentTemperature |
-| HeaterCooler | Preset |
-| HeaterCooler | SetActivePreset |
-| HeaterCooler | SetBack |
-| HeaterCooler | PresetTypes |
-| HeaterCooler | HeaterCoolerMode |
-| HeaterCooler | ActivePresetHandle |
-| HeaterCooler | HeatingTemperature |
-| HeaterCooler | NumberOfPresets |
-| HeaterCooler | HeaterCoolerButtonEvent |
-| HeaterCooler | MinHeatCoolDeadBand |
-| HeaterCooler | CurrentTemperatureCalibration |
-| HeaterCooler | TemperatureUIDisplayMode |
-| HeaterCooler | AntiFreezeTemperature |
-| HeaterCooler | HeaterCoolerPolarity |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">FloorHeating</td>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#heatercooler">HeaterCooler</a></td>
+  </tr>
+</table>
 
 ## AirQualitySensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| AirQuality | VOCDensity |
-| AirQuality | AirQuality |
-| AirQuality | VOCQuality |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>AirQualitySensor</td>
+    <td><a href="./function-codes#airquality">AirQuality</a></td>
+  </tr>
+</table>
 
 ## ModeSelector
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Mode | CurrentMode |
-| Mode | ChangeToMode |
-| Mode | ChangeToModeResponse |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>ModeSelector</td>
+    <td><a href="./function-codes#mode">Mode</a></td>
+  </tr>
+</table>
 
 ## AirConditioner
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| FreshAirControl | FreshAirMode |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
-| HeaterCooler | CoolingTemperature |
-| HeaterCooler | CurrentHumidity |
-| HeaterCooler | ClearActivePreset |
-| HeaterCooler | CurrentTemperature |
-| HeaterCooler | Preset |
-| HeaterCooler | SetActivePreset |
-| HeaterCooler | SetBack |
-| HeaterCooler | PresetTypes |
-| HeaterCooler | HeaterCoolerMode |
-| HeaterCooler | ActivePresetHandle |
-| HeaterCooler | HeatingTemperature |
-| HeaterCooler | NumberOfPresets |
-| HeaterCooler | HeaterCoolerButtonEvent |
-| HeaterCooler | MinHeatCoolDeadBand |
-| HeaterCooler | CurrentTemperatureCalibration |
-| HeaterCooler | TemperatureUIDisplayMode |
-| HeaterCooler | AntiFreezeTemperature |
-| HeaterCooler | HeaterCoolerPolarity |
-| FanControl | WindSetting |
-| FanControl | AirflowDirection |
-| FanControl | FanMode |
-| FanControl | FanSpeed |
-| FanControl | RockSetting |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="4">AirConditioner</td>
+    <td><a href="./function-codes#freshaircontrol">FreshAirControl</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#heatercooler">HeaterCooler</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#fancontrol">FanControl</a></td>
+  </tr>
+</table>
 
 ## VideoRemoteControl
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| MediaPlayback | Pause |
-| MediaPlayback | TargetPlaybackState |
-| MediaPlayback | Stop |
-| MediaPlayback | MediaInformation |
-| MediaPlayback | PlaybackDuration |
-| MediaPlayback | MediaPlaybackCommand |
-| MediaPlayback | CurrentPlaybackState |
-| MediaPlayback | PlaybackMode |
-| MediaPlayback | Rewind |
-| MediaPlayback | SampledPosition |
-| MediaPlayback | Play |
-| MediaPlayback | StartOver |
-| MediaPlayback | PlaySpecificList |
-| MediaPlayback | LoginState |
-| MediaPlayback | FastForward |
-| MediaPlayback | Next |
-| MediaPlayback | Previous |
-| MediaPlayback | PlaybackSampledPosition |
-| MediaPlayback | SelectedMediaOutputSource |
-| MediaPlayback | SelectedSource |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
-| MediaInput | SelectInput |
-| MediaInput | MediaInput |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="3">VideoRemoteControl</td>
+    <td><a href="./function-codes#mediaplayback">MediaPlayback</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#mediainput">MediaInput</a></td>
+  </tr>
+</table>
 
 ## WaterLeakSensor
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| WaterLeak | LeakState |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>WaterLeakSensor</td>
+    <td><a href="./function-codes#waterleak">WaterLeak</a></td>
+  </tr>
+</table>
 
 ## WaterHeater
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>WaterHeater</td>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+</table>
 
 ## Fan
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Output | Toggle |
-| Output | OutputSwitchingType |
-| Output | OnOff |
-| Output | OutputInterlockFlag |
-| Output | OutputNodeMode |
-| Output | Off |
-| Output | StartUpOnOff |
-| Output | On |
-| FanControl | WindSetting |
-| FanControl | AirflowDirection |
-| FanControl | FanMode |
-| FanControl | FanSpeed |
-| FanControl | RockSetting |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td rowspan="2">Fan</td>
+    <td><a href="./function-codes#output">Output</a></td>
+  </tr>
+  <tr>
+    <td><a href="./function-codes#fancontrol">FanControl</a></td>
+  </tr>
+</table>
 
 ## LaundryWasher
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| OperationalState | Pause |
-| OperationalState | OperationalError |
-| OperationalState | Start |
-| OperationalState | Stop |
-| OperationalState | OperationalState |
-| OperationalState | Resume |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>LaundryWasher</td>
+    <td><a href="./function-codes#operationalstate">OperationalState</a></td>
+  </tr>
+</table>
 
 ## ThermostatController
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| Binding | Binding |
-| Binding | SupportedBindingDeviceTypes |
-| Binding | SupportedBindingFunctions |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>ThermostatController</td>
+    <td><a href="./function-codes#binding">Binding</a></td>
+  </tr>
+</table>
 
 ## VehicleDetector
 
-| functionCode | trait/commandCode |
-| --- | --- |
-| VehicleDetection | VehicleDetected |
+<table>
+  <tr>
+    <th>deviceType</th>
+    <th>functionCode</th>
+  </tr>
+  <tr>
+    <td>VehicleDetector</td>
+    <td><a href="./function-codes#vehicledetection">VehicleDetection</a></td>
+  </tr>
+</table>
