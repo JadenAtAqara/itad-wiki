@@ -24,15 +24,15 @@ This method declares the MQTT devices to be added to Aqara Studio.
 
 ### Device Object Structure
 
-| Field Name | Description |
-|-----------|-------------|
-| deviceName | Device name. Optional; an empty value is treated as an empty string. |
-| deviceId | Device ID. Required. |
-| brokerEndpoint | MQTT Broker address. Required. |
-| brokerPort | MQTT Broker port. Required; the default port is `1883`. |
-| connectionType | Connection type. Required; the default value is `3`. Supported values: <ul><li>0: Anonymous</li><li>1: SSL anonymous</li><li>2: SSL username/password</li><li>3: Username/password without SSL</li></ul> |
-| username | Username. Required depending on `connectionType`. |
-| password | Password. Required depending on `connectionType`. |
+| Field Name | Required | Description |
+|-----------| --- |-------------|
+| deviceName | Optional | Device name. An empty value is treated as an empty string. |
+| deviceId | Required | Device ID. |
+| brokerEndpoint | Required | MQTT Broker address. |
+| brokerPort | Required | MQTT Broker port. The default port is `1883`. |
+| connectionType | Required | Connection type. The default value is `3`. Supported values: <ul><li>0: Anonymous</li><li>1: SSL anonymous</li><li>2: SSL username/password</li><li>3: Username/password without SSL</li></ul> |
+| username | Conditionally required | Username. Required depending on `connectionType`. |
+| password | Conditionally required | Password. Required depending on `connectionType`. |
 
 ### Example
 
@@ -59,29 +59,30 @@ You need to return an array containing one or more data point objects (such as `
 
 ### Point Object Structure
 
-| Field Name | Description |
-|-----------|-------------|
-| pointId   | Data point ID. Please consult the device manufacturer to obtain the actual ID to allow Aqara Studio to discover this point. |
-| pointName | Name for the data point defined by you. |
-| devType | Corresponds to `deviceType` in the Aqara Data Model Specification. For the specific available values, please refer to [Device Types](../aqara-developer/aqara-data-model-specification/device-types.mdx). |
-| functionCode | Corresponds to `functionCode` in the Aqara Data Model Specification. For the specific available values, please refer to [Function Codes](../aqara-developer/aqara-data-model-specification/function-codes.mdx). |
-| traitCode | Corresponds to `traitCode` in the Aqara Data Model Specification. For the specific available values, please refer to [Trait Codes](../aqara-developer/aqara-data-model-specification/trait-codes.mdx). |
-| dataType  | Data point type. Supported values: <ul><li><code>bool</code>: Boolean</li><li><code>numerical</code>: Numeric</li><li><code>enum</code>: Enumeration</li><li><code>text</code>: Text</li></ul> |
-| enumRange | Enumeration options. Required only when a general data point uses `dataType: "enum"`. The array must not be empty. Each item contains an integer `value` and a string `label`; both must be unique, and `label` must not be empty. |
-| min | Minimum value for a general numeric data point. Effective only when `dataType` is `numerical`; `minimum` can also be used as an alias. |
-| max | Maximum value for a general numeric data point. Effective only when `dataType` is `numerical`; `maximum` can also be used as an alias. |
-| step | Step value for a general numeric data point. It must be greater than 0. Effective only when `dataType` is `numerical`; `resolution` can also be used as an alias. |
-| precision | Precision value for a general numeric data point. It must be greater than or equal to 0. Effective only when `dataType` is `numerical`. |
-| decimals | Number of decimal places for a general numeric data point. It must be an integer greater than or equal to 0. Effective only when `dataType` is `numerical`. |
-| unit / units | Unit for a general numeric data point. Effective only when `dataType` is `numerical`; use a registered unit name or symbol, such as `kWh` / `kilowatt hour`, `W` / `watt`, `V` / `volt`, or `A` / `ampere`. |
-| access    | Access capability bit mask. <ul><li>1: Readable</li><li>2: Writable</li><li>3: Readable and writable</li></ul> |
-| subTopic  | (**Only applicable for MQTT devices**) Aqara Studio subscribes to this topic to get the latest data for this point. Please fill in according to your device protocol or manufacturer documentation. When one point needs to receive multiple upstream message types, you can use MQTT wildcards such as `+` or `#`. |
-| pubTopic  | (**Only applicable for MQTT devices**) Aqara Studio sends control message data to this topic for the data point. Please fill in according to your device protocol or manufacturer documentation. (For read-only points, leave this field empty) |
+| Field Name | Required | Description |
+|-----------| --- |-------------|
+| pointId   | Required | Data point ID. Please consult the device manufacturer to obtain the actual ID to allow Aqara Studio to discover this point. |
+| pointName | Required | Name for the data point defined by you. |
+| devType | Conditionally required | Corresponds to `deviceType` in the Aqara Data Model Specification. Fill it when defining a point based on Aqara Spec. For the specific available values, please refer to [Device Types](../aqara-developer/aqara-data-model-specification/device-types.mdx). |
+| functionCode | Conditionally required | Corresponds to `functionCode` in the Aqara Data Model Specification. Fill it when defining a point based on Aqara Spec. For the specific available values, please refer to [Function Codes](../aqara-developer/aqara-data-model-specification/function-codes.mdx). |
+| traitCode | Conditionally required | Corresponds to `traitCode` in the Aqara Data Model Specification. Fill it when defining a point based on Aqara Spec. For the specific available values, please refer to [Trait Codes](../aqara-developer/aqara-data-model-specification/trait-codes.mdx). |
+| dataType  | Conditionally required | Required for general data points. Data point type. Supported values: <ul><li><code>bool</code>: Boolean</li><li><code>numerical</code>: Numeric</li><li><code>enum</code>: Enumeration</li><li><code>text</code>: Text</li></ul> |
+| enumRange | Conditionally required | Enumeration options. Required only when a general data point uses `dataType: "enum"`. The array must not be empty. Each item contains an integer `value` and a string `label`; both must be unique, and `label` must not be empty. |
+| trueText / falseText | Optional | Display text for a general Boolean data point. Effective only when `dataType` is `bool`. If omitted, `trueText` defaults to `开` and `falseText` defaults to `关`. Configure these fields only when custom labels such as `Enabled` / `Disabled` are needed. You can also use `activeText` / `onText` and `inactiveText` / `offText` as aliases. |
+| min | Optional | Minimum value for a general numeric data point. Effective only when `dataType` is `numerical`; `minimum` can also be used as an alias. |
+| max | Optional | Maximum value for a general numeric data point. Effective only when `dataType` is `numerical`; `maximum` can also be used as an alias. |
+| step | Optional | Step value for a general numeric data point. It must be greater than 0. Effective only when `dataType` is `numerical`; `resolution` can also be used as an alias. |
+| precision | Optional | Precision value for a general numeric data point. It must be greater than or equal to 0. Effective only when `dataType` is `numerical`. |
+| decimals | Optional | Number of decimal places for a general numeric data point. It must be an integer greater than or equal to 0. Effective only when `dataType` is `numerical`. |
+| unit / units | Optional | Unit for a general numeric data point. Effective only when `dataType` is `numerical`; use a registered unit name such as `kilowatt hour`, `watt`, `volt`, `ampere`, `celsius`, or `percent`. Studio displays the corresponding symbol, such as `kWh`, `W`, `V`, `A`, `°C`, or `%`. See [Unit Names and Symbols Supported by Scripts](./script-supported-unit-symbols.mdx) for the full mapping. The system can also match registered unit symbols. |
+| access    | Conditionally required | Required for general data points. Access capability bit mask. <ul><li>1: Readable</li><li>2: Writable</li><li>3: Readable and writable</li></ul> |
+| subTopic  | Conditionally required | (**Only applicable for MQTT devices**) Required for readable or reportable points. Aqara Studio subscribes to this topic to get the latest data for this point. Please fill in according to your device protocol or manufacturer documentation. When one point needs to receive multiple upstream message types, you can use MQTT wildcards such as `+` or `#`. |
+| pubTopic  | Conditionally required | (**Only applicable for MQTT devices**) Required for writable points. Aqara Studio sends control message data to this topic for the data point. Please fill in according to your device protocol or manufacturer documentation. (For read-only points, leave this field empty) |
 
 :::note
 For `numerical` points, when Aqara Studio calls `buildWriteRequest`, it formats the write value by `decimals` first; if `decimals` is not configured, it infers decimal places from `step` / `resolution`. To avoid binary floating-point artifacts such as `0.30000030249357224`, explicitly configure `decimals` or `step` for points that write fractional values. `precision` only describes precision and is not used as the decimal-place truncation rule for outgoing write payloads.
 
-If a numeric point is used by energy statistics or other unit-dependent features, configure `unit` or `units`. For example, use `kWh` for accumulated energy, `W` for current power, `V` for voltage, and `A` for current. The unit must be a registered unit name or symbol.
+If a numeric point is used by energy statistics or other unit-dependent features, configure `unit` or `units`. For example, use `kilowatt hour` (displayed as `kWh`) for accumulated energy, `watt` (`W`) for current power, `volt` (`V`) for voltage, `ampere` (`A`) for current, and `celsius` (`°C`) for temperature. Enter unit names exactly as shown in [Unit Names and Symbols Supported by Scripts](./script-supported-unit-symbols.mdx), including case and spaces.
 :::
 
 :::tip
@@ -136,6 +137,7 @@ function parseDiscoverPointsResponse(deviceId) {
 			step: 0.1,
 			precision: 0.1,
 			decimals: 1,
+			unit: "celsius",
 			access: 2,
 			subTopic: "/WEI-iEdge/realdata/xxx",
 			pubTopic: "/WEI-iEdge/write/req/xxx"
@@ -149,6 +151,7 @@ function parseDiscoverPointsResponse(deviceId) {
 			step: 1,
 			precision: 1,
 			decimals: 0,
+			unit: "percent",
 			access: 2,
 			subTopic: "/WEI-iEdge/realdata/xxx",
 			pubTopic: "/WEI-iEdge/write/req/xxx"

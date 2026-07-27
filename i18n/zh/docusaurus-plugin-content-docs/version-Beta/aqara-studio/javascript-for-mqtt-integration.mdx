@@ -28,15 +28,15 @@ Aqara Studio 会调用此方法以发现所有可用设备，实现自动接入�
 
 ### 设备对象结构
 
-| 字段名称 | 说明 |
-| --- | --- |
-| deviceName | 设备名称。 |
-| deviceId   | 设备 ID。 |
-| brokerEndpoint | MQTT Broker 的地址。 |
-| brokerPort | MQTT Broker 的端口。 |
-| connectionType | 连接类型。支持以下取值：<ul><li>0：匿名</li><li>1：通过 SSL 匿名</li><li>2：通过 SSL 用户登录</li><li>3：用户登录无 SSL</li></ul> |
-| username | 用户名。 |
-| password | 密码。 |
+| 字段名称 | 是否必填 | 说明 |
+| --- | --- | --- |
+| deviceName | 可选 | 设备名称。 |
+| deviceId   | 必填 | 设备 ID。 |
+| brokerEndpoint | 必填 | MQTT Broker 的地址。 |
+| brokerPort | 必填 | MQTT Broker 的端口。 |
+| connectionType | 必填 | 连接类型。支持以下取值：<ul><li>0：匿名</li><li>1：通过 SSL 匿名</li><li>2：通过 SSL 用户登录</li><li>3：用户登录无 SSL</li></ul> |
+| username | 条件必填 | 用户名，按 `connectionType` 决定是否需要。 |
+| password | 条件必填 | 密码，按 `connectionType` 决定是否需要。 |
 
 字段必填说明：
 - `deviceId`、`brokerEndpoint`、`brokerPort`、`connectionType` 必填。
@@ -70,29 +70,30 @@ function parseDiscoveryResponse() {
 
 ### point 对象结构
 
-| 字段名称    | 说明                                                                                     |
-|-----------|-------------------------------------------------------------------------------------------|
-| pointId   | 功能点 ID。请咨询设备厂商获取功能点的真实 ID，以便 Aqara Studio 发现该点。                                                    |
-| pointName | 您自定义的功能点名称。                                                                              |
-| devType | 对应 Aqara 物模型规范的 `deviceType`。具体可用值请阅读 [设备类型](../aqara-developer/aqara-data-model-specification/device-types.mdx)。                                  |
-| functionCode | 对应 Aqara 物模型规范的 `functionCode`，具体可用值请阅读 [功能代码](../aqara-developer/aqara-data-model-specification/function-codes.mdx)。                                  |
-| traitCode   | 对应 Aqara 物模型规范的 `traitCode`，具体可用值请阅读 [功能点代码](../aqara-developer/aqara-data-model-specification/trait-codes.mdx)。                                      |
-| dataType  | 功能点数据类型，支持以下取值：<ul><li><code>bool</code>：布尔型</li><li><code>numerical</code>：数值型</li><li><code>enum</code>：枚举型</li><li><code>text</code>：文本型</li></ul> |
-| enumRange | 枚举选项数组。仅当通用功能点的 `dataType` 为 `enum` 时必填。数组不能为空；每项包含整数类型的 `value` 和字符串类型的 `label`，`value` 和 `label` 均不可重复，且 `label` 不可为空。 |
-| min | 数值型通用功能点的最小值。仅当 `dataType` 为 `numerical` 时生效；也可使用 `minimum` 作为别名。 |
-| max | 数值型通用功能点的最大值。仅当 `dataType` 为 `numerical` 时生效；也可使用 `maximum` 作为别名。 |
-| step | 数值型通用功能点的步长，必须大于 0。仅当 `dataType` 为 `numerical` 时生效；也可使用 `resolution` 作为别名。 |
-| precision | 数值型通用功能点的精度值，必须大于等于 0。仅当 `dataType` 为 `numerical` 时生效。 |
-| decimals | 数值型通用功能点的小数位数，必须为大于等于 0 的整数。仅当 `dataType` 为 `numerical` 时生效。 |
-| unit / units | 数值型通用功能点的单位。仅当 `dataType` 为 `numerical` 时生效；可填写系统已注册的单位名称或符号，例如 `kWh` / `kilowatt hour`、`W` / `watt`、`V` / `volt`、`A` / `ampere`。 |
-| access    | 读写能力标识，<ul><li>1：可读</li><li>2：可写</li><li>3：可读可写</li></ul>                                 |
-| subTopic  | （**仅适用于 MQTT 设备**）Aqara Studio 通过订阅该 Topic 获取功能点的最新数据。具体 Topic 请根据设备协议或厂商文档填写；需要同时接收多个上行主题时，可按 MQTT 规范填写 `+` 或 `#` 通配符。  |
-| pubTopic  | （**仅适用于 MQTT 设备**）Aqara Studio 通过向此 Topic 发送消息数据控制功能点。具体 Topic 请根据设备协议或厂商文档填写。（对于仅可读的功能点，此字段留空）        |
+| 字段名称    | 是否必填 | 说明                                                                                     |
+|-----------| --- |-------------------------------------------------------------------------------------------|
+| pointId   | 必填 | 功能点 ID。请咨询设备厂商获取功能点的真实 ID，以便 Aqara Studio 发现该点。                                                    |
+| pointName | 必填 | 您自定义的功能点名称。                                                                              |
+| devType | 条件必填 | 对应 Aqara 物模型规范的 `deviceType`。基于 Aqara Spec 定义功能点时填写，具体可用值请阅读 [设备类型](../aqara-developer/aqara-data-model-specification/device-types.mdx)。                                  |
+| functionCode | 条件必填 | 对应 Aqara 物模型规范的 `functionCode`。基于 Aqara Spec 定义功能点时填写，具体可用值请阅读 [功能代码](../aqara-developer/aqara-data-model-specification/function-codes.mdx)。                                  |
+| traitCode   | 条件必填 | 对应 Aqara 物模型规范的 `traitCode`。基于 Aqara Spec 定义功能点时填写，具体可用值请阅读 [功能点代码](../aqara-developer/aqara-data-model-specification/trait-codes.mdx)。                                      |
+| dataType  | 条件必填 | 通用功能点必填。功能点数据类型，支持以下取值：<ul><li><code>bool</code>：布尔型</li><li><code>numerical</code>：数值型</li><li><code>enum</code>：枚举型</li><li><code>text</code>：文本型</li></ul> |
+| enumRange | 条件必填 | 枚举选项数组。仅当通用功能点的 `dataType` 为 `enum` 时必填。数组不能为空；每项包含整数类型的 `value` 和字符串类型的 `label`，`value` 和 `label` 均不可重复，且 `label` 不可为空。 |
+| trueText / falseText | 可选 | 布尔型通用功能点的显示文案。仅当 `dataType` 为 `bool` 时生效；未配置时默认 `trueText` 为 `开`，`falseText` 为 `关`。仅在需要自定义文案时配置，例如 `启用` / `禁用`。也可使用 `activeText` / `onText` 和 `inactiveText` / `offText` 作为别名。 |
+| min | 可选 | 数值型通用功能点的最小值。仅当 `dataType` 为 `numerical` 时生效；也可使用 `minimum` 作为别名。 |
+| max | 可选 | 数值型通用功能点的最大值。仅当 `dataType` 为 `numerical` 时生效；也可使用 `maximum` 作为别名。 |
+| step | 可选 | 数值型通用功能点的步长，必须大于 0。仅当 `dataType` 为 `numerical` 时生效；也可使用 `resolution` 作为别名。 |
+| precision | 可选 | 数值型通用功能点的精度值，必须大于等于 0。仅当 `dataType` 为 `numerical` 时生效。 |
+| decimals | 可选 | 数值型通用功能点的小数位数，必须为大于等于 0 的整数。仅当 `dataType` 为 `numerical` 时生效。 |
+| unit / units | 可选 | 数值型通用功能点的单位。仅当 `dataType` 为 `numerical` 时生效；建议填写系统已注册的单位名称，例如 `kilowatt hour`、`watt`、`volt`、`ampere`、`celsius`、`percent`。Studio 会展示对应符号，例如 `kWh`、`W`、`V`、`A`、`°C`、`%`。完整映射请参见 [脚本支持的单位名称与符号](./script-supported-unit-symbols.mdx)。系统也可匹配已注册的单位符号。 |
+| access    | 条件必填 | 通用功能点必填。读写能力标识，<ul><li>1：可读</li><li>2：可写</li><li>3：可读可写</li></ul>                                 |
+| subTopic  | 条件必填 | （**仅适用于 MQTT 设备**）可读或可上报功能点需配置。Aqara Studio 通过订阅该 Topic 获取功能点的最新数据。具体 Topic 请根据设备协议或厂商文档填写；需要同时接收多个上行主题时，可按 MQTT 规范填写 `+` 或 `#` 通配符。  |
+| pubTopic  | 条件必填 | （**仅适用于 MQTT 设备**）可写功能点需配置。Aqara Studio 通过向此 Topic 发送消息数据控制功能点。具体 Topic 请根据设备协议或厂商文档填写。（对于仅可读的功能点，此字段留空）        |
 
 :::note
 对于 `numerical` 点，Aqara Studio 在写值调用 `buildWriteRequest` 时会优先依据 `decimals` 格式化数值；未配置 `decimals` 时会依据 `step` / `resolution` 推导小数位。为了避免 `0.3` 被二进制浮点误差表现为 `0.30000030249357224`，建议需要小数写入的点显式配置 `decimals` 或 `step`。`precision` 仅用于描述精度，不作为写值报文的小数位截断规则。
 
-如果数值点会被能耗统计或其他依赖单位的功能使用，请配置 `unit` 或 `units`，例如累计电量使用 `kWh`，当前功率使用 `W`，电压使用 `V`，电流使用 `A`。单位必须是系统已注册的单位名称或符号。
+如果数值点会被能耗统计或其他依赖单位的功能使用，请配置 `unit` 或 `units`，例如累计电量使用 `kilowatt hour`（显示 `kWh`），当前功率使用 `watt`（显示 `W`），电压使用 `volt`（显示 `V`），电流使用 `ampere`（显示 `A`），温度使用 `celsius`（显示 `°C`）。单位名称请按 [脚本支持的单位名称与符号](./script-supported-unit-symbols.mdx) 中的原文填写，大小写和空格保持一致。
 :::
 
 :::tip
@@ -146,6 +147,7 @@ function parseDiscoverPointsResponse(deviceId) {
 			step: 0.1,
 			precision: 0.1,
 			decimals: 1,
+			unit: "celsius",
 			access: 2,
 			subTopic: "/WEI-iEdge/realdata/7a1dd258f32940d95a542c68",
 			pubTopic: "/WEI-iEdge/write/req/7a1dd258f32940d95a542c68"
@@ -159,6 +161,7 @@ function parseDiscoverPointsResponse(deviceId) {
 			step: 1,
 			precision: 1,
 			decimals: 0,
+			unit: "percent",
 			access: 2,
 			subTopic: "/WEI-iEdge/realdata/7a1dd258f32940d95a542c68",
 			pubTopic: "/WEI-iEdge/write/req/7a1dd258f32940d95a542c68"
