@@ -242,10 +242,13 @@ Aqara Studio 会自动调用此函数，您需要在返回的数组中按要求�
 | step | 数值型通用功能点的步长，必须大于 0。仅当 `dataType` 为 `numerical` / `number` 时生效；也可使用 `resolution` 作为别名。 |
 | precision | 数值型通用功能点的精度值，必须大于等于 0。仅当 `dataType` 为 `numerical` / `number` 时生效。 |
 | decimals | 数值型通用功能点的小数位数，必须为大于等于 0 的整数。仅当 `dataType` 为 `numerical` / `number` 时生效。 |
+| unit / units | 数值型通用功能点的单位。仅当 `dataType` 为 `numerical` / `number` 时生效；可填写系统已注册的单位名称或符号，例如 `kWh` / `kilowatt hour`、`W` / `watt`、`V` / `volt`、`A` / `ampere`。 |
 | access    | 读写类型，<ul><li>1：仅可读</li><li>2：可读可写</li></ul>                                 |
 
 :::note
 对于 `numerical` / `number` 点，Aqara Studio 在写值调用 `buildWriteRequest` 时会优先依据 `decimals` 格式化数值；未配置 `decimals` 时会依据 `step` / `resolution` 推导小数位。为了避免 `0.3` 被二进制浮点误差表现为 `0.30000030249357224`，建议需要小数写入的点显式配置 `decimals` 或 `step`。`precision` 仅用于描述精度，不作为写值报文的小数位截断规则。
+
+如果数值点会被能耗统计或其他依赖单位的功能使用，请配置 `unit` 或 `units`，例如累计电量使用 `kWh`，当前功率使用 `W`，电压使用 `V`，电流使用 `A`。单位必须是系统已注册的单位名称或符号。
 :::
 
 :::tip

@@ -441,10 +441,13 @@ Fields:
 | step | Number | Step value for a general numeric point. It must be greater than 0. Effective only when `dataType` is `numerical`; `resolution` can also be used as an alias. |
 | precision | Number | Precision value for a general numeric point. It must be greater than or equal to 0. Effective only when `dataType` is `numerical`. |
 | decimals | Int | Number of decimal places for a general numeric point. It must be an integer greater than or equal to 0. Effective only when `dataType` is `numerical`. |
+| unit / units | String | Unit for a general numeric point. Effective only when `dataType` is `numerical`; use a registered unit name or symbol, such as `kWh` / `kilowatt hour`, `W` / `watt`, `V` / `volt`, or `A` / `ampere`. |
 | access | Int | Access permission bits: `bit1` read, `bit2` write, `bit3` report |
 
 :::note
 For `numerical` points, when Aqara Studio calls `buildWriteRequest`, it formats the write value by `decimals` first; if `decimals` is not configured, it infers decimal places from `step` / `resolution`. To avoid binary floating-point artifacts such as `0.30000030249357224`, explicitly configure `decimals` or `step` for points that write fractional values. `precision` only describes precision and is not used as the decimal-place truncation rule for outgoing write payloads.
+
+If a numeric point is used by energy statistics or other unit-dependent features, configure `unit` or `units`. For example, use `kWh` for accumulated energy, `W` for current power, `V` for voltage, and `A` for current. The unit must be a registered unit name or symbol.
 :::
 
 :::tip

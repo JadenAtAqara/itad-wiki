@@ -41,7 +41,7 @@ function parseDiscoveryResponse() {
 	return [
 		{
 			deviceName: "TestDevice",
-			deviceId: "98CC4D189E60",
+			deviceId: "device-001",
 			brokerEndpoint: "127.0.0.1",
 			brokerPort: 1883,
 			connectionType: 3,
@@ -73,12 +73,15 @@ You need to return an array containing one or more data point objects (such as `
 | step | Step value for a general numeric data point. It must be greater than 0. Effective only when `dataType` is `numerical`; `resolution` can also be used as an alias. |
 | precision | Precision value for a general numeric data point. It must be greater than or equal to 0. Effective only when `dataType` is `numerical`. |
 | decimals | Number of decimal places for a general numeric data point. It must be an integer greater than or equal to 0. Effective only when `dataType` is `numerical`. |
+| unit / units | Unit for a general numeric data point. Effective only when `dataType` is `numerical`; use a registered unit name or symbol, such as `kWh` / `kilowatt hour`, `W` / `watt`, `V` / `volt`, or `A` / `ampere`. |
 | access    | Access capability bit mask. <ul><li>1: Readable</li><li>2: Writable</li><li>3: Readable and writable</li></ul> |
-| subTopic  | (**Only applicable for MQTT devices**) Aqara Studio subscribes to this topic to get the latest data for this point. Please fill in according to your device protocol or manufacturer documentation. |
+| subTopic  | (**Only applicable for MQTT devices**) Aqara Studio subscribes to this topic to get the latest data for this point. Please fill in according to your device protocol or manufacturer documentation. When one point needs to receive multiple upstream message types, you can use MQTT wildcards such as `+` or `#`. |
 | pubTopic  | (**Only applicable for MQTT devices**) Aqara Studio sends control message data to this topic for the data point. Please fill in according to your device protocol or manufacturer documentation. (For read-only points, leave this field empty) |
 
 :::note
 For `numerical` points, when Aqara Studio calls `buildWriteRequest`, it formats the write value by `decimals` first; if `decimals` is not configured, it infers decimal places from `step` / `resolution`. To avoid binary floating-point artifacts such as `0.30000030249357224`, explicitly configure `decimals` or `step` for points that write fractional values. `precision` only describes precision and is not used as the decimal-place truncation rule for outgoing write payloads.
+
+If a numeric point is used by energy statistics or other unit-dependent features, configure `unit` or `units`. For example, use `kWh` for accumulated energy, `W` for current power, `V` for voltage, and `A` for current. The unit must be a registered unit name or symbol.
 :::
 
 :::tip
@@ -221,100 +224,146 @@ Below is a complete example for adding data points for an MQTT device:
 
 The `globalThis` registrations in the example are dynamic: register only the functions you actually implement; functions that are not implemented do not need to be registered.
 
+:::note
+The example below only demonstrates a common MQTT integration flow: subscribe to one topic filter that receives multiple upstream message types, parse status/event/command-response messages by type, and correlate command responses with write requests by request ID. Replace the topic, field names, and enum values with the actual device protocol.
+:::
+
 ```javascript
-(function(){
+(function() {
+	var DEVICE_ID = "device-001";
+	var SUB_TOPIC = "/example/" + DEVICE_ID + "/+/json";
+	var PUB_TOPIC = "/example/" + DEVICE_ID + "/cmd/json";
+	var nextRequestIdValue = 1;
+	var pendingWrites = {};
 
-function parseDiscoveryResponse() {
-	return [
-		{
-			deviceName: "TestDevice",
-			deviceId: "98CC4D189E60",
-			brokerEndpoint: "127.0.0.1",
-			brokerPort: 1883,
-			connectionType: 3,
-			username: "admin",
-			password: "public"
-		}
-	];
-}
-
-function parseDiscoverPointsResponse(deviceId) {
-	return [
-		// Add points based on Aqara Spec
-		{
-			pointId: "1#Chiller Operation Status",
-			pointName: "1#Chiller Operation Status",
-			devType: "AirConditioner",
-			functionCode: "Output",
-			traitCode: "OnOff",
-			subTopic: "/WEI-iEdge/realdata/xxx",
-			pubTopic: "/WEI-iEdge/write/req/xxx"
-		},
-		// Add points by the general approach
-		{
-			pointId: "1#Chiller On/Off Read",
-			pointName: "1#Chiller On/Off Read",
-			dataType: "bool",
-			access: 1,
-			subTopic: "/WEI-iEdge/realdata/xxx",
-			pubTopic: "/WEI-iEdge/write/req/xxx"
-		},
-		{
-			pointId: "1#Chiller Outlet Water Temp Set Read",
-			pointName: "1#Chiller Outlet Water Temp Set Read",
-			dataType: "numerical",
-			access: 2,
-			subTopic: "/WEI-iEdge/realdata/xxx",
-			pubTopic: "/WEI-iEdge/write/req/xxx"
-		},
-		{
-			pointId: "1#Chiller Cooling Capacity Percentage",
-			pointName: "1#Chiller Cooling Capacity Percentage",
-			dataType: "numerical",
-			access: 2,
-			subTopic: "/WEI-iEdge/realdata/xxx",
-			pubTopic: "/WEI-iEdge/write/req/xxx"
-		}
-	];
-}
-
-function parseReportRequest(pointId, jsonStr) {
-	try {
-		const obj = JSON.parse(jsonStr);
-		return obj["values"][pointId]?.toString();
-	} catch (e) {
-		return null;
-	}
-}
-
-// The value parameter is automatically passed in by Aqara Studio; no need to manually declare or assign it
-function buildWriteRequest(deviceId, pointId, value) {
-	try {
-		const obj = {
-			"node": "Chiller",
-			"group": "1#Chiller",
-			"timestamp": 1768204054654,
-			"values": {
-				
-			},
-			"errors": {
-				
-			},
-			"metas": {
-				
+	function parseDiscoveryResponse() {
+		return [
+			{
+				deviceName: "Example MQTT Device",
+				deviceId: DEVICE_ID,
+				brokerEndpoint: "127.0.0.1",
+				brokerPort: 1883,
+				connectionType: 3,
+				username: "username",
+				password: "password"
 			}
+		];
+	}
+
+	function parseDiscoverPointsResponse(deviceId) {
+		return [
+			{
+				pointId: "switch.on",
+				pointName: "Switch",
+				dataType: "bool",
+				access: 3,
+				subTopic: SUB_TOPIC,
+				pubTopic: PUB_TOPIC
+			}
+		];
+	}
+
+	function parseReportRequest(pointId, jsonStr) {
+		try {
+			var obj = JSON.parse(jsonStr);
+			if (pointId !== "switch.on") {
+				return null;
+			}
+
+			return parseStatusReport(obj)
+				|| parseEventReport(obj)
+				|| parseCommandResponse(obj);
+		} catch (e) {
+			return null;
+		}
+	}
+
+	function parseStatusReport(obj) {
+		if (obj.type !== "status") {
+			return null;
+		}
+		return toBoolString(obj.values && obj.values["switch.on"]);
+	}
+
+	function parseEventReport(obj) {
+		if (obj.type !== "event" || obj.pointId !== "switch.on") {
+			return null;
+		}
+		return toBoolString(obj.value);
+	}
+
+	function parseCommandResponse(obj) {
+		if (obj.type !== "response" || obj.requestId === undefined) {
+			return null;
+		}
+
+		var key = String(obj.requestId);
+		var pending = pendingWrites[key];
+		delete pendingWrites[key];
+
+		if (!pending || obj.success !== true) {
+			return null;
+		}
+		return pending.value;
+	}
+
+	function buildWriteRequest(deviceId, pointId, value) {
+		try {
+			if (pointId !== "switch.on") {
+				return null;
+			}
+
+			var writeValue = toBoolString(value);
+			if (writeValue === null) {
+				return null;
+			}
+
+			var requestId = nextRequestId();
+			pendingWrites[String(requestId)] = {
+				pointId: pointId,
+				value: writeValue
 			};
-		obj.values[pointId] = parseFloat(value);
-		return JSON.stringify(obj);
-	} catch (e) {
+
+			var values = {};
+			values[pointId] = writeValue === "1";
+
+			return JSON.stringify({
+				type: "command",
+				requestId: requestId,
+				values: values
+			});
+		} catch (e) {
+			return null;
+		}
+	}
+
+	function toBoolString(value) {
+		if (value === true || value === 1) {
+			return "1";
+		}
+		if (value === false || value === 0) {
+			return "0";
+		}
+
+		var text = String(value).toLowerCase();
+		if (text === "true" || text === "on" || text === "1") {
+			return "1";
+		}
+		if (text === "false" || text === "off" || text === "0") {
+			return "0";
+		}
 		return null;
 	}
-}
 
-globalThis.parseDiscoveryResponse = parseDiscoveryResponse;
-globalThis.parseDiscoverPointsResponse = parseDiscoverPointsResponse;
-globalThis.parseReportRequest = parseReportRequest;
-globalThis.buildWriteRequest = buildWriteRequest;
+	function nextRequestId() {
+		nextRequestIdValue += 1;
+		return nextRequestIdValue;
+	}
 
-})()
+	globalThis.parseDiscoveryResponse = parseDiscoveryResponse;
+	globalThis.parseDiscoverPointsResponse = parseDiscoverPointsResponse;
+	globalThis.buildWriteRequest = buildWriteRequest;
+	globalThis.parseReportRequest = parseReportRequest;
+	return null;
+})();
 ```
