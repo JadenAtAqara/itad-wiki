@@ -1,0 +1,410 @@
+# Unit Names and Symbols Supported by Scripts
+
+The following list comes from the `defaults/units.xml` file loaded by the Studio runtime. For general numeric points in JavaScript scripts, configure `unit` / `units` with one of the unit names below. Studio resolves the unit name and displays the registered symbol in the UI. The system can also match registered unit symbols, but the examples use unit names to avoid formatting differences in characters such as `°C` and `%`.
+
+Common unit names: use `celsius` (displayed as `°C`) for temperature, `percent` (`%`) for humidity, `volt` (`V`) for voltage, `ampere` (`A`) for current, `watt` (`W`) for current power, and `kilowatt hour` (`kWh`) for accumulated energy.
+
+| Quantity | Unit Name | Supported Unit Symbols |
+| --- | --- | --- |
+| other | - | `-`, `null` |
+| other | percent | `%` |
+| other | decibel | `db` |
+| other | power factor | `pf` |
+| other | pH | `pH` |
+| other | percent relative humidity | `%RH`, `percent-relative-humidity` |
+| other | absolute humidity | `gm-3` |
+| other | grams of water per kilogram dry air | `gH2O/kgAir` |
+| other | volts per degree kelvin | `V/K` |
+| other | degree days celsius | `°daysC` |
+| other | degree days fahrenheit | `°daysF` |
+| other | percent obscuration per foot | `%obsc/ft`, `OBS%/FT` |
+| other | percent obscuration per meter | `%obsc/m` |
+| other | smoke density per meter | `dB/m` |
+| other | psi per degree fahrenheit | `psi/°F`, `psi/℉` |
+| other | square meters per newton | `m²/N` |
+| other | watts per square meter degree kelvin | `W/m²K` |
+| other | ampere square meter | `Am²` |
+| other | db milliVolt | `dBmV` |
+| other | db milliWatt | `dBm` |
+| other | db microVolt | `dBuV` |
+| other | db volt | `dBV` |
+| other | db ampere | `dBA` |
+| other | minutes per degree kelvin | `min/K` |
+| other | grams per milliliter | `g/mL` |
+| other | grams per liter | `g/L` |
+| other | milligrams per liter | `mg/L` |
+| other | micrograms per liter | `ug/L` |
+| other | per mile | `/mile` |
+| other | milliliters of water | `mL H2O` |
+| other | moles percent | `moles%` |
+| other | volt squared hours | `V²hr` |
+| other | ampere squared hours | `A²hr` |
+| other | gas concentration | `%LEL` |
+| other | signed count | `pulses` |
+| other | activity | `s⁻¹` |
+| other | mol | `mol` |
+| other | counter pulses | `counter pulses` |
+| other | fan stage | `fan stage` |
+| other | brightness and color temperature transition | `% K s` |
+| other | date | `yyyy-mm-dd` |
+| other | date with time | `yr/mth/day hr:min:sec` |
+| acceleration | meters per second squared | `m/s²`, `ms⁻²` |
+| angular acceleration | radians per second squared | `rad/s²` |
+| angular acceleration | Acceleration angular | `rad s⁻²` |
+| angular momentum | joule second | `J-s`, `Js` |
+| angular momentum | momentum | `N/s` |
+| angular velocity | radians per second | `rad/s` |
+| angular velocity | revolutions per minute | `rpm` |
+| angular velocity | revolutions per second | `rps` |
+| area | square meter | `m²` |
+| area | square millimeter | `mm²` |
+| area | square centimeter | `cm²` |
+| area | square kilometer | `km²` |
+| area | square inch | `in²` |
+| area | square foot | `ft²` |
+| area | square yard | `yd²` |
+| area | square mile | `mile²` |
+| area | acre | `acre` |
+| capacitance | farad | `F` |
+| concentration | parts per unit | `ppu` |
+| concentration | parts per million | `ppm` |
+| concentration | parts per billion | `ppb` |
+| concentration | milligrams per kilogram | `mg/kg` |
+| concentration | grams per kilogram | `g/kg` |
+| concentration | grams per gram | `g/g` |
+| concentration | kilograms per kilogram | `kg/kg` |
+| concentration | milligrams per gram | `mg/g` |
+| currency | dollar | `$` |
+| currency | euro | `€` |
+| currency | franc | `₣` |
+| currency | lira | `₤` |
+| currency | peseta | `₧` |
+| currency | pounds | `£` |
+| currency | rupee | `₨` |
+| currency | won | `₩` |
+| currency | yen | `¥` |
+| currency | currency1 | `c1` |
+| currency | currency2 | `c2` |
+| currency | currency3 | `c3` |
+| currency | currency4 | `c4` |
+| currency | currency5 | `c5` |
+| currency | currency6 | `c6` |
+| currency | currency7 | `c7` |
+| currency | currency8 | `c8` |
+| currency | currency9 | `c9` |
+| currency | currency10 | `c10` |
+| density | kilograms per cubic meter | `kg/m³`, `kg m⁻³` |
+| density | grams per cubic meter | `g/m³` |
+| density | milligrams per cubic meter | `mg/m³` |
+| density | micrograms per cubic meter | `ug/m³`, `µg/m³` |
+| density | nanograms per cubic meter | `ng/m³` |
+| density | grams per cubic centimeter | `g/cm³` |
+| dynamic viscosity | pascal second | `Pas` |
+| electric charge | coulomb | `C` |
+| electric charge | ampere seconds | `As` |
+| electric charge | ampere hour | `Ah` |
+| electric charge | milliampere hour | `mAh` |
+| electric conductance | siemens | `S` |
+| electric conductance | millisiemens | `mS` |
+| electric conductance | microsiemens | `uS` |
+| electric current | ampere | `A` |
+| electric current | milliampere | `mA` |
+| electric current density | amperes per square meter | `A/m²`, `A m⁻²`, `A m²` |
+| electric field strength | volts per meter | `V/m`, `V·m⁻¹` |
+| electric potential | volt | `V` |
+| electric potential | millivolt | `mV` |
+| electric potential | kilovolt | `kV` |
+| electric potential | megavolt | `MV` |
+| electric resistance | ohm | `Ω`, `Ω⁻¹` |
+| electric resistance | kilohm | `kΩ` |
+| electric resistance | megohm | `MΩ` |
+| electric resistance | milliohm | `mΩ` |
+| electrical conductivity | siemens per meter | `S/m` |
+| electrical resistivity | ohm meter | `Ω-m`, `Ω·m`, `Ω⁻¹m⁻¹`, `Ωm` |
+| electrical resistivity | ohm meter squared per meter | `Ωm²/m` |
+| energy | joule | `J` |
+| energy | kilojoule | `kJ` |
+| energy | gigajoule | `GJ` |
+| energy | watt hour | `W-hr`, `W·h`, `Wh` |
+| energy | kilowatt hour | `kW-hr`, `kW·h`, `kWh` |
+| energy | megawatt hour | `MW-hr`, `MW·h` |
+| energy | btu | `BTU` |
+| energy | kilobtu | `kBTU` |
+| energy | megabtu | `MBTU` |
+| energy | horsepower hour | `hp-hr` |
+| energy | calorie | `cal` |
+| energy | therm | `therm` |
+| energy | decatherms | `Dth` |
+| energy | tons refrigeration hour | `tR-hr` |
+| energy | megajoule | `MJ` |
+| energy | newton meter | `N-m`, `Nm` |
+| energy | activation energy | `J/mol` |
+| apparent energy | volt ampere hour | `VA-hr`, `VAh` |
+| apparent energy | kilovolt ampere hour | `kVA-hr`, `kVAh` |
+| apparent energy | megavolt ampere hour | `MVA-hr` |
+| reactive energy | volt ampere reactive hour | `var-hr`, `VARh` |
+| reactive energy | kilovolt ampere reactive hour | `kvar-hr`, `kVARh` |
+| reactive energy | megavolt ampere reactive hour | `Mvar-hr` |
+| reactive energy | watt reactive hour | `Wr-hr` |
+| reactive energy | kilowatt reactive hour | `kWr-hr` |
+| reactive energy | megawatt reactive hour | `MWr-hr`, `MWrh`, `MWh` |
+| energy consumption | joules per square meter | `J/m²` |
+| energy consumption | watt hours per square meter | `W-hr/m²` |
+| energy consumption | watt hours per square foot | `W-hr/ft²` |
+| energy consumption | kilowatt hours per square meter | `kW-hr/m²` |
+| energy consumption | kilowatt hours per square foot | `kW-hr/ft²` |
+| energy consumption | megawatt hours per square meter | `MW-hr/m²` |
+| energy consumption | megawatt hours per square foot | `MW-hr/ft²` |
+| energy consumption | megajoules per square meter | `MJ/m²` |
+| energy consumption | megajoules per square foot | `MJ/ft²` |
+| energy consumption | newtons per meter | `N/m` |
+| energy consumption | btus per square foot | `BTU/ft²` |
+| energy consumption | kilobtus per square foot | `kBTU/ft²` |
+| enthalpy | joules per kilogram | `J/kg` |
+| enthalpy | joules per gram | `J/g` |
+| enthalpy | btu per pound | `BTU/lb` |
+| enthalpy | calorie per gram | `cal/g` |
+| enthalpy | kilojoule per kilogram | `kJ/kg` |
+| enthalpy differential | delta kilojoules per kilogram | `ΔkJ/kg`, `deltakJ/kg` |
+| enthalpy differential | delta btus per pound | `ΔBTU/lb`, `deltaBTU/lb` |
+| entropy | joules per degree kelvin | `J/°K`, `J/K` |
+| entropy | kilojoules per degree kelvin | `kJ/°K`, `kJ/K` |
+| entropy | megajoules per degree kelvin | `MJ/°K`, `MJ/K` |
+| fuel efficiency | joules per cubic meter | `J/m³` |
+| fuel efficiency | watt hour per cubic meter | `W-hr/m³` |
+| force | newton | `N` |
+| force | pound force | `lbf` |
+| frequency | hertz | `Hz` |
+| frequency | kilohertz | `kHz` |
+| frequency | cycles per hour | `cph` |
+| frequency | cycles per minute | `cpm` |
+| frequency | megahertz | `MHz` |
+| frequency | per minute | `/min` |
+| frequency | per second | `/s` |
+| frequency | per hour | `/hr` |
+| frequency | percent per second | `%/s` |
+| grammage | kilograms per square meter | `kg/m²` |
+| grammage | grams per square meter | `g/m²` |
+| heating rate | degrees kelvin per second | `K/s` |
+| heating rate | degrees celsius per hour | `°C/hr`, `℃/hr` |
+| heating rate | degrees celsius per minute | `°C/min`, `℃/min` |
+| heating rate | degrees fahrenheit per hour | `°F/hr`, `℉/hr` |
+| heating rate | degrees fahrenheit per minute | `°F/min`, `℉/min` |
+| heating rate | degrees kelvin per hour | `K/hr` |
+| heating rate | degrees kelvin per minute | `K/min` |
+| illuminance | lux | `lx` |
+| illuminance | kilolux | `klx` |
+| illuminance | lumen per square meter | `lum/m²` |
+| illuminance | lumen per square foot | `lum/ft²` |
+| illuminance | candelas per square meter | `cd/m²`, `C m⁻²`, `cd m⁻²` |
+| illuminance | footcandles | `fc` |
+| illuminance | Charge density (volume) | `C m⁻³` |
+| inductance | henry | `H` |
+| information | bit | `b` |
+| information | byte | `B` |
+| information | kilobit | `Kb` |
+| information | kilobyte | `KB` |
+| information | megabit | `Mb` |
+| information | megabyte | `MB` |
+| information | gigabit | `Gb` |
+| information | gigabyte | `GB` |
+| information | terabit | `Tb` |
+| information | terabyte | `TB` |
+| information speed | bits per second | `b/s` |
+| information speed | bytes per second | `B/s` |
+| information speed | kilobits per second | `Kb/s` |
+| information speed | kilobytes per second | `KB/s` |
+| information speed | megabits per second | `Mb/s` |
+| information speed | megabytes per second | `MB/s` |
+| information speed | gigabits per second | `Gb/s` |
+| information speed | gigabytes per second | `GB/s` |
+| information speed | terabits per second | `Tb/s` |
+| information speed | terabytes per second | `TB/s` |
+| irradiance | watts per square meter | `W/m²`, `W m⁻²` |
+| irradiance | kilowatts per square meter | `kW/m²` |
+| irradiance | megawatts per square meter | `MW/m²` |
+| irradiance | watts per square foot | `W/ft²` |
+| irradiance | kilowatts per square foot | `kW/ft²` |
+| irradiance | megawatts per square foot | `MW/ft²` |
+| irradiance | btus per hour per square foot | `BTU/hr/ft²` |
+| irradiance | kilobtus per hour per square foot | `kBTU/hr/ft²` |
+| length | meter | `m` |
+| length | micrometer | `um` |
+| length | millimeter | `mm` |
+| length | centimeter | `cm` |
+| length | kilometer | `km` |
+| length | inch | `in` |
+| length | foot | `ft` |
+| length | yard | `yd` |
+| length | mile | `mile` |
+| luminescence | candela | `cd` |
+| luminescence | footcandle | `ftcd` |
+| luminescence | candle power | `cp` |
+| luminous flux | lumen | `lm` |
+| magnetic field strength | amperes per meter | `A/m` |
+| magnetic flux | weber | `Wb` |
+| magnetic flux density | tesla | `T` |
+| mass | kilogram | `kg` |
+| mass | milligram | `mg` |
+| mass | gram | `g` |
+| mass | ounce | `oz` |
+| mass | pound | `lb` |
+| mass | metric ton | `ton` |
+| mass | short ton | `t` |
+| mass flow | kilograms per second | `kg/s` |
+| mass flow | kilograms per minute | `kg/min` |
+| mass flow | kilograms per hour | `kg/hr` |
+| mass flow | pounds per minute | `lb/min` |
+| mass flow | pounds per hour | `lb/hr` |
+| mass flow | pounds per second | `lb/s` |
+| mass flow | pounds mass per day | `lb/day` |
+| mass flow | grams per second | `g/s` |
+| mass flow | grams per minute | `g/min` |
+| mass flow | metric tons per hour | `ton/hr` |
+| momentum | newton second | `N-s` |
+| plane angle | radian | `rad` |
+| plane angle | degrees angular | `°`, `deg` |
+| plane angle | degrees phase | `degPh` |
+| power | watt | `W` |
+| power | milliwatt | `mW` |
+| power | kilowatt | `kW` |
+| power | megawatt | `MW` |
+| power | gigawatt | `GW` |
+| power | btus per hour | `BTU/hr` |
+| power | horsepower | `hp` |
+| power | foot pounds per second | `ft-lbs/sec` |
+| power | tons refrigeration | `tR` |
+| power | kilobtus per hour | `kBTU/hr` |
+| power | joules per hour | `J/hr` |
+| power | kilojoules per hour | `kJ/hr` |
+| apparent power | volt ampere | `VA` |
+| apparent power | kilovolt ampere | `kVA` |
+| apparent power | megavolt ampere | `MVA` |
+| reactive power | volt ampere reactive | `var` |
+| reactive power | kilovolt ampere reactive | `kvar` |
+| reactive power | megavolt ampere reactive | `Mvar` |
+| pressure | pascal | `Pa` |
+| pressure | kilopascals | `kPa` |
+| pressure | bar | `bar` |
+| pressure | atmosphere | `atm` |
+| pressure | pounds per square inch | `psi` |
+| pressure | pounds per square inch gauge | `psig` |
+| pressure | centimeters of water | `cm/wc` |
+| pressure | inches of water | `in/wc` |
+| pressure | millimeters of mercury | `mm Hg` |
+| pressure | centimeters of mercury | `cm Hg` |
+| pressure | inches of mercury | `in Hg` |
+| pressure | hectopascal | `hPa` |
+| pressure | millibar | `mbar` |
+| pressure | torr | `torr` |
+| pressure differential | pascal differential | `ΔPa`, `deltaPa` |
+| pressure differential | kilopascal differential | `ΔkPa`, `deltakPa` |
+| pressure differential | bar differential | `Δbar`, `deltabar` |
+| pressure differential | atmosphere differential | `Δatm`, `deltaatm` |
+| pressure differential | pounds per square inch differential | `Δpsi`, `deltapsi` |
+| pressure differential | centimeters of water differential | `Δcm/wc`, `deltacm/wc` |
+| pressure differential | inches of water differential | `Δin/wc`, `deltain/wc` |
+| pressure differential | millimeters of mercury differential | `Δmm Hg`, `deltamm Hg` |
+| pressure differential | centimeters of mercury differential | `Δcm Hg`, `deltacm Hg` |
+| pressure differential | inches of mercury differential | `Δin Hg`, `deltain Hg` |
+| pressure differential | hectopascal differential | `ΔhPa`, `deltahPa` |
+| pressure differential | millibar differential | `Δmbar`, `deltambar` |
+| pressure differential | torr differential | `Δtorr`, `deltatorr` |
+| radioactivity | becquerel | `Bq` |
+| radioactivity | kilobecquerel | `kBq` |
+| radioactivity | megabecquerel | `MBq` |
+| radiation dose | gray | `Gy` |
+| radiation dose | milligray | `mGy` |
+| radiation dose | microgray | `uGy` |
+| radiation dose | sievert | `Sv` |
+| radiation dose | millisievert | `mSv` |
+| radiation dose | microsievert | `uSv` |
+| radiation dose | millirems | `mrem` |
+| radiation dose rate | microsievert per hour | `uSv/hr` |
+| radiation dose rate | millirems per hour | `mrem/hr` |
+| solid angle | steradian | `sr` |
+| specific energy | joules per kilogram se | `J/kg` |
+| specific energy | joules per kilogram dry air | `J/kg` |
+| specific energy | btus per pound | `btu/lb` |
+| specific energy | btus per pound dry air | `btu/lb` |
+| specific energy | kilojoules per kilogram | `kJ/kg` |
+| specific energy | kilojoules per kilogram dry air | `kJ/kg` |
+| specific energy | megajoules per kilogram dry air | `MJ/kg` |
+| specific entropy | joules per kilogram degree kelvin | `J/kg°K`, `J/kg·K` |
+| surface tension | newtons per meter st | `N/m` |
+| temperature | fahrenheit | `°F`, `℉` |
+| temperature | celsius | `°C`, `℃`, `degrees-celsius` |
+| temperature | kelvin | `K` |
+| temperature | millikelvin | `mK` |
+| temperature | temperature-gradient | `K/h` |
+| temperature | kelvin-percent | `K/%` |
+| colorTemperature | mirek | `mirek`, `mired` |
+| colorTemperature | color temperature kelvin | `K` |
+| temperature differential | fahrenheit degrees | `Δ°F`, `Δ℉`, `delta℉` |
+| temperature differential | celsius degrees | `Δ°C`, `Δ℃`, `delta℃` |
+| temperature differential | kelvin degrees | `Δ°K`, `ΔK`, `deltaK` |
+| thermal conductivity | watts per meter degree kelvin | `W/m°K`, `W/m·K`, `W/m K⁻¹` |
+| time | nanosecond | `ns` |
+| time | microsecond | `us` |
+| time | millisecond | `ms` |
+| time | hundredths second | `cs` |
+| time | tenths second | `ds` |
+| time | second | `s` |
+| time | minute | `min` |
+| time | hour | `hr`, `h` |
+| time | day | `day` |
+| time | week | `wk` |
+| time | julian month | `mo` |
+| time | year | `yr` |
+| turbidity | nephelometric turbidity units | `ntu` |
+| turbidity | formazin nephelometric unit | `fnu` |
+| velocity | meters per second | `m/s` |
+| velocity | kilometers per second | `km/s` |
+| velocity | kilometers per hour | `km/hr`, `km/h` |
+| velocity | miles per hour | `mph` |
+| velocity | feet per second | `ft/s` |
+| velocity | feet per minute | `ft/min` |
+| velocity | millimeters per second | `mm/s` |
+| velocity | millimeters per minute | `mm/min` |
+| velocity | meters per minute | `m/min` |
+| velocity | meters per hour | `m/hr` |
+| volume | cubic meter | `m³` |
+| volume | cubic millimeter | `mm³` |
+| volume | cubic centimeter | `cm³` |
+| volume | milliliter | `mL` |
+| volume | liter | `L` |
+| volume | kiloliter | `kL` |
+| volume | cubic inch | `in³` |
+| volume | cubic foot | `ft³` |
+| volume | cubic yard | `yd³` |
+| volume | gallon | `gal` |
+| volume | quart | `qt` |
+| volume | pint | `pt` |
+| volume | fluid ounce | `fl oz` |
+| volume | imperial gallon | `galUK`, `gal(UK)` |
+| volumetric flow | cubic meters per second | `m³/s` |
+| volumetric flow | cubic meters per minute | `m³/min` |
+| volumetric flow | cubic meters per hour | `m³/hr`, `m³/h`, `m3/h` |
+| volumetric flow | cubic meters per day | `m³/day` |
+| volumetric flow | milliliters per second | `mL/s` |
+| volumetric flow | milliliters per minute | `mL/min` |
+| volumetric flow | milliliters per hour | `mL/hr` |
+| volumetric flow | liters per second | `L/s` |
+| volumetric flow | liters per minute | `L/min` |
+| volumetric flow | liters per hour | `L/hr`, `l/h` |
+| volumetric flow | cubic feet per second | `cfs`, `ft³/s` |
+| volumetric flow | cubic feet per minute | `cfm`, `ft³/min` |
+| volumetric flow | cubic feet per hour | `cfh`, `ft³/hr` |
+| volumetric flow | cubic feet per day | `cfd`, `ft³/day` |
+| volumetric flow | standard cubic feet per day | `std cfd`, `std ft³/day` |
+| volumetric flow | million standard cubic feet per minute | `std m cfm`, `std M ft³/min` |
+| volumetric flow | million standard cubic feet per day | `std m cfd`, `std M ft³/day` |
+| volumetric flow | thousand cubic feet per day | `th cfd`, `th ft³/day` |
+| volumetric flow | thousand standard cubic feet per day | `th std cfd`, `th std ft³/day` |
+| volumetric flow | imperial gallons per second | `galUK/s`, `gal(UK)/s` |
+| volumetric flow | imperial gallons per minute | `galUK/min`, `gal(UK)/min` |
+| volumetric flow | imperial gallons per hour | `galUK/hr`, `gal(UK)/hr` |
+| volumetric flow | gallons per second | `gal/s` |
+| volumetric flow | gallons per minute | `gal/min` |
+| volumetric flow | gallons per hour | `gal/hr` |
+| volumetric flow | rain amount | `l/m²` |
