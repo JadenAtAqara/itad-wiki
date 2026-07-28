@@ -212,7 +212,8 @@
           "items": [
             "aqara-studio/javascript-for-mqtt-integration",
             "aqara-studio/javascript-for-http-integration",
-            "aqara-studio/javascript-for-udp-tcp-integration"
+            "aqara-studio/javascript-for-udp-tcp-integration",
+            "aqara-studio/script-supported-unit-symbols"
           ]
         },
         "aqara-studio/numerical-mapping-functions"
