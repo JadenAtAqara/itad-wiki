@@ -1,12 +1,14 @@
 # Log Management
 
-Select **Log Audit** in the sidebar to access the following four types of logs: [Device Log](#device-log), [Link Log](#link-log), [User Operation Log](#user-operation-log), [System Update Log](#system-update-log) and [Firmware Update Log](#firmware-update-log). These logs provide detailed data to support system operation and security audits.
+Select **Log Audit** from the sidebar to access the following seven types of logs, which provide comprehensive data support for system operation and security audits:
 
-- **Device Log**: The device log records all changes in the function point values of devices, allowing you to track device status and operation history.
-- **Link Log**: The link log includes the connection status and target IP information for Aqara Studio and various protocols.
-- **User Operation Log**: The user operation log comprehensively records user logins and operation behaviors, making it easy to trace activities and clarify responsibilities.
-- **System Update Log**: The system update log records information related to system upgrades, helping to trace the update history.
-- **Firmware Update Log**: The firmware update log records the Aqara device firmware upgrade operations performed through Aqara Studio, allowing you to trace and analyze the update history of device firmware comprehensively.
+- [Device Log](#device-log)
+- [Gateway Operation Log](#gateway-operation-log)
+- [Link Log](#link-log)
+- [User Operation Log](#user-operation-log)
+- [Plugin Operation Log](#plugin-operation-log)
+- [System Upgrade Log](#system-upgrade-log)
+- [Firmware Upgrade Log](#firmware-upgrade-log)
 
 All logs support time filtering and keyword search, meeting daily operation and audit requirements.
 
@@ -18,6 +20,8 @@ By default, Aqara Studio displays logs from 00:00:00 to 23:59:59 of the current 
 
 You can view all records of changes in device function point values. You can also filter the logs by device ID, device name, and function point name.
 
+## Gateway Operation Log
+
 ## Link Log 
 
 You can view whether the link channels between Aqara Studio and each protocol (such as Aqara Cloud-M300, Studio Connect-BACnet IP) are operating normally (showing the most recent 500 records). You can also filter the logs by link name.
@@ -26,10 +30,14 @@ You can view whether the link channels between Aqara Studio and each protocol (s
 
 You can view all records of user logins and function usage (showing the most recent 500 records). You can also filter the logs by user name.
 
-## System Update Log
+## Plugin Operation Log
+
+You can view all operation logs related to Aqara Studio plugins, including operation time, plugin name, type, version, plugin ID, username, and operation details. The logs support filtering and display by type, operation details (such as success or failure of installation, uninstallation, update, etc.), making it convenient to trace plugin usage history and perform operation analysis.
+
+## System Upgrade Log
 
 You can view the time, version number, and result of each system update, which helps track the update history and troubleshoot issues.
 
-## Firmware Update Log
+## Firmware Upgrade Log
 
 You can view the Aqara device firmware upgrade operations performed through Aqara Studio, including the upgrade time, device ID, device name, upgrade version, and upgrade result, which helps you trace and analyze the update history of device firmware comprehensively.
