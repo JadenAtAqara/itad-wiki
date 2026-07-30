@@ -1,3 +1,8 @@
+---
+title: "概览"
+description: "Aqara Life 是一款新形态的独立 App，面向不同用户群体提供差异化的服务内容。它具备持续成长和个性化扩展能力，可以根据用户所拥有的设备、空间能力和使用场景，呈现不同的产品体验。"
+keywords: ["Aqara 文档", "Aqara Life", "概览", "overview"]
+---
 # 概览
 
 # 什么是 Aqara Life App？
