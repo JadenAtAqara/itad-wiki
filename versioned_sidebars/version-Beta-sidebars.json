@@ -233,7 +233,10 @@
     },
     {
       "type": "category",
-      "label": "Product Manuals",
+      "label": "Gateway",
+      "customProps": {
+        "tab": "product-knowledge"
+      },
       "items": [
         "aqara-studio/product-manuals/general",
         "aqara-studio/product-manuals/edge-hub-m300",
