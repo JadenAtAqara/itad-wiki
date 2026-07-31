@@ -87,9 +87,9 @@
     "message": "设备集成脚本",
     "description": "The label for category 'JavaScript for Integration' in sidebar 'aqaraStudioSidebar'"
   },
-  "sidebar.aqaraStudioSidebar.category.Product Manuals": {
-    "message": "产品手册",
-    "description": "The label for category 'Product Manuals' in sidebar 'aqaraStudioSidebar'"
+  "sidebar.aqaraStudioSidebar.category.Gateway": {
+    "message": "网关",
+    "description": "The label for category 'Gateway' in sidebar 'aqaraStudioSidebar'"
   },
   "sidebar.aqaraDeveloperSidebar.category.Local API for Studio": {
     "message": "Studio 本地 API",

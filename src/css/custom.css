@@ -124,6 +124,55 @@
    max-width: 28rem;
  }
 
+ .aqara-doc-layout-tabs {
+   background: var(--ifm-background-surface-color);
+   border-bottom: 1px solid var(--ifm-toc-border-color);
+   position: relative;
+   width: 100%;
+   z-index: 2;
+ }
+
+ .aqara-doc-layout-tabs__inner {
+   align-items: center;
+   display: flex;
+   gap: 0.5rem;
+   min-height: 3.5rem;
+   padding: 0.75rem 1rem 0.6rem;
+ }
+
+ .aqara-doc-layout-tabs__item {
+   border: 1px solid transparent;
+   border-radius: 0.85rem;
+   color: var(--ifm-font-color-base);
+   font-weight: 600;
+   line-height: 1;
+   padding: 0.9rem 1.15rem;
+   text-decoration: none !important;
+   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+ }
+
+ .aqara-doc-layout-tabs__item:hover {
+   background: rgba(46, 133, 85, 0.14);
+   border-color: rgba(46, 133, 85, 0.45);
+   color: #1f6b43;
+ }
+
+ .aqara-doc-layout-tabs__item--active {
+   background: var(--ifm-color-primary);
+   border-color: var(--ifm-color-primary);
+   color: #fff;
+ }
+
+ .aqara-doc-layout-tabs__item--active:hover {
+   background: var(--ifm-color-primary);
+   border-color: var(--ifm-color-primary);
+   color: #fff;
+ }
+
+ [data-theme='dark'] .aqara-doc-layout-tabs__item:hover {
+   color: var(--ifm-color-primary-lightest);
+ }
+
  html[lang="en-US"] .navbar-item--zh-only {
    display: none !important;
  }
@@ -133,6 +182,17 @@
  }
  
  @media (max-width: 996px) {
+   .aqara-doc-layout-tabs__inner {
+     overflow-x: auto;
+     padding-left: 0.75rem;
+     padding-right: 0.75rem;
+   }
+
+   .aqara-doc-layout-tabs__item {
+     flex: 0 0 auto;
+     white-space: nowrap;
+   }
+
    .aqara-resource-card {
      min-height: auto;
      padding: 1.5rem;
