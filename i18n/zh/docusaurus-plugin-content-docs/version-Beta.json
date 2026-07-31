@@ -31,6 +31,10 @@
     "message": "设备管理",
     "description": "The label for category 'Device Management' in sidebar 'aqaraStudioSidebar'"
   },
+  "sidebar.aqaraStudioSidebar.category.Aqara Device Configuration": {
+    "message": "Aqara 设备配置",
+    "description": "The label for category 'Aqara Device Configuration' in sidebar 'aqaraStudioSidebar'"
+  },
   "sidebar.aqaraStudioSidebar.category.Automation": {
     "message": "自动化",
     "description": "The label for category 'Automation' in sidebar 'aqaraStudioSidebar'"

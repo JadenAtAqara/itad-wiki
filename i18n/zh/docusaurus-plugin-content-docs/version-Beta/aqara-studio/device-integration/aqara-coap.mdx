@@ -1,3 +1,8 @@
+---
+title: "Aqara Coap 设备接入"
+description: "本文适用于将 Aqara 网关（不包括 Aqara Studio 子网关与官方标准主机）接入 Aqara Studio。"
+keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "Aqara Coap 设备接入"]
+---
 # Aqara Coap 设备接入
 
 本文适用于将 Aqara 网关（不包括 Aqara Studio 子网关与官方标准主机）接入 Aqara Studio。
@@ -19,9 +24,9 @@
 
 2. 在弹窗中选择 `AqaraCoap`。   
 3. 在左侧侧边栏选择 `AqaraCoap`，切换到 **导入五元组** 选项卡。
-4. 联系**Aqara 商务人员** 获取待接入 Aqara Studio 的 **网关本身** 的五元组信息文件（JSON）。
+4. 联系**Aqara 商务人员** 提供待接入 Aqara Studio 的 **网关** 的 **设备 ID** 或 **MAC 地址**，从而获取其五元组信息文件（JSON）。
     :::tip
-    只需提供网关的五元组信息，不需要其子设备的五元组信息
+    只需获取网关的五元组信息，不需要其子设备的五元组信息
     :::
 5. 上传该文件，Aqara Studio 会自动解析文件内容，等待设备入网。
 
@@ -31,7 +36,7 @@
 
 ## 添加 Aqara Coap 设备
 
-1. 启动 Aqara，填写所需的网络登录信息：
+1. 启动 Aqara Tool App，填写所需的网络登录信息：
     | 参数 | 说明 | 示例 |
     | -- | -- | ----------------------------------------- |
     | BaseUrl      | 总是包含协议（如 http:// 或 https://），后面紧跟主机（IP 地址或域名），并可能包含端口和路径。它是完整的服务入口地址。 | `http://10.10.24.83:8000`（IP 地址 + 端口，一般为 8000）<br/>`https://xxx.yyy.com/zzz/`（域名 + 路径） |
@@ -43,6 +48,10 @@
 3. 登录成功后，检索待接入的 Aqara 网关。   
     选择该网关，并根据页面提示添加 Aqara 网关。   
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraCoap-SelectGateway.jpg" alt="Aqara Tool 选择网关" style={{width: '50%'}} />
+
+    :::tip
+    若 Aqara Tool App 在设备配置网络环节卡顿，请关注网关指示灯颜色。如果指示灯已变为**说明书中标注的正常工作状态**（如 M200 型号为蓝色常亮），说明网关已成功入网。此时可刷新 Aqara Studio 网页，在 **设备管理 > AqaraCoap** 下确认网关是否显示。
+    :::
 
 4. 网关添加完成后，根据该网关的设备说明书，进入配网模式。  
 5. 待子设备入网成功后，设备信息会自动显示在右侧侧边栏的 <code>AqaraCoap</code> 目录中，无需手动添加功能点，Aqara Studio 会自动识别。

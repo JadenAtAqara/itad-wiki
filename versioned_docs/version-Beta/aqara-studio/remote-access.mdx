@@ -1,3 +1,8 @@
+---
+title: "Remote Access"
+description: "Enable remote access to manage Aqara Studio securely from outside your local network."
+keywords: ["Aqara Docs", "Aqara Studio", "Remote Access"]
+---
 # Remote Access
 
 ## Feature Overview
@@ -42,26 +47,159 @@ The following table details the feature visibility and permissions for different
 - ✗ indicates that the role cannot use this feature.
 :::
 
-| Primary Category | Secondary Category | Tertiary Category           | Operator (Remote) | Admin (Remote) |
-|------------------|-------------------|-----------------------------|-------------------|---------------|
-| Overview         | /                 | /                           | ✓                 | ✓             |
-| Build            | Space  | /                           | ✓                 | ✓             |
-|                  | Device | /                           | ✓                 | ✓             |
-|                  | Firmware Upgrade     | /                           | ×                 | ✗             |
-|                  | Automation        | /                           | ✓                 | ✓             |
-| Operation      | Alarm Management  | /                           | ✓                 | ✓             |
-|                  | Energy Management System | /                           | ✓                 | ✓             |
-|                  | Log Management         | Device Logs / Link Logs     | ✓                 | ✓             |
-|                  |                   | User Operation Logs         | ✗                 | ✗             |
-|                  |                   | System Upgrade Logs         | ✗                 | ✗             |
-|                  |                   | Firmware Upgrade Logs        | ✗                 | ✗             |
-| Management       | User Management   | /                           | ✗                 | ✗             |
-|                  | Backup & Restore  | /                           | ✗                 | ✗             |
-| Settings         | Local Settings    | /                           | ✗                 | ✗             |
-|                  | Cloud Connection  | /                           | ✗                 | ✗             |
-|                  | Remote Access     | /                           | ✗                 | ✗             |
-|                  | System Update     | /                           | ✗                 | ✗             |
-|                  | Technical Support | /                           | ✗                 | ✗             |
-| About            | /                 | /                           | ✗                 | ✗             |
-| Extensions       | Developer         | /                           | ✗                 | ✗             |
-|                  | Plugin Management | /                           | ✗                 | ✗             |
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2">Primary Category</th>
+      <th rowspan="2">Secondary Category</th>
+      <th rowspan="2">Tertiary Category</th>
+      <th colspan="2">Permissions</th>
+    </tr>
+    <tr>
+      <th>Operator (Remote)</th>
+      <th>Admin (Remote)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="1">Overview</td>
+      <td>/</td>
+      <td>/</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td rowspan="4">Build</td>
+      <td>Space</td>
+      <td>/</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Device</td>
+      <td>/</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Firmware Upgrade</td>
+      <td>/</td>
+      <td>✗</td>
+      <td>✗</td>
+    </tr>
+    <tr>
+      <td>Automation</td>
+      <td>/</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td rowspan="8">Operation</td>
+      <td>Alarm Management</td>
+      <td>/</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Energy Management</td>
+      <td>/</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td rowspan="6">Log Audit</td>
+      <td>Device Logs / Link Logs</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Gateway Operation Logs</td>
+      <td>✗</td>
+      <td>✗</td>
+    </tr>
+    <tr>
+      <td>Plugin Operation Logs</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>User Operation Logs</td>
+      <td>✗</td>
+      <td>✗</td>
+    </tr>
+    <tr>
+      <td>System Upgrade Logs</td>
+      <td>✗</td>
+      <td>✗</td>
+    </tr>
+    <tr>
+      <td>Firmware Upgrade Logs</td>
+      <td>✗</td>
+      <td>✗</td>
+    </tr>
+    <tr>
+      <td rowspan="2">Management</td>
+      <td>User Management</td>
+      <td>/</td>
+      <td>✗</td>
+      <td>✗</td>
+    </tr>
+    <tr>
+      <td>Backup &amp; Restore</td>
+      <td>/</td>
+      <td>✗</td>
+      <td>✗</td>
+    </tr>
+    <tr>
+      <td rowspan="5">Settings</td>
+      <td>Cloud Connection</td>
+      <td>/</td>
+      <td>✗</td>
+      <td>✗</td>
+    </tr>
+    <tr>
+      <td>Remote Access</td>
+      <td>/</td>
+      <td>✗</td>
+      <td>✗</td>
+    </tr>
+    <tr>
+      <td>System Update</td>
+      <td>/</td>
+      <td>✗</td>
+      <td>✗</td>
+    </tr>
+    <tr>
+      <td>Local Firmware Library</td>
+      <td>/</td>
+      <td>✗</td>
+      <td>✗</td>
+    </tr>
+    <tr>
+      <td>Technical Support</td>
+      <td>/</td>
+      <td>✗</td>
+      <td>✗</td>
+    </tr>
+    <tr>
+      <td>About</td>
+      <td>/</td>
+      <td>/</td>
+      <td>✗</td>
+      <td>✗</td>
+    </tr>
+    <tr>
+      <td rowspan="2">Extensions</td>
+      <td>Developer</td>
+      <td>/</td>
+      <td>✗</td>
+      <td>✗</td>
+    </tr>
+    <tr>
+      <td>Plugin Management</td>
+      <td>/</td>
+      <td>✗</td>
+      <td>✗</td>
+    </tr>
+  </tbody>
+</table>
