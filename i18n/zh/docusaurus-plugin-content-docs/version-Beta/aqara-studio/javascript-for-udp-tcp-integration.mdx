@@ -38,9 +38,77 @@
 并非所有函数都必须在所有设备场景下实现。例如，如果您的设备不需要主动上报回复，`buildReportResponse` 可以不实现；如果没有独立的点位发现请求，也可通过 `parseDiscoverPointsResponse` 直接返回点信息。
 :::
 
+## 协议脚本处理流程
+
+下图展示了 TCP/UDP 报文进入 JavaScript 后的通用处理过程。每个解析器会复用自己的 Context；Context 被回收后，下一次调用会重新创建 Context 并重新加载完整脚本。
+
+```mermaid
+flowchart TD
+    A["脚本加载或 TCP/UDP 完整报文"] --> B{"报文大小和脚本长度符合限制？"}
+    B -- "否" --> R["拒绝本次调用并记录原因"]
+    B -- "是" --> C{"执行队列、内存保护和超时熔断允许执行？"}
+    C -- "否" --> R
+    C -- "是" --> D["进入绑定的串行执行队列"]
+    D --> E{"Context 是否存在？"}
+    E -- "否" --> F["创建 Context<br/>注入 console 和 studioScriptState<br/>重新加载完整脚本"]
+    E -- "是" --> G["复用现有 Context"]
+    F --> H["调用 dispatch(bytes)"]
+    G --> H
+    H --> I{"dispatch 返回了什么？"}
+    I -- "path" --> J["调用 path 指定的解析函数"]
+    I -- "仅 msgId" --> K["交给请求事务按 msgId 匹配"]
+    I -- "path 和 msgId 都为空" --> L["按主动上报调用 parseReportRequest"]
+    J --> M{"返回结构、数量、点类型和值有效？"}
+    L --> M
+    M -- "否" --> N["忽略无效数据或将本次业务标记为失败"]
+    M -- "是" --> O["更新设备或功能点状态<br/>按需生成响应报文"]
+    H -- "执行超时或 Context 失效" --> P["关闭 Context 并短时熔断"]
+    N --> Q["限频检查 studioScriptState 大小"]
+    O --> Q
+    K --> Q
+    Q --> S["返回业务结果"]
+    P --> T["后续允许执行时按需重建 Context"]
+```
+
+各 TCP/UDP 业务节点还会执行以下校验：
+
+| 业务节点 | 调用函数 | 主要校验 |
+| --- | --- | --- |
+| 脚本加载 | 完整脚本 | 脚本不超过 1,048,576 个字符并且能够执行；加载后检查 `dispatch` 及协议期望函数，校验结果用于诊断，但不会阻止脚本加载。 |
+| 报文组帧和分发 | `packetProcessConfig` / `dispatch(bytes)` | 传入 JavaScript 的单条完整报文不得超过 64 KiB；`dispatch` 应返回 `path`、`msgId` 或两者。仅返回 `msgId` 时交给事务匹配，两者都为空时按主动上报处理。 |
+| 设备和功能点发现 | `parseDiscoveryResponse` / `parseDiscoverPointsResponse` | 发现结果必须是数组；单次最多处理 128 个设备或 512 个功能点；无效条目会被逐项忽略。 |
+| 探测、读取和写入 | `parseProbeResponse` / `parseReadResponse` / `parseWriteResponse` | 根据 `dispatch.path` 选择函数；响应结构、功能点匹配和数值类型必须有效，否则本次操作失败，但不影响其他 Context。 |
+| 设备主动上报 | `parseReportRequest(bytes)` | 函数每条报文只调用一次；返回值必须包含 `points` 数组，单次最多处理 512 项，并逐项校验 `pointId`、`value`、点匹配和类型转换。 |
+| 请求报文和上报响应 | `build*Request` / `buildReportResponse` | 返回值必须能够转换为字节数组；空值表示本次不发送报文。 |
+
 ## 控制台日志
 
 脚本支持使用 `console.log`、`console.info`、`console.debug`、`console.warn` 和 `console.error` 输出调试日志。多个参数会以空格拼接，`warn` 和 `error` 日志分别带有 `[warn]` 和 `[error]` 前缀。日志显示在协议配置页的只读字段 `Console Content` 中，最多保留 2048 个字符；超出限制时旧内容会被替换。每个脚本解析器每秒最多接收 20 条日志，超出部分会被忽略并在下一时间窗口输出汇总提示；单条日志最多保留 512 个字符并转换前 16 个参数。请勿在循环或高频报文处理函数中无条件输出日志，调试时应使用条件开关或采样输出。
+
+## 运行资源限制
+
+- 传入 JavaScript 的单条 TCP/UDP 二进制报文不得超过 64 KiB；超过限制的报文不会交给 JavaScript 处理。
+- 单次设备发现最多处理 128 个设备，单次功能点发现最多处理 512 个功能点；超出部分会被忽略。
+- 单条主动上报最多处理 512 个功能点值；超出部分会被忽略。
+- 脚本 Context 在长时间无调用或系统内存压力较高时可能被回收并在下次调用时重建。请勿依赖全局变量永久保存设备状态，跨报文组帧应由 `packetProcessConfig` 和通信层完成。
+- 当脚本执行队列已满或系统内存压力较高时，本次脚本调用可能被拒绝。设备主动上报应具备合理的重试或后续状态补报机制。
+
+### Context 级脚本状态
+
+协议脚本可以使用 `globalThis.studioScriptState` 在同一个 Context 的多次函数调用之间共享少量临时状态。该变量默认初始化为空对象：
+
+```javascript
+globalThis.studioScriptState = {
+	requestCount: 0,
+	lastValue: null
+};
+```
+
+请保持该变量为普通对象。对象属性可保存字符串、有限数值、布尔值、`null`、普通对象和数组，并可使用这些类型相互嵌套。日期应先转换为字符串。不要保存 `undefined`、函数、`Symbol`、`BigInt`、`NaN`、`Infinity`、循环引用、`Map`、`Set`、Java/Host 对象或自定义类实例；这些值可能被忽略、转换失真或导致序列化失败。
+
+状态大小按序列化后的 UTF-8 JSON 字节数计算，告警阈值为 2 MiB。Studio 在脚本调用后限频检查，首次越界时会同时向服务日志和协议配置页的 Console Content 写入一条 `[warn]`；持续超限不会定期重复打印，也不会自动删除状态或终止本次调用。开发脚本时应确保该变量长期保持在 2 MiB 以内。
+
+Context 被空闲回收、内存压力回收、脚本更新或执行超时后，`globalThis.studioScriptState` 会重新初始化。请勿用它替代 `packetProcessConfig` 完成跨报文组帧，也不要保存必须持久化的设备状态、凭据或无限增长的历史消息。
 
 ## 前提条件
 
@@ -671,7 +739,7 @@ function parseWriteResponse(msg) {
 
 ## parseReportRequest
 
-请在该函数中解析设备主动上报的点值报文，并返回点位值对象。
+请在该函数中解析设备主动上报的点值报文，并一次返回报文中的所有点位值。每条完整报文只调用一次该函数，返回多个点时不会为每个点重复执行脚本。
 
 ### 前提条件
 
@@ -685,16 +753,18 @@ function parseWriteResponse(msg) {
 
 ### 返回值
 
-返回值格式如下：
+返回值必须是包含 `points` 数组的对象：
 
-```json
+```javascript
 {
-    "pointId": "p.1234",
-    "value": 1
+    points: [
+        { pointId: "temperature", value: 23.5 },
+        { pointId: "humidity", value: 60 }
+    ]
 }
 ```
 
-字段说明如下：
+`points` 数组项的字段说明如下：
 
 | 字段 | 类型 | 必填 | 说明 |
 | --- | --- | --- | --- |
@@ -706,7 +776,7 @@ function parseWriteResponse(msg) {
 ```javascript
 function parseReportRequest(msg) {
     if (!msg || msg.length === 0) {
-        return null;
+        return { points: [] };
     }
 
     const dataStr = String.fromCharCode.apply(null, msg)
@@ -715,8 +785,12 @@ function parseReportRequest(msg) {
 
     const parts = dataStr.split("#");
     return {
-        pointId: parts[0],
-        value: parts[1]
+        points: [
+            {
+                pointId: parts[0],
+                value: parts[1]
+            }
+        ]
     };
 }
 ```
@@ -729,6 +803,11 @@ function parseReportRequest(msg) {
 
 ```javascript
 (function(){
+
+// 仅保存可 JSON 序列化的临时状态；Context 重建后会清空。
+const scriptState = globalThis.studioScriptState;
+scriptState.reportCount = 0;
+scriptState.lastReportAt = null;
 
 function buildDiscoveryRequest(msgId) {
     return Uint8Array.from(msgId + "#DEVICE_SCAN#\r\n", c => c.charCodeAt(0));
@@ -856,7 +935,9 @@ function parseWriteResponse(msg) {
 }
 
 function parseReportRequest(msg) {
-    if (!msg || msg.length === 0) return null;
+    scriptState.reportCount += 1;
+    scriptState.lastReportAt = new Date().toISOString();
+    if (!msg || msg.length === 0) return { points: [] };
 
     const dataStr = String.fromCharCode.apply(null, msg)
         .split('\0')[0]
@@ -864,8 +945,12 @@ function parseReportRequest(msg) {
 
     const parts = dataStr.split("#");
     return {
-        pointId: parts[0],
-        value: parts[1]
+        points: [
+            {
+                pointId: parts[0],
+                value: parts[1]
+            }
+        ]
     };
 }
 

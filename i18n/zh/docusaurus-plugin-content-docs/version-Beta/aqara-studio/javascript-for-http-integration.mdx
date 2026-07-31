@@ -22,9 +22,70 @@
 请勿更改函数的名称和参数。
 :::
 
+## 协议脚本处理流程
+
+下图展示了协议事件进入 JavaScript 后的通用处理过程。每个解析器会复用自己的 Context；Context 被回收后，下一次调用会重新创建 Context 并重新加载完整脚本。
+
+```mermaid
+flowchart TD
+    A["脚本加载或 HTTP 业务事件"] --> B{"输入大小和脚本长度符合限制？"}
+    B -- "否" --> R["拒绝本次调用并记录原因"]
+    B -- "是" --> C{"执行队列、内存保护和超时熔断允许执行？"}
+    C -- "否" --> R
+    C -- "是" --> D["进入绑定的串行执行队列"]
+    D --> E{"Context 是否存在？"}
+    E -- "否" --> F["创建 Context<br/>注入 console 和 studioScriptState<br/>重新加载完整脚本"]
+    E -- "是" --> G["复用现有 Context"]
+    F --> H["调用当前业务函数"]
+    G --> H
+    H --> I{"函数执行和返回结构是否有效？"}
+    I -- "否" --> J["忽略无效数据或将本次业务标记为失败"]
+    I -- "是" --> K["发送 HTTP 请求<br/>创建设备或功能点<br/>更新功能点值"]
+    H -- "执行超时或 Context 失效" --> N["关闭 Context 并短时熔断"]
+    J --> L["限频检查 studioScriptState 大小"]
+    K --> L
+    L --> M["返回业务结果"]
+    N --> O["后续允许执行时按需重建 Context"]
+```
+
+各 HTTP 业务节点还会执行以下校验：
+
+| 业务节点 | 调用函数 | 主要校验 |
+| --- | --- | --- |
+| 脚本加载 | 完整脚本 | 脚本不超过 1,048,576 个字符，并且能够被 JavaScript 引擎执行；业务函数在实际调用时还会检查是否存在且可执行。 |
+| 设备发现 | `buildDiscoveryRequest()` / `parseDiscoveryResponse(response)` | 请求函数可省略或返回空值；非空结果必须可转换为 HTTP 请求配置。发现结果必须是数组，单次最多处理 128 个设备，并逐项校验设备信息。 |
+| 功能点发现 | `buildDiscoverPointsRequest(deviceId)` / `parseDiscoverPointsResponse(deviceId, response)` | 响应按 UTF-8 计算不得超过 256 KiB；发现结果必须是数组，单次最多处理 512 个功能点，并逐项校验功能点结构。 |
+| 功能点读取和写入 | `buildReadRequest` / `parseReadResponse` / `buildWriteRequest` / `parseWriteResponse` | 请求结果必须可转换为 HTTP 请求配置；响应不得超过 256 KiB；解析结果必须包含可识别的功能点和值。 |
+| 设备主动上报 | `parseReportRequest(path, requestString)` | 请求体按 UTF-8 计算不得超过 256 KiB；返回值必须包含 `deviceId` 和 `points` 数组，单次最多处理 512 项，并逐项校验 `pointId` 和 `value`。 |
+
 ## 控制台日志
 
 脚本支持使用 `console.log`、`console.info`、`console.debug`、`console.warn` 和 `console.error` 输出调试日志。多个参数会以空格拼接，`warn` 和 `error` 日志分别带有 `[warn]` 和 `[error]` 前缀。日志显示在协议配置页的只读字段 `Console Content` 中，最多保留 2048 个字符；超出限制时旧内容会被替换。每个脚本解析器每秒最多接收 20 条日志，超出部分会被忽略并在下一时间窗口输出汇总提示；单条日志最多保留 512 个字符并转换前 16 个参数。请勿在循环或高频报文处理函数中无条件输出日志，调试时应使用条件开关或采样输出。
+
+## 运行资源限制
+
+- 传入 JavaScript 的单个 HTTP 响应或上报请求体按 UTF-8 计算不得超过 256 KiB；超过限制的数据不会交给 JavaScript 处理，上报请求会返回 HTTP `413`。
+- 单次设备发现最多处理 128 个设备，单次功能点发现最多处理 512 个功能点；超出部分会被忽略。
+- 单个 HTTP 主动上报请求最多处理 512 个功能点值；超出部分会被忽略。
+- 脚本 Context 在长时间无调用或系统内存压力较高时可能被回收并在下次调用时重建。请勿依赖全局变量永久保存设备状态，持久状态应保存在设备或 Studio 功能点中。
+- 当脚本执行队列已满或系统内存压力较高时，本次脚本调用可能被拒绝。设备主动上报应具备合理的重试或后续状态补报机制。
+
+### Context 级脚本状态
+
+协议脚本可以使用 `globalThis.studioScriptState` 在同一个 Context 的多次函数调用之间共享少量临时状态。该变量默认初始化为空对象：
+
+```javascript
+globalThis.studioScriptState = {
+	requestCount: 0,
+	lastValue: null
+};
+```
+
+请保持该变量为普通对象。对象属性可保存字符串、有限数值、布尔值、`null`、普通对象和数组，并可使用这些类型相互嵌套。日期应先转换为字符串。不要保存 `undefined`、函数、`Symbol`、`BigInt`、`NaN`、`Infinity`、循环引用、`Map`、`Set`、Java/Host 对象或自定义类实例；这些值可能被忽略、转换失真或导致序列化失败。
+
+状态大小按序列化后的 UTF-8 JSON 字节数计算，告警阈值为 2 MiB。Studio 在脚本调用后限频检查，首次越界时会同时向服务日志和协议配置页的 Console Content 写入一条 `[warn]`；持续超限不会定期重复打印，也不会自动删除状态或终止本次调用。开发脚本时应确保该变量长期保持在 2 MiB 以内。
+
+Context 被空闲回收、内存压力回收、脚本更新或执行超时后，`globalThis.studioScriptState` 会重新初始化。请勿用它保存必须持久化的设备状态、凭据或无限增长的历史消息。
 
 ## 前提条件
 
@@ -517,7 +578,7 @@ function parseWriteResponse(pointId, responseString) {
 
 ## parseReportRequest 
 
-当设备主动向 Aqara Studio 上报数据时（例如设备状态变化、传感器上报数据等），Aqara Studio 会调用此函数，从设备主动上报的数据中提取设备 ID 和各个功能点的上报数据，用于更新设备状态。
+当设备主动向 Aqara Studio 上报数据时（例如设备状态变化、传感器上报数据等），Aqara Studio 会调用此函数，从设备主动上报的数据中提取设备 ID 和各个功能点的上报数据，用于更新设备状态。每个 HTTP 上报请求只调用一次该函数，并通过 `points` 数组一次返回请求中的所有功能点值。
 
 请在本函数中将设备返回的原始数据转换为 Aqara Studio 可以识别的功能点数据格式。
 
@@ -597,6 +658,11 @@ function parseReportRequest(path, requestString) {
 
 ```javascript
 (function(){
+
+// 仅保存可 JSON 序列化的临时状态；Context 重建后会清空。
+const scriptState = globalThis.studioScriptState;
+scriptState.reportCount = 0;
+scriptState.lastReportAt = null;
 
 function buildDiscoveryRequest() {
     return {
@@ -713,6 +779,8 @@ function parseWriteResponse(pointId, responseString) {
 }
 
 function parseReportRequest(path, requestString) {
+    scriptState.reportCount += 1;
+    scriptState.lastReportAt = new Date().toISOString();
     if (!requestString) return { deviceId: "", points: [], responseMsg: "" };
     let obj;
     try {
