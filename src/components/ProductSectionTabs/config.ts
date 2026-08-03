@@ -68,7 +68,7 @@ const productSectionTabsConfigs: ProductSectionTabsConfig[] = [
           en: 'Product Knowledge',
           zh: '产品资料库',
         },
-        to: '/docs/aqara-studio/product-manuals/general',
+        to: '/docs/aqara-studio/product-knowledge/gateways/studio-gateway-comparison',
       },
     ],
   },
