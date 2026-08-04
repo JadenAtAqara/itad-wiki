@@ -9,98 +9,43 @@ This document explains how to use JavaScript scripts in Aqara Studio to add cust
 
 ## Script Overview
 
-In UDP and TCP integration scenarios, Aqara Studio relies on your JavaScript script to:
+In UDP and TCP integration scenarios, Aqara Studio uses your JavaScript script to complete the following tasks:
 
-- Build device discovery, point discovery, heartbeat, read, and write request payloads.
-- Parse raw byte data returned by devices.
-- Convert byte payloads into standard object structures recognized by Aqara Studio.
-- Parse point value reports actively pushed by devices.
+- Build request payloads for device discovery, point discovery, heartbeat detection, reading, and writing.
+- Parse byte data returned by devices.
+- Convert raw byte packets into standard object structures recognized by Aqara Studio.
+- Parse point value changes actively reported by devices.
 
-Depending on your protocol design, you will typically work with the following **14 functions** (some of which may be optional depending on the device protocol):
+Depending on the integration method and device protocol design, you will typically work with the following **14 functions** in the script, although some of them can be implemented selectively based on the protocol:
 
 | Function | Description |
 | --- | --- |
 | [buildDiscoveryRequest](#builddiscoveryrequest) | Builds the request payload for discovering devices |
-| [buildDiscoverPointsRequest](#builddiscoverpointsrequest) | Builds the request payload for discovering device points |
-| [buildProbeRequest](#buildproberequest) | Builds the request payload for probing device heartbeat |
-| [buildReadRequest](#buildreadrequest) | Builds the request payload for reading point values |
-| [buildWriteRequest](#buildwriterequest) | Builds the request payload for writing point values |
-| [buildReportResponse](#buildreportresponse) | Builds the response payload sent back to a device report |
-| [packetProcessConfig](#packetprocessconfig) | Defines how Aqara Studio extracts a complete packet from a byte stream |
-| [dispatch](#dispatch) | Determines which parser should handle the incoming response |
+| [buildDiscoverPointsRequest](#builddiscoverpointsrequest) | Builds the request payload for querying device point information |
+| [buildProbeRequest](#buildproberequest) | Builds the request payload for heartbeat detection |
+| [buildReadRequest](#buildreadrequest) | Builds the request payload for reading point data |
+| [buildWriteRequest](#buildwriterequest) | Builds the request payload for writing point data |
+| [buildReportResponse](#buildreportresponse) | Builds the response payload sent back to active device reports |
+| [packetProcessConfig](#packetprocessconfig) | Defines how to extract a complete packet from a byte stream |
+| [dispatch](#dispatch) | Dispatches packets to the corresponding parser according to message content |
 | [parseDiscoveryResponse](#parsediscoveryresponse) | Parses the device discovery response |
-| [parseDiscoverPointsResponse](#parsediscoverpointsresponse) | Parses the point discovery response |
+| [parseDiscoverPointsResponse](#parsediscoverpointsresponse) | Parses the device point information response |
 | [parseProbeResponse](#parseproberesponse) | Parses the heartbeat response |
 | [parseReadResponse](#parsereadresponse) | Parses the point read response |
 | [parseWriteResponse](#parsewriteresponse) | Parses the point write response |
-| [parseReportRequest](#parsereportrequest) | Parses device-initiated point reports |
+| [parseReportRequest](#parsereportrequest) | Parses device-initiated report packets |
 
 :::tip
-Do not change function names or parameter definitions. `build*Request` functions must return device protocol payloads, such as `Uint8Array`, `number[]`, hex strings, or plain strings. The platform converts the return value to bytes and sends it through TCP/UDP.
+Do not change function names or parameter definitions. `build*Request` functions need to return device protocol payloads. You can use `Uint8Array`, `number[]`, hexadecimal strings, or plain strings. The platform converts the return value to a byte array and sends it through TCP/UDP.
 :::
 
 :::tip
-Not every function must be implemented in every project. For example, if your protocol does not require a reply to point reports, `buildReportResponse` can be omitted. If there is no dedicated point discovery request, `parseDiscoverPointsResponse` can return point information directly.
+Not every function must be implemented in every device scenario. For example, if your device does not require a reply to active reports, `buildReportResponse` can be omitted. If there is no dedicated point discovery request, `parseDiscoverPointsResponse` can return point information directly.
 :::
 
-## Protocol Script Processing Flow
+## Script Global Variables
 
-The following diagram shows the common path taken after a complete TCP/UDP message enters JavaScript. Each parser reuses its own Context. If that Context has been reclaimed, the next call creates a new Context and reloads the complete script.
-
-```mermaid
-flowchart TD
-    A["Script load or complete TCP/UDP message"] --> B{"Message size and script length within limits?"}
-    B -- "No" --> R["Reject this call and record the reason"]
-    B -- "Yes" --> C{"Queue, memory protection, and timeout circuit allow execution?"}
-    C -- "No" --> R
-    C -- "Yes" --> D["Enter the bound serial execution queue"]
-    D --> E{"Context available?"}
-    E -- "No" --> F["Create Context<br/>inject console and studioScriptState<br/>reload the complete script"]
-    E -- "Yes" --> G["Reuse the existing Context"]
-    F --> H["Invoke dispatch(bytes)"]
-    G --> H
-    H --> I{"What did dispatch return?"}
-    I -- "path" --> J["Invoke the parser selected by path"]
-    I -- "msgId only" --> K["Match the pending transaction by msgId"]
-    I -- "Neither path nor msgId" --> L["Treat the message as a report and invoke parseReportRequest"]
-    J --> M{"Return structure, count, point type, and value valid?"}
-    L --> M
-    M -- "No" --> N["Ignore invalid data or mark this operation as failed"]
-    M -- "Yes" --> O["Update device or point state<br/>optionally build a response payload"]
-    H -- "Timeout or unusable Context" --> P["Close the Context and open a short circuit"]
-    N --> Q["Rate-limited studioScriptState size check"]
-    O --> Q
-    K --> Q
-    Q --> S["Return the business result"]
-    P --> T["Recreate the Context on a later allowed call"]
-```
-
-Each TCP/UDP business node also performs the following validation:
-
-| Business node | Script function | Main validation |
-| --- | --- | --- |
-| Script loading | Complete script | The script must not exceed 1,048,576 characters and must execute successfully. After loading, Studio checks `dispatch` and the expected protocol functions for diagnostics without blocking the script from loading. |
-| Packet framing and dispatch | `packetProcessConfig` / `dispatch(bytes)` | A complete binary message passed to JavaScript must not exceed 64 KiB. `dispatch` should return `path`, `msgId`, or both. A message containing only `msgId` is matched to a transaction; a message containing neither is treated as an active report. |
-| Device and point discovery | `parseDiscoveryResponse` / `parseDiscoverPointsResponse` | Discovery results must be arrays. At most 128 devices or 512 points are processed per call, and invalid entries are ignored individually. |
-| Probe, read, and write | `parseProbeResponse` / `parseReadResponse` / `parseWriteResponse` | The parser is selected through `dispatch.path`. Response shape, point matching, and value type must be valid; a failure is isolated to the current operation and Context. |
-| Active device report | `parseReportRequest(bytes)` | The function is called once per message. Its result must contain a `points` array with at most 512 processed entries. Each entry is checked for `pointId`, `value`, point matching, and value conversion. |
-| Requests and report response | `build*Request` / `buildReportResponse` | The return value must be convertible to bytes. An empty value means that no message is sent for that operation. |
-
-## Console Logging
-
-Scripts can output diagnostic logs through `console.log`, `console.info`, `console.debug`, `console.warn`, and `console.error`. Multiple arguments are joined with spaces, while `warn` and `error` messages use the `[warn]` and `[error]` prefixes. Logs appear in the read-only `Console Content` field on the protocol configuration page and are limited to 2048 characters; older content is replaced when the limit is exceeded. Each script parser accepts up to 20 log entries per second; excess entries are discarded and summarized in the next time window. Each entry retains up to 512 characters and converts only the first 16 arguments. Do not log unconditionally inside loops or high-frequency message handlers; use a debug condition or sampled logging instead.
-
-## Runtime Resource Limits
-
-- A single TCP/UDP binary message passed to JavaScript must not exceed 64 KiB. Oversized messages are not passed to JavaScript.
-- A single device discovery call processes at most 128 devices, and a single point discovery call processes at most 512 points. Additional entries are ignored.
-- A single active report processes at most 512 point values. Additional entries are ignored.
-- A script context may be reclaimed after a long idle period or when the system is under memory pressure, and it is recreated on the next call. Do not rely on global variables for durable device state; use `packetProcessConfig` and the transport layer for cross-packet framing.
-- A script call may be rejected when the execution queue is full or system memory pressure is high. Device reports should support reasonable retries or a later full-state report.
-
-### Context-Level Script State
-
-A protocol script can use `globalThis.studioScriptState` to share a small amount of temporary state between function calls in the same context. The variable is initialized to an empty object:
+A protocol script can use `globalThis.studioScriptState` to share a small amount of temporary state across multiple function calls in the same Context. This variable is initialized as an empty object by default:
 
 ```javascript
 globalThis.studioScriptState = {
@@ -109,43 +54,43 @@ globalThis.studioScriptState = {
 };
 ```
 
-Keep this variable as a plain object. Its properties may contain strings, finite numbers, booleans, `null`, plain objects, and arrays, including nested combinations of those types. Convert dates to strings first. Do not store `undefined`, functions, `Symbol`, `BigInt`, `NaN`, `Infinity`, circular references, `Map`, `Set`, Java/host objects, or custom class instances; such values may be omitted, lose information, or make serialization fail.
+Keep this variable as a plain object. Its properties may contain strings, finite numbers, booleans, `null`, plain objects, and arrays, including nested combinations of those types. Convert dates to strings first. Do not store `undefined`, functions, `Symbol`, `BigInt`, `NaN`, `Infinity`, circular references, `Map`, `Set`, Java/host objects, or custom class instances; such values may be ignored, lose information, or cause serialization failures.
 
-State size is measured from its serialized UTF-8 JSON representation. The warning threshold is 2 MiB. Studio performs a rate-limited check after script calls. When the state first crosses the threshold, Studio writes one `[warn]` entry to both the service log and Console Content on the protocol configuration page. It does not print repeated periodic warnings, delete the state, or terminate the current call. Keep this variable below 2 MiB during normal operation.
+State size is measured by the serialized UTF-8 JSON byte length. The warning threshold is 2 MiB. Studio performs a rate-limited check after script calls. When the state first exceeds the threshold, Studio writes one `[warn]` entry to both the service log and `Console Content` on the protocol configuration page. Repeated overflow does not produce periodic warnings, does not delete the state automatically, and does not terminate the current call. Keep this variable below 2 MiB during normal development and operation.
 
-`globalThis.studioScriptState` is reinitialized after context idle reclamation, memory-pressure reclamation, script updates, or execution timeouts. Do not use it instead of `packetProcessConfig` for cross-packet framing, or for durable device state, credentials, or an unbounded message history.
+`globalThis.studioScriptState` is reinitialized after idle Context reclamation, memory-pressure reclamation, script updates, or execution timeouts. Do not use it in place of `packetProcessConfig` for cross-packet framing, and do not use it for durable device state, credentials, or an unbounded message history.
 
 ## Prerequisites
 
-Before writing the script, make sure you fully understand the target device’s UDP or TCP protocol details, including but not limited to:
+Before writing the script, make sure you fully understand the UDP or TCP protocol details of the target device, including but not limited to:
 
-- Device discovery payload format
-- Point discovery payload format
-- Heartbeat payload format
-- Point read and write payload format
-- Device report payload format
-- Packet framing rules, frame headers, and packet length rules
-- Response field structures and meanings
+- Device discovery packet format
+- Point discovery packet format
+- Heartbeat packet format
+- Point read and write packet format
+- Device active report packet format
+- Stream framing rules, frame header rules, and packet length rules
+- The field structure and meaning of the returned device data
 
-Only by understanding the above protocol details can you correctly build requests and parse responses according to the device specification.
+Only by fully understanding the protocol above can you ensure that your JavaScript script correctly builds packets and parses data according to the device specification.
 
 ## buildDiscoveryRequest
 
-Return a device protocol payload that can be converted to bytes. It tells Aqara Studio how to send a device discovery request.
+Return a device protocol payload that can be converted into a byte array. It tells Aqara Studio how to send the byte packet for device discovery.
 
-### Parameters
+#### Parameters
 
-It is recommended that this function accept a `msgId` parameter used to correlate the request with its response.
+It is recommended that this function accept a `msgId` parameter used to construct the correlation identifier between request and response.
 
-### Return Value
+#### Return Value
 
-To ensure Aqara Studio can send the request properly, `buildDiscoveryRequest` should return a byte array such as:
+To ensure Aqara Studio can send the request properly, make sure `buildDiscoveryRequest` returns a byte array, for example:
 
 ```javascript
 Uint8Array.from("001#DEVICE_SCAN#\r\n", c => c.charCodeAt(0))
 ```
 
-### Example
+#### Example
 
 ```javascript
 function buildDiscoveryRequest(msgId) {
@@ -155,20 +100,22 @@ function buildDiscoveryRequest(msgId) {
 
 ## buildDiscoverPointsRequest
 
-Return a device protocol payload that can be converted to bytes. It tells Aqara Studio how to send a point discovery request for a specified device. If the device points are static, this function can be omitted or return empty, and the platform calls `parseDiscoverPointsResponse(deviceId, undefined)`.
+Return a device protocol payload that can be converted into a byte array. It tells Aqara Studio how to send the point discovery packet to the specified device. If device points are static, this function can be omitted or return an empty value, and the platform calls `parseDiscoverPointsResponse(deviceId, undefined)`.
 
-### Parameters
+#### Parameters
 
-| Name | Type | Description |
+It is recommended that this function accept the following parameters:
+
+| Parameter | Type | Description |
 | --- | --- | --- |
 | msgId | String | Request message ID |
 | deviceId | String | Device ID |
 
-### Return Value
+#### Return Value
 
-The return value must be a byte array representing the point discovery request payload.
+The return value must be a byte array representing the point discovery request packet.
 
-### Example
+#### Example
 
 ```javascript
 function buildDiscoverPointsRequest(msgId, deviceId) {
@@ -178,20 +125,22 @@ function buildDiscoverPointsRequest(msgId, deviceId) {
 
 ## buildProbeRequest
 
-Return a device protocol payload that can be converted to bytes. It tells Aqara Studio how to send a heartbeat probe request.
+Return a device protocol payload that can be converted into a byte array. It tells Aqara Studio how to send a heartbeat packet to the device.
 
-### Parameters
+#### Parameters
 
-| Name | Type | Description |
+It is recommended that this function accept the following parameters:
+
+| Parameter | Type | Description |
 | --- | --- | --- |
-| msgId | String | Request message ID. Recommended if response matching is based on `msgId`. |
+| msgId | String | Request message ID. If response matching based on `msgId` is enabled, passing it is recommended. |
 | deviceId | String | Device ID |
 
-### Return Value
+#### Return Value
 
-The return value must be a byte array representing the heartbeat request.
+The return value must be a byte array representing the heartbeat packet.
 
-### Example
+#### Example
 
 ```javascript
 function buildProbeRequest(msgId, deviceId) {
@@ -201,21 +150,23 @@ function buildProbeRequest(msgId, deviceId) {
 
 ## buildReadRequest
 
-Return a device protocol payload that can be converted to bytes. It tells Aqara Studio how to send a point read request.
+Return a device protocol payload that can be converted into a byte array. It tells Aqara Studio how to send the packet for reading point values.
 
-### Parameters
+#### Parameters
 
-| Name | Type | Description |
+It is recommended that this function accept the following parameters:
+
+| Parameter | Type | Description |
 | --- | --- | --- |
 | msgId | String | Request message ID |
 | deviceId | String | Device ID |
 | pointId | String | Point ID |
 
-### Return Value
+#### Return Value
 
-The return value must be a byte array representing the point read request payload.
+The return value must be a byte array representing the point read packet.
 
-### Example
+#### Example
 
 ```javascript
 function buildReadRequest(msgId, deviceId, pointId) {
@@ -225,22 +176,24 @@ function buildReadRequest(msgId, deviceId, pointId) {
 
 ## buildWriteRequest
 
-Return a device protocol payload that can be converted to bytes. It tells Aqara Studio how to send a point write request.
+Return a device protocol payload that can be converted into a byte array. It tells Aqara Studio how to send the control packet for writing point values.
 
-### Parameters
+#### Parameters
 
-| Name | Type | Description |
+It is recommended that this function accept the following parameters:
+
+| Parameter | Type | Description |
 | --- | --- | --- |
 | msgId | String | Request message ID |
 | deviceId | String | Device ID |
 | pointId | String | Point ID |
-| value | String / Number / Boolean / Int(enum) | Value to write |
+| value | String / Number / Boolean / Int(enum) | Control value to write |
 
-### Return Value
+#### Return Value
 
-The return value must be a byte array representing the point write request payload.
+The return value must be a byte array representing the control packet.
 
-### Example
+#### Example
 
 ```javascript
 function buildWriteRequest(msgId, deviceId, pointId, value) {
@@ -250,24 +203,26 @@ function buildWriteRequest(msgId, deviceId, pointId, value) {
 
 ## buildReportResponse
 
-Return a device protocol payload that can be converted to bytes. It tells Aqara Studio how to reply to a device report.
+Return a device protocol payload that can be converted into a byte array. It tells Aqara Studio how to reply to the active report packet sent by the device.
 
-If your protocol does not require a reply to report messages, this function can be omitted.
+If your protocol does not require a reply to report packets, this function can be omitted.
 
-### Parameters
+#### Parameters
 
-| Name | Type | Description |
+It is recommended that this function accept the following parameters:
+
+| Parameter | Type | Description |
 | --- | --- | --- |
 | msgId | String | Request message ID |
 | pointId | String | Point ID |
-| code | Byte | Response code, where `0` means success |
-| errorMsg | String | Error message |
+| code | Byte | Response status code, where `0` means success |
+| errorMsg | String | Error reason |
 
-### Return Value
+#### Return Value
 
-The return value must be a byte array representing the report reply payload.
+The return value must be a byte array representing the report reply packet.
 
-### Example
+#### Example
 
 ```javascript
 function buildReportResponse(msgId, pointId, code, errorMsg) {
@@ -277,13 +232,13 @@ function buildReportResponse(msgId, pointId, code, errorMsg) {
 
 ## packetProcessConfig
 
-Return an object that defines how Aqara Studio should extract one complete packet from a UDP/TCP byte stream.
+Return an object in this function to define how Aqara Studio should extract one complete packet from a UDP/TCP byte stream.
 
-If this function is not defined, Aqara Studio reads 128 bytes at a time as the response, which is usually only suitable for very simple packet structures.
+If you do not define this function, Aqara Studio reads 128 bytes each time as the response value by default, which is usually suitable only for very simple packet scenarios.
 
-### Return Value
+#### Return Value
 
-Example return value:
+The return value format is as follows:
 
 ```json
 {
@@ -293,20 +248,20 @@ Example return value:
 }
 ```
 
-Fields:
+Field descriptions:
 
 | Field | Type | Meaning |
 | --- | --- | --- |
-| frameStartBytes | number[] | Byte sequence representing the frame header |
-| lengthKnownAfterBytes | number | Offset after which the payload length becomes known |
-| remainingBytes | number | Remaining bytes to read after the length field |
-| totalLength | number | Total packet length, if you prefer using a fixed total length |
+| frameStartBytes | number[] | Frame header byte sequence used to identify the start of a packet |
+| lengthKnownAfterBytes | number | The byte position after the frame header where the length becomes known |
+| remainingBytes | number | The number of bytes still to read after the length field |
+| totalLength | number | Total packet length. If you do not use `lengthKnownAfterBytes` and `remainingBytes`, you can define the total length directly |
 
 :::tip
-`frameStartBytes`, `lengthKnownAfterBytes`, and `remainingBytes` are required; `totalLength` is optional. Usually you configure either `lengthKnownAfterBytes + remainingBytes` or `totalLength`, depending on the packet format defined by your device protocol.
+`frameStartBytes`, `lengthKnownAfterBytes`, and `remainingBytes` are required, while `totalLength` is optional. Usually you configure either `lengthKnownAfterBytes + remainingBytes` or `totalLength`, depending on the device's frame structure protocol.
 :::
 
-### Example
+#### Example
 
 ```javascript
 function packetProcessConfig() {
@@ -320,39 +275,39 @@ function packetProcessConfig() {
 
 ## dispatch
 
-This function is required for TCP/UDP scripts.
+This function is required in TCP/UDP scripts.
 
-Implement the dispatch logic so Aqara Studio can determine which parser should process a given incoming packet.
+Implement packet dispatch logic in this function so Aqara Studio can determine which parser should be called for the byte packet returned by the device.
 
-### Behavior
+#### Behavior
 
-After receiving a packet, Aqara Studio first calls this function. You should decide:
+After Aqara Studio receives a packet, it calls this function first. You need to decide in this function:
 
-- which request the packet belongs to;
-- or which parser function should handle it.
+- Which request the current packet is responding to
+- Or which parser function should handle the packet
 
-If `msgId` is returned, Aqara Studio prioritizes request matching by message ID.
-If `path` is returned, Aqara Studio dispatches directly to the specified parser function.
+When `msgId` is returned, Aqara Studio prioritizes matching by request ID.
+When `path` is returned, Aqara Studio uses the specified function path directly.
 If `path` is empty but `msgId` is not empty, the platform keeps the message for transaction matching.
-If both `path` and `msgId` are empty, the platform defaults to `parseReportRequest`.
-Other non-empty `path` values are handled as `parseReportRequest`.
+If both `path` and `msgId` are empty, the platform handles it as `parseReportRequest` by default.
+Other non-empty `path` values are also handled as `parseReportRequest`.
 
-### Parameters
+#### Parameters
 
-| Name | Type | Description |
+| Parameter | Type | Description |
 | --- | --- | --- |
-| fromAcceptMessage | Uint8Array | Raw response packet from the device |
+| fromAcceptMessage | Uint8Array | Raw byte packet returned by the device |
 
-### Return Value
+#### Return Value
 
-The returned object can include:
+The returned object may include the following fields:
 
 | Field | Type | Description |
 | --- | --- | --- |
 | msgId | String | Request message ID |
-| path | String | Parser function name, such as `parseProbeResponse` |
+| path | String | The corresponding parser function name, such as `parseProbeResponse` |
 
-### Example Return Value
+#### Example Return Value
 
 ```json
 {
@@ -361,7 +316,7 @@ The returned object can include:
 }
 ```
 
-### Example
+#### Example
 
 ```javascript
 function dispatch(fromAcceptMessage) {
@@ -393,19 +348,19 @@ function dispatch(fromAcceptMessage) {
 
 ## parseDiscoveryResponse
 
-Parse the device discovery response and return an array of device objects.
+Parse the device discovery response packet in this function and return an array of device information objects.
 
-If `buildDiscoveryRequest` is not defined, Aqara Studio may also use this return value as the basis for device discovery, so make sure the returned structure is stable.
+If `buildDiscoveryRequest` is not defined, Aqara Studio may also use the data returned by this function directly as the basis for device discovery, so make sure the returned structure is stable.
 
-### Parameters
+#### Parameters
 
-| Name | Type | Description |
+| Parameter | Type | Description |
 | --- | --- | --- |
-| fromAcceptMessage | Uint8Array | Raw discovery response packet |
+| fromAcceptMessage | Uint8Array | Raw byte packet of the device discovery response |
 
-### Return Value
+#### Return Value
 
-Example:
+The return value format is as follows:
 
 ```json
 [
@@ -421,19 +376,19 @@ Example:
 ]
 ```
 
-Fields:
+Field descriptions:
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | deviceName | String | No | Device name |
-| model | String | No | Device model |
+| model | String | No | Model |
 | vendor | String | No | Vendor |
 | firmwareVersion | String | No | Firmware version |
 | ip | String | Yes | Device IP address |
 | port | Int | Yes | UDP/TCP port |
-| deviceId | String | Yes | Unique device ID |
+| deviceId | String | Yes | Unique device identifier |
 
-### Example
+#### Example
 
 ```javascript
 function parseDiscoveryResponse(msg) {
@@ -460,20 +415,20 @@ function parseDiscoveryResponse(msg) {
 
 ## parseDiscoverPointsResponse
 
-Parse point information and return an array of point objects.
+Parse device point information in this function and return an array of point objects.
 
-### Parameters
+#### Parameters
 
-This function receives the following parameters:
+This function accepts the following parameters:
 
-| Name | Type | Description |
+| Parameter | Type | Description |
 | --- | --- | --- |
-| deviceId | String | Device ID. The platform always passes it as the first parameter. Required. |
-| fromAcceptMessage | Uint8Array \| undefined | Raw point discovery response passed as the second parameter when `buildDiscoverPointsRequest` is defined and a response is received. It may be empty when there is no dedicated point discovery request. |
+| deviceId | String | Device ID. The platform always passes this as the first parameter. Required |
+| fromAcceptMessage | Uint8Array \| undefined | If `buildDiscoverPointsRequest` is defined and the device response is received, this is passed as the second parameter. It may be empty when there is no separate point discovery request |
 
-### Return Value
+#### Return Value
 
-Example:
+The return value should be an array of point objects, for example:
 
 ```json
 [
@@ -498,37 +453,37 @@ Example:
 ]
 ```
 
-Fields:
+Field descriptions:
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| pointId | String | Required | Unique point ID used for subsequent read/write operations |
-| pointName | String | Required | Point display name |
-| devType | String | Conditionally required | Corresponds to `deviceType` in the Aqara Data Model Specification. Fill it when defining a point based on Aqara Spec. For the specific available values, please refer to [Device Types](../aqara-developer/aqara-data-model-specification/device-types.mdx). |
-| functionCode | String | Conditionally required | Corresponds to `functionCode` in the Aqara Data Model Specification. Fill it when defining a point based on Aqara Spec. For the specific available values, please refer to [Function Codes](../aqara-developer/aqara-data-model-specification/function-codes.mdx). |
-| traitCode | String | Conditionally required | Corresponds to `traitCode` in the Aqara Data Model Specification. Fill it when defining a point based on Aqara Spec. For the specific available values, please refer to [Trait Codes](../aqara-developer/aqara-data-model-specification/trait-codes.mdx). |
-| dataType | String | Conditionally required | Required for general points. Generic point data type: `enum`, `bool`, `numerical`, or `text` |
-| enumRange | Array | Conditionally required | Enumeration options. Required only when a general point uses `dataType: "enum"`. The array must not be empty. Each item contains an integer `value` and a string `label`; both must be unique, and `label` must not be empty. |
-| trueText / falseText | String | Optional | Display text for a general Boolean point. Effective only when `dataType` is `bool`. If omitted, `trueText` defaults to `开` and `falseText` defaults to `关`. Configure these fields only when custom labels such as `Enabled` / `Disabled` are needed. You can also use `activeText` / `onText` and `inactiveText` / `offText` as aliases. |
-| min | Number | Optional | Minimum value for a general numeric point. Effective only when `dataType` is `numerical`; `minimum` can also be used as an alias. |
-| max | Number | Optional | Maximum value for a general numeric point. Effective only when `dataType` is `numerical`; `maximum` can also be used as an alias. |
-| step | Number | Optional | Step value for a general numeric point. It must be greater than 0. Effective only when `dataType` is `numerical`; `resolution` can also be used as an alias. |
-| precision | Number | Optional | Precision value for a general numeric point. It must be greater than or equal to 0. Effective only when `dataType` is `numerical`. |
-| decimals | Int | Optional | Number of decimal places for a general numeric point. It must be an integer greater than or equal to 0. Effective only when `dataType` is `numerical`. |
-| unit / units | String | Optional | Unit for a general numeric point. Effective only when `dataType` is `numerical`; use a registered unit name such as `kilowatt hour`, `watt`, `volt`, `ampere`, `celsius`, or `percent`. Studio displays the corresponding symbol, such as `kWh`, `W`, `V`, `A`, `°C`, or `%`. See [Unit Names and Symbols Supported by Scripts](./script-supported-unit-symbols.mdx) for the full mapping. The system can also match registered unit symbols. |
-| access | Int | Conditionally required | Required for general points. Access permission bits: `bit1` read, `bit2` write, `bit3` report |
+| pointId | String | Required | Unique point ID used in subsequent read/write operations |
+| pointName | String | Required | Point name |
+| devType | String | Conditionally required | Corresponds to `deviceType` in the Aqara data model specification. Fill this when defining a point based on Aqara Spec. For available values, see [Device Types](../aqara-developer/aqara-data-model-specification/device-types.mdx). |
+| functionCode | String | Conditionally required | Corresponds to `functionCode` in the Aqara data model specification. Fill this when defining a point based on Aqara Spec. For available values, see [Function Codes](../aqara-developer/aqara-data-model-specification/function-codes.mdx). |
+| traitCode | String | Conditionally required | Corresponds to `traitCode` in the Aqara data model specification. Fill this when defining a point based on Aqara Spec. For available values, see [Trait Codes](../aqara-developer/aqara-data-model-specification/trait-codes.mdx). |
+| dataType | String | Conditionally required | Required for general points. Supported values are `enum`, `bool`, `numerical`, and `text` |
+| enumRange | Array | Conditionally required | Enumeration option array. Required only when the general point `dataType` is `enum`. The array must not be empty. Each item contains an integer `value` and a string `label`. Both `value` and `label` must be unique, and `label` must not be empty |
+| trueText / falseText | String | Optional | Display labels for a general Boolean point. Effective only when `dataType` is `bool`. If not configured, `trueText` defaults to `On` and `falseText` defaults to `Off`. Configure them only when custom labels such as `Enabled` / `Disabled` are needed. `activeText` / `onText` and `inactiveText` / `offText` can also be used as aliases |
+| min | Number | Optional | Minimum value for a general numeric point. Effective only when `dataType` is `numerical`. `minimum` can also be used as an alias |
+| max | Number | Optional | Maximum value for a general numeric point. Effective only when `dataType` is `numerical`. `maximum` can also be used as an alias |
+| step | Number | Optional | Step value for a general numeric point. It must be greater than 0. Effective only when `dataType` is `numerical`. `resolution` can also be used as an alias |
+| precision | Number | Optional | Precision value for a general numeric point. It must be greater than or equal to 0. Effective only when `dataType` is `numerical` |
+| decimals | Int | Optional | Number of decimal places for a general numeric point. It must be an integer greater than or equal to 0. Effective only when `dataType` is `numerical` |
+| unit / units | String | Optional | Unit for a general numeric point. Effective only when `dataType` is `numerical`. It is recommended to use registered unit names such as `kilowatt hour`, `watt`, `volt`, `ampere`, `celsius`, and `percent`. Studio displays the corresponding symbols such as `kWh`, `W`, `V`, `A`, `°C`, and `%`. See [Unit Names and Symbols Supported by Scripts](./script-supported-unit-symbols.mdx) for the full mapping. The system can also match registered unit symbols |
+| access | Int | Conditionally required | Required for general points. Access permission bits: `bit1` means read, `bit2` means write, and `bit3` means report |
 
 :::note
-For `numerical` points, when Aqara Studio calls `buildWriteRequest`, it formats the write value by `decimals` first; if `decimals` is not configured, it infers decimal places from `step` / `resolution`. To avoid binary floating-point artifacts such as `0.30000030249357224`, explicitly configure `decimals` or `step` for points that write fractional values. `precision` only describes precision and is not used as the decimal-place truncation rule for outgoing write payloads.
+For `numerical` points, when Aqara Studio calls `buildWriteRequest`, it formats the write value by `decimals` first. If `decimals` is not configured, it infers the number of decimal places from `step` / `resolution`. To avoid binary floating-point artifacts such as `0.30000030249357224`, explicitly configure `decimals` or `step` for points that write fractional values. `precision` only describes precision and is not used as the decimal-place truncation rule for outgoing write payloads.
 
 If a numeric point is used by energy statistics or other unit-dependent features, configure `unit` or `units`. For example, use `kilowatt hour` (displayed as `kWh`) for accumulated energy, `watt` (`W`) for current power, `volt` (`V`) for voltage, `ampere` (`A`) for current, and `celsius` (`°C`) for temperature. Enter unit names exactly as shown in [Unit Names and Symbols Supported by Scripts](./script-supported-unit-symbols.mdx), including case and spaces.
 :::
 
 :::tip
-If you define `devType`, `functionCode`, and `traitCode` based on Aqara Spec, you may not need the generic `dataType` and `access` mode. If you do not use Aqara Spec, then `dataType` and `access` are required.
+If you have already defined `devType`, `functionCode`, and `traitCode` based on Aqara Spec, you do not need to rely on the general `dataType` and `access` mode. If you do not use Aqara Spec, then `dataType` and `access` must be provided.
 :::
 
-### Example
+#### Example
 
 ```javascript
 function parseDiscoverPointsResponse(deviceId, fromAcceptMessage) {
@@ -573,17 +528,17 @@ function parseDiscoverPointsResponse(deviceId, fromAcceptMessage) {
 
 ## parseProbeResponse
 
-Parse the heartbeat response and return a standard status object.
+Parse the device heartbeat response in this function and return a standard status object.
 
-### Parameters
+#### Parameters
 
-| Name | Type | Description |
+| Parameter | Type | Description |
 | --- | --- | --- |
-| fromAcceptMessage | Uint8Array | Raw heartbeat response packet |
+| fromAcceptMessage | Uint8Array | Heartbeat response packet returned by the device |
 
-### Return Value
+#### Return Value
 
-Example:
+The return value format is as follows:
 
 ```json
 {
@@ -592,15 +547,15 @@ Example:
 }
 ```
 
-Fields:
+Field descriptions:
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| code | Byte | Yes | `0` means success; other values indicate failure |
-| errorMsg | String | No | Error message |
-| deviceId | String | No | Can be returned if message matching is not based on `msgId` |
+| code | Byte | Yes | `0` means success; other values mean failure |
+| errorMsg | String | No | Error description |
+| deviceId | String | No | When `msgId` matching is not used, you can return the device ID |
 
-### Example
+#### Example
 
 ```javascript
 function parseProbeResponse(msg) {
@@ -629,17 +584,17 @@ function parseProbeResponse(msg) {
 
 ## parseReadResponse
 
-Parse the point read response and return a point value object.
+Parse the device point read response in this function and return a point value object.
 
-### Parameters
+#### Parameters
 
-| Name | Type | Description |
+| Parameter | Type | Description |
 | --- | --- | --- |
-| fromAcceptMessage | Uint8Array | Raw point read response packet |
+| fromAcceptMessage | Uint8Array | Response packet for reading point values |
 
-### Return Value
+#### Return Value
 
-Example:
+The return value format is as follows:
 
 ```json
 {
@@ -648,14 +603,14 @@ Example:
 }
 ```
 
-Fields:
+Field descriptions:
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| pointId | String | No | Recommended when response matching is not based on `msgId` |
+| pointId | String | No | When `msgId` matching is not used, returning the point ID is recommended |
 | value | String / Double / Boolean / Int(enum) | Yes | Point value |
 
-### Example
+#### Example
 
 ```javascript
 function parseReadResponse(msg) {
@@ -677,17 +632,17 @@ function parseReadResponse(msg) {
 
 ## parseWriteResponse
 
-Parse the point write response and return a standard write result object.
+Parse the device control response in this function and return a standard write result object.
 
-### Parameters
+#### Parameters
 
-| Name | Type | Description |
+| Parameter | Type | Description |
 | --- | --- | --- |
-| fromAcceptMessage | Uint8Array | Raw point write response packet |
+| fromAcceptMessage | Uint8Array | Response packet after writing point values |
 
-### Return Value
+#### Return Value
 
-Example:
+The return value format is as follows:
 
 ```json
 {
@@ -697,15 +652,15 @@ Example:
 }
 ```
 
-Fields:
+Field descriptions:
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | code | Byte | Yes | `0` means success |
-| errorMsg | String | Yes | Error message; empty means success |
-| pointId | String | No | Recommended when response matching is not based on `msgId` |
+| errorMsg | String | Yes | Error description. Empty means success |
+| pointId | String | No | When `msgId` matching is not used, returning the point ID is recommended |
 
-### Example
+#### Example
 
 ```javascript
 function parseWriteResponse(msg) {
@@ -734,19 +689,19 @@ function parseWriteResponse(msg) {
 
 ## parseReportRequest
 
-Parse a device-initiated point report and return all point values in that packet at once. The function is called once for each complete packet; returning multiple points does not execute the script once per point.
+Parse the device-initiated point value report packet in this function and return all point values in that packet at once. This function is called only once per complete packet, and returning multiple points does not execute the script once per point.
 
-### Prerequisites
+#### Prerequisites
 
-This function is especially important when the device supports active reporting or your integration depends on device-pushed point value changes.
+You only need to focus on implementing this function when the device supports active reporting or when your integration depends on device-pushed point value changes.
 
-### Parameters
+#### Parameters
 
-| Name | Type | Description |
+| Parameter | Type | Description |
 | --- | --- | --- |
-| fromAcceptMessage | Uint8Array | Raw report packet pushed by the device |
+| fromAcceptMessage | Uint8Array | Raw byte packet actively reported by the device |
 
-### Return Value
+#### Return Value
 
 The return value must be an object containing a `points` array:
 
@@ -759,14 +714,14 @@ The return value must be an object containing a `points` array:
 }
 ```
 
-Fields in each `points` item:
+Field descriptions for items in `points`:
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | pointId | String | Yes | Point ID |
 | value | String / Double / Boolean / Int(enum) | Yes | Point value |
 
-### Example
+#### Example
 
 ```javascript
 function parseReportRequest(msg) {
@@ -792,9 +747,9 @@ function parseReportRequest(msg) {
 
 ## Complete Example
 
-The following example shows a simplified UDP/TCP integration script structure. Adjust it according to your device protocol:
+The following example shows a simplified UDP/TCP integration script structure. You can adjust it according to the device protocol:
 
-The `globalThis` registrations in the example are dynamic: register only the functions you actually implement; functions that are not implemented do not need to be registered.
+The `globalThis` registrations in the example are dynamic: register only the functions you actually implement. Functions that are not implemented do not need to be registered.
 
 ```javascript
 (function(){
@@ -966,3 +921,77 @@ globalThis.parseReportRequest = parseReportRequest;
 
 })()
 ```
+
+## Troubleshooting Script Issues
+
+After you finish developing the script, if Aqara Studio still cannot complete device discovery or point discovery, follow the steps below to check whether the script is running correctly:
+
+1. Use [Console Logging](#console-logging) to check whether the methods in the script are being called correctly.
+2. Review [Script Checklist](#script-checklist) and verify item by item whether the script meets Aqara Studio's validation requirements.
+3. If the issue still cannot be resolved, it may be caused by Aqara Studio's [Runtime Resource Limits](#runtime-resource-limits).
+
+### Console Logging
+
+1. To debug and troubleshoot methods in the script, such as `parseDiscoveryResponse` and `parseDiscoverPointsResponse`, you can add any of the following console logging methods anywhere inside a function:
+
+   - `console.log`
+   - `console.info`
+   - `console.debug`
+   - `console.warn`
+   - `console.error`
+
+   :::tip
+   Do not print logs unconditionally inside loops or high-frequency packet-processing functions. Use conditional switches or sampled logging during debugging.
+   :::
+
+   Example:
+
+   ```javascript {2}
+   function parseDiscoveryResponse() {
+       console.info("Start parsing discovery response", arguments);
+       return [
+           {
+               deviceName: "xxx",
+               // ...
+           }
+       ];
+   }
+   ```
+
+   :::tip
+   - When multiple arguments are passed, the log output joins them with spaces.
+   - Output from `console.warn` and `console.error` includes the `[warn]` and `[error]` prefixes respectively.
+   :::
+
+2. Trigger the related action again in Aqara Studio, such as device discovery, point discovery, point reading, writing, or reporting, to execute the method that contains logs.
+3. Open the **UDP Protocol Configuration** page or the **TCP Protocol Configuration** page and check whether the `Console Content` field contains log output:
+
+   - If logs appear correctly, the method has been integrated successfully.
+   - If no logs appear, check whether the method implementation is incorrect.
+
+   :::tip
+   - `Console Content` keeps at most 2048 characters. When the limit is exceeded, older content is replaced.
+   - Each script parser accepts at most 20 log entries per second. Excess logs are ignored and summarized in the next time window.
+   - Each log entry keeps at most 512 characters and converts only the first 16 arguments.
+   :::
+
+### Script Checklist
+
+It is recommended that you review the script item by item according to the validation flow of each Aqara Studio business node so that all key checks pass and the script remains reliable and compatible.
+
+| Business node | Called function | Main validation |
+| --- | --- | --- |
+| Script loading | Complete script | The script must not exceed 1,048,576 characters and must be executable. After loading, Studio checks `dispatch` and the protocol-expected functions. The validation result is used for diagnostics but does not block script loading. |
+| Packet framing and dispatch | `packetProcessConfig` / `dispatch(bytes)` | A single complete packet passed into JavaScript must not exceed 64 KiB. `dispatch` should return `path`, `msgId`, or both. If only `msgId` is returned, the message is handed to transaction matching. If both are empty, it is treated as an active report. |
+| Device and point discovery | `parseDiscoveryResponse` / `parseDiscoverPointsResponse` | Discovery results must be arrays. At most 128 devices or 512 points are processed in a single call. Invalid entries are ignored item by item. |
+| Probe, read, and write | `parseProbeResponse` / `parseReadResponse` / `parseWriteResponse` | The function is selected according to `dispatch.path`. The response structure, point matching, and value type must be valid. Otherwise, only the current operation fails and other Contexts are not affected. |
+| Active device report | `parseReportRequest(bytes)` | The function is called once per packet. The return value must contain a `points` array. At most 512 items are processed in a single call, and each item is validated for `pointId`, `value`, point matching, and type conversion. |
+| Request packets and report replies | `build*Request` / `buildReportResponse` | The return value must be convertible to a byte array. An empty value means no packet is sent for this operation. |
+
+### Runtime Resource Limits
+
+- A single TCP/UDP binary packet passed into JavaScript must not exceed 64 KiB. Oversized packets are not passed to JavaScript.
+- A single device discovery call processes at most 128 devices, and a single point discovery call processes at most 512 points. Additional entries are ignored.
+- A single active report processes at most 512 point values. Additional entries are ignored.
+- A script Context may be reclaimed after a long idle period or when the system is under memory pressure, and it is rebuilt on the next call. Do not rely on global variables to permanently store device state. Cross-packet framing should be handled by `packetProcessConfig` and the transport layer.
+- A script call may be rejected when the execution queue is full or system memory pressure is high. Active device reports should support reasonable retries or later state retransmission.

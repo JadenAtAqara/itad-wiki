@@ -27,55 +27,7 @@ keywords: ["Aqara 文档", "Aqara Studio", "JavaScript 脚本（适用于 HTTP�
 请勿更改函数的名称和参数。
 :::
 
-## 协议脚本处理流程
-
-下图展示了协议事件进入 JavaScript 后的通用处理过程。每个解析器会复用自己的 Context；Context 被回收后，下一次调用会重新创建 Context 并重新加载完整脚本。
-
-```mermaid
-flowchart TD
-    A["脚本加载或 HTTP 业务事件"] --> B{"输入大小和脚本长度符合限制？"}
-    B -- "否" --> R["拒绝本次调用并记录原因"]
-    B -- "是" --> C{"执行队列、内存保护和超时熔断允许执行？"}
-    C -- "否" --> R
-    C -- "是" --> D["进入绑定的串行执行队列"]
-    D --> E{"Context 是否存在？"}
-    E -- "否" --> F["创建 Context<br/>注入 console 和 studioScriptState<br/>重新加载完整脚本"]
-    E -- "是" --> G["复用现有 Context"]
-    F --> H["调用当前业务函数"]
-    G --> H
-    H --> I{"函数执行和返回结构是否有效？"}
-    I -- "否" --> J["忽略无效数据或将本次业务标记为失败"]
-    I -- "是" --> K["发送 HTTP 请求<br/>创建设备或功能点<br/>更新功能点值"]
-    H -- "执行超时或 Context 失效" --> N["关闭 Context 并短时熔断"]
-    J --> L["限频检查 studioScriptState 大小"]
-    K --> L
-    L --> M["返回业务结果"]
-    N --> O["后续允许执行时按需重建 Context"]
-```
-
-各 HTTP 业务节点还会执行以下校验：
-
-| 业务节点 | 调用函数 | 主要校验 |
-| --- | --- | --- |
-| 脚本加载 | 完整脚本 | 脚本不超过 1,048,576 个字符，并且能够被 JavaScript 引擎执行；业务函数在实际调用时还会检查是否存在且可执行。 |
-| 设备发现 | `buildDiscoveryRequest()` / `parseDiscoveryResponse(response)` | 请求函数可省略或返回空值；非空结果必须可转换为 HTTP 请求配置。发现结果必须是数组，单次最多处理 128 个设备，并逐项校验设备信息。 |
-| 功能点发现 | `buildDiscoverPointsRequest(deviceId)` / `parseDiscoverPointsResponse(deviceId, response)` | 响应按 UTF-8 计算不得超过 256 KiB；发现结果必须是数组，单次最多处理 512 个功能点，并逐项校验功能点结构。 |
-| 功能点读取和写入 | `buildReadRequest` / `parseReadResponse` / `buildWriteRequest` / `parseWriteResponse` | 请求结果必须可转换为 HTTP 请求配置；响应不得超过 256 KiB；解析结果必须包含可识别的功能点和值。 |
-| 设备主动上报 | `parseReportRequest(path, requestString)` | 请求体按 UTF-8 计算不得超过 256 KiB；返回值必须包含 `deviceId` 和 `points` 数组，单次最多处理 512 项，并逐项校验 `pointId` 和 `value`。 |
-
-## 控制台日志
-
-脚本支持使用 `console.log`、`console.info`、`console.debug`、`console.warn` 和 `console.error` 输出调试日志。多个参数会以空格拼接，`warn` 和 `error` 日志分别带有 `[warn]` 和 `[error]` 前缀。日志显示在协议配置页的只读字段 `Console Content` 中，最多保留 2048 个字符；超出限制时旧内容会被替换。每个脚本解析器每秒最多接收 20 条日志，超出部分会被忽略并在下一时间窗口输出汇总提示；单条日志最多保留 512 个字符并转换前 16 个参数。请勿在循环或高频报文处理函数中无条件输出日志，调试时应使用条件开关或采样输出。
-
-## 运行资源限制
-
-- 传入 JavaScript 的单个 HTTP 响应或上报请求体按 UTF-8 计算不得超过 256 KiB；超过限制的数据不会交给 JavaScript 处理，上报请求会返回 HTTP `413`。
-- 单次设备发现最多处理 128 个设备，单次功能点发现最多处理 512 个功能点；超出部分会被忽略。
-- 单个 HTTP 主动上报请求最多处理 512 个功能点值；超出部分会被忽略。
-- 脚本 Context 在长时间无调用或系统内存压力较高时可能被回收并在下次调用时重建。请勿依赖全局变量永久保存设备状态，持久状态应保存在设备或 Studio 功能点中。
-- 当脚本执行队列已满或系统内存压力较高时，本次脚本调用可能被拒绝。设备主动上报应具备合理的重试或后续状态补报机制。
-
-### Context 级脚本状态
+## 脚本全局变量
 
 协议脚本可以使用 `globalThis.studioScriptState` 在同一个 Context 的多次函数调用之间共享少量临时状态。该变量默认初始化为空对象：
 
@@ -107,11 +59,11 @@ Context 被空闲回收、内存压力回收、脚本更新或执行超时后，
 
 请在该函数中返回一个请求配置对象，用于指示 Aqara Studio 如何通过 HTTP API 发现设备。
 
-### 入参说明
+#### 入参说明
 
 建议本函数无任何参数。
 
-### 返回值
+#### 返回值
 
 为确保 Aqara Studio 可以正常向设备发起请求，您需要确保 buildDiscoveryRequest 函数返回的数据的格式与下列一致：
 
@@ -137,7 +89,7 @@ Context 被空闲回收、内存压力回收、脚本更新或执行超时后，
 请根据设备官方技术文档或联系设备技术支持获取 `path`、`method`、`headers` 及 `postParams`。
 :::
 
-### 函数示例
+#### 函数示例
     
 ```javascript
 function buildDiscoveryRequest() {
@@ -158,11 +110,11 @@ function buildDiscoveryRequest() {
 
 请在此函数中解析设备发现请求结果，并返回包含设备 ID（deviceId）和设备名称（deviceName）的设备列表对象数组，供 Aqara Studio 使用。
 
-### 入参说明
+#### 入参说明
 
 建议该函数只接收一个 string 参数用于传入设备发现请求的返回结果。
 
-### 返回值
+#### 返回值
 
 为确保 Aqara Studio 可以正常获取设备信息，您需要确保 parseDiscoveryResponse 函数返回的数据的格式与下列一致：
 
@@ -175,7 +127,7 @@ function buildDiscoveryRequest() {
 ]
 ```
 
-### 函数示例
+#### 函数示例
 
 假设设备发现接口返回的数据如下：
 
@@ -230,11 +182,11 @@ function parseDiscoveryResponse(responseString) {
 
 请在该函数中返回一个请求配置对象，用于指示 Aqara Studio 如何通过 HTTP API 查询指定设备的功能点（points）。如果返回 `null`、空对象或没有 `path` 字段，平台不会发送 HTTP 请求，会直接调用 `parseDiscoverPointsResponse()`。
 
-### 入参说明
+#### 入参说明
 
 建议该函数只接收一个 string 参数，用于传入目标设备 ID。
 
-### 返回值
+#### 返回值
 
 为确保 Aqara Studio 可以正常向设备发起请求，您需要确保 buildDiscoveryRequest 函数返回的数据的格式与下列一致：
 
@@ -260,7 +212,7 @@ function parseDiscoveryResponse(responseString) {
 请根据设备官方技术文档或联系设备技术支持获取 `path`、`method`、`headers` 及 `postParams`。
 :::
 
-### 函数示例
+#### 函数示例
 
 ```javascript
 function buildDiscoverPointsRequest(deviceId) {
@@ -283,12 +235,12 @@ Aqara Studio 会自动调用此函数，您需要在返回的数组中按要求�
 
 通过正确实现本函数，Aqara Studio 才能识别和接入设备支持的全部功能点，从而实现功能点的自动发现与控制。
 
-### 入参说明
+#### 入参说明
 
 建议该函数只接收一个 string 参数，用于传入功能点发现请求结果。
 
 
-### 返回值
+#### 返回值
 
 为确保 Aqara Studio 可以正常获取功能点信息，您需要确保 parseDiscoverPointsResponse 函数返回的数据为 [point 对象结构](#point-对象结构) 数组。
 
@@ -370,7 +322,7 @@ Aqara Studio 会自动调用此函数，您需要在返回的数组中按要求�
     ]
     ```
 
-### 函数示例
+#### 函数示例
 
 ```javascript
 function parseDiscoverPointsResponse(responseString) {
@@ -399,11 +351,11 @@ function parseDiscoverPointsResponse(responseString) {
 
 请在该函数中返回一个请求配置对象，用于指示 Aqara Studio 如何通过 HTTP API 查询指定设备的功能点（points）的值。
 
-### 入参说明
+#### 入参说明
 
 建议该函数接收两个 string 参数，用于传入设备 ID 和功能点 ID。
 
-### 返回值
+#### 返回值
 
 为确保 Aqara Studio 可以正常获取功能点信息，您需要确保 buildReadRequest 函数返回的数据的格式与下列一致：
 
@@ -433,7 +385,7 @@ function parseDiscoverPointsResponse(responseString) {
 请根据设备官方技术文档或联系设备技术支持获取 `path`、`method`、`headers` 及 `postParams`。
 :::
 
-### 函数示例
+#### 函数示例
 
 ```javascript
 function buildReadRequest(deviceId, pointId) {
@@ -453,12 +405,12 @@ function buildReadRequest(deviceId, pointId) {
 
 请在本函数中将设备返回的原始数据转换为 Aqara Studio 可以识别的功能点数据格式。
 
-### 入参说明
+#### 入参说明
 
 建议该函数接收两个 string 参数，用于传入设备 ID 和 HTTP 响应字符串。
 
 
-### 返回值
+#### 返回值
 
 为了确保 Aqara Studio 能正确获取功能点的数据，您需要保证 parseReadResponse 函数返回的数据格式与下方示例一致：
 
@@ -471,7 +423,7 @@ function buildReadRequest(deviceId, pointId) {
 
 字段说明：每个 key 表示功能点，对应的 value 为该点的值（均为字符串类型）。
 
-### 函数示例
+#### 函数示例
 
 ```javascript
 function parseReadResponse(deviceId, responseString) {
@@ -502,11 +454,11 @@ function parseReadResponse(deviceId, responseString) {
 
 请在该函数中返回一个请求配置对象，指示 Aqara Studio 应如何通过 HTTP API 向设备下发控制指令。
 
-### 入参说明
+#### 入参说明
 
 建议该函数接收三个 string 参数，用于传入设备 ID 和功能点 ID 和功能点值。
 
-### 返回值
+#### 返回值
 
 为确保 Aqara Studio 可以正常控制功能点，您需要确保 buildWriteRequest 函数返回的数据的格式与下列一致：
 
@@ -532,7 +484,7 @@ function parseReadResponse(deviceId, responseString) {
 请根据设备官方技术文档或联系设备技术支持获取 `path`、`method`、`headers` 及 `postParams`。
 :::
 
-### 函数示例
+#### 函数示例
 
 ```javascript
 function buildWriteRequest(deviceId, pointId, value) {
@@ -556,17 +508,17 @@ function buildWriteRequest(deviceId, pointId, value) {
 
 请在本函数中解析设备返回的数据，并将其转换为布尔值，便于 Aqara Studio 判断控制指令是否执行成功。
 
-### 入参说明
+#### 入参说明
 
 建议该函数接收两个 string 参数，用于传入设备 ID 和功能点写入（控制）接口请求结果。
 
-### 返回值
+#### 返回值
 
 请确保函数返回值为布尔值，布尔值说明如下：
 - true：功能点写入成功
 - false：功能点写入失败或设备返回异常
 
-### 函数示例
+#### 函数示例
 
 ```javascript
 function parseWriteResponse(pointId, responseString) {
@@ -587,7 +539,7 @@ function parseWriteResponse(pointId, responseString) {
 
 请在本函数中将设备返回的原始数据转换为 Aqara Studio 可以识别的功能点数据格式。
 
-### 前提条件
+#### 前提条件
 
 请确保设备端严格按照以下 Endpoint、方法及请求体要求向 Aqara Studio 进行数据上报：
 
@@ -595,7 +547,7 @@ function parseWriteResponse(pointId, responseString) {
 - 请求方法：POST
 - 请求体：由您自定义，只需确保能通过 [parseReportRequest](#parsereportrequest) 接口解析获得下述返回值规定的设备信息字段，即 `deviceId` 和 `points`。
 
-### 入参说明
+#### 入参说明
 
 建议该函数接收两个 string 参数：
 - 第一个参数：传入 Aqara Studio 用于接收设备数据的 Endpoint，即上述 `http://{ip}:8000/report/data`。
@@ -603,7 +555,7 @@ function parseWriteResponse(pointId, responseString) {
 
 请保证参数命名和顺序正确，以便 Aqara Studio 能准确识别并处理指定路径下的设备上报数据。
 
-### 返回值
+#### 返回值
 
 返回值应包含以下三个字段：
 
@@ -628,7 +580,7 @@ function parseWriteResponse(pointId, responseString) {
 }
 ```
 
-### 函数示例
+#### 函数示例
 
 ```javascript
 function parseReportRequest(path, requestString) {
@@ -820,3 +772,74 @@ globalThis.parseReportRequest = parseReportRequest;
 
 })()
 ```
+
+## 排查脚本问题
+
+在完成脚本开发后，如果您无法在 Aqara Studio 完成发现设备或功能点等操作，请参考以下步骤检查脚本是否正常运行：
+1. 使用 [控制台日志](#控制台日志) 检查脚本内各方法是否被正常调用；
+2. 阅读 [脚本检查要点](#脚本检查要点)，逐项检查脚本是否满足 Aqara Studio 的校验要求。
+3. 如果以上步骤都无法解决问题，可能是因为 Aqara Studio 的 [运行资源限制](#运行资源限制) 导致脚本无法正确运行。
+
+### 控制台日志
+
+1. 为调试和排查脚本各方法（例如 `parseDiscoveryResponse`、`parseDiscoverPointsResponse` 等），可在函数内部任意位置添加如下控制台日志方法：
+    - `console.log`
+    - `console.info`
+    - `console.debug`
+    - `console.warn`
+    - `console.error`
+
+    :::tip
+    请勿在循环或高频报文处理函数中无条件输出日志，调试时应使用条件开关或采样输出。
+    :::
+
+    示例代码：
+
+    ```javascript {2}
+    function parseDiscoveryResponse() {
+        console.info("开始解析发现响应", arguments);
+        return [
+            {
+                deviceName: "xxx",
+                // ...
+            }
+        ];
+    }
+    ```
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Javascript-Console.png" alt="添加控制台日志示例" style={{ width: '80%' }} />   
+
+    :::tip
+    - 多参数时，日志内容将使用空格拼接输出。
+    - `console.warn` 和 `console.error` 的输出分别带有 `[warn]` 和 `[error]` 前缀。
+    :::
+
+2. 在 Aqara Studio 中重新发起相关操作（如设备发现、功能点发现、功能点读取、写入、上报等），即可触发包含日志的方法。
+3. 进入 **HTTP 协议配置** 页面，查看 `Console Content` 字段是否有日志输出：
+    - 若日志正常显示，说明方法已正确接入；
+    - 若没有日志，请检查方法实现是否有误。
+
+    :::tip
+    - `Console Content` 最多保留 2048 个字符；超出限制时旧内容会被替换。
+    - 每个脚本解析器每秒最多接收 20 条日志，超出部分会被忽略并在下一时间窗口输出汇总提示。单条日志最多保留 512 个字符并转换前 16 个参数。
+    :::
+
+### 脚本检查要点
+
+建议您结合 Aqara Studio 各业务节点的校验流程，逐项检查脚本是否满足平台要求，确保各关键节点通过校验，提升脚本可靠性与兼容性。
+
+| 业务节点 | 调用函数 | 主要校验 |
+| --- | --- | --- |
+| 脚本加载 | 完整脚本 | 脚本不超过 1,048,576 个字符，并且能够被 JavaScript 引擎执行；业务函数在实际调用时还会检查是否存在且可执行。 |
+| 设备发现 | `buildDiscoveryRequest()` / `parseDiscoveryResponse(response)` | 请求函数可省略或返回空值；非空结果必须可转换为 HTTP 请求配置。发现结果必须是数组，单次最多处理 128 个设备，并逐项校验设备信息。 |
+| 功能点发现 | `buildDiscoverPointsRequest(deviceId)` / `parseDiscoverPointsResponse(deviceId, response)` | 响应按 UTF-8 计算不得超过 256 KiB；发现结果必须是数组，单次最多处理 512 个功能点，并逐项校验功能点结构。 |
+| 功能点读取和写入 | `buildReadRequest` / `parseReadResponse` / `buildWriteRequest` / `parseWriteResponse` | 请求结果必须可转换为 HTTP 请求配置；响应不得超过 256 KiB；解析结果必须包含可识别的功能点和值。 |
+| 设备主动上报 | `parseReportRequest(path, requestString)` | 请求体按 UTF-8 计算不得超过 256 KiB；返回值必须包含 `deviceId` 和 `points` 数组，单次最多处理 512 项，并逐项校验 `pointId` 和 `value`。 |
+
+### 运行资源限制
+
+- 传入 JavaScript 的单个 HTTP 响应或上报请求体按 UTF-8 计算不得超过 256 KiB；超过限制的数据不会交给 JavaScript 处理，上报请求会返回 HTTP `413`。
+- 单次设备发现最多处理 128 个设备，单次功能点发现最多处理 512 个功能点；超出部分会被忽略。
+- 单个 HTTP 主动上报请求最多处理 512 个功能点值；超出部分会被忽略。
+- 脚本 Context 在长时间无调用或系统内存压力较高时可能被回收并在下次调用时重建。请勿依赖全局变量永久保存设备状态，持久状态应保存在设备或 Studio 功能点中。
+- 当脚本执行队列已满或系统内存压力较高时，本次脚本调用可能被拒绝。设备主动上报应具备合理的重试或后续状态补报机制。
