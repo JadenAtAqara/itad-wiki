@@ -19,55 +19,7 @@ keywords: ["Aqara 文档", "Aqara Studio", "JavaScript 脚本（适用于 MQTT�
 请勿更改方法的参数及其输入输出结构。
 :::
 
-## 协议脚本处理流程
-
-下图展示了协议事件进入 JavaScript 后的通用处理过程。每个解析器会复用自己的 Context；Context 被回收后，下一次调用会重新创建 Context 并重新加载完整脚本。
-
-```mermaid
-flowchart TD
-    A["脚本加载或 MQTT 业务事件"] --> B{"输入大小和脚本长度符合限制？"}
-    B -- "否" --> R["拒绝本次调用并记录原因"]
-    B -- "是" --> C{"执行队列、内存保护和超时熔断允许执行？"}
-    C -- "否" --> R
-    C -- "是" --> D["进入绑定的串行执行队列"]
-    D --> E{"Context 是否存在？"}
-    E -- "否" --> F["创建 Context<br/>注入 console 和 studioScriptState<br/>重新加载完整脚本"]
-    E -- "是" --> G["复用现有 Context"]
-    F --> H["调用当前业务函数"]
-    G --> H
-    H --> I{"函数执行和返回结构是否有效？"}
-    I -- "否" --> J["忽略无效数据或将本次业务标记为失败"]
-    I -- "是" --> K["创建设备或功能点<br/>更新点值或生成写入报文"]
-    H -- "执行超时或 Context 失效" --> N["关闭 Context 并短时熔断"]
-    J --> L["限频检查 studioScriptState 大小"]
-    K --> L
-    L --> M["返回业务结果"]
-    N --> O["后续允许执行时按需重建 Context"]
-```
-
-各 MQTT 业务节点还会执行以下校验：
-
-| 业务节点 | 调用函数 | 主要校验 |
-| --- | --- | --- |
-| 脚本加载 | 完整脚本 | 脚本不超过 1,048,576 个字符，并且能够被 JavaScript 引擎执行；业务函数在实际调用时还会检查是否存在且可执行。 |
-| 设备发现 | `parseDiscoveryResponse()` | 返回值必须是数组；单次最多处理 128 个设备；无效设备项会被忽略，其中 `deviceId` 必须有效。 |
-| 功能点发现 | `parseDiscoverPointsResponse(deviceId)` | 返回值必须是数组；单次最多处理 512 个功能点；逐项校验 `pointId`、数据类型、访问能力以及枚举或数值配置。 |
-| 设备上报 | `parseReportRequest(topic, msg)` | 消息按 UTF-8 计算不得超过 256 KiB；函数每条消息只调用一次；返回值必须包含 `points` 数组，单次最多处理 512 项，并逐项校验 `pointId` 和 `value`。 |
-| 功能点写入 | `buildWriteRequest(deviceId, pointId, value)` | 函数必须返回非空字符串；生成的内容通过功能点配置的发布 Topic 发送。 |
-
-## 控制台日志
-
-脚本支持使用 `console.log`、`console.info`、`console.debug`、`console.warn` 和 `console.error` 输出调试日志。多个参数会以空格拼接，`warn` 和 `error` 日志分别带有 `[warn]` 和 `[error]` 前缀。日志显示在协议配置页的只读字段 `Console Content` 中，最多保留 2048 个字符；超出限制时旧内容会被替换。每个脚本解析器每秒最多接收 20 条日志，超出部分会被忽略并在下一时间窗口输出汇总提示；单条日志最多保留 512 个字符并转换前 16 个参数。请勿在循环或高频报文处理函数中无条件输出日志，调试时应使用条件开关或采样输出。
-
-## 运行资源限制
-
-- 传入 `parseReportRequest` 的单条 MQTT 消息按 UTF-8 计算不得超过 256 KiB；超过限制的消息不会交给 JavaScript 处理。
-- 单次设备发现最多处理 128 个设备，单次功能点发现最多处理 512 个功能点；超出部分会被忽略。
-- `parseReportRequest` 单次最多返回 512 个功能点值；超出部分会被忽略。
-- 脚本 Context 在长时间无调用或系统内存压力较高时可能被回收并在下次调用时重建。请勿依赖全局变量永久保存设备状态，持久状态应保存在设备或 Studio 功能点中。
-- 当脚本执行队列已满或系统内存压力较高时，本次脚本调用可能被拒绝。设备主动上报应具备合理的重试或后续状态补报机制。
-
-### Context 级脚本状态
+## 脚本全局变量
 
 协议脚本可以使用 `globalThis.studioScriptState` 在同一个 Context 的多次函数调用之间共享少量临时状态。该变量默认初始化为空对象：
 
@@ -92,7 +44,7 @@ Context 被空闲回收、内存压力回收、脚本更新或执行超时后，
 
 Aqara Studio 会调用此方法以发现所有可用设备，实现自动接入与管理。
 
-### 设备对象结构
+#### 设备对象结构
 
 | 字段名称 | 是否必填 | 说明 |
 | --- | --- | --- |
@@ -110,7 +62,7 @@ Aqara Studio 会调用此方法以发现所有可用设备，实现自动接入�
 - `username`/`password` 按 `connectionType` 决定是否需要。
 - `deviceName` 可选，为空时使用空字符串。
 
-### 示例 
+#### 示例 
 
 ```javascript
 function parseDiscoveryResponse() {
@@ -134,7 +86,7 @@ function parseDiscoveryResponse() {
 
 您需要在返回数组中填写一个或多个待发现功能点结构（如 `pointId` 等，详情请见 [point 对象结构](#point-对象结构)）。这样，Aqara Studio 才能在功能点发现流程中会调用该函数，解析返回值，从而识别设备具备的所有功能点，实现功能点无缝接入和控制。
 
-### point 对象结构
+#### point 对象结构
 
 | 字段名称    | 是否必填 | 说明                                                                                     |
 |-----------| --- |-------------------------------------------------------------------------------------------|
@@ -168,7 +120,7 @@ function parseDiscoveryResponse() {
 - **通用方式**：需填写 `dataType`、`access` 等基本字段。
 :::
 
-### 示例
+#### 示例
 
 ```javascript
 function parseDiscoverPointsResponse(deviceId) {
@@ -247,7 +199,7 @@ function parseDiscoverPointsResponse(deviceId) {
 
 返回值必须是包含 `points` 数组的对象。数组中的每一项包含 `pointId` 和 `value`；只有返回的功能点会被更新。
 
-### 示例
+#### 示例
 
 ```javascript
 function parseReportRequest(topic, jsonStr) {
@@ -276,7 +228,7 @@ function parseReportRequest(topic, jsonStr) {
 
 请根据设备实际可接受的报文格式，在函数内部合理构建对象结构。例如，以 MQTT 设备为例，可包含 `node`、`group`、`timestamp` 等字段，并将 `pointId` 对应的值被写入 `values` 字段。
 
-### 示例
+#### 示例
 
 ```javascript
 // 以通过 JSON 字符串控制 MQTT 设备为例
@@ -462,3 +414,75 @@ function buildWriteRequest(deviceId, pointId, value) {
 	return null;
 })();
 ```
+
+## 排查脚本问题
+
+在完成脚本开发后，如果您无法在 Aqara Studio 完成发现设备或功能点等操作，请参考以下步骤检查脚本是否正常运行：
+1. 使用 [控制台日志](#控制台日志) 检查脚本内各方法是否被正常调用；
+2. 阅读 [脚本检查要点](#脚本检查要点)，逐项检查脚本是否满足 Aqara Studio 的校验要求。
+3. 如果以上步骤都无法解决问题，可能是因为 Aqara Studio 的 [运行资源限制](#运行资源限制) 导致脚本无法正确运行。
+
+### 控制台日志
+
+1. 为调试和排查脚本各方法（例如 `parseDiscoveryResponse`、`parseDiscoverPointsResponse` 等），可在函数内部任意位置添加如下控制台日志方法：
+    - `console.log`
+    - `console.info`
+    - `console.debug`
+    - `console.warn`
+    - `console.error`
+
+    :::tip
+    请勿在循环或高频报文处理函数中无条件输出日志，调试时应使用条件开关或采样输出。
+    :::
+
+    示例代码：
+
+    ```javascript {2}
+    function parseDiscoveryResponse() {
+        console.info("开始解析发现响应", arguments);
+        return [
+            {
+                deviceName: "xxx",
+                // ...
+            }
+        ];
+    }
+    ```
+
+    :::tip
+    - 多参数时，日志内容将使用空格拼接输出。
+    - `console.warn` 和 `console.error` 的输出分别带有 `[warn]` 和 `[error]` 前缀。
+    :::
+
+2. 在 Aqara Studio 中重新发起相关操作（如设备发现、功能点发现、功能点读取、写入、上报等），即可触发包含日志的方法。
+3. 进入 **MQTT 协议配置** 页面，查看 `Console Content` 字段是否有日志输出：
+    - 若日志正常显示，说明方法已正确接入；
+    - 若没有日志，请检查方法实现是否有误。
+
+    :::tip
+    - `Console Content` 最多保留 2048 个字符；超出限制时旧内容会被替换。
+    - 每个脚本解析器每秒最多接收 20 条日志，超出部分会被忽略并在下一时间窗口输出汇总提示。
+    - 单条日志最多保留 512 个字符并转换前 16 个参数。
+    :::
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Javascript-ConsoleContent.png" alt="查看 Console Content 日志输出" style={{ width: '80%' }} />   
+
+### 脚本检查要点
+
+建议您结合 Aqara Studio 各业务节点的校验流程，逐项检查脚本是否满足平台要求，确保各关键节点通过校验，提升脚本可靠性与兼容性。
+
+| 业务节点 | 调用函数 | 主要校验 |
+| --- | --- | --- |
+| 脚本加载 | 完整脚本 | 脚本不超过 1,048,576 个字符，并且能够被 JavaScript 引擎执行；业务函数在实际调用时还会检查是否存在且可执行。 |
+| 设备发现 | `parseDiscoveryResponse()` | 返回值必须是数组；单次最多处理 128 个设备；无效设备项会被忽略，其中 `deviceId` 必须有效。 |
+| 功能点发现 | `parseDiscoverPointsResponse(deviceId)` | 返回值必须是数组；单次最多处理 512 个功能点；逐项校验 `pointId`、数据类型、访问能力以及枚举或数值配置。 |
+| 设备上报 | `parseReportRequest(topic, msg)` | 消息按 UTF-8 计算不得超过 256 KiB；函数每条消息只调用一次；返回值必须包含 `points` 数组，单次最多处理 512 项，并逐项校验 `pointId` 和 `value`。 |
+| 功能点写入 | `buildWriteRequest(deviceId, pointId, value)` | 函数必须返回非空字符串；生成的内容通过功能点配置的发布 Topic 发送。 |
+
+### 运行资源限制
+
+- 传入 `parseReportRequest` 的单条 MQTT 消息按 UTF-8 计算不得超过 256 KiB；超过限制的消息不会交给 JavaScript 处理。
+- 单次设备发现最多处理 128 个设备，单次功能点发现最多处理 512 个功能点；超出部分会被忽略。
+- `parseReportRequest` 单次最多返回 512 个功能点值；超出部分会被忽略。
+- 脚本 Context 在长时间无调用或系统内存压力较高时可能被回收并在下次调用时重建。请勿依赖全局变量永久保存设备状态，持久状态应保存在设备或 Studio 功能点中。
+- 当脚本执行队列已满或系统内存压力较高时，本次脚本调用可能被拒绝。设备主动上报应具备合理的重试或后续状态补报机制。
