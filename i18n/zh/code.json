@@ -367,6 +367,9 @@
   "homepage.layoutDescription": {
     "message": "Aqara 文档 & 教程. 从入门到精通."
   },
+  "homepage.layoutTitle": {
+    "message": "Aqara 文档"
+  },
   "homepage.title": {
     "message": "文档中心"
   },
