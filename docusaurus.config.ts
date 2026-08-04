@@ -80,6 +80,7 @@ const config: Config = {
 
   // Add local search plugin
   plugins: [
+    require.resolve('./plugins/llms-generator'),
     [
       'docusaurus-plugin-openapi-docs',
       {

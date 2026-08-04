@@ -1,0 +1,21 @@
+# Aqara Documentation Center
+> A language-model-friendly index for the Aqara documentation center.
+
+This index is written for English docs. For Simplified Chinese docs, use the localized root index.
+
+- Other language root index: https://docs.aqara.com/zh/llms.txt
+
+## Product indexes
+- Aqara Studio: https://docs.aqara.com/aqara-studio/llms.txt
+- Aqara Developer: https://docs.aqara.com/aqara-developer/llms.txt
+- Aqara Life: https://docs.aqara.com/aqara-life/llms.txt
+- Aqara OpenLink: https://docs.aqara.com/aqara-openlink/llms.txt
+
+## Recommended starting points
+- Introduction: https://docs.aqara.com/docs/aqara-studio/overview/introduction
+- AI Native Architecture: https://docs.aqara.com/docs/aqara-studio/overview/ai-native-architecture
+- Overview: https://docs.aqara.com/docs/aqara-developer/introduction
+- Introduction: https://docs.aqara.com/docs/aqara-developer/data-export-api/introduction
+- Overview: https://docs.aqara.com/docs/aqara-life/overview
+- Overview: https://docs.aqara.com/docs/aqara-openlink/overview
+

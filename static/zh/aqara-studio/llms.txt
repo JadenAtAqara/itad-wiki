@@ -1,0 +1,92 @@
+# Aqara Studio
+> 面向空间智能系统的文档索引，覆盖部署、集成、自动化、运维和开发者工具。
+
+## 推荐优先阅读
+- 平台概述: https://docs.aqara.com/zh/docs/aqara-studio/overview/introduction
+- 核心概念: https://docs.aqara.com/zh/docs/aqara-studio/overview/core-concepts
+- 开发者指南: https://docs.aqara.com/zh/docs/aqara-studio/developer-guide
+- 连接至 Aqara Studio MCP Server: https://docs.aqara.com/zh/docs/aqara-studio/set-up-mcp-server
+
+## 侧边栏收录的全部文档
+- 平台概述: https://docs.aqara.com/zh/docs/aqara-studio/overview/introduction
+- AI 原生架构: https://docs.aqara.com/zh/docs/aqara-studio/overview/ai-native-architecture
+- 核心概念: https://docs.aqara.com/zh/docs/aqara-studio/overview/core-concepts
+- 可接入 Aqara 设备清单: https://docs.aqara.com/zh/docs/aqara-studio/overview/compatible-aqara-devices
+- M300 功能一览: https://docs.aqara.com/zh/docs/aqara-studio/overview/features
+- 边端部署形态: https://docs.aqara.com/zh/docs/aqara-studio/deployment/edge-deployed-model
+- 网关融合形态: https://docs.aqara.com/zh/docs/aqara-studio/deployment/hub-integrated-model
+- 空间管理: https://docs.aqara.com/zh/docs/aqara-studio/space
+- Aqara Hub 接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/aqara
+- Zigbee 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/zigbee
+- Matter 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/matter
+- Aqara Modbus 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/aqara-modbus
+- Home Assistant 生态集成: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/home-assistant
+- Modbus TCP 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/modbus-tcp
+- BACnet 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/bacnet
+- KNX IP 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/knx-ip
+- MQTT 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/mqtt
+- HTTP 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/http
+- TCP 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/tcp
+- UDP 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/udp
+- Sonos 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/sonos
+- Aqara Coap 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/aqara-coap
+- 红外设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/virtual/infrared-equipment
+- 灯箱设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/virtual/light-box
+- 转出至 Aqara Home App: https://docs.aqara.com/zh/docs/aqara-studio/device-export/aiot
+- 查看和修改基本信息: https://docs.aqara.com/zh/docs/aqara-studio/device-management/basic-information
+- 固件升级: https://docs.aqara.com/zh/docs/aqara-studio/device-management/firmware-upgrade
+- 查看和控制功能点: https://docs.aqara.com/zh/docs/aqara-studio/device-management/point-information
+- 展示历史数据: https://docs.aqara.com/zh/docs/aqara-studio/device-management/history
+- 添加标签: https://docs.aqara.com/zh/docs/aqara-studio/device-management/tags
+- 灯: https://docs.aqara.com/zh/docs/aqara-studio/device-management/aqara-device-configuration/lights
+- 屏: https://docs.aqara.com/zh/docs/aqara-studio/device-management/aqara-device-configuration/screens
+- 自动化: https://docs.aqara.com/zh/docs/aqara-studio/automation
+- Classic: https://docs.aqara.com/zh/docs/aqara-studio/classic-automation
+- Flow: https://docs.aqara.com/zh/docs/aqara-studio/flow/flow-introduction
+- 触发: https://docs.aqara.com/zh/docs/aqara-studio/flow/trigger
+- 判断: https://docs.aqara.com/zh/docs/aqara-studio/flow/condition
+- 执行: https://docs.aqara.com/zh/docs/aqara-studio/flow/action
+- 可视化大屏: https://docs.aqara.com/zh/docs/aqara-studio/graph/graph-introduction
+- 组件库: https://docs.aqara.com/zh/docs/aqara-studio/graph/components
+- 组件类型: https://docs.aqara.com/zh/docs/aqara-studio/graph/component-categories
+- 素材库: https://docs.aqara.com/zh/docs/aqara-studio/graph/assets
+- 组件与素材的通用属性: https://docs.aqara.com/zh/docs/aqara-studio/graph/common-properties
+- 能耗管理: https://docs.aqara.com/zh/docs/aqara-studio/energy-management-system
+- 告警管理: https://docs.aqara.com/zh/docs/aqara-studio/alarm-management
+- 日志管理: https://docs.aqara.com/zh/docs/aqara-studio/log-management
+- 本地用户管理: https://docs.aqara.com/zh/docs/aqara-studio/user
+- 备份与还原: https://docs.aqara.com/zh/docs/aqara-studio/backup-and-restore
+- 静态 IP: https://docs.aqara.com/zh/docs/aqara-studio/static-ip
+- 无线连接: https://docs.aqara.com/zh/docs/aqara-studio/wireless-connection
+- 云端连接: https://docs.aqara.com/zh/docs/aqara-studio/cloud
+- 远程访问: https://docs.aqara.com/zh/docs/aqara-studio/remote-access
+- 系统更新: https://docs.aqara.com/zh/docs/aqara-studio/system-update
+- 技术支持: https://docs.aqara.com/zh/docs/aqara-studio/technical-support
+- 本地固件库: https://docs.aqara.com/zh/docs/aqara-studio/local-firmware-library
+- 通过主机访域名访问: https://docs.aqara.com/zh/docs/aqara-studio/local-domain-name-access
+- 恢复出厂设置: https://docs.aqara.com/zh/docs/aqara-studio/factory-reset
+- 插件市场: https://docs.aqara.com/zh/docs/aqara-studio/plugin-market
+- 开发者指南: https://docs.aqara.com/zh/docs/aqara-studio/developer-guide
+- 数据转出 API v1: https://docs.aqara.com/zh/docs/aqara-studio/api-references/data-export-api-v1
+- 设备功能 API: https://docs.aqara.com/zh/docs/aqara-studio/api-references/trait-api
+- 设备类型说明: https://docs.aqara.com/zh/docs/aqara-studio/api-references/device-type
+- 功能点代码一览: https://docs.aqara.com/zh/docs/aqara-studio/api-references/trait-codes
+- 自动化 API: https://docs.aqara.com/zh/docs/aqara-studio/api-references/automation-api
+- JSON 自动化脚本定义: https://docs.aqara.com/zh/docs/aqara-studio/api-references/json-automation-script
+- 空间管理 API: https://docs.aqara.com/zh/docs/aqara-studio/api-references/space-management-api
+- 以 MQTT 转出设备数据: https://docs.aqara.com/zh/docs/aqara-studio/data-export-by-mqtt
+- 在 OpenClaw Web UI 中使用 Aqara Studio Skill: https://docs.aqara.com/zh/docs/aqara-studio/use-aqara-studio-skill-in-openclaw-web-ui
+- 连接至 Aqara Studio MCP Server: https://docs.aqara.com/zh/docs/aqara-studio/set-up-mcp-server
+- 常见问题: https://docs.aqara.com/zh/docs/aqara-studio/faq
+- JavaScript 脚本（适用于 MQTT）: https://docs.aqara.com/zh/docs/aqara-studio/javascript-for-mqtt-integration
+- JavaScript 脚本（适用于 HTTP）: https://docs.aqara.com/zh/docs/aqara-studio/javascript-for-http-integration
+- JavaScript 脚本（适用于 UDP 和 TCP）: https://docs.aqara.com/zh/docs/aqara-studio/javascript-for-udp-tcp-integration
+- 脚本支持的单位名称与符号: https://docs.aqara.com/zh/docs/aqara-studio/script-supported-unit-symbols
+- 数值映射函数: https://docs.aqara.com/zh/docs/aqara-studio/numerical-mapping-functions
+- 参考格式: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/reference
+- Studio 网关功能一览: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/gateways/studio-gateway-comparison
+- 通用资料: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/gateways/general
+- 智慧边端 M300: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/gateways/edge-hub-m300
+- 配电箱网关 AX100M: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/gateways/din-rail-hub-ax100m
+- 配电箱网关 AX200M: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/gateways/din-rail-hub-ax200m
+

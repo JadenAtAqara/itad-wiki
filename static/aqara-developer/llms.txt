@@ -1,0 +1,78 @@
+# Aqara Developer
+> Cloud API, Studio local API, and data model documentation for developers integrating with Aqara.
+
+## Recommended starting points
+- Overview: https://docs.aqara.com/docs/aqara-developer/introduction
+- Introduction: https://docs.aqara.com/docs/aqara-developer/aiot-api/introduction
+- Introduction: https://docs.aqara.com/docs/aqara-developer/data-export-api/introduction
+- Core Concepts: https://docs.aqara.com/docs/aqara-developer/aqara-data-model-specification/core-concepts
+
+## All sidebar-listed docs
+- Overview: https://docs.aqara.com/docs/aqara-developer/introduction
+- Introduction: https://docs.aqara.com/docs/aqara-developer/data-export-api/introduction
+- Getting Started with the Data Export API: https://docs.aqara.com/docs/aqara-developer/data-export-api/getting-started-with-the-data-export-api
+- Try API Online: https://docs.aqara.com/docs/aqara-developer/data-export-api/try-api-online
+- Test API with Postman: https://docs.aqara.com/docs/aqara-developer/data-export-api/postman
+- Space: https://docs.aqara.com/docs/aqara-developer/data-export-api/space
+- List Spaces: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-spaces
+- Create A Space: https://docs.aqara.com/docs/aqara-developer/data-export-api/create-space
+- Update A Space Name: https://docs.aqara.com/docs/aqara-developer/data-export-api/update-space-name
+- Delete A Space: https://docs.aqara.com/docs/aqara-developer/data-export-api/delete-space
+- Gateway: https://docs.aqara.com/docs/aqara-developer/data-export-api/gateway
+- List Gateways: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-gateways
+- Enable Sub-device Joining: https://docs.aqara.com/docs/aqara-developer/data-export-api/join-subdevice
+- Disable Sub-device Joining: https://docs.aqara.com/docs/aqara-developer/data-export-api/stop-subdevice-join
+- Query Sub-device Joining Results: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-device-bind-result
+- Device: https://docs.aqara.com/docs/aqara-developer/data-export-api/device
+- List Device Types: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-device-types
+- List Devices: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-devices
+- Query Device Model Definition: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-device-definitions
+- Query Device Matching Capabilities: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-matched-device-capabilities
+- Control Devices by Traits: https://docs.aqara.com/docs/aqara-developer/data-export-api/execute-device-trait
+- Query Trait Values: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-trait-values
+- Control Devices by Commands: https://docs.aqara.com/docs/aqara-developer/data-export-api/execute-device-command
+- Send Command to Device and Wait for Response: https://docs.aqara.com/docs/aqara-developer/data-export-api/execute-device-command-await
+- Delete A Function: https://docs.aqara.com/docs/aqara-developer/data-export-api/delete-device-point
+- Add A Virtual Device: https://docs.aqara.com/docs/aqara-developer/data-export-api/add-virtual-device
+- Unbind A Device: https://docs.aqara.com/docs/aqara-developer/data-export-api/unbind-device
+- Automation: https://docs.aqara.com/docs/aqara-developer/data-export-api/automation
+- List Endpoint Capabilities for Automation: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-automation-capabilities
+- Create An Automation: https://docs.aqara.com/docs/aqara-developer/data-export-api/create-automation
+- List Automations: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-automation-list
+- Query Automation Details: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-automation-details
+- Edit An Automation: https://docs.aqara.com/docs/aqara-developer/data-export-api/update-automation
+- Batch Update Automation Statuses: https://docs.aqara.com/docs/aqara-developer/data-export-api/update-automation-status
+- Update Space Association for Automations: https://docs.aqara.com/docs/aqara-developer/data-export-api/update-automation-space
+- Delete Automations: https://docs.aqara.com/docs/aqara-developer/data-export-api/delete-automations
+- Get Manual Trigger List: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-automation-manual-trigger-list
+- Execute A Manual Trigger: https://docs.aqara.com/docs/aqara-developer/data-export-api/execute-automation-manual-trigger
+- Studio: https://docs.aqara.com/docs/aqara-developer/data-export-api/studio
+- Get Studio Statistics: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-studio-statistics
+- EMS: https://docs.aqara.com/docs/aqara-developer/data-export-api/ems
+- Get Energy Consumption Trend of a Device: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-trend-device
+- Get Energy Consumption Trend of a Space: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-trend-space
+- Get Energy Consumption of a Device: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-total-device
+- Query Energy Consumption for a Space: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-total-space
+- Integrate the Infrared Remote Control SDK with UI: https://docs.aqara.com/docs/aqara-developer/local-studio-development/sdk/infrared/integration
+- Infrared Device Integration: https://docs.aqara.com/docs/aqara-developer/local-studio-development/features/infrared-device-integration
+- Introduction: https://docs.aqara.com/docs/aqara-developer/aiot-api/introduction
+- Getting Started with the AIOT API: https://docs.aqara.com/docs/aqara-developer/aiot-api/getting-started-with-the-aiot-api
+- Try API Online: https://docs.aqara.com/docs/aqara-developer/aiot-api/try-api-online
+- Space: https://docs.aqara.com/docs/aqara-developer/aiot-api/space
+- List Spaces: https://docs.aqara.com/docs/aqara-developer/aiot-api/get-spaces
+- Create A Space: https://docs.aqara.com/docs/aqara-developer/aiot-api/create-space
+- Update A Space Name: https://docs.aqara.com/docs/aqara-developer/aiot-api/update-space-name
+- Device: https://docs.aqara.com/docs/aqara-developer/aiot-api/device
+- List Device Types: https://docs.aqara.com/docs/aqara-developer/aiot-api/get-device-types
+- List Devices: https://docs.aqara.com/docs/aqara-developer/aiot-api/get-devices
+- Query Device Model Definition: https://docs.aqara.com/docs/aqara-developer/aiot-api/get-device-definitions
+- Control Devices by Traits: https://docs.aqara.com/docs/aqara-developer/aiot-api/execute-device-trait
+- Query Trait Values: https://docs.aqara.com/docs/aqara-developer/aiot-api/get-trait-values
+- Control Devices by Commands: https://docs.aqara.com/docs/aqara-developer/aiot-api/execute-device-command
+- Core Concepts: https://docs.aqara.com/docs/aqara-developer/aqara-data-model-specification/core-concepts
+- Device Types: https://docs.aqara.com/docs/aqara-developer/aqara-data-model-specification/device-types
+- Function Codes: https://docs.aqara.com/docs/aqara-developer/aqara-data-model-specification/function-codes
+- Trait Codes: https://docs.aqara.com/docs/aqara-developer/aqara-data-model-specification/trait-codes
+- Command Codes: https://docs.aqara.com/docs/aqara-developer/aqara-data-model-specification/command-codes
+- Data Types: https://docs.aqara.com/docs/aqara-developer/aqara-data-model-specification/data-types
+
