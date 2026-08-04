@@ -16,7 +16,7 @@ function HomepageHeader() {
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
         <Heading as="h1" className="hero__title">
-          <Translate id="homepage.title">{siteConfig.title}</Translate>
+        <Translate id="homepage.title">Aqara Docs</Translate>
         </Heading>
         <p className="hero__subtitle">
           <Translate id="homepage.tagline">{siteConfig.tagline}</Translate>
@@ -39,7 +39,7 @@ export default function Home(): ReactNode {
     <Layout
       title={
         translate({
-        message: `${siteConfig.title}`,
+          message: 'Aqara Docs',
         id: 'homepage.layoutTitle'
         })    
       }

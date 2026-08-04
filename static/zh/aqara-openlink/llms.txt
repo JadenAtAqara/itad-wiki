@@ -1,0 +1,13 @@
+# Aqara OpenLink
+> 面向 OpenLink 智能模组集成的模块、协议与接入流程文档索引。
+
+## 推荐优先阅读
+- 概览: https://docs.aqara.com/zh/docs/aqara-openlink/overview
+- Aqara 赋能通信协议规范: https://docs.aqara.com/zh/docs/aqara-openlink/aqara-empowerment-communication-protocol
+
+## 侧边栏收录的全部文档
+- 概览: https://docs.aqara.com/zh/docs/aqara-openlink/overview
+- Aqara 赋能通信协议规范: https://docs.aqara.com/zh/docs/aqara-openlink/aqara-empowerment-communication-protocol
+- LM-MG24 模组规格书: https://docs.aqara.com/zh/docs/aqara-openlink/aqara-standard-protocol-modules/zigbee-thread/lm-mg24
+- LM-MG24-S 模组规格书: https://docs.aqara.com/zh/docs/aqara-openlink/aqara-standard-protocol-modules/zigbee-thread/lm-mg24-s
+

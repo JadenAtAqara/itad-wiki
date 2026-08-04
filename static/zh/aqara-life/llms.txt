@@ -1,0 +1,9 @@
+# Aqara Life
+> Aqara Life 文档的精简入口索引。
+
+## 推荐优先阅读
+- 概览: https://docs.aqara.com/zh/docs/aqara-life/overview
+
+## 侧边栏收录的全部文档
+- 概览: https://docs.aqara.com/zh/docs/aqara-life/overview
+

@@ -1,0 +1,11 @@
+User-agent: Googlebot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: *
+Allow: /
+
+Sitemap: https://docs.aqara.com/zh/sitemap.xml
+Sitemap: https://docs.aqara.com/sitemap.xml

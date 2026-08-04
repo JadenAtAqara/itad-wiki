@@ -1,0 +1,9 @@
+# Aqara Life
+> A compact entry point for Aqara Life documentation.
+
+## Recommended starting points
+- Overview: https://docs.aqara.com/docs/aqara-life/overview
+
+## All sidebar-listed docs
+- Overview: https://docs.aqara.com/docs/aqara-life/overview
+

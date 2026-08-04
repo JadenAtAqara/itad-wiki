@@ -1,0 +1,78 @@
+# Aqara Developer
+> 面向开发者的 Aqara 文档索引，涵盖云 API、Studio 本地 API 与数据模型规范。
+
+## 推荐优先阅读
+- 概览: https://docs.aqara.com/zh/docs/aqara-developer/introduction
+- AIOT API 简介: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/introduction
+- 数据转出 API 简介: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/introduction
+- 核心概念: https://docs.aqara.com/zh/docs/aqara-developer/aqara-data-model-specification/core-concepts
+
+## 侧边栏收录的全部文档
+- 概览: https://docs.aqara.com/zh/docs/aqara-developer/introduction
+- 数据转出 API 简介: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/introduction
+- 数据转出 API 入门: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/getting-started-with-the-data-export-api
+- 在线体验 API: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/try-api-online
+- 使用 Postman 调测: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/postman
+- Space: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/space
+- 查询空间列表: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-spaces
+- 创建空间: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/create-space
+- 修改空间名称: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/update-space-name
+- 删除空间: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/delete-space
+- Gateway: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/gateway
+- 查询网关列表: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-gateways
+- 开启网关子设备添加模式: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/join-subdevice
+- 关闭网关子设备添加模式: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/stop-subdevice-join
+- 查询子设备入网结果: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-device-bind-result
+- Device: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/device
+- 查询设备类型列表: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-device-types
+- 查询设备信息列表: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-devices
+- 查询设备模型定义: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-device-definitions
+- 查询设备匹配能力: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-matched-device-capabilities
+- 通过 Trait 控制设备: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/execute-device-trait
+- 查询 Trait 值: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-trait-values
+- 通过 Command 控制设备: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/execute-device-command
+- 向设备下发 Command 并等待响应: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/execute-device-command-await
+- 删除设备点位: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/delete-device-point
+- 添加虚拟设备: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/add-virtual-device
+- 设备解绑: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/unbind-device
+- Automation: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/automation
+- 查询支持自动化的端点能力列表: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-automation-capabilities
+- 创建自动化: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/create-automation
+- 查询自动化列表: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/query-automation-list
+- 查询自动化详情: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/query-automation-details
+- 编辑自动化: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/update-automation
+- 批量更新自动化状态: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/update-automation-status
+- 批量更新自动化关联空间: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/update-automation-space
+- 删除自动化: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/delete-automations
+- 获取手动触发器列表: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/query-automation-manual-trigger-list
+- 执行手动触发器: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/execute-automation-manual-trigger
+- Studio: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/studio
+- 获取 Studio 统计信息: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-studio-statistics
+- EMS: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/ems
+- 查询单设备能耗趋势: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-ems-trend-device
+- 查询单空间能耗趋势: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-ems-trend-space
+- 查询单设备能耗总量: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-ems-total-device
+- 查询单空间能耗总量: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-ems-total-space
+- 集成红外遥控控制 SDK（含 UI）: https://docs.aqara.com/zh/docs/aqara-developer/local-studio-development/sdk/infrared/integration
+- 红外设备接入: https://docs.aqara.com/zh/docs/aqara-developer/local-studio-development/features/infrared-device-integration
+- AIOT API 简介: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/introduction
+- AIOT API 入门: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/getting-started-with-the-aiot-api
+- 在线体验 API: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/try-api-online
+- Space: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/space
+- 查询空间列表: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/get-spaces
+- 创建空间: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/create-space
+- 修改空间名称: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/update-space-name
+- Device: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/device
+- 查询设备类型集合: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/get-device-types
+- 查询设备信息列表: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/get-devices
+- 查询设备模型定义: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/get-device-definitions
+- 通过 Trait 控制设备: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/execute-device-trait
+- 查询 Trait 值: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/get-trait-values
+- 通过 Command 控制设备: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/execute-device-command
+- 核心概念: https://docs.aqara.com/zh/docs/aqara-developer/aqara-data-model-specification/core-concepts
+- 设备类型: https://docs.aqara.com/zh/docs/aqara-developer/aqara-data-model-specification/device-types
+- 功能代码: https://docs.aqara.com/zh/docs/aqara-developer/aqara-data-model-specification/function-codes
+- 功能点代码: https://docs.aqara.com/zh/docs/aqara-developer/aqara-data-model-specification/trait-codes
+- 命令代码: https://docs.aqara.com/zh/docs/aqara-developer/aqara-data-model-specification/command-codes
+- 数据类型: https://docs.aqara.com/zh/docs/aqara-developer/aqara-data-model-specification/data-types
+
