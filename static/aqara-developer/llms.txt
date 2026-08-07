@@ -53,6 +53,7 @@
 - Get Energy Consumption Trend of a Space: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-trend-space
 - Get Energy Consumption of a Device: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-total-device
 - Query Energy Consumption for a Space: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-total-space
+- WebSocket API Playground: https://docs.aqara.com/docs/aqara-developer/data-export-api/websocket-api/websocket-api
 - Integrate the Infrared Remote Control SDK with UI: https://docs.aqara.com/docs/aqara-developer/local-studio-development/sdk/infrared/integration
 - Infrared Device Integration: https://docs.aqara.com/docs/aqara-developer/local-studio-development/features/infrared-device-integration
 - Introduction: https://docs.aqara.com/docs/aqara-developer/aiot-api/introduction

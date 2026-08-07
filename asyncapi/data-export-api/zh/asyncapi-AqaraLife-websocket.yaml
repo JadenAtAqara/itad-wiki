@@ -1,0 +1,846 @@
+asyncapi: 3.0.0
+id: urn:studio:websocket:v1
+info:
+  title: Studio WebSocket API
+  version: v1
+  description: |
+    本文件描述客户端与 Studio WebSocket 服务之间的异步消息：
+    - 客户端发送鉴权、心跳、订阅、取消订阅请求。
+    - Studio 返回请求响应，并在订阅命中或设备事件发生时主动推送消息。
+    - WebSocket 支持握手 Header `Authorization: Bearer <accessToken>` 与首包 `AuthRequest` 两种认证方式。
+defaultContentType: application/json
+
+servers:
+  remoteAccess:
+    host: '{host}'
+    protocol: wss
+    pathname: /open/ws
+    description: Studio 远程访问域名。
+    variables:
+      host:
+        default: xxx.edge-xxx.aqara.cn
+  local:
+    host: '{host}'
+    protocol: ws
+    pathname: /open/ws
+    description: Studio 本地访问 IP 地址或主机访问域名。
+    variables:
+      host:
+        default: xxx.xxx.xxx.xxx
+
+channels:
+  studioWebSocket:
+    address: null
+    title: Studio WebSocket channel
+    description: |
+      单连接双向 JSON 文本消息通道。认证方式二选一：
+      - 握手 Header 携带 `Authorization: Bearer <accessToken>`。
+      - 连接建立后首包发送 `AuthRequest`。
+
+      鉴权完成前只允许发送 `AuthRequest`；鉴权成功后再发送心跳、订阅、取消订阅等业务消息。
+      未在握手 Header 携带 Authorization 时，客户端必须在连接建立后 7 秒内发送 `AuthRequest`。
+      为保持连接活跃，客户端应定期（建议每 30 秒内至少发送一次）发送 `ping` 或其他业务消息。若 30 秒内未发送任何消息，链路中的网关或代理可能会断开 WebSocket 连接。
+      使用 API AccessToken 且配置了访问范围时，订阅与取消订阅消息需要授权 `POST /api/v1/devices/trait/read` 或 `*`。
+    messages:
+      AuthRequest:
+        $ref: '#/components/messages/AuthRequest'
+      AuthResponse:
+        $ref: '#/components/messages/AuthResponse'
+      PingRequest:
+        $ref: '#/components/messages/PingRequest'
+      PongResponse:
+        $ref: '#/components/messages/PongResponse'
+      SubscribeAllRequest:
+        $ref: '#/components/messages/SubscribeAllRequest'
+      SubscribeAllResponse:
+        $ref: '#/components/messages/SubscribeAllResponse'
+      UnsubscribeAllRequest:
+        $ref: '#/components/messages/UnsubscribeAllRequest'
+      UnsubscribeAllResponse:
+        $ref: '#/components/messages/UnsubscribeAllResponse'
+      SubscribeTraitValueRequest:
+        $ref: '#/components/messages/SubscribeTraitValueRequest'
+      SubscribeTraitValueResponse:
+        $ref: '#/components/messages/SubscribeTraitValueResponse'
+      UnsubscribeTraitValueRequest:
+        $ref: '#/components/messages/UnsubscribeTraitValueRequest'
+      UnsubscribeTraitValueResponse:
+        $ref: '#/components/messages/UnsubscribeTraitValueResponse'
+      TraitValueUpdate:
+        $ref: '#/components/messages/TraitValueUpdate'
+      ObjectEvent:
+        $ref: '#/components/messages/ObjectEvent'
+      ErrorMessage:
+        $ref: '#/components/messages/ErrorMessage'
+
+operations:
+  sendAuthRequest:
+    action: send
+    channel:
+      $ref: '#/channels/studioWebSocket'
+    messages:
+      - $ref: '#/channels/studioWebSocket/messages/AuthRequest'
+  receiveAuthResponse:
+    action: receive
+    channel:
+      $ref: '#/channels/studioWebSocket'
+    messages:
+      - $ref: '#/channels/studioWebSocket/messages/AuthResponse'
+      - $ref: '#/channels/studioWebSocket/messages/ErrorMessage'
+  sendPing:
+    action: send
+    channel:
+      $ref: '#/channels/studioWebSocket'
+    messages:
+      - $ref: '#/channels/studioWebSocket/messages/PingRequest'
+  receivePong:
+    action: receive
+    channel:
+      $ref: '#/channels/studioWebSocket'
+    messages:
+      - $ref: '#/channels/studioWebSocket/messages/PongResponse'
+      - $ref: '#/channels/studioWebSocket/messages/ErrorMessage'
+  sendSubscriptionCommand:
+    action: send
+    channel:
+      $ref: '#/channels/studioWebSocket'
+    messages:
+      - $ref: '#/channels/studioWebSocket/messages/SubscribeAllRequest'
+      - $ref: '#/channels/studioWebSocket/messages/UnsubscribeAllRequest'
+      - $ref: '#/channels/studioWebSocket/messages/SubscribeTraitValueRequest'
+      - $ref: '#/channels/studioWebSocket/messages/UnsubscribeTraitValueRequest'
+  receiveSubscriptionCommandResponse:
+    action: receive
+    channel:
+      $ref: '#/channels/studioWebSocket'
+    messages:
+      - $ref: '#/channels/studioWebSocket/messages/SubscribeAllResponse'
+      - $ref: '#/channels/studioWebSocket/messages/UnsubscribeAllResponse'
+      - $ref: '#/channels/studioWebSocket/messages/SubscribeTraitValueResponse'
+      - $ref: '#/channels/studioWebSocket/messages/UnsubscribeTraitValueResponse'
+      - $ref: '#/channels/studioWebSocket/messages/ErrorMessage'
+  receivePushMessage:
+    action: receive
+    channel:
+      $ref: '#/channels/studioWebSocket'
+    messages:
+      - $ref: '#/channels/studioWebSocket/messages/TraitValueUpdate'
+      - $ref: '#/channels/studioWebSocket/messages/ObjectEvent'
+      - $ref: '#/channels/studioWebSocket/messages/ErrorMessage'
+
+components:
+  messages:
+    AuthRequest:
+      name: AuthRequest
+      title: WebSocket 鉴权请求
+      summary: 首包认证方式；未在握手 Header 携带 Authorization 时使用。
+      payload:
+        $ref: '#/components/schemas/AuthRequestMessage'
+      examples:
+        - name: bearerToken
+          payload:
+            type: AuthRequest
+            version: v1
+            msgId: '10001'
+            data:
+              authType: token
+              token: 'Bearer <Token>'
+    AuthResponse:
+      name: AuthResponse
+      title: WebSocket 鉴权响应
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/AuthResponseMessage'
+      examples:
+        - name: success
+          payload:
+            type: AuthResponse
+            version: v1
+            msgId: '10001'
+            data: ''
+            code: 0
+            message: Authentication successful. Welcome <username>
+    PingRequest:
+      name: ping
+      title: 心跳请求
+      payload:
+        $ref: '#/components/schemas/PingRequestMessage'
+      examples:
+        - name: ping
+          payload:
+            type: ping
+            version: v1
+            msgId: '10002'
+            data: null
+    PongResponse:
+      name: pong
+      title: 心跳响应
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/PongResponseMessage'
+      examples:
+        - name: pong
+          payload:
+            type: pong
+            version: v1
+            msgId: '10002'
+            data: pong
+            code: 0
+            message: success
+    SubscribeAllRequest:
+      name: SubscribeAllRequest
+      title: 订阅全部/部分设备请求
+      payload:
+        $ref: '#/components/schemas/SubscribeAllRequestMessage'
+      examples:
+        - name: allDevices
+          payload:
+            type: SubscribeAllRequest
+            version: v1
+            msgId: '1751609244328'
+            data: null
+        - name: specifiedDevices
+          payload:
+            type: SubscribeAllRequest
+            version: v1
+            msgId: '1751609244328'
+            data:
+              - deviceId
+    SubscribeAllResponse:
+      name: SubscribeAllResponse
+      title: 订阅全部/部分设备响应
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/SubscribeAllResponseMessage'
+    UnsubscribeAllRequest:
+      name: UnsubscribeAllRequest
+      title: 取消订阅全部/部分设备请求
+      payload:
+        $ref: '#/components/schemas/UnsubscribeAllRequestMessage'
+    UnsubscribeAllResponse:
+      name: UnsubscribeAllResponse
+      title: 取消订阅全部/部分设备响应
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/UnsubscribeAllResponseMessage'
+    SubscribeTraitValueRequest:
+      name: SubscribeTraitValueRequest
+      title: 订阅指定 Trait 值请求
+      payload:
+        $ref: '#/components/schemas/SubscribeTraitValueRequestMessage'
+      examples:
+        - name: subscribeTrait
+          payload:
+            type: SubscribeTraitValueRequest
+            version: v1
+            msgId: get_devices_1751609244328
+            data:
+              - deviceId: '57190441014857'
+                endpointId: 3
+                functionCode: MediaPlayback
+                traitCodes:
+                  - TargetPlaybackState
+    SubscribeTraitValueResponse:
+      name: SubscribeTraitValueResponse
+      title: 订阅指定 Trait 值响应
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/SubscribeTraitValueResponseMessage'
+    UnsubscribeTraitValueRequest:
+      name: UnsubscribeTraitValueRequest
+      title: 取消订阅指定 Trait 值请求
+      payload:
+        $ref: '#/components/schemas/UnsubscribeTraitValueRequestMessage'
+    UnsubscribeTraitValueResponse:
+      name: UnsubscribeTraitValueResponse
+      title: 取消订阅指定 Trait 值响应
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/UnsubscribeTraitValueResponseMessage'
+    TraitValueUpdate:
+      name: TraitValueUpdate
+      title: Trait 值变化推送
+      payload:
+        $ref: '#/components/schemas/PushTraitValueUpdateMessageV1'
+      examples:
+        - name: traitValueUpdate
+          payload:
+            type: TraitValueUpdate
+            version: v1
+            msgId: '1754469720110'
+            data:
+              - deviceId: '57190441014857'
+                endpointId: 3
+                functionCode: MediaPlayback
+                traitCode: TargetPlaybackState
+                value: '0'
+                time: 1754469720110
+            code: 0
+            message: ''
+    ObjectEvent:
+      name: objectEvent
+      title: 对象事件推送
+      summary: 对象事件按连接级推送注册发送；客户端应按 eventType 和 objectId 自行分发与过滤。
+      description: |
+        对象事件按当前连接的推送注册状态推送，不按 objectId、设备 ID 或 Trait 订阅条件做精确过滤。
+        即使某些订阅请求未形成有效的 TraitValueUpdate 订阅，当前连接仍可能收到对象事件。
+        若不希望当前连接继续收到任何推送，应发送 data 为空数组或不传的 UnsubscribeAllRequest，或直接关闭 WebSocket 连接。
+      payload:
+        $ref: '#/components/schemas/PushObjectEventMessageV1'
+      examples:
+        - name: deviceAdded
+          payload:
+            type: objectEvent
+            version: v1
+            msgId: '2'
+            data:
+              eventType: DEVICE_ADDED
+              objectId: 14d3b91
+              time: 1754469720110
+              data:
+                deviceId: 14d3b91
+                name: ''
+                deviceTypesList:
+                  - Light
+                endpointIds:
+                  - 0
+                  - 2
+                  - 3
+                time: 1754469720110
+            code: 0
+            message: success
+    ErrorMessage:
+      name: ErrorMessage
+      title: 错误响应
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/ErrorMessageV1'
+
+  schemas:
+    MessageType:
+      type: string
+      description: WebSocket 消息类型。本文档仅列订阅推送相关类型。
+      enum:
+        - AuthRequest
+        - AuthResponse
+        - ping
+        - pong
+        - SubscribeAllRequest
+        - SubscribeAllResponse
+        - UnsubscribeAllRequest
+        - UnsubscribeAllResponse
+        - SubscribeTraitValueRequest
+        - SubscribeTraitValueResponse
+        - UnsubscribeTraitValueRequest
+        - UnsubscribeTraitValueResponse
+        - TraitValueUpdate
+        - objectEvent
+        - ErrorMessage
+    MsgId:
+      type: string
+      description: 消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。
+      minLength: 1
+      maxLength: 64
+    Version:
+      type: string
+      enum:
+        - v1
+    BaseRequest:
+      type: object
+      required:
+        - type
+        - version
+        - msgId
+      properties:
+        type:
+          $ref: '#/components/schemas/MessageType'
+        version:
+          $ref: '#/components/schemas/Version'
+        msgId:
+          $ref: '#/components/schemas/MsgId'
+        data:
+          description: 业务参数。
+    BaseResponse:
+      type: object
+      required:
+        - type
+        - version
+        - msgId
+        - code
+        - message
+      properties:
+        type:
+          $ref: '#/components/schemas/MessageType'
+        version:
+          $ref: '#/components/schemas/Version'
+        msgId:
+          $ref: '#/components/schemas/MsgId'
+        data:
+          description: 响应数据。无数据时通常为空字符串或 null。
+        code:
+          type: integer
+          format: int32
+          description: 处理结果码，0 表示成功，非 0 表示失败。
+        message:
+          type:
+            - string
+            - 'null'
+          description: 处理结果描述。
+    BasePushMessage:
+      type: object
+      required:
+        - type
+        - version
+        - msgId
+        - data
+        - code
+        - message
+      properties:
+        type:
+          $ref: '#/components/schemas/MessageType'
+        version:
+          $ref: '#/components/schemas/Version'
+        msgId:
+          $ref: '#/components/schemas/MsgId'
+        data:
+          description: 推送业务数据。
+        code:
+          type: integer
+          format: int32
+          description: 处理结果码，0 表示成功，非 0 表示失败。
+        message:
+          type:
+            - string
+            - 'null'
+          description: 处理结果描述。
+    AuthRequestMessage:
+      allOf:
+        - $ref: '#/components/schemas/BaseRequest'
+        - type: object
+          required:
+            - data
+          properties:
+            type:
+              type: string
+              enum:
+                - AuthRequest
+            data:
+              $ref: '#/components/schemas/AuthRequestData'
+    AuthRequestData:
+      type: object
+      required:
+        - token
+      properties:
+        authType:
+          type: string
+          description: 鉴权方式。请传入 token。
+          enum:
+            - token
+          default: token
+        token:
+          type: string
+          description: "请使用格式：`Bearer <Token>`，其中 `<Token>` 为 Aqara Studio 获取的原始 Token。切勿将此 Token 记录或暴露于日志。"
+    CommonEmptyResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required:
+            - data
+          properties:
+            data:
+              type:
+                - string
+                - 'null'
+              default: ''
+    AuthResponseMessage:
+      allOf:
+        - $ref: '#/components/schemas/CommonEmptyResponse'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - AuthResponse
+    SubscribeAllResponseMessage:
+      allOf:
+        - $ref: '#/components/schemas/CommonEmptyResponse'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - SubscribeAllResponse
+    UnsubscribeAllResponseMessage:
+      allOf:
+        - $ref: '#/components/schemas/CommonEmptyResponse'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - UnsubscribeAllResponse
+    SubscribeTraitValueResponseMessage:
+      allOf:
+        - $ref: '#/components/schemas/CommonEmptyResponse'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - SubscribeTraitValueResponse
+    UnsubscribeTraitValueResponseMessage:
+      allOf:
+        - $ref: '#/components/schemas/CommonEmptyResponse'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - UnsubscribeTraitValueResponse
+    PingRequestMessage:
+      allOf:
+        - $ref: '#/components/schemas/BaseRequest'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - ping
+            data:
+              type:
+                - string
+                - 'null'
+              default: null
+    PongResponseMessage:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required:
+            - data
+          properties:
+            type:
+              type: string
+              enum:
+                - pong
+            data:
+              type: string
+              enum:
+                - pong
+    SubscribeAllRequestMessage:
+      allOf:
+        - $ref: '#/components/schemas/BaseRequest'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - SubscribeAllRequest
+            data:
+              type:
+                - array
+                - 'null'
+              default: null
+              description: |
+                设备 ID 列表。为 null 或省略时表示订阅当前权限范围内全部设备数据，并清理此前的设备级订阅。
+                data 不为空时会取消“订阅所有设备”状态并追加这些设备级订阅，但不会自动清理此前已追加的其他设备级订阅。
+                若使用受限 API AccessToken，data 为空数组可能返回 code=0 但不建立有效订阅；订阅权限范围内全部设备时建议传 null 或省略 data。
+                若需要缩小或替换设备级订阅范围，应先用 UnsubscribeAllRequest 取消不再需要的设备。
+                若需要清理当前连接全部订阅，应发送 data 为空数组或不传的 UnsubscribeAllRequest。
+                若当前账号或 Token 权限范围内没有可访问设备，服务端可能返回 code=0 但不会产生后续推送。
+                同一连接内，SubscribeAllRequest 会覆盖并清理此前通过 SubscribeTraitValueRequest 建立的 Trait 订阅。
+                若需从全部设备或指定设备订阅切换回仅 Trait 维度订阅，应先发送 UnsubscribeAllRequest 清理全量/设备级订阅。
+              items:
+                type: string
+    UnsubscribeAllRequestMessage:
+      allOf:
+        - $ref: '#/components/schemas/BaseRequest'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - UnsubscribeAllRequest
+            data:
+              type:
+                - array
+                - 'null'
+              default: null
+              description: |
+                设备 ID 列表。为空或 null 时表示取消全部订阅。
+                若当前为全部设备订阅，按特定设备取消订阅不会生效，需传空值取消全部订阅。
+                同一连接内，UnsubscribeAllRequest 会同时清理此前通过 SubscribeTraitValueRequest 建立的 Trait 订阅。
+                按特定设备取消订阅只取消设备级订阅，不等同于关闭当前连接的全部推送。
+              items:
+                type: string
+    TraitSubscriptionItem:
+      type: object
+      required:
+        - deviceId
+        - endpointId
+        - functionCode
+        - traitCodes
+      properties:
+        deviceId:
+          type: string
+          description: 设备 ID。
+        endpointId:
+          type: integer
+          format: int32
+          description: 端点 ID。
+        functionCode:
+          type: string
+          description: 功能代码。
+        traitCodes:
+          type: array
+          description: Trait 功能点代码列表。建议传非空数组；为空数组时不会创建或取消具体 Trait 订阅，但当前实现仍可能返回成功响应。
+          items:
+            type: string
+    SubscribeTraitValueRequestMessage:
+      allOf:
+        - $ref: '#/components/schemas/BaseRequest'
+        - type: object
+          required:
+            - data
+          properties:
+            type:
+              type: string
+              enum:
+                - SubscribeTraitValueRequest
+            data:
+              type: array
+              description: |
+                需要订阅的 Trait 列表。建议传非空数组；省略 data 会解析失败。
+                当前实现对空数组或 traitCodes 为空数组仍可能返回成功响应，但不会创建有效的 TraitValueUpdate 订阅。
+              items:
+                $ref: '#/components/schemas/TraitSubscriptionItem'
+    UnsubscribeTraitValueRequestMessage:
+      allOf:
+        - $ref: '#/components/schemas/BaseRequest'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - UnsubscribeTraitValueRequest
+            data:
+              type: array
+              default: []
+              description: |
+                需要取消订阅的 Trait 列表。建议传非空数组。
+                省略 data、传空数组或 traitCodes 为空数组不会取消任何 Trait 订阅，但当前实现仍可能返回成功响应。
+              items:
+                $ref: '#/components/schemas/TraitSubscriptionItem'
+    PushTraitValueUpdateItem:
+      type: object
+      required:
+        - deviceId
+        - endpointId
+        - functionCode
+        - traitCode
+        - time
+      properties:
+        deviceId:
+          type: string
+          description: 设备 ID。
+        endpointId:
+          type: integer
+          format: int32
+          description: 端点 ID。
+        functionCode:
+          type: string
+          description: 功能代码。
+        traitCode:
+          type: string
+          description: Trait 功能点代码。
+        value:
+          description: Trait 功能点值，类型由具体功能点定义决定。
+        time:
+          type: integer
+          format: int64
+          description: 上报时间戳，单位毫秒。
+    PushTraitValueUpdateMessageV1:
+      allOf:
+        - $ref: '#/components/schemas/BasePushMessage'
+        - type: object
+          required:
+            - data
+          properties:
+            type:
+              type: string
+              enum:
+                - TraitValueUpdate
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/PushTraitValueUpdateItem'
+    PushObjectEventDeviceData:
+      type: object
+      required:
+        - deviceId
+        - name
+        - deviceTypesList
+        - endpointIds
+        - time
+      properties:
+        deviceId:
+          type: string
+          description: 设备 ID。
+        name:
+          type: string
+          description: 设备名称。
+        deviceTypesList:
+          type: array
+          description: 设备类型列表。
+          items:
+            type: string
+        endpointIds:
+          type: array
+          description: 端点 ID 列表。
+          items:
+            type: integer
+            format: int32
+        time:
+          type: integer
+          format: int64
+          description: 事件发生时间戳，单位毫秒。
+    TraitParameterValue:
+      type: object
+      properties:
+        endpointId:
+          type:
+            - integer
+            - 'null'
+          format: int32
+          description: 端点 ID。
+        functionCode:
+          type:
+            - string
+            - 'null'
+          description: 功能代码。
+        traitCode:
+          type:
+            - string
+            - 'null'
+          description: Trait 功能点代码。
+        min:
+          type:
+            - number
+            - 'null'
+          description: 最小值。
+        max:
+          type:
+            - number
+            - 'null'
+          description: 最大值。
+        unit:
+          type:
+            - string
+            - 'null'
+          description: 单位。
+        step:
+          type:
+            - number
+            - 'null'
+          description: 步长。
+    PushObjectEventTraitParameterData:
+      type: object
+      required:
+        - deviceId
+      properties:
+        deviceId:
+          type: string
+          description: 设备 ID。
+        endpointId:
+          type:
+            - integer
+            - 'null'
+          format: int32
+          description: 端点 ID。
+        functionCode:
+          type:
+            - string
+            - 'null'
+          description: 功能代码。
+        traitCode:
+          type:
+            - string
+            - 'null'
+          description: Trait 功能点代码。
+        newValue:
+          anyOf:
+            - $ref: '#/components/schemas/TraitParameterValue'
+            - type: 'null'
+          description: 更新后的 Trait 参数值；为空时序列化可能省略该字段。
+        oldValue:
+          anyOf:
+            - $ref: '#/components/schemas/TraitParameterValue'
+            - type: 'null'
+          description: 更新前的 Trait 参数值；为空时序列化可能省略该字段。
+    PushObjectEventData:
+      type: object
+      required:
+        - eventType
+        - objectId
+        - time
+      properties:
+        eventType:
+          type: string
+          description: 对象事件类型。
+          enum:
+            - DEVICE_ADDED
+            - DEVICE_REMOVED
+            - DEVICE_ENDPOINT_ADDED
+            - DEVICE_ENDPOINT_REMOVED
+            - DEVICE_TRAIT_PARAMETER_UPDATE
+        objectId:
+          type: string
+          description: 对象 ID，设备事件场景通常为设备 ID。
+        time:
+          type: integer
+          format: int64
+          description: 事件发生时间戳，单位毫秒。
+        data:
+          description: 根据 eventType 判断具体结构。
+          type:
+            - object
+            - 'null'
+          additionalProperties: true
+    PushObjectEventMessageV1:
+      allOf:
+        - $ref: '#/components/schemas/BasePushMessage'
+        - type: object
+          required:
+            - data
+          properties:
+            type:
+              type: string
+              enum:
+                - objectEvent
+            data:
+              $ref: '#/components/schemas/PushObjectEventData'
+    ErrorMessageV1:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required:
+            - message
+          properties:
+            type:
+              type: string
+              enum:
+                - ErrorMessage
+            code:
+              type: integer
+              format: int32
+              description: 处理结果码，非 0 表示失败；不建议客户端依赖某个具体错误码判断固定业务场景。
+            data:
+              type:
+                - string
+                - 'null'

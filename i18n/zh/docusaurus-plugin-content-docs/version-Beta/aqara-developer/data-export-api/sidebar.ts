@@ -7,6 +7,11 @@ const sidebar: SidebarsConfig = {
       id: "version-Beta/aqara-developer/data-export-api/data-export-api",
     },
     {
+      type: "doc",
+      id: "version-Beta/aqara-developer/data-export-api/websocket-api",
+      label: "WebSocket Playground",
+    },
+    {
       type: "category",
       label: "Space",
       link: {
