@@ -1,0 +1,846 @@
+asyncapi: 3.0.0
+id: urn:studio:websocket:v1
+info:
+  title: Studio WebSocket API
+  version: v1
+  description: |
+    This document describes the asynchronous messages exchanged between the client and the Studio WebSocket service:
+    - The client sends authentication, heartbeat, subscribe, and unsubscribe requests.
+    - Studio returns responses to requests and proactively pushes messages when subscriptions match or device events occur.
+    - WebSocket supports two authentication methods: the handshake header `Authorization: Bearer <accessToken>` and an initial `AuthRequest` message after connection establishment.
+defaultContentType: application/json
+
+servers:
+  remoteAccess:
+    host: '{host}'
+    protocol: wss
+    pathname: /open/ws
+    description: Studio remote-access domain name.
+    variables:
+      host:
+        default: xxx.edge-xxx.aqara.com
+  local:
+    host: '{host}'
+    protocol: ws
+    pathname: /open/ws
+    description: Studio local-access IP address or host domain name.
+    variables:
+      host:
+        default: xxx.xxx.xxx.xxx
+
+channels:
+  studioWebSocket:
+    address: null
+    title: Studio WebSocket channel
+    description: |
+      A bidirectional JSON text message channel over a single connection. Choose one of the following authentication methods:
+      - Include `Authorization: Bearer <accessToken>` in the handshake header.
+      - Send `AuthRequest` as the first message after the connection is established.
+
+      Before authentication is completed, only `AuthRequest` may be sent. After authentication succeeds, business messages such as heartbeat, subscribe, and unsubscribe may be sent.
+      If Authorization is not provided in the handshake header, the client must send `AuthRequest` within 7 seconds after the connection is established.
+      To keep the connection alive, the client should periodically send `ping` or another outbound business message. It is recommended to send at least one message every 30 seconds. If no message is sent within 30 seconds, a gateway or proxy in the path may disconnect the WebSocket connection.
+      When using an API AccessToken with scoped permissions, subscribe and unsubscribe messages require authorization for `POST /api/v1/devices/trait/read` or `*`.
+    messages:
+      AuthRequest:
+        $ref: '#/components/messages/AuthRequest'
+      AuthResponse:
+        $ref: '#/components/messages/AuthResponse'
+      PingRequest:
+        $ref: '#/components/messages/PingRequest'
+      PongResponse:
+        $ref: '#/components/messages/PongResponse'
+      SubscribeAllRequest:
+        $ref: '#/components/messages/SubscribeAllRequest'
+      SubscribeAllResponse:
+        $ref: '#/components/messages/SubscribeAllResponse'
+      UnsubscribeAllRequest:
+        $ref: '#/components/messages/UnsubscribeAllRequest'
+      UnsubscribeAllResponse:
+        $ref: '#/components/messages/UnsubscribeAllResponse'
+      SubscribeTraitValueRequest:
+        $ref: '#/components/messages/SubscribeTraitValueRequest'
+      SubscribeTraitValueResponse:
+        $ref: '#/components/messages/SubscribeTraitValueResponse'
+      UnsubscribeTraitValueRequest:
+        $ref: '#/components/messages/UnsubscribeTraitValueRequest'
+      UnsubscribeTraitValueResponse:
+        $ref: '#/components/messages/UnsubscribeTraitValueResponse'
+      TraitValueUpdate:
+        $ref: '#/components/messages/TraitValueUpdate'
+      ObjectEvent:
+        $ref: '#/components/messages/ObjectEvent'
+      ErrorMessage:
+        $ref: '#/components/messages/ErrorMessage'
+
+operations:
+  sendAuthRequest:
+    action: send
+    channel:
+      $ref: '#/channels/studioWebSocket'
+    messages:
+      - $ref: '#/channels/studioWebSocket/messages/AuthRequest'
+  receiveAuthResponse:
+    action: receive
+    channel:
+      $ref: '#/channels/studioWebSocket'
+    messages:
+      - $ref: '#/channels/studioWebSocket/messages/AuthResponse'
+      - $ref: '#/channels/studioWebSocket/messages/ErrorMessage'
+  sendPing:
+    action: send
+    channel:
+      $ref: '#/channels/studioWebSocket'
+    messages:
+      - $ref: '#/channels/studioWebSocket/messages/PingRequest'
+  receivePong:
+    action: receive
+    channel:
+      $ref: '#/channels/studioWebSocket'
+    messages:
+      - $ref: '#/channels/studioWebSocket/messages/PongResponse'
+      - $ref: '#/channels/studioWebSocket/messages/ErrorMessage'
+  sendSubscriptionCommand:
+    action: send
+    channel:
+      $ref: '#/channels/studioWebSocket'
+    messages:
+      - $ref: '#/channels/studioWebSocket/messages/SubscribeAllRequest'
+      - $ref: '#/channels/studioWebSocket/messages/UnsubscribeAllRequest'
+      - $ref: '#/channels/studioWebSocket/messages/SubscribeTraitValueRequest'
+      - $ref: '#/channels/studioWebSocket/messages/UnsubscribeTraitValueRequest'
+  receiveSubscriptionCommandResponse:
+    action: receive
+    channel:
+      $ref: '#/channels/studioWebSocket'
+    messages:
+      - $ref: '#/channels/studioWebSocket/messages/SubscribeAllResponse'
+      - $ref: '#/channels/studioWebSocket/messages/UnsubscribeAllResponse'
+      - $ref: '#/channels/studioWebSocket/messages/SubscribeTraitValueResponse'
+      - $ref: '#/channels/studioWebSocket/messages/UnsubscribeTraitValueResponse'
+      - $ref: '#/channels/studioWebSocket/messages/ErrorMessage'
+  receivePushMessage:
+    action: receive
+    channel:
+      $ref: '#/channels/studioWebSocket'
+    messages:
+      - $ref: '#/channels/studioWebSocket/messages/TraitValueUpdate'
+      - $ref: '#/channels/studioWebSocket/messages/ObjectEvent'
+      - $ref: '#/channels/studioWebSocket/messages/ErrorMessage'
+
+components:
+  messages:
+    AuthRequest:
+      name: AuthRequest
+      title: WebSocket authentication request
+      summary: First-message authentication flow; used when Authorization is not included in the handshake header.
+      payload:
+        $ref: '#/components/schemas/AuthRequestMessage'
+      examples:
+        - name: bearerToken
+          payload:
+            type: AuthRequest
+            version: v1
+            msgId: '10001'
+            data:
+              authType: token
+              token: 'Bearer <Token>'
+    AuthResponse:
+      name: AuthResponse
+      title: WebSocket authentication response
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/AuthResponseMessage'
+      examples:
+        - name: success
+          payload:
+            type: AuthResponse
+            version: v1
+            msgId: '10001'
+            data: ''
+            code: 0
+            message: Authentication successful. Welcome <username>
+    PingRequest:
+      name: ping
+      title: Heartbeat request
+      payload:
+        $ref: '#/components/schemas/PingRequestMessage'
+      examples:
+        - name: ping
+          payload:
+            type: ping
+            version: v1
+            msgId: '10002'
+            data: null
+    PongResponse:
+      name: pong
+      title: Heartbeat response
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/PongResponseMessage'
+      examples:
+        - name: pong
+          payload:
+            type: pong
+            version: v1
+            msgId: '10002'
+            data: pong
+            code: 0
+            message: success
+    SubscribeAllRequest:
+      name: SubscribeAllRequest
+      title: Subscribe to all or selected devices request
+      payload:
+        $ref: '#/components/schemas/SubscribeAllRequestMessage'
+      examples:
+        - name: allDevices
+          payload:
+            type: SubscribeAllRequest
+            version: v1
+            msgId: '1751609244328'
+            data: null
+        - name: specifiedDevices
+          payload:
+            type: SubscribeAllRequest
+            version: v1
+            msgId: '1751609244328'
+            data:
+              - deviceId
+    SubscribeAllResponse:
+      name: SubscribeAllResponse
+      title: Subscribe to all or selected devices response
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/SubscribeAllResponseMessage'
+    UnsubscribeAllRequest:
+      name: UnsubscribeAllRequest
+      title: Unsubscribe from all or selected devices request
+      payload:
+        $ref: '#/components/schemas/UnsubscribeAllRequestMessage'
+    UnsubscribeAllResponse:
+      name: UnsubscribeAllResponse
+      title: Unsubscribe from all or selected devices response
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/UnsubscribeAllResponseMessage'
+    SubscribeTraitValueRequest:
+      name: SubscribeTraitValueRequest
+      title: Subscribe to specified Trait values request
+      payload:
+        $ref: '#/components/schemas/SubscribeTraitValueRequestMessage'
+      examples:
+        - name: subscribeTrait
+          payload:
+            type: SubscribeTraitValueRequest
+            version: v1
+            msgId: get_devices_1751609244328
+            data:
+              - deviceId: '57190441014857'
+                endpointId: 3
+                functionCode: MediaPlayback
+                traitCodes:
+                  - TargetPlaybackState
+    SubscribeTraitValueResponse:
+      name: SubscribeTraitValueResponse
+      title: Subscribe to specified Trait values response
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/SubscribeTraitValueResponseMessage'
+    UnsubscribeTraitValueRequest:
+      name: UnsubscribeTraitValueRequest
+      title: Unsubscribe from specified Trait values request
+      payload:
+        $ref: '#/components/schemas/UnsubscribeTraitValueRequestMessage'
+    UnsubscribeTraitValueResponse:
+      name: UnsubscribeTraitValueResponse
+      title: Unsubscribe from specified Trait values response
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/UnsubscribeTraitValueResponseMessage'
+    TraitValueUpdate:
+      name: TraitValueUpdate
+      title: Trait value change push
+      payload:
+        $ref: '#/components/schemas/PushTraitValueUpdateMessageV1'
+      examples:
+        - name: traitValueUpdate
+          payload:
+            type: TraitValueUpdate
+            version: v1
+            msgId: '1754469720110'
+            data:
+              - deviceId: '57190441014857'
+                endpointId: 3
+                functionCode: MediaPlayback
+                traitCode: TargetPlaybackState
+                value: '0'
+                time: 1754469720110
+            code: 0
+            message: ''
+    ObjectEvent:
+      name: objectEvent
+      title: Object event push
+      summary: Object events are pushed at the connection-registration level; the client should dispatch and filter them based on `eventType` and `objectId`.
+      description: |
+        Object events are pushed according to the current connection's push registration state and are not precisely filtered by `objectId`, device ID, or Trait subscription conditions.
+        Even if some subscription requests do not result in an effective `TraitValueUpdate` subscription, the current connection may still receive object events.
+        If the current connection should stop receiving all push messages, send `UnsubscribeAllRequest` with an empty `data` array or omit `data`, or close the WebSocket connection directly.
+      payload:
+        $ref: '#/components/schemas/PushObjectEventMessageV1'
+      examples:
+        - name: deviceAdded
+          payload:
+            type: objectEvent
+            version: v1
+            msgId: '2'
+            data:
+              eventType: DEVICE_ADDED
+              objectId: 14d3b91
+              time: 1754469720110
+              data:
+                deviceId: 14d3b91
+                name: ''
+                deviceTypesList:
+                  - Light
+                endpointIds:
+                  - 0
+                  - 2
+                  - 3
+                time: 1754469720110
+            code: 0
+            message: success
+    ErrorMessage:
+      name: ErrorMessage
+      title: Error response
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/ErrorMessageV1'
+
+  schemas:
+    MessageType:
+      type: string
+      description: WebSocket message type. This document only lists types related to subscription and push delivery.
+      enum:
+        - AuthRequest
+        - AuthResponse
+        - ping
+        - pong
+        - SubscribeAllRequest
+        - SubscribeAllResponse
+        - UnsubscribeAllRequest
+        - UnsubscribeAllResponse
+        - SubscribeTraitValueRequest
+        - SubscribeTraitValueResponse
+        - UnsubscribeTraitValueRequest
+        - UnsubscribeTraitValueResponse
+        - TraitValueUpdate
+        - objectEvent
+        - ErrorMessage
+    MsgId:
+      type: string
+      description: Unique message identifier. Normal requests and responses are correlated by the same `msgId`; parse failures, partial-permission issues, or internal errors may return `UNKNOWN`; server push messages are generated by the server and do not correspond to the subscription request `msgId`.
+      minLength: 1
+      maxLength: 64
+    Version:
+      type: string
+      enum:
+        - v1
+    BaseRequest:
+      type: object
+      required:
+        - type
+        - version
+        - msgId
+      properties:
+        type:
+          $ref: '#/components/schemas/MessageType'
+        version:
+          $ref: '#/components/schemas/Version'
+        msgId:
+          $ref: '#/components/schemas/MsgId'
+        data:
+          description: Business parameters.
+    BaseResponse:
+      type: object
+      required:
+        - type
+        - version
+        - msgId
+        - code
+        - message
+      properties:
+        type:
+          $ref: '#/components/schemas/MessageType'
+        version:
+          $ref: '#/components/schemas/Version'
+        msgId:
+          $ref: '#/components/schemas/MsgId'
+        data:
+          description: Response data. When no data is returned, it is usually an empty string or `null`.
+        code:
+          type: integer
+          format: int32
+          description: Processing result code. `0` indicates success, and any non-zero value indicates failure.
+        message:
+          type:
+            - string
+            - 'null'
+          description: Processing result message.
+    BasePushMessage:
+      type: object
+      required:
+        - type
+        - version
+        - msgId
+        - data
+        - code
+        - message
+      properties:
+        type:
+          $ref: '#/components/schemas/MessageType'
+        version:
+          $ref: '#/components/schemas/Version'
+        msgId:
+          $ref: '#/components/schemas/MsgId'
+        data:
+          description: Push payload data.
+        code:
+          type: integer
+          format: int32
+          description: Processing result code. `0` indicates success, and any non-zero value indicates failure.
+        message:
+          type:
+            - string
+            - 'null'
+          description: Processing result message.
+    AuthRequestMessage:
+      allOf:
+        - $ref: '#/components/schemas/BaseRequest'
+        - type: object
+          required:
+            - data
+          properties:
+            type:
+              type: string
+              enum:
+                - AuthRequest
+            data:
+              $ref: '#/components/schemas/AuthRequestData'
+    AuthRequestData:
+      type: object
+      required:
+        - token
+      properties:
+        authType:
+          type: string
+          description: Authentication type. Pass `token`.
+          enum:
+            - token
+          default: token
+        token:
+          type: string
+          description: "Use the format `Bearer <Token>`, where `<Token>` is the raw token obtained from Aqara Studio. Do not log or expose this token."
+    CommonEmptyResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required:
+            - data
+          properties:
+            data:
+              type:
+                - string
+                - 'null'
+              default: ''
+    AuthResponseMessage:
+      allOf:
+        - $ref: '#/components/schemas/CommonEmptyResponse'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - AuthResponse
+    SubscribeAllResponseMessage:
+      allOf:
+        - $ref: '#/components/schemas/CommonEmptyResponse'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - SubscribeAllResponse
+    UnsubscribeAllResponseMessage:
+      allOf:
+        - $ref: '#/components/schemas/CommonEmptyResponse'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - UnsubscribeAllResponse
+    SubscribeTraitValueResponseMessage:
+      allOf:
+        - $ref: '#/components/schemas/CommonEmptyResponse'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - SubscribeTraitValueResponse
+    UnsubscribeTraitValueResponseMessage:
+      allOf:
+        - $ref: '#/components/schemas/CommonEmptyResponse'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - UnsubscribeTraitValueResponse
+    PingRequestMessage:
+      allOf:
+        - $ref: '#/components/schemas/BaseRequest'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - ping
+            data:
+              type:
+                - string
+                - 'null'
+              default: null
+    PongResponseMessage:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required:
+            - data
+          properties:
+            type:
+              type: string
+              enum:
+                - pong
+            data:
+              type: string
+              enum:
+                - pong
+    SubscribeAllRequestMessage:
+      allOf:
+        - $ref: '#/components/schemas/BaseRequest'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - SubscribeAllRequest
+            data:
+              type:
+                - array
+                - 'null'
+              default: null
+              description: |
+                List of device IDs. When `null` or omitted, it subscribes to all device data within the current permission scope and clears previously established device-level subscriptions.
+                When `data` is non-empty, the "subscribe all devices" state is cancelled and these device-level subscriptions are appended, but any other previously appended device-level subscriptions are not automatically cleared.
+                When using a restricted API AccessToken, an empty `data` array may return `code=0` without creating an effective subscription; when subscribing to all devices within the authorized scope, it is recommended to pass `null` or omit `data`.
+                To narrow or replace the device-level subscription scope, first use `UnsubscribeAllRequest` to remove devices that are no longer needed.
+                To clear all subscriptions on the current connection, send `UnsubscribeAllRequest` with an empty `data` array or omit `data`.
+                If the current account or token permission scope has no accessible devices, the server may return `code=0` but no subsequent push messages will be generated.
+                Within the same connection, `SubscribeAllRequest` overrides and clears Trait subscriptions previously established via `SubscribeTraitValueRequest`.
+                To switch from all-device or selected-device subscriptions back to Trait-only subscriptions, first send `UnsubscribeAllRequest` to clear the all-device/device-level subscriptions.
+              items:
+                type: string
+    UnsubscribeAllRequestMessage:
+      allOf:
+        - $ref: '#/components/schemas/BaseRequest'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - UnsubscribeAllRequest
+            data:
+              type:
+                - array
+                - 'null'
+              default: null
+              description: |
+                List of device IDs. Empty or `null` means unsubscribe from everything.
+                If the current connection is subscribed to all devices, unsubscribing by specific device IDs has no effect; pass an empty value to cancel all subscriptions.
+                Within the same connection, `UnsubscribeAllRequest` also clears Trait subscriptions previously established via `SubscribeTraitValueRequest`.
+                Unsubscribing specific devices only removes device-level subscriptions and does not mean stopping all push messages on the current connection.
+              items:
+                type: string
+    TraitSubscriptionItem:
+      type: object
+      required:
+        - deviceId
+        - endpointId
+        - functionCode
+        - traitCodes
+      properties:
+        deviceId:
+          type: string
+          description: Device ID.
+        endpointId:
+          type: integer
+          format: int32
+          description: Endpoint ID.
+        functionCode:
+          type: string
+          description: Function code.
+        traitCodes:
+          type: array
+          description: List of Trait feature point codes. A non-empty array is recommended; an empty array does not create or cancel any specific Trait subscriptions, although the current implementation may still return a success response.
+          items:
+            type: string
+    SubscribeTraitValueRequestMessage:
+      allOf:
+        - $ref: '#/components/schemas/BaseRequest'
+        - type: object
+          required:
+            - data
+          properties:
+            type:
+              type: string
+              enum:
+                - SubscribeTraitValueRequest
+            data:
+              type: array
+              description: |
+                List of Traits to subscribe to. A non-empty array is recommended; omitting `data` causes parsing to fail.
+                In the current implementation, an empty array or empty `traitCodes` may still return a success response, but no effective `TraitValueUpdate` subscription will be created.
+              items:
+                $ref: '#/components/schemas/TraitSubscriptionItem'
+    UnsubscribeTraitValueRequestMessage:
+      allOf:
+        - $ref: '#/components/schemas/BaseRequest'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - UnsubscribeTraitValueRequest
+            data:
+              type: array
+              default: []
+              description: |
+                List of Traits to unsubscribe from. A non-empty array is recommended.
+                Omitting `data`, passing an empty array, or using empty `traitCodes` will not cancel any Trait subscriptions, although the current implementation may still return a success response.
+              items:
+                $ref: '#/components/schemas/TraitSubscriptionItem'
+    PushTraitValueUpdateItem:
+      type: object
+      required:
+        - deviceId
+        - endpointId
+        - functionCode
+        - traitCode
+        - time
+      properties:
+        deviceId:
+          type: string
+          description: Device ID.
+        endpointId:
+          type: integer
+          format: int32
+          description: Endpoint ID.
+        functionCode:
+          type: string
+          description: Function code.
+        traitCode:
+          type: string
+          description: Trait feature point code.
+        value:
+          description: Trait feature point value. The actual type is determined by the specific feature point definition.
+        time:
+          type: integer
+          format: int64
+          description: Report timestamp in milliseconds.
+    PushTraitValueUpdateMessageV1:
+      allOf:
+        - $ref: '#/components/schemas/BasePushMessage'
+        - type: object
+          required:
+            - data
+          properties:
+            type:
+              type: string
+              enum:
+                - TraitValueUpdate
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/PushTraitValueUpdateItem'
+    PushObjectEventDeviceData:
+      type: object
+      required:
+        - deviceId
+        - name
+        - deviceTypesList
+        - endpointIds
+        - time
+      properties:
+        deviceId:
+          type: string
+          description: Device ID.
+        name:
+          type: string
+          description: Device name.
+        deviceTypesList:
+          type: array
+          description: List of device types.
+          items:
+            type: string
+        endpointIds:
+          type: array
+          description: List of endpoint IDs.
+          items:
+            type: integer
+            format: int32
+        time:
+          type: integer
+          format: int64
+          description: Event timestamp in milliseconds.
+    TraitParameterValue:
+      type: object
+      properties:
+        endpointId:
+          type:
+            - integer
+            - 'null'
+          format: int32
+          description: Endpoint ID.
+        functionCode:
+          type:
+            - string
+            - 'null'
+          description: Function code.
+        traitCode:
+          type:
+            - string
+            - 'null'
+          description: Trait feature point code.
+        min:
+          type:
+            - number
+            - 'null'
+          description: Minimum value.
+        max:
+          type:
+            - number
+            - 'null'
+          description: Maximum value.
+        unit:
+          type:
+            - string
+            - 'null'
+          description: Unit.
+        step:
+          type:
+            - number
+            - 'null'
+          description: Step size.
+    PushObjectEventTraitParameterData:
+      type: object
+      required:
+        - deviceId
+      properties:
+        deviceId:
+          type: string
+          description: Device ID.
+        endpointId:
+          type:
+            - integer
+            - 'null'
+          format: int32
+          description: Endpoint ID.
+        functionCode:
+          type:
+            - string
+            - 'null'
+          description: Function code.
+        traitCode:
+          type:
+            - string
+            - 'null'
+          description: Trait feature point code.
+        newValue:
+          anyOf:
+            - $ref: '#/components/schemas/TraitParameterValue'
+            - type: 'null'
+          description: Updated Trait parameter value; when empty, this field may be omitted during serialization.
+        oldValue:
+          anyOf:
+            - $ref: '#/components/schemas/TraitParameterValue'
+            - type: 'null'
+          description: Previous Trait parameter value; when empty, this field may be omitted during serialization.
+    PushObjectEventData:
+      type: object
+      required:
+        - eventType
+        - objectId
+        - time
+      properties:
+        eventType:
+          type: string
+          description: Object event type.
+          enum:
+            - DEVICE_ADDED
+            - DEVICE_REMOVED
+            - DEVICE_ENDPOINT_ADDED
+            - DEVICE_ENDPOINT_REMOVED
+            - DEVICE_TRAIT_PARAMETER_UPDATE
+        objectId:
+          type: string
+          description: Object ID; in device event scenarios, this is typically the device ID.
+        time:
+          type: integer
+          format: int64
+          description: Event timestamp in milliseconds.
+        data:
+          description: Concrete structure determined by `eventType`.
+          type:
+            - object
+            - 'null'
+          additionalProperties: true
+    PushObjectEventMessageV1:
+      allOf:
+        - $ref: '#/components/schemas/BasePushMessage'
+        - type: object
+          required:
+            - data
+          properties:
+            type:
+              type: string
+              enum:
+                - objectEvent
+            data:
+              $ref: '#/components/schemas/PushObjectEventData'
+    ErrorMessageV1:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required:
+            - message
+          properties:
+            type:
+              type: string
+              enum:
+                - ErrorMessage
+            code:
+              type: integer
+              format: int32
+              description: Processing result code. Any non-zero value indicates failure; clients are discouraged from relying on specific error codes for fixed business logic decisions.
+            data:
+              type:
+                - string
+                - 'null'

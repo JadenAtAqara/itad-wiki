@@ -22,6 +22,12 @@ declare module "@theme/SchemaItem" {
   export default SchemaItem;
 }
 
+declare module "@theme/Schema" {
+  import * as React from "react";
+  const Schema: React.ComponentType<any>;
+  export default Schema;
+}
+
 declare module "@theme/SchemaTabs" {
   import * as React from "react";
   const SchemaTabs: React.ComponentType<any>;

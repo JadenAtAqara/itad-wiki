@@ -1,0 +1,19 @@
+---
+id: websocket-api
+title: "WebSocket API Playground"
+description: "Interactive WebSocket playground for the Aqara Data Export API."
+sidebar_label: "WebSocket API"
+hide_table_of_contents: true
+---
+
+import AsyncApiWebSocketPlayground from "@site/src/components/AsyncApiWebSocketPlayground";
+
+# WebSocket API Playground
+
+Use this page to test the AqaraLife Studio WebSocket channel directly in the docs site. You can edit the host and path, connect to your Studio endpoint, send `AuthRequest` / `ping` / subscription messages, and inspect pushed events in real time.
+
+:::info Browser Limitation
+The browser WebSocket API does not allow setting a custom `Authorization` handshake header. This playground therefore uses the post-connect `AuthRequest` flow for authentication and debugging.
+:::
+
+<AsyncApiWebSocketPlayground />

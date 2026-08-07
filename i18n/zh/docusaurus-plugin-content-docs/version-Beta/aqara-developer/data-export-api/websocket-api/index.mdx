@@ -1,0 +1,28 @@
+---
+id: websocket-api
+title: "WebSocket API Playground"
+description: "在文档页面内直接调试 Aqara Data Export API 的 WebSocket 通道。"
+sidebar_label: "WebSocket API"
+hide_table_of_contents: true
+---
+
+import AsyncApiWebSocketPlayground from "@site/src/components/AsyncApiWebSocketPlayground";
+
+# WebSocket API Playground
+
+本页基于 `asyncapi/data-export-api/zh/asyncapi-AqaraLife-websocket.yaml` 整理出 AqaraLife Studio 的 WebSocket 接入契约，并将其渲染为可交互的 playground。您可以直接修改 Host 与 Path，建立连接后发送鉴权、心跳和订阅消息，并在同一页面查看服务端返回和推送事件。
+
+## 使用建议
+
+1. 先在「连接配置」中选择生产环境或局域网环境，再按需修改 Host 地址。
+2. 由于浏览器原生 WebSocket 不支持自定义握手 `Authorization` Header，推荐勾选自动发送 `AuthRequest`，通过首包完成鉴权。`Token` 输入框中只需填写从 Aqara Studio 获取的 Token，playground 会自动按 `Bearer <Token>` 形式组装鉴权内容。
+3. 如果您的 Studio 暴露的是非默认路径，可继续调整 `Path`；默认契约路径为 `/open/ws`。
+4. 为保持 WebSocket 连接活跃，客户端应定期发送 `ping` 或其他业务消息。根据最新契约建议，**每 30 秒内至少发送一次消息**；若 30 秒内没有任何出站消息，链路中的网关或代理可能主动断开连接。
+5. 连接成功后，可通过消息编辑器载入 `SubscribeAllRequest`、`SubscribeTraitValueRequest` 等示例，再直接发送调试。
+6. `TraitValueUpdate`、`objectEvent` 与 `ErrorMessage` 会实时出现在日志区域，便于核对订阅结果。
+
+:::tip 鉴权说明
+原始 AsyncAPI 契约支持两种认证方式：握手 Header `Authorization: Bearer <accessToken>` 与连接后首包 `AuthRequest`。由于浏览器环境限制，本页面重点覆盖第二种方式。
+:::
+
+<AsyncApiWebSocketPlayground />

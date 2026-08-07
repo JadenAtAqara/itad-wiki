@@ -54,3 +54,7 @@ Aqara 数据转出 API 提供了一套丰富的接口，支持用户高效、安
 | [删除自动化](./delete-automations.api.mdx) | /open/api/v1/automations/delete | POST |
 | [查询自动化手动触发对象列表](./query-automation-manual-trigger-list.api.mdx) | /open/api/v1/automations/manual-triggers | GET |
 | [执行手动触发器](./execute-automation-manual-trigger.api.mdx) | /open/api/v1/automations/manual-triggers/execute | POST |
+
+## WebSocket API
+
+除 HTTP 接口外，AqaraLife Studio 还提供基于 WebSocket 的订阅推送能力，适用于实时接收 Trait 值变化和对象事件。若您希望直接在文档页面里调试连接、鉴权、心跳和订阅流程，请访问 [WebSocket API Playground](./websocket-api/)。
