@@ -249,7 +249,17 @@
         "aqara-studio/product-knowledge/gateways/general",
         "aqara-studio/product-knowledge/gateways/edge-hub-m300",
         "aqara-studio/product-knowledge/gateways/din-rail-hub-ax100m",
-        "aqara-studio/product-knowledge/gateways/din-rail-hub-ax200m"
+        "aqara-studio/product-knowledge/gateways/hub-ax200m"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Sensor",
+      "customProps": {
+        "tab": "product-knowledge"
+      },
+      "items": [
+        "aqara-studio/product-knowledge/sensors/presence-sensor-pr330p"
       ]
     }
   ],

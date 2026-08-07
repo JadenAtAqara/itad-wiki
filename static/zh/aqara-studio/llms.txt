@@ -88,5 +88,6 @@
 - 通用资料: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/gateways/general
 - 智慧边端 M300: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/gateways/edge-hub-m300
 - 配电箱网关 AX100M: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/gateways/din-rail-hub-ax100m
-- 配电箱网关 AX200M: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/gateways/din-rail-hub-ax200m
+- 智慧网关 AX200M: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/gateways/hub-ax200m
+- 人在传感器 PR330P: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/sensors/presence-sensor-pr330p
 

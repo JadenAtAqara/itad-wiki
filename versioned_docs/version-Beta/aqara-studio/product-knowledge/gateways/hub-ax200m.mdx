@@ -1,0 +1,254 @@
+---
+title: "Hub AX200M"
+description: "This manual provides the product specifications, wiring terminal specifications, button operation instructions, and indicator status guidance for the DIN Rail Hub AX200M."
+keywords: ["Aqara Docs", "Aqara Studio", "Product Manuals", "Hub AX200M"]
+---
+# Hub AX200M
+
+## Product Information
+
+### Basic Information
+
+Chinese name: Hub AX200M
+English name: Hub AX200M
+Product model: ZHWG42LM
+Product type: Hub
+Barcode: 6978350352565
+SKU: AG055CNB01 / AG055CNB02
+Product ID: A01872 / A01968
+
+## Product Specifications
+
+### Basic Specifications
+
+Product dimensions: Φ100.5 × 30.75 mm
+Operating temperature: -10°C to 50°C
+Operating humidity: 0% to 95% RH, non-condensing
+Wireless protocols: Wi-Fi IEEE 802.11 a/b/g/n/ac/ax 2.4 GHz / 5 GHz (Wi-Fi 6), Zigbee/Thread IEEE 802.15.4, Bluetooth
+Power input: 5V⎓2A (USB Type-C)
+PoE input: 48V⎓0.25A (RJ45, IEEE 802.3af supported)
+Ethernet: RJ45, 100 Mbps, PoE supported
+Applicable standard: GB 4943.1-2022
+Package dimensions: 111 × 63 × 108 mm
+Package contents: Hub AX200M ×1, User manual ×1; CN version includes a 5V 2A adapter; GL version does not include an adapter and retains a USB-A to USB-C power cable
+
+### Main Materials
+
+PC+ABS
+
+## Product Appearance
+
+### Wireframe
+
+![image](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/mPdnpE5P6KQGmqw9/img/1e594597-d774-4e8d-8b69-a0f75193c6f3.png)
+
+## Product Overview
+
+### Product Overview
+
+Aqara Hub AX200M is the B-end version of Hub M200 (Nand Flash upgraded from 128 MB to 256 MB). It is designed for enterprise users and system integrators, and can serve as an extension hub with Hub M300 to expand coverage. It supports Aqara Zigbee and Thread devices, dual-band 2.4/5 GHz Wi-Fi 6, dual power supply via Type-C and PoE, local pairing to Aqara Studio on M300 for use without cloud AIoT, Matter Controller / Thread Border Router, Matter Bridging of Zigbee child devices to third-party Matter ecosystems, custom ringtones and personalized automation voice announcements, and B-end dedicated child devices.
+
+## Sales Information
+
+### Sales Regions
+
+Chinese Mainland (B2B channels)
+
+## Installation Instructions
+
+### Installation Prerequisites
+
+Use an adapter with a minimum output of 5VDC 2A; or power the hub via RJ45 using a PoE switch that supports IEEE 802.3af.
+
+### Installation Precautions
+
+1. This product is not a toy. Keep it away from children;
+2. For indoor use only. Do not use in humid environments or outdoors;
+3. Keep dry. Do not spill water or other liquids onto this product;
+4. Do not place this product near heat sources. Do not place it in an enclosed space unless adequate ventilation is provided;
+5. Do not attempt to repair this product yourself. Repairs should be performed by authorized professionals;
+6. This product and its child devices are intended only to improve convenience and for device status alerts. They should not be used as security equipment for homes, buildings, warehouses, or any other premises. If users violate the product instructions and these precautions and use the product for security purposes, the manufacturer assumes no responsibility for any resulting risks or property loss;
+7. Use an adapter with a minimum output of 5VDC 2A.
+
+## User Instructions
+
+### Quick Setup
+
+**1. Select power supply method**
+**1.1 Type-C power**
+Use a 5V⎓2A power adapter with a USB Type-C cable to power the hub via the Type-C port.
+**1.2 PoE power**
+Use a PoE device that supports IEEE 802.3af to power the hub via an RJ45 Ethernet cable (48V⎓0.25A).
+**2. Wait for the hub to start**
+The indicator stays solid yellow during startup, then switches to fast flashing yellow (waiting for connection).
+**3. Hub binding**
+Wired pairing: Connect Hub AX200M to a router/switch via Ethernet, place it on the same LAN as M300, then sign in to the Aqara Studio management page to complete pairing (see the Aqara Hub pairing guide for details).
+![image](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/mPdnpE5P6KQGmqw9/img/87e1beea-44af-44f8-9f9e-47d8b68477eb.png)
+**4. Bind child devices**
+Bind Zigbee devices: see the Zigbee device pairing guide
+Bind Aqara RS-485 devices: see the Aqara RS-485 device pairing guide
+Bind Matter Over Thread devices: Thread devices must be bound via the Aqara Life app
+**5. Reset network parameters**
+Press and hold the function button for more than 10 seconds: reset network parameters (user configuration data remains unchanged). When anti-misdelete mode is enabled, unbinding from the device side is not available; delete the device in Studio.
+**6. Factory reset**
+Press the function button quickly 10 times: restore factory settings (clear all user data to factory state).
+
+## Product Features
+
+### Feature Description
+
+**Interface description**
+Indicator: single RGB status indicator for hub operating status
+Button: raised function button for pairing, adding child devices, clearing alarms, reset, etc.
+Type-C: power interface (5V⎓2A); also supports network data communication; can connect an external 4G module via a Type-C dock for internet access
+RJ45: Ethernet interface (100 Mbps), IEEE 802.3af PoE supported
+Speaker: one 2 W speaker; supports custom ringtones and automation voice announcements
+**Button description**
+Press and hold the function button for more than 10 seconds: reset network parameters (user configuration data remains unchanged); when anti-misdelete is enabled, unbinding from the device side is not available
+Press the function button quickly 10 times: restore factory settings
+Press the function button once: clear alarm / stop adding child devices / stop voice announcement
+Press the function button quickly 2 times: disarm-related actions (cancel alarm and turn off the current guard mode, etc.; see product instructions for details)
+Press the function button quickly 3 times: enter Zigbee child device pairing mode
+Press the function button quickly 5 times, then press and hold for 3-5 seconds: enter network standby mode (Wi-Fi/Zigbee/Thread/BLE off; wired network remains available)
+**Indicator description**
+Solid yellow: starting up
+Fast flashing yellow: waiting for network connection
+Fast flashing blue: connecting to network
+Slow flashing blue: network connected, account binding in progress / offline after pairing
+Solid blue: working normally (account bound successfully)
+Solid white: unable to connect to the router within about 10 minutes / account binding failed; re-enter waiting-for-pairing configuration
+Slow flashing purple: Zigbee child device pairing allowed
+Slow flashing yellow: firmware upgrading
+Solid purple: network standby mode
+Fast flashing red 3 times: anti-misdelete enabled; cannot delete from the device side
+**Key capabilities**
+1. Supports local pairing to Aqara Studio on M300 for use without cloud AIoT
+2. Can serve as a Zigbee hub and Thread Border Router to connect Aqara Zigbee and Thread child devices
+3. Supports Matter Controller, Matter Bridge, and Matter commissioner
+4. Supports dual-band 2.4 GHz & 5 GHz Wi-Fi 6 and RJ45 wired networking
+5. Supports dual power supply via Type-C / PoE
+6. Supports custom ringtones and automation voice announcements
+7. Supports B-end dedicated child devices (including Siemens child device access on the Siemens version)
+8. Supports B-end capabilities such as new Thing Model, static IP, child device anti-misdelete, and security level settings
+
+## Precautions
+
+### Usage Precautions
+
+1. This product is not a toy. Keep it away from children;
+2. For indoor use only. Do not use in humid environments or outdoors;
+3. Keep dry. Do not spill water or other liquids onto this product;
+4. Do not place this product near heat sources. Do not place it in an enclosed space unless adequate ventilation is provided;
+5. Do not attempt to repair this product yourself. Repairs should be performed by authorized professionals;
+6. This product and its child devices are intended only to improve convenience and for device status alerts. They should not be used as security equipment for homes, buildings, warehouses, or any other premises. If users violate the product instructions and these precautions and use the product for security purposes, the manufacturer assumes no responsibility for any resulting risks or property loss;
+7. Use an adapter with a minimum output of 5VDC 2A.
+
+## Maintenance
+
+### N/A
+
+N/A
+
+## Supported Hub Information
+
+### N/A
+
+N/A
+
+## Automation Information
+
+### Supported Automation Triggers
+
+Anti-misdelete notification equals / does not equal button-triggered reset / button-triggered factory reset
+Volume equals / does not equal / greater than / greater than or equal to / less than / less than or equal to 0-100
+
+### Supported Automation Conditions
+
+Volume equals / does not equal / greater than / greater than or equal to / less than / less than or equal to 0-100
+
+### Supported Automation Actions
+
+Restart device; set volume; play hub ringtone
+
+## Voice Control
+
+### Supported Voice Commands
+
+N/A
+
+### Supported Third-Party Voice Platforms
+
+N/A
+
+## Product Certification
+
+### Product Certification
+
+SRRC, quality inspection report
+
+## Product Warranty
+
+### Warranty Statement
+
+After-sales service for this product is provided strictly in accordance with the Law of the People's Republic of China on the Protection of Consumer Rights and Interests and the Product Quality Law of the People's Republic of China, under the three-guarantee (return/replacement/repair) policy. For complete warranty details, including the warranty policy and non-warranty terms, scan the QR code in the user manual to view the product handbook.
+
+### Warranty Policy
+
+Within the three-guarantee validity period, you may enjoy free return, replacement, and repair services in accordance with these provisions. Return, replacement, and repair shall be handled with the invoice.
+1. Unconditional return within 7 days from the day after receipt (e-commerce purchase channels); logistics fees are borne by the user;
+2. If this product has a performance fault listed in the Product Performance Fault Table, and it is confirmed by the after-sales service center, you may enjoy the following services free of charge.
+**Friendly reminder**
+Because packaging is required to ensure safe transportation, it is recommended that you keep the packaging box for at least 30 days from the day after receipt.
+
+### Non-Warranty Terms
+
+1. Unauthorized repair, misuse, collision, negligence, abuse, liquid ingress, accidents, modification, incorrect use of non-original accessories, or tearing/altering labels or anti-counterfeit marks;
+2. Beyond the three-guarantee validity period;
+3. Damage caused by force majeure;
+4. Conditions that do not match the performance faults listed in the Product Performance Fault Table;
+5. Performance faults listed in the Product Performance Fault Table that are caused by human factors to this product or its accessories.
+
+### Product Performance Fault Table
+
+1. Surface cracking caused by structural or material factor
+2. Product fails to power on
+3. Indicator failure
+4. Button failure
+5. Wi-Fi connection failure
+6. Unable to restore factory settings
+7. Other factory hardware faults that prevent normal function
+
+## Troubleshooting Guide
+
+### Fault Symptoms, Possible Causes, and Solutions
+
+Common pairing failures:
+\*After power-on, press and hold the hub button for more than 10 seconds, wait until the yellow light flashes, then retry adding;
+\*Check whether the router has Wi-Fi anti-sharing settings enabled, which may prevent the hub from connecting to the network;
+\*Check whether the router has AP isolation enabled, which may prevent the phone from discovering the hub on the LAN;
+\*Avoid connecting to bridged networks.
+
+## Specific Notes
+
+### Low-Power Radio Device Instructions
+
+1. The Zigbee/Thread technology used in this product complies with the technical requirements for Category F general-purpose low-power devices in the Catalogue and Technical Requirements for Low-Power Short-Range Radio Transmission Equipment, and is used for data transmission. It uses an integrated antenna. For control, adjustment, and switch operations, refer to the relevant sections of the product manual;
+2. Do not change the usage scenario or conditions without authorization, expand the transmission frequency range, increase transmit power (including adding an RF power amplifier), or modify the transmitting antenna;
+3. Do not cause harmful interference to other legitimate radio stations, and do not claim protection from harmful interference;
+4. Must tolerate interference from industrial, scientific, and medical (ISM) equipment that radiates RF energy, or from other legitimate radio stations;
+5. If harmful interference is caused to other legitimate radio stations, stop using the product immediately and take measures to eliminate the interference before continuing use;
+6. When used in aircraft or within electromagnetic environment protection areas designated by laws, regulations, national provisions, or standards-such as radio astronomy observatories, weather radar stations, satellite earth stations (including TT&C, ranging, receiving, and navigation stations), military/civilian radio stations, and airports-comply with electromagnetic environment protection requirements and relevant industry authorities;
+7. Do not use model remote controllers within a 5,000-meter radius centered on an airport runway midpoint;
+8. Operating temperature for the low-power device is -10°C to +50°C; power supply is 5V⎓2A or 48V⎓0.25A.
+
+## Product Selling Points
+
+### Product Image
+
+![网关M200设备图.png](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/mPdnpE5P6KQGmqw9/img/b623925d-f73e-4bbf-af6a-999cbb0f870d.png)
+
+## FAQ
+
+### Hub AX200M FAQ
+
+NA
