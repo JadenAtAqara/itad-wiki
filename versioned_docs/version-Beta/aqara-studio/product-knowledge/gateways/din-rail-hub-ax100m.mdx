@@ -5,45 +5,267 @@ keywords: ["Aqara Docs", "Aqara Studio", "Product Manuals", "DIN Rail Hub AX100M
 ---
 # DIN Rail Hub AX100M
 
-## 产品规格
+## Product Information
 
-| 参数       | 规格 |
-|------------|-----------------------------------------|
-| 产品型号   | ZHWG30LM / HM-G07D                      |
-| Type-C输入 | 5V⎓1A                                  |
-| 电源输入   | 12V-24V⎓，0.6A                          |
-| 尺寸       | 95 × 26.8 × 61 mm                      |
-| 接口       | Type-C，SMA接口，100Mbps RJ45，8-pin端子 |
-| 无线协议   | Wi-Fi IEEE 802.11 a/b/g/n/ac/ax 2.4 GHz / 5 GHz, Zigbee/Thread IEEE 802.15.4, Bluetooth |
-| 执行标准   | GB 4943.1-2022                         |
-| 工作温度   | -10°C ~ 50°C                           |
-| 工作湿度   | 0 ~ 95% RH, 无冷凝                      |
+### Basic Information
 
-## 接线端子规格
+Chinese name: DIN Rail Hub AX100M
+English name: DIN Rail Hub AX100M
+Product model: ZHWG30LM (CN version) / HM-G07D (GL version)
+Product type: Hub
+Barcode: 6978350350851 (White / CN version) / 6978350350875 / 0192784003459 (White / GL version)
+SKU: AG049CNB01 (CN version) / AG049GLB02 (GL version)
+Product ID: A01699 (CN version) / A01701 (GL version)
 
-**端子顺序（左->右）**：**NA / NA / NA / GND / B / A / V- / V+，其中，NA 不使用，GND / B / A 用于连接AqaraModbus子设备，V- / V+ 用于连接电源模块。
-**推荐线材**：建议使用符合电气安装规范的线材进行连接，并根据端子规格预留约 8 mm 的剥线长度。接线外径推荐为1.05mm。
+## Product Specifications
 
-## 按钮操作指引
+### Basic Specifications
 
-| 按键动作                | 说明 |
-|----------------------|------|
-| 长按10秒               | 网络重置，清除Wi-Fi设置（如有），清除Studio连接关系，保留子设备连接关系 |
-| 快按10次               | 恢复出厂设置，清除本机设置，清除Studio连接关系和子设备连接关系 |
-| 快按3次                | 进入 Zigbee 子设备配对状态 |
-| 快按5次+长按3～5秒      | 网络待机状态：所有无线网络关闭（包括 Wi-Fi、Zigbee、Thread、BLE），能够继续使用有线网络、AqaraModbus 和红外收发，能够继续使用快按 10 下进入重置功能。 |
+Product dimensions: 95 × 26.8 × 61 mm
+Operating temperature: -10°C to 50°C
+Operating humidity: 0% to 95% RH, non-condensing
+Wireless protocols: Wi-Fi IEEE 802.11 a/b/g/n/ac/ax 2.4 GHz / 5 GHz (Wi-Fi 6), Zigbee/Thread IEEE 802.15.4, Bluetooth
+Type-C input: 5V⎓1A
+Power input: 12V-24V⎓, 0.6A (DC terminals connected to power module)
+Ethernet: RJ45, 100 Mbps (PoE not supported)
+RS485: 10 Mbit/s Max, 8-pin terminal (GND/B/A for connecting Aqara RS-485 child devices; V-/V+ for power module)
+Applicable standard: GB 4943.1-2022
+Package dimensions: 178 × 111 × 35 mm
+Package contents: DIN Rail Hub AX100M ×1, User manual ×1, Antenna ×1 (0.8 m magnetic antenna)
 
-## 指示灯状态指引
+### Main Materials
 
-| 指示灯状态   | 设备状态 & 操作说明                   |
-|------------|--------------------------------------|
-| 黄灯常亮    | 正在启动                             |
-| 黄灯快闪    | 等待连接网络                         |
-| 蓝灯快闪    | 连接网络中                           |
-| 蓝灯慢闪    | 网络连接成功，系统初始化中           |
-| 蓝灯常亮    | 正常工作                             |
-| 白灯常亮    | 网络配置超时，需要重启               |
-| 紫灯常亮    | 网络待机状态                         |
-| 紫灯闪烁    | Zigbee子设备配对状态                 |
-| 黄灯慢闪    | 固件升级中                           |
-| 熄灭        | 指示灯被关闭/设备未上电              |
+PC+ABS
+
+## Product Appearance
+
+### Wireframe
+
+![image](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/5VLqXL5JEYm1ZqX1/img/58d6ee3a-48ce-4179-920b-fb68b16f59d4.png)
+
+## Product Overview
+
+### Product Overview
+
+Aqara DIN Rail Hub AX100M is a hub designed to meet DIN rail installation requirements for distribution boxes, and can be mounted on a standard DIN rail. It supports both Zigbee and Thread protocols, Matter Controller and Thread Border Router functions, and can act as a Matter Bridge to connect bound Zigbee child devices to third-party Matter ecosystems. It supports Aqara RS-485 child devices, enabling pairing, network configuration, and control management via wired RS485 connection. It supports dual-band 2.4 GHz and 5 GHz Wi-Fi, and can be powered via USB Type-C or a power module.
+
+## Sales Information
+
+### Sales Regions
+
+CN version: Chinese Mainland
+GL version: European Union
+
+## Installation Instructions
+
+### Installation Prerequisites
+
+Installation tools: connecting wires (twisted pair or AWG 28 electronic wire recommended; to be prepared by the user)
+
+### Installation Precautions
+
+Before installation, make sure the main power switch is turned off! Wire the hub only when it is powered off to avoid electrical accidents.
+Use with the dedicated Aqara power module. The power module outputs 24 V and can supply power to the DC ports of Aqara DIN Rail Hub AX100M and Aqara RS-485 child devices. If another power module is required, confirm the specifications with Aqara technical support before installation to avoid damage.
+
+## User Instructions
+
+### Quick Setup
+
+**1. Select power supply method and install**
+\*Before installation, make sure the main power switch is turned off! Wire the hub only when it is powered off.
+**1.1. Power via power module DC port**
+1. Turn off the main power supply switch;
+2. Insert the matching female terminal into the hub DC interface;
+3. Connect the hub V+ and V- ports to the power module output V+ and V- with connecting wires;
+4. Connect the mains wires to the power module input, then turn on the main power supply.
+**1.2. Power via Type-C**
+Use a 5V⎓1A power adapter with a USB Type-C cable to connect the adapter to the hub Type-C port for power supply (power cable and adapter are not included).
+**2. Hub antenna installation**
+Due to the installation environment, the distribution box may shield Zigbee and Thread signals. Use the antenna included in the package. Screw the antenna SMA connector into the SMA port on the hub, and install the antenna outside the distribution box so the hub can communicate with Zigbee and Thread child devices outside the box.
+**3. Wait for the hub to start**
+The hub indicator changes from solid yellow to fast flashing yellow.
+**4. Hub binding**
+Connect DIN Rail Hub AX100M to the router, place it on the same LAN as M300, then sign in to the M300 Studio management page. See the Aqara Hub pairing guide for details.
+![image](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/5VLqXL5JEYm1ZqX1/img/c924f5e7-9f16-4194-a8d6-2a28436defc5.png)
+**5. Bind child devices**
+Bind Zigbee devices: see the Zigbee device pairing guide
+Bind Aqara RS-485 devices: see the Aqara RS-485 device pairing guide
+Bind Matter Over Thread devices: Thread devices must be bound to AX100M via the Aqara Life app
+**6. Reset network parameters**
+Press and hold the function button for more than 10 seconds: reset network parameters (user configuration data remains unchanged). When anti-misdelete mode is enabled, unbinding from the hub side is not available.
+**7. Factory reset**
+Press the function button quickly 10 times: restore factory settings (clear all user data to factory state).
+
+## Product Features
+
+### Feature Description
+
+**Recommended number of connected child devices**
+Recommended connected child devices
+Zigbee: 40
+Thread: 40
+Aqara RS-485: 32
+Within these limits, Aqara lab testing confirms good automation success rates.
+**Interface description**
+Indicator: hub status indicator
+Button: hub function button for triggering different hub functions
+Type-C USB: power interface for a Type-C cable with a 5V⎓1A power adapter (power cable and adapter are not included)
+SMA: antenna interface (package includes an 80 cm magnetic antenna)
+RJ45: Ethernet interface for wired network connection
+8-pin terminal: push-in terminal block, left to right: NC/NC/NC/GND/B/A/V-/V+; GND/B/A are RS485 terminals for Aqara RS-485 child devices; V-/V+ connect to the power module
+**Button description**
+Press and hold the function button for more than 10 seconds: reset network parameters (user configuration data remains unchanged); when anti-misdelete mode is enabled, unbinding from the hub side is not available
+Press the function button quickly 10 times: restore factory settings (clear all user data to factory state)
+Press the function button quickly 3 times: enter Zigbee child device pairing mode
+**Indicator description**
+Solid yellow: starting up
+Fast flashing yellow: waiting for network connection
+Fast flashing blue: connecting to network
+Slow flashing blue: network connected, account binding in progress
+Solid blue: working normally
+Solid white: powered on for 10 minutes without network configuration
+Flashing purple: child device pairing allowed
+Slow flashing yellow: firmware upgrading
+Off: indicator turned off / hub not powered / hub in sleep mode
+**Key capabilities**
+1. Can serve as a Zigbee hub and Thread Border Router to connect Aqara Zigbee and Thread child devices
+2. Can serve as a Matter Bridge to connect bound Aqara Zigbee child devices to third-party Matter ecosystems
+3. Supports Matter Controller to add third-party Matter devices
+4. Connects Aqara RS-485 child devices via RS485 wired interface (supports up to 32 Aqara RS-485 child devices) for pairing, connection, and control
+5. Supports dual-band 2.4 GHz & 5 GHz Wi-Fi 6 wireless networking and RJ45 wired networking
+6. Can connect to third-party Matter platforms (Google, Alexa, Samsung SmartThings, etc.)
+
+## Precautions
+
+### Usage Precautions
+
+1. This product is not a toy. Keep it away from children;
+2. For indoor use only. Do not use in humid environments or outdoors;
+3. Keep dry. Do not spill water or other liquids onto this product;
+4. Do not place this product near heat sources. Do not place it in an enclosed space unless adequate ventilation is provided;
+5. Do not attempt to repair this product yourself. Repairs should be performed by authorized professionals;
+6. This product and its child devices are intended only to improve home convenience and entertainment, and for device status alerts. They should not be used as security equipment for homes, buildings, warehouses, or any other premises. If users violate the product instructions and these precautions and use the product for security purposes, the manufacturer assumes no responsibility for any resulting risks or property loss;
+7. Use an adapter with a minimum output of 5VDC 1A, or a power module of 12-24V⎓, 0.6A
+
+## Maintenance
+
+### N/A
+
+N/A
+
+## Supported Hub Information
+
+### N/A
+
+N/A
+
+## Automation Information
+
+### Supported Automation Triggers
+
+Feature: Anti-misdelete notification
+Trigger condition: equals / does not equal button-triggered reset / button-triggered factory reset
+
+### Supported Automation Conditions
+
+N/A
+
+### Supported Automation Actions
+
+Restart the entire device; delay duration
+
+## Voice Control
+
+### Supported Voice Commands
+
+N/A
+
+### Supported Third-Party Voice Platforms
+
+N/A
+
+## Product Certification
+
+### Product Certification
+
+SRRC, quality inspection report, CE
+
+## Product Warranty
+
+### Warranty Statement
+
+After-sales service for this product is provided strictly in accordance with the Law of the People's Republic of China on the Protection of Consumer Rights and Interests and the Product Quality Law of the People's Republic of China, under the three-guarantee (return/replacement/repair) policy.
+
+### Warranty Policy
+
+Within the three-guarantee validity period, you may enjoy free return, replacement, and repair services in accordance with these provisions. Return, replacement, and repair shall be handled with the invoice.
+1. Unconditional return within 7 days from the day after receipt (e-commerce purchase channels); logistics fees are borne by the user;
+2. If this product has a performance fault listed in the Product Performance Fault Table, and it is confirmed by the after-sales service center, you may enjoy the following services free of charge.
+**Friendly reminder**
+Because packaging is required to ensure safe transportation, it is recommended that you keep the packaging box for at least 30 days from the day after receipt.
+
+### Non-Warranty Terms
+
+1. Unauthorized repair, misuse, collision, negligence, abuse, liquid ingress, accidents, modification, incorrect use of non-original accessories, or tearing/altering labels or anti-counterfeit marks;
+2. Beyond the three-guarantee validity period;
+3. Damage caused by force majeure;
+4. Conditions that do not match the performance faults listed in the Product Performance Fault Table;
+5. Performance faults listed in the Product Performance Fault Table that are caused by human factors to this product or its accessories.
+
+### Product Performance Fault Table
+
+1. Surface cracking caused by structural or material factors
+2. Product fails to power on
+3. Indicator failure
+4. Button failure
+5. Wi-Fi connection failure
+6. Unable to restore factory settings
+7. Other factory hardware faults that prevent normal function
+
+## Troubleshooting Guide
+
+### Fault Symptoms, Possible Causes, and Solutions
+
+Common pairing failures:
+\*After power-on, press and hold the hub button for more than 10 seconds, wait until the yellow light flashes, then retry adding;
+\*Check whether the router has Wi-Fi anti-sharing settings enabled, which may prevent the hub from connecting to the network;
+\*Check whether the router has AP isolation enabled, which may prevent the phone from discovering the hub on the LAN;
+\*Avoid connecting to bridged networks.
+
+## Specific Notes
+
+### Low-Power Radio Device Instructions
+
+1. The Zigbee/Thread technology used in this product complies with the technical requirements for Category F general-purpose low-power devices in the Catalogue and Technical Requirements for Low-Power Short-Range Radio Transmission Equipment, and is used for data transmission. It uses an integrated antenna. For control, adjustment, and switch operations, refer to the relevant sections of the product manual;
+2. Do not change the usage scenario or conditions without authorization, expand the transmission frequency range, increase transmit power (including adding an RF power amplifier), or modify the transmitting antenna;
+3. Do not cause harmful interference to other legitimate radio stations, and do not claim protection from harmful interference;
+4. Must tolerate interference from industrial, scientific, and medical (ISM) equipment that radiates RF energy, or from other legitimate radio stations;
+5. If harmful interference is caused to other legitimate radio stations, stop using the product immediately and take measures to eliminate the interference before continuing use;
+6. When used in aircraft or within electromagnetic environment protection areas designated by laws, regulations, national provisions, or standards-such as radio astronomy observatories, weather radar stations, satellite earth stations (including TT&C, ranging, receiving, and navigation stations), military/civilian radio stations, and airports-comply with electromagnetic environment protection requirements and relevant industry authorities;
+7. Do not use model remote controllers within a 5,000-meter radius centered on an airport runway midpoint;
+8. Operating temperature for the low-power device is -10°C to +50°C; power supply is Type-C 5V⎓1A or power module 12-24V⎓, 0.6A
+
+## Product Selling Points
+
+### Selling Point Description
+
+1. DIN rail mounting for distribution box scenarios
+2. Dual power options: USB-C / DC terminals
+3. External SMA antenna to manage Zigbee & Thread child devices outside the distribution box
+4. Dual-band 2.4 GHz & 5 GHz Wi-Fi 6 for more stable connections
+5. Dual protocol: Zigbee hub + Thread Border Router
+6. Can act as Matter Bridge / Matter Controller to connect to third-party Matter ecosystems
+7. RS485 wired connection for Aqara RS-485 child devices (supports up to 32 Aqara RS-485 child devices)
+
+### Product Image / Selling Point Poster
+
+![image](https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/5VLqXL5JEYm1ZqX1/img/205e6fba-e257-470b-a498-635c0dd12217.png)
+
+## FAQ
+
+### DIN Rail Hub AX100M FAQ
+
+Q: Does DIN Rail Hub AX100M support third-party RS485 protocols such as Modbus RTU or BACnet MS/TP?
+A: It is supported at the hardware level and theoretically supportable in software, but this has not been developed yet and needs to be evaluated based on actual customer requirements.
+Q: What are the pros and cons of wired RS-485 compared with wireless Zigbee & Thread?
+A: RS-485 is simple and reliable, and once deployed requires almost no maintenance; however, it requires pre-installation and makes adding new devices more difficult.
