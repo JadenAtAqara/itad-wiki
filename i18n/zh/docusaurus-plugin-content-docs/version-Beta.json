@@ -91,6 +91,10 @@
     "message": "网关",
     "description": "The label for category 'Gateway' in sidebar 'aqaraStudioSidebar'"
   },
+  "sidebar.aqaraStudioSidebar.category.Sensor": {
+    "message": "传感器",
+    "description": "The label for category 'Sensor' in sidebar 'aqaraStudioSidebar'"
+  },
   "sidebar.aqaraDeveloperSidebar.category.Local API for Studio": {
     "message": "Studio 本地 API",
     "description": "The label for category 'Local API for Studio' in sidebar 'aqaraDeveloperSidebar'"
