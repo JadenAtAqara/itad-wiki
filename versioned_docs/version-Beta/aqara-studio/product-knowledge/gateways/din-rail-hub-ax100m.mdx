@@ -32,7 +32,7 @@ keywords: ["Aqara Docs", "Aqara Studio", "Product Manuals", "DIN Rail Hub AX100M
 | Type-C input | 5V⎓1A |
 | Power input | 12V-24V⎓, 0.6A (DC terminals connected to power module) |
 | Ethernet | RJ45, 100 Mbps (PoE not supported) |
-| RS485 | 10 Mbit/s Max, 8-pin terminal (GND/B/A for connecting Aqara RS-485 child devices; V-/V+ for power module) |
+| RS485 | 10 Mbit/s Max, 8-pin terminal (GND/B/A for connecting Aqara RS-485 sub-devices; V-/V+ for power module) |
 | Applicable standard | GB 4943.1-2022 |
 | Package dimensions | 178 × 111 × 35 mm |
 | Package contents | <ul><li>DIN Rail Hub AX100M ×1</li><li>User manual ×1</li><li>Antenna ×1 (0.8 m magnetic antenna)</li></ul> |
@@ -49,7 +49,7 @@ PC+ABS
 
 ## Product Overview
 
-Aqara DIN Rail Hub AX100M is a hub designed to meet DIN rail installation requirements for distribution boxes, and can be mounted on a standard DIN rail. It supports both Zigbee and Thread protocols, Matter Controller and Thread Border Router functions, and can act as a Matter Bridge to connect bound Zigbee child devices to third-party Matter ecosystems. It supports Aqara RS-485 child devices, enabling pairing, network configuration, and control management via wired RS485 connection. It supports dual-band 2.4 GHz and 5 GHz Wi-Fi, and can be powered via USB Type-C or a power module.
+Aqara DIN Rail Hub AX100M is a hub designed to meet DIN rail installation requirements for distribution boxes, and can be mounted on a standard DIN rail. It supports both Zigbee and Thread protocols, Matter Controller and Thread Border Router functions, and can act as a Matter Bridge to connect bound Zigbee sub-devices to third-party Matter ecosystems. It supports Aqara RS-485 sub-devices, enabling pairing, network configuration, and control management via wired RS485 connection. It supports dual-band 2.4 GHz and 5 GHz Wi-Fi, and can be powered via USB Type-C or a power module.
 
 ## Sales Information
 
@@ -69,7 +69,7 @@ Installation tools: connecting wires (twisted pair or AWG 28 electronic wire rec
 ### Installation Precautions
 
 - Before installation, make sure the main power switch is turned off! Wire the hub only when it is powered off to avoid electrical accidents.
-- Use with the dedicated Aqara power module. The power module outputs 24 V and can supply power to the DC ports of Aqara DIN Rail Hub AX100M and Aqara RS-485 child devices. If another power module is required, confirm the specifications with Aqara technical support before installation to avoid damage.
+- Use with the dedicated Aqara power module. The power module outputs 24 V and can supply power to the DC ports of Aqara DIN Rail Hub AX100M and Aqara RS-485 sub-devices. If another power module is required, confirm the specifications with Aqara technical support before installation to avoid damage.
 
 ## User Instructions
 
@@ -96,7 +96,7 @@ Use a 5V⎓1A power adapter with a USB Type-C cable to connect the adapter to th
 
 #### 2. Hub Antenna Installation
 
-Due to the installation environment, the distribution box may shield Zigbee and Thread signals. Use the antenna included in the package. Screw the antenna SMA connector into the SMA port on the hub, and install the antenna outside the distribution box so the hub can communicate with Zigbee and Thread child devices outside the box.
+Due to the installation environment, the distribution box may shield Zigbee and Thread signals. Use the antenna included in the package. Screw the antenna SMA connector into the SMA port on the hub, and install the antenna outside the distribution box so the hub can communicate with Zigbee and Thread sub-devices outside the box.
 
 #### 3. Wait for the Hub to Start
 
@@ -108,9 +108,9 @@ Connect DIN Rail Hub AX100M to the router, place it on the same LAN as M300, the
 
 <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/DIN-Rail-Hub-AX100M-pic2.png" alt="Hub binding"  style={{ width: '60%' }} />
 
-#### 5. Bind Child Devices
+#### 5. Bind Sub-Devices
 
-| Child device protocol | Pairing guide |
+| Sub-device protocol | Pairing guide |
 | -- | -- |
 | Zigbee | [Zigbee Device Integration Guide](./../../device-integration/zigbee.mdx) |
 | Aqara RS-485 | [Aqara RS-485 Device Integration Guide](./../../device-integration/aqara-rs-485.mdx) |
@@ -118,11 +118,11 @@ Connect DIN Rail Hub AX100M to the router, place it on the same LAN as M300, the
 
 ## Product Features
 
-### Recommended Number of Connected Child Devices
+### Recommended Number of Connected Sub-Devices
 
-Recommended connected child devices:
+Recommended connected sub-devices:
 
-| Child device protocol | Recommended quantity |
+| Sub-device protocol | Recommended quantity |
 | :-----------: | :----------: |
 | Zigbee | 40 |
 | Thread | 40 |
@@ -139,7 +139,7 @@ Within these limits, Aqara lab testing confirms good automation success rates.
 | Type-C USB | Power interface for a Type-C cable with a 5V⎓1A power adapter (power cable and adapter are not included) |
 | SMA | antenna interface (package includes an 80 cm magnetic antenna) |
 | RJ45 | Ethernet interface for wired network connection |
-| 8-pin terminal | Push-in terminal block, left to right: NC/NC/NC/GND/B/A/V-/V+; GND/B/A are RS485 terminals for Aqara RS-485 child devices; V-/V+ connect to the power module |
+| 8-pin terminal | Push-in terminal block, left to right: NC/NC/NC/GND/B/A/V-/V+; GND/B/A are RS485 terminals for Aqara RS-485 sub-devices; V-/V+ connect to the power module |
 
 ### Button Description
 
@@ -147,7 +147,7 @@ Within these limits, Aqara lab testing confirms good automation success rates.
 |----------------------|--------------------------------------------------|
 | Press and hold the function button for more than 10 seconds | Reset network parameters (user configuration data remains unchanged); when anti-misdelete mode is enabled, unbinding from the hub side is not available |
 | Press the function button quickly 10 times | Restore factory settings (clear all user data to factory state) |
-| Press the function button quickly 3 times | Enter Zigbee child device pairing mode |
+| Press the function button quickly 3 times | Enter Zigbee sub-device pairing mode |
 
 ### Indicator Description
 
@@ -159,16 +159,16 @@ Within these limits, Aqara lab testing confirms good automation success rates.
 | Slow flashing blue | Network connected, account binding in progress |
 | Solid blue | Working normally |
 | Solid white | Powered on for 10 minutes without network configuration |
-| Flashing purple | Child device pairing allowed |
+| Flashing purple | Sub-device pairing allowed |
 | Slow flashing yellow | Firmware upgrading |
 | Off | Indicator turned off / hub not powered / hub in sleep mode |
 
 ### Key Capabilities
 
-- Can serve as a Zigbee hub and Thread Border Router to connect Aqara Zigbee and Thread child devices
-- Can serve as a Matter Bridge to connect bound Aqara Zigbee child devices to third-party Matter ecosystems
+- Can serve as a Zigbee hub and Thread Border Router to connect Aqara Zigbee and Thread sub-devices
+- Can serve as a Matter Bridge to connect bound Aqara Zigbee sub-devices to third-party Matter ecosystems
 - Supports Matter Controller to add third-party Matter devices
-- Connects Aqara RS-485 child devices via RS485 wired interface (supports up to 32 Aqara RS-485 child devices) for pairing, connection, and control
+- Connects Aqara RS-485 sub-devices via RS485 wired interface (supports up to 32 Aqara RS-485 sub-devices) for pairing, connection, and control
 - Supports dual-band 2.4 GHz & 5 GHz Wi-Fi 6 wireless networking and RJ45 wired networking
 - Can connect to third-party Matter platforms (Google, Alexa, Samsung SmartThings, etc.)
 
@@ -181,7 +181,7 @@ Within these limits, Aqara lab testing confirms good automation success rates.
 - Keep dry. Do not spill water or other liquids onto this product;
 - Do not place this product near heat sources. Do not place it in an enclosed space unless adequate ventilation is provided;
 - Do not attempt to repair this product yourself. Repairs should be performed by authorized professionals;
-- This product and its child devices are intended only to improve home convenience and entertainment, and for device status alerts. They should not be used as security equipment for homes, buildings, warehouses, or any other premises. If users violate the product instructions and these precautions and use the product for security purposes, the manufacturer assumes no responsibility for any resulting risks or property loss;
+- This product and its sub-devices are intended only to improve home convenience and entertainment, and for device status alerts. They should not be used as security equipment for homes, buildings, warehouses, or any other premises. If users violate the product instructions and these precautions and use the product for security purposes, the manufacturer assumes no responsibility for any resulting risks or property loss;
 - Use an adapter with a minimum output of 5VDC 1A, or a power module of 12-24V⎓, 0.6A
 
 ## Automation Information
@@ -266,11 +266,11 @@ Common pairing failures:
 
 - DIN rail mounting for distribution box scenarios
 - Dual power options: USB-C / DC terminals
-- External SMA antenna to manage Zigbee & Thread child devices outside the distribution box
+- External SMA antenna to manage Zigbee & Thread sub-devices outside the distribution box
 - Dual-band 2.4 GHz & 5 GHz Wi-Fi 6 for more stable connections
 - Dual protocol: Zigbee hub + Thread Border Router
 - Can act as Matter Bridge / Matter Controller to connect to third-party Matter ecosystems
-- RS485 wired connection for Aqara RS-485 child devices (supports up to 32 Aqara RS-485 child devices)
+- RS485 wired connection for Aqara RS-485 sub-devices (supports up to 32 Aqara RS-485 sub-devices)
 
 ### Product Image / Selling Point Poster
 
