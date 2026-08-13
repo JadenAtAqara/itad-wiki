@@ -1,30 +1,38 @@
 ---
 title: "云端连接"
-description: "云端连接（Edge2Cloud）可以将本地 Studio 绑定至 Aqara Builder 云平台，以便用户在任何地方都可以通过 Aqara Builder 远程访问本地 Studio ，不再受到本地访问的限制。"
+description: "云端连接（Edge2Cloud）可以将本地 Studio 绑定至  Aqara Cloud 云平台，以便用户在任何地方都可以通过 Aqara Builder 远程访问本地 Studio ，不再受到本地访问的限制。"
 keywords: ["Aqara 文档", "Aqara Studio", "云端连接", "cloud"]
 ---
 # 云端连接
 
 ## 功能简介
 
-云端连接（Edge2Cloud）可以将本地 Studio 绑定至 [Aqara Builder](https://builder.aqara.com) 云平台，以便用户在任何地方都可以通过 Aqara Builder 远程访问本地 Studio ，不再受到本地访问的限制。
-
-主要功能包括：
+云端连接可以将本地 Studio 绑定至 Aqara Cloud 云平台，在任何地方都可以通过 Aqara Cloud 远程访问本地 Studio 不再受到本地访问的限制。主要功能包括：
 - 为云平台具备权限的用户提供 [远程安全访问](./remote-access.mdx) 服务。
 - 可通过云平台远程监控等云端运营功能。
 - 为本地 Studio 提供更多可扩展的增值服务。
 - 提供本地 Studio 和云端平台之间的数据交互功能。
-- 用户远程访问在所有维护的 Studio 版本上均免费使用。   
-
-更多功能尽情期待!
-
-## Aqara Builder 简介
-
-作为 Aqara 的云中心，Aqara Builder 连接了本地的 Aqara Studio 和基于云的创意工作流程。Aqara Builder 支持多个现场站点集中管理 Aqara Studio 设备，并实现一键远程连接，实现无缝云端运营。即使没有 Studio 设备，用户也可以通过“试用在线演示”功能体验完整的 Aqara Studio 创作过程。
+- 用户远程访问在所有维护的 Studio 版本上均免费使用。
 
 ## 使用流程
 
-1. 从左侧侧边栏访问**云端连接**页面。
-2. 在该页面登录 Aqara Builder 账号。
-3. 将 Aqara Studio 与您的 Aqara Workspace 绑定。
-4. 绑定成功后，进入 Aqara Studio 左侧侧边栏的**用户管理**页面，即可查看已绑定的 Aqara Builder 账号信息，该账号的用户角色为 **管理员（远程）**。
+1. 从左侧侧边栏访问 **设置** -> **云端连接**页面，单击 **连接至 Aqara Cloud** 按钮。
+
+    ![连接至 Aqara Cloud](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Cloud-ConnectToAqaraCloud.png)
+
+2. 在弹窗中登录您的 Aqara 账号，完成校验，以使用云端连接相关服务。
+
+    :::tip
+    登录前，请确认弹窗中所选地区设置正确。该地区信息将决定 Aqara Studio 在 Aqara Builder 中的归属区域，并直接影响 [远程访问](./remote-access.mdx) 的使用体验。
+    :::
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Cloud-Login.png" alt="Log in to Aqara Cloud" style={{ width: '60%', height: 'auto' }} />
+
+3. 登录成功后，系统将自动完成云端连接，并在页面顶部显示彩色云朵图标，表明设备已成功连接至 Aqara Cloud，如下图所示：
+
+    ![连接至 Aqara Cloud](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Cloud-LoggedIn.png)
+
+
+4. 绑定成功后，进入 Aqara Studio 左侧侧边栏的**用户管理**页面，即可查看已绑定的 Aqara 账号信息，该账号的用户角色为 **远程管理员**。
+
+    ![远程管理员](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Cloud-RemoteAdmin.png)

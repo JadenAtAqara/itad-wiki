@@ -7,17 +7,23 @@ keywords: ["Aqara 文档", "Aqara Studio", "远程访问", "remote access"]
 
 ## 功能概览
 
-默认情况下，您只能在局域网内访问 Aqara Studio。当需要通过外部网络进行连接时，您可以启用**远程访问**，以便从任意位置安全地管理您的智能家居设备和控制系统。
+默认情况下，您只能在局域网内访问 Aqara Studio。当需要通过外部网络进行连接时，您可以使用**远程访问**，以便从任意位置安全地管理您的智能家居设备和控制系统。
 
 ## 前提条件
 
-在开始使用远程访问之前，请确保您已经在 [云端连接](./cloud.mdx) 页面登录了 **Aqara Builder** 账号并绑定了一个 Workspace。
+在开始使用远程访问之前，请确保您已 [连接了 Aqara Cloud](./cloud.mdx)。
 
 ## 访问流程
 
-1. 打开 [Aqara Builder](https://builder.aqara.com)，在左侧顶部选择您已绑定的 Workspace。
-2. 在左侧菜单中点击进入 **Studios**。
-3. 在 **Studio Instances & Projects** 列表中，找到与您的 Aqara Studio IP 相对应的设备，点击其 **Connect** 按钮。即可访问该 Aqara Studio 的远程访问界面。
+1. 访问 [Aqara Builder](https://builder.aqara.com) 官网，从左边侧边栏进入 **Builder 工坊**。
+
+    ![进入 Builder 工坊](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/PluginCenter-EnterBuilderLab.png)
+
+2. 在左侧边栏点击进入 **空间**，选择您在 [云端连接](./cloud.mdx) 时登录 Aqara 账号所选的 **区域**。
+
+    切换对应 **空间**，找到与您的 Aqara Studio IP 匹配的设备，点击其 **连接** 按钮，即可进入该 Aqara Studio 的远程访问界面。
+
+    ![连接 Aqara Studio](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/RemoteAccess-Connect.png)
 
     :::tip
     您还可以使用现有的本地用户账号登录该远程访问地址，所拥有的权限与在本地访问时完全一致，详情请参考 [本地用户管理 - 本地用户角色](./user.mdx#本地用户角色)。
@@ -25,17 +31,49 @@ keywords: ["Aqara 文档", "Aqara Studio", "远程访问", "remote access"]
 
 ## 邀请其他用户
 
-1. 访问 [Aqara Builder](https://builder.aqara.com/)，在左侧选择您已绑定的 Aqara Workspace，单击 **Manage Workspaces**。
+1. 如需邀请其他 Aqara 用户访问您的 Aqara Studio，请先前往 [Aqara Builder 工坊](https://builder.aqara.com/lab) 并创建一个新的空间（非 My Home）。
 
-    :::tip
-    如需允许其他 Aqara Builder 用户访问您的 Aqara Studio，您需要在云端连接一个 `Personal` 以外的 Aqara Workspace。
-    :::
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Builder-NewSpace.png" alt="创建空间" />
 
-2. 在 **Manage Workspaces** 弹窗单击 **Invite Members** 按钮，呼出弹窗。
-3. 在弹窗中传入 1 名 Aqara Builder 用户的邮箱地址，并指定该用户的角色（`Operator` 或 `Admin`，角色权限的说明请参考 [远程用户角色](#远程用户角色)）。
-4. 受邀用户接受邀请后，可通过登录 [Aqara Builder](https://builder.aqara.com/)，在左侧顶部选择受邀进入的 Workspace。
-5. 在左侧菜单中点击进入 **Studios**，找到可访问的设备，点击其 **Connect** 按钮，即可访问该 Aqara Studio。
+   单击空间下拉列表，即可看到新增的空间。
 
+2. 此时，您需要将自己的 Aqara Studio 从 **My Home** 空间迁移至新创建的空间。
+
+    找到您的 Aqara Studio，单击 **转移归属** 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Builder-TransferOwnership.png" alt="迁移 Aqara Studio" />
+
+    在弹窗中选择新创建的空间，单击 **下一步**。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Builder-SelectSpace.png" alt="选择空间" style={{width: "60%"}} />
+
+    在弹窗中确认迁移信息，单击 **确认并执行校验与转移**，即可完成迁移。
+    
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Builder-ConfirmTransfer.png" alt="确认迁移" style={{width: "60%"}}/>
+
+3. 在空间下拉列表选择 **管理空间**。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Builder-ManageSpace.png" alt="管理空间" />
+
+4. 在 **空间列表** 中选择新增的空间，单击 **邀请成员**。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Builder-SpaceList.png" alt="在空间列表中选择新增的空间并邀请成员" />
+
+
+5. 在弹窗中传入 1 名 Aqara 用户的**邮箱地址**，并指定该用户的**权限**（`操作员` 或 `管理员`，权限说明请参考 [远程用户角色](#远程用户角色)）。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Builder-FillInAccountAndAccess.png" alt="在弹窗中传入邮箱地址并指定权限" style={{width: "50%"}} />
+
+6. **受邀用户** 收到邀请邮件后，点击邮件内的链接，跳转至 [Aqara Builder](https://builder.aqara.com)。
+
+    进入左侧菜单的 **Builder 工坊**，若有新邀请，站内通知会弹出提示，点击**同意**加入空间。
+
+    ![站内通知提示有新的邀请](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Builder-InvitationNotification.png)
+
+7. **受邀用户**从左侧边栏访问 **空间**后，找到刚加入的空间，找到与您的 Aqara Studio IP 匹配的设备，点击其 **连接** 按钮，即可进入该 Aqara Studio 的远程访问界面。
+
+    ![受邀用户访问 Aqara Studio](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Builder-RemoteAccessForOtherUser.png)
+    
 ## 远程用户角色
 
 远程用户，是指使用 Aqara Builder 账号访问 Aqara Studio 的用户。远程用户的角色可分为管理员（admin）或操作员（operator）。

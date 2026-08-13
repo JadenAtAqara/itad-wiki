@@ -21,7 +21,7 @@ Whether you are managing devices or building automation scenarios, the Data Expo
 | --- | --- | --- |
 | [List Spaces](./get-spaces.api.mdx) | /open/api/v1/spaces | GET |
 | [Create Space](./create-space.api.mdx) | /open/api/v1/spaces | POST |
-| [Update Space Name](./update-space-name.api.mdx) | /open/api/v1/spaces/update | POST |
+| [Update Space Name](./update-space-name.api.mdx) | /open/api/v1/spaces/name | POST |
 | [Delete Space](./delete-space.api.mdx) | /open/api/v1/spaces/delete | POST |
 
 ### Gateway
@@ -29,20 +29,25 @@ Whether you are managing devices or building automation scenarios, the Data Expo
 | Name | API Endpoint | HTTP Method |
 | --- | --- | --- |
 | [List Gateways](./get-gateways.api.mdx) | /open/api/v1/gateways | GET |
-| [Gateway Joins Subdevice](./join-subdevice.api.mdx) | /open/api/v1/gateways/subdevice/join | POST |
-| [Stop Gateway Subdevice Join](./stop-subdevice-join.api.mdx) | /open/api/v1/gateways/subdevice/join/stop | POST |
-| [Get Device Bind Result](./get-device-bind-result.api.mdx) | /open/api/v1/gateways/subdevice/join/result | POST |
+| [Gateway Joins Subdevice](./join-subdevice.api.mdx) | /open/api/v1/gateways/subdevices/join | POST |
+| [Stop Gateway Subdevice Join](./stop-subdevice-join.api.mdx) | /open/api/v1/gateways/subdevices/join/stop | POST |
+| [Get Device Bind Result](./get-device-bind-result.api.mdx) | /open/api/v1/gateways/subdevices/bindResult | POST |
 
 ### Device
 
 | Name | API Endpoint | HTTP Method |
 | --- | --- | --- |
-| [List Device Types](./get-device-types.api.mdx) | /open/api/v1/device-types | GET |
+| [List Device Types](./get-device-types.api.mdx) | /open/api/v1/devices/types | GET |
 | [List Devices](./get-devices.api.mdx) | /open/api/v1/devices | GET |
-| [Query Device Details](./get-device-definitions.api.mdx) | /open/api/v1/devices/definitions | GET |
+| [Query Device Model Definition](./get-device-definitions.api.mdx) | /open/api/v1/devices/definitions | GET |
+| [Query Device Matching Capabilities](./get-matched-device-capabilities.api.mdx) | /open/api/v1/devices/capabilities | GET |
 | [Control Devices by Traits](./execute-device-trait.api.mdx) | /open/api/v1/devices/trait/execute | POST |
 | [Query Trait Values](./get-trait-values.api.mdx) | /open/api/v1/devices/trait/read | POST |
 | [Control Devices by Commands](./execute-device-command.api.mdx) | /open/api/v1/devices/command/execute | POST |
+| [Send Command to Device and Wait for Response](./execute-device-command-await.api.mdx) | /open/api/v1/devices/command/execute/await | POST |
+| [Delete A Function](./delete-device-point.api.mdx) | /open/api/v1/devices/points/delete | POST |
+| [Add A Virtual Device](./add-virtual-device.api.mdx) | /open/api/v1/virtual-devices | POST |
+| [Unbind A Device](./unbind-device.api.mdx) | /open/api/v1/devices/unbind | POST |
 
 ### Automation
 
@@ -56,8 +61,23 @@ Whether you are managing devices or building automation scenarios, the Data Expo
 | [Batch Update Automation Status](./update-automation-status.api.mdx) | /open/api/v1/automations/status | POST |
 | [Batch Update Automation Space](./update-automation-space.api.mdx) | /open/api/v1/automations/space | POST |
 | [Delete Automations](./delete-automations.api.mdx) | /open/api/v1/automations/delete | POST |
-| [List Automation Manual Triggers](./query-automation-manual-trigger-list.api.mdx) | /open/api/v1/automations/manual-triggers | GET |
+| [Get Manual Trigger List](./query-automation-manual-trigger-list.api.mdx) | /open/api/v1/automations/manual-triggers | GET |
 | [Execute Manual Trigger](./execute-automation-manual-trigger.api.mdx) | /open/api/v1/automations/manual-triggers/execute | POST |
+
+### Studio 
+
+| Name | API Endpoint | HTTP Method |
+| --- | --- | --- |
+| [Get Studio Statistics](./get-studio-statistics.api.mdx) | /open/api/v1/studio/statistics | GET |
+
+### EMS
+
+| Name | API Endpoint | HTTP Method |
+| --- | --- | --- |
+| [Get Energy Consumption Trend of a Device](./get-ems-trend-device.api.mdx) | /open/api/v1/ems/trend/device | POST |
+| [Get Energy Consumption Trend of a Space](./get-ems-trend-space.api.mdx) | /open/api/v1/ems/trend/space | POST |
+| [Get Energy Consumption of a Device](./get-ems-total-device.api.mdx) | /open/api/v1/ems/total/device | POST |
+| [Query Energy Consumption for a Space](./get-ems-total-space.api.mdx) | /open/api/v1/ems/total/space | POST |
 
 
 ## WebSocket API

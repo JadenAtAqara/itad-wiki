@@ -234,7 +234,20 @@ async function fetchLocalizedProductLlms(
 }
 
 function shouldHideForSource(source: string | undefined): boolean {
-  if (!source || !source.endsWith('.api.mdx')) {
+  if (!source) {
+    return false;
+  }
+
+  const hiddenExactSources = [
+    '@site/versioned_docs/version-Beta/aqara-developer/data-export-api/websocket-api/index.mdx',
+    '@site/i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-developer/data-export-api/websocket-api/index.mdx',
+  ];
+
+  if (hiddenExactSources.includes(source)) {
+    return true;
+  }
+
+  if (!source.endsWith('.api.mdx')) {
     return false;
   }
 

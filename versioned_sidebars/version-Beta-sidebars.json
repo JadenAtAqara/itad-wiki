@@ -36,6 +36,7 @@
                 "collapsed": false,
                 "items": [
                   "aqara-studio/device-integration/aqara",
+                  "aqara-studio/device-integration/aqara-rs-485",
                   "aqara-studio/device-integration/zigbee",
                   "aqara-studio/device-integration/matter",
                   "aqara-studio/device-integration/aqara-modbus",
@@ -61,7 +62,8 @@
                   "keywords": ["device-export"]
                 },
                 "items": [
-                  "aqara-studio/device-export/aiot"
+                  "aqara-studio/device-export/aiot",
+                  "aqara-studio/device-export/haystack"
                 ]
               },
               {
@@ -167,7 +169,7 @@
           }
         ]      
     },
-    "aqara-studio/plugin-market",
+    "aqara-studio/plugin-center",
     {
       "type": "category",
       "label": "Developer",
@@ -259,7 +261,8 @@
         "tab": "product-knowledge"
       },
       "items": [
-        "aqara-studio/product-knowledge/sensors/presence-sensor-pr330p"
+        "aqara-studio/product-knowledge/sensors/presence-sensor-pr330p",
+        "aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400"
       ]
     }
   ],

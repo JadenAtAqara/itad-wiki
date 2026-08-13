@@ -7,17 +7,23 @@ keywords: ["Aqara Docs", "Aqara Studio", "Remote Access"]
 
 ## Feature Overview
 
-By default, you can only access Aqara Studio within your local area network (LAN). When you need to connect from an external network, you can enable **remote access** to securely manage your smart home devices and control systems from anywhere.
+By default, you can only access Aqara Studio within your local area network (LAN). When you need to connect from an external network, you can use **remote access** to securely manage your smart home devices and control systems from anywhere.
 
 ## Prerequisites
 
-Before using remote access, please ensure that you have logged in to your **Aqara Builder** account and bound a Workspace on the [Cloud Connect](./cloud.mdx) page.
+Before using remote access, please ensure that you have [connected to Aqara Cloud](./cloud.mdx).
 
 ## Steps to Access
 
-1. Open [Aqara Builder](https://builder.aqara.com) and select your bound workspace at the top left.
-2. In the left menu, click on **Studios**.
-3. In the **Studio Instances & Projects** list, find the device corresponding to your Aqara Studio IP and click the **Connect** button. You will then be able to access the remote access interface of that Aqara Studio.
+1. Visit the [Aqara Builder](https://builder.aqara.com) website, and navigate to **Builder Lab** from the left sidebar.
+
+    ![Enter Builder Lab](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/PluginCenter-EnterBuilderLab.png)
+
+2. From the left sidebar, go to **Spaces**, then select the **Region** you chose when logging in with your Aqara account during [Cloud Connect](./cloud.mdx).
+
+    Switch to the corresponding **Space**, find the device that matches your Aqara Studio IP, and click its **Connect** button to enter the remote access interface of that Aqara Studio.
+
+    ![Connect to Aqara Studio](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/RemoteAccess-Connect.png)
 
     :::tip
     You can also use an existing local user account to log in to the remote access address. The permissions granted will be exactly the same as those for local access. For details, please refer to [Local User Management - Local User Roles](./user.mdx#local-user-roles).
@@ -25,16 +31,47 @@ Before using remote access, please ensure that you have logged in to your **Aqar
 
 ## Invite Other Users
 
-1. Visit [Aqara Builder](https://builder.aqara.com/), select your bound Aqara Workspace on the left, and click **Manage Workspaces**.
+1. To invite other Aqara users to access your Aqara Studio, first go to [Aqara Builder Lab](https://builder.aqara.com/lab) and create a new space (not **My Home**).
 
-    :::tip
-    To allow other Aqara Builder users to access your Aqara Studio, you need to connect to an Aqara Workspace that is not of type `Personal`.
-    :::
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-NewSpace.png" alt="Create a space" />
 
-2. In the **Manage Workspaces** popup, click the **Invite Members** button to open the invitation window.
-3. In the popup, enter the email address of an Aqara Builder user and assign a role (`Operator` or `Admin`). For details on role permissions, please refer to [Remote User Roles](#remote-user-roles).
-4. After accepting the invitation, the invited user can log in to [Aqara Builder](https://builder.aqara.com) and select the target Workspace from the top left.
-5. In the left menu, click on **Studios**, find the device you have access to, and click the **Connect** button to access that Aqara Studio.
+    Click the space dropdown to see the newly created space.
+
+2. Next, migrate your Aqara Studio from the **My Home** space to the newly created space.
+
+    Find your Aqara Studio, and click the **Transfer Ownership** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-TransferOwnership.png" alt="Transfer Aqara Studio" />
+
+    In the popup, select the newly created space and click **Next**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-SelectSpace.png" alt="Select a space" style={{width: "60%"}} />
+
+    Confirm the transfer details in the popup, then click **Confirm and Transfer** to complete the migration.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-ConfirmTransfer.png" alt="Confirm transfer" style={{width: "60%"}}/>
+
+3. From the space dropdown, select **Manage Spaces**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-ManageSpace.png" alt="Manage spaces" />
+
+4. In the **Space** popup, select the newly created space and click **Invite Members**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-SpaceList.png" alt="Select the newly created space in the space list and invite members" />
+
+5. In the popup, enter the **email address** of an Aqara user, and assign their **access** (`Operator` or `Admin`; for permission details, see [Remote User Roles](#remote-user-roles)).
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-FillInAccountAndAccess.png" alt="Enter an email address and assign permission in the popup" style={{width: "50%"}} />
+
+6. After the **invited user** receives the invitation email, they click the link in the email to go to [Aqara Builder](https://builder.aqara.com).
+
+    Enter **Builder Lab** from the left menu. If there is a new invitation, an in-app notification will appear; click **Agree** to join the space.
+
+    ![In-app notification for a new invitation](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-InvitationNotification.png)
+
+7. After the **invited user** goes to **Space** from the left sidebar, they find the space they just joined, locate the device that matches your Aqara Studio IP, and click its **Connect** button to access your Aqara Studio remotely.
+
+    ![Invited user accesses Aqara Studio](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-RemoteAccessForOtherUser.png)
 
 ## Remote User Roles
 
