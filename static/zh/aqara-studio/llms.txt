@@ -17,6 +17,7 @@
 - 网关融合形态: https://docs.aqara.com/zh/docs/aqara-studio/deployment/hub-integrated-model
 - 空间管理: https://docs.aqara.com/zh/docs/aqara-studio/space
 - Aqara Hub 接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/aqara
+- Aqara RS-485 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/aqara-rs-485
 - Zigbee 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/zigbee
 - Matter 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/matter
 - Aqara Modbus 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/aqara-modbus
@@ -33,6 +34,7 @@
 - 红外设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/virtual/infrared-equipment
 - 灯箱设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/virtual/light-box
 - 转出至 Aqara Home App: https://docs.aqara.com/zh/docs/aqara-studio/device-export/aiot
+- 以 Haystack 框架转出: https://docs.aqara.com/zh/docs/aqara-studio/device-export/haystack
 - 查看和修改基本信息: https://docs.aqara.com/zh/docs/aqara-studio/device-management/basic-information
 - 固件升级: https://docs.aqara.com/zh/docs/aqara-studio/device-management/firmware-upgrade
 - 查看和控制功能点: https://docs.aqara.com/zh/docs/aqara-studio/device-management/point-information
@@ -65,7 +67,7 @@
 - 本地固件库: https://docs.aqara.com/zh/docs/aqara-studio/local-firmware-library
 - 通过主机访域名访问: https://docs.aqara.com/zh/docs/aqara-studio/local-domain-name-access
 - 恢复出厂设置: https://docs.aqara.com/zh/docs/aqara-studio/factory-reset
-- 插件市场: https://docs.aqara.com/zh/docs/aqara-studio/plugin-market
+- 插件中心: https://docs.aqara.com/zh/docs/aqara-studio/plugin-center
 - 开发者指南: https://docs.aqara.com/zh/docs/aqara-studio/developer-guide
 - 数据转出 API v1: https://docs.aqara.com/zh/docs/aqara-studio/api-references/data-export-api-v1
 - 设备功能 API: https://docs.aqara.com/zh/docs/aqara-studio/api-references/trait-api
@@ -90,4 +92,5 @@
 - 配电箱网关 AX100M: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/gateways/din-rail-hub-ax100m
 - 智慧网关 AX200M: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/gateways/hub-ax200m
 - 人在传感器 PR330P: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/sensors/presence-sensor-pr330p
+- AI 空间传感器 FP400: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400
 

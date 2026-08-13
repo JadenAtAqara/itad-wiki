@@ -1,0 +1,768 @@
+# Spatial Multi-Sensor FP400
+
+## Product Introduction
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Spatial-Multi-Sensor-FP400-image1.png" alt="Image 1"  style={{ width: '60%' }} />
+
+The Aqara Spatial Multi-Sensor FP400, equipped with a high-precision millimeter-wave radar, combines presence detection, multi-person tracking, AI powered person detection, and light intensity detection to deliver accurate, actionable spatial awareness.
+
+The product has a strong spatial perception capability, supporting up to 8 custom zones based on 320 fine grid divisions, capable of simultaneously tracking the real-time position and movement direction of 10 people, precisely distinguishing left and right entry/exit, forward and backward movement, approaching or moving away, and can be linked to various smart devices, triggering personalized spatial automations and scenes.
+
+For flexible multi-ecosystem integration, the FP400 supports both Zigbee and Matter protocols. Under the Zigbee protocol, users can connect the device to Aqara Home through an Aqara hub, and bridge it to third-party Matter platforms through an Aqara Matter Hub. Under the Matter protocol, users can add the device to Aqara Home through an Aqara Matter Hub, complete the setup of up to 8 custom zones in Aqara Home, and share it to third-party Matter platforms via a Matter pairing code, enabling compatibility with multi-ecosystem smart scenarios.
+
+- This device needs to be used with an Aqara hub and the Aqara Home app to obtain full functionality.
+
+- Due to protocol limitations and third-party ecosystem support, functions may vary across different protocols and ecosystems. Certain specific features are only supported in Aqara Home.
+
+## Product Components
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Spatial-Multi-Sensor-FP400-image2.png" alt="Image 2"  style={{ width: '60%' }} />
+
+【Product Component Diagram】
+
+1 Reset Button 2 Body 3 Indicator Light 4 USB-C Power Cord 5 Bracket 6 Magnetic Plate 7 Adhesive Backing
+
+## Device Installation
+
+### Installation Method
+
+The device can be mounted using adhesive, magnetic base mounting or wall anchors and screws. It supports both side mounting and ceiling mounting. Different mounting methods and installation heights may affect the detection range. Users can choose an appropriate installation position based on the desired detection range, and fine-tune coverage by adjusting the mounting angle and the device tilt angle.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Spatial-Multi-Sensor-FP400-image3.png" alt="Image 3"  style={{ width: '60%' }} />
+
+[Device supports installation via adhesive, magnetic absorption, expansion screws]
+
+### Wall Mounting
+
+·Installation Height: 1.5 meters - 2 meters
+
+·Detection Angle: Horizontal 120°, Vertical 100°
+
+·Maximum Detection Range: Forward 10 meters, Width 8 meters (excessive tilt may reduce detection range)
+
+- For detecting a larger area, it is recommended to install in the middle of the wall, with the radar front facing the shorter side of the area to be detected
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Spatial-Multi-Sensor-FP400-image4.png" alt="Image 4"  style={{ width: '60%' }} />
+
+[Wall side mounting range schematic side view and top view]
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Spatial-Multi-Sensor-FP400-image5.png" alt="Image 5"  style={{ width: '60%' }} />
+
+[Wall side mounting detection range schematic (light area for movement range, dark area for presence range)]
+
+- The above are maximum detection ranges measured in laboratory environments. Actual movement and presence detection ranges may vary due to installation height, installation angle, wall reflection, environmental interference, target posture, etc. There are detection blind spots beyond 120°, so avoid placing critical detection areas (especially entrances and exits) in blind spots.
+
+- It is recommended to maintain a distance of more than 0.5 meters from walls and windows. Being too close can cause multipath echoes from wall reflections, resulting in false targets (ghost images) and location jumps.
+
+### Wall Corner Installation
+
+·Installation Height: 1.5 meters - 2 meters
+
+·Detection Angle: Horizontal 120°, Vertical 100°
+
+Maximum detection range: 7m × 7m (excessive tilt may reduce detection range)
+
+- By installing at the wall corner, the 120° detection angle can cover the wall corner, avoiding detection blind spots at large angles on both sides when mounted on the wall surface.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Spatial-Multi-Sensor-FP400-image6.png" alt="Image 6"  style={{ width: '60%' }} />
+
+[Comparison of Detection Range: Wall Middle Installation vs. Wall Corner Installation]
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Spatial-Multi-Sensor-FP400-image7.png" alt="Image 7"  style={{ width: '60%' }} />
+
+[Wall Corner Installation Detection Range Diagram (Light Area: Movement Range, Dark Area: Presence Range)]
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Spatial-Multi-Sensor-FP400-image8.png" alt="Image 8"  style={{ width: '60%' }} />
+
+[Wall Corner Bracket Installation Diagram]
+
+- Wall corner bracket (Presence Sensor Bracket) is optional, accessories shall be subject to the product accessory list.
+
+- The above is the maximum detection range measured in laboratory environments. Actual movement and presence detection range may vary due to factors such as installation height, installation angle, wall reflection, environmental interference, and target posture.
+
+- Wall corner installation can effectively avoid long-distance blind spots on both sides of the wall, prioritizing over wall middle installation.
+
+### Ceiling Installation
+
+· Installation Height: 3m–4m, placed directly above the area to be detected
+
+· Detection Angle: Using the device’s logo as reference, horizontal 120°, vertical 100°
+
+· Installation Requirements: Adjust the device to be horizontal, with device’s logo aligned horizontally with the detection area's long side, indicator light facing upward on the app’s map.
+
+· Maximum Detection Range: At 3m installation height, the maximum person movement detection range is an ellipse 5×6m directly below the radar, maximum person presence detection range is an ellipse 4×5m directly below the radar
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Spatial-Multi-Sensor-FP400-image9.png" alt="Image 9"  style={{ width: '60%' }} />
+
+Ceiling Installation Detection Range Diagram 1 (Light Area: Movement Range, Dark Area: Presence Range)
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Spatial-Multi-Sensor-FP400-image10.png" alt="Image 10"  style={{ width: '60%' }} />
+
+Ceiling-Installation Detection Range Schematic 2 (Light-colored Area is Movement Range, Dark-colored Area is Presence Range)
+
+- The above is the maximum detection range measured in a laboratory environment. Actual mobile detection and presence detection ranges may differ due to factors such as installation height, ceiling reflection, environmental interference, and target posture.
+
+### Installation Recommendations
+
+1. Based on the actual detection range requirements, install the device on walls, wall corners, ceilings, etc., using adhesive or magnetic mounting. Point the device's front towards the area to be detected and adjust the angle accordingly.
+
+2. To cover a larger detection range, it is recommended to use side mounting, with an installation height of around 2 meters, slightly tilted downwards to cover the main human activity area.
+
+3. When side-mounted on walls or wall corners, the recommended installation height is 1.4-1.8m, which better detects standing and sitting states. If installed at other heights, adjust the bracket's tilt angle to cover the main activity area.
+
+4. To avoid device detection blind spots, it is recommended to install in wall corners, with the device facing the wall corner's center line, effectively avoiding radar FOV blind spots at long distances.
+
+5. It is recommended to face the sensor towards the front chest area of people, making it easier to detect respiratory micro-movements and maintain a static occupancy state.
+
+6. During installation, try to avoid facing large metal, glass, or other highly reflective surfaces, and avoid installing near air conditioning vents, air purifiers, or fans.
+
+7. For installation heights below 2 meters, use adhesive or magnetic mounting. For heights exceeding 2 meters, use screw mounting.
+
+8. If the installation location setting does not match the actual situation, it will affect the detection ability. Do not move the device's installation position after completing the installation setup, as it will impact the detection accuracy of the map area. If you need to change the device location, please switch the installation method in the APP and complete the guided process.
+
+## Device Network Connection
+
+### Preparation
+
+① Download Aqara Home App
+
+Please download the latest version of Aqara Home App by scanning the following QR code.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Spatial-Multi-Sensor-FP400-image11.png" alt="Image 11"  style={{ width: '60%' }} />
+
+【Aqara Home App】
+
+② Power up the device and enter network pairing mode
+
+Connect the device’s USB cable to a 5V 1A power source. After powering up, the device will automatically enter pairing mode, and the LED indicator will start slowly blinking blue.
+
+If the network pairing window has passed, press and hold the reset button for 5 seconds until the LED indicator starts blinking, then release, and the device will enter network pairing mode again.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Spatial-Multi-Sensor-FP400-image12.png" alt="Image 12"  style={{ width: '60%' }} />
+
+### Communication Protocol Brief Introduction and Selection Guide
+
+Thread Protocol
+
+Thread is based on IP protocol, natively supports the Matter standard, and can connect devices to Apple Home, Google Home, Amazon Alexa, and other Matter platforms. Suitable for users who want cross-platform interconnection, requires pairing with Aqara Matter hub/controller (such as M3, M100, etc.).
+
+Zigbee Protocol
+
+Zigbee protocol supports more advanced Aqara functions and automation capabilities, with stronger local control and response speed, suitable for users pursuing local stability and deeper functionality, requires pairing with Aqara Zigbee hub (such as M3, M100, etc.), and can also synchronize devices to third-party Matter ecosystem through Aqara Matter hub's bridging capability.
+
+### Network Pairing via the Zigbee Protocol (requires an Aqara hub)
+
+1. Open the Aqara Home App, go to "Home" page and click "+" in the upper right corner to enter "Add Device" page
+
+2. Click the corresponding device and select the hub to connect with
+
+3. On the "Device Protocol" selection screen, choose "Zigbee Protocol"
+
+4. The device will download the latest firmware from the cloud, and after firmware is downloaded, it will automatically complete protocol switching, please follow the app prompts to complete device addition
+
+- Please ensure that the device is in network configuration mode (indicator light should be blinking) during the adding process. If the indicator light is in another state, press and hold the reset key for 5 seconds until the LED indicator starts blinking, then release, and the device will enter network pairing mode again.
+
+### Network Access via Thread Protocol (Requires Aqara Matter Hub / Controller)
+
+1. Open Aqara Home App, go to "Home" page and click "+" in the upper right corner to enter "Add Device" page
+
+2. Click on the corresponding device, and select "Thread Protocol" in the "Device Protocol" selection interface
+
+3. Scan the Matter code on the product body or instruction manual according to the App’s instructions.
+
+4. Select the Aqara Matter hub you want to connect to, and complete the addition.
+
+- If no Aqara Matter controller has been added to the current home, you can add it in the APP according to the guide, and then follow the above steps to connect this device to the corresponding Matter controller to complete network access.
+
+- Please be careful to distinguish between the Aqara MagicPair Code and Aqara Matter Code on the device body and instruction manual. Incorrect scanning will result in adding failure.
+
+## Share to Third-Party Ecosystems
+
+### Zigbee Protocol: Bridge to Third-Party Ecosystem via Aqara Matter Hub
+
+If the device has been added to Aqara Home via the Zigbee protocol, after configuration, it can bridge the device status to the third-party ecosystem through the Aqara Matter Hub (such as M3). You can obtain the Matter pairing code in the "Third-Party Matter Ecosystems" of the corresponding hub. In the third-party platform app, scan the Matter pairing code or enter the digital code to complete the addition.
+
+### Thread Protocol: Synchronize to Third-Party Ecosystem via Matter Pairing Code
+
+If the device has been added to Aqara Home via the Thread protocol, first configure custom zones, detection sensitivity, Absence Confirmation Period, and other settings in the Aqara Home app. Then it can be shared to third-party Matter platforms via a Matter pairing code as one general presence sensor, with up to 8 custom zone presence sensors, and one light sensor. You can obtain the Matter pairing code in “Third-Party Matter Ecosystems” on the device page in the Aqara Home app. Launch the “Add Device” process in third-party Matter-supported apps like Apple HomeKit and Google Home, and complete the addition by scanning the pairing code.
+
+- The device also supports direct addition to third-party Matter platforms by scanning the Matter code on the device itself without going through configuration in the Aqara Home app. However, in this way, it can only be used as one general presence sensor and one light sensor. It is recommended that users configure the device through the Aqara Home app before synchronizing it to third-party platforms to use the device’s full functionality.
+
+- Some third-party ecosystems may not support dynamic adding and deleting of zones, so it is recommended to complete all configurations in Aqara Home before synchronizing via the pairing code.
+
+- When adding to other platforms, be sure to scan the Matter pairing code generated by the app, and do not scan the original QR code on the device or manual, otherwise pairing will fail.
+
+- Regarding custom zone names, due to ecosystem limitations, the naming in the Aqara Home App may not be directly synchronized. After adding, users need to name the corresponding sensors in the third-party ecosystem to distinguish their actual areas.
+
+- If there are issues with sensor naming or display in third-party ecosystems, you can delete and re-add the device to synchronize the latest device settings and status.
+
+- Actual functionality may be limited by Matter standard functions and third-party Matter platform support.
+
+## Firmware Upgrade and Protocol Switching
+
+### Firmware Upgrade
+
+To ensure the best user experience, please update the device firmware to the latest version in the app settings page after adding the device.
+
+- If third-party ecosystems cannot obtain the latest firmware, users can add the device in Aqara Home and perform two "protocol switching" operations (such as switching Thread to Zigbee and then back to Thread) to retrieve and upgrade to the latest cloud firmware.
+
+### Protocol Switching
+
+If you need to switch protocols after pairing the device, first remove the device in the Aqara Home App, then long-press the device reset key for 5 seconds to reset the device and enter pairing mode. On the device pairing screen, select "Switch Protocol" and select the desired protocol, then complete the setup according to the app’s instructions.
+
+- Switching protocols will clear all device settings and data. If you want to preserve map configurations for future use, please save the map template first.
+
+## Main Functions Introduction
+
+### Person Detection
+
+Detect the presence or absence of people in the entire space and in custom-defined zones.
+
+- The response speed of "occupied" / "unoccupied" status is affected by environmental interference, target posture, installation conditions, etc. There may be a delay in triggering the unoccupied state (see the "Absence Confirmation Period" section of this manual).
+
+### Multi-Person Tracking
+
+Real-time positioning of people in the space can be viewed on the device's homepage. By creating custom zones, it supports triggering occupancy status by zone, with the ability to simultaneously track up to 10 people.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Spatial-Multi-Sensor-FP400-image13.png" alt="Image 13"  style={{ width: '60%' }} />
+
+[App Multi-Person Positioning and Zone Division Interface Diagram]
+
+- Detecting and distinguishing multiple people works when people are separated by 1 meter.
+
+- When two people are less than approximately 1 meter apart, point cloud mixing may occur, potentially causing algorithm instability (human/non-human label swapping), person "adhesion" and other phenomena, which are physical limitations of current millimeter-wave radar technology. It is recommended to maintain appropriate spacing and set densely populated areas as larger "monitoring zones" rather than fine-grained positioning.
+
+### Zone Division
+
+The device supports up to 8 custom zone settings, which can be further configured as follows:
+
+Monitoring Zone
+
+You can divide the home into different functional zones based on how each space is used, and use the defined detection zones for zone-based automation management.
+
+Each detection zone can be assigned a zone type. Defining the zone type helps the device better adjust the corresponding detection parameters, providing the most suitable recognition performance.
+
+Interference Source
+
+Interference sources can be set based on the location of moving objects such as fans, air conditioners, and plants. Interference sources can be set as point-like or surface-like, and micro-movements within the interference area will be ignored after setting.
+
+Interference within the environment is an important factor affecting device accuracy. FP400 supports interference source identification. When the algorithm detects potential interference sources in the space, it prompts the user to confirm and configure the corresponding area as an interference source. It also supports users actively configuring interference sources to filter specific interference areas in the space.
+
+- Common interference source types have been optimized in the algorithm: fans, air purifiers, sweeping robots, subtle plant movements, curtains, blinds and roller shutters, pets, toilets, air conditioners, refrigerators. For unlisted interference sources (such as new home appliances, dynamic decorative ornaments, etc.), recognition performance may decrease, with a certain probability of misidentification as a person.
+
+Entrance/Exit
+
+After setting the entrance/exit, the speed which a person can be detected and removed can be improved, enhancing detection accuracy and trigger speed. It is recommended to set according to the actual area after installation.
+
+Boundary
+
+Setting boundaries will reduce misjudgments of presence detection (commonly known as "ghost shadows"), avoid interference from wall reflections, large mirror surfaces, metal, and improve monitoring accuracy.
+
+If boundaries are not enabled, the device is easily prone to generating false detections due to signal reflections on walls. After creating boundaries, no targets will be created outside the boundaries, and valid targets will not enter the boundaries, effectively improving detection accuracy.
+
+- Large glass curtain walls, stainless steel surfaces, smooth ceramic tiles, or mirror-like surfaces are the main sources of "ghost shadows". It is recommended to prioritize setting these areas as "boundaries" to effectively reduce reflective interference.
+
+### AI Enhanced Person Detection
+
+Enabling "AI Enhanced Person Detection" in "Advanced Functions" can direct AI algorithms to identify sweeping robots, pets, moving toys, etc. as "interference targets", reducing interference with person detection results (but with a certain probability of identifying babies or children on the ground as "interference targets"). It is recommended to enable only in scenarios with sweeping robots, pets, and other interference targets.
+
+- After a new target is created, it requires about 2-3 seconds of initial confirmation period, during which the target will be displayed as "..." unknown identity, and related automation will be correspondingly delayed in triggering.
+
+- Low-height targets (such as those significantly shorter than a normal adult) and crawling posture targets have a certain probability of not being stably recognized as humans or being misclassified as pets. If such situations exist at home, it is recommended to use the "AI Enhanced Person Detection" function with caution.
+
+### Real-Time People Count
+
+Enabling "Real-Time People Count" in "Advanced Functions" will provide real-time occupancy status and time-segmented people count statistics. The homepage will display a real-time people count card, which can be selected to enter the time-segmented people count statistics page.
+
+- When staying on the app’s device homepage for a long time, the app may not be able to refresh in real-time. If you encounter an inaccurate people count displayed on the page, you can exit the device page and re-enter to obtain an accurate real-time people count.
+
+In scenarios with multiple people present, due to point cloud aliasing and mutual occlusion, the people count may have a deviation of 1-3 persons, which is a normal performance under current technical conditions and does not constitute a device failure. If precise people count is strictly required, it is recommended to refer to the trend rather than an exact count.
+
+### Static and Dynamic Detection
+
+Monitors whether personnel in the space are in a stationary or active state. When someone moves with a significant amplitude or exceeds 50cm, the device will report "people moving"; when all targets in the space have an activity range smaller than 50cm or are in a micro-motion state, the device will report "all people stationary". You can configure automations based on "People moving / All people stationary".
+
+### Illuminance Detection
+
+Real-time monitoring of environmental light intensity, displaying illuminance measurement values, and enabling automation scenarios based on lighting conditions and occupancy status.
+
+The illuminance sensor on the device is located on the front upper part of the device and is affected by device installation location, orientation, and light incidence angle. The feedback light value is not entirely consistent with the actual light perceived by people in the space. This illuminance sensor is mainly used to feedback the strength and change trend of environmental light for lighting automation and cannot be used as a professional illuminance measuring instrument.
+
+## More Configuration Options
+
+### Presence Detection Sensitivity
+
+Presence detection sensitivity is configured for the entire space. The higher the sensitivity, the easier it is to trigger and maintain the "occupied" state. High sensitivity is suitable for areas where people are typically stationary, avoiding misidentifying a space as "unoccupied" during micro-motion. Low sensitivity is suitable for areas with frequent and large human body movements, avoiding false "occupied" reports caused by spatial interference.
+
+### Absence Confirmation Period
+
+The Absence Confirmation Period can be used to precisely judge whether the area is in an "unoccupied" state, avoiding false reports due to personnel briefly leaving, slight movements (such as wind blowing curtains, small items falling), or environmental interference. After setting the time period, the radar needs to complete an entire cycle of "unoccupied" determination before triggering the "unoccupied" state. If someone enters during the cycle or encounters environmental interference (such as pets running, device vibration), the timing will immediately restart, recalculating from the next "unoccupied" detection. Users can set different Absence Confirmation Periods for the entire space and each custom zone.
+
+The actual trigger time for an unoccupied state in the space may not necessarily equal the "Absence Confirmation Period" because more cycles might be needed for judgment in complex environments.
+
+When the Absence Confirmation Period for the space and custom zones are inconsistent, such as a shorter periods set for the space, it may result in the space being judged as unoccupied while the area is still judged as occupied.
+
+When a longer period is set for an area, but the target's trajectory has already left the area, the area may remain in an occupied state for some time, with the area edges highlighted to indicate occupancy.
+
+The unoccupied determination response speed is affected by the degree of environmental interference. In scenarios with micro-motion interference (such as pets, fans, curtain swaying), the unoccupied determination may experience additional delay.
+
+### AI Spatial Learning
+
+AI Spatial Learning can learn environmental backgrounds, exclude large areas of glass, metal, mirrors, and other interference sources that affect detection results, adapt to environmental interference, and improve detection accuracy.
+
+It is recommended that users actively perform an AI Spatial Learning check after device installation. AI Spatial Learning requires maintaining an empty space (without people) and takes some time, so please be patient.
+
+During normal use, there is no need to manually perform the check again, as the device will continuously learn the space background through AI to adapt to real-time changes in the space’s environment, making the device more precise with use.
+
+In special situations, if users find that the device is affected by environmental interference and mistakenly identifies an empty state as occupied, and it is difficult to return to an empty state, they can actively conduct an AI Spatial Learning check to quickly restore the space to an empty state.
+
+- If "ghost targets" frequently appear when no one is present, it is recommended to run an AI Spatial Learning check to restore normal operation.
+
+### Default and Left-Right Detection
+
+Users can choose between the default, which is omnidirectional monitoring, and left-right monitoring in "Detection Direction".
+
+Default monitoring can detect presence within the sensing range. Left-right monitoring can detect movement directions on the left and right sides of the space, helping to better distinguish between left entry/right entry/left exit/right exit movement states. When selecting default monitoring, it supports configuring "entry/exit" automation conditions for the entire area and specific zones. When automations require distinguishing between entering and exiting, left-right monitoring can be selected.
+
+When left-right monitoring is selected, "entry/exit" automation conditions will be split into "left entry/right entry/left exit/right exit". Left-right monitoring only applies to the entire area, with regions not distinguishing left and right entry/exit events.
+
+"Entry" events are only triggered when the first target enters an empty area or region. "Exit" events are only triggered when the last target leaves an area or region. Since "entry" and "exit" are triggered by target trajectories, "entry" can be triggered faster than "occupied" when "AI Enhanced Person Detection" is enabled (without waiting for target confirmation), and "exit" can be triggered faster than the "unoccupied" automation condition when the space or region is empty (without waiting for the Absence Confirmation Period).
+
+- If there is no directional monitoring requirement, it is recommended to use the default monitoring.
+
+### Proximity Sensing Distance
+
+This setting affects the proximity sensing distance for people relative to the device and to specified zones. Low, medium, and high settings correspond to thresholds of 1 meter, 2 meters, and 3 meters respectively.
+
+Entire area and zone-based automations both have "approach/leave" events, where any target approaching/leaving this threshold will trigger an "approach/leave" event.
+
+When the automation conditions include "approach/leave", this distance corresponds to the distance between the target and the device; when the automation condition selects "someone approaching/leaving a specified zone", this distance corresponds to the distance between the detected person and the edge of the specified zone.
+
+If set to medium (2 meters), with the automation condition selecting "someone approaching a specified zone", when a person approaches the area from outside and is about 2 meters from the zone’s edge, a zone approach event will be reported; when a person moves outside the area to 2 meters beyond the edge, a leaving zone event will be reported.
+
+### Turn Off Indicator Light
+
+When enabled, the indicator lights are completely turned off during specified periods, this includes all statuses and alerts which it would normally indicate.
+
+- Network reset and other indicator light functions are not within the Turn Off Indicator Light scope and can still function normally during the network access process.
+
+## Automation Configuration
+
+Users can add device-related automations by clicking the "+" in the top right corner of the app’s "Automations" page.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Spatial-Multi-Sensor-FP400-image14.png" alt="Image 14"  style={{ width: '60%' }} />
+
+【Aqara Smart Linkage Diagram】
+
+### Automation Conditions
+
+| General Automation Conditions | Zone Automation Conditions |
+| --- | --- |
+| Occupied | Specified Zone Occupied |
+| Unoccupied | Specified Zone Unoccupied |
+| Occupied for a Certain Duration | Specified Zone Occupied for a Certain Duration |
+| Unoccupied for a Certain Duration | Specified Zone Unoccupied for a Certain Duration |
+| Approaching | Approaching Specified Zone |
+| Leaving | Leaving Specified Zone |
+| Enter (in left/right mode, full domain support is subdivided into: left entry/right entry) | Enter Specified Zone |
+| Leave (in left/right mode, full domain support is subdivided into: left exit/right exit) | Leave Specified Zone |
+| Real-time number of people greater than | / |
+| Real-time number of people equal to | / |
+| All people in space remain stationary for a certain duration | / |
+| People moving in space for a certain duration | / |
+| Illuminance rises to | / |
+| Illuminance drops to | / |
+| Above specified illuminance | / |
+| Below specified illuminance | / |
+
+### Automation Recommendations
+
+1. WHEN "Presence is detected (zone)" and "Below the set light level", THEN "turn on light", which can achieve turning on lights in a specific zone with people present when light is needed.
+
+2. WHEN "No presence exceeding a set time", then "turn off light" and "turn off air conditioning", achieving energy saving when the space is unoccupied
+
+3. WHEN "Somebody enters from the left", THEN "home mode" / WHEN "Somebody exits from the right", THEN "away mode", achieving home/away distinction and triggering corresponding scenes
+
+4. WHEN TV Zone detects "Somebody is approaching (zone)", THEN "trigger reminder", avoiding children getting too close to the TV
+
+5. WHEN "All detected people remain still for a set time", THEN enter "sleep mode", automatically adjusting to a comfortable sleeping environment
+
+6. WHEN "Movement detected for a set time", THEN enter "motion mode", automatically activating a user’s favorite scenes
+
+7. WHEN "Person count is higher than 3", THEN enter "reception mode", "set air conditioning to 24 degrees Celsius", implementing dynamic scene adjustment based on the number of people
+
+8. WHEN "Someone is approaching (zone)", THEN "turn on the light", WHEN "Someone is leaving (zone)", THEN "turn off the light", enabling automated lighting control in the specified area
+
+## More Use Tips
+
+1. After installation, it is recommended to actively perform an "AI Spatial Learning" in the App when no one is present, helping the device quickly adapt to its environment, exclude interference from glass, metal, etc., and improve detection accuracy.
+
+2. If the device mistakenly identifies an empty space as occupied, it is generally due to environmental micro-motion interference. You can use the "AI Spatial Learning" feature to quickly return to an empty state, or set a specific area as an "interference source" in the map on the device’s homepage.
+
+3. It is recommended to configure the detection range according to actual needs, set unnecessary detection areas as boundaries, and mark entry and exit areas to improve detection speed and accuracy.
+
+4. The device has an "AI Enhanced Person Detection" function with a continuous self-learning algorithm which can become more precise with use. However, to ensure maximum detection accuracy, it is still recommended to avoid installing the device near air conditioning outlets, air purifiers, or fans.
+
+5. The "AI Enhanced Person Detection" function can improve the accuracy of presence detection in the space, excluding false alarms caused by pets, sweeping robots, etc. It can be enabled when relevant interference objects are present in the space.
+
+6. It is recommended to regularly check target trajectories in the app to confirm whether there are unconfigured interference sources or strong reflection areas in the current environment, and to add "interference sources" and "boundaries" on the map.
+
+7. If you need to detect both a larger area and more detailed zones, we recommend first setting appropriate “detection zone” boundaries in the app, then adjusting the sensitivity and Absence Confirmation Period based on your actual needs.
+
+## Indicator Light and Button Description
+
+### Indicator Light Status
+
+| Indicator light status | Device status |
+| --- | --- |
+| Blue light flashes quickly 1 time | Tap the device once and the reset button will flash a blue light once |
+| Blue light flashes 3 times | Appears when powered on, restarted, or reset to factory settings, indicating normal power supply |
+| Blue breathing (Thread firmware) / Purple breathing (Zigbee firmware) | Indicates the device is in pairing mode, pairing ends after 10 minutes, the light turns off, and the device enters sleep mode |
+| Blue light continuously flashing | When resetting the device, the blue light flashes quickly until the button is released within 3 seconds. During pairing, the blue light continues to flash quickly, indicating that pairing is in progress. |
+| Blue light stays on for 1 second | Indicates successful pairing |
+
+### Reset Button Description
+
+| Button Action | Description |
+| --- | --- |
+| Single press the reset key | Check Zigbee hub connection, verify hub is within a valid distance (only triggered when bound to a Zigbee hub) |
+| Long press reset key for more than 5s | Resets the device and enables network configuration mode |
+| Quickly press the reset key 10 times | Restore factory settings |
+
+### Device Reset
+
+Device reset only resets the network and enters pairing mode, without deleting the local data. Confirm the device is powered on, press and hold the device reset button for 5s, release the button when the light flashes quickly, and the device will reset and enter Bluetooth broadcast phase.
+
+### Factory Reset
+
+Factory reset means resetting the network and deleting all local and cloud data. Confirm the device is powered on, press the device reset button 10 times quickly, and the device will enter the factory reset state.
+
+## Product Parameters
+
+Product Model: PS-S05E, PS-S05D
+
+Wireless Protocols: Zigbee, Thread, Bluetooth
+
+Sensing Technology: Radar
+
+Rated Input: 5V⎓1A
+
+Interface: USB-C
+
+Product Dimensions: 64×64×29.5 mm
+
+Operating Temperature: -10°C-+50°C
+
+Operating Humidity: 0-95%RH, non-condensing
+
+Waterproof Rating: IPX5
+
+## Troubleshooting Guide
+
+### False Alarm "Presence Detected" (No Person There)
+
+Possible Causes
+
+· Persistent minor motion interference in the environment: curtains swaying, fan rotation, air conditioning airflow, pet activity
+
+· "Ghost images" caused by large glass, metal, mirror surfaces, residual false targets
+
+Diagnosis and Solutions
+
+1. Enter the device homepage in the Aqara Home app to see if there is any false targets displayed on the map.
+
+2. Set interference sources (near pet beds, plant areas, fan locations, etc.) as "interference source" type by long pressing on the map.
+
+3. Set glass, mirror, metal railing, and other strong reflective areas as a "boundary" type.
+
+4. Appropriately lower the "presence detection sensitivity" to reduce environmental interference triggers.
+
+5. Activate the "AI Spatial Learning" feature in the App to re-establish the environmental baseline.
+
+6. If interference comes from air conditioning/fan outlets, consider adjusting device installation position to avoid airflow.
+
+7. Please ensure to upgrade the device’s firmware to the latest version for optimal results.
+
+After screening, if there are still false reports, it is recommended to view the target trajectory in the App and confirm whether false targets are concentrated in a specific area, and set that area as "boundary" or "interference source".
+
+### Person Detected not Activating when a Person is There
+
+Possible Causes
+
+- Improper installation height or angle, radar not facing the occupied area.
+
+- Sensitivity set too low, unable to detect subtle breathing movements.
+
+- The person may be at the far edge of the detection area or heavily obstructed, resulting in insufficient detection data.
+
+- The Person may be extremely still, such as during deep sleep or prolonged sitting, while the “Absence Confirmation Period” is set too short.
+
+- In multi-person scenarios, the target distance is too close (\<1 meter), causing mutual interference
+
+- When "AI Enhanced Person Detection" is on, people near interference targets (pets, sweeping robot, fan, etc.) are causing point cloud overlap and misidentification
+
+Diagnosis and Solutions
+
+1. Check the installation height and angle, ensure radar directly faces the main activity area, pointed towards the user’s chests.
+
+2. Enter the device’s homepage on the app, go to Settings -> Monitoring Settings, and raise the "Presence Detection Sensitivity" to high
+
+3. Increase the "Absence Confirmation Period" to give the device enough time to capture subtle breathing signals.
+
+4. Remove obstructions between the device and detection targets, avoid placing the device where large objects may block detection.
+
+5. Readjust the installation position, away from metal, glass, and other strong reflective surfaces.
+
+6. Set non-critical areas to "boundary", optimize radar recognition logic, and reduce interference signals
+
+7. Retry after upgrading the device’s firmware to the latest version
+
+8. If there are no pets, robot vacuums, or other interference sources at home, it is recommended to turn off "AI Enhanced Person Detection"
+
+### Static Target (sleeping/sitting) Detection Instability
+
+Possible Causes
+
+- Static targets provide limited point cloud data, which may cause the algorithm to take longer for initial confirmation.
+
+- Target is too far or at the edge of the field of view.
+
+- Absence Confirmation Period set too short, causing false "no person" triggers
+
+- Weak interference signals in the environment affect static judgment
+
+Diagnosis and Solutions
+
+1. The recommended installation height is 1.–m, with the sensor facing the front chest area of people.
+
+2. Set "Presence Detection Sensitivity" to high
+
+3. Set "Absence Confirmation Period" to a longer time (such as 5 minutes)
+
+4. Actively perform an "AI Spatial Learning" in the App
+
+5. Adjust posture slightly (move arms or breathe), helping the algorithm quickly complete initial confirmation
+
+6. Ensure the installation location is away from airflow and strong reflective surfaces
+
+### Frequent Target Positioning Jumps or "Ghost" Appearances in the App.
+
+Possible Causes
+
+- Presence of large areas of glass, mirrors, metal railings, and other strong reflective surfaces, causing multipath echoes
+
+- A person is too close to a wall or window (\<0.5 meters), signal reflection causing false point clouds
+
+- Suspended objects in the environment (such as chandeliers, ceiling fans) producing interference point clouds
+
+- In multi-person scenarios, people standing less than 1 meter apart may cause overlapping point cloud data.
+
+Diagnosis and Solutions
+
+1. Set all non-detection areas (walls, glass, metal surfaces, etc.) as "boundary" type
+
+2. Check for suspended or swinging objects in the space, set their activity areas as "interference sources"
+
+3. Maintain a distance of 0.5 meters or more from walls and windows for optimal presence detection
+
+4. Actively perform an "AI Spatial Learning" in the app
+
+5. If frequent jumps occur in multi-person scenarios, set a larger, more appropriate “detection zone” boundary to reduce switching.
+
+6. Please ensure device firmware is upgraded to the latest version for optimal performance
+
+### Inaccurate People Counting
+
+Possible Causes
+
+- When multiple people enter simultaneously and are close together, overlapping point cloud data may cause counting errors
+
+- Some people may be a long distance away from the sensor or at the edge of detection areas, resulting in insufficient point cloud data
+
+- Interference from moving objects like pets/sweeping robots affecting counting
+
+- People might be behind large obstructions, leading to missing point cloud data
+
+Diagnosis and Solutions
+
+1. Appropriate spacing can achieve a better detection effect (suggested >1 meter)
+
+2. Enable "AI Enhanced Person Detection" to filter non-human targets like pets/sweeping robots
+
+3. Set non-human interference target activity areas as "interference sources"
+
+4. Check and optimize installation position to reduce blind area coverage
+
+5. Upgrade device firmware to the latest version
+
+- FP400 person counting has a 1-3 person error rate in multi-person scenarios, which is normal performance under current technical conditions and does not constitute device failure. If precise count accuracy is strictly required, it is recommended to reference trends rather than exact counting.
+
+### Third-Party Ecosystem Function Abnormal or Status Not Synchronized
+
+1. First confirm device status is normal and firmware is up to the latest version in the Aqara Home App
+
+2. Delete the device on the third-party platform and re-add it using the Matter pairing code
+
+3. Confirm the device is connected using the Thread protocol, and ensure the Matter hub supports all required features.
+
+4. Complete all zone and parameter settings in Aqara Home before syncing to another ecosystem
+
+5. Check whether the third-party platform fully supports Matter presence sensors. Refer to the platform’s official documentation for details.
+
+### Unable to Pair or Device Unresponsive
+
+1. Confirm the device is powered by a 5V 1A standard power supply, with a normal indicator light response after power-on
+
+2. Press and hold the reset key for 5s to put the device in pairing mode (blue light slow/fast blinking)
+
+3. Place the device close to the Matter hub to reduce the communication distance
+
+4. Confirm the Matter hub is online and functioning normally
+
+5. If issues still persist, quickly press the reset key 10 times to restore factory settings and retry
+
+## Frequently Asked Questions (FAQ)
+
+### Installation and Deployment
+
+Q1: What position and height are recommended for the FP400 installation?
+
+A: Recommended side-mounting height is 1.5–2 m, balancing detection accuracy for standing, seated, and low-activity scenarios. For more coverage, use side-mounting at a height of around 2 m. Recommended ceiling-mounting height is 3–4 m. For blind-spot-free detection, corner installation is preferred.
+
+Q2: Can the FP400 be installed in humid environments such as bathrooms or kitchens?
+
+A: Yes, this product has an IPX5 protection rating, meaning it is splash-resistant and suitable for use in humid indoor environments such as bathrooms and kitchens. However, keep it away from open flames and areas exposed to direct high-temperature steam.
+
+Q3: What advantages does corner installation have over middle-of-wall installation?
+
+A: Corner installation makes full use of the 120° detection angle, eliminating long-distance blind spots on both sides that may occur with wall mounting. This provides more even detection coverage and reduces missed detections.
+
+Q4: Is it normal if the device's detection range differs from the specifications in the manual?
+
+A: This is normal. The values stated in the manual represent the maximum detection range under ideal laboratory conditions. In actual use, mounting height, angle, wall/metal reflections, airflow, target posture, and obstructions can all affect the effective range of motion and presence detection, and unavoidable blind spots may exist.
+
+### Functions and Recognition Accuracy
+
+Q5: When people are sleeping or sitting still for a long time, will the device incorrectly detect them as absent?
+
+A: FP400 uses millimeter-wave radar to precisely detect subtle human breathing movements. With proper configuration, it can reliably identify static presence. We recommend setting detection sensitivity to high and extending the Absence Confirmation Period to significantly reduce false negatives when stationary.
+
+Q6: Can the FP400 detect falls or human posture?
+
+A: No. FP400 only supports occupancy detection (“Presence” / “No Presence”) and motion detection (“motion detected” / “all stationary”). It does not support fall detection or pose recognition and cannot determine whether a person is standing, sitting, or lying down.
+
+Q7: My home has pets/robot vacuums, and there are frequent false alerts indicating presence. What should I do?
+
+A: Three solutions: ① Enable “AI Enhanced Person Detection” to automatically filter out non-human targets such as pets and robot vacuums (note: infants and small children may occasionally be misclassified as pets); ② Set areas where pets/robot vacuums frequently move as interference sources to ignore micro-movement signals in those areas; ③ Slightly reduce detection sensitivity to reduce environmental interference triggers.
+
+Q8: There are frequent “presence detected” statuses when no people are there. What should I do?
+
+A: “Ghost targets” are false detections caused by multipath echoes due to strong reflective surfaces such as walls, metal, mirrors, or glass. Setting reflective areas as “Boundary” type or readjusting the installation angle to avoid strong reflective surfaces can significantly improve accuracy. It is recommended to manually set Boundary regions in the app after installation.
+
+Q9: Even though there is clearly no one in the space, the app still shows “Someone present”. What is the reason?
+
+A: Main causes and solutions: ① Micro-movement interference in the environment (curtain movement, fan rotation, air conditioning airflow, pet activity); set the interference source area as “Interference Source” type; ② “Ghost targets” remain; perform an “AI Spatial Learning” manually in the app; ③ Set reflective surface areas as “Boundary” type.
+
+Q10: A person is in the room, but the app is showing that no presence is detected. What could be the reason?
+
+A: Main causes and solutions: ① Incorrect mounting height or angle—the device is not oriented toward the activity area; adjust the device orientation or lower its mounting height appropriately; ② Detection sensitivity is too low; open your app and increase the sensitivity; ③ The person is in a distant edge area or is heavily obstructed; consider reducing the Absence Confirmation Period to see if performance improves; ④ The person is in a near-motionless state (such as sleeping); ensure sensitivity is increased and appropriately extend the Absence Confirmation Period.
+
+### Multi-target and Positioning
+
+Q11: Is it normal for the person count to be inaccurate when multiple people are present?
+
+A: A small deviation is normal. When multiple people are present simultaneously, the person count may have a 1–3 person variance due to overlapping point clouds between multiple targets and/or people obstructing each other from the radar. Therefore, accuracy cannot be guaranteed 100%. In scenarios requiring high personnel count accuracy, we recommend referring only to the “Real-Time People Count” trend in your app and not using it as an exact counting reference.
+
+Q12: Why does detection become unstable when two people are close together?
+
+A: When two targets (a person or a non-person) are within approximately 1 meter of each other horizontally, the point cloud may overlap, causing the algorithm to become unstable in classification (swapping the person/non-person labels) or causing the target to “stick” to the position of another target. We recommend setting densely occupied areas in your app as a larger “Monitoring Zone” rather than precise positioning.
+
+Q13: Why does the app's map display sudden jumps when one person stands close to another?
+
+A: When a target is within approximately 1 meter of another target, the algorithm pauses classification to prevent point cloud overlap. During this time, the target remains in a “pending confirmation” state (displayed as “...”). Normal operation resumes when the targets separate by more than 1 meter. Optimal detection performance occurs when targets are more than 1 meter apart.
+
+Q14: Why does target positioning occasionally jump to walls or windows and then return to normal after a while?
+
+A: This is a “ghosting” phenomenon, commonly seen near large glass, mirror, or metal surfaces. Signal reflections cause false targets to appear in locations where none exist. We recommend setting reflective areas as “Boundary” type, or performing an “AI Spatial Learning” manually in the app to adapt to the environment.
+
+### Custom Areas
+
+Q15: Custom zones were set in the app, but the number of zones displayed on third-party platforms (such as Apple Home) is incorrect. How do I fix this?
+
+A: There are three reasons: ① Some third-party Matter platforms do not support adding or removing zones; we recommend completing all zone configurations in Aqara Home before syncing to third-party platforms; ② After syncing, you need to manually name the corresponding presence sensor in the third-party platform to distinguish the zones; ③ Try removing and re-adding the device in the third-party platform to sync the latest status.
+
+Q16: What are the four zone types: “Monitoring Zone”, “Interference Source”, “Entry/Exit”, and “Boundary”?
+
+A: ① Monitoring Zone: main functional areas such as living room or bedroom, used to trigger automations for Presence/No Presence; ② Interference Source: objects with continuous micro-movements (e.g., fan, plant, pet activity zone); setting this area filters out its signal; ③ Entry/Exit: location of an entrance/exit; setting it improves detection speed for people entering or leaving; ④ Boundary: reflective surfaces such as walls, glass, or metal; setting this prevents ghosting and false targets.
+
+### Network Access and Protocol
+
+Q17: Is it necessary to pair the FP400 with an Aqara hub?
+
+A: Connecting to the Aqara ecosystem and accessing the device's full functionality requires an Aqara hub. If the device is instead added directly to a third-party ecosystem by scanning its Matter code, it can only be used as a single presence sensor and a single light sensor; custom zone configuration and other advanced features are not available outside of Aqara Home.
+
+Q18: What are the functional differences between the Zigbee and Thread protocols?
+
+A: Main differences: ① Local automation and response speed: the Zigbee protocol combined with an Aqara hub is typically faster; ② Cross-platform compatibility: Thread natively supports Matter, making it easier to integrate with third-party platforms such as Apple Home and Google Home.
+
+Q19: How do I switch the FP400 from the Thread protocol to the Zigbee protocol?
+
+A: First remove the device in the app, then press and hold the reset button for 5 seconds to reset the device. On the pairing screen, tap “Switch Protocol”, select the target protocol, and follow the instructions to complete pairing. Switching protocols will erase all settings, equivalent to a factory reset, so remember to save the current map as a template first.
+
+### Third-Party Ecosystem
+
+Q20: What should I do if custom zones that have been set cannot be displayed in third-party ecosystems?
+
+A: ① Complete all zone and parameter configurations within the Aqara Home app first, then synchronize to third-party platforms via the Matter pairing code; ② Some third-party platforms do not support dynamic zone modification; delete and re-add the device if needed; ③ Zone names must be manually modified in the third-party platform to match actual locations.
+
+Q21: What should I do if scanning the QR code on the physical device fails when adding the device to a third-party platform?
+
+A: When adding a second or subsequent platform, scan the secondary Matter pairing code generated in the Aqara Home app, not the original QR code on the device or manual. Reusing the original code for repeated additions will cause pairing failure.
+
+Q22: What should I do if the FP400's performance is unstable in third-party ecosystems and its status is inconsistent with Aqara Home?
+
+A: Troubleshooting steps: ① First confirm the device status is normal and the firmware is up to date in Aqara Home; ② Delete the device from the third-party platform and re-add it using the Matter pairing code; ③ Confirm the Thread protocol connection and ensure the Matter hub supports full functionality; ④ Complete all zone and parameter configurations in Aqara Home before synchronization.
+
+## Product Capability Boundary Description
+
+### Supported Target Types
+
+FP400 has been specially optimized for the following common interference sources: fans, air purifiers, sweeping robots, subtle plant movements, curtains (sliding and rolling curtains), pets, toilets, air conditioners, refrigerators. For other unlisted interference sources, recognition performance may decrease, with a certain probability of misidentification as human.
+
+### Multi-Target Tracking Accuracy Description
+
+In scenarios with multiple targets simultaneously, due to radar angular and distance resolution limitations, when two targets' planar distance is less than about 1 meter, point clouds may overlap, potentially causing unstable classification, target "adhesion", people counting deviations (1-3 person error), etc. This is a physical limitation of current millimeter-wave radar technology that cannot be completely eliminated.
+
+### Static Detection Accuracy Description
+
+The device captures human body breathing micro-movements through millimeter-wave radar to achieve presence detection. Detection is stable and reliable in normal sitting/standing postures; for deep sleep, long-distance, or edge area personnel, detection may be unstable or targets may be lost due to weak breathing micro-movement signals. Recommended to optimize detection effect by increasing sensitivity and extending human Absence Confirmation Period.
+
+### Detection Range and Blind Area Description
+
+The detection range noted in the manual is the maximum value under ideal laboratory conditions. In actual use, effective range will be smaller than laboratory values due to factors like installation height, tilt angle, ceiling reflection, environmental airflow, target posture, and obstructions. Device has blind areas outside horizontal 120°, vertical 100° FOV, and areas beyond the device's direct facing direction. Avoid placing critical areas (especially entrances/exits) in blind areas.
+
+### Target Classification Boundary Description
+
+Low-height targets (such as children under approximately 1.4 meters), crawling posture targets have a certain probability of not being stably identified as human, or being misclassified as pets. For new interference sources not in the optimization list, there is also a probability of misidentification as "human".
+
+### Function Platform Difference Description
+
+After synchronizing the device to a third-party Matter platform, actual function support depends on Matter standard function support and third-party platform's Matter implementation degree, which may differ from Aqara Home App. Recommended to use with Aqara Home App to obtain full device functions.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Spatial-Multi-Sensor-FP400-image15.png" alt="Image 15"  style={{ width: '60%' }} />
+
+- Bluetooth® word mark and logos are registered trademarks of the Bluetooth SIG, and Shenzhen Lumi United Technology Co., Ltd. has obtained permission for any such trademark use. Other trademarks and trade names belong to their respective owners.
+
+- Using the "Works with Apple" badge means that the accessory is specifically designed to work with the technology indicated on the badge and has been certified by developers, meeting Apple's performance standards. Apple is not responsible for the operation of this product or its compliance with safety regulations.
+
+- Please read this manual carefully and keep it safe
+
+Service Hotline: 400-990-7930 (Weekdays 10:00~18:00)
+
+Service Website: www.aqara.com/support
+
+Service Email: service@aqara.com
+
+Manufacturer: Shenzhen Lumi United Technology Co., Ltd.
+
+Address: Room 801-804, Building 1, Chongwen Park, Nanshan Intelligence Park, 3370 Liuxian Avenue, Futian Community, Taoyuan Street, Nanshan District, Shenzhen

@@ -10,10 +10,19 @@ import AsyncApiWebSocketPlayground from "@site/src/components/AsyncApiWebSocketP
 
 # WebSocket API Playground
 
-Use this page to test the AqaraLife Studio WebSocket channel directly in the docs site. You can edit the host and path, connect to your Studio endpoint, send `AuthRequest` / `ping` / subscription messages, and inspect pushed events in real time.
+You can directly test the Aqara Studio WebSocket channel on this page. Customize the host, connect to your Studio endpoint, send `AuthRequest`, `ping`, and subscription messages, and view push event responses in real time.
 
-:::info Browser Limitation
-The browser WebSocket API does not allow setting a custom `Authorization` handshake header. This playground therefore uses the post-connect `AuthRequest` flow for authentication and debugging.
+## Usage Recommendations
+
+1. First, select either the local network environment or remote access environment in the "Connect" section, then modify the Host address as needed.
+2. Since browsers' native WebSocket does not support custom handshake `Authorization` headers, it is recommended to enable the option to automatically send an `AuthRequest` to complete authentication with the first message. In the `Token` input box, just enter the Token obtained from Aqara Studio; the playground will automatically assemble the authentication content as `Bearer <Token>`.
+3. If your Studio exposes a non-default path, you can further modify the `Path`; the default contract path is `/open/ws`.
+4. To keep the WebSocket connection alive, the client should regularly send `PingRequest` or other business messages, and **at least one message should be sent every 30 seconds**; if there are no outbound messages within 30 seconds, the connection will be closed.
+5. After a successful connection, you can use the message editor to load sample messages such as `SubscribeAllRequest` and `SubscribeTraitValueRequest`, modify them as needed, and then send them directly for testing.
+6. `TraitValueUpdate`, `objectEvent`, and `ErrorMessage` will appear in real time in the log area for easy verification of subscription results.
+
+:::tip Authentication Instructions
+The original AsyncAPI contract supports two authentication methods: handshake header `Authorization: Bearer <accessToken>` and `AuthRequest` as the first message after connection. Due to browser environment limitations, this page mainly covers the second method.
 :::
 
 <AsyncApiWebSocketPlayground />

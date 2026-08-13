@@ -17,6 +17,7 @@
 - Hub-integrated Model: https://docs.aqara.com/docs/aqara-studio/deployment/hub-integrated-model
 - Space Management: https://docs.aqara.com/docs/aqara-studio/space
 - Aqara Hub: https://docs.aqara.com/docs/aqara-studio/device-integration/aqara
+- Aqara RS-485: https://docs.aqara.com/docs/aqara-studio/device-integration/aqara-rs-485
 - Zigbee: https://docs.aqara.com/docs/aqara-studio/device-integration/zigbee
 - Matter: https://docs.aqara.com/docs/aqara-studio/device-integration/matter
 - Aqara Modbus: https://docs.aqara.com/docs/aqara-studio/device-integration/aqara-modbus
@@ -33,6 +34,7 @@
 - Infrared Equipment: https://docs.aqara.com/docs/aqara-studio/device-integration/virtual/infrared-equipment
 - Light Box: https://docs.aqara.com/docs/aqara-studio/device-integration/virtual/light-box
 - Export to Aqara Home App: https://docs.aqara.com/docs/aqara-studio/device-export/aiot
+- Export via Haystack Framework: https://docs.aqara.com/docs/aqara-studio/device-export/haystack
 - View and Edit Basic Information: https://docs.aqara.com/docs/aqara-studio/device-management/basic-information
 - Firmware Upgrade: https://docs.aqara.com/docs/aqara-studio/device-management/firmware-upgrade
 - View and Control Function Points: https://docs.aqara.com/docs/aqara-studio/device-management/point-information
@@ -65,7 +67,7 @@
 - Local Firmware Library: https://docs.aqara.com/docs/aqara-studio/local-firmware-library
 - Host Access Domain Name Access: https://docs.aqara.com/docs/aqara-studio/local-domain-name-access
 - Factory Reset: https://docs.aqara.com/docs/aqara-studio/factory-reset
-- Plugin Market: https://docs.aqara.com/docs/aqara-studio/plugin-market
+- Plugin Center: https://docs.aqara.com/docs/aqara-studio/plugin-center
 - Developer Guide: https://docs.aqara.com/docs/aqara-studio/developer-guide
 - Data Export API v1: https://docs.aqara.com/docs/aqara-studio/api-references/data-export-api-v1
 - Device Function API: https://docs.aqara.com/docs/aqara-studio/api-references/trait-api
@@ -90,4 +92,5 @@
 - DIN Rail Hub AX100M: https://docs.aqara.com/docs/aqara-studio/product-knowledge/gateways/din-rail-hub-ax100m
 - Hub AX200M: https://docs.aqara.com/docs/aqara-studio/product-knowledge/gateways/hub-ax200m
 - Presence Sensor PR330P: https://docs.aqara.com/docs/aqara-studio/product-knowledge/sensors/presence-sensor-pr330p
+- Spatial Multi-Sensor FP400: https://docs.aqara.com/docs/aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400
 

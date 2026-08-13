@@ -1,33 +1,38 @@
 ---
 title: "Cloud Connect"
-description: "Cloud Connect (Edge2Cloud) enables you to link your local Studio with the Aqara Builder cloud platform, providing secure and seamless remote access to your Studio anytime, anywhere, without local network limitations."
-keywords: ["Aqara Docs", "Aqara Studio", "Cloud Connect"]
+description: "Cloud Connect (Edge2Cloud) enables you to bind your local Studio to the Aqara Cloud platform, so that you can remotely access your local Studio from anywhere via Aqara Builder, without local network limitations."
+keywords: ["Aqara Docs", "Aqara Studio", "Cloud Connect", "cloud"]
 ---
 # Cloud Connect
 
 ## Feature Overview
 
-Cloud Connect (Edge2Cloud) allows you to bind your local Studio to the [Aqara Builder](https://builder.aqara.com) cloud platform, so that you can remotely access their local Studio from anywhere via Aqara Builder, free from local network restrictions.
-
-Key features include:
+Cloud Connect allows you to bind your local Studio to the Aqara Cloud platform, so that you can remotely access your local Studio from anywhere via Aqara Cloud, free from local network restrictions. Key features include:
 - Provides [secure remote access](./remote-access.mdx) services for cloud platform users with the necessary permissions.
 - Enables remote monitoring and other cloud-based operational features through the cloud platform.
 - Offers more extensible value-added services for local Studio.
 - Facilitates data interaction between the local Studio and the cloud platform.
 - Remote access for users is free of charge across all maintained Studio versions.
 
-More features are coming soon!
-
-## About Aqara Builder
-
-Serving as the definitive cloud hub, [Aqara Builder](https://builder.aqara.com) bridges local Aqara Studio and cloud-based creative workflows. Aqara Builder enables centralized management of Aqara Studio devices across multiple on-site locations and one-click remote connection to unlock seamless cloud-based operations. 
-
-Even without Studio, users can experience the complete Aqara Studio creative process through the 'Try Online Demo' feature.
-
 ## How to Use
 
-1. Go to the **Cloud Connect** page from the left sidebar.
-2. Log in with your Aqara Builder account on this page.
-3. Bind Aqara Studio with your Aqara Workspace.
-4. After successful binding, go to the **User** page in the left sidebar of Aqara Studio, and you can view the linked Aqara Builder account.
-4. After successfully binding, go to the **User Management** page in the left sidebar of Aqara Studio to view the bound Aqara Builder account information. The user role for this account will be **Admin (Remote)**.
+1. From the left sidebar, go to **Settings** -> **Cloud Connect**, then click the **Connect to Aqara Cloud** button.
+
+    ![Connect to Aqara Cloud](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Cloud-ConnectToAqaraCloud.png)
+
+2. In the pop-up window, log in with your Aqara account and complete verification to use Cloud Connect services.‘
+
+    :::tip
+    Before logging in, please confirm that the region selected in the pop-up window is correct. It will determine the region of Aqara Studio in Aqara Builder, and directly affect the usage experience of [Remote Access](./remote-access.mdx).
+    :::
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Cloud-Login.png" alt="Log in to Aqara Cloud" style={{ width: '60%', height: 'auto' }} />
+
+3. After a successful login, the system will automatically complete the cloud connection, and a colorful cloud icon will appear at the top of the page, indicating that the device has been successfully connected to Aqara Cloud, as shown below:
+
+    ![Connected to Aqara Cloud](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Cloud-LoggedIn.png)
+
+
+4. After successful binding, go to the **User** page in the left sidebar of Aqara Studio to view the bound Aqara account information. The user role for this account will be **Remote Admin**.
+
+    ![Remote Admin](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Cloud-RemoteAdmin.png)
