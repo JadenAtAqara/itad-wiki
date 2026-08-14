@@ -18,7 +18,7 @@
 - 空间管理: https://docs.aqara.com/zh/docs/aqara-studio/space
 - Aqara Hub 接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/aqara
 - Aqara RS-485 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/aqara-rs-485
-- Zigbee 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/zigbee
+- Aqara Zigbee 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/zigbee
 - Matter 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/matter
 - Aqara Modbus 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/aqara-modbus
 - Home Assistant 生态集成: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/home-assistant

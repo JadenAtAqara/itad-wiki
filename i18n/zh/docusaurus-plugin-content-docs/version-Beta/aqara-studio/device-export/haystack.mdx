@@ -19,14 +19,17 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备导出", "以 Haystack 框架�
 ## 转出流程
 
 1. 在 **插件中心** 找到 `Haystack Export` 插件，点击 **转出** 按钮。
-2. 在弹窗中 **确认已连接 Aqara Cloud**。
 
-    ![检查云端连接](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AIOTExport-CheckCloudConnection.png)
+    ![点击转出按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Haystack-TransferOut.png)
 
-3. 选择您 Aqara Home App 中的一个 **家庭**。
-4. 勾选待转出的设备，并单击 **开始导出** 按钮。
-    ![选择设备](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AIOTExport-SelectDevices.png)
+2. Aqara Studio 会自动跳转至 **开发者中心**，找到 **Haystack 转出**，你可以看到有一个默认账号和密码，可用于转出 Aqara Studio 内的所有设备。
 
-5. 转出成功后，您可以看到如下界面。此时，您即可在 Aqara Home App 上控制此设备。
+    ![默认账号和密码](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Haystack-DefaultAccount.png)
 
-    ![检查云端连接](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AIOTExport-Success.png)
+3. 如果您只希望转出某个网关下的设备，请单击 **新建服务**。
+
+    ![新建服务](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Haystack-NewService.png)
+
+4. 在弹窗中选择目标网关，设置账号和密码，单击 **确定** 按钮。
+
+5. 如此，您可以看到 **Haystack 转出** 下新增了一个账号和密码，可用于转出该网关下的所有设备。

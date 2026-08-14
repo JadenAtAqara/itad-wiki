@@ -17,7 +17,9 @@ Aqara Studio 内置 MQTT broker，支持您通过 MQTT 协议将设备数据转�
 
 ## 使用流程
 
-1. 在 Aqara Studio 左侧侧边栏进入 **开发者**，并开启 **MQTT转出** 服务。此时，界面会展示建立 MQTT 连接所需的所有信息（如 Aqara Studio 本机 IP、MQTT 端口、用户名、密码），以及请求和响应 Topic 的格式。
+1. 在 Aqara Studio 左侧侧边栏进入 **开发者**，并开启 **MQTT转出** 服务。
+
+    此时，界面会展示建立 MQTT 连接所需的所有信息（如 Aqara Studio 本机 IP、MQTT 端口、用户名、密码），以及请求和响应 Topic 的格式。
 
     ![获取 MQTT 连接所需信息](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/mqtt-export-1.png) 
 
@@ -27,13 +29,13 @@ Aqara Studio 内置 MQTT broker，支持您通过 MQTT 协议将设备数据转�
 
 3. 连接成功后，点击 **New Subscription** 按钮，根据 Aqara Studio 显示的 **响应 Topic 格式**，将其中的 ClientID 替换为 MQTTX 自动生成的实际 ClientID，以完成对响应消息的订阅。
 
-    ![订阅响应](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/mqtt-export-3.png) 
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/mqtt-export-3.png" alt="订阅响应" style={{width: '60%'}} /> 
 
 4. 在已创建的订阅中，将 Aqara Studio 提供的 **请求 Topic 格式**中的 ClientID 替换为 MQTTX 自动生成的实际 ClientID，并填写到 Topic 输入框。参照 [设备功能 API](./api-references/trait-api.mdx) 文档中各接口的请求参数说明，编写 JSON 格式的消息并发送，即可获得响应。
 
     下图以 [查询设备 ID 列表](./api-references/trait-api.mdx#查询设备的-spec-配置) 的请求为例：
 
-    ![发送请求](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/mqtt-export-4.png) 
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/mqtt-export-4.png" alt="发送请求" style={{width: '70%'}} /> 
 
     以下为响应示意图：
 

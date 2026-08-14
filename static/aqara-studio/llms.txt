@@ -18,7 +18,7 @@
 - Space Management: https://docs.aqara.com/docs/aqara-studio/space
 - Aqara Hub: https://docs.aqara.com/docs/aqara-studio/device-integration/aqara
 - Aqara RS-485: https://docs.aqara.com/docs/aqara-studio/device-integration/aqara-rs-485
-- Zigbee: https://docs.aqara.com/docs/aqara-studio/device-integration/zigbee
+- Aqara Zigbee: https://docs.aqara.com/docs/aqara-studio/device-integration/zigbee
 - Matter: https://docs.aqara.com/docs/aqara-studio/device-integration/matter
 - Aqara Modbus: https://docs.aqara.com/docs/aqara-studio/device-integration/aqara-modbus
 - Home Assistant: https://docs.aqara.com/docs/aqara-studio/device-integration/home-assistant
