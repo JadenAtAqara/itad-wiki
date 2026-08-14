@@ -5,3 +5,31 @@ keywords: ["Aqara Docs", "Aqara Studio", "Device Export", "Export via Haystack F
 ---
 
 # Export via Haystack Framework
+
+This document provides a detailed guide on how to export smart devices from Aqara Studio to third-party platforms via Haystack framework, enabling you to flexibly manage and control your devices on third-party platforms.
+
+## Prerequisites
+
+Before you begin, please use your Aqara Home App account to [log in to Aqara Cloud, select your country or region, and bind it to a home within the Aqara Home App](./../cloud.mdx).
+
+## Install the Plugin
+
+Please refer to the [Plugin Market](./../plugin-center.mdx) documentation and visit [Aqara Builder](https://builder.aqara.com) to install the `Haystack Export` plugin.
+
+## Export Process
+
+1. In the **Plugin Center**, find the `Haystack Export` plugin and click the **Transfer Out** button.
+
+    ![Click Transfer Out](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Haystack-TransferOut.png)
+
+2. Aqara Studio will automatically redirect you to the **Developer Center**. Find **Haystack Transfer Out**, where you can see a default username and password that can be used to export all devices in Aqara Studio.
+
+    ![Default username and password](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Haystack-DefaultAccount.png)
+
+3. If you only want to export devices under a specific gateway, click **New Service**.
+
+    ![New Service](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Haystack-NewService.png)
+
+4. In the pop-up window, select the target gateway, set a username and password, and click **Confirm**.
+
+5. After that, you will see a new username and password under **Haystack Export**, which can be used to export all devices under that gateway.
