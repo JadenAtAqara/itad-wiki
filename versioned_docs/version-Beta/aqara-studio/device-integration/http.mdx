@@ -21,10 +21,19 @@ Please refer to the [Plugin Market](./../plugin-center.mdx) instruction, and go 
 
 ## Add HTTP Devices and Function Points
 
-1. In the left sidebar, click to enter the **Devices** page.
-2. In the device tree on the left, click the “+” button. In the popup, choose `HTTP` to add an HTTP node.
-3. Select the HTTP node to open the management page.
-4. Go to the `Protocol Configuration` tab and set the following parameters for the HTTP device to be integrated.
+1. In the left sidebar, click to enter the **Device Management** page. In the left **Protocols and Devices** panel, click the **...** button and select **Add Protocol**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Devices-AddProtocol.png" alt="Add Protocol" /> 
+
+2. In the popup, select `Http` to add an HTTP node.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Devices-SelectHttp.png" alt="Add HTTP" style={{width: '70%'}} /> 
+
+3. Select the node to enter the management page. Click the **Protocol Configuration** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/HTTP-ProtocolConfiguration.png" alt="Protocol Configuration" /> 
+
+4. Configure the following parameters for the HTTP device to be integrated.
 
     | Parameter | Description |
     | -- | -- |
@@ -33,19 +42,47 @@ Please refer to the [Plugin Market](./../plugin-center.mdx) instruction, and go 
     | Port                   | The network port on which the device receives and processes HTTP requests. |
     | Enable/Disable Network | If disabled, the device on this network will be unavailable. |
 
-5. Switch to the **Script** tab and paste the [JavaScript script you wrote](#learn-and-write-javascript-scripts) into the code editor, ensuring that the HTTP device and its function points can be correctly recognized and managed by Aqara Studio.
-6. Switch to the **Add Device** tab, and click the **Discover Devices** button. Aqara Studio will automatically scan for and identify the HTTP device that can be integrated based on your script. The discovered device will appear in the **Added Device List**.
-7. Select the target device and click the **+** button in the center to add the device to the **Added Device List** on the right, and it will also be displayed in real time under the HTTP node in the device tree on the left.
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/HTTP-ProtocolConfigurationFields.png" alt="Protocol configuration fields" /> 
 
-    Expand the device in the device tree on the left to view all recognized function points for that device.
+5. Click the **Script Configuration** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/HTTP-ScriptConfiguration.png" alt="Script Configuration" style={{width: '60%'}} /> 
+
+6. Paste the [JavaScript script you wrote](#learn-and-write-javascript-scripts) into the code editor, ensuring that the HTTP device and its function points can be correctly recognized and managed by Aqara Studio.
+7. Return to the HTTP management page and click the **Add Device** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/HTTP-AddDevice.png" alt="Click the Add Device button" /> 
+8. Click the **Discover Devices** button.
+
+    Aqara Studio will automatically scan for and identify HTTP devices that can be integrated based on the script you wrote. Discovered devices will appear in the **Discovered Devices** list.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/HTTP-DiscoverDevices.png" alt="Click the Discover Devices button" /> 
+
+9. Select the devices to integrate and click the **+** button in the center.
+
+    Newly added devices will appear in the **Added Device List** on the right. Click the **Complete** button to exit the add device process.
+
+10. You will then see the successfully added devices under the HTTP node in the left **Protocols and Devices** panel, as well as in the device list on the HTTP management page.
+
+## Add Points
+
+1. Under the HTTP node, select an HTTP device and click the **Add Point** button.
+
+2. Click the **Discover Points** button.
+
+3. In the **Discovered Points** list, check the required points and click the middle **+** button.
+    
+    Newly added points will appear in the **Added Points** list on the right. Click the **Complete** button to exit the add points process.
+
+4. You will then see the successfully added points on the management page of that HTTP device.
 
 ## Add Multiple HTTP Devices
 
-Each HTTP node can be associated with only one HTTP device. If you need to integrate multiple HTTP devices, click the "+" button in the device tree on the left multiple times to create the required number of HTTP nodes, and then configure each node with its corresponding HTTP device information separately, rather than modifying the device parameters within an existing HTTP node.
+Each HTTP node can be associated with only one HTTP device. If you need to integrate multiple HTTP devices, add multiple HTTP nodes in the left **Protocols and Devices** panel, and then configure each node with its corresponding HTTP device information separately. Do not modify the device parameters within an existing HTTP node.
 
 ## Multi-Gateway HTTP Device Integration
 
-Each HTTP node can only be associated with HTTP devices under a single gateway. If you need to integrate devices under different gateways, click the "+" button in the device tree on the left multiple times to add separate HTTP nodes. Configure the gateway information separately for each node. Do not modify an existing node's network parameters to connect devices from other gateways.
+Each HTTP node can only be associated with HTTP devices under a single gateway. If you need to integrate HTTP devices under different gateways, add multiple HTTP nodes in the left **Protocols and Devices** panel, and configure the gateway information separately for each node. Do not modify an existing node's network parameters to connect devices from other gateways.
 
 ## Next Steps
 
