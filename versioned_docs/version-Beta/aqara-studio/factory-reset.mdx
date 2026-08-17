@@ -24,15 +24,15 @@ Depending on your Aqara Studio [deployment model](./overview/introduction.mdx#wh
 
 Please refer to the manual of the official Aqara Studio master device (e.g., [Edge Hub M300](./product-knowledge/gateways/edge-hub-m300.mdx)) to learn how to perform a factory reset on Aqara Studio using button operation.
 
-## Restrict Button Operations
+## Disable Button Factory Reset
 
-For Aqara Studio in `Hub-Integrated` mode, if you do not want others to restore settings via the [physical button](#physical-button-operation), you can restrict button operation by following these steps:
+For Aqara Studio in `Hub-Integrated` mode, if you do not want others to perform factory reset via the [physical button](#physical-button-operation), you can disable it by following these steps:
 1. In the left navigation bar, click **Devices**, select **AqaraHub**, and locate the required official Aqara Studio master device.
 2. In the point list of that device, find the **Disable Button Factory Reset** point and set it to `True` to prevent factory reset via the physical button.
 
 ![Disable Button Factory Reset](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/FactoryReset-DisableButtonFactoryReset.png)
 
-In this way, when someone attempts to reset Aqara Studio to the factory settings via [physical button operations](#physical-button-operation), Aqara Studio will play a voice prompt: "Factory reset is disabled. You can enable it in Aqara Studio settings."
+In this way, when someone attempts to reset Aqara Studio to the factory settings via the [physical button](#physical-button-operation), Aqara Studio will play a voice prompt: "Factory reset is disabled. You can enable it in Aqara Studio settings."
 
 ## Enable Button Factory Reset
 
