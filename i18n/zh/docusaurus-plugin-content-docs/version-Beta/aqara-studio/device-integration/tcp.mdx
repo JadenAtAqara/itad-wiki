@@ -15,62 +15,107 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "TCP 设备接入"]
 
 请参考 [插件市场](./../plugin-center.mdx) 文档，前往 [Aqara Builder](https://builder.aqara.com) 安装 `TCP Protocol Access` 插件。
 
-## 添加 TCP 设备
+## 添加 TCP 设备和功能点
 
-1. 在左侧侧边栏点击进入**设备管理**页面，在左侧设备树单击“+”按钮。
+1. 在左侧侧边栏点击进入**设备管理**页面。在左侧 **协议和设备** 单击 **...** 按钮，选择 **添加协议**。
 
-    ![单击添加按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-ClickAddButton.png)
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-AddProtocol.png" alt="添加协议" /> 
 
 2. 在弹窗中选择 `TCP`，以添加一个 TCP 节点。
-3. 选择该 TCP 节点，进入管理界面。
-    ![TCP 协议管理页面](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-Management.png)
 
-4. 进入 **脚本** 选项卡，将 [编写好的 JavaScript 脚本](#学习并编写-javascript-脚本) 粘贴到代码框中，确保 TCP 设备及其功能点能被 Aqara Studio 正确识别和管理。
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/UDP-JavaScript.png" alt="编写 JS 脚本" style={{width: '70%'}} />
-    
-5. 切换到 **添加设备** 选项卡。   
-    ![切换至添加设备选项卡](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-AddDevice.png)
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-SelectTCP.png" alt="添加 TCP" style={{width: '70%'}} /> 
 
-6. （可选）单击 ⚙ 图标。
+3. 选择该节点，进入管理界面。点击 **协议配置** 按钮。
 
-    ![单击齿轮图标](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/UDP-Gear.png)
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-ProtocolConfiguration.png" alt="协议配置" /> 
 
-7.（可选）根据您的 TCP 设备是通过 TCP 协议还是 UDP 协议被发现，请选择以下任一流程进行设置：
+4. 在弹窗中单击 **脚本配置** 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-ScriptConfiguration.png" alt="脚本配置" style={{width: '60%'}} /> 
+
+5. 将 [编写好的 JavaScript 脚本](#学习并编写-javascript-脚本) 粘贴到代码框中，确保 TCP 设备及其功能点能被 Aqara Studio 正确识别和管理。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-ScriptEditor.png" alt="代码粘贴至脚本编辑器" style={{width: '60%'}} /> 
+
+6. （可选）如果您希望用 `msgId` 来匹配发送消息与接收消息，请启用 `Match by msgId` 开关。若无启用，则表示按顺序处理。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-MsgIdMatch.png" alt="消息 ID 匹配" style={{width: '60%'}} /> 
+
+7. 返回 TCP 管理页面，单击 **添加设备** 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-AddDevice.png" alt="单击添加设备按钮" /> 
+
+8. 在弹窗中选择 **自动发现** 作为接入方式，并选择 **开始接入设备** 进入下一步。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-SelectAutoDiscovery.png" alt="选择自动发现作为接入方式" style={{width: '60%'}} /> 
+
+9. （可选）单击 ⚙ 图标。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-Gear.png" alt="单击齿轮图标" /> 
+
+    若您的 TCP 设备是通过 TCP 协议被发现，请选择 **TCP** 选项；若您的 TCP 设备是通过 UDP 协议被发现，请选择 **UDP** 选项。
 
     :::tip
-    如果没有以下配置，建议在 JS 脚本中 [parseDiscoveryResponse](./../javascript-for-udp-tcp-integration.mdx#parsediscoveryresponse) 的返回结果里直接写明目标 TCP 设备的 IP 和端口号，实现设备的精准发现和接入。
+    如果没有以下配置，建议在 [JS 脚本](#学习并编写-javascript-脚本) 中 [parseDiscoveryResponse](./../javascript-for-udp-tcp-integration.mdx#parsediscoveryresponse) 的返回结果里直接写明目标 TCP 设备的 IP 和端口号，实现设备的精准发现和接入。
     :::
 
     - **TCP**：   
-        在弹窗内填写 TCP 目标的 IP 地址和端口号。该信息将用于 JS 脚本中的 [buildDiscoveryRequest](./../javascript-for-udp-tcp-integration.mdx#builddiscoveryrequest) 接口，指导 Aqara Studio 从指定地址自动发现所有 TCP 设备。   
+        在弹窗内填写 TCP 目标的 IP 地址和端口号。该信息将用于 [JS 脚本](#学习并编写-javascript-脚本) 中的 [buildDiscoveryRequest](./../javascript-for-udp-tcp-integration.mdx#builddiscoveryrequest) 接口，指导 Aqara Studio 从指定地址自动发现所有 TCP 设备。   
         <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-TCPIPConfiguration.png" alt="配置服务端 IP 地址和 Port" style={{width: '50%'}} />
 
     - **UDP**：   
         设置 `Discovery Type` 为 `UDP`。   
         <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-DiscoveryType.png" alt="配置发现类型" style={{width: '50%'}} />   
-        在弹窗内填写 UDP 服务端的 IP 地址和端口号。该信息将用于 JS 脚本中的 [buildDiscoveryRequest](./../javascript-for-udp-tcp-integration.mdx#builddiscoveryrequest) 接口，指导 Aqara Studio 从指定地址自动发现所有 TCP 设备。    
+        在弹窗内填写 UDP 服务端的 IP 地址和端口号。该信息将用于 [JS 脚本](#学习并编写-javascript-脚本) 中的 [buildDiscoveryRequest](./../javascript-for-udp-tcp-integration.mdx#builddiscoveryrequest) 接口，指导 Aqara Studio 从指定地址自动发现所有 TCP 设备。    
         <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-IPConfiguration.png" alt="配置服务端 IP 地址和 Port" style={{width: '50%'}} />
-8. 点击 **发现设备** 按钮，Aqara Studio 会根据您编写的脚本自动扫描并识别可接入的 TCP 设备，被发现的设备会在**发现设备列表**中展示。
-9. 选中目标设备，点击中间的 **+** 按钮，即可将该设备添加至右侧的**已添加设备列表**，并会实时同步显示在左侧设备树的 TCP 节点下。
+
+10. 选择 **发现设备** 按钮。
+
+    Aqara Studio 会根据您编写的 [JS 脚本](#学习并编写-javascript-脚本) 自动扫描并识别可接入的 TCP 设备，被发现的设备会在**发现设备列表**中展示。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-DiscoverDevices.png" alt="发现设备" /> 
+
+11. 选择需接入的设备，点击中间“+”按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-AddDiscoveredDevices.png" alt="新增发现设备" /> 
+
+    新增设备会出现在右侧的已添加设备列表。单击 **完成** 按钮，退出添加设备流程。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-AddedDeviceList.png" alt="已添加设备列表" /> 
+
+
+12. 此时，您将在左侧 **协议和设备** 的 TCP 节点下，以及该 TCP 管理页面的设备列表中，看到已成功添加的设备。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-CheckAddedDevices.png" alt="设备已添加至" /> 
 
 ## 添加功能点
 
-1. 在设备树选择您新增的设备，进入其`功能点`选项卡，单击`添加功能点`按钮。
+1. 在 TCP 节点下选择一个 TCP 设备，单击 **添加功能点** 按钮。
 
-    ![添加功能点](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/UDP-AddPoints.png)
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-SelectDeviceAndAddPoint.png" alt="选择设备并添加功能点" /> 
 
-2. 在“添加功能点”页面，单击 **发现功能点** 按钮，Aqara Studio 即开始扫描发现该设备的功能点。 
+2. 选择 **发现功能点** 按钮。
 
     :::tip
-    - 若设备功能点为**动态**，请在脚本中实现 [buildDiscoverPointsRequest](./../javascript-for-udp-tcp-integration.mdx#builddiscoverpointsrequest) 接口和 [parseDiscoverPointsResponse](./../javascript-for-udp-tcp-integration.mdx#parsediscoverpointsresponse) 接口。   
-    此时，点击`添加功能点`按钮，Aqara Studio 会调用 [buildDiscoverPointsRequest](./../javascript-for-udp-tcp-integration.mdx#builddiscoverpointsrequest) 接口以动态发现设备功能点，并会将该接口的返回值作为 [parseDiscoverPointsResponse](./../javascript-for-udp-tcp-integration.mdx#parsediscoverpointsresponse) 接口的入参。
-    - 若设备功能点为**静态**，请在脚本中实现 [parseDiscoverPointsResponse](./../javascript-for-udp-tcp-integration.mdx#parsediscoverpointsresponse) 接口，并在返回值中**直接提供目标设备的功能点列表**。   
-    此时，点击`添加功能点`按钮，Aqara Studio 将直接发现这些功能点。
-    :::   
+    - 若设备功能点为**动态**，请在 [JS 脚本](#学习并编写-javascript-脚本) 中实现 [buildDiscoverPointsRequest](./../javascript-for-udp-tcp-integration.mdx#builddiscoverpointsrequest) 接口和 [parseDiscoverPointsResponse](./../javascript-for-udp-tcp-integration.mdx#parsediscoverpointsresponse) 接口。   
+    此时，点击 **添加功能点** 按钮，Aqara Studio 会调用 [buildDiscoverPointsRequest](./../javascript-for-udp-tcp-integration.mdx#builddiscoverpointsrequest) 接口以动态发现设备功能点，并会将该接口的返回值作为 [parseDiscoverPointsResponse](./../javascript-for-udp-tcp-integration.mdx#parsediscoverpointsresponse) 接口的入参。
+    - 若设备功能点为**静态**，请在 [JS 脚本](#学习并编写-javascript-脚本) 中实现 [parseDiscoverPointsResponse](./../javascript-for-udp-tcp-integration.mdx#parsediscoverpointsresponse) 接口，并在返回值中**直接提供目标设备的功能点列表**。   
+    此时，点击 **添加功能点** 按钮，Aqara Studio 将直接发现这些功能点。
+    :::
 
-    ![发现功能点](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/UDP-DiscoverPoints.png)
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-DiscoverPoints.png" alt="发现功能点" /> 
 
-3. 勾选需要的点，单击中间 **+** 按钮，新增功能点会出现在右侧的**已添加功能点**列表，并同步显示在左侧设备树的相关设备下。
+3. 在 **发现功能点列表** 勾选需要的点，单击中间 **+** 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-AddDiscoveredPoints.png" alt="新增发现功能点" />
+    
+    新增功能点会出现在右侧的 **已添加功能点** 列表。单击 **完成** 按钮，退出添加功能点流程。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-AddedPoints.png" alt="已添加功能点" /> 
+
+4. 此时，您将在该 TCP 设备的管理页面中，看到已成功添加的功能点。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-CheckPoints.png" alt="已添加功能点" /> 
 
 ## 下一步
 
