@@ -242,7 +242,7 @@
 
     {
       "type": "category",
-      "label": "Gateway",
+      "label": "Gateways",
       "customProps": {
         "tab": "product-knowledge"
       },
@@ -256,13 +256,23 @@
     },
     {
       "type": "category",
-      "label": "Sensor",
+      "label": "Sensors",
       "customProps": {
         "tab": "product-knowledge"
       },
       "items": [
         "aqara-studio/product-knowledge/sensors/presence-sensor-pr330p",
         "aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Controllers",
+      "customProps": {
+        "tab": "product-knowledge"
+      },
+      "items": [
+        "aqara-studio/product-knowledge/controllers/din-rail-module-4-channels-aw110k"
       ]
     }
   ],

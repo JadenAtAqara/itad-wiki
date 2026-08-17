@@ -87,13 +87,17 @@
     "message": "设备集成脚本",
     "description": "The label for category 'JavaScript for Integration' in sidebar 'aqaraStudioSidebar'"
   },
-  "sidebar.aqaraStudioSidebar.category.Gateway": {
+  "sidebar.aqaraStudioSidebar.category.Gateways": {
     "message": "网关",
-    "description": "The label for category 'Gateway' in sidebar 'aqaraStudioSidebar'"
+    "description": "The label for category 'Gateways' in sidebar 'aqaraStudioSidebar'"
   },
-  "sidebar.aqaraStudioSidebar.category.Sensor": {
+  "sidebar.aqaraStudioSidebar.category.Sensors": {
     "message": "传感器",
-    "description": "The label for category 'Sensor' in sidebar 'aqaraStudioSidebar'"
+    "description": "The label for category 'Sensors' in sidebar 'aqaraStudioSidebar'"
+  },
+  "sidebar.aqaraStudioSidebar.category.Controllers": {
+    "message": "控制器",
+    "description": "The label for category 'Controllers' in sidebar 'aqaraStudioSidebar'"
   },
   "sidebar.aqaraDeveloperSidebar.category.Local API for Studio": {
     "message": "Studio 本地 API",
