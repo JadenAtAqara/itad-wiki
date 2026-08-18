@@ -81,7 +81,7 @@ Context 被空闲回收、内存压力回收、脚本更新或执行超时后，
 
 #### 入参说明
 
-建议该函数接收一个 `msgId` 参数，用于构造请求与响应的关联标识。
+该函数无入参。设备发现不使用 `msgIdMatch`。
 
 #### 返回值
 
@@ -94,8 +94,8 @@ Uint8Array.from("001#DEVICE_SCAN#\r\n", c => c.charCodeAt(0))
 #### 函数示例
 
 ```javascript
-function buildDiscoveryRequest(msgId) {
-    return Uint8Array.from(msgId + "#DEVICE_SCAN#\r\n", c => c.charCodeAt(0));
+function buildDiscoveryRequest() {
+    return Uint8Array.from("001#DEVICE_SCAN#\r\n", c => c.charCodeAt(0));
 }
 ```
 
@@ -134,7 +134,7 @@ function buildDiscoverPointsRequest(msgId, deviceId) {
 
 | 参数 | 类型 | 说明 |
 | --- | --- | --- |
-| msgId | String | 请求消息 ID。若启用了基于 `msgId` 的响应匹配，则建议传入。 |
+| msgId | String | 请求消息 ID。若启用了基于 `msgIdMatch` 的响应匹配，则必须传入。 |
 | deviceId | String | 设备 ID |
 
 #### 返回值
@@ -287,11 +287,15 @@ Aqara Studio 收到一条报文后，会先调用该函数。您需要在此函�
 - 当前报文对应哪个请求的响应；
 - 或者应交由哪个解析函数处理。
 
-当返回 `msgId` 时，Aqara Studio 会优先按请求 ID 匹配；
-当返回 `path` 时，Aqara Studio 会按指定函数路径处理；
-如果 `path` 为空但 `msgId` 不为空，平台会保留消息给事务匹配；
-如果 `path` 和 `msgId` 都为空，平台默认按 `parseReportRequest` 处理；
-其他非空 `path` 会按 `parseReportRequest` 处理。
+`msgId` 与 `path` 相互独立：`msgId` 用于事务匹配，`path` 用于校验并选择解析函数。
+
+- 同时返回 `msgId` 和 `path` 时，Studio 先按请求 ID 定位事务，再校验解析函数；
+- `path` 为空但 `msgId` 不为空时，Studio 匹配事务后，按该请求期望的解析函数处理；
+- `path` 和 `msgId` 都为空时，Studio 默认按 `parseReportRequest` 处理；
+- `path` 为 `parseReportRequest` 时始终按主动上报处理，即使携带 `msgId` 也不会占用等待事务；
+- 其他不受支持的非空 `path` 会被拒绝并记录警告。
+
+协议配置字段 `msgIdMatch` 是请求 ID 校验开关，默认关闭。关闭时，`buildDiscoverPointsRequest`、`buildProbeRequest`、`buildReadRequest` 和 `buildWriteRequest` 收到的第一个 `msgId` 参数为空字符串；开启时，Studio 为每次请求生成非空 ID，脚本应将其写入请求报文，并由 `dispatch` 从响应中返回相同 ID。Studio 使用该 ID 匹配等待事务及乱序响应；ID 缺失、不一致或已过期时不会完成当前事务，该操作可能重试或超时。此字段不决定请求是否等待响应，也不替代 `path`，并且不适用于设备发现和 `buildReportResponse`。
 
 #### 入参说明
 
@@ -305,7 +309,7 @@ Aqara Studio 收到一条报文后，会先调用该函数。您需要在此函�
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
-| msgId | String | 请求消息 ID |
+| msgId | String | 从响应中提取的请求消息 ID。启用 `msgIdMatch` 时，必须与请求报文中的 ID 一致。 |
 | path | String | 对应的解析函数名称，例如 `parseProbeResponse` |
 
 #### 返回值示例
@@ -372,7 +376,8 @@ function dispatch(fromAcceptMessage) {
         "firmwareVersion": "1.1.0",
         "deviceId": "uuid1234",
         "ip": "设备ip",
-        "port": 1102
+        "port": 1102,
+        "localPort": 1103
     }
 ]
 ```
@@ -387,7 +392,14 @@ function dispatch(fromAcceptMessage) {
 | firmwareVersion | String | 否 | 固件版本 |
 | ip | String | 是 | 设备 IP 地址 |
 | port | Int | 是 | UDP/TCP 端口 |
+| localPort | Int | 否 | 仅用于 UDP。Studio 接收响应和主动上报时绑定的本地监听端口。未返回或返回 `0` 时使用 `port`；TCP 会忽略该字段。 |
 | deviceId | String | 是 | 设备唯一标识 |
+
+`localPort` 适用于设备远端服务端口与 Studio 接收端口不同、设备要求客户端使用固定源端口，或者多个 UDP 设备需要避免本地监听端口冲突的场景。大多数请求与响应使用同一端口的设备无需返回该字段。
+
+:::note
+当前每个 UDP 设备独立绑定本地监听端口。请确保同时运行的 UDP 设备使用可用且不冲突的 `localPort`。如果多个设备必须向 Studio 的同一个本地端口主动上报，当前接入方式不支持共享该监听端口。
+:::
 
 #### 函数示例
 
@@ -760,8 +772,8 @@ const scriptState = globalThis.studioScriptState;
 scriptState.reportCount = 0;
 scriptState.lastReportAt = null;
 
-function buildDiscoveryRequest(msgId) {
-    return Uint8Array.from(msgId + "#DEVICE_SCAN#\r\n", c => c.charCodeAt(0));
+function buildDiscoveryRequest() {
+    return Uint8Array.from("001#DEVICE_SCAN#\r\n", c => c.charCodeAt(0));
 }
 
 function buildDiscoverPointsRequest(msgId, deviceId) {

@@ -80,7 +80,7 @@ Return a device protocol payload that can be converted into a byte array. It tel
 
 #### Parameters
 
-It is recommended that this function accept a `msgId` parameter used to construct the correlation identifier between request and response.
+This function has no parameters. Device discovery does not use `msgIdMatch`.
 
 #### Return Value
 
@@ -93,8 +93,8 @@ Uint8Array.from("001#DEVICE_SCAN#\r\n", c => c.charCodeAt(0))
 #### Example
 
 ```javascript
-function buildDiscoveryRequest(msgId) {
-    return Uint8Array.from(msgId + "#DEVICE_SCAN#\r\n", c => c.charCodeAt(0));
+function buildDiscoveryRequest() {
+    return Uint8Array.from("001#DEVICE_SCAN#\r\n", c => c.charCodeAt(0));
 }
 ```
 
@@ -286,11 +286,15 @@ After Aqara Studio receives a packet, it calls this function first. You need to 
 - Which request the current packet is responding to
 - Or which parser function should handle the packet
 
-When `msgId` is returned, Aqara Studio prioritizes matching by request ID.
-When `path` is returned, Aqara Studio uses the specified function path directly.
-If `path` is empty but `msgId` is not empty, the platform keeps the message for transaction matching.
-If both `path` and `msgId` are empty, the platform handles it as `parseReportRequest` by default.
-Other non-empty `path` values are also handled as `parseReportRequest`.
+`msgId` and `path` are independent: `msgId` is used for transaction matching, while `path` validates and selects the parser.
+
+- When both `msgId` and `path` are returned, Studio locates the transaction by request ID and then validates the parser.
+- When `path` is empty but `msgId` is not empty, Studio matches the transaction and uses the parser expected by that request.
+- When both `path` and `msgId` are empty, Studio handles the packet as `parseReportRequest` by default.
+- A `path` of `parseReportRequest` is always handled as an active report. It does not consume a waiting transaction even if `msgId` is also returned.
+- Any other unsupported non-empty `path` is rejected and logged as a warning.
+
+The protocol configuration field `msgIdMatch` is the request ID validation switch and is disabled by default. When disabled, the first `msgId` argument passed to `buildDiscoverPointsRequest`, `buildProbeRequest`, `buildReadRequest`, and `buildWriteRequest` is an empty string. When enabled, Studio generates a non-empty ID for each request. The script should include it in the request packet and return the same ID from the response through `dispatch`. Studio uses the ID to match waiting transactions and out-of-order responses. A missing, mismatched, or expired ID does not complete the current transaction, so the operation may retry or time out. This field does not decide whether a request waits for a response, does not replace `path`, and does not apply to device discovery or `buildReportResponse`.
 
 #### Parameters
 
@@ -304,7 +308,7 @@ The returned object may include the following fields:
 
 | Field | Type | Description |
 | --- | --- | --- |
-| msgId | String | Request message ID |
+| msgId | String | Request message ID extracted from the response. When `msgIdMatch` is enabled, it must match the ID in the request packet. |
 | path | String | The corresponding parser function name, such as `parseProbeResponse` |
 
 #### Example Return Value
@@ -371,7 +375,8 @@ The return value format is as follows:
         "firmwareVersion": "1.1.0",
         "deviceId": "uuid1234",
         "ip": "device ip",
-        "port": 1102
+        "port": 1102,
+        "localPort": 1103
     }
 ]
 ```
@@ -386,7 +391,14 @@ Field descriptions:
 | firmwareVersion | String | No | Firmware version |
 | ip | String | Yes | Device IP address |
 | port | Int | Yes | UDP/TCP port |
+| localPort | Int | No | UDP only. The local port that Studio binds to receive responses and unsolicited reports. If omitted or set to `0`, Studio uses `port`; TCP ignores this field. |
 | deviceId | String | Yes | Unique device identifier |
+
+Use `localPort` when the device's remote service port differs from Studio's receive port, when the device requires a fixed client source port, or when multiple UDP devices need distinct local listening ports. Most request-response devices that use the same port do not need this field.
+
+:::note
+Each UDP device currently binds its own local listening port. Make sure concurrently running UDP devices use available, non-conflicting `localPort` values. This integration mode does not currently support multiple devices sharing one Studio listening port for unsolicited reports.
+:::
 
 #### Example
 
@@ -759,8 +771,8 @@ const scriptState = globalThis.studioScriptState;
 scriptState.reportCount = 0;
 scriptState.lastReportAt = null;
 
-function buildDiscoveryRequest(msgId) {
-    return Uint8Array.from(msgId + "#DEVICE_SCAN#\r\n", c => c.charCodeAt(0));
+function buildDiscoveryRequest() {
+    return Uint8Array.from("001#DEVICE_SCAN#\r\n", c => c.charCodeAt(0));
 }
 
 function buildDiscoverPointsRequest(msgId, deviceId) {
