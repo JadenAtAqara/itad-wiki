@@ -1,1 +1,34 @@
+---
+title: "Aqara RS-485 设备接入"
+description: "本文档说明如何将 Aqara RS-485 设备接入 Aqara Studio。"
+keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "Aqara RS-485 设备接入"]
+---
 # Aqara RS-485 设备接入
+
+本文说明如何将 Aqara RS-485 设备接入 Aqara Studio。
+
+## 前提条件
+
+在开始之前，请确保：
+- 已将支持 Aqara RS-485 设备的 Aqara Hub 网关（如 [配电箱网关 AX100M](./../product-knowledge/gateways/din-rail-hub-ax100m.mdx)） 接入 Aqara Studio，详情请参考 [Aqara Hub 设备接入](./aqara-hub.mdx)。
+- 待接入的 Aqara RS-485 设备已连接 Aqara Hub 网关。
+
+## 流程
+
+1. 在左侧侧边栏点击**设备管理**，选择 `Aqara RS-485` 进入管理页面，点击**添加设备**按钮。
+
+    ![添加 Aqara RS-485 设备](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraRS485-AddDevice.png)
+
+2. 在页面中，选择 Aqara Hub 网关（需已与待接入的 Aqara RS-485 设备相连），选择 **实时入网** 或 **定时入网**，单击 **开启入网** 按钮，Aqara Studio 会将 Aqara RS-485 设备接入 Aqara Studio。
+
+    ![选择 Aqara Hub 网关并开启入网](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraRS485-SelectGatewayAndEnableNetworkAccess.png)
+
+    入网成功后，Aqara RS-485 设备会出现在左侧 **已添加设备**列表中，单击 **完成** 按钮，退出添加设备流程。
+
+3. 此时，您将在左侧 **协议和设备** 的 Aqara RS-485 节点下，以及该 Aqara RS-485 管理页面的设备列表中，看到已成功添加的设备。
+
+    ![Aqara RS-485 设备添加成功](https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/AqaraRS485-CheckAddedDevices.png)
+
+## 下一步
+
+接下来，您可以直接 [查看该设备的详情和控制该设备](./../device-management/basic-information.mdx)，还可以利用该设备 [编排自动化逻辑](./../automation.mdx) 了。
