@@ -1,16 +1,16 @@
 ---
 title: "恢复出厂设置"
-description: "本文将详细讲解如何将 Aqara Studio 恢复出厂设置、如何限制按钮操作，以及如何启用按钮恢复出厂功能。"
+description: "本文详细介绍如何将 Aqara Studio 恢复出厂设置，如何禁用或启用实体按键的恢复出厂功能。"
 keywords: ["Aqara 文档", "Aqara Studio", "恢复出厂设置", "factory reset"]
 ---
 # 恢复出厂设置
 
-本文将详细讲解如何将 Aqara Studio [恢复出厂设置](#恢复出厂设置-1)、如何[限制按钮操作](#限制按钮操作) 以及 [启用按钮恢复出厂](#启用按钮恢复出厂)。
+本文将详细讲解如何将 Aqara Studio [恢复出厂设置](#恢复出厂设置-1)、如何[禁用按键恢复出厂](#禁用按键恢复出厂) 以及 [启用按键恢复出厂](#启用按键恢复出厂)。
 
 ## 恢复出厂设置
 
 根据您的 Aqara Studio [形态](./overview/introduction.mdx#运行形态)，选择以下方式进行恢复出厂设置：
-- `网关融合形态`，您可以通过 Aqara Studio [Web 页面操作](#web-页面操作)，或者通过 Aqara Studio 官方标准主机（如智慧边端 M300）上的 [实体按钮操作](#实体按钮操作)，将 Aqara Studio 恢复出厂设置。
+- `网关融合形态`，您可以通过 Aqara Studio [Web 页面操作](#web-页面操作)，或者通过 Aqara Studio 官方标准主机（如智慧边端 M300）上的 [实体按键操作](#实体按键操作)，将 Aqara Studio 恢复出厂设置。
 - `边端部署形态`，您可以通过 Aqara Studio [Web 页面操作](#web-页面操作)，将 Aqara Studio 恢复出厂设置。
 
 ### Web 页面操作
@@ -20,28 +20,28 @@ keywords: ["Aqara 文档", "Aqara Studio", "恢复出厂设置", "factory reset"
 
 ![Web 页面操作](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/FactoryReset-Steps.png) 
 
-### 实体按钮操作
+### 实体按键操作
 
 请阅读 Aqara Studio 官方标准主机（[智慧边端 M300](./product-knowledge/gateways/edge-hub-m300.mdx)）的说明书，了解如何通过按钮操作将 Aqara Studio 恢复出厂设置。
 
 ## 禁用按键恢复出厂
 
-对于网关融合形态的 Aqara Studio，如果您不希望其他人通过 [实体按钮](#实体按钮操作) 将 Aqara Studio 恢复出厂设置，可以通过以下流程，禁用此功能：
+对于网关融合形态的 Aqara Studio，如果您不希望其他人通过 [实体按键](#实体按键操作) 将 Aqara Studio 恢复出厂设置，可以通过以下流程，禁用此功能：
 1. 在左侧导航栏点击 **设备管理**，选择 **AqaraHub**，找到所需的 Aqara Studio 官方标准主机。
-2. 在该设备的功能点列表中，找到 **禁用按键恢复出厂** 功能点，并将其设置为 `True`，即可禁止通过实体按钮进行恢复出厂操作。
+2. 在该设备的功能点列表中，找到 **禁用按键恢复出厂** 功能点，并将其设置为 `True`，即可禁止通过实体按键进行恢复出厂操作。
 
 ![禁用按钮恢复出厂](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/FactoryReset-DisableButtonFactoryReset.png)
 
-如此，当有人尝试通过 [实体按钮](#实体按钮操作) 恢复出厂设置时，Aqara Studio 会语音播报“恢复出厂设置已禁用。您可以在 Aqara Studio 设置中启用它”。
+如此，当有人尝试通过 [实体按键](#实体按键操作) 恢复出厂设置时，Aqara Studio 会语音播报“恢复出厂设置已禁用。您可以在 Aqara Studio 设置中启用它”。
 
-## 启用按钮恢复出厂
+## 启用按键恢复出厂
 
-当您需要允许通过实体按钮恢复出厂设置，您可以参考 [限制按钮操作](#限制按钮操作) 流程，将 **禁用按键恢复出厂** 功能点设置为 `否`，即可启用通过实体按钮进行恢复出厂操作。
+当您需要允许通过实体按键恢复出厂设置，您可以参考 [禁用按键恢复出厂](#禁用按键恢复出厂) 流程，将 **禁用按键恢复出厂** 功能点设置为 `否`，即可启用通过实体按键进行恢复出厂操作。
 
 若您忘记密码无法登录 Aqara Studio 时，请阅读以下流程：
 1. 联系 Aqara 售后人员，获取含有重置文件的 SD 卡。
 2. 将 SD 卡插入 Aqara Studio 官方标准主机（如智慧边端 M300）的 SD 卡槽。
 4. 将 Aqara Studio 官方标准主机断电后，重新通电开机。
 3. 等待 Aqara Studio 官方标准主机检测并识别该 SD 卡。
-    - 若匹配成功，Aqara Studio 官方标准主机会重新允许使用按键恢复出厂，您可以通过 [实体按钮操作](#实体按钮操作) 将 Aqara Studio 恢复出厂设置。
-    - 若匹配失败导致无法启用按钮恢复出厂，请联系 Aqara 售后人员，重新获取正确的 SD 卡。
+    - 若匹配成功，Aqara Studio 官方标准主机会重新允许使用按键恢复出厂，您可以通过 [实体按键操作](#实体按键操作) 将 Aqara Studio 恢复出厂设置。
+    - 若匹配失败导致无法启用按键恢复出厂，请联系 Aqara 售后人员，重新获取正确的 SD 卡。

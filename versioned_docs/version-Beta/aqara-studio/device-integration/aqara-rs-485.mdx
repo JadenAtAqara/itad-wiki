@@ -1,1 +1,34 @@
+---
+title: "Aqara RS-485"
+description: "This document explains how to integrate Aqara RS-485 devices into Aqara Studio."
+keywords: ["Aqara Docs", "Aqara Studio", "Device Integration", "Aqara RS-485 Integration"]
+---
 # Aqara RS-485
+
+This guide explains how to integrate Aqara RS-485 devices into Aqara Studio.
+
+## Prerequisites
+
+Before you begin, make sure that:
+- An Aqara Hub gateway that supports Aqara RS-485 devices (such as the [DIN Rail Hub AX100M](./../product-knowledge/gateways/din-rail-hub-ax100m.mdx)) is already integrated into Aqara Studio. For more information, refer to [Aqara Hub Integration](./aqara.mdx).
+- The Aqara RS-485 device you want to add is connected to the Aqara Hub gateway.
+
+## Procedure
+
+1. In the left sidebar, click **Devices**, select `Aqara RS-485` to enter the management page, and click the **Add Device** button.
+
+    ![Add Aqara RS-485 Device](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraRS485-AddDevice.png)
+
+2. On the page, select the Aqara Hub gateway (which should already be connected to the Aqara RS-485 device to be added), choose **Real-time** or **Timing** network pairing, and click the **Enable Network Access** button. Aqara Studio will integrate the Aqara RS-485 device.
+
+    ![Select Aqara Hub Gateway and Enable Network Access](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraRS485-SelectGatewayAndEnableNetworkAccess.png)
+
+    Once pairing is successful, the Aqara RS-485 device will appear in the **Added Devices** list on the left. Click the **Complete** button to exit the device integration process.
+
+3. You will then see the successfully added device under the Aqara RS-485 node in **Protocols and Devices** on the left, as well as in the device list on the Aqara RS-485 management page.
+
+    ![Aqara RS-485 Device Added Successfully](https://itad-aqara-docs-1300889962.cos.ap-beijing.myqcloud.com/dev/img/aqara-studio/zh/AqaraRS485-CheckAddedDevices.png)
+
+## Next Steps
+
+Now, you can [view details and control the device](./../device-management/basic-information.mdx), or [use the device in automation](./../automation.mdx).
