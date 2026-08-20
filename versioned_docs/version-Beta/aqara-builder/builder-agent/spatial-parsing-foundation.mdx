@@ -1,0 +1,37 @@
+# Spatial Parsing (Foundation)
+
+Spatial parsing is Builder Agent's **foundation** — before recommending devices or orchestrating scenes, the Agent must first "see" the space.
+
+## Why It's the Foundation
+
+Device recommendations require knowing "which device goes in which room," and scene orchestration requires knowing "how the living room lights and AC work together" — all of which depend on one prerequisite: **the Agent has a clear picture of what's in the space, where things are, and how they relate to each other**.
+
+Spatial parsing converts a floor plan image or description into a **spatial model + spatial graph** the Agent can reason with.
+
+## How It Works
+
+The process has two steps:
+
+1. **Spatial Model**: Converts the floor plan image / description into a computable geometric and semantic structure — rooms, walls, and device points, plus what each space "is" (this is the living room, that's the master bedroom, this one is the balcony…)
+2. **Spatial Graph**: Builds a relationship network on top of the model — relative relationships (belongsTo, connects, isAdjacentTo) between rooms, devices, and zones, so the Agent understands "who is inside whom, and who is next to whom"
+
+
+## What the Spatial Model Looks Like
+
+Once parsing is complete, the space is represented as a **Spatial Graph**:
+
+- **Nodes**: rooms, devices, zones, etc.
+- **Edges (relationships)**: belongsTo, connects, isAdjacentTo, and more
+
+For example, the "living room temperature sensor" has a belongsTo relationship to the "living room" node — all subsequent recommendations and orchestration are based on this graph.
+
+## Point-to-Room Mapping & Device Assignment
+
+With the spatial model in place, the Agent can do two critical things:
+
+- **Device assignment to rooms**: Determines which room a device belongs to (used as context for recommendations and orchestration)
+- **Position coordinates**: Pinpoints the device's exact location in space (x, y, z) for precise installation placement
+
+:::tip
+The quality of spatial parsing directly determines downstream performance. The clearer the floor plan and the more complete the information, the better the recommendations and orchestration. We recommend uploading a complete floor plan when creating the project.
+:::

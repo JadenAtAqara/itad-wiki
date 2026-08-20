@@ -158,6 +158,7 @@ const config: Config = {
           items: [
             { label: "Aqara Studio", to: "docs/aqara-studio/overview/introduction", activeBasePath: "docs/aqara-studio" },
             { label: "Aqara Developer", to: "docs/aqara-developer/introduction", activeBasePath: "docs/aqara-developer" },
+            { label: "Aqara Builder", to: "docs/aqara-builder/builder-agent/overview", activeBasePath: "docs/aqara-builder" },
             { label: "Aqara Life", to: "docs/aqara-life/overview", activeBasePath: "docs/aqara-life" },
             { label: "Aqara OpenLink", to: "docs/aqara-openlink/overview", activeBasePath: "docs/aqara-openlink" },
           ],

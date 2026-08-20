@@ -1,0 +1,38 @@
+# From Request to Solution: End-to-End Workflow
+
+## Full Path
+
+A complete end-to-end spatial intelligence solution design typically follows these steps:
+
+```
+① Create project → ② Floor plan recognition (spatial parsing)
+→ ③ Device Recommendation Agent (first on stage)
+→ ④ Scene Generation Agent (second on stage)
+→ ⑤ Automation Generation Agent (third on stage)
+→ ⑥ Generate solution package
+→ ⑦ One-click deploy to Aqara Studio → Installer uses it
+```
+
+**What each step does:**
+
+1. **Create a project**: Open a new project in Builder Lab, name it, and upload the floor plan
+2. **Floor plan recognition**: The Agent completes spatial parsing, converting the floor plan into a semantic model
+3. **Device Recommendation Agent**: Generates a device list based on the request (new property recommendations + gap filling for existing properties)
+4. **Scene Generation Agent**: Orchestrates one-tap smart scenes (simple / complex flows)
+5. **Automation Generation Agent**: Generates condition-triggered automation rules
+6. **Generate solution package**: All three Agents work together to output the complete solution file
+7. **One-click deploy**: Solution is pushed to Aqara Studio; installers use it immediately
+
+
+## Quick Start
+
+1. Create a new project in Builder Lab and upload the floor plan
+2. Once floor plan recognition is done, click "Activate Agent" — Device Recommendation Agent goes first
+3. Enter your spatial needs (e.g., "3 bedrooms, 2 living rooms — I want whole-home lighting control and smart AC")
+4. The Agent reads the floor plan, understands the space, and outputs a device recommendation list
+5. As needed, switch to Scene Generation or Automation Generation to continue orchestrating
+6. Once the solution package is generated, push it to Aqara Studio with one click for installation and use
+
+:::tip
+For questions or additional notes, please contact the Builder Agent product team.
+:::
