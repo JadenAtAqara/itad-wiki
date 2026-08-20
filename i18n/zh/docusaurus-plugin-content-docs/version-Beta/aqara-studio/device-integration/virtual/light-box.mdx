@@ -4,3 +4,70 @@ description: "灯箱设备接入文档，提供相关功能说明、配置方法
 keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "虚拟设备", "灯箱设备接入", "light box"]
 ---
 # 灯箱设备接入
+
+本文档将介绍如何将灯箱设备集成到 Aqara Studio，帮助用户通过智慧边端 M300 实现对灯箱设备的便捷管理与控制。
+
+##  前提条件
+
+在开始之前，请确保：
+- 您的灯箱设备已完成与 Aqara RS485 灯控设备的接线。
+- Aqara RS485 灯控设备已接入 Aqara Studio，详情请参考 [Aqara RS-485 设备接入](./../aqara-rs-485.mdx)。
+
+
+## 创建灯箱设备
+
+1. 在左侧侧边栏点击进入**设备管理**页面。在左侧 **协议和设备** 单击 **...** 按钮，选择 **添加协议**。   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-AddProtocol.png" alt="添加协议" /> 
+2. 在弹窗中选择 `Virtual`，以添加一个 `Virtual` 节点。   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-SelectVirtual.png" alt="选择 Virtual" style={{width: '70%'}} /> 
+3. 选择该节点，单击 `添加设备` 按钮。   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Virtual-AddDevice.png" alt="添加设备" /> 
+4. 在弹窗中选择该设备的**虚拟设备类型**为**灯箱设备**，并配置该设备的**名称**。   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-ConfigureVirtualTypeAndName.png" alt="配置虚拟设备类型和名称" style={{width: '60%'}} /> 
+5. 配置灯箱的色彩显示（包含光源负载设备型号、灯珠类型和灯珠协议）。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-ConfigureLights.png" alt="配置灯珠" style={{width: '60%'}} /> 
+6. 配置画布（灯珠列数和行数、灯珠列间距和行间距）。
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-ConfigureCanvas.png" alt="配置画布" style={{width: '60%'}} /> 
+7. 此时，您将在左侧 **协议和设备** 的 `Virtual` 节点下，以及该 `Virtual` 管理页面的设备列表中，看到已成功添加的设备。
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-CheckAddedDevice.png" alt="查看已添加设备" /> 
+
+## 配置从控器
+
+1. 在左侧 **协议和设备** 的 `Virtual` 节点下，选择上述已添加的设备，单击 **设备详情**。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-SelectDeviceandCheckDetails.png" alt="配置从控器" /> 
+
+2. 在设备详情页面切换至 **设备配置** 标签页。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-SwitchToDeviceConfiguration.png" alt="切换至设备配置标签页" style={{width: '60%'}} /> 
+
+3. 在 **灯箱配置** 区域选择一个 Aqara RS485 设备作为从控器。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-SelectAnAqaraRS485Device.png" alt="选择一个 Aqara RS485 设备" style={{width: '60%'}} /> 
+
+4. 启用从控器的通道，用于控制灯箱的灯珠。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-EnableChannels.png" alt="启用通道" style={{width: '60%'}} /> 
+
+5. 单击 **位置关联** 按钮，将启用的从控器通道与灯箱灯珠进行对应配置，实现精确的控制关系。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LIghtBox-RelateToPositions.png" alt="单击位置关联" style={{width: '60%'}} /> 
+
+    在 **从控制器列表** 中选择 1 个通道，在画布上拖拽选中灯珠，表示该通道控制被选中的灯珠。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-SelectAChannelAndAssignLights.png" alt="选择一个通道并分配灯珠" style={{width: '60%'}} /> 
+
+    完成后单击 **保存** 按钮，退出配置流程。
+
+6. 单击 **下发** 按钮，将配置内容一键下发并同步至灯箱设备，确保配置生效。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-Deploy.png" alt="下发配置" style={{width: '60%'}} /> 
+
+7. 返回 **设备详情** 标签页，您可以看到新增了许多的 **功能点**，表示灯箱设备已成功接入 Aqara Studio，可以进行控制。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-BackToDeviceDetailsToSeePoints.png" alt="返回设备详情查看功能点" style={{width: '60%'}} /> 
+
+## 下一步
+
+接下来，您可以直接 [查看该设备的详情和控制该设备](./../../device-management/basic-information.mdx)，还可以利用该设备 [编排自动化逻辑](./../../automation.mdx) 了。

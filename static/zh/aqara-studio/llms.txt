@@ -94,4 +94,5 @@
 - 人在传感器 PR330P: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/sensors/presence-sensor-pr330p
 - AI 空间传感器 FP400: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400
 - 四路控制模块 AW110K: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/controllers/din-rail-module-4-channels-aw110k
+- 妙控场景屏 AX150S: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/screens/panel-hub-ax150s
 

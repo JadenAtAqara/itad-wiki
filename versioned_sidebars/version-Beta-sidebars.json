@@ -239,7 +239,6 @@
         "tab": "product-knowledge"
       }
     },
-
     {
       "type": "category",
       "label": "Gateways",
@@ -273,6 +272,16 @@
       },
       "items": [
         "aqara-studio/product-knowledge/controllers/din-rail-module-4-channels-aw110k"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Screens",
+      "customProps": {
+        "tab": "product-knowledge"
+      },
+      "items": [
+        "aqara-studio/product-knowledge/screens/panel-hub-ax150s"
       ]
     }
   ],
