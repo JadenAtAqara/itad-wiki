@@ -675,6 +675,21 @@
       ]
     }
   ],
+  "aqaraBuilderSidebar": [
+    {
+      "type": "category",
+      "label": "Builder Agent",
+      "items": [
+        "aqara-builder/builder-agent/overview",
+        "aqara-builder/builder-agent/spatial-parsing-foundation",
+        "aqara-builder/builder-agent/device-recommendation-agent",
+        "aqara-builder/builder-agent/scene-generation-agent",
+        "aqara-builder/builder-agent/automation-generation-agent",
+        "aqara-builder/builder-agent/scene-vs-automation-key-differences",
+        "aqara-builder/builder-agent/from-request-to-solution-end-to-end-workflow"
+      ]
+    }
+  ],
   "aqaraLifeSidebar": [
     "aqara-life/overview"
   ],

@@ -1,0 +1,54 @@
+# 设备推荐 Agent
+
+设备推荐 Agent 是 Builder Agent **第一个上场的 Agent**：在户型图识别完成后，点红框图标即可唤起它。
+
+![图1：点击红框图标激活设备推荐 Agent](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/agent-image-1.png)
+
+## 它能做什么
+
+根据用户的一句话需求，结合空间理解，输出两份东西：
+
+- **对话文本回复**：告诉用户为什么推荐这些设备
+- **右侧推荐设备清单**：每个房间 × 推荐设备 × 型号 × 推荐理由
+
+![图2：用户输入意图 + 右侧推荐列表双输出](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/agent-image-2.png)
+
+## 用户能怎么问
+
+用一两句话，简单描述你的空间需求。举例：
+
+- 「我家客厅想要回家自动开灯、夏天太热自动开空调」
+- 「主卧需要安装遮阳帘控制，需要智能灯光」
+- 「帮我看看厨房还缺什么安防设备」
+- 「两室一厅的公寓，全屋需要基础智能」
+
+## 它怎么回答
+
+根据空间理解 + 用户意图，Agent 推出最佳方案，输出两种场景结果：
+
+### 空房场景（新装修 / 完全新建）
+
+Agent 根据户型图识别出每个房间，结合用户需求，给出每个房间的推荐设备清单，包括型号、品类、推荐理由。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/agent-image-4-recommended-final-results-and-device-list-generation.png" style={{ width: '70%' }} />
+
+
+### 旧房改造场景（已有设备，AI 帮你补全缺口）
+
+当用户家里已有部分设备时，Agent 会智能识别缺什么、分阶段补全：
+
+1. **先看家里有什么**：Agent 读取已有设备，呈现当前配置
+   <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/agent-image-5-when-the-user-already-has-devices-at-home.png" style={{ width: '70%' }} />
+
+2. **用户描述想要什么**：用户输入改造需求（「我想加个离家模式」「希望书房能语音控制灯光」……）
+   <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/agent-image-6-agent-device-completion-input-display.png" style={{ width: '70%' }} />
+
+3. **Agent 分析缺口**：结合已有设备 + 用户意图，推理出缺口在哪里、为什么缺
+   <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/agent-image-7-agent-gap-analysis-display.png" style={{ width: '70%' }} />
+
+4. **智能补全结果**：给出分阶段的设备补全方案（基础→进阶→完善）
+   <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/agent-image-8-device-intelligent-completion-results-display.png" style={{ width: '70%' }} />
+
+:::tip
+设备推荐 Agent 的核心价值：不仅告诉你要买什么，还告诉你「为什么推荐这个」「还差什么」「怎么一步步补齐」。
+:::

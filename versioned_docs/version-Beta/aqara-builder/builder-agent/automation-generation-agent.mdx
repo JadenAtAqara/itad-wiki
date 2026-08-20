@@ -1,0 +1,31 @@
+# Automation Generation Agent
+
+The Automation Generation Agent is Builder Agent's **third Agent on stage**: activated when the user, after completing device recommendation and scene generation, wants to set up rules that execute only when conditions are met.
+
+
+## What Is an "Automation"
+
+**An automation = a rule that executes only when its conditions are met.**
+
+No manual intervention needed — when the specified condition is met, the system automatically takes action. For example: "Living room temperature above 28°C AND someone is present → Automatically turn on the AC at 26°C."
+
+:::Core distinction from a scene
+Automation is **passively triggered** (by a condition), while a scene is **actively triggered** (by a person). See [Scene vs Automation](./scene-vs-automation-key-differences.mdx) for details.
+:::
+
+## Its Structure
+
+Each automation rule consists of three parts:
+
+- **Trigger**: What event kicks off the rule — time, sensor state, device state change, etc.
+- **Condition**: Under what circumstances to execute — multiple conditions can be combined with AND / OR logic
+- **Action**: What to do when conditions are met — turn on lights, turn off AC, send a notification, etc.
+
+## Example Walkthrough
+
+
+Example:
+
+- **Trigger**: Temperature sensor detects living room temperature > 28°C
+- **Condition**: Someone is present (PIR sensor detects motion)
+- **Action**: Turn on the living room AC, set to 26°C

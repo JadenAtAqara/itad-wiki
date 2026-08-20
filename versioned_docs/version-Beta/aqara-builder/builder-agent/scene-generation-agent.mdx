@@ -1,0 +1,49 @@
+# Scene Generation Agent
+
+The Scene Generation Agent is Builder Agent's **second Agent on stage**: activated when the user, after completing device recommendations, wants to orchestrate "one-tap" smart scenes.
+
+
+## What Is a "Scene"
+
+**A scene = a set of device states executed simultaneously with one tap.**
+
+The user presses a button or says a voice command, and multiple devices act in concert. For example, "Good Night Mode" — turn off the lights, close the curtains, lower the AC temperature — all in one tap, no conditions required.
+:::Core distinction from automation
+A scene is **actively triggered** (by a person), while automation is **passively triggered** (by a condition). See [Scene vs Automation](./scene-vs-automation-key-differences.mdx) for details.
+:::
+
+## Simple vs Complex: How to Tell
+
+Whether a scene is "simple" or "complex" comes down to two dimensions:
+
+- **Device count**: 1-3 devices in a single room = usually simple
+- **Logic complexity**: Does it need multi-condition checks, branching, sequential execution, or cross-room coordination? The more convoluted the logic, the more complex it is
+
+| Dimension | Simple Scene | Complex Scene |
+|---|---|---|
+| Device count | Few (1-3) | Many (cross-room, cross-system) |
+| Logic structure | A set of actions runs together | Multi-condition + multi-branch + sequential |
+| Example | Good Night (lights off + curtains + AC) | Welcome Scene (different behavior day vs night) |
+
+## Simple Scene Orchestration
+
+Best for single triggers with a group of devices acting together. For example:
+
+- "Good Night Mode": All lights off + curtains closed + AC set to 26°C sleep mode
+- "Movie Mode": Living room lights dimmed + curtains closed + TV turned on
+
+
+## Complex Scene Orchestration
+
+For complex logic involving multiple conditions, devices, or branches. For example:
+
+- "Welcome Scene": Guest arrives during the day → Full brightness in living room + background music playing; Guest arrives at night → Living room lights at 50% + warm ambient lighting
+- "Away Patrol": No one detected → Lights off in sequence → AC off → Security camera activated + door lock armed
+
+
+## Output & Display
+
+Once scene generation is complete, the Agent outputs:
+
+- **Conversational text**: Describes the scene name, trigger method, and devices involved
+- **Right-panel Flow preview**: A visual representation of the trigger logic and device relationships — clear at a glance

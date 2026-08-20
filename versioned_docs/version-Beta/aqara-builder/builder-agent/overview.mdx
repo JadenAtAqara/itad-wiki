@@ -1,0 +1,38 @@
+# Builder Agent Overview
+
+Builder Agent is the **AI solution designer** in the Aqara Builder platform — it transforms a customer's brief spatial request into a ready-to-deploy spatial intelligence solution for service providers.
+
+## What Problem Does It Solve
+
+Traditional spatial intelligence solutions rely on expert manual design:
+
+- **Slow design**: each floor plan requires multiple rounds of communication, diagramming, and device listing
+- **Inconsistent quality**: outcomes vary widely depending on the individual expert
+- **Prone to gaps**: devices and scenes are easily overlooked, leading to uneven customer experience
+
+Builder Agent turns this into a "describe the need → get a solution" process, letting service providers focus on customer communication and implementation.
+
+## Three Core Capabilities
+
+Builder Agent provides three Agents focused on spatial solution design:
+
+| Agent | What It Does |
+|---|---|
+| **Device Recommendation Agent** | Listens to your request and delivers a device list with reasons, plus identifies what's missing |
+| **Scene Generation Agent** | Creates one-tap scene automations like "Good Night Mode" or "Movie Time" |
+| **Automation Generation Agent** | Generates condition-triggered rules like "Lights off when everyone leaves" or "Turn on AC when it's too hot" |
+
+
+## Typical Workflow
+
+A complete solution design typically follows these steps:
+
+1. **Create a project / upload the floor plan**: Tell Builder Agent what your space looks like
+2. **Floor plan recognition**: Upload the floor plan; Builder Agent completes spatial parsing and understands each room and existing devices
+3. **Activate the Agent**: Invoke the Device Recommendation, Scene Generation, or Automation Generation Agent as needed
+4. **Generate the solution package**: All three Agents work together to output a complete device list, scenes, and automation rules
+5. **One-click deploy**: The solution package is pushed to Aqara Studio for installers to use immediately
+
+:::tip
+Spatial parsing is the foundation of every capability. The more accurately the floor plan is understood, the better the recommendations and orchestration will be. The Device Recommendation Agent is the first Agent to go live — typically activated right after floor plan recognition is complete.
+:::

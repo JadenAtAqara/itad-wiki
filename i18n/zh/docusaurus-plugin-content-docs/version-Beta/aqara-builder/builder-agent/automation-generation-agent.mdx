@@ -1,0 +1,33 @@
+# 自动化生成 Agent
+
+自动化生成 Agent 是 Builder Agent 的 **第三个上场的 Agent**：在设备推荐和场景生成完成后，用户想要设定「条件满足才执行」的规则时激活。
+
+![图9：场景 / 自动化生成 Agent 入口](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/agent-image-9-scenario-automation-generation-agent-preliminary-introduction.png)
+
+## 什么是「自动化」
+
+**自动化 = 条件满足才执行的规则**。
+
+不需要人干预，当指定条件满足时，系统自动执行相应动作。比如「温度高于 28°C 且有人在客厅 → 自动开空调并设为 26°C」。
+
+:::tip
+与场景的本质区别：自动化是**被动执行**（条件触发），场景是**主动执行**（人触发）。详见 [场景 vs 自动化](./scene-vs-automation-key-differences.mdx)。
+:::
+
+## 它的结构
+
+每个自动化规则由三部分组成：
+
+- **触发（Trigger）**：什么事件启动这条规则（时间 / 传感器状态 / 设备状态变化……）
+- **条件（Condition）**：在什么情况下才执行（可多个条件组合：且 / 或）
+- **执行（Action）**：满足条件后做什么（开灯 / 关空调 / 发通知……）
+
+## 示例演示
+
+![图13：自动化生成示例](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/agent-image-13-automation-generation-example.png)
+
+举例：
+
+- **触发**：温度传感器检测到客厅温度 > 28°C
+- **条件**：当前为「有人」状态（人体传感器感应到）
+- **执行**：打开客厅空调，设为 26°C

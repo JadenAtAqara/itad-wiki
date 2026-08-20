@@ -1,0 +1,46 @@
+# Device Recommendation Agent
+
+The Device Recommendation Agent is Builder Agent's **first Agent on stage**: once floor plan recognition is complete, simply click the icon highlighted in the red box to invoke it.
+
+
+## What It Can Do
+
+Based on a one-sentence user request combined with spatial understanding, it delivers two outputs:
+
+- **Conversational text response**: Explains to the user why each device is recommended
+- **Right-panel device recommendation list**: Room × Recommended Device × Model × Recommendation Rationale
+
+
+## What Can the User Say
+
+Describe your spatial needs in one or two sentences. For example:
+
+- "I'd like auto lighting when I get home in the living room, and AC to turn on automatically when it's hot in summer."
+- "I need motorised curtain control and smart lighting in the master bedroom."
+- "Help me check what security devices are missing in the kitchen."
+- "I have a 2-bedroom apartment and want basic smart home coverage throughout."
+
+## How It Responds
+
+Based on spatial understanding + user intent, the Agent delivers the best-fit solution in two scenarios:
+
+### New Property Scenario (New Build / Complete)
+
+
+The Agent identifies each room from the floor plan and, combined with the user's request, produces a recommended device list for every room — including model, category, and rationale.
+
+### Retrofit Scenario (Existing Devices — AI Identifies the Gaps)
+
+
+When the home already has some devices, the Agent intelligently identifies what's missing and proposes a phased upgrade path:
+
+1. **See what's already there**: The Agent reads the existing devices and presents the current configuration
+
+2. **User describes what they want**: The user enters their upgrade goals ("I'd like a 'leaving home' mode", "I want voice-controlled lighting in the study"…)
+
+3. **Agent analyses the gaps**: Combined with existing devices and the user's goals, it reasons through what gaps exist and why
+
+4. **Smart completion results**: Outputs a phased device completion plan (Foundation → Enhanced → Complete)
+:::tip
+The core value of the Device Recommendation Agent: it doesn't just tell you what to buy — it also explains "why this device," "what's still missing," and "how to fill the gaps step by step."
+:::

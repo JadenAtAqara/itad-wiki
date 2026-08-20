@@ -1,0 +1,42 @@
+# 场景生成 Agent
+
+场景生成 Agent 是 Builder Agent 的 **第二个上场的 Agent**：在设备推荐完成后，用户想要编排「一键执行」的智能场景时激活。
+
+![图9：场景 / 自动化生成 Agent 入口](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/agent-image-9-scenario-automation-generation-agent-preliminary-introduction.png)
+
+## 什么是「场景」
+
+**场景 = 一键执行的设备状态集合**。
+
+用户按一个键 / 说一句话，多个设备同时执行一组动作。比如「晚安模式」——关灯 + 关窗帘 + 调低空调温度，一键完成，无需任何条件触发。
+
+:::tip
+与自动化的本质区别：场景是**主动执行**（人触发），自动化是**被动执行**（条件触发）。详见 [场景 vs 自动化](./scene-vs-automation-key-differences.mdx)。
+:::
+
+## 简单场景编排
+
+适用于单一触发、一组设备联动。比如：
+
+- 「晚安模式」：关全屋灯 + 关窗帘 + 空调调至 26°C 睡眠模式
+- 「观影模式」：客厅灯调暗 + 窗帘关闭 + 电视打开
+
+![图10：简单场景生成示例](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/agent-image-10-scenario-generation-display-example.png)
+
+## 复杂场景编排
+
+适用于多条件、多设备、多分支的复杂逻辑。比如：
+
+- 「迎宾场景」：白天来客人 → 客厅灯全亮 + 背景音乐播放；晚上来客人 → 客厅灯亮 50% + 柔和暖光
+- 「离家巡航」：检测到无人 → 按顺序关灯 → 关空调 → 启动安防摄像头 + 门锁设防
+
+![图11：场景生成结果 + 右侧逻辑 Flow 预览](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/agent-image-11-scenario-generation-results-display-and-right-side-logic-flow-preview.png)
+
+![图12：Flow 编排图详情 · 复杂场景多条件分支](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/agent-image-12-flow-diagram-details.png)
+
+## 生成结果展示
+
+场景生成完成后，Agent 输出：
+
+- **对话文本**：描述场景名称、触发方式、涉及的设备
+- **右侧 Flow 预览**：可视化呈现触发逻辑和设备联动关系，一目了然
