@@ -23,31 +23,36 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "虚拟设备", "红�
 - 热水器
 - 自定义
 
-## 接入流程
+## 创建红外设备
 
-将红外设备集成到 Aqara Studio 的流程如下：
-1. 在左侧侧边栏点击进入**设备管理**页面。在左侧设备树单击“+”按钮。    
-    ![单击添加按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-ClickAddButtonNew.png)
-2. 在弹窗中选择 `Virtual`，以添加 `Virtual`。
-3. 选择 `Virtual`，进入 `添加设备` 选项卡，配置该设备的**虚拟设备类型**为**红外设备**，并配置该设备的**名称**。   
-    ![进入添加设备标签页](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Virtual-AddDeviceTab.png)
-4. 选择该设备的**红外设备类型**，及其所属品牌。    
+1. 在左侧侧边栏点击进入**设备管理**页面。在左侧 **协议和设备** 单击 **...** 按钮，选择 **添加协议**。   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-AddProtocol.png" alt="添加协议" /> 
+2. 在弹窗中选择 `Virtual`，以添加一个 `Virtual` 节点。   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-SelectVirtual.png" alt="选择 Virtual" style={{width: '70%'}} /> 
+3. 选择该节点，单击 `添加设备` 按钮。   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Virtual-AddDevice.png" alt="添加设备" /> 
+4. 在弹窗中选择该设备的**虚拟设备类型**为**红外设备**，并配置该设备的**名称**。   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-ConfigureVirtualTypeAndName.png" alt="配置虚拟设备类型和名称" style={{width: '60%'}} /> 
+5. 选择该设备的**红外设备类型**，及其所属品牌。    
     ![选择红外设备类型](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-SelectTypeandBrand.png)
 
     若该设备的类型未在列表中或为自定义设备，请选择**自定义**。随后点击**下一步**，进入 [红外学习流程](#红外学习流程)。
     ![选择自定义设备类型](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-CustomDevice.png)
-    
-5. Aqara Studio 会开始下载该品牌的该类型设备的所有码库。
-6. 下载完成后，选择适用的码库，并选择**调试网关或设备**（用于发送红外指令控制待接入的红外设备，如智慧边端 M300）。
+
+6. Aqara Studio 会开始下载该品牌的该类型设备的所有码库。 
+
+## 匹配码库
+
+7. 下载完成后，选择适用的码库，并选择**调试网关或设备**（用于发送红外指令控制待接入的红外设备，如智慧边端 M300）。
     ![选择码库和调试网关](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-SelectCodesandGateway.png)
-7. 单击一个红外指令，上述**调试网关或设备**会**闪烁蓝灯**。观察待接入的红外设备是否响应。
+8. 单击一个红外指令，上述**调试网关或设备**会**闪烁蓝灯**。观察待接入的红外设备是否响应。
     若设备响应，则说明该指令可用于控制该红外设备，单击**有响应**按钮。   
     若设备无响应，则说明该指令不可用于控制该红外设备，单击**无响应**按钮。   
     ![测试红外指令](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-TestCodes.png)
 
-### 红外学习流程 {#红外学习流程}
+### 红外学习
 
-8. 除了使用上述预设的红外码库外，若设备有更多红外指令需求，可通过**红外学习**功能新增所需指令。
+9. 除了使用上述预设的红外码库外，若设备有更多红外功能点，可通过**红外学习**功能新增所需功能点。
     单击**添加功能点**按钮，打开**添加按键**弹窗。
     ![单击添加功能点按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-AddFunctionPoint.png)   
     
@@ -59,21 +64,45 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "虚拟设备", "红�
 
     新增功能点会出现在**红外学习功能**区域。   
     ![新增功能点](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-NewPoints.png)
-9. 添加完所有红外指令后，单击**确认**按钮，完成设备接入流程。
-    ![完成设备接入](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-Confirm.png)
 
-## 下发网关
+## 完成设备接入
+
+10. 完成 [红外码库匹配](#匹配码库) 和 [添加完所有红外功能点](#红外学习) 后，单击**确认**按钮，完成设备接入流程。
+    ![确认完成红外码库匹配和红外学习](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-ConfirmAddition.png)
+11. 此时，您将在左侧 **协议和设备** 的 `Virtual` 节点下，以及该 `Virtual` 管理页面的设备列表中，看到已成功添加的设备。
+
+    :::tip
+    此时，您会发现设备为离线状态。设备还需与 [网关关联](#关联网关)，才能进行控制。
+    :::
+
+    ![返回设备详情](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-CheckAddedDevice.png)
+
+## 关联网关
 
 完成上述设备接入和红外指令添加后，并不意味着您可以立即控制此设备。您还需要将待接入的红外设备与**调试网关或设备**连接，流程如下：
-1. 进入红外设备的详情页面，查看**设备配置**标签页。
-2. 找到**关联配置**，选择**下发网关**，单击**下发保存按钮**。
-3. 下发成功后，您就可以通过 Aqara Studio 控制该红外设备了。
+1. 在左侧 **协议和设备** 的 `Virtual` 节点下，选择上述已添加的设备，单击 **设备详情**。   
 
-:::tip
-下发网关后，红外匹配内容将自动锁定，无法再次修改。请在下发前确认匹配方案准确无误。
-:::
+    ![查看设备详情](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-CheckDeviceDetails.png)
 
-![下发网关](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-DeliverCodestoGateway.png)
+2. 切换至 **设备配置** 标签页，找到 **关联配置**，选择 **下发网关**，单击 **关联** 按钮。
+
+    :::tip
+    关联网关后，红外匹配内容将自动锁定，无法再次修改。请在下发前确认匹配方案准确无误。
+    :::
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-SwitchToDeviceConfigurationandChooseHub.png" alt="切换至设备配置标签页" style={{width: '60%'}} />
+
+3. 下发成功后，您可以看到红外码库的状态为 **生效**，设备的在线状态为 **在线**。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-CodeValidandOnline.png" alt="红外码库状态为生效，设备的在线状态为在线" style={{width: '60%'}} />
+
+4. 返回 **设备详情** 标签页，您可以看到新增了 **指令控制（Command）** 区域，这是已成功匹配的红外码库，您可以在此控制该红外设备。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-CheckCommands.png" alt="查看指令控制" style={{width: '60%'}} />
+
+5. 回到 **设备管理** 页面，您可以看到 **功能点** 列表新增了您自定义的红外功能点（trait），也可以在此控制该红外设备。
+
+    ![查看自定义功能点](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/IR-CheckTraits.png)
 
 ## 下一步
 

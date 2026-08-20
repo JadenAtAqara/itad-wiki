@@ -4,3 +4,46 @@ description: "Light Box documentation with feature details, configuration guidan
 keywords: ["Aqara Docs", "Aqara Studio", "Device Integration", "Virtual Devices", "Light Box"]
 ---
 # Light Box
+
+This document introduces how to integrate light box equipment into Aqara Studio, enabling users to conveniently manage and control light box equipment via the M300 Edge Gateway.
+
+## Prerequisites
+
+Before you begin, please make sure that:
+- Your light box equipment has been connected to the Aqara RS485 lighting control device.
+- The Aqara RS485 lighting control device has been added to Aqara Studio. For details, please refer to [Aqara RS-485 Device Integration](./../aqara-rs-485.mdx).
+
+## Creating Light Box Equipment
+
+1. Click on **Device Management** in the left sidebar. Under **Protocols and Devices**, click the **...** button and select **Add Protocol**.  
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Devices-AddProtocol.png" alt="Add Protocol" />
+2. In the popup, select `Virtual` to add a `Virtual` node.  
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Devices-SelectVirtual.png" alt="Select Virtual" style={{width: '70%'}} /> 
+3. Select this node and click the `Add Device` button.  
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Virtual-AddDevice.png" alt="Add Device" />
+4. In the popup, set the **Virtual Device Type** to **Light Box Equipment** and configure the **Name** of the device.  
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LightBox-ConfigureVirtualTypeAndName.png" alt="Configure Virtual Device Type and Name" style={{width: '60%'}} />
+5. Configure the color display for the light box equipment, including the lighting load device model, lamp bead type, and lamp bead protocol.
+6. Configure the canvas (number of lamp bead columns and rows, and spacing between columns and rows).
+7. At this point, you will see the successfully added equipment under the `Virtual` node in **Protocols and Devices** on the left, as well as in the device list on the management page for that `Virtual` node.
+
+## Configuring the Sub-controller
+
+1. Under the `Virtual` node in **Protocols and Devices** on the left, select the equipment you just added and click **Device Details**.
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LightBox-SelectDeviceandCheckDetails.png" alt="Configure Sub-controller" /> 
+
+2. Switch to the **Device Configuration** tab on the device details page.
+3. In the **Light Box Configuration** area, select an Aqara RS485 device as the sub-controller.
+4. Enable the channels of the sub-controller to control the lamp beads of the light box equipment.
+5. Click the **Position Association** button to map the enabled sub-controller channels to the lamp beads of the light box equipment, allowing precise control.
+
+    In the **Sub-controller List**, select one channel, then drag and select lamp beads on the canvas to indicate that the channel controls the selected lamp beads.
+
+    After completion, click the **Save** button to exit the configuration process.
+
+6. Click the **Deploy** button to send all configuration in one step and synchronize it to the light box equipment, ensuring the settings take effect.
+7. Return to the **Device Details** tab. You will now see many new **feature points**, indicating that the light box equipment has been successfully integrated into Aqara Studio and can be controlled.
+
+## Next Step
+
+Now, you can [view details and control the equipment](./../../device-management/basic-information.mdx), or [use the equipment in automation](./../../automation.mdx).
