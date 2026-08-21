@@ -1,0 +1,51 @@
+---
+title: "Feature Overview"
+description: "This article introduces the current primary user flow in Aqara Life, including entering Studio spaces, default widgets, the message center, and device details."
+keywords: ["Aqara Docs", "Aqara Life", "Feature Overview", "Studio Space"]
+---
+# Feature Overview
+
+This part introduces the current primary user flow and the capabilities available in the default Aqara Life interface.
+
+## 1. Sign In and Enter a Studio Space
+
+After registering and signing in, users can select the Studio they want to access. The Studio must first be connected to the cloud on the platform and linked to the account currently signed in. Once selected in the app, the user can enter the corresponding Studio space.
+
+Future releases are planned to support adding a new Studio directly through Aqara Life, providing users with more complete Studio management capabilities.
+
+## 2. Widgets in the Default Interface
+
+After entering a Studio space, the default interface contains the following four types of functional widgets. At present, widgets can only be added, removed, and arranged on the Home tab. Future releases may introduce more plugin assets and editing across multiple tabs. Developers are also welcome to contribute plugin resources and help expand what is possible.
+
+### 2.1 AI Agent Conversation Widget
+
+The AI Agent provides a conversational entry point for interacting with a space. Using natural language, users can perform basic device- and space-level queries, controls, and edits.
+
+When more complete spatial information and configuration capabilities are available, the AI Agent can interpret user intent based on the devices in the space and the relationships between them, enabling more advanced and natural interactions with the intelligent space.
+
+### 2.2 Space Overview
+
+Space Overview presents summary information for the current Studio space, including spaces, devices, and existing scenes and automations. Selecting an item opens its corresponding details page.
+
+- Spaces: A complete tree view of the spatial hierarchy.
+- Devices: A device list grouped by spatial hierarchy. Select a device name to open its details page.
+- Scenes: Logic blocks in a Flow that are triggered manually. Select a scene to run the corresponding automation.
+- Automations: Flows other than scenes. Individual Flows can be enabled or disabled.
+
+### 2.3 Favorite Scenes
+
+The first four scenes are displayed by default and can be run with a tap. Select the Favorite Scenes heading to view all scenes. The widget layout can be configured on the platform to display two, three, or four rows. If the corresponding Flow is assigned to a room, the room label is also shown on the scene card for easier identification.
+
+### 2.4 Automations
+
+The first four Flows are displayed by default. The widget layout can be configured on the platform to show two, four, six, or eight Flows. If a Flow is assigned to a room, the room label is also shown on the automation card for easier identification.
+
+## 3. Message Center and Device Alerts
+
+Device alerts can be configured in advance in the platform's Alert Center. When a device triggers a relevant event, the Aqara Life Message Center receives the corresponding push message.
+
+When the app is being used through remote access, relevant notifications can also be delivered through the phone's system notification panel. Users can therefore stay informed of important device alerts without keeping the app open.
+
+## 4. Device Details
+
+From the device list, users can select a device name to open its details page, where they can view and operate the device. Available capabilities vary by device type and by the capabilities the device provides in Studio.

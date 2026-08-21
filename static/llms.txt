@@ -17,5 +17,5 @@ This index is written for English docs. For Simplified Chinese docs, use the loc
 - Overview: https://docs.aqara.com/docs/aqara-developer/introduction
 - Introduction: https://docs.aqara.com/docs/aqara-developer/data-export-api/introduction
 - Overview: https://docs.aqara.com/docs/aqara-life/overview
-- Overview: https://docs.aqara.com/docs/aqara-openlink/overview
+- Feature Overview: https://docs.aqara.com/docs/aqara-life/feature-overview
 

@@ -1,0 +1,123 @@
+---
+title: "Life Agent"
+description: "Life Agent is the conversational core of the Aqara Life App, enabling users to control devices, configure scenes, and set up automations through natural language."
+keywords: ["Aqara Docs", "Aqara Life", "Life Agent", "Natural Language Control"]
+---
+# Life Agent
+
+Life Agent is the conversational core of the Aqara Life App. Built on natural language processing, it lets users control devices, configure scenes, and set up automations through everyday conversation — turning complex smart home operations into an intuitive "talk to control" spatial intelligence experience.
+
+The product centers on three capabilities — device control, scene configuration, and automation configuration — built on Aqara Studio's spatial ontology. Together they form an "understand – reason – execute – respond" loop that removes the complexity barrier of traditional app-based operation, giving families a flexible, customizable, and extensible way to interact with their space through natural language.
+
+## Feature Details
+
+### Device Control
+
+Users can control devices at home directly with natural language. Life Agent parses the instruction, sends it to the device, and reports back the result.
+
+#### Single-Device Control
+
+Supports on/off switching and parameter adjustment, including brightness, color temperature, temperature, curtain position, and mode/fan speed. Fuzzy matching is supported — for example, "living room light" matches all light devices in the living room.
+
+| Capability | Description | Example Commands |
+| --- | --- | --- |
+| On/Off Control | Supports turning devices on and off. Users can refer to devices loosely (e.g. "living room light"); Life Agent reports whether the action succeeded, and explains why if it failed | "Turn on the living room main light", "Turn off the AC", "Close the curtains", "Turn on the TV" |
+| Parameter Adjustment | Supports adjusting brightness, color temperature, temperature, curtain position, operating mode, and fan speed | "Set the light to 70%", "Switch to warm color temperature", "Set the AC to 26°C cooling", "Open the curtains halfway" |
+
+#### Batch Control
+
+Supports whole-home control of the same device type and batch control within a single room, with support for exclusion lists; if some devices fail, the failures are reported in detail.
+
+| Capability | Description | Example Commands |
+| --- | --- | --- |
+| Batch by Device Type | Controls all devices of the same type across the home at once, with the option to exclude specific rooms or devices; if some devices fail, Life Agent reports which ones and why | "Turn off all the lights in the house", "Set all ACs to 26°C", "Turn off all lights except the living room", "Set all lights to 50%" |
+| Batch by Room | Controls all devices in a specified room at once, and can apply multiple different parameters in a single instruction | "Turn off everything in the bedroom", "Turn on all living room lights and set the AC to 26°C" |
+
+#### Location-Based Control
+
+Supports controlling devices based on their spatial relationship to furniture or areas. Life Agent identifies the relative position of devices to furniture and zones, so it can match and control devices using spatial language such as "near", "next to", or "in front of".
+
+| Capability | Description | Example Commands |
+| --- | --- | --- |
+| Nearby Device Control | Identifies and controls devices based on their position relative to furniture or a specific area | "Turn on the light near the sofa", "Set all lights near the dining table to warm white", "Turn off the AC next to the bookshelf" |
+
+### Device Query
+
+Users can check what devices exist in their space at any time, along with their online/offline status and basic device information.
+
+#### Space Device List
+
+Lists all devices and their types across the home, grouped by room, with online/offline status. Also supports querying all devices in a specific room, with their location and function.
+
+| Capability | Description | Example Commands |
+| --- | --- | --- |
+| Whole-Home Devices | Lists all devices and their types across the home, grouped by room, with each device's online/offline status | "What devices do I have?", "List of all devices in the house", "List devices by room" |
+| Room Devices | Queries all devices in a specific room, showing their location, function, and online/offline/low-battery status | "What devices are in the living room?", "What's installed in the master bedroom?", "What sensors are in the kitchen?" |
+
+#### Status Query
+
+Checks whether a specific device is online, filters for offline devices, and reports how long a device has been offline and when it was last online. Also supports querying real-time device status, current sensor readings, and low-battery devices.
+
+| Capability | Description | Example Commands |
+| --- | --- | --- |
+| Online Status | Checks whether a specific device is online, filters out all offline devices, and can report how long a device has been offline and when it was last seen online | "Is the living room main light online?", "Which devices are offline?", "When did the kitchen smoke sensor go offline?" |
+| Operating Status | Queries the real-time operating status of a device (e.g. on/off, brightness, temperature, mode), current sensor readings, and devices running low on battery | "What's the status of the living room AC?", "What's the temperature in the master bedroom?", "Which sensors are running low on battery?" |
+
+#### Filter & Search
+
+Filters devices by type (lighting, AC, sensors, curtains, etc.) or by protocol (Zigbee/Matter/Wi-Fi). Also supports filtering by online/offline status, on/off status, and abnormal devices (offline, low battery, faulty).
+
+| Capability | Description | Example Commands |
+| --- | --- | --- |
+| Filter by Type | Filters by device type (lighting, AC, sensors, curtains, etc.), or by communication protocol (Zigbee/Matter/Wi-Fi) | "What lights do I have?", "List all the ACs", "What Zigbee devices are there?" |
+| Filter by Status | Filters devices by online/offline or on/off status, and can surface abnormal devices such as offline, low-battery, or faulty ones | "List all the devices that are online", "What's currently turned on?", "Find all offline devices" |
+
+#### Location-Based Query
+
+Supports querying devices based on their spatial relationship to furniture or areas. Life Agent uses the spatial ontology model to identify the relative position between devices, furniture, and zones, and returns information about devices near a specified location.
+
+| Capability | Description | Example Commands |
+| --- | --- | --- |
+| Nearby Device Query | Queries devices near a specified piece of furniture or area | "What devices are near the TV?", "What's installed next to the sofa?", "Is there a light above the dining table?" |
+| Relative Position Query | Queries the spatial or relative position between devices | "Where are the lights in the bedroom located?", "Which devices are near the kitchen counter?" |
+
+### Scene Configuration
+
+Users can create a new scene from a single sentence or a preset template, and at any time view, enable, disable, or delete existing scenes.
+
+#### Create a Scene
+
+Supports both one-sentence creation and template-based creation. Life Agent extracts a scene name and a sequence of actions from natural language, automatically matches available devices, fills in default parameters, and proactively asks for any missing information.
+
+| Capability | Description | Example Commands |
+| --- | --- | --- |
+| One-Sentence Creation | Extracts a scene name and action sequence from the user's description, and automatically matches available devices at home | "Create a sunset scene for me", "Make a tea-time scene", "Create a romantic candlelight scene", "Set up a meditation scene" |
+
+#### Manage Scenes
+
+Lists all current scenes, shows the detailed configuration of a scene, and supports enabling, disabling, or deleting scenes.
+
+| Capability | Description | Example Commands |
+| --- | --- | --- |
+| Query & Control | Supports viewing all current scenes, checking the detailed configuration of a specific scene, and enabling, disabling, or deleting scenes | "What scenes do I have?", "What does the sunset scene actually do?", "Delete that scene" |
+
+### Automation Configuration
+
+Users can describe a rule in natural language to create a new automation, and at any time view, enable, disable, or delete existing automations.
+
+#### Create an Automation
+
+Extracts trigger conditions and execution actions from natural language, automatically matches devices, and fills in default parameters. Supports extracting time-based, sensor-based, device-state-based, and location-based trigger conditions.
+
+| Capability | Description | Example Commands |
+| --- | --- | --- |
+| One-Sentence Creation | Extracts the trigger condition and execution action from the user's description, and automatically matches devices | "Set the curtains to open automatically every morning at 7am" |
+| Condition Extraction | Recognizes a range of trigger conditions — time, sensor readings, device state, location — and extracts the corresponding execution action and scope | "Turn on the light for 10 seconds when someone passes through the hallway", "Turn on the AC when the temperature is above 30°C and someone is home" |
+
+#### Manage Automations
+
+Lists all current automations and their trigger methods, shows detailed configuration, and supports enabling, disabling, or deleting them.
+
+| Capability | Description | Example Commands |
+| --- | --- | --- |
+| Query & Control | Supports viewing all current automations and their trigger methods, checking detailed configuration, and enabling, disabling, or deleting automations | "What automations do I have?", "What does the 'coming home' automation actually do?", "Temporarily disable the 'getting up at night' automation", "Delete that old movie-mode automation" |

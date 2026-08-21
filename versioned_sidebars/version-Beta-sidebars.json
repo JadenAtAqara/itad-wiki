@@ -770,7 +770,10 @@
     }
   ],
   "aqaraLifeSidebar": [
-    "aqara-life/overview"
+    "aqara-life/overview",
+    "aqara-life/feature-overview",
+    "aqara-life/future-of-the-plugin-based-architecture",
+    "aqara-life/life-agent/overview"
   ],
   "aqaraOpenLinkSidebar": [
     "aqara-openlink/overview",
