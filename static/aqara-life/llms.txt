@@ -6,4 +6,7 @@
 
 ## All sidebar-listed docs
 - Overview: https://docs.aqara.com/docs/aqara-life/overview
+- Feature Overview: https://docs.aqara.com/docs/aqara-life/feature-overview
+- The Future of the Plugin-Based Architecture: https://docs.aqara.com/docs/aqara-life/future-of-the-plugin-based-architecture
+- Life Agent: https://docs.aqara.com/docs/aqara-life/life-agent/overview
 

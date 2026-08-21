@@ -6,4 +6,7 @@
 
 ## 侧边栏收录的全部文档
 - 概览: https://docs.aqara.com/zh/docs/aqara-life/overview
+- 功能介绍: https://docs.aqara.com/zh/docs/aqara-life/feature-overview
+- 插件化架构的未来: https://docs.aqara.com/zh/docs/aqara-life/future-of-the-plugin-based-architecture
+- Life Agent: https://docs.aqara.com/zh/docs/aqara-life/life-agent/overview
 

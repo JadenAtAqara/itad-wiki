@@ -17,5 +17,5 @@
 - 概览: https://docs.aqara.com/zh/docs/aqara-developer/introduction
 - 数据转出 API 简介: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/introduction
 - 概览: https://docs.aqara.com/zh/docs/aqara-life/overview
-- 概览: https://docs.aqara.com/zh/docs/aqara-openlink/overview
+- 功能介绍: https://docs.aqara.com/zh/docs/aqara-life/feature-overview
 
