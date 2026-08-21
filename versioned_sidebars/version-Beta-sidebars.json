@@ -169,7 +169,18 @@
           }
         ]      
     },
-    "aqara-studio/plugin-center",
+    {
+      "type": "category",
+      "label": "Plugin Center",
+      "collapsed": false,
+      "link": {
+          "type": "doc",
+          "id": "aqara-studio/plugin-center"
+      },
+      "items": [
+        "aqara-studio/plugin-center/aiot-data-migration"
+      ]
+    },
     {
       "type": "category",
       "label": "Developer",

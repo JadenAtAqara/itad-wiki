@@ -1,0 +1,94 @@
+---
+title: "AIOT Data Migration"
+description: "This article details how to migrate sub-device data from certain gateways (referred to as 'source gateways' below) in the AIOT (Aqara Home App) to gateways in Studio (referred to as 'target gateways' below). Only binding relationships of Zigbee sub-devices are supported."
+keywords: ["Aqara Documentation", "Aqara Studio", "AIOT Data Migration", "aiot"]
+---
+# AIOT Data Migration
+
+This article details how to migrate **sub-device** data from specific gateways (hereafter referred to as "source gateways") in the AIOT (Aqara Home App) to gateways in Studio (hereafter referred to as "target gateways"). The migration only supports **Zigbee** sub-device binding relationships.
+
+:::warning
+Please read the following notes carefully to ensure you fully understand the risks of data migration:
+- The migration only includes Zigbee sub-device binding relationships and network information. Automation/scenes and special configurations related to sub-devices need to be reconfigured in Aqara Studio after migration. The migration operation is irreversible.
+- After Zigbee sub-devices have been migrated to the target gateway, you must manually restore the source gateway to factory settings to avoid communication failures that may lead to usage issues. If you still need to use the source gateway to control devices of other protocols, please re-add those devices to the source gateway after the migration.
+:::
+
+## Prerequisites
+
+Before starting, please ensure your Aqara Studio is already [connected to Aqara Cloud](./../cloud.mdx).
+
+## Install the Plugin
+
+Please refer to the [Plugin Market](./../plugin-center.mdx) documentation:
+1. Go to [Aqara Builder](https://builder.aqara.com) and obtain the `AIOT Data Migration` plugin.
+2. Assign it to Aqara Studio.
+3. Then go to the **Plugin Center** in Aqara Studio to install the plugin.
+
+## Check Compatibility
+
+Before migrating data, please confirm that the firmware versions of both your [source gateway](#source-gateway-firmware-requirements) and [target gateway](#target-gateway-firmware-requirements) meet the minimum requirements, and refer to the [compatibility table](#compatibility-between-source-and-target-gateways) below to ensure your device models support this migration. Otherwise, migration will not be possible.
+
+### Source Gateway Firmware Requirements
+
+The following source gateways and minimum firmware versions support migration:
+
+| Product Name             | Model                  | Minimum Version     |
+|------------------------- |----------------------- |--------------------|
+| M100 (China)             | lumi.gateway.agl010    | 4.5.60_0019.0017   |
+| M100 (Overseas)          | lumi.gateway.agl008    | 4.5.60_0019.0017   |
+| M200 (China/Overseas)    | lumi.gateway.agl011    | 4.5.60_0019        |
+| M3 (China)               | lumi.gateway.acn012    | 4.5.60_0017        |
+| M3 (Overseas)            | lumi.gateway.agl004    | 4.5.60_0017        |
+| Wall Gateway V1 (China)  | lumi.gateway.acn011    | 4.5.60_0019.0017   |
+
+### Target Gateway Firmware Requirements
+
+The following target gateways and minimum firmware versions support migration:
+
+| Product Name | Model                   | Minimum Version   |
+|--------------|------------------------ |------------------|
+| M300         | lumi.models.4447_2059   | 4.5.70_0007      |
+| AX100M       | lumi.models.4447_2081   | 4.5.70_0101      |
+| AX200M       | lumi.models.4447_2088   | 4.5.70_0009      |
+
+### Compatibility between Source and Target Gateways
+
+Refer to the table below to confirm compatibility for data migration between your source gateway (in the first column) and target gateway (in the first row):
+
+|                | M100 (China) | M100 (Overseas) | M200 (China/Overseas) | M3 (China) | M3 (Overseas) | Wall Gateway V1 (China) |
+|----------------|:------------:|:---------------:|:---------------------:|:----------:|:-------------:|:-----------------------:|
+| **M300**       | ✓           | ✓               | ✓                     | ✓          | ✓             | ✓                       |
+| **AX100M**     | ✓           | ✓               | ✗                     | ✗          | ✗             | ✗                       |
+| **AX200M**     | ✓           | ✓               | ✓                     | ✗          | ✗             | ✓                       |
+
+## Migration Process
+
+1. In the **Plugin Center**, locate the `AIOT Data Migration` plugin and click the **Data Migration** button.
+
+2. In the popup, you will need to confirm the currently connected region (the region you selected when connecting to the cloud).
+
+    After confirming it is correct, select one **Home** created by you in the Aqara Home App in that region.
+
+    After making your selection, click the **Next Step** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AIOTDataMigration-ConfirmRegionAndSelectASpace.png" style={{ width: '70%' }} />
+
+4. Select a gateway in this Home as the source gateway for data migration and click **Next Step**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AIOTDataMigration-SelectASourceGateway.png" style={{ width: '70%' }} />
+
+5. Select a gateway in Aqara Studio as the target gateway for migration and click **Start migration**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AIOTDataMigration-SelectATargetGateway.png" style={{ width: '70%' }} />
+
+6. Confirm that you acknowledge the migration risks, then click **Confirm Migration**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AIOTDataMigration-ConfirmMigration.png" style={{ width: '70%' }} />
+
+7. Once migration is successful, go to the **Devices** page. You will find the migrated sub-devices under the **Aqara Zigbee** node.
+
+    ![Migration Success](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AIOTDataMigration-CheckMigratedZigbeeDeivce.png)
+
+8. Manually reset the source gateway to factory settings to avoid abnormal usage due to device communication issues. 
+
+    All contents on the target gateway will be cleared after the migration, and you will need to reconfigure.

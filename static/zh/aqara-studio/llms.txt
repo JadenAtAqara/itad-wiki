@@ -68,6 +68,7 @@
 - 通过主机访域名访问: https://docs.aqara.com/zh/docs/aqara-studio/local-domain-name-access
 - 恢复出厂设置: https://docs.aqara.com/zh/docs/aqara-studio/factory-reset
 - 插件中心: https://docs.aqara.com/zh/docs/aqara-studio/plugin-center
+- AIOT 数据迁移: https://docs.aqara.com/zh/docs/aqara-studio/plugin-center/aiot-data-migration
 - 开发者指南: https://docs.aqara.com/zh/docs/aqara-studio/developer-guide
 - 数据转出 API v1: https://docs.aqara.com/zh/docs/aqara-studio/api-references/data-export-api-v1
 - 设备功能 API: https://docs.aqara.com/zh/docs/aqara-studio/api-references/trait-api
