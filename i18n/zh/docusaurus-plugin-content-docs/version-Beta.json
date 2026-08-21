@@ -159,6 +159,22 @@
     "message": "功能",
     "description": "The label for category 'Features' in sidebar 'aqaraDeveloperSidebar'"
   },
+  "sidebar.aqaraBuilderSidebar.category.Builder Lab": {
+    "message": "Builder 工坊",
+    "description": "The label for category 'Builder Lab' in sidebar 'aqaraBuilderSidebar'"
+  },
+  "sidebar.aqaraBuilderSidebar.category.Space Planning": {
+    "message": "空间规划",
+    "description": "The label for category 'Space Planning' in sidebar 'aqaraBuilderSidebar'"
+  },
+  "sidebar.aqaraBuilderSidebar.category.Floor Plan and Device Placement Design": {
+    "message": "户型与点位设计",
+    "description": "The label for category 'Floor Plan and Device Placement Design' in sidebar 'aqaraBuilderSidebar'"
+  },
+  "sidebar.aqaraBuilderSidebar.category.Interface Design": {
+    "message": "界面设计",
+    "description": "The label for category 'Interface Design' in sidebar 'aqaraBuilderSidebar'"
+  },
   "sidebar.aqaraOpenLinkSidebar.category.Aqara Standard Protocol Modules": {
     "message": "Aqara 标准协议模组",
     "description": "The label for category 'Aqara Standard Protocol Modules' in sidebar 'aqaraOpenLinkSidebar'"

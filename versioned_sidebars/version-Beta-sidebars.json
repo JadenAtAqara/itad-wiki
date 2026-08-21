@@ -687,6 +687,74 @@
     }
   ],
   "aqaraBuilderSidebar": [
+    "aqara-builder/overview",
+    {
+      "type": "category",
+      "label": "Builder Lab",
+      "link": {
+        "type": "generated-index",
+        "keywords": ["builder-lab"]
+      },
+      "items": [
+        {
+          "type": "category",
+          "label": "Space Planning",
+          "link": {
+            "type": "generated-index",
+            "keywords": ["space-planning"]
+          },
+          "items": [
+            "aqara-builder/builder-lab/space-planning/create-space-planning-solution",
+            {
+              "type": "category",
+              "label": "Floor Plan and Device Placement Design",
+              "link": {
+                "type": "generated-index",
+                "keywords": ["floor-plan-and-device-placement-design"]
+              },
+              "items": [
+                "aqara-builder/builder-lab/space-planning/draw-floor-plan-and-space-structure",
+                "aqara-builder/builder-lab/space-planning/place-furniture-and-smart-devices",
+                "aqara-builder/builder-lab/space-planning/place-light-strips",
+                "aqara-builder/builder-lab/space-planning/place-switches-and-configure-controlled-devices"
+              ]
+            },
+            "aqara-builder/builder-lab/space-planning/scene-and-automation-design",
+            "aqara-builder/builder-lab/space-planning/deploy-space-solution"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Interface Design",
+          "link": {
+            "type": "generated-index",
+            "keywords": ["interface-design"]
+          },
+          "items": [
+            "aqara-builder/builder-lab/interface-design/create-and-edit-interface-design",
+            "aqara-builder/builder-lab/interface-design/deploy-interface-design"
+          ]
+        },
+        "aqara-builder/builder-lab/builder-lab-faq"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Studio Manager",
+      "link": {
+        "type": "generated-index",
+        "keywords": ["studio-manager"]
+      },
+      "items": [
+        "aqara-builder/studio-manager/manage-projects",
+        "aqara-builder/studio-manager/move-studio",
+        "aqara-builder/studio-manager/manage-studio-members",
+        "aqara-builder/studio-manager/view-deployed-studio-resources",
+        "aqara-builder/studio-manager/manage-member-interfaces",
+        "aqara-builder/studio-manager/unbind-studio-from-cloud",
+        "aqara-builder/studio-manager/studio-manager-faq"
+      ]
+    },
     {
       "type": "category",
       "label": "Builder Agent",
