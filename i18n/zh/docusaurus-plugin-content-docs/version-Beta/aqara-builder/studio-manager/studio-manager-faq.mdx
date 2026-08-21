@@ -1,0 +1,32 @@
+---
+title: "Studio Manager 常见问题"
+description: "本文汇总 Studio Manager 中 Studio 查找、成员选择、项目删除和界面分配等常见问题与处理方法。"
+keywords: ["Aqara 文档", "Aqara Builder", "Studio Manager", "常见问题"]
+---
+# Studio Manager 常见问题
+
+## Studio Manager 中找不到 Studio？
+
+- **可能原因 1：** Studio 绑定时选择的 Region 与当前进入 Studio Manager 的 Region 不同。  
+  **处理方法：** 请确认 Studio 绑定 Region 和 Studio Manager 当前 Region 是否一致；可以切换 Studio 的绑定 Region，也可以切换 Studio Manager 的 Region 再尝试。
+
+- **可能原因 2：** 当前登录账号不是绑定 Studio 的账号。  
+  **处理方法：** 请确认 Studio 绑定的账号，并确保使用正确账号登录 Builder Lab 和 Studio Manager。
+
+## 部署界面设计时找不到目标成员？
+
+**可能原因：** 该成员尚未加入目标 Studio。   
+**处理方法：** 需先在 Studio Manager 中邀请该成员，并确认其已加入目标 Studio。
+
+## 界面设计部署给了错误成员，怎么办？
+
+**可能原因：** Studio 或成员信息核对不完整。  
+**处理方法：** 可在 Studio Manager 中找到该成员，并修改该成员当前使用的 UI。
+
+## 为什么无法删除项目？
+
+- **可能原因 1：** 该项目是默认项目。  
+  **处理方法：** 默认项目不支持删除，请保留。
+
+- **可能原因 2：** 项目中仍包含 Studio。  
+  **处理方法：** 若普通项目中仍有 Studio，请先将 Studio Move 到其他项目，再进行删除操作。
