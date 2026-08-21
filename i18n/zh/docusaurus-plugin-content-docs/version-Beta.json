@@ -59,6 +59,10 @@
     "message": "管理",
     "description": "The label for category 'Management' in sidebar 'aqaraStudioSidebar'"
   },
+  "sidebar.aqaraStudioSidebar.category.Plugin Center": {
+    "message": "插件中心",
+    "description": "The label for category 'Plugin Center' in sidebar 'aqaraStudioSidebar'"
+  },
   "sidebar.aqaraStudioSidebar.category.Developer": {
     "message": "开发者",
     "description": "The label for category 'Developer' in sidebar 'aqaraStudioSidebar'"
