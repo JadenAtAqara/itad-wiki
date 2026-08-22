@@ -4,3 +4,71 @@ description: "本文说明如何配置 Aqara 的屏设备。"
 keywords: ["Aqara 文档", "Aqara Studio", "设备管理", "屏", "screens"]
 ---
 # 屏
+
+本文将为您详细说明如何配置和发布 Aqara 屏设备的 [面板](#配置与发布面板)及[待机](#配置与发布待机)，帮助您灵活定制显示效果与工作模式。
+
+## 配置与发布面板
+
+1. 在 **设备管理** 页面，在左侧 **协议和设备** 树中找到 **Aqara Hub**，选择您的目标屏设备，切换至 **面板设置** 标签页，单击 **新增面板**。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-CreateAPanel.png" alt="新增一个面板" />
+
+2. 在 **新建面板** 弹窗中，选择一个模板，命名面板，单击 **新建** 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-SelectATemplateAndNameThePanel.png" alt="选择模板并命名面板" />
+
+3. 此时您会进入面板编辑页面，您可以在此页面中配置面板的组件、模板、图层、样式和属性。
+
+    :::tip
+    组件若需关联自动化或设备数据，请确保所有相关数据源均已完成设置，否则可能导致发布失败。
+    :::
+
+    完成后单击 **保存** 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-ConfigureThePanel.png" alt="配置面板" />
+
+4. 编辑完成后，退出面板编辑页面，返回目标屏设备的 **面板设置** 标签页。
+
+    在列表中找到刚新增的面板，点击 **... > 预览**，即可查看面板效果。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-PreviewAPanel.png" alt="预览面板" />
+
+5. 确认效果后，单击 **发布** 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-ClickPublish.png" alt="点击发布" />
+
+6. 在 **发布** 弹窗中，勾选需要展示的面板，调整面板顺序，单击 **确定发布** 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-SelectPanelsAndAdjustTheOrderAndComfirmPublish.png" alt="选择面板、调整顺序并确认发布" />
+
+    发布成功后，即可在屏设备上查看面板效果。
+
+## 配置与发布待机
+
+1. 在 **设备管理** 页面，在左侧 **协议和设备** 树中找到 **Aqara Hub**，选择您的目标屏设备，切换至 **待机设置** 标签页，单击 **新增待机**。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-CreateAStandby.png" alt="新增一个待机" />
+
+2. 在 **新建待机** 弹窗中，选择一个模板，命名待机，单击 **新建** 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-NewStandby.png" alt="新建一个待机" />
+
+3. 此时您会进入待机编辑页面，您可以在此页面中配置待机的组件、模板、图层、样式和属性。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-EditStandby.png" alt="编辑待机" />
+
+4. 编辑完成后，退出待机编辑页面，返回目标屏设备的 **待机设置** 标签页。
+
+    在列表中找到刚新增的待机，点击 **... > 预览**，即可查看待机效果。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-PreviewStandby.png" alt="预览待机" />
+
+5. 确认效果后，单击 **发布** 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-StandbyClickPublish.png" alt="点击发布待机" />
+
+6. 在 **发布** 弹窗中，选择一个待机，单击 **确定发布** 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-SelectAStandbyAndConfirmPublish.png" alt="选择待机并确认发布" style={{width: '70%'}}  />
+
+    发布成功后，即可在屏设备上查看待机效果。

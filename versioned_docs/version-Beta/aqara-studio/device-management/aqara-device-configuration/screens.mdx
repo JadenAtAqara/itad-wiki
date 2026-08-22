@@ -4,3 +4,63 @@ description: "This document explains how to configure Aqara screens in Aqara Stu
 keywords: ["Aqara Docs", "Aqara Studio", "Device Management", "Screens"]
 ---
 # Screens
+
+This document explains in detail how to configure and publish Aqara screen devices with [Panels](#configure-and-publish-a-panel) and [Standby](#configure-and-publish-a-standby), helping you flexibly customize display effects and operating modes.
+
+## Configure and Publish A Panel
+
+1. On the **Devices** page, find **Aqara Hub** in the **Protocols and Devices** tree on the left, select your target screen device, switch to the **Panel configuration** tab, and click **Add Panel**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Screens-CreateAPanel.png" alt="Add a panel" />
+
+2. In the **New Panel** pop-up window, select a template, name the panel, and click the **Create** button.
+
+3. You will now enter the panel editing page, where you can configure the panel’s components, templates, layers, styles, and properties.
+
+    :::tip
+    If components need to be linked to automation or device data, please ensure all related data sources are configured; otherwise, publishing may fail.
+    :::
+
+    After finishing, click the **Save** button.
+
+4. Once editing is complete, exit the panel editing page and return to the **Panel configuration** tab of the target screen device. 
+
+    Locate the newly added panel in the list and click **... > Preview** to view the panel effect.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Screens-PreviewAPanel.png" alt="Preview the panel" />
+
+5. After confirming the effect, click the **Publish** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Screens-ClickPublish.png" alt="Click Publish" />
+
+6. In the **Publish** pop-up window, select the panels to be displayed, adjust the order, and click the **Confirm publish** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Screens-SelectPanelsAndAdjustTheOrderAndComfirmPublish.png" alt="Select panels, adjust the order, and confirm publish" />
+
+    After successful publication, you can view the panel on the screen device.
+    
+## Configure and Publish A Standby
+
+1. On the **Devices** page, find **Aqara Hub** in the **Protocols and Devices** tree on the left, select your target screen device, switch to the **Standby configuration** tab, and click **Add Standby**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Screens-CreateAStandby.png" alt="Add a standby" />
+
+2. In the **New Standby** pop-up window, select a template, name the standby, and click the **Create** button.
+
+3. You will now enter the standby editing page, where you can configure the standby’s components, templates, layers, styles, and properties.
+
+4. After editing, exit the standby editing page and return to the **Standby configuration** tab of the target screen device.
+
+    Locate the newly added standby in the list and click **... > Preview** to view the standby effect.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Screens-PreviewStandby.png" alt="Preview Standby" />
+
+5. After confirming the effect, click the **Publish** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Screens-StandbyClickPublish.png" alt="Click Publish Standby" />
+
+6. In the **Publish** pop-up window, select a standby and click the **Confirm publish** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Screens-SelectAStandbyAndConfirmPublish.png" alt="Select Standby and Confirm Publish" style={{width: '70%'}} />
+
+    After successful publication, you will be able to view the standby effect on the screen device.
