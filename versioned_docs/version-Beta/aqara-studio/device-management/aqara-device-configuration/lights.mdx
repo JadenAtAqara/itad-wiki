@@ -4,3 +4,102 @@ description: "This document explains how to configure Aqara lights in Aqara Stud
 keywords: ["Aqara Docs", "Aqara Studio", "Device Management", "Lights"]
 ---
 # Lights
+
+Aqara lights support three scene control modes to flexibly meet diverse lighting needs:
+- [Static Scene](#static-scene): Set and display a single color and brightness.
+- [Dynamic Scene](#dynamic-scene): Create a vivid atmosphere with dynamic transitions in color and brightness.
+- [Sequence Scene](#sequence-scene): Customize the duration and order of transitions between colors for gradient or choreography effects.
+
+You can either [use Aqara's preset scene modes](#use-default-scenes), [create custom scenes](#custom-scenes) according to your needs, or [copy your custom scenes to other devices](#copy-custom-scenes-to-other-devices).
+
+:::tip
+The scene modes and available presets vary by Aqara light model. Please refer to your device's actual capabilities for details.
+:::
+
+## Use Default Scenes
+
+1. On the **Devices** page, in the left-side **Protocols & Devices** tree, select your target light device and click **Device details**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Light-SelectADeviceAndCheckDetails.png" alt="View device details" />
+
+2. On the **Device details** page, find the **Scene Control** area. Under the **Default** tab, hover over a scene and click the **Execute Scene** button. After execution, the light will display the defined color and brightness of that scene.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Light-ExecuteDefaultScene.png" alt="Execute default scene" style={{width: '60%'}} />
+
+## Custom Scenes
+
+In addition to Aqara's default scenes, you can also create your own scenes.
+
+### Create a Custom Scene
+
+In the **Scene Control** area, click the **New Scene** button. From the dropdown menu, select the type of scene you want to create ([Static Scene](#static-scene), [Dynamic Scene](#dynamic-scene), or [Sequence Scene](#sequence-scene)).
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Light-NewScene.png" alt="Create new scene" style={{width: '80%'}} />
+
+### Configure the Custom Scene
+
+Configure parameters based on the type of scene.
+
+#### Static Scene
+
+On the **New Static Scene** page:
+1. Set a scene name and choose a color and brightness.
+2. (Optional) Click the **Preview** button to view the effect and confirm if it meets your expectations.
+3. Click the **Save** button to complete creation.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Light-ConfigureAndPreviewStaticScene.png" alt="New static scene" style={{width: '60%'}} />
+
+#### Dynamic Scene
+
+On the **New Dynamic Scene** page:
+1. Set a scene name, select multiple colors, choose a dynamic effect for global color switching, and set the switching speed.
+2. (Optional) Click the **Preview** button to view the effect and confirm if it meets your expectations.
+3. Click the **Save** button to complete creation.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Light-ConfigureAndPreviewDynamicScene.png" alt="New dynamic scene" style={{width: '60%'}} />
+
+#### Sequence Scene
+
+On the **New Sequence Scene** page:
+1. Configure the scene name and loop mode.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Light-ConfigureSequenceSceneNameAndLoop.png" alt="" style={{width: '60%'}} />
+
+2. Click the **Add Sequence Step** button. Each time, you can add a step including "transition time, light color, brightness, and duration". Add multiple steps as needed to form a complete sequence.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Light-AddLightSequenceSteps.png" alt="" style={{width: '60%'}} />
+
+3. Click the **Transition Time** to configure it.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Light-ConfigureTransitionTime.png" alt="" style={{width: '60%'}} />
+
+4. Click **Color**, **Brightness**, and **Duration** to configure each step as needed.
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Light-ConfigureColorBrightnessAndDuration.png" alt="" style={{width: '60%'}} />
+
+5. (Optional) Click the **Preview** button to view the effect and confirm if it meets your expectations.
+6. Click the **Save** button to complete creation.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Light-PreviewAndSaveSequenceScene.png" alt="" style={{width: '60%'}} />
+
+### Reference Existing Scenes
+
+If you've already created other scenes and wish to use one in your current scene, click the **Reference Existing Scene** button. Select the scene you want to reference from the dropdown list to complete the reference.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Light-ReferenceAnExisitingScene.png" alt="Reference existing scene" style={{width: '80%'}} />
+
+### Execute Custom Scene
+
+In the **Scene Control** area, switch to the **Custom** tab. Hover over a scene and click the **Execute Scene** button. After execution, the light will display the color and brightness defined in that scene.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Light-ExecuteCustomScene.png" alt="Execute custom scene" style={{width: '80%'}} />
+
+## Copy Custom Scenes to Other Devices
+
+If you'd like to [copy your custom scenes](#custom-scenes) to other devices, follow these steps:
+1. In the **Scene Control** area, click the **Copy** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Light-ClickCopyButton.png" alt="Click copy button" style={{width: '80%'}} />
+
+2. In the pop-up window, select one or more custom scenes, select one or more target devices, and click the **Save** button to complete the copy.
+
+3. Go to the target device, and in **Device details > Scene Control**, switch to the **Custom** tab to see the scenes copied to the target device.
