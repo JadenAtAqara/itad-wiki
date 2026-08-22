@@ -41,6 +41,7 @@
 - Display History: https://docs.aqara.com/docs/aqara-studio/device-management/history
 - Add Tags: https://docs.aqara.com/docs/aqara-studio/device-management/tags
 - Lights: https://docs.aqara.com/docs/aqara-studio/device-management/aqara-device-configuration/lights
+- Light Boxes: https://docs.aqara.com/docs/aqara-studio/device-management/aqara-device-configuration/light-boxes
 - Screens: https://docs.aqara.com/docs/aqara-studio/device-management/aqara-device-configuration/screens
 - Automation: https://docs.aqara.com/docs/aqara-studio/automation
 - Classic: https://docs.aqara.com/docs/aqara-studio/classic-automation

@@ -41,6 +41,7 @@
 - 展示历史数据: https://docs.aqara.com/zh/docs/aqara-studio/device-management/history
 - 添加标签: https://docs.aqara.com/zh/docs/aqara-studio/device-management/tags
 - 灯: https://docs.aqara.com/zh/docs/aqara-studio/device-management/aqara-device-configuration/lights
+- 灯箱: https://docs.aqara.com/zh/docs/aqara-studio/device-management/aqara-device-configuration/light-boxes
 - 屏: https://docs.aqara.com/zh/docs/aqara-studio/device-management/aqara-device-configuration/screens
 - 自动化: https://docs.aqara.com/zh/docs/aqara-studio/automation
 - Classic: https://docs.aqara.com/zh/docs/aqara-studio/classic-automation

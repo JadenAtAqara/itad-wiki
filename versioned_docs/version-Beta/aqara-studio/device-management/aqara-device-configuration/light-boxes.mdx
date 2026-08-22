@@ -1,0 +1,49 @@
+# Light Boxes
+
+A light box supports two scene control modes: [Static Scenario](#static-scenario) and [Dynamic Sequence].
+- Static Scenario: Display any image through the light box.
+- Dynamic Sequence: Display default video content provided by Aqara Studio through the light box.
+
+## Check Firmware Versions
+
+Before you begin, please ensure that the following devices and software meet the minimum firmware version requirements:
+
+| Name                         | Minimum Firmware Version |
+| ---------------------------- | ---------------------- |
+| Aqara RS-485 Light Strip Controller | 0.00030               |
+| [DIN Rail Hub AX100M](./../../product-knowledge/gateways/din-rail-hub-ax100m.mdx) | 4.5.70_0101            |
+| Aqara Studio                 | 1.2.3_11               |
+
+## Static Scenario
+
+1. In **Devices**, find the light box you want to configure and click **Device details**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LightBox-SelectADeviceAndCheckDetails.png" alt="View Device Details" />
+
+2. On the **Device details** page, switch to the **Device Configuration** tab, find the **Scene Control** section, and click the **New** button. From the dropdown menu, select **Static Scenario**.
+
+3. In the pop-up window, configure the name of the scenario, upload an image, and set the brightness. Click the **Save** button to complete the creation.
+
+    :::tip
+    The aspect ratio of the crop box is consistent with the row and column settings of the light box canvas. When the ratio is not 1:1, it is normal for the crop box to not cover the entire image.
+    :::
+
+4. At this point, you will see the newly created scenario in the **Scene Control** section. Hover over the scenario and click the **Execute Scenario** button. After execution is complete, the light box will display the image you uploaded.
+
+
+## Dynamic Sequence
+
+1. In **Devices**, find the light box you want to configure and click **Device details**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/LightBox-SelectADeviceAndCheckDetails.png" alt="View Device Details" />
+
+2. On the **Device details** page, switch to the **Device Configuration** tab, find the **Scene Control** section, and click the **New** button. From the dropdown menu, select **Dynamic Sequence**.
+
+3. In the pop-up window, configure the name of the scenario, select an available video, set sequence parameters, and adjust the brightness. Click the **Save** button to complete the creation.
+
+    :::tip
+    The video crop ratio follows the row and column settings of the light box canvas. If the video cannot fully cover the entire canvas, please check your row and column configuration.
+    :::
+
+4. At this point, you will see the newly created scenario in the **Scene Control** section. Hover over the scenario and click the **Execute Scenario** button. After execution is complete, the light box will display the video you selected.
+
