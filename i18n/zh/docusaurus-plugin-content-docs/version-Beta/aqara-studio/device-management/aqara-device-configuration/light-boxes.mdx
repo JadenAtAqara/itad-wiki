@@ -1,0 +1,62 @@
+# 灯箱
+
+灯箱支持两种情景控制模式：[静态场景](#静态场景) 和 [动态序列](#动态序列)。
+- 静态场景：通过灯箱展示任意图片。
+- 动态序列：通过灯箱展示 Aqara Studio 默认提供的视频内容。
+
+## 检查固件版本
+
+在开始之前，请检查以下设备和软件的固件版本是否满足最低要求：
+
+| 名称         | 最低固件版本         |
+| -------------- | ----------------- |
+| Aqara RS-485 灯带控制器   | 0.00030    |
+| [配电箱网关 AX100M](./../../product-knowledge/gateways/din-rail-hub-ax100m.mdx)         | 4.5.70_0101 |
+| Aqara Studio         | 1.2.3_11 |
+
+## 静态场景
+
+1. 在 **设备管理** 找到需要配置的灯箱，单击 **设备详情**。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-SelectADeviceAndCheckDetails.png" alt="查看设备详情" />
+
+2. 在 **设备详情** 页面切换至 **设备配置** 标签页，找到 **情景控制** 区域，点击 **新建** 按钮，从下拉列表中选择 **静态场景**。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-AddStaticScenario.png" alt="新建静态场景" style={{width: '80%'}} />
+
+3. 在弹窗中配置此场景的名称，上传图片和设置亮度。单击 **保存** 按钮完成创建。
+
+    :::tip
+    裁剪框比例与灯箱画布的行列设置一致。行列不是 1:1 时，裁剪框不会铺满整张图片，属正常现象。
+    :::
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-ConfigureStaticScenario.png" alt="新建静态场景" style={{width: '80%'}} />
+
+4. 此时，您将在 **情景控制** 区域看到新创建的场景。将鼠标悬停在该场景上，点击 **执行场景** 按钮。待执行完成后，灯箱将展示您上传的图片。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-ExecuteTheScenario.png" alt="新建静态场景" style={{width: '80%'}} />
+
+
+## 动态序列
+
+1. 在 **设备管理** 找到需要配置的灯设备，单击 **设备详情**。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-SelectADeviceAndCheckDetails.png" alt="查看设备详情" />
+
+2. 在 **设备详情** 页面切换至 **设备配置** 标签页，找到 **情景控制** 区域，点击 **新建** 按钮，从下拉列表中选择 **动态序列**。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-AddDynamicSequence.png" alt="新建动态序列情景" style={{width: '80%'}} />
+
+
+3. 在弹窗中配置此场景的名称，选择可用的视屏，配置序列参数和设置亮度。单击 **保存** 按钮完成创建。
+
+    :::tip
+    视频裁剪比例跟随灯箱画布行列设置，无法铺满整段视频时请检查灯箱画布行列配置。
+    :::
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-ConfigureDynamicSequence.png" alt="新建动态序列场景" style={{width: '60%'}} />
+
+4. 此时，您将在 **情景控制** 区域看到新创建的场景。将鼠标悬停在该场景上，点击 **执行场景** 按钮。待执行完成后，灯箱将展示您选择的视频。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/LightBox-ExecuteTheDynamicSequence.png" alt="新建动态序列场景" style={{width: '80%'}} />
+
