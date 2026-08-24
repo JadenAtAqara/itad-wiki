@@ -20,7 +20,6 @@
 - Aqara RS-485 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/aqara-rs-485
 - Aqara Zigbee 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/zigbee
 - Matter 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/matter
-- Aqara Modbus 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/aqara-modbus
 - Home Assistant 生态集成: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/home-assistant
 - Modbus TCP 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/modbus-tcp
 - BACnet 设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/bacnet
@@ -88,7 +87,6 @@
 - 脚本支持的单位名称与符号: https://docs.aqara.com/zh/docs/aqara-studio/script-supported-unit-symbols
 - 数值映射函数: https://docs.aqara.com/zh/docs/aqara-studio/numerical-mapping-functions
 - 参考格式: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/reference
-- Studio 网关功能一览: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/gateways/studio-gateway-comparison
 - 通用资料: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/gateways/general
 - 智慧边端 M300: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/gateways/edge-hub-m300
 - 配电箱网关 AX100M: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/gateways/din-rail-hub-ax100m
@@ -97,4 +95,5 @@
 - AI 空间传感器 FP400: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400
 - 四路控制模块 AW110K: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/controllers/din-rail-module-4-channels-aw110k
 - 妙控场景屏 AX150S: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/screens/panel-hub-ax150s
+- 灯光场景控制器 AW100L: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/lighting/lighting-scene-controller-aw100l
 
