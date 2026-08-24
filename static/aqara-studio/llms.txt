@@ -20,7 +20,6 @@
 - Aqara RS-485: https://docs.aqara.com/docs/aqara-studio/device-integration/aqara-rs-485
 - Aqara Zigbee: https://docs.aqara.com/docs/aqara-studio/device-integration/zigbee
 - Matter: https://docs.aqara.com/docs/aqara-studio/device-integration/matter
-- Aqara Modbus: https://docs.aqara.com/docs/aqara-studio/device-integration/aqara-modbus
 - Home Assistant: https://docs.aqara.com/docs/aqara-studio/device-integration/home-assistant
 - Modbus TCP: https://docs.aqara.com/docs/aqara-studio/device-integration/modbus-tcp
 - BACnet: https://docs.aqara.com/docs/aqara-studio/device-integration/bacnet
@@ -88,7 +87,7 @@
 - Unit Names and Symbols Supported by Scripts: https://docs.aqara.com/docs/aqara-studio/script-supported-unit-symbols
 - Numerical Mapping Functions: https://docs.aqara.com/docs/aqara-studio/numerical-mapping-functions
 - 参考格式: https://docs.aqara.com/docs/aqara-studio/product-knowledge/reference
-- Studio 网关功能一览: https://docs.aqara.com/docs/aqara-studio/product-knowledge/gateways/studio-gateway-comparison
+- Studio Hub Comparison: https://docs.aqara.com/docs/aqara-studio/product-knowledge/gateways/studio-hub-comparison
 - General: https://docs.aqara.com/docs/aqara-studio/product-knowledge/gateways/general
 - Edge Hub M300: https://docs.aqara.com/docs/aqara-studio/product-knowledge/gateways/edge-hub-m300
 - DIN Rail Hub AX100M: https://docs.aqara.com/docs/aqara-studio/product-knowledge/gateways/din-rail-hub-ax100m
@@ -97,4 +96,5 @@
 - Spatial Multi-Sensor FP400: https://docs.aqara.com/docs/aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400
 - DIN Rail Module (4 Channels) AW110K: https://docs.aqara.com/docs/aqara-studio/product-knowledge/controllers/din-rail-module-4-channels-aw110k
 - Panel Hub AX150S: https://docs.aqara.com/docs/aqara-studio/product-knowledge/screens/panel-hub-ax150s
+- 灯光场景控制器 AW100L: https://docs.aqara.com/docs/aqara-studio/product-knowledge/lighting/lighting-scene-controller-aw100l
 
