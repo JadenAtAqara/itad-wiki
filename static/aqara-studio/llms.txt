@@ -98,4 +98,6 @@
 - Panel Hub AX150S: https://docs.aqara.com/docs/aqara-studio/product-knowledge/screens/panel-hub-ax150s
 - Lighting Scene Controller AW100L: https://docs.aqara.com/docs/aqara-studio/product-knowledge/lighting/lighting-scene-controller-aw100l
 - Pastel Light Module H1: https://docs.aqara.com/docs/aqara-studio/product-knowledge/lighting/pastel-light-module-h1
+- Pastel Light Board H1: https://docs.aqara.com/docs/aqara-studio/product-knowledge/lighting/pastel-light-board-h1
+- Pastel Light Strip Controller H1: https://docs.aqara.com/docs/aqara-studio/product-knowledge/lighting/pastel-light-strip-controller-h1
 

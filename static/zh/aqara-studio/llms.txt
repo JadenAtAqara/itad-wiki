@@ -97,4 +97,6 @@
 - 妙控场景屏 AX150S: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/screens/panel-hub-ax150s
 - 灯光场景控制器 AW100L: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/lighting/lighting-scene-controller-aw100l
 - 臻彩光四色光源模组 H1: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/lighting/pastel-light-module-h1
+- 臻彩光四色光源板 H1: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/lighting/pastel-light-board-h1
+- 臻彩光灯带驱动控制器 H1: https://docs.aqara.com/zh/docs/aqara-studio/product-knowledge/lighting/pastel-light-strip-controller-h1
 
