@@ -15,7 +15,6 @@ Aqara Studio 支持将 Home Assistant 生态的物联网设备接入。目前仅
   - Home Assistant 系统安装，详情请参考 Home Assistant 官网文档 [Installation](https://www.home-assistant.io/installation/)。
   - Home Assistant 生态设备发现与集成，详情请参考 Home Assistant 官网文档 [Onboarding](https://www.home-assistant.io/getting-started/onboarding/)。
   
-
 ## 获取 Home Assistant Token
 
 1. 在浏览器地址栏中输入访问此地址：`http://homeassistant.local:8123`（如果您修改过 Home Assistant 的端口号，请修改本地址的端口号后再访问），访问 Home Assistant 主页。
@@ -26,25 +25,43 @@ Aqara Studio 支持将 Home Assistant 生态的物联网设备接入。目前仅
 
 ## 添加 Home Assistant 生态设备
 
-1. 在左侧侧边栏点击进入**设备管理**页面。在左侧设备树单击“+”按钮。
+1. 在左侧侧边栏点击进入**设备管理**页面。在左侧 **协议和设备** 单击 **...** 按钮，选择 **添加协议**。
 
-  ![单击添加按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-ClickAddButton.png)
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-AddProtocol.png" alt="添加协议" /> 
 
 2. 在弹窗中选择 `Home Assistant`，以添加 `Home Assistant`。
 
-  ![选择 Home Assistant](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/SelectProtocol-HomeAssistant.png)
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Protocols-ChooseHomeAssistant.png" alt="选择 Home Assistant" style={{ width: '60%' }} /> 
+
+3. 在左侧 **协议和设备** 树选择新增的 `Home Assistant`，单击其 **协议配置** 按钮。
+
+  <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HomeAssistant-ClickProtocolConfiguration.png" alt="单击协议配置按钮" /> 
+
+4. 在 **基础配置** 中输入 Home Assistant 系统的本地 IP 地址、端口和 [令牌](#获取-home-assistant-token)。
+
+  <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HomeAssistant-FillInBasicConfiguration.png" alt="输入 Home Assistant 基础配置" style={{ width: '60%' }} /> 
+
+5. 在 `Home Assistant` 协议管理页面中单击 **添加设备** 按钮。
+
+  <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HomeAssistant-ClickAddDevice.png" alt="单击添加设备按钮" /> 
+
+6. 单击 **发现设备** 按钮，本系统即可自动发现 Home Assistant 中的设备。
+
+  ![发现设备](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HomeAssistant-ClickDiscoverDevices.png)
 
 
-3. 选择 `Home Assistant`，进入 Home Assistant 管理界面。
-4. 进入 **协议配置** 选项卡，找到 `基础配置`，输入 Home Assistant 系统的本地 IP 地址、端口和 [令牌](#获取-home-assistant-token)。
+7. 选择需接入的设备，单击中间的 **+** 按钮。
 
-  ![配置协议](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HomeAssistant-ProtocolConfiguration.png)
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HomeAssistant-SelectDevicesAndClickPlus.png" alt="新增发现设备" /> 
 
-5. 进入 `设备发现`选项卡，单击“发现”按钮，本系统即可自动发现 Home Assistant 中的设备。
+    新增设备会出现在右侧的已添加设备列表。单击 **完成** 按钮，退出添加设备流程。
 
-  ![发现设备](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HomeAssistant-ClickDiscoverDevicesButton.png)
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HomeAssistant-AddedDeviceList.png" alt="已添加设备列表" /> 
 
-6. 选择需接入的设备后，点击中间“+”按钮，新增设备会出现在右侧的**已添加设备列表**，并同步显示在左侧设备树的 Home Assistant 下。
+8. 此时，您将在左侧 **协议和设备** 的 Home Assistant 节点下，以及该 Home Assistant 管理页面的设备列表中，看到已成功添加的设备。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HomeAssistant-CheckAddedDevices.png" alt="设备已添加至 Home Assistant 下" /> 
+
 
    
 ## 支持的设备类型

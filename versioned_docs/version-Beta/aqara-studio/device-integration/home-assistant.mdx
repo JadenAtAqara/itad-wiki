@@ -25,24 +25,40 @@ Before you begin, make sure that:
 
 ## Add Home Assistant Ecosystem Devices
 
-1. In the left sidebar, click to enter the **Devices** page. In the device tree on the left, click the "+" button.
+1. In the left sidebar, click to enter the **Devices** page. In the left **Protocols and Devices** panel, click the **...** button and select **Add Protocol**.
 
-  ![Click the addition button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Devices-ClickAddButton.png)
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Devices-AddProtocol.png" alt="Add Protocol" /> 
 
-2.  In the popup, select `Home Assistant` to add the `Home Assistant`.
+2. Select `Home Assistant` in the popup.   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Protocols-ChooseHomeAssistant.png" alt="Select Home Assistant" style={{ width: '60%' }} /> 
 
-  ![Select Home Assistant](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/SelectProtocol-HomeAssistant.png)
+3. In the left **Protocols and Devices** tree, select the newly added `Home Assistant` node, and click its **Protocol Configuration** button.
 
-3. Select the `Home Assistant` folder to enter the Home Assistant management page.
-4. Go to the **Protocol Configuration** tab. In "Basic Configuration", type in the local IP address, port, and the [token](#how-to-get-a-home-assistant-token) of your Home Assistant system.
+  <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/HomeAssistant-ClickProtocolConfiguration.png" alt="Click the Protocol Configuration button" /> 
 
-  ![Configure the Protocol](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en99/HomeAssistant-ProtocolConfiguration.png)
+4. In the **Basic Configuration** section, enter the local IP address and port of your Home Assistant system, as well as the [token](#how-to-get-a-home-assistant-token).
 
-5. Go to the `Add Device` tab and click the "Discover Devices" button. Aqara Studio will automatically find devices from your Home Assistant.
+  <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/HomeAssistant-FillInBasicConfiguration.png" alt="Enter Home Assistant basic configuration" style={{ width: '60%' }} /> 
 
-  ![Discover devices](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/HomeAssistant-ClickDiscoverDevicesButton.png)
+5. In the `Home Assistant` protocol management page, click the **Add Devices** button.
 
-6. After selecting the devices you wish to add, click the "+" button in the center. The newly added devices will appear in the **Added Device List** on the right, and will also be visible under Home Assistant on the left device tree.
+  <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/HomeAssistant-ClickAddDevice.png" alt="Click the Add Devices button" /> 
+
+6. Click the **Discover Devices** button, Aqara Studio will automatically find devices from your Home Assistant.
+
+  ![Discover devices](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/HomeAssistant-ClickDiscoverDevices.png)
+
+7. Select the devices to integrate and click the **+** button in the center.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/HomeAssistant-SelectDevicesAndClickPlus.png" alt="Add discovered devices" /> 
+
+    Newly added devices will appear in the **Added Device List** on the right. Click the **Complete** button to exit the add device process.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/HomeAssistant-AddedDeviceList.png" alt="Added Device List" /> 
+
+8. You will then see the successfully added devices under the Home Assistant node in the left **Protocols and Devices** panel, as well as in the device list on the Home Assistant management page.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/HomeAssistant-CheckAddedDevices.png" alt="Devices have been added to Home Assistant" /> 
 
 ## Supported Device Types
 
