@@ -129,13 +129,13 @@ RS-485 灯光场景控制器接线端口分为三类，电源输入端口\*1、�
 
 ## 产品概述
 
-灯光场景控制器 AW100L 是 Aqara RS-485 情景照明方案的核心控制枢纽，采用工业级 RS-485 总线通信，需配合配电箱网关 AX100M 使用，可稳定驱动臻彩光四色光源板 H1（大灯板）及臻彩光四色光源模组 H1（小灯板）等 SPI-RGBW 淡彩光源。
+灯光场景控制器 AW100L 是 Aqara RS-485 情景照明方案的核心控制枢纽，采用工业级 RS-485 总线通信，需配合 [配电箱网关 AX100M](./../gateways/din-rail-hub-ax100m.mdx) 使用，可稳定驱动臻彩光四色光源板 H1（大灯板）及 [臻彩光四色光源模组 H1](./pastel-light-module-h1.mdx)（小灯板）等 SPI-RGBW 淡彩光源。
 
 控制器提供 4 路 SPI 控制输出，单路最大支持 100 个 IC 像素点，总输出功率 Max 480W，支持多控制器 RS-485 菊花链级联，灵活适配不同规模灯箱/灯膜项目。控制器采用 DC 12-24V 双路电源输入（VIN1/VIN2 各 Max.10A），电源输入 VIN1 对应 VOUT1/2 输出组，VIN2 对应 VOUT3/4 输出组。
 
 基于 Aqara Studio 平台，可将控制器组合成灯箱，支持开关、亮度、颜色控制及静态、动态情景，支持自主上传图片/视频生成动态灯光情景及 AI 场景生成，将灯箱变为沉浸式艺术画布，配合其它 Aqara 智能设备可实现丰富的自动化功能。
 
-- 本设备需配合配电箱网关 AX100M 使用以获得最全功能支持，某些特定功能仅在 Aqara 生态中支持。
+- 本设备需配合 [配电箱网关 AX100M](./../gateways/din-rail-hub-ax100m.mdx) 使用以获得最全功能支持，某些特定功能仅在 Aqara 生态中支持。
 
 ## 销售信息
 
@@ -151,7 +151,7 @@ RS-485 灯光场景控制器接线端口分为三类，电源输入端口\*1、�
 | -- | -- |
 | 安装环境 | 室内使用（干燥环境） |
 | 安装工具 | 螺丝刀、压线钳（建议配 VE 管型端子）、剪钳、卷尺、 自攻螺丝 |
-| 配套设备 | 白羊配电箱网关 AX100M、DC 12-24V 恒压电源（建议 Aqara 电源：100W-KGDY01LM、150W-KGDY02LM、200W-KGDY03LM、300W-KGDY04LM）、臻彩光四色光源板/模组 H1 |
+| 配套设备 | [白羊配电箱网关 AX100M](./../gateways/din-rail-hub-ax100m.mdx)、DC 12-24V 恒压电源（建议 Aqara 电源：100W-KGDY01LM、150W-KGDY02LM、200W-KGDY03LM、300W-KGDY04LM）、臻彩光四色光源板/[模组 H1](./pastel-light-module-h1.mdx) |
 | 电源要求 | DC 12-24V（**不可直接接市电**，需搭配恒压开关电源使用） |
 | 通信线材 | 普通网线（RS-485 通信线） |
 | 信号线材 | 国标 RVVP 双层屏蔽电缆信号线或六类双层屏蔽网线（控制信号传输线） |
@@ -164,31 +164,18 @@ RS-485 灯光场景控制器接线端口分为三类，电源输入端口\*1、�
 :::
 
 - 在安装、接线或维护前，务必关闭电源开关，并确认已完全断电，以避免触电或短路风险；
-
 - 本产品非玩具，请让儿童远离本产品；
-
 - 本产品仅适用于室内干燥环境，配电箱应具备良好的防潮、防尘性能；
-
 - 确保所有接线连接牢固，导线符合电气标准，防止因接线松动或导线过载导致的过热或损坏；
-
 - 请勿将本产品安装在靠近热源的位置；
-
 - 禁止水、油或其他液体进入产品内部，以防止设备损坏或故障；
-
 - 禁止自行拆卸、改装或绕过本产品的安全保护功能，所有维修必须由授权专业人员执行；
-
 - 本产品不能直接连接市电，需使用合适的恒压控制装置；
-
 - 首尾两个控制器的终端匹配电阻拨码开关拨至右端（靠近天线口方向拨），单台时同样拨动；
-
 - 建议使用 VE 管型端子和压线钳将同一端口的待接入线一并压接后接入，便于接线管理；
-
 - 信号输出端连接至灯箱第一块灯板的距离不超过 6m（双层屏蔽线缆通信下）；
-
 - 信号线与负极线需并线走，尽量保持同一长度，减小信号干扰；
-
 - 网关和控制器通过 RS-485 菊花链连接，A/B 信号线无分支、手拉手串接走线；
-
 - 灯箱如使用多个电源供电，需将灯箱系统内所有电源的输出端 24V 负极相连，确保每个电源、灯板信号共地，零电位相等，减少干扰。同一网关控制下的多个灯箱系统也建议将所有电源输出负极相连。
 
 ### 灯箱设备材料数量计算及布局规划
@@ -196,30 +183,23 @@ RS-485 灯光场景控制器接线端口分为三类，电源输入端口\*1、�
 #### 根据灯箱尺寸计算所需灯板数量：
 
 - 灯箱内部深度（灯珠透镜表面到灯膜的距离）建议 10cm ，控制在 8-12cm 范围内；
-
 - 灯板与灯箱内框（灯膜边缘）最大距离建议不超过 4cm ，否则会出现暗区；
-
 - 按每平方米 8 块灯板布局，灯板尺寸 496mm\*296mm ，单边 2mm 公差 ，存在缝隙；
-
 - 若灯箱尺寸非 500mm\*250mm 倍数 ，可适当增大灯板间距 ，建议不超过 3cm ，否则会出现明显暗区；
 
 #### 根据灯板数量计算所需电源数量及供电分布：
 
 - 每块灯板最大功率 36W ，按 40W 做功率预留 ，计算整个灯箱需求的电源数量；
-
 - 为减小信号干扰，保证灯效 ，请使用 Aqara 电源产品：100W 电源-KGDY01LM 、 150W 电源-KGDY02LM 、 200W 电源-KGDY03LM 、 300W 电源-KGDY04LM；
 
 #### 根据灯箱尺寸及灯板布局 ，规划灯板信号进线口位置及补电位置 ，信号及电流走向，计算所需控制器数量：
 
 - 灯板方向以补电缺口为准 ，统一排列摆放方向 ， 以信号输入口 1 作为起始进线口 ， 同一行中若灯板存在反向排列 ，则连接后会出现短路；
-
 - 每个控制器有 4 路 SPI 控制口，每路 SPI 控制 100 个 IC ，一块大灯板上包含 8 给 IC ，所以单路最多连接控制 12 大块灯板；
-
 - 串联灯板供电电压降至 23V 左右需补电，实际约每 4 块大灯板需进行补电·进线口及补电位置尽量选择在灯箱同一侧 ，方便走线及管理；
 
 <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-board-1.png" alt="灯板固定及接线 1" />
 <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-board-2.png" alt="灯板固定及接线 2" />
-lighting-scene-controller-aw100l-board-2.png
 
 ### 灯板固定及接线
 
@@ -228,15 +208,10 @@ lighting-scene-controller-aw100l-board-2.png
 #### 使用配套连接线将灯板连接
 
 - 灯板连接必须遵循向每个 IC 位置相邻方向连接 ，不能跳过或间隔 IC ，否则 APP 或 studio 系统上无法对应 IC 位置 ，导致图效错乱。
-
 - 灯板配套连接线 ，包括①9pin 板间短线 ，②9pin 板间长线 ，③9pin 信号长线 ，④8pin 补电长线 ，如下所示：
-
     - 起始位置的信号进线口使用信号长线 ，24V 正负线接入电源，信号及负极线接入控制器（信号线与负极线需并线走 ，尽量保持同一长度，减小信号干扰）；
-
     - 横向连接灯板用板间短线连接信号进出口；
-
     - 横向末端灯板使用板间长线将灯板同侧进出口自连；纵向连接灯板用板间长线连接信号进出口；
-
     - 需补电灯板在补电口连接补电长线，后接入供电电源。
 
 <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-light-board-connection-1.png" alt="灯板连接 1" />
@@ -252,9 +227,7 @@ lighting-scene-controller-aw100l-board-2.png
 ### 电源接线
 
 - 建议选择 1.5mm 及以上线径的电源线缆，防止载流能力不足，发热过大。
-
 - 将供电范围内的灯板补电线接入同一电源，不超过单电源功率规格。
-
 - 灯箱如使用多个电源供电，需将灯箱系统内所有电源的输出端 24V 负极相连，确保每个电源、灯板信号共地，零电位相等，减少干扰。同一网关控制下的多个灯箱系统也建议将所有电源输出负极相连。
 
 如下图所示：
@@ -266,7 +239,6 @@ lighting-scene-controller-aw100l-board-2.png
 #### 按照控制器接线说明，将电源、网关、控制器相连接：
 
 - 首尾两个控制器的终端匹配电阻拨码开关拨至右端（往靠近天线口方向拨），单台时同样拨动。
-
 - 建议使用 VE 管型端子和压线钳将同一端口的待接入线一并压接后接入，便于接线管理。
 
 <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-connection-1.png" alt="控制器接线 1" />
@@ -279,32 +251,21 @@ lighting-scene-controller-aw100l-board-2.png
 #### 将电源接入 VIN1-GND，或 VIN2-GND，两组电源输入端口的任意一组，给控制器供电。
 
 - 确定信号输出端 1/2/3/4，将对应的 DATA 端口信号线连接至灯板数据输入 DI 口，且将灯板 GND 也连接到控制器的 GND。
-
 - 在双层屏蔽线缆通信下，建议将灯板的 GND 线与屏蔽层的铜线拧紧成一股线再接入控制器的 GND，加强屏蔽能力。
 
 #### 控制器靠近灯箱摆放，输出信号线不宜过长；
 
 - 在双层屏蔽线缆通信下，建议信号输出端连接至灯箱第一块灯板的距离不超过 6m；
-
 - 具体接线见（控制器接线说明），接线示意图如下：
-
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-connection-4.png" alt="控制器接线 4" />
-
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-connection-4.png" alt="控制器接线 4" />
 - VE 管型端子接入控制器端口
-
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-ve.png" alt="控制器接线 VE 管型端子" />
-
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-ve.png" alt="控制器接线 VE 管型端子" />
 - 网关-控制器接线示意
-
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-hub-controller.png" alt="控制器接线 网关-控制器" />
-
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-hub-controller.png" alt="控制器接线 网关-控制器" />
 - 控制器-控制器接线示意
-
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-2-controllers.png" alt="控制器接线 控制器-控制器" />
-
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-2-controllers.png" alt="控制器接线 控制器-控制器" />
 - 接线示意图
-
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-overall-connection.png" alt="控制器接线 整体接线" />
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-overall-connection.png" alt="控制器接线 整体接线" />
 
 ## 使用说明
 
@@ -316,8 +277,7 @@ lighting-scene-controller-aw100l-board-2.png
 
 #### 添加设备
 
-- 添加 AX100M 网关至 Aqara Studio。详情请参考 [Aqara Hub 接入](./../../device-integration/aqara.mdx)。
-
+- 添加 [AX100M 网关](./../gateways/din-rail-hub-ax100m.mdx) 至 Aqara Studio。详情请参考 [Aqara Hub 接入](./../../device-integration/aqara.mdx)。
 - 添加灯光场景控制器 AW100L 至 Aqara Studio。详情请参考 [Aqara RS-485 设备接入](./../../device-integration/aqara-rs-485.mdx)。
 
 #### 创建灯箱
@@ -327,9 +287,9 @@ lighting-scene-controller-aw100l-board-2.png
 灯箱设备配置应当如下：
 - 光源负载设备型号：RGBCW 光源
 - 灯珠类型：RGBW 淡彩灯珠
-- 灯珠协议：臻彩光四色光源板 H1 选 SM5206E；臻彩光四色光源模组 H1 选 SM18635E
+- 灯珠协议：臻彩光四色光源板 H1 选 SM5206E；[臻彩光四色光源模组 H1](./pastel-light-module-h1.mdx) 选 SM18635E
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-led-type.png" alt="灯珠类型" />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/ligthing-scene-controller-aw100l-led-type.png" alt="光源负载设备型号" />
 
 #### 配置从控制器
 
@@ -337,13 +297,9 @@ lighting-scene-controller-aw100l-board-2.png
 
 #### 新建情景（图片/视频）
 
-
 - 在「情景控制」区域点击 **新建情景：**
-
     - **静态情景：**上传图片
-
     - **动态序列：**上传视频
-
 - 上传后保存即可完成情景配置。
 
 详情请参考 [Aqara 设备配置 - 灯箱设备](./../../device-management/aqara-device-configuration/light-boxes.mdx)
@@ -384,9 +340,9 @@ lighting-scene-controller-aw100l-board-2.png
 
 ## 维护保养
 
-1. 定期用干燥软布擦拭产品表面，避免积尘影响使用效果；
-2. 请勿使用化学溶剂清洁产品；
-3. 长期不使用时，请断电存放于干燥环境。
+- 定期用干燥软布擦拭产品表面，避免积尘影响使用效果；
+- 请勿使用化学溶剂清洁产品；
+- 长期不使用时，请断电存放于干燥环境。
 
 ## 支持网关信息
 
@@ -394,7 +350,7 @@ lighting-scene-controller-aw100l-board-2.png
 
 | 参数 | 说明 |
 | -- | -- |
-| 配套网关 | 白羊配电箱网关 AX100M（RS-485 连接） |
+| 配套网关 | [白羊配电箱网关 AX100M](./../gateways/din-rail-hub-ax100m.mdx)（RS-485 连接） |
 
 :::tip
 网关有两种供电方式：
@@ -437,7 +393,7 @@ lighting-scene-controller-aw100l-board-2.png
 
 | 可能原因 | 解决方案 |
     | -- | -- |
-| <ul><li>网关未联网或未正常工作</li><li>控制器电源接线异常</li><li>RS-485 通信线接线错误（A/B 接反、接触不良）</li><li>终端匹配电阻拨码开关未正确设置</li></ul> | <ol><li>确认网关 AX100M 已添加并联网正常；</li><li>检查控制器 DC 12-24V 电源输入是否正常；</li><li>检查 RS-485 通信线 A/B/GND 接线是否正确、牢固；</li><li>确认首尾控制器的终端匹配电阻拨码开关已拨至接通位置。</li></ol> |
+| <ul><li>网关未联网或未正常工作</li><li>控制器电源接线异常</li><li>RS-485 通信线接线错误（A/B 接反、接触不良）</li><li>终端匹配电阻拨码开关未正确设置</li></ul> | <ol><li>确认 [网关 AX100M](./../gateways/din-rail-hub-ax100m.mdx) 已添加并联网正常；</li><li>检查控制器 DC 12-24V 电源输入是否正常；</li><li>检查 RS-485 通信线 A/B/GND 接线是否正确、牢固；</li><li>确认首尾控制器的终端匹配电阻拨码开关已拨至接通位置。</li></ol> |
 
 ### 故障二：某块灯板及后续灯板不亮
 
@@ -461,7 +417,7 @@ lighting-scene-controller-aw100l-board-2.png
 
 ### 灯光场景控制器 AW100L 支持哪些光源？
 
-当前支持臻彩光四色光源板 H1（大灯板，ZCGSSGYB01LM）及臻彩光四色光源模组 H1（小灯板，ZCGSSGYMZ01LM）淡彩光源。
+当前支持臻彩光四色光源板 H1（大灯板，ZCGSSGYB01LM）及 [臻彩光四色光源模组 H1](./pastel-light-module-h1.mdx)（小灯板，ZCGSSGYMZ01LM）淡彩光源。
 
 ### 单个控制器可以连接多少灯板？
 

@@ -107,6 +107,10 @@
     "message": "屏",
     "description": "The label for category 'Screens' in sidebar 'aqaraStudioSidebar'"
   },
+  "sidebar.aqaraStudioSidebar.category.Lighting": {
+    "message": "调光照明",
+    "description": "The label for category 'Lighting' in sidebar 'aqaraStudioSidebar'"
+  },
   "sidebar.aqaraDeveloperSidebar.category.Local API for Studio": {
     "message": "Studio 本地 API",
     "description": "The label for category 'Local API for Studio' in sidebar 'aqaraDeveloperSidebar'"
