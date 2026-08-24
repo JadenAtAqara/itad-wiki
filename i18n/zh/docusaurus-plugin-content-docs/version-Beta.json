@@ -103,6 +103,10 @@
     "message": "控制器",
     "description": "The label for category 'Controllers' in sidebar 'aqaraStudioSidebar'"
   },
+  "sidebar.aqaraStudioSidebar.category.Screens": {
+    "message": "屏",
+    "description": "The label for category 'Screens' in sidebar 'aqaraStudioSidebar'"
+  },
   "sidebar.aqaraDeveloperSidebar.category.Local API for Studio": {
     "message": "Studio 本地 API",
     "description": "The label for category 'Local API for Studio' in sidebar 'aqaraDeveloperSidebar'"
