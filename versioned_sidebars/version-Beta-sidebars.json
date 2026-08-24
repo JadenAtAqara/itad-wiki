@@ -302,7 +302,8 @@
         "tab": "product-knowledge"
       },
       "items": [
-        "aqara-studio/product-knowledge/lighting/lighting-scene-controller-aw100l"
+        "aqara-studio/product-knowledge/lighting/lighting-scene-controller-aw100l",
+        "aqara-studio/product-knowledge/lighting/pastel-light-module-h1"
       ]
     }
   ],
