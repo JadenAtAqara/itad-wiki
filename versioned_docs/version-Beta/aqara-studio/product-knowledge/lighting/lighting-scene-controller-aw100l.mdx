@@ -135,7 +135,7 @@ The gateway and controllers are connected via RS-485 daisy chain. The RS-485 A/B
 
 ## Product Overview
 
-The Lighting Scene Controller AW100L is the core control hub of Aqara's RS-485 scene lighting solution. It adopts industrial-grade RS-485 bus communication and requires use with [AX100M](./../gateways/din-rail-hub-ax100m.mdx). It can stably drive Pastel Light Board H1 (large board) and [Pastel Light Module H1](./pastel-light-module-h1.mdx) (small board) and other SPI-RGBW tinted color light sources.
+The Lighting Scene Controller AW100L is the core control hub of Aqara's RS-485 scene lighting solution. It adopts industrial-grade RS-485 bus communication and requires use with [AX100M](./../gateways/din-rail-hub-ax100m.mdx). It can stably drive [Pastel Light Board H1](./pastel-light-board-h1.mdx) (large board) and [Pastel Light Module H1](./pastel-light-module-h1.mdx) (small board) and other SPI-RGBW tinted color light sources.
 
 The controller provides 4-channel SPI control output, each channel supporting up to 100 IC pixels, with total output power up to Max 480W. It supports multi-controller RS-485 daisy-chain cascading, flexibly adapting to light box/light film projects of different scales. The controller uses DC 12-24V dual power input (VIN1/VIN2 each Max.10A), where VIN1 corresponds to VOUT1/2 output group, and VIN2 corresponds to VOUT3/4 output group.
 
@@ -318,7 +318,7 @@ Create a light box device in Aqara Studio. For more details, please refer to [Li
 The light box device should be configured as follows:
 * Light Source Load Model: RGBCW Light Source
 * LED Type: RGBW Tinted Color LED
-* LED Protocol: Select SM5206E for Pastel Light Board H1; Select SM18635E for [Pastel Light Module H1](./pastel-light-module-h1.mdx)
+* LED Protocol: Select SM5206E for [Pastel Light Board H1](./pastel-light-board-h1.mdx); Select SM18635E for [Pastel Light Module H1](./pastel-light-module-h1.mdx)
 
 #### Configure Sub-controllers
 
@@ -456,7 +456,7 @@ Within the valid Three Guarantees period, you may enjoy free return, exchange, a
 
 ### What light sources does Lighting Scene Controller AW100L support?
 
-Currently supports Pastel Light Board H1 (large board, ZCGSSGYB01LM) and [Pastel Light Module H1](./pastel-light-module-h1.mdx) (small board, ZCGSSGYMZ01LM) tinted color light sources.
+Currently supports [Pastel Light Board H1](./pastel-light-board-h1.mdx) (large board, ZCGSSGYB01LM) and [Pastel Light Module H1](./pastel-light-module-h1.mdx) (small board, ZCGSSGYMZ01LM) tinted color light sources.
 
 ### How many light boards can a single controller connect?
 
