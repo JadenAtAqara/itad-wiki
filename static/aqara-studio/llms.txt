@@ -100,4 +100,5 @@
 - Pastel Light Module H1: https://docs.aqara.com/docs/aqara-studio/product-knowledge/lighting/pastel-light-module-h1
 - Pastel Light Board H1: https://docs.aqara.com/docs/aqara-studio/product-knowledge/lighting/pastel-light-board-h1
 - Pastel Light Strip Controller H1: https://docs.aqara.com/docs/aqara-studio/product-knowledge/lighting/pastel-light-strip-controller-h1
+- Pastel LED Strip H1: https://docs.aqara.com/docs/aqara-studio/product-knowledge/lighting/pastel-led-strip-h1
 
