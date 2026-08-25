@@ -121,9 +121,9 @@ The first controller can power the gateway through VOUT and GND pins (connecting
 The gateway and controllers are connected via RS-485 daisy chain. The RS-485 A/B signals between the gateway and each controller must be wired in a hand-in-hand series without branching. The termination resistor DIP switches on the first and last controllers should be set to the right position (near the antenna port).
 :::
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-rs-485-1.png" alt="RS-485 Communication Port Wiring Diagram 1" />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/lighting-scene-controller-aw100l-rs-485-1.png" alt="RS-485 Communication Port Wiring Diagram 1" />
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/lighting-scene-controller-aw100l-rs-485-2.png" alt="RS-485 通信端口接线图 2" />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/lighting-scene-controller-aw100l-rs-485-2.png" alt="RS-485 Communication Port Wiring Diagram 2" />
 
 
 | No. | Name |
@@ -164,62 +164,48 @@ Based on the Aqara Studio platform, controllers can be combined into light boxes
 This product is a low-voltage input control device. Installation, wiring, and commissioning must be performed by qualified electricians or professionals with relevant experience.**
 :::
 
-*   Before installation, wiring, or maintenance, ensure the power switch is turned off and confirm complete power disconnection to avoid electric shock or short circuit risks;
-    
-*   This product is not a toy; keep away from children;
-    
-*   This product is only suitable for indoor dry environments; the distribution box should have good moisture and dust protection performance;
-    
-*   Ensure all wiring connections are secure and wires meet electrical standards to prevent overheating or damage caused by loose connections or wire overload;
-    
-*   Do not install this product near heat sources;
-    
-*   Prohibit water, oil, or other liquids from entering the product interior to prevent equipment damage or malfunction;
-    
-*   Unauthorized disassembly, modification, or bypassing of safety protection functions is prohibited. All maintenance must be performed by authorized professionals;
-    
-*   This product cannot be directly connected to mains; appropriate constant voltage control devices must be used;
-    
-*   The termination resistor DIP switches on the first and last controllers should be set to the right position (toward antenna port direction); same applies for single-controller setups;
-    
-*   It is recommended to use VE tube terminals and crimping tools to crimp all wires for the same port together for easier wiring management;
-    
-*   The distance from the signal output end to the first light board in the light box should not exceed 6m (with double-shielded cable communication);
-    
-*   Signal wires and negative wires should be routed together, maintaining equal length as much as possible to reduce signal interference;
-    
-*   The gateway and controllers are connected via RS-485 daisy chain; A/B signal wires must be hand-in-hand series connection without branching;
-    
-*   If the light box uses multiple power supplies, connect all 24V negative outputs from all power supplies within the light box system together to ensure common ground for each power supply and light board signal, equalizing zero potential and reducing interference. For multiple light box systems under the same gateway control, it is also recommended to connect all power output negatives together.
+- Before installation, wiring, or maintenance, ensure the power switch is turned off and confirm complete power disconnection to avoid electric shock or short circuit risks;  
+- This product is not a toy; keep away from children;     
+- This product is only suitable for indoor dry environments; the distribution box should have good moisture and dust protection performance;  
+- Ensure all wiring connections are secure and wires meet electrical standards to prevent overheating or damage caused by loose connections or wire overload;
+- Do not install this product near heat sources;
+- Prohibit water, oil, or other liquids from entering the product interior to prevent equipment damage or malfunction;
+- Unauthorized disassembly, modification, or bypassing of safety protection functions is prohibited. All maintenance must be performed by authorized professionals;
+- This product cannot be directly connected to mains; appropriate constant voltage control devices must be used;
+- The termination resistor DIP switches on the first and last controllers should be set to the right position (toward antenna port direction); same applies for single-controller setups;
+- It is recommended to use VE tube terminals and crimping tools to crimp all wires for the same port together for easier wiring management;
+- The distance from the signal output end to the first light board in the light box should not exceed 6m (with double-shielded cable communication);
+- Signal wires and negative wires should be routed together, maintaining equal length as much as possible to reduce signal interference;
+- The gateway and controllers are connected via RS-485 daisy chain; A/B signal wires must be hand-in-hand series connection without branching;  
+- If the light box uses multiple power supplies, connect all 24V negative outputs from all power supplies within the light box system together to ensure common ground for each power supply and light board signal, equalizing zero potential and reducing interference. For multiple light box systems under the same gateway control, it is also recommended to connect all power output negatives together.
     
 
 ### Light Box Equipment Quantity Calculation and Layout Planning
 
 #### Calculate Required Number of Light Boards Based on Light Box Dimensions:
 
-*   Recommended internal depth of light box (distance from LED lens surface to light film): 10cm, controlled within 8-12cm range;
+- Recommended internal depth of light box (distance from LED lens surface to light film): 10cm, controlled within 8-12cm range;
     
-*   Maximum recommended distance between light board and light box inner frame (light film edge): 4cm, otherwise dark zones will appear;
+- Maximum recommended distance between light board and light box inner frame (light film edge): 4cm, otherwise dark zones will appear;
     
-*   Layout at 8 boards per square meter; light board dimensions: 496mm x 296mm, with 2mm tolerance per side, gaps exist;
+- Layout at 8 boards per square meter; light board dimensions: 496mm x 296mm, with 2mm tolerance per side, gaps exist;
     
-*   If light box dimensions are not multiples of 500mm x 250mm, appropriately increase spacing between light boards (recommended not exceeding 3cm), otherwise obvious dark zones will appear;
+- If light box dimensions are not multiples of 500mm x 250mm, appropriately increase spacing between light boards (recommended not exceeding 3cm), otherwise obvious dark zones will appear;
     
 
 #### Calculate Required Number of Power Supplies and Power Distribution Based on Light Board Count:
 
-*   Maximum power per light board: 36W, calculate with 40W power reserve when determining total power supply quantity needed for the entire light box;
-    
-*   To reduce signal interference and ensure lighting quality, please use Aqara power products: 100W Power Supply - KGDY01LM, 150W Power Supply - KGDY02LM, 200W Power Supply - KGDY03LM, 300W Power Supply - KGDY04LM;
+- Maximum power per light board: 36W, calculate with 40W power reserve when determining total power supply quantity needed for the entire light box;
+- To reduce signal interference and ensure lighting quality, please use Aqara power products: 100W Power Supply - KGDY01LM, 150W Power Supply - KGDY02LM, 200W Power Supply - KGDY03LM, 300W Power Supply - KGDY04LM;
     
 
 #### Plan Light Board Signal Entry Point Position and Power Reinjection Position Based on Light Box Dimensions and Light Board Layout, Signal and Current Flow Direction, Calculate Required Number of Controllers:
 
-*   Light board orientation should be based on the power reinjection notch, arranged in uniform direction. Use signal input port 1 as the starting entry point. If light boards in the same row are arranged in reverse direction, short circuit will occur after connection;
+- Light board orientation should be based on the power reinjection notch, arranged in uniform direction. Use signal input port 1 as the starting entry point. If light boards in the same row are arranged in reverse direction, short circuit will occur after connection;
     
-*   Each controller has 4 SPI control ports, each SPI controls 100 ICs. One large light board contains 8 ICs, so single channel can connect maximum 12 large light boards;
+- Each controller has 4 SPI control ports, each SPI controls 100 ICs. One large light board contains 8 ICs, so single channel can connect maximum 12 large light boards;
     
-*   When series-connected light board supply voltage drops to around 23V, power reinjection is needed. Approximately every 4 large light boards require power reinjection. Entry point and reinjection position should preferably be on the same side of the light box for convenient wiring and management;
+- When series-connected light board supply voltage drops to around 23V, power reinjection is needed. Approximately every 4 large light boards require power reinjection. Entry point and reinjection position should preferably be on the same side of the light box for convenient wiring and management;
 
 <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/lighting-scene-controller-aw100l-board-1.png" alt="Light Board Fixing and Wiring 1" />
 
@@ -231,17 +217,12 @@ This product is a low-voltage input control device. Installation, wiring, and co
 
 #### Use Included Connection Cables to Connect Light Boards
 
-*   Light board connection must follow adjacent direction to each IC position; skipping or interval ICs is not allowed, otherwise APP or Studio system cannot map IC positions correctly, causing image display errors.
-    
-*   Light board connection cables include: 1 9pin short inter-board cable, 2 9pin long inter-board cable, 3 9pin long signal cable, 4 8pin long power reinjection cable, as shown below:
-    
-    *   Use long signal cable for starting position signal entry; connect 24V positive/negative to power supply; connect signal and negative wires to controller (signal wire and negative wire should be routed together, maintaining equal length to reduce signal interference);
-        
-    *   Use short inter-board cables for horizontal light board connection between signal input/output ports;
-        
-    *   Use long inter-board cables for horizontal end light board self-connection on same side input/output ports; use long inter-board cables for vertical light board connection between signal input/output ports;
-        
-    *   Connect long power reinjection cable at reinjection port for boards requiring reinjection, then connect to power supply.
+- Light board connection must follow adjacent direction to each IC position; skipping or interval ICs is not allowed, otherwise APP or Studio system cannot map IC positions correctly, causing image display errors.
+- Light board connection cables include: 1 9pin short inter-board cable, 2 9pin long inter-board cable, 3 9pin long signal cable, 4 8pin long power reinjection cable, as shown below:
+    - Use long signal cable for starting position signal entry; connect 24V positive/negative to power supply; connect signal and negative wires to controller (signal wire and negative wire should be routed together, maintaining equal length to reduce signal interference);
+    - Use short inter-board cables for horizontal light board connection between signal input/output ports;
+    - Use long inter-board cables for horizontal end light board self-connection on same side input/output ports; use long inter-board cables for vertical light board connection between signal input/output ports;
+    - Connect long power reinjection cable at reinjection port for boards requiring reinjection, then connect to power supply.
         
 <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/lighting-scene-controller-aw100l-light-board-connection-1.png" alt="Light Board Connection 1" />
 
@@ -276,7 +257,6 @@ As shown below:
 
 <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/lighting-scene-controller-aw100l-controller-connection-3.png" alt="Controller Wiring 3" />
 
-
 #### Connect Power Supply to VIN1-GND, or VIN2-GND, Either Group of Dual Power Input Ports to Power the Controller.
 
 - Determine signal output channels 1/2/3/4, connect corresponding DATA port signal wires to light board data input DI port, and also connect light board GND to controller GND.
@@ -286,7 +266,7 @@ As shown below:
 #### Place Controller Near Light Box; Output Signal Wires Should Not Be Excessively Long;
 
 - With double-shielded cable communication, recommended distance from signal output end to first light board in light box should not exceed 6m;
-- See (Controller Wiring Instructions) for specific wiring; wiring diagram shown below:
+- See ([Terminal Wiring Instructions](#terminal-wiring-instructions)) for specific wiring; wiring diagram shown below:
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-connection-4.png" alt="Controller Wiring 4" />
 - VE Tube Terminal Connected to Controller Port
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/lighting-scene-controller-aw100l-controller-ve.png" alt="Controller Wiring VE Tube Terminal" />
@@ -395,35 +375,35 @@ After-sales service for this product strictly follows the "Three Guarantees" pol
 
 Within the valid Three Guarantees period, you may enjoy free return, exchange, and repair services according to these regulations. Returns, exchanges, and repairs must be processed with invoice.
 
-*   Return: Within 7 days from the day after receipt, return due to quality issues;
+- Return: Within 7 days from the day after receipt, return due to quality issues;
     
-*   Exchange: Within 15 days from the day after receipt, exchange due to quality issues;
+- Exchange: Within 15 days from the day after receipt, exchange due to quality issues;
     
-*   Repair: Within 1 year from the day after receipt, repair due to quality issues.
+- Repair: Within 1 year from the day after receipt, repair due to quality issues.
     
 
 ### Non-Warranty Conditions
 
-*   Unauthorized repair, misuse, collision, negligence, abuse, liquid ingress, accident, modification, incorrect use of non-original accessories, or tearing/altering labels or anti-counterfeit marks;
+- Unauthorized repair, misuse, collision, negligence, abuse, liquid ingress, accident, modification, incorrect use of non-original accessories, or tearing/altering labels or anti-counterfeit marks;
     
-*   Exceeded valid Three Guarantees period;
+- Exceeded valid Three Guarantees period;
     
-*   Damage caused by force majeure;
+- Damage caused by force majeure;
     
-*   Does not meet performance failure conditions listed in "Product Performance Failure Table";
+- Does not meet performance failure conditions listed in "Product Performance Failure Table";
     
-*   Performance failures listed in "Product Performance Failure Table" caused by human factors.
+- Performance failures listed in "Product Performance Failure Table" caused by human factors.
     
 
 ### Product Performance Failure Table
 
-*   Surface cracking or damage due to structural or material factors
+- Surface cracking or damage due to structural or material factors
     
-*   Product cannot power on / cannot light up after powering on
+- Product cannot power on / cannot light up after powering on
     
-*   Indicator light failure
+- Indicator light failure
     
-*   Other factory hardware failures causing inability to use functions normally
+- Other factory hardware failures causing inability to use functions normally
     
 
 ## Troubleshooting Guide
