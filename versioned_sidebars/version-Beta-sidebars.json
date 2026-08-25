@@ -305,7 +305,8 @@
         "aqara-studio/product-knowledge/lighting/lighting-scene-controller-aw100l",
         "aqara-studio/product-knowledge/lighting/pastel-light-module-h1",
         "aqara-studio/product-knowledge/lighting/pastel-light-board-h1",
-        "aqara-studio/product-knowledge/lighting/pastel-light-strip-controller-h1"
+        "aqara-studio/product-knowledge/lighting/pastel-light-strip-controller-h1",
+        "aqara-studio/product-knowledge/lighting/pastel-led-strip-h1"
       ]
     }
   ],
