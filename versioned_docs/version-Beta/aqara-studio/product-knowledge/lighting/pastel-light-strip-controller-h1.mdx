@@ -191,21 +191,21 @@ If you integrate device to third-party ecosystem (such as Apple, Google or Amazo
 | Function | Description |
 | --- | --- |
 | Static Scene | Can solidify and store specific combinations of white light color temperature, RGB colored light, and brightness values as dedicated scenes for one-click recall. Supports copy, edit, delete. Custom scene upper limit: matter - 30, zigbee - 26 |
-| Dynamic Sequence | Supports multi-keyframe setting. Can customize keyframes with:<br />- **Color Temperature** (1800K-12000K, default 5500K) / **Color**<br />    <br />- **Brightness** (1-100%, default 50%)<br />    <br />- **Transition Time** (0-59 min 59 sec, granularity 100ms)<br />    <br />- **Duration** (0-59 min 59 sec, granularity 100ms)<br />    <br />- And **Loop Mode** (continuous loop / 1-99 times)<br />    <br />To generate flowing white light effect sequences, sequence quantity up to 20 items |
-| Colored Light Dynamic Scene | Supports selecting colors through color card/palette to generate specific effects. Can customize:<br />- **Sequence Parameters**: Color sequence quantity up to 8 items<br />    <br />- **Brightness**: 1% - 100% (default 50%)<br />    <br />- **Speed**: 1% - 100% (default 50%)<br />    <br />- **Dynamic Effects**: Supports **Breathing**, **Candle**, **Rainbow**, **Strobe** 4 modes<br />    <br />(**Safety Warning**: Strobe mode contains fast flashing light effects; photosensitive epilepsy patients should use with caution) |
+| Dynamic Sequence | Supports multi-keyframe setting. Can customize keyframes with:<ul><li><strong>Color Temperature</strong> (1800K-12000K, default 5500K) / <strong>Color</strong></li><li><strong>Brightness</strong> (1-100%, default 50%)</li><li><strong>Transition Time</strong> (0-59 min 59 sec, granularity 100ms)</li><li><strong>Duration</strong> (0-59 min 59 sec, granularity 100ms)</li><li><strong>Loop Mode</strong> (continuous loop / 1-99 times)</li></ul>To generate flowing white light effect sequences, sequence quantity up to 20 items |
+| Colored Light Dynamic Scene | Supports selecting colors through color card/palette to generate specific effects. Can customize:<ul><li><strong>Sequence Parameters</strong>: Color sequence quantity up to 8 items</li><li><strong>Brightness</strong>: 1% - 100% (default 50%)</li><li><strong>Speed</strong>: 1% - 100% (default 50%)</li><li><strong>Dynamic Effects</strong>: Supports **Breathing**, **Candle**, **Rainbow**, **Strobe** 4 modes</li><li><strong>Safety Warning</strong>: Strobe mode contains fast flashing light effects; photosensitive epilepsy patients should use with caution</li></ul> |
 
 ### Configuration Options
 
 | Configuration Item | Description |
 | --- | --- |
 | Communication Protocol | Zigbee (factory default) / Thread |
-| Power-On State | Four modes available:<br />- Power-off Memory (default): Maintain state before power-off after re-powering.<br />    <br />- Power-on Device Energized: Turn on relay after re-powering. <br />    <br />- Power-on Device De-energized: Turn off relay after re-powering.<br />    <br />- Switch State Reverse: Opposite to state before power-off. |
+| Power-On State | Four modes available:<ul><li>Power-off Memory (default): Maintain state before power-off after re-powering.</li><li>Power-on Device Energized: Turn on relay after re-powering.</li><li>Power-on Device De-energized: Turn off relay after re-powering.</li><li>Switch State Reverse: Opposite to state before power-off.</li></ul> |
 | On/Off Transition Time | Default value: 1500ms, maximum range 0-10s. |
-| Transition Curve Configuration | Light transitions to target state with set curve effect<br />Adjustment method:<br />- Curve dragging, curvature updates in real-time after adjustment;<br />    <br />- Custom value, range: 0.2~6. a=0.2~1: fast then slow; a=1: uniform; a=1~6: slow then fast \*Supports two decimal places (step 0.01) |
+| Transition Curve Configuration | Light transitions to target state with set curve effect<br />Adjustment method:<ul><li>Curve dragging, curvature updates in real-time after adjustment;</li><li>Custom value, range: 0.2&#126;6.<ul><li>a=0.2&#126;1: fast then slow;</li><li>a=1: uniform;</li><li>a=1&#126;6: slow then fast</li><li><strong>Supports two decimal places (step 0.01)</strong></li></ul></li></ul> |
 | Initial Brightness Configuration | Supports 1-50% range adjustment, default 1%, step 1%. After configuring initial brightness for power-on, light will execute transition effect from configured value as initial brightness to final state when turning on (when last power-off brightness is lower than configured initial brightness, light turns on directly at last power-off brightness without transition time) |
 | Dimming Range Configuration | Click to enter to set maximum and minimum brightness of light. After setting, brightness range 1-100% on device homepage and automation components respectively correspond to maximum and minimum illuminance range settings |
 | Find Device | Upon clicking, device flashes or beeps |
-| LED Strip Model | Must select light source model before use, default output parameter definition, skip directly only when default value.<br />Model list:<br />\* DCLBDD01LM |
+| LED Strip Model | Must select light source model before use, default output parameter definition, skip directly only when default value.<br />Model list:<ul><li>DCLBDD01LM</li></ul> |
 
 ### Button Instructions
 
@@ -233,7 +233,7 @@ This product requires use with Aqara gateway for full functionality support. Cer
 
 | Parameter | Description |
 | --- | --- |
-| Aqara Gateway Support | - GX300M<br />    <br />- AX100M<br />    <br />- GX100M<br />    <br />- M300<br />    <br />- M200<br />    <br />- AXI00S<br />    <br />- GR100S |
+| Aqara Gateway Support | <ul><li>GX300M</li><li>AX100M</li><li>GX100M</li><li>M300</li><li>M200</li><li>AXI00S</li><li>GR100S</li></ul> |
 
 ## Automation Information
 
