@@ -101,4 +101,7 @@
 - Pastel Light Board H1: https://docs.aqara.com/docs/aqara-studio/product-knowledge/lighting/pastel-light-board-h1
 - Pastel Light Strip Controller H1: https://docs.aqara.com/docs/aqara-studio/product-knowledge/lighting/pastel-light-strip-controller-h1
 - Pastel LED Strip H1: https://docs.aqara.com/docs/aqara-studio/product-knowledge/lighting/pastel-led-strip-h1
+- Pastel Spotlight/Downlight H1: https://docs.aqara.com/docs/aqara-studio/product-knowledge/lighting/pastel-spotlight-downlight-h1
+- Track Light V1 Series: https://docs.aqara.com/docs/aqara-studio/product-knowledge/lighting/track-light-v1-series
+- Spotlight/Downlight T2 Pro Series: https://docs.aqara.com/docs/aqara-studio/product-knowledge/lighting/spotlight-downlight-t2-pro-series
 

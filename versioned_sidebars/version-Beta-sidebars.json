@@ -306,7 +306,10 @@
         "aqara-studio/product-knowledge/lighting/pastel-light-module-h1",
         "aqara-studio/product-knowledge/lighting/pastel-light-board-h1",
         "aqara-studio/product-knowledge/lighting/pastel-light-strip-controller-h1",
-        "aqara-studio/product-knowledge/lighting/pastel-led-strip-h1"
+        "aqara-studio/product-knowledge/lighting/pastel-led-strip-h1",
+        "aqara-studio/product-knowledge/lighting/pastel-spotlight-downlight-h1",
+        "aqara-studio/product-knowledge/lighting/track-light-v1-series",
+        "aqara-studio/product-knowledge/lighting/spotlight-downlight-t2-pro-series"
       ]
     }
   ],
