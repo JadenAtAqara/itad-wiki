@@ -94,6 +94,7 @@
 - Hub AX200M: https://docs.aqara.com/docs/aqara-studio/product-knowledge/gateways/hub-ax200m
 - Presence Sensor PR330P: https://docs.aqara.com/docs/aqara-studio/product-knowledge/sensors/presence-sensor-pr330p
 - Spatial Multi-Sensor FP400: https://docs.aqara.com/docs/aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400
+- Spatial Multi-Sensor FP400 Pro: https://docs.aqara.com/docs/aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400-pro
 - DIN Rail Module (4 Channels) AW110K: https://docs.aqara.com/docs/aqara-studio/product-knowledge/controllers/din-rail-module-4-channels-aw110k
 - Panel Hub AX150S: https://docs.aqara.com/docs/aqara-studio/product-knowledge/screens/panel-hub-ax150s
 - Lighting Scene Controller AW100L: https://docs.aqara.com/docs/aqara-studio/product-knowledge/lighting/lighting-scene-controller-aw100l
