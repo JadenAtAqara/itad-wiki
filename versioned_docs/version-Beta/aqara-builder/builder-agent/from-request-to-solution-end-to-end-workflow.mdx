@@ -9,13 +9,22 @@ keywords: ["Aqara Docs", "Aqara Builder", "Builder Agent", "End-to-End Workflow"
 
 A complete end-to-end spatial intelligence solution design typically follows these steps:
 
-```
-① Create project → ② Floor plan recognition (spatial parsing)
-→ ③ Device Recommendation Agent (first on stage)
-→ ④ Scene Generation Agent (second on stage)
-→ ⑤ Automation Generation Agent (third on stage)
-→ ⑥ Generate solution package
-→ ⑦ One-click deploy to Aqara Studio → Installer uses it
+```mermaid
+flowchart TD
+    A[① Create Project]
+    B[② Floor Plan Recognition (Spatial Parsing)]
+    C[③ Device Recommendation Agent (First on Stage)]
+    D[④ Scene Generation Agent (Second on Stage)]
+    E[⑤ Automation Generation Agent (Third on Stage)]
+    F[⑥ Generate Solution Package]
+    G[⑦ One-click Deploy to Aqara Studio<br/>Installer Uses It]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
 ```
 
 **What each step does:**

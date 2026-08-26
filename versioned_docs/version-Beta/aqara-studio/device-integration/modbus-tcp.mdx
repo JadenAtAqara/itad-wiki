@@ -15,14 +15,31 @@ Before you begin, please make sure:
 
 ## Add a Modbus TCP Device
 
-1. Click the **Devices** page in the left sidebar. In the device tree on the left, click the “+” button.   
-  ![Click the addition button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Devices-ClickAddButton.png)
+1. In the left sidebar, click to enter the **Devices** page. In the left **Protocols and Devices** panel, click the **...** button and select **Add Protocol**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Devices-AddProtocol.png" alt="Add Protocol" /> 
 
 2. Select `Modbus TCP` in the popup.   
-    ![Select Modbus](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Devices-SelectModbus.png)
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Protocols-ChooseModbusTCP.png" alt="Select Modbus TCP" style={{ width: '60%' }} /> 
 
-3. Click `Modbus TCP`, switch to **Add Device** page, fill in and save the following parameters:   
-  ![Add a Modbus Device](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Devices-AddModbusDevice.png)
+3. In the left **Protocols and Devices** tree, select the newly added **Modbus TCP** node, click the **Protocol Configuration** button, you can set the advanced configuration. Once the configuration is complete, click the **Close** button:   
+    ![Click Protocol Configuration Button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/ModbusTCP-ClickProtocolConfiguration.png)
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/ModbusTCP-AdvancedConfiguration.png" alt="Advanced Configuration" style={{ width: '60%' }} />
+
+    | Parameter             | Description |
+    |-----------------------|-------------|
+    | Enable/Disable Device | Note: If disabled, this device will not be available. |
+    | Float Byte Order      | The byte order used for 32-bit float values. Supported orders:<ul><li>Order BADC</li><li>Order ABCD (default)</li><li>Order CDAB</li><li>Order DCBA</li></ul> |
+    | Long Byte Order       | The byte order for 64-bit long integer values. Supported orders:<ul><li>Order BADC</li><li>Order ABCD (default)</li><li>Order CDAB</li><li>Order DCBA</li></ul> |
+
+4. Click the **Add Device** button to enter the add process.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/ModbusTCP-ClickAddDevice.png" alt="Click Add Device Button" />
+
+5. In the step 1, configure the device configuration and advanced configuration of the target Modbus TCP device. Once finished, click the **Next** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/ModbusTCP-AddDeviceStep1.png" alt="Add Device Step 1" />
 
   - Device Configuration:
 
@@ -35,85 +52,14 @@ Before you begin, please make sure:
 
   - Advanced Configuration: 
 
-    <table>
-    <thead>
-        <tr>
-        <th colspan="2">Parameter</th>
-        <th>Description</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-        <td rowspan="2">Ping Address</td>
-        <td>Address Format</td>
-        <td>The <strong>holding register</strong> address used to check if this Modbus device works properly. Supported formats are: <ul><li>Hexadecimal</li><li>Decimal</li><li>Standard Modbus Address</li></ul></td>
-        </tr>
-        <tr>
-        <td>Address</td>
-        <td>The actual <strong>holding register</strong> address.</td>
-        </tr>
-        <tr>
-        <td colspan="2">Rx Process Mode</td>
-        <td>Choose how received data is processed:<ul><li><strong>Byte</strong>: Byte stream mode.</li><li><strong>Packet</strong>: Packet mode.</li></ul></td>
-        </tr>  
-        <tr>
-        <td colspan="2">Use Force MultIPle Coil</td>
-        <td>Whether to use the "Force Multiple Coils" command to write multiple coils (Modbus function code 15).</td>
-        </tr>
-        <tr>
-        <td colspan="2">Use Preset Multiple Register</td>
-        <td>Whether to use the "Preset Multiple Registers" command to write multiple holding registers (Modbus function code 16).</td>
-        </tr>
-        <tr>
-        <td colspan="2">Float Byte Order</td>
-        <td>The byte order used for 32-bit float values. Only <code>Order1032</code> and <code>Order3210</code> are supported.</td>
-        </tr>
-        <tr>
-        <td colspan="2">Long Byte Order</td>
-        <td>The byte order for 64-bit long integer values. Only <code>Order1032</code> and <code>Order3210</code> are supported.</td>
-        </tr>
-        <tr>
-        <td rowspan="2">Input Register Base Address</td>
-        <td>Address Format</td>
-        <td>The format of input register (Modbus function code 04: Read Input Registers) offset address. Supported options:<ul><li>Hexadecimal</li><li>Decimal</li><li>Standard Modbus Address</li></ul>If you are not sure what an offset address is, please see <a href="#what-is-an-offset-address">What is an Offset Address?</a> below.</td>
-        </tr>
-        <tr>
-        <td>Address</td>
-        <td>The offset address.</td>
-        </tr>
-        <tr>
-        <td rowspan="2">Holding Register Base Address</td>
-        <td>Address Format</td>
-        <td>The format of holding register (Modbus function code 03: Read Holding Registers) offset address. The supported formats are the same as those for Input Register Offset Address.</td>
-        </tr>
-        <tr>
-        <td>Address</td>
-        <td>The offset address.</td>
-        </tr>
-        <tr>
-        <td rowspan="2">Coil Status Base Address</td>
-        <td>Address Format</td>
-        <td>The format of coil status (Modbus function code 01: Read Coils) offset address. Supported formats are the same as Input Register Offset Address.</td>
-        </tr>
-        <tr>
-        <td>Address</td>
-        <td>The offset address.</td>
-        </tr>
-        <tr>
-        <td rowspan="2">Input Status Base Address</td>
-        <td>Address Format</td>
-        <td>The format of discrete input (Modbus function code 02: Discrete Inputs) offset address. Supported formats are the same as Input Register Offset Address.</td>
-        </tr>
-        <tr>
-        <td>Address</td>
-        <td>The offset address</td>
-        </tr>
-        <tr>
-        <td colspan="2">Enable/Disable Device</td>
-        <td>Note: If disabled, this device will not be available.</td>
-        </tr>  
-    </tbody>
-    </table>
+    | Parameter Name | Required | Description |
+    | --- | --- | --- |
+    | Use Force MultIPle Coil | ✔ | Whether to use the "Force Multiple Coils" command to write multiple coils (Modbus function code 15). |
+    | Use Preset MultIPle Register | ✔ | Whether to use the "Preset Multiple Registers" command to write multiple holding registers (Modbus function code 16). |
+    | Float Byte Order | ✔ | The byte order used for 32-bit float values. Supported orders:<ul><li>Order BADC</li><li>Order ABCD (default)</li><li>Order CDAB</li><li>Order DCBA</li></ul> |
+    | Long Byte Order | ✔ | The byte order for 64-bit long integer values. Supported orders:<ul><li>Order BADC</li><li>Order ABCD (default)</li><li>Order CDAB</li><li>Order DCBA</li></ul> |
+    | Overwrite Network Configuration | ✔ | Whether to overwrite the network configuration. If not enabled, the network configuration will be used. |
+    | Rx Process Mode | ✔ | Choose how received data is processed:<ul><li><strong>Byte</strong>: Byte stream mode.</li><li><strong>Packet</strong>: Packet mode.</li></ul> |
 
 4. In the "Add Point" page, click the **+** button in the “Type selection” area to add a point.   
     ![Click Plus button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Modbus-ClickPlusButton.png)
