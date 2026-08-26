@@ -16,14 +16,33 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "Modbus TCP 设备接
 
 ## 添加 Modbus TCP 设备
 
-1. 在左侧侧边栏点击进入**设备管理**页面。在左侧设备树单击“+”按钮。   
-  ![单击添加按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-ClickAddButton.png)
+1. 在左侧侧边栏点击进入**设备管理**页面。在左侧 **协议和设备** 单击 **...** 按钮，选择 **添加协议**。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-AddProtocol.png" alt="添加协议" /> 
 
 2. 在弹窗中选择 `Modbus TCP`，以添加 `Modbus TCP`。   
-    ![选择 Modbus](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-SelectModbus.png)
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Protocols-ChooseModbusTCP.png" alt="选择 Modbus TCP" style={{ width: '60%' }} /> 
 
-3. 单击 Modbus TCP，切换至 **添加设备** 选项卡，填写并保存如下参数：    
-  ![添加 Modbus 设备](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-AddModbusDevice.png)
+3. （可选）在左侧 **协议和设备** 树选择新增的 **Modbus TCP** 节点，选择 **协议配置** 按钮，即可设置高级配置。配置完成后即可关闭此弹窗：    
+    
+    ![单击协议配置按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/ModbusTCP-ClickProtocolConfiguration.png)
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/ModbusTCP-AdvancedConfiguration.png" alt="高级配置" style={{ width: '60%' }} />
+
+    | 参数名称 | 说明 |
+    | --- | --- |
+    |启用/禁用该设备 | 注意：禁用后该设备将不可用。|
+    |浮点数字节序 | 32 位浮点数的读写顺序，支持如下：<ul><li>Order BADC</li><li>Order ABCD（默认）</li><li>Order CDAB</li><li>Order DCBA</li></ul>。|
+    |长整型字节序 | 64 位长整型字节顺序，支持如下：<ul><li>Order BADC</li><li>Order ABCD（默认）</li><li>Order CDAB</li><li>Order DCBA</li></ul>。|
+
+4. 单击**添加设备**按钮，进入添加流程。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/ModbusTCP-ClickAddDevice.png" alt="单击添加设备按钮" />
+
+5. 在步骤 1 中配置目标 Modbus TCP 设备的设备配置和高级配置。完成后，单击**下一步**按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/ModbusTCP-AddDeviceStep1.png" alt="添加设备步骤 1" />
+
 
   - 设备配置：
 
@@ -31,90 +50,19 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "Modbus TCP 设备接
     | --- | --- | --- |
     | 设备名称 | ✔ | 您自定义的设备名称。  |
     | 设备地址 | ✘ | 此设备从站地址（单位标识符），范围 0~255。 |
-    | IP地址 | ✔ | 此设备的 IP 地址。 |
+    | IP 地址 | ✔ | 此设备的 IP 地址。 |
     | 端口 | ✔ | Modbus TCP 通信端口，默认 502。 |
 
   - 高级配置：
   
-    <table>
-    <thead>
-        <tr>
-        <th colspan="2">参数</th>
-        <th>说明</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-        <td rowspan="2">Ping地址</td>
-        <td>地址格式</td>
-        <td>用于检测此 Modbus 设备正常工作的<strong>保持寄存器</strong>地址，支持以下格式：<ul><li>十六进制</li><li>十进制</li><li>标准 Modbus 地址</li></ul></td>
-        </tr>
-        <tr>
-        <td>地址</td>
-        <td>实际的<strong>保持寄存器</strong>地址数值。</td>
-        </tr>
-        <tr>
-        <td colspan="2">接收处理模式</td>
-        <td>接收数据处理模式，支持以下值：<ul><li><strong>Byte</strong>：字节流模式。</li><li><strong>Packet</strong>：报文模式。</li></ul></td>
-        </tr>  
-        <tr>
-        <td colspan="2">是否启用批量写入线圈指令</td>
-        <td>是否使用 "Force Multiple Coils" 指令写多个线圈（对应 Modbus 协议中的功能码 15）。</td>
-        </tr>
-        <tr>
-        <td colspan="2">是否启用批量写入寄存器指令</td>
-        <td>是否使用 "Preset Multiple Registers" 指令写多个保持寄存器（对应 Modbus 协议中的功能码 16）。</td>
-        </tr>
-        <tr>
-        <td colspan="2">浮点数字节序</td>
-        <td>32 位浮点数的读写顺序，仅支持<code>Order1032</code>与<code>Order3210</code>。</td>
-        </tr>
-        <tr>
-        <td colspan="2">长整型字节序</td>
-        <td>64 位长整型字节顺序，仅支持<code>Order1032</code>与<code>Order3210</code>。</td>
-        </tr>
-        <tr>
-        <td rowspan="2">输入寄存器偏移地址</td>
-        <td>地址格式</td>
-        <td>输入寄存器（对应 Modbus 协议中的功能码 04：Read Input Registers）偏移地址的格式，支持选项如下：<ul><li>十六进制</li><li>十进制</li><li>标准Modbus地址</li></ul>如果您不了解什么是偏移地址，请参考下文 <a href="#什么是偏移地址">什么是偏移地址</a>。</td>
-        </tr>
-        <tr>
-        <td>地址</td>
-        <td>偏移地址。</td>
-        </tr>
-        <tr>
-        <td rowspan="2">保持寄存器偏移地址</td>
-        <td>地址格式</td>
-        <td>保持寄存器（对应 Modbus 协议中的功能码 03：Read Holding Registers）偏移地址的格式，支持格式与"输入寄存器偏移地址"相同。</td>
-        </tr>
-        <tr>
-        <td>地址</td>
-        <td>偏移地址。</td>
-        </tr>
-        <tr>
-        <td rowspan="2">线圈状态偏移地址</td>
-        <td>地址格式</td>
-        <td>线圈状态（对应 Modbus 协议中的功能码 01：Read Coils）偏移地址的格式，支持格式与"输入寄存器偏移地址"相同。</td>
-        </tr>
-        <tr>
-        <td>地址</td>
-        <td>偏移地址。</td>
-        </tr>
-        <tr>
-        <td rowspan="2">离散输入偏移地址</td>
-        <td>地址格式</td>
-        <td>离散输入（对应 Modbus 协议中的功能码 02：Discrete Inputs）偏移地址的格式，支持格式与"输入寄存器偏移地址"相同。</td>
-        </tr>
-        <tr>
-        <td>地址</td>
-        <td>偏移地址。</td>
-        </tr>
-        <tr>
-        <td colspan="2">启用/禁用该设备</td>
-        <td>注意：禁用后该设备将不可用。</td>
-        </tr>  
-    </tbody>
-    </table>
+    | 参数名称 | 是否必填 | 说明 |
+    | --- | --- | --- |
+    | 是否启用批量写入线圈指令 | ✔ | 是否使用 "Force Multiple Coils" 指令写多个线圈（对应 Modbus 协议中的功能码 15）。 |
+    | 是否启用批量写入寄存器指令 | ✔ | 是否使用 "Preset Multiple Registers" 指令写多个保持寄存器（对应 Modbus 协议中的功能码 16）。 |
+    | 浮点数字节序 | ✔ | 32 位浮点数的读写顺序，支持如下：<ul><li>Order BADC</li><li>Order ABCD（默认）</li><li>Order CDAB</li><li>Order DCBA</li></ul>。 |
+    | 长整型字节序 | ✔ | 64 位长整型字节顺序，支持如下：<ul><li>Order BADC</li><li>Order ABCD（默认）</li><li>Order CDAB</li><li>Order DCBA</li></ul>。 |
+    | 是否覆盖网络配置 | ✔ | 不开启则使用 network 的字节序配置，当前字节序配置无效。 |
+    | rxProcessMode | ✔ | 接收数据处理模式，支持以下值：<ul><li>Byte</li><li>Packet</li></ul>。 |
 
 4. 在“配置功能点”页面，在`类型选择`区域单击 **+** 按钮，以添加一个功能点。   
     ![点击添加按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Modbus-ClickPlusButton.png)
