@@ -272,7 +272,8 @@
       },
       "items": [
         "aqara-studio/product-knowledge/sensors/presence-sensor-pr330p",
-        "aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400"
+        "aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400",
+        "aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400-pro"
       ]
     },
     {
