@@ -19,59 +19,57 @@ Before using remote access, please ensure that you have [connected to Aqara Clou
 
     ![Enter Builder Lab](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/PluginCenter-EnterBuilderLab.png)
 
-2. From the left sidebar, go to **Spaces**, then select the **Region** you chose when logging in with your Aqara account during [Cloud Connect](./cloud.mdx).
+2. Select your avatar in the top navigation bar, then select **Studio Manager** from the dropdown list.
 
-    Switch to the corresponding **Space**, find the device that matches your Aqara Studio IP, and click its **Connect** button to enter the remote access interface of that Aqara Studio.
+    ![Select Studio Manager](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/RemoteAccess-EnterStudioManager.png)
 
-    ![Connect to Aqara Studio](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/RemoteAccess-Connect.png)
+3. Select the **Region** you chose when logging in with your Aqara account during [Cloud Connect](./cloud.mdx).
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/RemoteAccess-SelectARegion.png" alt="Select a region" style={{width: "60%"}} />
+
+4. After entering Studio Manager, switch to the **Studios** tab. Click the Aqara Studio that you want to access remotely.
+
+    ![Connect to Aqara Studio](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/RemoteAccess-SwitchToStudiosAndSelectAStudio.png)
+
+5. In the popup, click **Console** to remotely access the Aqara Studio.
+
+    ![Click the Console button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/RemoteAccess-ClickConsole.png)
+
+    ![Aqara Studio remote access console](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/RemoteAccess-RealAccess.png)
 
     :::tip
     You can also use an existing local user account to log in to the remote access address. The permissions granted will be exactly the same as those for local access. For details, please refer to [Local User Management - Local User Roles](./user.mdx#local-user-roles).
     :::
 
-## Invite Other Users
+## Share with Other Aqara Users
 
-1. To invite other Aqara users to access your Aqara Studio, first go to [Aqara Builder Lab](https://builder.aqara.com/lab) and create a new space (not **My Home**).
+To invite other Aqara users to remotely access your Aqara Studio, follow these steps:
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-NewSpace.png" alt="Create a space" />
+1. After entering Studio Manager, switch to the **Studio** tab. Click the Aqara Studio that you want to share for remote access.
 
-    Click the space dropdown to see the newly created space.
+    ![Connect to Aqara Studio](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/RemoteAccess-SwitchToStudiosAndSelectAStudio.png)
 
-2. Next, migrate your Aqara Studio from the **My Home** space to the newly created space.
+2. In the popup, click the **Share** button.
 
-    Find your Aqara Studio, and click the **Transfer Ownership** button.
+    ![Click the Share button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/RemoteAccess-ClickShare.png)
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-TransferOwnership.png" alt="Transfer Aqara Studio" />
+3. In the popup, select the role to assign to the invited user and the expiration time of the invitation link.
 
-    In the popup, select the newly created space and click **Next**.
+    ![Select a role and expiration date](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/RemoteAccess-SelectARoleAndExpirationDate.png)
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-SelectSpace.png" alt="Select a space" style={{width: "60%"}} />
+4. Click **Copy** to share the link with other Aqara users.
 
-    Confirm the transfer details in the popup, then click **Confirm and Transfer** to complete the migration.
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/RemoteAccess-CopyTheLink.png" alt="Copy the link" style={{width: "60%"}} />
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-ConfirmTransfer.png" alt="Confirm transfer" style={{width: "60%"}}/>
+5. After the invited user clicks the link, they will see a page for requesting access and need to click **Request**.
 
-3. From the space dropdown, select **Manage Spaces**.
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/RemoteAccess-Request.png" alt="Request access" style={{width: "60%"}} />
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-ManageSpace.png" alt="Manage spaces" />
+6. In Studio Manager, open the Studio details again, view **Studio Member**, find the request, and click **Approve**.
 
-4. In the **Space** popup, select the newly created space and click **Invite Members**.
+    ![Approve the request](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/RemoteAccess-ApproveRequest.png)
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-SpaceList.png" alt="Select the newly created space in the space list and invite members" />
-
-5. In the popup, enter the **email address** of an Aqara user, and assign their **access** (`Operator` or `Admin`; for permission details, see [Remote User Roles](#remote-user-roles)).
-
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-FillInAccountAndAccess.png" alt="Enter an email address and assign permission in the popup" style={{width: "50%"}} />
-
-6. After the **invited user** receives the invitation email, they click the link in the email to go to [Aqara Builder](https://builder.aqara.com).
-
-    Enter **Builder Lab** from the left menu. If there is a new invitation, an in-app notification will appear; click **Agree** to join the space.
-
-    ![In-app notification for a new invitation](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-InvitationNotification.png)
-
-7. After the **invited user** goes to **Space** from the left sidebar, they find the space they just joined, locate the device that matches your Aqara Studio IP, and click its **Connect** button to access your Aqara Studio remotely.
-
-    ![Invited user accesses Aqara Studio](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Builder-RemoteAccessForOtherUser.png)
+7. The invited user can then see the Aqara Studio under the **Studio Manager > Studio** tab and remotely access it. For details, see [Steps to Access](#steps-to-access).
 
 ## Remote User Roles
 
