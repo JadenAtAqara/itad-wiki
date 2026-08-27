@@ -12,7 +12,7 @@ Before starting to use the API v1, you need to [obtain the Studio’s access add
 
 ## Obtain Required Information
 
-Before using the API v1, you must first get a Studio access address and Token. These details are used for composing the request endpooint and for authentication.
+Before using the API v1, you must first get a Studio access address and Token. These details are used for composing the request endpoint and for authentication.
 
 ### Obtain Access Address
 
@@ -23,8 +23,8 @@ You can access Aqara Studio through any of the following three types of addresse
 
 The methods to obtain each type are as follows:
 
-- **IP address**: Go to the **Settings** page from the left navigation bar. In the sidebar, choose **Local Settings** to view the **IP address**.
-    ![IP Address Acquisition](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Settings-GetIP.png)
+- **IP address**: Go to the **Settings** page from the left navigation bar. In the sidebar, choose **Network Settings** to view the **IP address** in the current network mode.
+    ![IP Address Acquisition](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeveloperGuide-FindIPAddress.png)
 - **Host access domain**: See the [Access via LAN Domain Name](./local-domain-name-access.mdx) document for more information.
 - **Remote access address**: See the [Remote Access](./remote-access.mdx) document for more details.
 
@@ -32,9 +32,9 @@ The methods to obtain each type are as follows:
 
 Follow these steps:
 
-1. In the left sidebar, navigate to the “Developer” page. In the **Data Export API** section, click the **New Token** button.
+1. In the left sidebar, navigate to the “Developer” page. In the **Open API & MCP Access** section, enable the service and click the **New Token** button.
 
-    ![Click New Token Button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Developer-NewToken.png)
+    ![Click New Token Button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeveloperGuide-EnableTheServiceAndCreateAToken.png)
 
 2. In the popup, define the token name and validity period. Click the **Confirm** button.
 
@@ -42,14 +42,33 @@ Follow these steps:
 
     Afterwards, you will see a popup indicating the Token was created successfully and displaying the token.
 
-3. In the **Data Export API** section, you can see the newly added token entry. Click the copy icon to obtain the token.
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeveloperGuide-NewTokenCreatedSuccessfully.png" alt="Token Created Successfully" style={{width: '80%'}} />
 
-    ![Copy Token](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Developer-CopyToken.png)
+3. In the **Open API & MCP Access** section, you can see the newly added Token entry.
 
-4. To restrict the API access permissions of the Token, click the **…** icon. In the **API Configuration** popup, uncheck the APIs you do not need, then click the **Confirm** button.
+4. (Optional) To restrict the API access permissions of this Token, click **… > API Configuration**.
+
     ![API Configuration](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Token-ConfigureAPIs.png)
-    
-    ![Uncheck Unneeded APIs](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Token-Uncheck.png)
+
+    In the **API Configuration** popup, uncheck the APIs you do not need, then click the **Confirm** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Token-Uncheck.png" alt="Uncheck unneeded API endpoints" style={{width: '80%'}} />
+
+5. (Optional) In addition to calling APIs, this Token can also be used for MCP services. To enable MCP services, click the **MCP Service** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeveloperGuide-EnableMCPService.png" alt="Enable MCP service" style={{width: '80%'}} />
+
+    To restrict the MCP service capabilities of this Token, click **… > MCP Capability Configuration**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeveloperGuide-ConfigureMCP.png" alt="MCP capability configuration" style={{width: '80%'}} />
+
+    In the **MCP Capability Configuration** popup, uncheck the MCP capabilities you do not need, then click the **Confirm** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeveloperGuide-UncheckMCPCapabilities.png" alt="Uncheck unneeded MCP capabilities" style={{width: '80%'}} />
+
+6. After completing the configuration above, click the copy icon to obtain the Token.
+
+    ![Copy Token](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/DeveloperGuide-CopyTheToken.png)
 
 ## Call the API
 
