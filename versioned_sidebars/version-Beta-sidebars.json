@@ -768,8 +768,8 @@
         "aqara-builder/studio-manager/move-studio",
         "aqara-builder/studio-manager/manage-studio-members",
         "aqara-builder/studio-manager/view-deployed-studio-resources",
-        "aqara-builder/studio-manager/manage-member-interfaces",
-        "aqara-builder/studio-manager/unbind-studio-from-cloud",
+        "aqara-builder/studio-manager/manage-the-ui-used-by-members",
+        "aqara-builder/studio-manager/disconnect-a-studio-from-the-cloud",
         "aqara-builder/studio-manager/studio-manager-faq"
       ]
     },

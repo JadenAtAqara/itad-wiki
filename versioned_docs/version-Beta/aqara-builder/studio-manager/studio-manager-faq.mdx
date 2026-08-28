@@ -4,3 +4,29 @@ description: "Find common Studio Manager issues and solutions for Studio visibil
 keywords: ["Aqara Docs", "Aqara Builder", "Studio Manager", "FAQ"]
 ---
 # Studio Manager FAQ
+
+## Can't find a Studio in Studio Manager?
+
+- **Possible Cause 1:** The Region selected when the Studio was linked is different from the Region currently selected in Studio Manager.  
+  **Solution:** Make sure the Studio's linked Region matches the Region currently selected in Studio Manager. You can either switch the Studio's linked Region or change the Region in Studio Manager.
+
+- **Possible Cause 2:** The signed-in account is not the account that linked the Studio.  
+  **Solution:** Identify the account used to link the Studio, and then sign in to both Builder Lab and Studio Manager with this account.
+
+## Can't find a member during Application UI deployment?
+
+**Possible Cause:** The member has not joined the target Studio.  
+**Solution:** Invite the member in Studio Manager and ensure they have accepted the invitation to join the Studio.
+
+## Application UI deployed to the wrong member?
+
+**Possible Cause:** The Studio or member details were not fully verified.  
+**Solution:** Find the member in Studio Manager, and update the UI currently assigned to them.
+
+## Why can't I delete a project?
+
+- **Possible Cause 1:** It is the Default project.  
+  **Solution:** The Default project cannot be deleted. Please keep it.
+
+- **Possible Cause 2:** The project still contains Studios.  
+  **Solution:** Move all Studios to a different project before deleting this project.
