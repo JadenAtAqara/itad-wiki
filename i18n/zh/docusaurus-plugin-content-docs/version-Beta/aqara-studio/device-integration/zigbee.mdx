@@ -9,23 +9,23 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "Zigbee 设备接入"
 本文档仅适用于 **网关融合形态**的 Aqara Studio。
 :::
 
-本文说明如何将 Zigbee 设备接入 Aqara Studio。
+本文说明如何将 Aqara Zigbee 设备接入 Aqara Studio。
 
 :::tip
-在接入 Zigbee 设备前，建议先查看 [可接入 Aqara 设备清单](./../overview/compatible-aqara-devices.mdx)，以确认您的设备是否已获得支持。
+在接入 Aqara Zigbee 设备前，建议先查看 [可接入 Aqara 设备清单](./../overview/compatible-aqara-devices.mdx)，以确认您的设备是否已获得支持。
 :::
 
 ## 流程
 
-1. 在左侧侧边栏点击进入**设备管理**页面。选择 `Zigbee`，进入管理界面。
+1. 在左侧侧边栏点击进入**设备管理**页面。选择 `Aqara Zigbee`，进入管理界面，单击 **添加设备** 按钮。
 
-    ![进入 Zigbee 管理](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-Zigbee.png)
+    ![进入 Aqara Zigbee 管理并单击添加设备按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraZigbee-AddDevice.png)
 
-2. 进入`添加设备`选项卡，在**选择网关**下拉框中选择需要绑定子设备的网关，并在**开启方式**中选择该网关的配网模式（支持**实时开启**或**定时开启**）。
+2. 选择一个需要绑定子设备的 AqaraHub 网关，并在**开启方式**中选择该网关的配网模式（支持**实时开启**或**定时开启**）。
 
-     点击**开启入网**按钮后，所选网关将进入配网状态，此时可让子设备进入配对模式以完成绑定。
+    点击**开启入网**按钮后，所选网关将进入配网状态，此时可让子设备进入配对模式以完成绑定。
 
-    ![配置](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Zigbee-Configuration.png)
+    ![设置并开启入网](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraZigbee-SetNetworkAccessAndEnable.png)
 
 3. 子设备绑定成功后，将在**已添加设备**列表中显示该子设备。
 
@@ -40,4 +40,4 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "Zigbee 设备接入"
 当您的 Aqara 设备同时支持 Zigbee 及其他协议时，通过 Zigbee 接入的步骤如下：
 
 - 若设备当前已处于 Zigbee 协议模式，可直接参考本文档流程接入。
-- 若设备当前使用的是其他协议，请先在 Aqara Home App 中将设备切换到 Zigbee 协议模式，完成后再参考本文档流程接入。
+- 若设备当前使用的是其他协议，请先在 Aqara Home App 或 Aqara Life App 中将设备切换到 Zigbee 协议模式，完成后再参考本文档流程接入。
