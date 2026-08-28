@@ -108,24 +108,24 @@ RS-485 灯光场景控制器接线端口分为三类，电源输入端口\*1、�
 
 3. **RS-485 通信端口：**
 
-| 序号 | 名称 | 说明 | 接线 |
-| -- | -- | -- | -- |
-| 1 | VOUT | 电源输出正极+ | 网关输入正极+/不接 |
-| 2 | GND | 电源输出负极-/信号地 | 网关输入负极-/信号地 GND |
-| 3 | ADDIN | 地址输入信号 | 第一台控制器接 GND；第 2~n 台接上一台的 ADDOUT |
-| 4 | A | RS-485 信号 A | 接网关/上一台控制器的 RS-485 信号 A 端口 |
-| 5 | B | RS-485 信号 B | 接网关/上一台控制器的 RS-485 信号 B 端口 |
-| 6 | ADDOUT | 地址输出信号 | 接下一台控制器的 ADDIN |
+    | 序号 | 名称 | 说明 | 接线 |
+    | -- | -- | -- | -- |
+    | 1 | VOUT | 电源输出正极+ | 网关输入正极+/不接 |
+    | 2 | GND | 电源输出负极-/信号地 | 网关输入负极-/信号地 GND |
+    | 3 | ADDIN | 地址输入信号 | 第一台控制器接 GND；第 2~n 台接上一台的 ADDOUT |
+    | 4 | A | RS-485 信号 A | 接网关/上一台控制器的 RS-485 信号 A 端口 |
+    | 5 | B | RS-485 信号 B | 接网关/上一台控制器的 RS-485 信号 B 端口 |
+    | 6 | ADDOUT | 地址输出信号 | 接下一台控制器的 ADDIN |
 
-:::caution
-第一台控制器可通过 VOUT、GND 引脚连接网关 V+、V- 给网关供电；当网关使用 Type-c 供电时，可不接 VOUT，仍需接 GND，控制器 GND 与网关信号地 GND 相连，保持共地。
+    :::caution
+    第一台控制器可通过 VOUT、GND 引脚连接网关 V+、V- 给网关供电；当网关使用 Type-c 供电时，可不接 VOUT，仍需接 GND，控制器 GND 与网关信号地 GND 相连，保持共地。
 
-网关和控制器通过 485 通信菊花链连接，网关和每台控制器的 RS-485 信号 A/B 无分支、手拉手串接走线；首尾两个控制器的终端匹配电阻拨码开关拨至右端（靠近天线口端）接通。
-:::
+    网关和控制器通过 485 通信菊花链连接，网关和每台控制器的 RS-485 信号 A/B 无分支、手拉手串接走线；首尾两个控制器的终端匹配电阻拨码开关拨至右端（靠近天线口端）接通。
+    :::
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-rs-485-1.png" alt="RS-485 通信端口接线图 1" />
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-rs-485-1.png" alt="RS-485 通信端口接线图 1" />
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-rs-485-2.png" alt="RS-485 通信端口接线图 2" />
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-rs-485-2.png" alt="RS-485 通信端口接线图 2" />
 
 ## 产品概述
 
@@ -256,15 +256,24 @@ RS-485 灯光场景控制器接线端口分为三类，电源输入端口\*1、�
 #### 控制器靠近灯箱摆放，输出信号线不宜过长；
 
 - 在双层屏蔽线缆通信下，建议信号输出端连接至灯箱第一块灯板的距离不超过 6m；
-- 具体接线见（[控制器接线说明](#接线端子说明)），接线示意图如下：
+- 具体接线见（[控制器接线说明](#接线端子说明)），接线示意图如下：   
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-connection-4.png" alt="控制器接线 4" />
-- VE 管型端子接入控制器端口
+
+- VE 管型端子接入控制器端口   
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-ve.png" alt="控制器接线 VE 管型端子" />
-- 网关-控制器接线示意
+
+- 网关-控制器接线示意   
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-hub-controller.png" alt="控制器接线 网关-控制器" />
-- 控制器-控制器接线示意
+
+- 控制器-控制器接线示意   
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-2-controllers.png" alt="控制器接线 控制器-控制器" />
-- 接线示意图
+
+- 接线示意图   
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-overall-connection.png" alt="控制器接线 整体接线" />
 
 ## 使用说明
@@ -298,8 +307,8 @@ RS-485 灯光场景控制器接线端口分为三类，电源输入端口\*1、�
 #### 新建情景（图片/视频）
 
 - 在「情景控制」区域点击 **新建情景：**
-    - **静态情景：**上传图片
-    - **动态序列：**上传视频
+    - **静态情景**：上传图片
+    - **动态序列**：上传视频
 - 上传后保存即可完成情景配置。
 
 详情请参考 [Aqara 设备配置 - 灯箱设备](./../../device-management/aqara-device-configuration/light-boxes.mdx)

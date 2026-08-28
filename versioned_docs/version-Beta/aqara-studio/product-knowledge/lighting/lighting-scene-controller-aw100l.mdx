@@ -105,33 +105,31 @@ The Lighting Scene Controller AW100L wiring ports are divided into three categor
     
 3.  **RS-485 Communication Port:**
     
+    | No. | Name | Description | Wiring |
+    | --- | --- | --- | --- |
+    | 1 | VOUT | Power Output Positive + | Gateway input positive+/Do not connect |
+    | 2 | GND | Power Output Negative-/Signal Ground | Gateway input negative-/Signal ground GND |
+    | 3 | ADDIN | Address Input Signal | First controller connects to GND; Controllers 2~n connect to previous controller's ADDOUT |
+    | 4 | A | RS-485 Signal A | Connect to Gateway/Previous controller's RS-485 Signal A port |
+    | 5 | B | RS-485 Signal B | Connect to Gateway/Previous controller's RS-485 Signal B port |
+    | 6 | ADDOUT | Address Output Signal | Connect to next controller's ADDIN |
 
-| No. | Name | Description | Wiring |
-| --- | --- | --- | --- |
-| 1 | VOUT | Power Output Positive + | Gateway input positive+/Do not connect |
-| 2 | GND | Power Output Negative-/Signal Ground | Gateway input negative-/Signal ground GND |
-| 3 | ADDIN | Address Input Signal | First controller connects to GND; Controllers 2~n connect to previous controller's ADDOUT |
-| 4 | A | RS-485 Signal A | Connect to Gateway/Previous controller's RS-485 Signal A port |
-| 5 | B | RS-485 Signal B | Connect to Gateway/Previous controller's RS-485 Signal B port |
-| 6 | ADDOUT | Address Output Signal | Connect to next controller's ADDIN |
+    :::note
+    The first controller can power the gateway through VOUT and GND pins (connecting to gateway V+, V-). When the gateway uses Type-C power supply, VOUT can be left unconnected, but GND must still be connected to maintain common ground between controller and gateway signal ground.
 
-:::note
-The first controller can power the gateway through VOUT and GND pins (connecting to gateway V+, V-). When the gateway uses Type-C power supply, VOUT can be left unconnected, but GND must still be connected to maintain common ground between controller and gateway signal ground.
+    The gateway and controllers are connected via RS-485 daisy chain. The RS-485 A/B signals between the gateway and each controller must be wired in a hand-in-hand series without branching. The termination resistor DIP switches on the first and last controllers should be set to the right position (near the antenna port).
+    :::
 
-The gateway and controllers are connected via RS-485 daisy chain. The RS-485 A/B signals between the gateway and each controller must be wired in a hand-in-hand series without branching. The termination resistor DIP switches on the first and last controllers should be set to the right position (near the antenna port).
-:::
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/lighting-scene-controller-aw100l-rs-485-1.png" alt="RS-485 Communication Port Wiring Diagram 1" />
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/lighting-scene-controller-aw100l-rs-485-1.png" alt="RS-485 Communication Port Wiring Diagram 1" />
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/lighting-scene-controller-aw100l-rs-485-2.png" alt="RS-485 Communication Port Wiring Diagram 2" />
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/lighting-scene-controller-aw100l-rs-485-2.png" alt="RS-485 Communication Port Wiring Diagram 2" />
-
-
-| No. | Name |
-| --- | --- |
-| 1 | Indicator light |
-| 2 | Reset button |
-| 3 | Termination resistor DIP switch |
-| 4 | Reserved antenna port |
+    | No. | Name |
+    | --- | --- |
+    | 1 | Indicator light |
+    | 2 | Reset button |
+    | 3 | Termination resistor DIP switch |
+    | 4 | Reserved antenna port |
 
 ## Product Overview
 
@@ -266,15 +264,24 @@ As shown below:
 #### Place Controller Near Light Box; Output Signal Wires Should Not Be Excessively Long;
 
 - With double-shielded cable communication, recommended distance from signal output end to first light board in light box should not exceed 6m;
-- See ([Terminal Wiring Instructions](#terminal-wiring-instructions)) for specific wiring; wiring diagram shown below:
+- See ([Terminal Wiring Instructions](#terminal-wiring-instructions)) for specific wiring; wiring diagram shown below:   
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-connection-4.png" alt="Controller Wiring 4" />
-- VE Tube Terminal Connected to Controller Port
+
+- VE Tube Terminal Connected to Controller Port   
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/lighting-scene-controller-aw100l-controller-ve.png" alt="Controller Wiring VE Tube Terminal" />
-- Gateway-Controller Wiring Diagram
+
+- Gateway-Controller Wiring Diagram   
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-hub-controller.png" alt="Controller Wiring Gateway-Controller" />
-- Controller-Controller Wiring Diagram
+
+- Controller-Controller Wiring Diagram   
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-2-controllers.png" alt="Controller Wiring Controller-Controller" />
-- Complete Wiring Diagram
+
+- Complete Wiring Diagram   
+
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/lighting-scene-controller-aw100l-controller-overall-connection.png" alt="Controller Wiring Overall Connection" />
 
 ## User Guide
@@ -307,8 +314,8 @@ After successful creation, enter light box device configuration. In "Light Box C
 #### Create New Scene (Image/Video)
 
 - Click **New Scene** in "Scene Control" area:  
-    - **Static Scene:** Upload image
-    - **Dynamic Sequence:** Upload video
+    - **Static Scene**: Upload image
+    - **Dynamic Sequence**: Upload video
 - Save after upload to complete scene configuration.
 
 For details, please refer to [Aqara Device Configuration - Light Box Device](./../../device-management/aqara-device-configuration/light-boxes.mdx).
