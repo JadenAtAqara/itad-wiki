@@ -9,66 +9,111 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备管理", "屏", "screens"]
 
 ## 配置与发布面板
 
-1. 在 **设备管理** 页面，在左侧 **协议和设备** 树中找到 **Aqara Hub**，选择您的目标屏设备，切换至 **面板设置** 标签页，单击 **新增面板**。
+### 1. 新增面板
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-CreateAPanel.png" alt="新增一个面板" />
+在 **设备管理** 页面，在左侧 **协议和设备** 树中找到 **Aqara Hub**，选择您的目标屏设备，切换至 **面板设置** 标签页，单击 **新增面板**。
 
-2. 在 **新建面板** 弹窗中，选择一个模板，命名面板，单击 **新建** 按钮。
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-CreateAPanel.png" alt="新增一个面板" />
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-SelectATemplateAndNameThePanel.png" alt="选择模板并命名面板" />
+### 2. 选择模板或空白画布并命名面板
 
-3. 此时您会进入面板编辑页面，您可以在此页面中配置面板的组件、模板、图层、样式和属性。
+在 **新建面板** 弹窗中，选择一个模板或空白画布，命名面板，单击 **新建** 按钮。
 
-    :::tip
-    组件若需关联自动化或设备数据，请确保所有相关数据源均已完成设置，否则可能导致发布失败。
-    :::
+根据您的需要，您可以使用以下任意方案进行面板配置：
 
-    完成后单击 **保存** 按钮。
+| 方案 | 说明| 优点 |
+| -- | -- | -- |
+| 方案 A | 只使用模版| 更方便更快捷更美观。 |
+| 方案 B | 模板或空白画布 + [卡片](#添加卡片)| 相对灵活，并且能保证一定美观度。 |
+| 方案 C | 模板或空白画布 + [卡片](#添加卡片) + [组件](#添加组件)| 高阶功能，需要有一定排版审美基础的用户进行配置，自由度高。 |
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-ConfigureThePanel.png" alt="配置面板" />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-SelectATemplateAndNameThePanel.png" alt="选择模板并命名面板" />
 
-4. 编辑完成后，退出面板编辑页面，返回目标屏设备的 **面板设置** 标签页。
+### 3. 编辑面板
 
-    在列表中找到刚新增的面板，点击 **... > 预览**，即可查看面板效果。
+此时您会进入面板编辑页面，您可以在此页面中配置面板的组件、模板、图层、样式和属性。
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-PreviewAPanel.png" alt="预览面板" />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-ConfigureThePanel.png" alt="配置面板" />
 
-5. 确认效果后，单击 **发布** 按钮。
+#### 关联自动化或设备数据
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-ClickPublish.png" alt="点击发布" />
+如需将组件与自动化或设备数据进行关联，请先确保所有相关数据源已完成设置，否则发布时可能失败。  
+您只需点击相应组件或卡片，在右侧边栏切换到 **属性** 标签页，按需设置关联的自动化或设备数据即可。
 
-6. 在 **发布** 弹窗中，勾选需要展示的面板，调整面板顺序，单击 **确定发布** 按钮。
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-CardRelatedToDevice.png" alt="组件关联自动化或设备数据" />
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-SelectPanelsAndAdjustTheOrderAndComfirmPublish.png" alt="选择面板、调整顺序并确认发布" />
+#### 添加卡片
 
-    发布成功后，即可在屏设备上查看面板效果。
+如果您需要在画布上添加更多的由 Aqara 设计好的卡片，请在左侧侧边栏进入 **组件库**，切换至 **卡片** 标签页，单击选择或拖拽任意卡片，即可添加至画布上。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-AddACard.png" alt="添加一个卡片" />
+
+#### 添加组件
+
+如果您需要在画布上自由地添加并组合各式组件，请在左侧侧边栏进入 **组件库**，切换至 **组件** 标签页，单击选择或拖拽任意组件，即可添加至画布上。
+
+:::tip
+目前，**组件** 为 Beta 功能。
+:::
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-AddAComponent.png" alt="添加一个组件" />
+
+### 4. 保存面板
+
+完成后单击 **保存** 按钮。
+
+编辑完成后，退出面板编辑页面，返回目标屏设备的 **面板设置** 标签页。
+
+### 5. 预览面板
+
+在列表中找到刚新增的面板，点击 **... > 预览**，即可查看面板效果。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-PreviewAPanel.png" alt="预览面板" />
+
+### 6. 发布面板
+
+确认效果后，单击 **发布** 按钮。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-ClickPublish.png" alt="点击发布" />
+
+在 **发布** 弹窗中，勾选需要展示的面板，调整面板顺序，单击 **确定发布** 按钮。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-SelectPanelsAndAdjustTheOrderAndComfirmPublish.png" alt="选择面板、调整顺序并确认发布" />
+
+发布成功后，即可在屏设备上查看面板效果。
 
 ## 配置与发布待机
 
-1. 在 **设备管理** 页面，在左侧 **协议和设备** 树中找到 **Aqara Hub**，选择您的目标屏设备，切换至 **待机设置** 标签页，单击 **新增待机**。
+### 1. 新增面板
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-CreateAStandby.png" alt="新增一个待机" />
+在 **设备管理** 页面，在左侧 **协议和设备** 树中找到 **Aqara Hub**，选择您的目标屏设备，切换至 **待机设置** 标签页，单击 **新增待机**。
 
-2. 在 **新建待机** 弹窗中，选择一个模板，命名待机，单击 **新建** 按钮。
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-CreateAStandby.png" alt="新增一个待机" />
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-NewStandby.png" alt="新建一个待机" />
+### 2. 选择模板或空白画布并命名面板
 
-3. 此时您会进入待机编辑页面，您可以在此页面中配置待机的组件、模板、图层、样式和属性。
+相关步骤与 **面板** 的 **[2. 选择模板或空白画布并命名面板](#2-选择模板或空白画布并命名面板)** 相同。
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-EditStandby.png" alt="编辑待机" />
+### 3. 编辑待机
 
-4. 编辑完成后，退出待机编辑页面，返回目标屏设备的 **待机设置** 标签页。
+相关步骤与 **面板** 的 **[3. 编辑面板](#3-编辑面板)** 相同。
 
-    在列表中找到刚新增的待机，点击 **... > 预览**，即可查看待机效果。
+### 4. 预览待机
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-PreviewStandby.png" alt="预览待机" />
+相关步骤与 **面板** 的 **[4. 预览面板](#4-预览面板)** 相同。
 
-5. 确认效果后，单击 **发布** 按钮。
+### 5. 保存面板
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-StandbyClickPublish.png" alt="点击发布待机" />
+相关步骤与 **面板** 的 **[5. 保存面板](#5-保存面板)** 相同。
 
-6. 在 **发布** 弹窗中，选择一个待机，单击 **确定发布** 按钮。
+### 6. 发布待机
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-SelectAStandbyAndConfirmPublish.png" alt="选择待机并确认发布" style={{width: '70%'}}  />
+确认效果后，单击 **发布** 按钮。
 
-    发布成功后，即可在屏设备上查看待机效果。
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-StandbyClickPublish.png" alt="点击发布待机" />
+
+在 **发布** 弹窗中，选择一个待机，单击 **确定发布** 按钮。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Screens-SelectAStandbyAndConfirmPublish.png" alt="选择待机并确认发布" style={{width: '70%'}}  />
+
+发布成功后，即可在屏设备上查看待机效果。
