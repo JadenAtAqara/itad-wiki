@@ -3,4 +3,53 @@ title: "Builder Lab FAQ"
 description: "Find common Builder Lab issues and solutions for local Studio discovery, device matching, switch configuration, and UI deployment."
 keywords: ["Aqara Docs", "Aqara Builder", "Builder Lab", "FAQ"]
 ---
+
 # Builder Lab FAQ
+
+### A Local Studio does not appear in Builder Lab
+
+**Possible cause**: The device running Builder Lab and the Studio are not on the same local network.
+
+**Solution**: Connect both devices to the same local network, then search for the Local Studio again.
+
+### A Local Studio does not appear in Builder Lab
+
+**Possible cause**: The Studio has not been set up.
+
+**Solution**: Set up the Studio, then return to Builder Lab and search again.
+
+### The Studio I need is not listed under Create with My Devices
+
+**Possible cause**: The wrong remote or local connection method is selected.
+
+**Solution**: Select Remote Studio or Local Studio to match how the Studio is connected.
+
+### The space plan cannot be deployed
+
+**Possible cause**: One or more devices in the plan are not matched to actual Studio devices.
+
+**Solution**: Find each unmatched device and select an actual Studio device for it.
+
+### The automatic matches do not reflect the actual installation
+
+**Possible cause**: Automatic matches must be reviewed manually.
+
+**Solution**: Change the match between each plan device and actual Studio device as needed.
+
+### A matched device may not support the features required by the plan
+
+**Possible cause**: The system does not currently check device-feature compatibility.
+
+**Solution**: Use your knowledge of the devices to confirm that the plan device and actual Studio device are compatible.
+
+### A switch button cannot be assigned to another device category
+
+**Possible cause**: After the first controlled device is selected, only devices in the same category can be added.
+
+**Solution**: Use only Aqara smart devices or only third-party smart devices for the same button.
+
+### A member is not listed during Application UI deployment
+
+**Possible cause**: The member has not joined the target Studio.
+
+**Solution**: Invite the member in Studio Manager and make sure the invitation has been accepted.
