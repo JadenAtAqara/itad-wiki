@@ -1,0 +1,50 @@
+---
+title: "Deploy a Space Plan"
+description: "Learn how to choose a target Studio, review device matching results, and deploy a space solution from Builder Lab."
+keywords: ["Aqara Docs", "Aqara Builder", "Builder Lab", "Deploy a Space Plan"]
+---
+# Deploy a Space Plan
+
+Before deploying a space plan to a Studio, you must match every device in the plan with an actual device in the Studio.
+
+### Select the Target Studio
+
+You can connect to the target Studio remotely through the cloud or locally on the same network.
+
+* For a Remote Studio, confirm that the account, Region, project, and target Studio are correct.  
+* For a Local Studio, make sure the Studio has been set up and that the device running Builder Lab is on the same local network.
+
+Steps:
+1. Open the space plan you want to deploy.
+2. Start the deployment process.
+3. Select Remote Studio or Local Studio.
+4. Select the target Studio and verify its details.
+
+### Review the Automatic Matches
+
+After you select the target Studio, the system first tries to match the devices in the plan with the actual devices in the Studio.
+
+* If you deploy the plan back to the source Studio, the system automatically matches devices that were previously deployed.  
+* If you deploy to another Studio, review and manually match devices for the target Studio as needed.
+
+Review every automatic match. If a match does not reflect the actual installation, change it manually.
+
+### Change a Device Match Manually
+
+1. Find the device in the plan that you want to update.
+2. View the actual Studio device currently matched to it.
+3. Select a different actual device in the Studio.
+4. Continue until all unmatched or incorrectly matched devices are resolved.
+
+The same actual Studio device cannot be matched to more than one device in the plan. After an actual device is matched, it is unavailable for other plan devices.
+
+### Finish Matching and Deploy
+
+Before deployment, confirm that:
+* Every device in the plan is matched to an actual device in the Studio.
+* Each actual Studio device supports the features required by the plan.  
+
+The system does not currently check device-feature compatibility automatically. Use your knowledge of the devices to confirm that each match is suitable.
+
+After confirming the space plan, target Studio, and device matches, submit the deployment.
+

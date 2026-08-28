@@ -49,6 +49,7 @@ Before you begin, please make sure:
     | Device Address | ✘ | The slave device address (unit identifier), range 0~255. |
     | IP Address | ✔ | The IP address of this device. |
     | Port | ✔ | The Modbus TCP communication port, default is 502. |
+    | TCP Frame Mode | ✘ | Supported values:<ul><li>Modbus TCP</li><li>RTU Over TCP</li><li>ASCII Over TCP</li></ul> |
 
   - Advanced Configuration: 
 
@@ -61,12 +62,13 @@ Before you begin, please make sure:
     | Overwrite Network Configuration | ✔ | Whether to overwrite the network configuration. If not enabled, the network configuration will be used. |
     | Rx Process Mode | ✔ | Choose how received data is processed:<ul><li><strong>Byte</strong>: Byte stream mode.</li><li><strong>Packet</strong>: Packet mode.</li></ul> |
 
-4. In the "Add Point" page, click the **+** button in the “Type selection” area to add a point.   
-    ![Click Plus button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Modbus-ClickPlusButton.png)
+4. In the step 2, click the **Manually Add** button to start adding points.
+
+    ![Click Manually Add Button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/ModbusTCP-ManuallyAdd.png)
 
 5. Click the new point to set its type and configure it. When finished, click **Complete adding**.
 
-    ![Point Configuration](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Modbus-PointConfiguration.png)
+    ![Add and Configure Points](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/ModbusTCP-AddAndConfigurePoints.png)
 
    <table>
      <colgroup>

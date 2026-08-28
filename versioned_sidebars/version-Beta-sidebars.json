@@ -716,41 +716,41 @@
       "items": [
         {
           "type": "category",
-          "label": "Space Planning",
+          "label": "Space Plan",
           "link": {
             "type": "generated-index",
-            "keywords": ["space-planning"]
+            "keywords": ["space-plan"]
           },
           "items": [
-            "aqara-builder/builder-lab/space-planning/create-space-planning-solution",
+            "aqara-builder/builder-lab/space-plan/create-a-space-plan",
             {
               "type": "category",
-              "label": "Floor Plan and Device Placement Design",
+              "label": "Layout and Device Placement",
               "link": {
                 "type": "generated-index",
-                "keywords": ["floor-plan-and-device-placement-design"]
+                "keywords": ["layout-and-device-placement"]
               },
               "items": [
-                "aqara-builder/builder-lab/space-planning/draw-floor-plan-and-space-structure",
-                "aqara-builder/builder-lab/space-planning/place-furniture-and-smart-devices",
-                "aqara-builder/builder-lab/space-planning/place-light-strips",
-                "aqara-builder/builder-lab/space-planning/place-switches-and-configure-controlled-devices"
+                "aqara-builder/builder-lab/space-plan/draw-the-floor-plan-and-rooms",
+                "aqara-builder/builder-lab/space-plan/add-furniture-and-smart-devices",
+                "aqara-builder/builder-lab/space-plan/add-light-strips",
+                "aqara-builder/builder-lab/space-plan/add-switches"
               ]
             },
-            "aqara-builder/builder-lab/space-planning/scene-and-automation-design",
-            "aqara-builder/builder-lab/space-planning/deploy-space-solution"
+            "aqara-builder/builder-lab/space-plan/design-scenes-and-automations",
+            "aqara-builder/builder-lab/space-plan/deploy-a-space-plan"
           ]
         },
         {
           "type": "category",
-          "label": "Interface Design",
+          "label": "Application UI",
           "link": {
             "type": "generated-index",
-            "keywords": ["interface-design"]
+            "keywords": ["application-ui"]
           },
           "items": [
-            "aqara-builder/builder-lab/interface-design/create-and-edit-interface-design",
-            "aqara-builder/builder-lab/interface-design/deploy-interface-design"
+            "aqara-builder/builder-lab/application-ui/create-and-edit-an-application-ui",
+            "aqara-builder/builder-lab/application-ui/deploy-an-application-ui"
           ]
         },
         "aqara-builder/builder-lab/builder-lab-faq"
