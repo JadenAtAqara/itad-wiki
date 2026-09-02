@@ -11,29 +11,78 @@ Aqara Studio 支持对用户数据进行备份，帮助您在遇到服务故障�
 
 从左侧侧边栏进入**备份与还原**页面，即可 [开始备份](#开始备份) 和 [管理备份](#管理备份)。
 
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BackupAndRestore-Entry.png" alt="进入备份与还原页面" />
+
 ### 开始备份
 
-当前 Aqara Studio 采用整体备份机制，完整备份应用数据。你可以使用两种方式进行备份：自动备份和手动备份。
+当前 Aqara Studio 采用整体备份机制，完整备份应用数据。你可以使用两种方式进行备份：[自动备份](#自动备份) 和 [手动备份](#手动备份)。
 
-| 备份方式 | 说明 | 操作 |
-| - | - | - |
-| 自动备份 | 您可以预设备份间隔，系统将根据该间隔自动备份。 | 单击**本地自动备份设置**按钮，配置以下参数：<br />1. **启用**自动备份。<br />2. 设置自动备份的开始日子和时刻。<br />3. 设置自动备份文件最多能存在数量上限。<br />4. 单击**保存**按钮完成配置。  |
-| 手动备份 | 可通过手动备份实现即时备份。 | 单击“手动备份”。 |
+#### 自动备份
+
+您可以预设备份频次，系统将根据该间隔自动备份。
+
+1. 单击**编辑计划**按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BackupAndRestore-EditSchedule.png" alt="编辑计划" />
+
+2. 在弹窗中配置以下参数：
+    - **启用**自动备份。
+    - 设置自动备份的日子和时刻。
+    - 设置 **自动备份文件** 最多能存在数量上限。
+    - 根据您是否希望将备份文件上传至 Aqara Cloud，选择是否开启 **云端备份**。
+    - 单击**保存**按钮完成配置。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BackupAndRestore-LocalAutoBackupSettings.png" alt="本地自动备份设置" style={{ width: '60%' }} />
+
+#### 手动备份
+
+单击 **立即备份** 按钮，即可实现即时手动备份。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BackupAndRestore-BackupNow.png" alt="立即备份" />
 
 ### 管理备份
 
-备份成功后，可在备份列表中看到该备份，可进行如下操作：
+备份成功后，可在 **备份历史** 下的 **本地备份** 标签页中看到该备份的详细信息（包含名称、备份类型、备份时间、备注、文件大小、Aqara Studio 版本）。
+
+:::tip
+Aqara Studio 版本信息仅用于标识备份创建时所用的软件版本，并不意味着可通过该备份将 Aqara Studio 恢复到该版本。
+:::
+
+除此之外，您可对该备份进行以下操作：
 - 还原：将当前系统的数据还原为该备份。
-- 下载：下载此备份到本地进行管理。
+- 下载：下载此备份到电脑。
+- 上传至云端：将此备份上传至 Aqara Cloud。
 - 删除：删除此备份。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BackupAndRestore-CheckTheBackup.png" alt="查看备份详情" />
+
+当您将备份上传至云端后，您可以在 **备份历史** 下的 **云端备份** 标签页中找到该备份。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BackupAndRestore-CloudBackup.png" alt="查看云端备份" />
 
 ## 还原数据
 
 :::tip
 - 数据还原将导致系统重启并退出当前登录账号，务必确保在还原操作前保存所有重要数据！
-- 因为备份仅保存 Aqara Studio 本地数据，不包含与 [云端连接](./cloud.mdx) 的相关信息，所以还原数据后，Aqara Studio 会解除与 Aqara Workspace 的绑定，并删除因绑定 Aqara Builder 而生成的用户数据，您需重新进行绑定，但该用户的操作日志将被保留，不受影响。
+- 因为备份仅保存 Aqara Studio 本地数据，不包含与 [云端连接](./cloud.mdx) 的相关信息，所以还原数据后，Aqara Studio 会解除与 Aqara Cloud 的绑定，并删除因绑定 Aqara Builder 而生成的用户数据，您需重新进行绑定，但该用户的操作日志将被保留，不受影响。
 :::
 
 您可以通过以下两种方式还原用户数据：
-- 选中任一备份文件后的“还原”，可将数据还原为该备份。
-- 单击**系统还原**按钮，即可从您的电脑选择任一备份文件进行还原。
+- 在 **备份历史** 下任一备份文件后的“还原”，可将数据还原为该备份。
+- 单击 **从文件还原** 按钮，即可从您的电脑选择任一备份文件进行还原。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BackupAndRestore-Restore.png" alt="还原数据" />
+
+## 常见问题
+
+### Aqara Studio 的备份可以在不同的智慧边端 M300 设备之间进行迁移还原吗？
+
+可以。但请确保源 M300 和目标 M300 的 Aqara Studio 版本均为 `1.2.3_37` 或更高版本。
+
+您只需将源 M300 的备份文件 **下载** 至本地，然后通过 **从文件还原** 功能，将该备份导入到目标 M300，即可完成数据迁移。
+
+导入后，目标 M300 能完整获取源 M300 中的所有数据（包括设备信息、自动化配置等），无需再次添加子设备，即可直接控制原有子设备。
+
+:::tip
+在完成数据还原后，请务必将源 M300 断电或恢复出厂设置，否则同一个子设备会同时被两个 M300 管理，可能导致设备状态异常或间歇性不可控。
+:::

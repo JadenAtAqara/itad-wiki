@@ -11,29 +11,75 @@ Aqara Studio supports backing up user data, helping you quickly recover operatio
 
 Navigate to the **Backup and Restore** page from the sidebar to [start backup](#start-backup) and [manage backups](#manage-backups).
 
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BackupAndRestore-Entry.png" alt="Enter the Backup and Restore page" />
+
 ### Start Backup
 
-Aqara Studio uses a full backup mechanism that completely backs up user data. You can use two methods to back up: automatic backup and manual backup.
+Aqara Studio uses a full backup mechanism that completely backs up user data. You can use two methods to back up: [automatic backup](#automatic-backup) and [manual backup](#manual-backup).
 
-| Backup Method | Description | Operation |
-| - | - | - |
-| Automatic Backup | You can set up a backup interval, and the system will automatically create backups according to this schedule. | Click "Local Auto-Backup Settings" to configure the following parameters:<br />1. **Enable** automatic backup.<br />2. Set the start date and time for automatic backups.<br />3. Set the maximum number of backup files allowed.<br />4. **Save** your configuration. |
-| Manual Backup | Instantly back up by triggering a manual backup. | Click "Manual Backup". |
+#### Automatic Backup
+
+You can set up a backup interval, and the system will automatically create backups according to this schedule.
+
+1. Click the **Edit Schedule** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BackupAndRestore-EditSchedule.png" alt="Edit Schedule" />
+
+2. In the popup window, configure the following parameters:
+
+    1. **Enable** automatic backup.
+    2. Set the dates and time for automatic backups.
+    3. Set the maximum number of **automatic backup files** allowed.
+    4. Depending on whether you want to upload backup files to Aqara Cloud, choose whether to enable **Cloud Backup**.
+    5. Click the **Save** button to complete the configuration.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BackupAndRestore-LocalAutoBackupSettings.png" alt="Local Auto Backup Settings" style={{ width: '60%' }} />
+
+#### Manual Backup
+
+Click the **Back up now** button to instantly perform manual backup.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BackupAndRestore-BackupNow.png" alt="Manual Backup" />
 
 ### Manage Backups
 
-After successful backup, you can see the backup on the backup list, and perform the following actions:
-- Reset: Restore the system data to this backup.
-- Download: Download the backup for local management.
+After a backup is successfully created, you can view detailed information about it (including name, backup type, backup time, remarks, file size, and Aqara Studio version) in the **Local backup** tab under **Backup history**.
+
+:::tip
+The Aqara Studio version information is used only to indicate the software version at the time of backup creation; it does not mean that restoring from this backup will revert Aqara Studio itself to that version.
+:::
+
+Additionally, you can perform the following operations on each backup:
+- Restore: Restore your current system data with this backup.
+- Download: Download this backup to your local device for management.
+- Upload to Cloud: Upload this backup to Aqara Cloud.
 - Delete: Delete this backup.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BackupAndRestore-CheckTheBackup.png" alt="View backup details" />
 
 ## Restore Data
 
 :::tip
 - Restoring data will cause the system to reboot and log out the current account. Be sure to save all important data before proceeding!
-- Backups only save Aqara Studio's local data and do not include information related to [cloud connections](./cloud.mdx). Therefore, after restoring data, Aqara Studio will be unlinked from Aqara Workspace, and user data generated from binding Aqara Builder will be deleted; you will need to re-bind, but operation logs for those users will be retained and not affected.
+- Backups only save Aqara Studio's local data and do not include information related to [cloud connections](./cloud.mdx). Therefore, after restoring data, Aqara Studio will be unlinked from Aqara Cloud, and user data generated from binding Aqara Builder will be deleted; you will need to re-bind, but operation logs for those users will be retained and not affected.
 :::
 
 You can restore user data using either of the following methods:
-- Select any backup file and click "Reset" to restore data from that backup.
-- Click the **System Restore** button to select any backup file from your computer and restore it.
+- In the **Backup history**, select any backup file and click "Restore" to restore data from that backup.
+- Click the **Restore from file** button to select any backup file from your computer to restore.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BackupAndRestore-Restore.png" alt="Restore data" />
+
+## FAQ
+
+### Can Aqara Studio backups be migrated and restored across different Edge Hub M300 devices?
+
+Yes, but please ensure that both Aqara Studio versions of the source and target M300 are `1.2.3_37` or later.
+
+Simply **download** the backup file from the source M300 to your local computer, and then use the **Restore from file** feature to import the backup into the target M300. This allows you to complete data migration easily.
+
+After importing, the target M300 will acquire all data from the source M300 (including device information, automation configurations, etc.), so you do not need to add sub-devices again and can directly control the original sub-devices.
+
+:::tip
+After data restoration is complete, please make sure to power off or reset the source M300 to factory settings. Otherwise, the same sub-device may be managed by two M300 devices simultaneously, which could result in abnormal device states or intermittent loss of control.
+:::

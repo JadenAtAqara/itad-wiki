@@ -2086,21 +2086,47 @@ Thermostat Profile 定义恒温器设备的专有属性与命令，适用于帧�
 | 0x00 | Celsius | 摄氏度。 |
 | 0x01 | Fahrenheit | 华氏度。 |
 
+#### OpenWindowAlarmEnum8 类型
+
+该类型的底层类型为 `enum8`，用于表示开窗告警状态。
+
+| 值    | 名称                    | 说明                    |
+|-------|-------------------------|-------------------------|
+| 0x00  | NoAlarm                 | 无开窗告警。            |
+| 0x01  | InternalOpenWindowAlarm | 内部温度探头检测到开窗。|
+| 0x02  | ExternalOpenWindowAlarm | 外部传感器检测到开窗。  |
+
+#### FrostProtectionAlarmEnum8 类型
+
+该类型的底层类型为 `enum8`，用于表示防冻告警状态。
+
+| 值    | 名称                  | 说明                       |
+|-------|-----------------------|----------------------------|
+| 0x00  | NoAlarm               | 无防冻告警。               |
+| 0x01  | FrostProtectionAlarm  | 防冻保护处于激活状态。     |
+
 ### 属性
 
 | ID | 名称 | 类型 | 约束 | 默认值 | 访问权限 | 归属方 | 必选性 | 简述 |
 |:---:|:---|:---|:---|:---:|:---:|:---:|:---:|:---|
-| 0x1000 | SystemMode | [ThermostatSystemModeEnum8](#thermostatsystemmodeenum8-类型) | 见枚举 | 0x00 | R/W/RP | S | M | 基础工作模式。 |
-| 0x1001 | OccupiedHeatingSetpoint | int16 | 设备能力范围 | — | R/W/RP | S | M | 设定制热温度。 |
-| 0x1002 | LocalTemperature | int16 | 0.01℃ | — | R/RP | S | M | 设备环境温度测量值。 |
-| 0x1003 | LocalTemperatureCalibration | int8 | 0.1℃ | 0 | R/W/RP | S | M | 本地温度校准。 |
-| 0x1004 | KeypadLockout | [KeypadLockoutEnum8](#keypadlockoutenum8-类型) | 见枚举 | 0x00 | R/W/RP | S | O | 童锁状态。 |
-| 0x1005 | TemperatureDisplayMode | [TemperatureDisplayModeEnum8](#temperaturedisplaymodeenum8-类型) | 见枚举 | 0x00 | R/W/RP | S | O | 温度显示单位。 |
-| 0x1006 | FrostProtectionEnabled | bool | true / false | false | R/W/RP | S | O | 防冻模式使能开关。 |
-| 0x1007 | FrostProtectionTemperature | int16 | 0.01℃ | — | R/W/RP | S | O | 防冻模式触发温度。 |
-| 0x1008 | WindowDetectionEnabled | bool | true / false | false | R/W/RP | S | O | 开窗检测功能使能开关。 |
-| 0x100A | ActivePower | uint32 | mW | — | RP | S | O | 当前功率。 |
-| 0xFFFB | ServerAttributeList | list[uint16] | 无额外约束 | — | R/RP | S | M | Server 支持的属性列表。 |
+| 0x1000 | [SystemMode](#systemmode-属性) | [ThermostatSystemModeEnum8](#thermostatsystemmodeenum8-类型) | 见枚举 | 0x00 | R/W/RP | S | M | 基础工作模式。 |
+| 0x1001 | [OccupiedHeatingSetpoint](#occupiedheatingsetpoint-属性) | int16 | 设备能力范围 | — | R/W/RP | S | M | 设定制热温度。 |
+| 0x1002 | [LocalTemperature](#localtemperature-属性) | int16 | 0.01℃ | — | R/RP | S | M | 设备环境温度测量值。 |
+| 0x1003 | [LocalTemperatureCalibration](#localtemperaturecalibration-属性) | int8 | 0.1℃ | 0 | R/W/RP | S | M | 本地温度校准。 |
+| 0x1004 | [KeypadLockout](#keypadlockout-属性) | [KeypadLockoutEnum8](#keypadlockoutenum8-类型) | 见枚举 | 0x00 | R/W/RP | S | O | 童锁状态。 |
+| 0x1005 | [TemperatureDisplayMode](#temperaturedisplaymode-属性) | [TemperatureDisplayModeEnum8](#temperaturedisplaymodeenum8-类型) | 见枚举 | 0x00 | R/W/RP | S | O | 温度显示单位。 |
+| 0x1006 | [FrostProtectionEnabled](#frostprotectionenabled-属性) | bool | true / false | false | R/W/RP | S | O | 防冻模式使能开关。 |
+| 0x1007 | [FrostProtectionTemperature](#frostprotectiontemperature-属性) | int16 | Min ~ Max，0.01℃ | 500 | R/W/RP | S | O | 防冻模式触发温度。 |
+| 0x1008 | [WindowDetectionEnabled](#windowdetectionenabled-属性) | bool | true / false | false | R/W/RP | S | O | 开窗检测功能使能开关。 |
+| 0x100A | [ActivePower](#activepower-属性) | uint32 | mW | — | RP | S | O | 当前功率。 |
+| 0x100B | [OpenWindowAlarm](#openwindowalarm-属性) | [OpenWindowAlarmEnum8](#openwindowalarmenum8-类型) | 见枚举 | 0x00 | R/RP | S | O | 当前开窗告警状态。 |
+| 0x100C | [OpenWindowTemperatureControlPauseDuration](#openwindowtemperaturecontrolpauseduration-属性) | uint16 | Min ~ Max，min | 30 | R/W/RP | S | O | 开窗告警触发后暂停主动温控输出的时长。 |
+| 0x100D | [OpenWindowTemperatureControlPauseDurationMin](#openwindowtemperaturecontrolpausedurationmin-属性) | uint16 | min | 1 | R/RP | S | O | 暂停时长下限。 |
+| 0x100E | [OpenWindowTemperatureControlPauseDurationMax](#openwindowtemperaturecontrolpausedurationmax-属性) | uint16 | min | 1440 | R/RP | S | O | 暂停时长上限。 |
+| 0x100F | [FrostProtectionAlarm](#frostprotectionalarm-属性) | [FrostProtectionAlarmEnum8](#frostprotectionalarmenum8-类型) | 见枚举 | 0x00 | R/RP | S | O | 当前防冻告警状态。 |
+| 0x1010 | [FrostProtectionTemperatureMin](#frostprotectiontemperaturemin-属性) | int16 | 0.01℃ | 500 | R/RP | S | O | 防冻触发温度下限。 |
+| 0x1011 | [FrostProtectionTemperatureMax](#frostprotectiontemperaturemax-属性) | int16 | 0.01℃ | 1500 | R/RP | S | O | 防冻触发温度上限。 |
+| 0xFFFB | [ServerAttributeList](#serverattributelist-属性) | list[uint16] | 无额外约束 | — | R/RP | S | M | Server 支持的属性列表。 |
 
 #### SystemMode 属性
 
@@ -2140,15 +2166,21 @@ Client MAY WRITE 该属性修改制热目标温度。Server SHALL 在目标温�
 
 #### FrostProtectionEnabled 属性
 
-`FrostProtectionEnabled` 表示防冻模式是否启用。`true` 表示启用，`false` 表示禁用。
+`FrostProtectionEnabled` 表示防冻保护是否启用。`true` 表示启用，`false` 表示禁用。
+
+当该属性为 `true` 时，Server SHALL 根据 `FrostProtectionTemperature` 监测用于防冻判断的实测温度。当该属性为 `false` 时，Server SHALL NOT 应用防冻保护行为，并 MAY 将 `FrostProtectionAlarm` 设置为 `NoAlarm`。未实现该属性时，是否启用防冻保护由产品定义。
 
 #### FrostProtectionTemperature 属性
 
-`FrostProtectionTemperature` 表示防冻模式触发温度，单位 0.01℃。当环境温度低于该值且防冻模式启用时，Server MAY 自动开启制热以防冻。
+`FrostProtectionTemperature` 表示防冻保护触发温度，单位 0.01℃。该属性的值 SHALL 大于等于 `FrostProtectionTemperatureMin`，且小于等于 `FrostProtectionTemperatureMax`。
+
+当 `FrostProtectionEnabled` 存在且为 `true`，并且用于防冻判断的实测温度低于该值时，Server SHALL 触发产品定义的防冻行为并将 `FrostProtectionAlarm` 设置为 `FrostProtectionAlarm`。若 `FrostProtectionEnabled` 不存在，防冻触发行为由产品定义。
 
 #### WindowDetectionEnabled 属性
 
 `WindowDetectionEnabled` 表示开窗检测功能是否启用。`true` 表示启用，`false` 表示禁用。
+
+当该属性为 `true` 时，Server MAY 使用快速温度变化、外部传感器输入或产品定义的其他逻辑检测开窗。当该属性为 `false` 时，Server SHALL NOT 应用开窗检测专有的温控行为，并 MAY 将 `OpenWindowAlarm` 设置为 `NoAlarm`、立即恢复温控。
 
 #### ActiveCurrent 属性
 
@@ -2158,11 +2190,76 @@ Client MAY WRITE 该属性修改制热目标温度。Server SHALL 在目标温�
 
 `ActivePower` 表示当前功率，单位 mW。Server SHOULD 按产品定义的周期或变化策略 REPORT 该属性。
 
+#### OpenWindowAlarm 属性
+
+`OpenWindowAlarm` 表示当前开窗告警状态，有效值见 [OpenWindowAlarmEnum8](#openwindowalarmenum8-类型)。
+
+检测到开窗且 `WindowDetectionEnabled` 为 `true` 时，Server **应** 将该属性设置为 `InternalOpenWindowAlarm` 或 `ExternalOpenWindowAlarm`，并进入控制暂停。告警清除后，Server **应** 将该属性设置为 `NoAlarm` 并恢复温控。
+
+`OpenWindowAlarm` 的值发生变化时，Server **应** REPORT 该属性。`ClearOpenWindowAlarmReq` 命令执行成功时，Server **应** 清除告警并立即恢复温控。
+
+#### OpenWindowTemperatureControlPauseDuration 属性
+
+`OpenWindowTemperatureControlPauseDuration` 表示开窗告警触发后控制暂停的持续时间，单位为分钟。该属性的值 **应** 大于等于 `OpenWindowTemperatureControlPauseDurationMin`，且小于等于 `OpenWindowTemperatureControlPauseDurationMax`。
+
+“控制暂停”是指 Server 暂停为维持当前目标温度而产生的主动制热或制冷输出，例如停止驱动阀门、继电器、压缩机或其他温控执行器。控制暂停不等同于关闭设备，也不改变 `SystemMode`、目标温度及其他用户配置。暂停期间，Server **应** 继续执行温度测量、属性读写与上报、命令处理及产品定义的安全保护；安全保护行为 **优先于** 控制暂停。
+
+开窗告警触发后，Server **应** 进入控制暂停并保持该属性指定的时长。暂停时间到期后，Server **应** 根据当前 `SystemMode`、目标温度和实测温度恢复正常温控。若告警在计时结束前被清除，Server **应** 立即结束控制暂停并重新进行温控判断。
+
+#### OpenWindowTemperatureControlPauseDurationMin 属性
+
+`OpenWindowTemperatureControlPauseDurationMin` 表示 `OpenWindowTemperatureControlPauseDuration` 支持的最小值，单位为分钟。
+
+#### OpenWindowTemperatureControlPauseDurationMax 属性
+
+`OpenWindowTemperatureControlPauseDurationMax` 表示 `OpenWindowTemperatureControlPauseDuration` 支持的最大值，单位为分钟。
+
+#### FrostProtectionAlarm 属性
+
+`FrostProtectionAlarm` 表示当前防冻告警状态，有效值见 [FrostProtectionAlarmEnum8](#frostprotectionalarmenum8-类型)。防冻保护激活时，Server **应** 将该属性设置为 `FrostProtectionAlarm`；防冻保护退出后，Server **应** 将该属性设置为 `NoAlarm`。
+
+该属性的值发生变化时，Server **应** REPORT。
+
+#### FrostProtectionTemperatureMin 属性
+
+`FrostProtectionTemperatureMin` 表示 `FrostProtectionTemperature` 支持的最小值，单位为 0.01℃。
+
+#### FrostProtectionTemperatureMax 属性
+
+`FrostProtectionTemperatureMax` 表示 `FrostProtectionTemperature` 支持的最大值，单位为 0.01℃。
+
 #### ServerAttributeList 属性
 
 `ServerAttributeList` 声明 Thermostat Profile 下 Server 实际支持的 Attribute ID 列表。
 
 该属性类型为 `list[uint16]`。列表元素 SHALL 按 Attribute ID 从小到大排列，并包含 `ServerAttributeList` 自身的 Attribute ID `0xFFFB`。
+
+### Thermostat 命令
+
+| ID      | 名称                      | 方向               | 应答                   | 必选性 | 简述                       |
+|---------|---------------------------|--------------------|------------------------|--------|----------------------------|
+| 0x1000  | [ClearOpenWindowAlarmReq](#clearopenwindowalarmreq-命令)   | Client → Server    | [ClearOpenWindowAlarmRsp](#clearopenwindowalarmrsp-命令)| O      | 清除当前开窗告警并立即恢复温控。 |
+| 0x1001  | [ClearOpenWindowAlarmRsp](#clearopenwindowalarmrsp-命令)   | Server → Client    | N                      | O      | 返回清除操作结果。          |
+
+有参命令的参数定义见各命令 **参数** 表；Data Segment 编码规则见 [Command](#commandopc--0x9)。
+
+#### ClearOpenWindowAlarmReq 命令
+
+该命令请求 Server 清除激活的开窗告警。命令执行成功后，Server **应** 将 `OpenWindowAlarm` 设置为 `NoAlarm`，并立即恢复温控，不受剩余 `OpenWindowTemperatureControlPauseDuration` 限制。
+
+该命令无参数。Server **应** 使用配对命令 `ClearOpenWindowAlarmRsp` 返回执行结果，不再另行返回 ACKNOWLEDGE。
+
+#### ClearOpenWindowAlarmRsp 命令
+
+该命令为 `ClearOpenWindowAlarmReq` 的配对返回命令。Client 收到后 **应** 不再返回 ACKNOWLEDGE。
+
+##### 参数
+
+| 参数顺序 | 名称    | 类型  | 约束           | 默认值 |
+|----------|---------|-------|----------------|--------|
+| 1        | Success | bool  | true / false   | —      |
+
+`Success` 表示命令的业务执行结果：`true` 表示操作成功，`false` 表示操作失败。
 
 ## 附录 A：串口消息示例
 
