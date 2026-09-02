@@ -25,7 +25,7 @@ Before you begin, please make sure:
 3. In the left **Protocols and Devices** tree, select the newly added **Modbus TCP** node, click the **Protocol Configuration** button, you can set the advanced configuration. Once the configuration is complete, click the **Close** button:   
     ![Click Protocol Configuration Button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/ModbusTCP-ClickProtocolConfiguration.png)
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/ModbusTCP-AdvancedConfiguration.png" alt="Advanced Configuration" style={{ width: '60%' }} />
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/ModbusTCP-AdvancedConfiguration.png" alt="Advanced Configuration" style={{ width: '70%' }} />
 
     | Parameter             | Description |
     |-----------------------|-------------|
@@ -66,132 +66,51 @@ Before you begin, please make sure:
 
     ![Click Manually Add Button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/ModbusTCP-ManuallyAdd.png)
 
-5. Click the new point to set its type and configure it. When finished, click **Complete adding**.
+5. In the list of function points, click the **+** button to add a new function point.
 
     ![Add and Configure Points](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/ModbusTCP-AddAndConfigurePoints.png)
 
-   <table>
-     <colgroup>
-       <col />
-       <col />
-       <col />
-       <col />
-     </colgroup>
-     <thead>
-       <tr>
-         <th>Parameter Name</th>
-         <th>Required</th>
-         <th>Description</th>
-         <th>Example</th>
-       </tr>
-     </thead>
-     <tbody>
-       <tr>
-         <td>Point Name</td>
-         <td>Yes</td>
-         <td>Your custom name for the point.</td>
-         <td>-</td>
-       </tr>
-       <tr>
-         <td>Object Type</td>
-         <td>No</td>
-         <td>No need to modify; use the default value.</td>
-         <td></td>
-       </tr>
-       <tr>
-         <td>Status Type</td>
-         <td>Required for Boolean Point</td>
-         <td>
-           <p>Choose when the point is <strong>Boolean</strong>. Supported options:</p>
-           <ul>
-             <li><strong>Coil</strong></li>
-             <li><strong>Input</strong></li>
-           </ul>
-         </td>
-         <td>Coil</td>
-       </tr>
-       <tr>
-         <td>Reg Type</td>
-         <td>Required for Numeric Point</td>
-         <td>
-           <p>Supported options:</p>
-           <ul>
-             <li><strong>Holding</strong></li>
-             <li><strong>Input</strong></li>
-           </ul>
-         </td>
-         <td>Holding</td>
-       </tr>
-       <tr>
-         <td>Data Type</td>
-         <td>Required for Numeric Point</td>
-         <td>
-           <p>Supported options:</p>
-           <ul>
-             <li>Integer Type</li>
-             <li>Long Integer Type</li>
-             <li>Float Type</li>
-             <li>Signed Integer</li>
-             <li>Unsigned Long</li>
-           </ul>
-         </td>
-         <td>Integer Type</td>
-       </tr>
-       <tr>
-         <td>Poll Frequency</td>
-         <td>No</td>
-         <td>
-           <p>Supported options:</p>
-           <ul>
-             <li><strong>Fast</strong>: High frequency polling (for key control)</li>
-             <li><strong>Normal</strong>: Standard frequency</li>
-             <li><strong>Slow</strong>: Low frequency polling (for non-real-time status)</li>
-           </ul>
-         </td>
-         <td>Normal</td>
-       </tr>
-       <tr>
-         <td>Address Format</td>
-         <td>Yes</td>
-         <td>
-           <p>Type of address format. Supported options:</p>
-           <ul>
-             <li><strong>Hex</strong>: Hexadecimal, e.g., 0x0013.</li>
-             <li><strong>Decimal</strong>: e.g., 19.</li>
-             <li><strong>Modbus</strong>: Standard modbus address, e.g., 00001, 10001.</li>
-           </ul>
-         </td>
-         <td>Decimal</td>
-       </tr>
-       <tr>
-         <td>Address</td>
-         <td>Yes</td>
-         <td>
-           <p>Input value = Actual address – The offset address you set above</p>
-         </td>
-         <td>0</td>
-       </tr>
-       <tr>
-         <td>Device Type</td>
-         <td>Yes</td>
-         <td>It is used to link this point to the corresponding trait in the Aqara Spec protocol for standardized control and management.</td>
-         <td>-</td>
-       </tr>
-     </tbody>
-   </table>
+    After adding a point, you can configure the following parameter types for it: **Point Add**, **Type Setting**, and **Data Mapping Rules**.
 
+    - **Point Addition**:  
+        | Parameter Name      | Required | Description | Example Configuration |
+        |---------------------|----------|-------------|----------------------|
+        | Point Name          | ✔        | The custom name you define for this point. | - |
+        | Poll Frequency   | ✘        | Controls the polling frequency of this point. Supported options: <ul><li><strong>Fast</strong>: 1 second, for high-frequency polling (suitable for key controls)</li><li><strong>Normal</strong>: 5 seconds, standard frequency</li><li><strong>Slow</strong>: 30 seconds, low frequency (for non-real-time status)</li></ul>This setting mainly takes effect when the point is read independently. If device-level polling is enabled, the actual refresh rate may follow the device polling group configuration. | Normal |
+        | Data Area Type       | ✔        | Supported types:<ul><li><strong>Holding Register</strong></li><li><strong>Input Register</strong></li><li><strong>Discrete Coil</strong></li><li><strong>Discrete Input</strong></li></ul> | Holding Register |
+        | Access Type         | ✘        | Supported:<ul><li>**Read Only**</li><li>**Read/Write**</li></ul> | Read/Write |
+        | Address Format | ✔    | Address format type, supports:<ul><li>**Hex**: e.g., 0x0013</li><li>**Decimal**: e.g., 19</li><li>**Modbus**: e.g., 00001, 10001, 30001, 40001</li></ul> | Decimal |
+        | Address    | ✔        | Enter the value according to the selected address format. hex example: 000A; decimal example: 10; modbus examples: 00001, 10001, 30001, 40001 | 10 |
+        | Data Type           | Required for numeric points | Data type. When register type is **Holding Register** or **Input Register**, this is required. Supported:<ul><li>UInt16</li><li>Int16</li><li>UInt32</li><li>Int32</li><li>Float32</li></ul> | Int16 |
+        | Unit                | Required for numeric points | Customize a suitable unit for this point. | - |
+        | Bit Number          | Required for numeric points | Used to read a specified single bit from a 16-bit holding or input register. Bit numbers are zero-based and range from 0 to 15, where 0 is the least significant bit. A value of -1 indicates that this configuration is not used. | -1 |
+        | Beginning Bit  | Required for numeric points | If a group of consecutive bits in a 16-bit register represents a value or state enum, fill in the start bit of this data segment. Numbered from 0, range 0-15, where 0 is the least significant bit. | 0 |
+        | Number of Bits      | Required for numeric points | If a group of consecutive bits in a 16-bit register represents a value or state enum, fill in the number of consecutive bits starting from the start bit. Range: 1-16; start bit + number of bits must not exceed 16. Currently only supports extracting consecutive segments from a single 16-bit register. | 1 |
+    - **Type Setting**:
+        - When the register type is **Holding Register** or **Input Register**:   
+            | Parameter Type  | Parameter Name | Required | Description | Example Configuration |
+            |----------------|---------------|----------|-------------|----------------------|
+            | Aqara Spec     | -             | ✔        | Associates this point with the corresponding function point in the Aqara Spec protocol for standardized control and management. | Air Conditioner/Heater Cooler/Set temperature |
+            | Point Value (Number) | Min value | ✔     | The minimum value for this numeric function point. | 16 |
+            |                | Max value       | ✔        | The maximum value for this numeric function point. | 30 |
+            |                | Step          | ✔        | The step of the value range for this point. | 1 |
+            |                | Unit          | ✔        | The unit of the value range for this point. | Celsius (℃) |
+            |                | Precision     | ✔        | The precision of the value range for this point. Supported: <ul><li>Integer</li><li>1 decimal place</li><li>2 decimal places</li><li>3 decimal places</li></ul> | Integer |
+        - When the register type is **Discrete Coil** or **Discrete Input**:   
+            | Parameter Type  | Parameter Name | Required | Description | Example Configuration |
+            |----------------|---------------|----------|-------------|----------------------|
+            | Aqara Spec     | -             | ✔        | Associates this point with the corresponding function point in the Aqara Spec protocol for standardized control and management. | Door and Window Sensor/Contact/Contact Status |
+            | Point Value (Boolean) | True text | ✔   | Display text when the boolean function point value is `true`. | Closed |
+            |                | False text    | ✔        | Display text when the boolean function point value is `false`. | Open |
+    - **Data Mapping Rules**: After enabled, the original physical value can be recalculated and mapped to a status. Please refer to [Numerical Mapping Functions](./../numerical-mapping-functions.mdx) for more details.
+        - When the **data area type** of the point is different from the **Aqara Spec type** (for example, a numeric type needs to be mapped to a boolean type, or a boolean type needs to be mapped to a numeric type), please enable this option to achieve conversion and mapping between the physical value and the standard function point type.
+        - If the **data area type** of the point and the **Aqara Spec type** are the same, you do not need to enable this option.
 
-### What is an Offset Address?
+6. After completing the point addition, return to the **Devices** page, and you can see the newly added Modbus TCP device under the Modbus TCP node.
 
-In the Modbus protocol, each data item in the device (such as registers or coils) has a numbered address used for reading or writing.
+    Select this device, and you can see the newly added points in the **Points** list in the device details page.
 
-However, the addresses used in Modbus messages start from 0 internally, while users often see addresses starting from 1, 30001, 40001, and so on. Therefore, Aqara Studio asks for an “offset address” to help automatically convert these values.
-
-For example, imagine a point with a real address of 40001 (holding register). If you set the “Holding Register Offset Address” to 40000, then when you add this point, you only need to input a data address of 1. Aqara Studio will automatically add the offset and calculate:
-
-Final read address = Offset address + Data address = 40000 + 1 = 40001
-
-This helps you configure many points easily. Just use the relative address (like 1, 2, 3) instead of the full Modbus address each time. This is both simple and consistent.
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/ModbusTCP-CheckNewDeviceAndPoint.png" alt="Device Details" />
 
 ## Next Steps
 

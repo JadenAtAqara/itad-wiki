@@ -2075,22 +2075,48 @@ The column meanings of all attribute tables in this chapter follow [Chapter 1 Fi
 | 0x00 | Celsius | Celsius. |
 | 0x01 | Fahrenheit | Fahrenheit. |
 
+#### OpenWindowAlarmEnum8
+
+The underlying type is enum8 and represents the open-window alarm state.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | NoAlarm | No open-window alarm. |
+| 0x01 | InternalOpenWindowAlarm | Open window detected by the internal temperature probe. |
+| 0x02 | ExternalOpenWindowAlarm | Open window detected by an external sensor. |
+
+#### FrostProtectionAlarmEnum8
+
+The underlying type is enum8 and represents the frost-protection alarm state.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | NoAlarm | No frost-protection alarm. |
+| 0x01 | FrostProtectionAlarm | Frost protection is active. |
+
 ### Attributes
 
 | ID | Name | Type | Constraint | Default | Access | Side | Conformance | Description |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0x1000 | SystemMode | [ThermostatSystemModeEnum8](#thermostatsystemmodeenum8) | See enum | 0x00 | R/W/RP | S | M | basic operating mode. |
-| 0x1001 | OccupiedHeatingSetpoint | int16 | Device capability range | - | R/W/RP | S | M | heating setpoint. |
-| 0x1002 | LocalTemperature | int16 | 0.01degC | - | R/RP | S | M | measured ambient temperature. |
-| 0x1003 | LocalTemperatureCalibration | int8 | 0.1degC | 0 | R/W/RP | S | M | local temperature calibration. |
-| 0x1004 | KeypadLockout | [KeypadLockoutEnum8](#keypadlockoutenum8) | See enum | 0x00 | R/W/RP | S | O | keypad lockout state. |
-| 0x1005 | TemperatureDisplayMode | [TemperatureDisplayModeEnum8](#temperaturedisplaymodeenum8) | See enum | 0x00 | R/W/RP | S | O | temperature display unit. |
-| 0x1006 | FrostProtectionEnabled | bool | true / false | false | R/W/RP | S | O | frost protection enable switch. |
-| 0x1007 | FrostProtectionTemperature | int16 | 0.01degC | - | R/W/RP | S | O | frost protection trigger temperature. |
-| 0x1008 | WindowDetectionEnabled | bool | true / false | false | R/W/RP | S | O | open-window detection enable switch. |
-| 0x1009 | ActiveCurrent | uint32 | mA | - | RP | S | O | current. |
-| 0x100A | ActivePower | uint32 | mW | - | RP | S | O | current power. |
-| 0xFFFB | ServerAttributeList | list[uint16] | No additional constraints | - | R/RP | S | M | list of attributes supported by Server. |
+| 0x1000 | [SystemMode](#systemmode) | [ThermostatSystemModeEnum8](#thermostatsystemmodeenum8) | See enum | 0x00 | R/W/RP | S | M | basic operating mode. |
+| 0x1001 | [OccupiedHeatingSetpoint](#occupiedheatingsetpoint) | int16 | Device capability range | - | R/W/RP | S | M | heating setpoint. |
+| 0x1002 | [LocalTemperature](#localtemperature) | int16 | 0.01degC | - | R/RP | S | M | measured ambient temperature. |
+| 0x1003 | [LocalTemperatureCalibration](#localtemperaturecalibration) | int8 | 0.1degC | 0 | R/W/RP | S | M | local temperature calibration. |
+| 0x1004 | [KeypadLockout](#keypadlockout) | [KeypadLockoutEnum8](#keypadlockoutenum8) | See enum | 0x00 | R/W/RP | S | O | keypad lockout state. |
+| 0x1005 | [TemperatureDisplayMode](#temperaturedisplaymode) | [TemperatureDisplayModeEnum8](#temperaturedisplaymodeenum8) | See enum | 0x00 | R/W/RP | S | O | temperature display unit. |
+| 0x1006 | [FrostProtectionEnabled](#frostprotectionenabled) | bool | true / false | false | R/W/RP | S | O | frost-protection enable switch. |
+| 0x1007 | [FrostProtectionTemperature](#frostprotectiontemperature) | int16 | Min ~ Max, 0.01degC | 500 | R/W/RP | S | O | frost-protection trigger temperature. |
+| 0x1008 | [WindowDetectionEnabled](#windowdetectionenabled) | bool | true / false | false | R/W/RP | S | O | open-window detection enable switch. |
+| 0x1009 | [ActiveCurrent](#activecurrent) | uint32 | mA | - | RP | S | O | current. |
+| 0x100A | [ActivePower](#activepower) | uint32 | mW | - | RP | S | O | current power. |
+| 0x100B | [OpenWindowAlarm](#openwindowalarm) | [OpenWindowAlarmEnum8](#openwindowalarmenum8) | See enum | 0x00 | R/RP | S | O | current open-window alarm state. |
+| 0x100C | [OpenWindowTemperatureControlPauseDuration](#openwindowtemperaturecontrolpauseduration) | uint16 | Min ~ Max, min | 30 | R/W/RP | S | O | duration for which active temperature-control output is suspended after an open-window alarm. |
+| 0x100D | [OpenWindowTemperatureControlPauseDurationMin](#openwindowtemperaturecontrolpausedurationmin) | uint16 | min | 1 | R/RP | S | O | minimum pause duration. |
+| 0x100E | [OpenWindowTemperatureControlPauseDurationMax](#openwindowtemperaturecontrolpausedurationmax) | uint16 | min | 1440 | R/RP | S | O | maximum pause duration. |
+| 0x100F | [FrostProtectionAlarm](#frostprotectionalarm) | [FrostProtectionAlarmEnum8](#frostprotectionalarmenum8) | See enum | 0x00 | R/RP | S | O | current frost-protection alarm state. |
+| 0x1010 | [FrostProtectionTemperatureMin](#frostprotectiontemperaturemin) | int16 | 0.01degC | 500 | R/RP | S | O | minimum frost-protection temperature. |
+| 0x1011 | [FrostProtectionTemperatureMax](#frostprotectiontemperaturemax) | int16 | 0.01degC | 1500 | R/RP | S | O | maximum frost-protection temperature. |
+| 0xFFFB | [ServerAttributeList](#serverattributelist) | list[uint16] | No additional constraints | - | R/RP | S | M | list of attributes supported by Server. |
 
 #### SystemMode
 
@@ -2130,15 +2156,21 @@ Valid values are defined in [TemperatureDisplayModeEnum8](#temperaturedisplaymod
 
 #### FrostProtectionEnabled
 
-`FrostProtectionEnabled` indicates whether frost protection is enabled. `true` means enabled, `false` means disabled.
+`FrostProtectionEnabled` indicates whether frost protection is enabled. `true` means enabled, and `false` means disabled.
+
+When this attribute is `true`, the Server SHALL monitor the measured temperature used for frost protection against `FrostProtectionTemperature`. When this attribute is `false`, the Server SHALL NOT apply frost-protection behavior and MAY set `FrostProtectionAlarm` to `NoAlarm`. If this attribute is not implemented, whether frost protection is enabled is product-defined.
 
 #### FrostProtectionTemperature
 
-`FrostProtectionTemperature` represents the frost protection trigger temperature, in units of 0.01degC. When ambient temperature is lower than this value and frost protection is enabled, Server MAY automatically start heating for frost protection.
+`FrostProtectionTemperature` represents the frost-protection trigger temperature, in units of 0.01degC. Its value SHALL be greater than or equal to `FrostProtectionTemperatureMin` and less than or equal to `FrostProtectionTemperatureMax`.
+
+When `FrostProtectionEnabled` exists and is `true`, and the measured temperature used for frost protection is below this value, the Server SHALL trigger product-defined frost-protection behavior and set `FrostProtectionAlarm` to `FrostProtectionAlarm`. If `FrostProtectionEnabled` is absent, frost-protection triggering is product-defined.
 
 #### WindowDetectionEnabled
 
-`WindowDetectionEnabled` indicates whether open-window detection is enabled. `true` means enabled, `false` means disabled.
+`WindowDetectionEnabled` indicates whether open-window detection is enabled. `true` means enabled, and `false` means disabled.
+
+When this attribute is `true`, the Server MAY use rapid temperature changes, external sensor input, or other product-defined logic to detect an open window. When this attribute is `false`, the Server SHALL NOT apply temperature-control behavior specific to open-window detection and MAY set `OpenWindowAlarm` to `NoAlarm` and immediately resume temperature control.
 
 #### ActiveCurrent
 
@@ -2148,11 +2180,76 @@ Valid values are defined in [TemperatureDisplayModeEnum8](#temperaturedisplaymod
 
 `ActivePower` represents the current power, in mW. Server SHOULD REPORT this attribute according to the product-defined period or change policy.
 
+#### OpenWindowAlarm
+
+`OpenWindowAlarm` indicates the current open-window alarm state. Valid values are defined in [OpenWindowAlarmEnum8](#openwindowalarmenum8).
+
+When an open window is detected while `WindowDetectionEnabled` is `true`, the Server SHALL set this attribute to `InternalOpenWindowAlarm` or `ExternalOpenWindowAlarm` and enter the temperature-control pause. After the alarm is cleared, the Server SHALL set this attribute to `NoAlarm` and resume temperature control.
+
+The Server SHALL REPORT this attribute when its value changes. After successful execution of `ClearOpenWindowAlarmReq`, the Server SHALL clear the alarm and immediately resume temperature control.
+
+#### OpenWindowTemperatureControlPauseDuration
+
+`OpenWindowTemperatureControlPauseDuration` indicates how long temperature control is paused after an open-window alarm is triggered, in minutes. Its value SHALL be greater than or equal to `OpenWindowTemperatureControlPauseDurationMin` and less than or equal to `OpenWindowTemperatureControlPauseDurationMax`.
+
+“Temperature-control pause” means that the Server suspends active heating or cooling output used to maintain the current target temperature, such as stopping a valve, relay, compressor, or other temperature-control actuator. A temperature-control pause does not turn off the device and does not change `SystemMode`, target temperatures, or other user configuration. During the pause, the Server SHALL continue temperature measurement, attribute reads/writes and reporting, command processing, and product-defined safety protection. Safety-protection behavior SHALL take precedence over the temperature-control pause.
+
+After an open-window alarm is triggered, the Server SHALL enter the temperature-control pause for the duration specified by this attribute. When the duration expires, the Server SHALL resume normal temperature control according to the current `SystemMode`, target temperature, and measured temperature. If the alarm is cleared before the timer expires, the Server SHALL end the pause immediately and reevaluate temperature control.
+
+#### OpenWindowTemperatureControlPauseDurationMin
+
+`OpenWindowTemperatureControlPauseDurationMin` indicates the minimum value supported for `OpenWindowTemperatureControlPauseDuration`, in minutes.
+
+#### OpenWindowTemperatureControlPauseDurationMax
+
+`OpenWindowTemperatureControlPauseDurationMax` indicates the maximum value supported for `OpenWindowTemperatureControlPauseDuration`, in minutes.
+
+#### FrostProtectionAlarm
+
+`FrostProtectionAlarm` indicates the current frost-protection alarm state. Valid values are defined in [FrostProtectionAlarmEnum8](#frostprotectionalarmenum8). While frost protection is active, the Server SHALL set this attribute to `FrostProtectionAlarm`. After frost protection ends, the Server SHALL set it to `NoAlarm`.
+
+The Server SHALL REPORT this attribute when its value changes.
+
+#### FrostProtectionTemperatureMin
+
+`FrostProtectionTemperatureMin` indicates the minimum value supported for `FrostProtectionTemperature`, in units of 0.01degC.
+
+#### FrostProtectionTemperatureMax
+
+`FrostProtectionTemperatureMax` indicates the maximum value supported for `FrostProtectionTemperature`, in units of 0.01degC.
+
 #### ServerAttributeList
 
 `ServerAttributeList` declares the Attribute ID list actually supported by Server under Thermostat Profile.
 
 The attribute type is `list[uint16]`. List elements SHALL be sorted by Attribute ID in ascending order and include `ServerAttributeList`'s own Attribute ID `0xFFFB`.
+
+### Thermostat Commands
+
+| ID      | Name                      | Direction         | Response               | Conformance | Description                                                                      |
+|---------|---------------------------|-------------------|------------------------|-------------|----------------------------------------------------------------------------------|
+| 0x1000  | [ClearOpenWindowAlarmReq](#clearopenwindowalarmreq)   | Client → Server   | [ClearOpenWindowAlarmRsp](#clearopenwindowalarmrsp)| O           | Clear the active open-window alarm and immediately resume temperature control.    |
+| 0x1001  | [ClearOpenWindowAlarmRsp](#clearopenwindowalarmrsp)   | Server → Client   | N                      | O           | Return the result of the clear operation.                                         |
+
+Parameter definitions for commands with parameters are provided in each command's **Parameters** table. The Data Segment encoding is described in [COMMAND (OPC = 0x9)](#command-opc--0x9).
+
+#### ClearOpenWindowAlarmReq
+
+This command requests the Server to clear the active open-window alarm. After successful execution, the Server SHALL set `OpenWindowAlarm` to `NoAlarm` and immediately resume temperature control, regardless of any remaining `OpenWindowTemperatureControlPauseDuration`.
+
+This command has no parameters. The Server SHALL return the result using the paired `ClearOpenWindowAlarmRsp` command and SHALL NOT return a separate ACKNOWLEDGE.
+
+#### ClearOpenWindowAlarmRsp
+
+This command is the paired response to `ClearOpenWindowAlarmReq`. The Client SHALL NOT send an ACKNOWLEDGE after receiving it.
+
+##### Parameters
+
+| Parameter Order | Name    | Type | Constraint     | Default |
+|:---------------:|---------|------|---------------|---------|
+| 1               | Success | bool | true/false    | -       |
+
+`Success` indicates the result of the command: `true` means success and `false` means failure.
 
 ## Appendix A: UART Message Examples
 
