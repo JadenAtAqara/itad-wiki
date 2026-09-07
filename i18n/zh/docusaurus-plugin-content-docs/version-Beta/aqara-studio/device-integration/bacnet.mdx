@@ -22,9 +22,13 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "BACnet 设备接入"
 2. 在弹窗中选择 `BACnet IP`，以添加 `BACnet IP`。   
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Protocols-ChooseBACnetIP.png" alt="选择 BACnet IP" style={{ width: '60%' }} /> 
 
-3. 选择 `BACnet IP`，进入 `协议配置` 选项卡，您需要配置该协议的参数。
+3. 选择 `BACnet IP`，单击 `协议配置` 按钮。
 
-    ![Configure Protocol](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Bacnet-ProtocolConfiguration.png)
+    ![Click Protocol Configuration Button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-ClickProtocolConfiguration.png)
+
+    您可以配置以下类型的参数：**基础配置**、**工作模式配置**、**高级配置**。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-ProtocolConfiguration.png" alt="Configure Protocol" style={{ width: '70%' }} />
 
     相关参数如下表所示：
 
@@ -94,8 +98,8 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "BACnet 设备接入"
                 <td rowspan="6">高级配置</td>
                 <td>可接收的最大APDU长度（单位：字节）</td>
                 <td>✘</td>
-                <td>支持的最大 APDU（Application Protocol Data Unit，应用层协议数据单元）数据长度，单位为字节，建议不大于 1476。</td>
-                <td>1076</td>
+                <td>支持的最大 APDU（Application Protocol Data Unit，应用层协议数据单元）数据长度，单位为字节，不大于 1476。</td>
+                <td>1476</td>
             </tr>
             <tr>
                 <td>是否支持报文分段</td>
@@ -118,7 +122,7 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "BACnet 设备接入"
             <tr>
                 <td>字符编码集</td>
                 <td>✘</td>
-                <td>使用的字符编码集，用于确保设备间文本信息的正确编码与解码。支持选项：ISO_10646_UTF8、IBM_MICROSOFT_DBCS、JIS_X0208、ISO_10646_UCS4、ISO_10646_UCS2、ISO_8859_1、UNKNOWN。</td>
+                <td>使用的字符编码集，用于确保设备间文本信息的正确编码与解码。支持选项：<ul><li>ISO_10646_UTF8</li><li>IBM_MICROSOFT_DBCS</li><li>JIS_X0208</li><li>ISO_10646_UCS4</li><li>ISO_10646_UCS2</li><li>ISO_8859_1</li><li>未知</li></ul></td>
                 <td>ISO_10646_UTF8</td>
             </tr>
             <tr>
@@ -130,9 +134,17 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "BACnet 设备接入"
         </tbody>
     </table>
 
-4. （可选）切换至“添加设备”单选项卡，单击 ⚙ 按钮，即可设置设备发现规则。
+4. 单击 **添加设备** 按钮。
 
-    ![设置设备发现规则](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Bacnet-SetDiscoveryRule.png)
+    ![单击添加设备按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-ClickAddDevice.png)
+
+    在弹窗中选择 **自动发现**，并单击 **开始接入设备**。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-SelectAutoDiscovery.png" alt="开始接入设备" style={{ width: '60%' }} />
+
+5. （可选）单击 **⚙** 按钮，即可设置设备发现规则。
+
+    ![设置设备发现规则](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-SetDiscoveryRule.png)
 
     字段说明如下：
 
@@ -160,6 +172,10 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "BACnet 设备接入"
                 <td>等待响应时间</td>
                 <td>发现过程持续时长，单位为 s。<br /><strong>说明：</strong>如果扫描失败或未扫描到部分设备，可根据当前网络情况，调整此字段。</td>
             </tr>
+            <tr>
+                <td>Max Wait Time</td>
+                <td>发现过程的最大等待时间，单位为 s。默认值为 10 秒。</td>
+            </tr>
         </tbody>
     </table>
    
@@ -169,17 +185,26 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "BACnet 设备接入"
     如果本系统没有发现您的 BACnet 设备，您也可以 [手动添加该设备](#如何处理-aqara-studio-无法发现-bacnet-设备的问题)。
     :::
 
-    ![Discover Devices](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Bacnet-DiscoverDevices.png)
+    ![Discover Devices](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-ClickDiscoverDevices.png)
 
-6. 选择需接入的设备后，点击中间“+”按钮，新增设备会出现在右侧的**已添加设备列表**，并同步显示在左侧设备树的 BACnet IP 下。
+6. 选择需接入的设备后，点击中间“+”按钮。
 
-    ![添加一个 Bacnet 设备](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Bacnet-AddADevice.png)
+    ![添加一个 Bacnet 设备](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-SelectAndAddDevices.png)
+
+    新增设备会出现在右侧的已添加设备列表。单击 完成 按钮，退出添加设备流程。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-AddedDeviceList.png" alt="已添加设备列表" /> 
+
+7. 此时，您将在左侧 **协议和设备** 的 BACnet IP 节点下，以及该 BACnet IP 管理页面的设备列表中，看到已成功添加的设备。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-CheckAddedDevices.png" alt="设备已添加至 BACnet IP 下" /> 
+
 
 ## 添加功能点
 
-1. 在设备树选择您新增的设备，进入其`功能点`选项卡，单击`添加功能点`按钮。
+1. 在 BACnet IP 节点下选择一个 BACnet 设备，单击 **添加功能点** 按钮。
 
-    ![Bacnet 功能点页](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Bacnet-PointPage.png)
+    ![Bacnet 功能点页](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-ClickAddPoint.png)
 
 2. 在“添加功能点”页面，单击 **发现功能点** 按钮，Aqara Studio 即开始扫描发现该设备的功能点。 
 
@@ -187,17 +212,31 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "BACnet 设备接入"
     如果本系统没有发现你需要的功能点，您也可以 [手动添加该功能点](#如何处理-aqara-studio-无法发现-bacnet-功能点的问题)。
     :::
 
-    ![添加功能点](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Bacnet-AddPoints.png)
+    ![Add points](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-ClickDiscoverPoints.png)
 
-3. 勾选需要的点，单击中间 **+** 按钮，新增功能点会出现在右侧的**已添加功能点**列表，并同步显示在左侧设备树的相关设备下。
+3. 勾选需要的点，单击中间 **+** 按钮。
 
-    Aqara Studio 会自动将 BACnet 设备的功能点关联到 Aqara Spec 协议中的对应功能点，实现标准化控制与管理。
+    ![Add points](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-AddSelectedPoints.png)
 
-    :::tip
-    若 Aqara Studio 关联的功能点类型有误，可在设备树中选中对应功能点，进入**功能点详情**页面后，点击**功能点类型**即可调整。
+4. 此时，您可以看到 **添加功能点** 弹窗。在左侧的 **功能点** 列表中，选择一个功能点。
 
-    ![修改功能点类型](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnet-ModifyTrait.png )
-    :::
+    Aqara Studio 会根据点的类型，自动将功能点关联到 Aqara Spec 协议中的同类型功能点。请在左侧 **功能点配置** 中找到 **类型设置 > Aqara Spec**，确认推荐类型是否与该功能点的实际功能一致。如果不一致，请调整为正确功能点。
+
+    ![Configure points](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-ConfigurePoints.png)
+
+    如果该 BACnet 设备的功能点与您选择的 Aqara Spec 功能点数据类型不一致，系统将触发 **数据映射**。请在 **数据映射规则** 中配置原始数值与 Aqara Spec 目标值之间的映射关系。
+
+    ![数据映射](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-DataMapping.png)
+
+    完成一个功能点的配置后，可在 **功能点** 列表中选择其他点继续配置。所有功能点配置完成后，单击 **完成** 按钮，退出功能点配置流程。
+
+5. 此时，Aqara Studio 自动添加功能点。新增功能点会出现在右侧的 **已添加功能点** 列表。单击 **完成** 按钮，退出添加功能点流程。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-PointsAdded.png" alt="已添加功能点" /> 
+
+4. 此时，您将在该 BACnet 设备的管理页面中，看到已成功添加的功能点。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MQTT-CheckPoints.png" alt="已添加功能点" /> 
 
 ## 下一步
 
@@ -207,35 +246,89 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "BACnet 设备接入"
 
 ### 如何处理 Aqara Studio 无法发现 BACnet 设备的问题
 
-若 Aqara Studio 未发现您的 BACnet 设备，在已添加设备列表单击**手动添加**按钮，在“添加设备”弹窗中传入设备的各项参数，完成手动添加设备。
+若 Aqara Studio 未发现您的 BACnet 设备，请遵需如下步骤手动添加：
+1. 返回至 BACnet IP 管理页面，单击 **添加设备** 按钮，在弹窗中选择 **手动接入** 和 **开始接入设备** 按钮。
 
-具体参数说明如下表所示：
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-ManualOnboarding.png" alt="手动接入" />
 
-| 参数 | 是否必填 | 说明 | 配置示例 |
-| ---- | ------ | ---- | ------- |
-| 设备名称 | ✔ | 您自定义的 BACnet 设备名称。 |  |
-| 设备实例号 | ✔ | BACnet 设备在 BACnet 网络中的唯一标识符；范围为 [0, 4194303]。 | 1 |
-| 网络号 | ✔ | 用于标识逻辑子网，请确保唯一。取值范围：[0, 65535]。0：本地网络；65535：广播网络 | 1 |
-| MAC地址 | ✘ | 设备的 MAC 地址。 | - |
-| 地址类型 | ✘ | 指定 MAC 地址的格式和协议类型：<ul><li>UNKNOWN：未知类型；</li><li>ETHERNET：以太网 MAC 地址，6 字节，格式：AA:BB:CC:DD:EE:FF；</li><li>IP：IP 地址，4-6 字节，格式：192.168.1.1:47808）；</li><li>MSTP：MS/TP 地址，1 字节，主从令牌传递；</li><li>SC：安全连接地址，6 字节，WebSocket</li></ul> | - |
-| 可接收的最大APDU长度（单位：字节） | ✘ | 支持的最大 APDU（Application Protocol Data Unit，应用层协议数据单元）数据长度，单位为字节，建议不大于 1476。 | 1076 |
-| 是否支持报文分段 | ✘ | 可选支持项如下：<ul><li>支持收发分段（默认）：设备支持发送和接收分段的 APDU 报文；</li><li>仅发送分段：设备支持发送分段报文，但不支持接收分段报文；</li><li>仅接收分段：设备不支持发送分段报文，但可接收分段报文；</li><li>不支持分段：设备不支持发送或接收分段报文，仅支持长度不超过最大 APDU 限制的完整报文。</li></ul> | 支持收发分段 |
-| 编码 | ✘ | 使用的字符编码集，用于确保设备间文本信息的正确编码与解码。支持选项：<ul><li>ISO_10646_UTF8</li><li>IBM_MICROSOFT_DBCS</li><li>JIS_X0208</li><li>ISO_10646_UCS4</li><li>ISO_10646_UCS2</li><li>ISO_8859_1</li><li>UNKNOWN</li></ul> | ISO_10646_UTF8 |
-| 供应商名称 | ✘ | 设备厂商名称。 | - |
-| 型号名称 | ✘ | 设备型号。 | - |
-| 协议修订版本 | ✘ | 请传入 BACnet 协议中 `Protocol_Revision` 属性值。 | - |
-| 固件版本 | ✘ | 请传入 BACnet 协议中 `Firmware_Revision` 属性值。 | - |
-| 应用软件版本 | ✘ | 请传入 BACnet 协议中 `Application_Software_Version` 属性值。 | - |
+2. 填写如下设备信息，随后单击 **下一步** 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-FillInDeviceInfo.png" alt="填写设备信息" />
+
+    具体参数说明如下表所示：
+
+    - 基础配置：
+
+        | 参数 | 是否必填 | 说明 | 配置示例 |
+        | ---- | ------ | ---- | ------- |
+        | 设备名称 | ✔ | 您自定义的 BACnet 设备名称。 |  |
+        | 设备实例号 | ✔ | BACnet 设备在 BACnet 网络中的唯一标识符；范围为 [0, 4194303]。 | 1 |
+        | 网络号 | ✔ | 用于标识逻辑子网，请确保唯一。取值范围：[0, 65535]。0：本地网络；65535：广播网络 | 1 |
+        | MAC地址 | ✘ | 设备的 MAC 地址。 | - |
+        | 地址类型 | ✘ | 指定 MAC 地址的格式和协议类型：<ul><li>UNKNOWN：未知类型；</li><li>ETHERNET：以太网 MAC 地址，6 字节，格式：AA:BB:CC:DD:EE:FF；</li><li>IP：IP 地址，4-6 字节，格式：192.168.1.1:47808）；</li><li>MSTP：MS/TP 地址，1 字节，主从令牌传递；</li><li>SC：安全连接地址，6 字节，WebSocket</li></ul> | - |
+        | 可接收的最大APDU长度（单位：字节） | ✘ | 支持的最大 APDU（Application Protocol Data Unit，应用层协议数据单元）数据长度，单位为字节，建议不大于 1476。 | 1076 |
+        | 是否支持报文分段 | ✘ | 可选支持项如下：<ul><li>支持收发分段（默认）：设备支持发送和接收分段的 APDU 报文；</li><li>仅发送分段：设备支持发送分段报文，但不支持接收分段报文；</li><li>仅接收分段：设备不支持发送分段报文，但可接收分段报文；</li><li>不支持分段：设备不支持发送或接收分段报文，仅支持长度不超过最大 APDU 限制的完整报文。</li></ul> | 支持收发分段 |
+        | 编码 | ✘ | 使用的字符编码集，用于确保设备间文本信息的正确编码与解码。支持选项：<ul><li>ISO_10646_UTF8</li><li>IBM_MICROSOFT_DBCS</li><li>JIS_X0208</li><li>ISO_10646_UCS4</li><li>ISO_10646_UCS2</li><li>ISO_8859_1</li><li>UNKNOWN</li></ul> | ISO_10646_UTF8 | 
+
+    - 设备配置：
+
+        | 参数 | 是否必填 | 说明 | 配置示例 |
+        | ---- | ------ | ---- | ------- |
+        | 供应商名称 | ✘ | 设备厂商名称。 | - |
+        | 型号名称 | ✘ | 设备型号。 | - |
+        | 协议修订版本 | ✘ | 请传入 BACnet 协议中 `Protocol_Revision` 属性值。 | - |
+        | 固件版本 | ✘ | 请传入 BACnet 协议中 `Firmware_Revision` 属性值。 | - |
+        | 应用软件版本 | ✘ | 请传入 BACnet 协议中 `Application_Software_Version` 属性值。 | - |
+
+3. 单击 **手动添加** 按钮，开始手动添加功能点，详细流程请参考 [如何处理 Aqara Studio 无法发现 BACnet 功能点的问题](#如何处理-aqara-studio-无法发现-bacnet-功能点的问题)。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-ClickManuallyAdd.png" alt="手动添加" />
 
 ### 如何处理 Aqara Studio 无法发现 BACnet 功能点的问题
 
-若 Aqara Studio 未发现您需要的功能点，请在“添加功能点”的页面单击“手动添加”，在“添加点”弹窗中传入点的各项参数，完成手动添加点。
+若 Aqara Studio 未发现您需要的功能点，请遵需如下步骤手动添加：
+1. 返回至该 BACnet IP 设备的管理页面，单击 **添加功能点** 按钮。
 
-具体参数说明如下表所示：
+    ![Bacnet 功能点页](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-ClickAddPoint.png)
 
-| 参数 | 是否必填 | 说明 |
-| ---- | ------ | ---- |
-| 点名称 | ✔ | 您可自定义此功能点的名称。 |
-| 对象类型 | ✔ | BACnet 定义的功能点对象类型。 |
-| 对象实例号 | ✘ | 此功能点的对象实例号。取值范围：[0, 4194303]。 |
-| Aqara 对象类型 | ✘ | Aqara 定义的功能点对象类型。 |
+2. 单击 **手动添加** 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-ClickManuallyAdd.png" alt="手动添加" />
+
+    在 **添加功能点** 弹窗中，您可以在左侧 **功能点** 列表中单击 **+** 按钮，手动添加功能点。
+
+    选中新增的功能点后，即可配置其各项参数，详情参考如下：
+    - 点添加：
+
+        | 参数 | 是否必填 | 说明 |
+        | ---- | ------ | ---- |
+        | 点名称 | ✔ | 您可自定义此功能点的名称。 |
+        | 对象实例号 | ✔ | 此功能点的对象实例号。取值范围：[0, 4194303]。 |
+        | 对象类型 | ✔ |  这是 Bacnet 协议中用于定义数据点类型的标准，它规定了数据的格式、范围和含义。您可以阅读此 BACnet 设备的说明书了解所需点的对象类型。|
+        | 单位 | ✘ | 适用于此功能点的单位。 |
+
+    - 类型设置：
+        - 当功能点值的类型为数值型时：
+            
+            | 参数类型           | 参数名称   | 是否必填 | 参数说明                                                                                                               | 配置示例               |
+            |--------------------|------------|----------|------------------------------------------------------------------------------------------------------------------------|------------------------|
+            | Aqara Spec         | -          | ✔        | 用于将此点位关联到 Aqara Spec 协议中的对应功能点，实现标准化控制与管理。                                                | 空调/冷暖控制功能/设置温度 |
+            | 功能取值（数值）   | 最小值     | ✔        | 配置数值型功能点的取值范围的最小值。                                                                                   | 16                     |
+            |                    | 最大值     | ✔        | 配置数值型功能点的取值范围的最大值。                                                                                   | 30                     |
+            |                    | 步长       | ✔        | 配置数值型功能点的取值范围的步长。                                                                                     | 1                      |
+            |                    | 单位       | ✔        | 配置数值型功能点的取值范围的单位。                                                                                     | 摄氏度（℃）            |
+            |                    | 精度       | ✔        | 配置数值型功能点的取值范围的精度，支持以下：<ul><li>整数</li><li>小数点后 1 位</li><li>小数点后 2 位</li><li>小数点后 3 位</li></ul> | 整数                   |
+
+        - 当功能点值的类型为布尔型时：
+
+            | 参数类型           | 参数名称   | 是否必填 | 参数说明                                                                          | 配置示例                  |
+            |--------------------|------------|----------|-----------------------------------------------------------------------------------|---------------------------|
+            | Aqara Spec         | -          | ✔        | 用于将此点位关联到 Aqara Spec 协议中的对应功能点，实现标准化控制与管理。           | 门窗传感器/接触/接触状态    |
+            | 功能取值（布尔）   | true 文本  | ✔        | 配置布尔型功能点取值为 true 时显示的文本。                                        | 已关上                    |
+            |                    | false 文本 | ✔        | 配置布尔型功能点取值为 false 时显示的文本。                                       | 已打开                    |
+
+    - **数据映射规则**：开启后可对读取到的原始物理数值进行二次逻辑计算与状态映射。相关规则请阅读 [数值映射函数](./../numerical-mapping-functions.mdx)
+        - 当功能点值的类型与 **Aqara Spec 类型**不一致时（如数值型需要映射为布尔型，或布尔型需要映射为数值型），请开启此选项，实现物理值与标准功能点类型之间的转换与映射。
+        - 若功能点值的类型与 **Aqara Spec 类型**一致，则无需开启本选项。
+
+3. 配置完所有点后，单击 **完成** 按钮，退出添加功能点流程。

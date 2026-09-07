@@ -88,7 +88,7 @@ Before you begin, please make sure:
         | Number of Bits      | Required for numeric points | If a group of consecutive bits in a 16-bit register represents a value or state enum, fill in the number of consecutive bits starting from the start bit. Range: 1-16; start bit + number of bits must not exceed 16. Currently only supports extracting consecutive segments from a single 16-bit register. | 1 |
     - **Type Setting**:
         - When the register type is **Holding Register** or **Input Register**:   
-            | Parameter Type  | Parameter Name | Required | Description | Example Configuration |
+            | Parameter  | Parameter Name | Required | Description | Example Configuration |
             |----------------|---------------|----------|-------------|----------------------|
             | Aqara Spec     | -             | ✔        | Associates this point with the corresponding function point in the Aqara Spec protocol for standardized control and management. | Air Conditioner/Heater Cooler/Set temperature |
             | Point Value (Number) | Min value | ✔     | The minimum value for this numeric function point. | 16 |
@@ -97,7 +97,7 @@ Before you begin, please make sure:
             |                | Unit          | ✔        | The unit of the value range for this point. | Celsius (℃) |
             |                | Precision     | ✔        | The precision of the value range for this point. Supported: <ul><li>Integer</li><li>1 decimal place</li><li>2 decimal places</li><li>3 decimal places</li></ul> | Integer |
         - When the register type is **Discrete Coil** or **Discrete Input**:   
-            | Parameter Type  | Parameter Name | Required | Description | Example Configuration |
+            | Parameter  | Parameter Name | Required | Description | Example Configuration |
             |----------------|---------------|----------|-------------|----------------------|
             | Aqara Spec     | -             | ✔        | Associates this point with the corresponding function point in the Aqara Spec protocol for standardized control and management. | Door and Window Sensor/Contact/Contact Status |
             | Point Value (Boolean) | True text | ✔   | Display text when the boolean function point value is `true`. | Closed |
