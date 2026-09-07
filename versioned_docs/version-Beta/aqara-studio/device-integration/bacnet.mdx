@@ -22,9 +22,13 @@ Before you start, please make sure your network meets these conditions based on 
 2. Select `BACnet IP` in the popup.   
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Protocols-ChooseBACnetIP.png" alt="Select BACnet IP" style={{ width: '60%' }} /> 
 
-3. Select `BACnet IP`. Go to the `Protocol Configuration` tab, and set the protocol parameters.
+3. Select `BACnet IP`, and click the `Protocol Configuration` button, you need to configure the parameters of the protocol.
 
-    ![Configure Protocol](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Bacnet-ProtocolConfiguration.png)
+    ![Configure Protocol](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-ClickProtocolConfiguration.png)
+
+    You can configure the following types of parameters: **Basic Configuration**, **Worker Mode Configuration**, **Advanced Configuration**.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-ProtocolConfiguration.png" alt="Configure Protocol" style={{ width: '70%' }} />
 
     The relevant parameters are shown in the following table:
 
@@ -118,7 +122,7 @@ Before you start, please make sure your network meets these conditions based on 
             <tr>
                 <td>Character Set</td>
                 <td>✘</td>
-                <td>The character set used, to ensure text information can be correctly encoded and decoded between devices. Supported options: ISO_10646_UTF8, IBM_MICROSOFT_DBCS, JIS_X0208, ISO_10646_UCS4, ISO_10646_UCS2, ISO_8859_1, UNKNOWN.</td>
+                <td>The character set used, to ensure text information can be correctly encoded and decoded between devices. Supported options:<ul><li>ISO_10646_UTF8</li><li>IBM_MICROSOFT_DBCS</li><li>JIS_X0208</li><li>ISO_10646_UCS4</li><li>ISO_10646_UCS2</li><li>ISO_8859_1</li><li>UNKNOWN</li></ul></td>
                 <td>ISO_10646_UTF8</td>
             </tr>
             <tr>
@@ -130,9 +134,17 @@ Before you start, please make sure your network meets these conditions based on 
         </tbody>
     </table>
 
-4. (Optional) Go to the "Add Device" tab, and click the ⚙ button to set up device discovery rules.
+4. Click the **Add Device** button.
 
-    ![Configure Protocol](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Bacnet-ProtocolConfiguration.png)
+    ![Click Add Device Button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-ClickAddDevice.png)
+
+    In the popup, select **Auto Discovery** and click the **Start connecting the device** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-SelectAutoDiscovery.png" alt="Select Auto Discovery" style={{ width: '60%' }} />
+
+5. (Optional) Click the **⚙** button to set up device discovery rules.
+
+    ![Configure Protocol](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-SetDiscoveryRule.png)
 
     The relevant parameters are described in the following table:
 
@@ -160,6 +172,10 @@ Before you start, please make sure your network meets these conditions based on 
                 <td>Wait Response Time</td>
                 <td>The time for the discovery process, in seconds. <br /><strong>Note:</strong> If device discovery fails or some devices are not found, adjust this field based on network conditions.</td>
             </tr>
+            <tr>
+                <td>Max Wait Time</td>
+                <td>The maximum time to wait for the discovery process, in seconds. Default is 10 seconds.</td>
+            </tr>
         </tbody>
     </table>
    
@@ -169,17 +185,25 @@ Before you start, please make sure your network meets these conditions based on 
     If Aqara Studio does not find your BACnet device, you can also [add the device manually](#how-to-handle-bacnet-devices-not-discovered-by-aqara-studio).
     :::
 
-    ![Discover Devices](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Bacnet-DiscoverDevices.png)    
+    ![Discover Devices](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-ClickDiscoverDevices.png)    
 
-6. Select the device(s) you want to add, and click the "+" button in the center. The newly added device(s) will appear in the **Added Device List** on the right, and will also be displayed under BACnet IP in the device tree on the left.
+6. Select the device(s) you want to add, and click the "+" button in the center. 
 
-    ![Add a Bacnet device](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Bacnet-AddADevice.png)
+    ![Add a Bacnet device](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-SelectAndAddDevices.png)
+
+    Newly added devices will appear in the **Added Device List** on the right. Click the **Complete** button to exit the add device process.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-AddedDeviceList.png" alt="Added Device List" /> 
+
+7. You will then see the successfully added devices under the BACnet IP node in the left **Protocols and Devices** panel, as well as in the device list on the BACnet IP management page.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-CheckAddedDevices.png" alt="Devices have been added" />
 
 ## Add Points
 
-1. In the device tree, select the newly added device, go to the `Point` tab and click the `Add point` button. 
+1. Under the BACnet IP node, select a BACnet device and click the **Add Point** button.
 
-    ![Bacnet Point Page](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Bacnet-PointPage.png)
+    ![Bacnet Point Page](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-ClickAddPoint.png)
 
 2. In the "Add point" page, click **Discover Points** button, Aqara Studio will begin scanning to discover function points for this device.
 
@@ -187,17 +211,31 @@ Before you start, please make sure your network meets these conditions based on 
     If the system does not discover the function points you need, you can also [add them manually](#how-to-handle-bacnet-points-not-discovered-by-aqara-studio).
     :::
 
-    ![Add points](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Bacnet-AddPoints.png)
+    ![Add points](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-ClickDiscoverPoints.png)
 
-3. Select the required points and click the blue "+" button. The newly added points will appear in the **Added Points** list on the right, and will also be displayed under the related device in the device tree on the left.
+3. Select the required points and click the blue "+" button. 
 
-    Aqara Studio will automatically map the points of BACnet devices to the feature points in the Aqara Spec protocol accordingly, enabling standardized control and management.
+    ![Add points](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/BACnetIP-AddSelectedPoints.png)
 
-    :::tip
-    If Aqara Studio mapped a point type incorrectly, you can select the point in the device tree, go to the **Point detail** page, and click **Point Type** to adjust it.
+4. You will then see the **Add Point** popup. In the left **Point** list, select a point.
 
-    ![Modify feature point type](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnet-ModifyTrait.png )
-    :::
+    Aqara Studio will automatically associate the function point with a matching type in the Aqara Spec protocol based on the point type. In the left **Point Configuration** panel, find **Type Setting > Aqara Spec**, and confirm whether the recommended type matches the actual function of this point. If not, adjust it to the correct function point.
+
+    ![Configure points](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-ConfigurePoints.png)
+
+    If the point of the BACnet device does not match the data type of the Aqara Spec point you selected, the system will trigger **Data Mapping**. Please configure the mapping relationship between the original value and the target value in the Aqara Spec in the **Data mapping rules**.
+
+    ![Data Mapping](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-DataMapping.png)
+
+    After completing the configuration of one point, you can select other points in the **Point** list to continue configuring. After all function points are configured, click the **Complete** button to exit the function point configuration process.
+
+5. Aqara Studio will automatically add the points. The newly added points will appear in the **Added Points** list on the right. Click the **Complete** button to exit the add point process.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-PointsAdded.png" alt="Added Points" /> 
+
+6. You will then see the added points on the BACnet device management page.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-CheckPoints.png" alt="Points have been added" /> 
 
 ## Next Steps
 
@@ -207,35 +245,88 @@ Now, you can [view details and control the device](./../device-management/basic-
 
 ### How to Handle BACnet Devices Not Discovered by Aqara Studio
 
-If Aqara Studio does not find your BACnet device, click "Manually Add." In the "Add Device" popup, enter the required parameters to finish adding the device.
+If Aqara Studio does not discover your BACnet device, please follow these steps to manually add it:
+1. Return to the BACnet IP management page, click the **Add Device** button, then select **Manual Onboarding** and click the **Start connecting the device** button in the popup.
 
-Details for each parameter are as follows:
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-ManualOnboarding.png" alt="Manual Onboarding" />
 
-| Parameter            | Required | Description | Example |
-|----------------------|----------|-------------|---------|
-| Device Name          | ✔        | Your custom name for the BACnet device. |         |
-| Device Object Instance Number | ✔      | Unique ID for the BACnet device on the BACnet network. Range: [0, 4194303]. | 1       |
-| Network Number        | ✔       | Identifies the logical subnet, must be unique. Range: [0,65535]. 0: Local, 65535: Broadcast | 1 |
-| MAC Address           | ✘       | MAC address of the device. | - |
-| Address Type          | ✘       | Specify the format and protocol type of MAC address:<ul><li>UNKNOWN: Unknown type</li><li>ETHERNET: 6-byte Ethernet MAC, format AA:BB:CC:DD:EE:FF</li><li>IP: 4-6 byte IP address, format 192.168.1.1:47808</li><li>MSTP: 1 byte, Master-Slave/Token-Passing</li><li>SC: 6-byte Secure Connection, WebSocket</li></ul> | - |
-| Max APDU Length Accepted (bytes) | ✘ | The maximum APDU (Application Protocol Data Unit) length in bytes. Recommended no larger than 1476. | 1076    |
-| Segmentation Supported    | ✘ | Options: <ul><li>Send and Receive Segmentation (default): Supports both sending and receiving segmented APDUs.</li><li>Send Only: Only supports sending segmented messages.</li><li>Receive Only: Can only receive segmented messages.</li><li>No Segmentation: Only unsegmented messages within the length limit are supported.</li></ul> | Send and Receive Segmentation |
-| Encoding              | ✘       | Character encoding used. Supported: <ul><li>ISO_10646_UTF8</li><li>IBM_MICROSOFT_DBCS</li><li>JIS_X0208</li><li>ISO_10646_UCS4</li><li>ISO_10646_UCS2</li><li>ISO_8859_1</li><li>UNKNOWN</li></ul> | ISO_10646_UTF8 |
-| Vendor Name           | ✘       | Name of the device manufacturer. | - |
-| Model Name            | ✘       | Model name of the device. | - |
-| Protocol Revision     | ✘       | Enter the `Protocol_Revision` property from BACnet. | - |
-| Firmware Version      | ✘       | Enter the `Firmware_Revision` property from BACnet. | - |
-| Application Software Version | ✘ | Enter the `Application_Software_Version` property from BACnet. | - |
+2. Fill in the following device information, then click the **Next step** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-FillInDeviceInfo.png" alt="Fill in device information" />
+
+    Details for each parameter are as follows:
+    - Basic Configuration: 
+
+        | Parameter            | Required | Description | Example |
+        |----------------------|----------|-------------|---------|
+        | Device Name          | ✔        | Your custom name for the BACnet device. |         |
+        | Device Object Instance Number | ✔      | Unique ID for the BACnet device on the BACnet network. Range: [0, 4194303]. | 1       |
+        | Network Number        | ✔       | Identifies the logical subnet, must be unique. Range: [0,65535]. 0: Local, 65535: Broadcast | 1 |
+        | MAC Address           | ✘       | MAC address of the device. | - |
+        | Address Type          | ✘       | Specify the format and protocol type of MAC address:<ul><li>UNKNOWN: Unknown type</li><li>ETHERNET: 6-byte Ethernet MAC, format AA:BB:CC:DD:EE:FF</li><li>IP: 4-6 byte IP address, format 192.168.1.1:47808</li><li>MSTP: 1 byte, Master-Slave/Token-Passing</li><li>SC: 6-byte Secure Connection, WebSocket</li></ul> | - |
+        | Max APDU Length Accepted (bytes) | ✘ | The maximum APDU (Application Protocol Data Unit) length in bytes. Recommended no larger than 1476. | 1076    |
+        | Segmentation Supported    | ✘ | Options: <ul><li>Send and Receive Segmentation (default): Supports both sending and receiving segmented APDUs.</li><li>Send Only: Only supports sending segmented messages.</li><li>Receive Only: Can only receive segmented messages.</li><li>No Segmentation: Only unsegmented messages within the length limit are supported.</li></ul> | Send and Receive Segmentation |
+        | Encoding              | ✘       | Character encoding used. Supported: <ul><li>ISO_10646_UTF8</li><li>IBM_MICROSOFT_DBCS</li><li>JIS_X0208</li><li>ISO_10646_UCS4</li><li>ISO_10646_UCS2</li><li>ISO_8859_1</li><li>UNKNOWN</li></ul> | ISO_10646_UTF8 |
+
+    - Device Configuration:
+
+        | Parameter            | Required | Description | Example |
+        |----------------------|----------|-------------|---------|
+        | Vendor Name           | ✘       | Name of the device manufacturer. | - |
+        | Model Name            | ✘       | Model name of the device. | - |
+        | Protocol Revision     | ✘       | Enter the `Protocol_Revision` property from BACnet. | - |
+        | Firmware Version      | ✘       | Enter the `Firmware_Revision` property from BACnet. | - |
+        | Application Software Version | ✘ | Enter the `Application_Software_Version` property from BACnet. | - |
+
+3. Click the **Manually Add** button, start manually adding points, please refer to [How to Handle BACnet Points Not Discovered by Aqara Studio](#how-to-handle-bacnet-points-not-discovered-by-aqara-studio) for detailed steps.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-ClickManuallyAdd.png" alt="Manually Add" /> 
 
 ### How to Handle BACnet Points Not Discovered by Aqara Studio
 
-If Aqara Studio does not find the points you need, click "Manually Add" on the Point Add page, and enter the point parameters in the popup.
+If Aqara Studio does not find the points you need, please follow these steps to manually add them:
+1. Return to the BACnet IP device management page, click the **Add Point** button.
 
-Details for each parameter are as follows:
+    ![Bacnet Point Page](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-ClickAddPoint.png)
 
-| Parameter           | Required | Description |
-|---------------------|----------|-------------|
-| Point Name          | ✔        | You can set a custom name for this point. |
-| Aqara Object Type   | ✘        | Object type defined by Aqara. |
-| Object Type         | ✔        | Object type as defined by BACnet. |
-| Object Instance identifier | ✘     | The instance number for this point. Range: [0, 4194303]. |
+2. Click the **Manually Add** button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnetIP-ClickManuallyAdd.png" alt="Manually Add" />
+
+    In the **Add Point** popup, you can click the **+** button in the left **Point** list to manually add a point.
+
+    After selecting the newly added point, you can configure its parameters. Details are as follows:
+    - Point Add：
+
+        | Parameter | Required | Description |
+        | ---- | ------ | ---- |
+        | Point Name | ✔ | You can customize the name of this point. |
+        | Object Instance identifier | ✔ | The object instance identifier of this point. Range: [0, 4194303]. |
+        | Object Type | ✔ | Object Type is a standard in Bacnet protocol used to define data point types, specifying the format, range, and meaning of data. You can read the description of this BACnet device to understand the object type of the point you need. |
+        | Unit | ✘ | The unit for this point. |
+
+    - **Type Setting**:
+        - When the value of the point is **numeric**:   
+
+            | Parameter Type  | Parameter Name | Required | Description | Example Configuration |
+            |----------------|---------------|----------|-------------|----------------------|
+            | Aqara Spec     | -             | ✔        | Associates this point with the corresponding function point in the Aqara Spec protocol for standardized control and management. | Air Conditioner/Heater Cooler/Set temperature |
+            | Point Value (Number) | Min value | ✔     | The minimum value for this numeric function point. | 16 |
+            |                | Max value       | ✔        | The maximum value for this numeric function point. | 30 |
+            |                | Step          | ✔        | The step of the value range for this point. | 1 |
+            |                | Unit          | ✔        | The unit of the value range for this point. | Celsius (℃) |
+            |                | Precision     | ✔        | The precision of the value range for this point. Supported: <ul><li>Integer</li><li>1 decimal place</li><li>2 decimal places</li><li>3 decimal places</li></ul> | Integer |
+            
+        - When the value of the point is **boolean**:   
+
+            | Parameter Type  | Parameter Name | Required | Description | Example Configuration |
+            |----------------|---------------|----------|-------------|----------------------|
+            | Aqara Spec     | -             | ✔        | Associates this point with the corresponding function point in the Aqara Spec protocol for standardized control and management. | Door and Window Sensor/Contact/Contact Status |
+            | Point Value (Boolean) | True text | ✔   | Display text when the boolean function point value is `true`. | Closed |
+            |                | False text    | ✔        | Display text when the boolean function point value is `false`. | Open |
+
+    - **Data Mapping Rules**: After enabled, the original physical value can be recalculated and mapped to a status. Please refer to [Numerical Mapping Functions](./../numerical-mapping-functions.mdx) for more details.
+        - When the **data area type** of the point is different from the **Aqara Spec type** (for example, a numeric type needs to be mapped to a boolean type, or a boolean type needs to be mapped to a numeric type), please enable this option to achieve conversion and mapping between the physical value and the standard function point type.
+        - If the **data area type** of the point and the **Aqara Spec type** are the same, you do not need to enable this option.
+
+3. After configuring all points, click the **Complete** button to exit the point adding process.

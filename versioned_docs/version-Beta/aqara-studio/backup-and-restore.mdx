@@ -76,10 +76,15 @@ You can restore user data using either of the following methods:
 
 Yes, but please ensure that both Aqara Studio versions of the source and target M300 are `1.2.3_37` or later.
 
-Simply **download** the backup file from the source M300 to your local computer, and then use the **Restore from file** feature to import the backup into the target M300. This allows you to complete data migration easily.
+The steps are as follows:
+1. Access Aqara Studio on the source M300 device and **download** the backup file to your computer.
+2. Power off the source M300 or perform a **factory reset** to prevent the target M300 from failing to connect to sub-devices later.
+3. Access Aqara Studio on the target M300, and use the **Restore from file** feature to import the previously downloaded backup file into the target M300. This will complete the data migration.
 
-After importing, the target M300 will acquire all data from the source M300 (including device information, automation configurations, etc.), so you do not need to add sub-devices again and can directly control the original sub-devices.
+    After import, the target M300 will be able to fully access all data from the source M300 (including device information, automation configurations, etc.), and you will be able to control the original sub-devices directly without re-adding them.
 
 :::tip
-After data restoration is complete, please make sure to power off or reset the source M300 to factory settings. Otherwise, the same sub-device may be managed by two M300 devices simultaneously, which could result in abnormal device states or intermittent loss of control.
+To prevent the same sub-device from being managed by two M300 devices simultaneously, which could cause device status anomalies or intermittent loss of control. Make sure to keep the source M300 powered off after the target M300 has successfully connected and is able to control the sub-devices.
+
+If you need to power on the source M300 again, please perform a **factory reset** first, and **avoid using the same backup file to restore data** in the future to ensure proper device operation.
 :::
