@@ -22,8 +22,13 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "KNX IP 设备接入"
 2. 在弹窗中选择 `KNX IP`，以添加 `KNX IP`。   
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Protocols-ChooseKNXIP.png" alt="选择 KNX IP" style={{ width: '60%' }} /> 
 
-3. 选择 `KNX IP`，切换至 **添加设备** 选项卡，在填写如下参数，保存并继续。   
-    ![添加 KNX 设备](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/KNX-AddADevice.png)   
+3. 选择 `KNX IP`，单击 **添加设备** 按钮。   
+    ![单击添加设备按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/KNXIP-ClickAddDevice.png)   
+
+4. 在 **添加 KNX IP 设备** 页面，填写如下参数，并单击 **下一步** 按钮。
+
+    ![添加 KNX IP 设备](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/KNXIP-AddKNXIPDevice.png)
+
     相关字段如下表所示：   
     <table>
       <thead>
@@ -64,22 +69,31 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "KNX IP 设备接入"
       </tbody>
     </table>
 
-4. **点击上传**设备对应的 KNXPROJ 文件或群组地址 XML 文件（均可通过 ETS6 导出）。   
-  ![上传文件](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/KNX-UploadFile.png)
+4. **导入**设备对应的 KNXPROJ 文件或群组地址 XML 文件（均可通过 ETS6 导出）。   
+ 
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/KNXIP-ImportFiles.png" alt="上传文件" />
 
-5. 文件上传成功后，点击 **发现功能点** 按钮，系统将自动解析文件并生成可添加的点位列表。
+5. 文件上传成功后，点击 **发现功能点** 按钮，系统将自动解析文件并生成可添加的功能点列表。
 
-  ![发现功能点](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/KNX-DiscoverPoints.png)
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/KNXIP-ClickDiscoverPoints.png" alt="单击发现功能点按钮" />
 
-6. 勾选需要的点，单击中间 **+** 按钮，新增功能点会出现在右侧的**已添加功能点**列表，并同步显示在左侧设备树的相关设备下。
-    
-    Aqara Studio 会自动将 BACnet 设备的功能点关联到 Aqara Spec 协议中的对应功能点，实现标准化控制与管理。
+6. 勾选需要的点，单击中间 **+** 按钮。
 
-    :::tip
-    若 Aqara Studio 关联的功能点类型有误，可在设备树中选中对应功能点，进入**功能点详情**页面后，点击**功能点类型**即可调整。
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/KNXIP-SelectPointsAndClickAdd.png" alt="选择功能点列表并单击添加" />
 
-    ![修改功能点类型](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/KNX-ModifyTrait.png)
-    :::
+    Aqara Studio 会根据点的类型，自动将功能点关联到 Aqara Spec 协议中的同类型功能点。请在左侧 **功能点配置** 中找到 **类型设置 > Aqara Spec**，确认推荐类型是否与该功能点的实际功能一致。如果不一致，请调整为正确功能点。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/KNXIP-ConfigurePointsAndSave.png" alt="配置功能点列表并保存" />
+
+    如果该 KNX IP 设备的功能点与您选择的 Aqara Spec 功能点数据类型不一致，系统将触发 **数据映射**。请在 **数据映射规则** 中配置原始数值与 Aqara Spec 目标值之间的映射关系。
+
+    新增功能点会出现在右侧的**已添加功能点**列表，并同步显示在左侧设备树的相关设备下
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/KNXIP-PointsAddedAndComplete.png" alt="功能点列表添加完成" />
+
+7. 回到 **设备管理** 页面，您会发现在 **协议与设备** 树的 **KNX IP** 节点中存在已添加的设备。选择该设备，您可以查看功能点列表。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/KNXIP-CheckAddedDeviceAndPoints.png" alt="检查已添加设备和功能点列表" />
 
 ## 下一步
 
@@ -87,15 +101,49 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "KNX IP 设备接入"
 
 ## 常见问题
 
-### 如何修改和手动添加 KNX 点位
+### 如何手动添加 KNX 功能点列表添加完成
 
-在添加点的页面，如果您需要修改已发现的点的信息，或想要手动添加点，可参考如下方式，分别单击“添加”或“手动添加”。
+1. 在左侧侧边栏点击进入**设备管理**页面。在左侧 **协议和设备** 树选择设备，进入其管理页面。单击 **添加功能点** 按钮。
+    
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/KNXIP-ClickAddPoint.png" alt="单击添加功能点按钮" />
 
-此时，您会看到一个“点添加”弹窗，在该弹窗中提供下表所示信息，即可完成：
+2. 在添加功能点的页面，单击 **手动添加** 按钮。
 
-| 参数名称   | 说明 |
-|------------|-----|
-| KNX点名称  | 您自定义的点位名称。 |
-| KNX组地址  | 点位对应的 KNX 组地址，此字段您在 ETS6 上配置的相关字段。 |
-| 数据点类型 | 点位的数据类型（DPT），此字段您在 ETS6 上配置的相关字段。 |
-| Aqara对象类型   | 点位所属的设备类型。 |
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/KNXIP-ClickManualAdd.png" alt="单击手动添加功能点按钮" />
+
+3. 在 **添加功能点** 弹窗中，您可以在左侧 **功能点** 列表中单击 **+** 按钮，手动添加功能点。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/KNXIP-ConfigureCustomPoints.png" alt="配置自定义功能点" />
+
+    选中新增的功能点后，即可配置其各项参数，详情参考如下：
+    - 点添加：
+
+        | 参数 | 是否必填 | 说明 |
+        | ---- | ------ | ---- |
+        | KNX点名称 | ✔ | 您自定义的点位名称。 |
+        | KNX组地址 | ✔ | 点位对应的 KNX 组地址，此字段您在 ETS6 上配置的相关字段。 |
+        | 数据点类型 | ✔ | 点位的数据类型（DPT），此字段您在 ETS6 上配置的相关字段。 |
+        
+    - 类型设置：
+        - 当功能点值的类型为数值型时：
+            
+            | 参数类型           | 参数名称   | 是否必填 | 参数说明                                                                                                               | 配置示例               |
+            |--------------------|------------|----------|------------------------------------------------------------------------------------------------------------------------|------------------------|
+            | Aqara Spec         | -          | ✔        | 用于将此点位关联到 Aqara Spec 协议中的对应功能点，实现标准化控制与管理。                                                | 空调/冷暖控制功能/设置温度 |
+            | 功能取值（数值）   | 最小值     | ✔        | 配置数值型功能点的取值范围的最小值。                                                                                   | 16                     |
+            |                    | 最大值     | ✔        | 配置数值型功能点的取值范围的最大值。                                                                                   | 30                     |
+            |                    | 步长       | ✔        | 配置数值型功能点的取值范围的步长。                                                                                     | 1                      |
+            |                    | 单位       | ✔        | 配置数值型功能点的取值范围的单位。                                                                                     | 摄氏度（℃）            |
+            |                    | 精度       | ✔        | 配置数值型功能点的取值范围的精度，支持以下：<ul><li>整数</li><li>小数点后 1 位</li><li>小数点后 2 位</li><li>小数点后 3 位</li></ul> | 整数                   |
+
+        - 当功能点值的类型为布尔型时：
+
+            | 参数类型           | 参数名称   | 是否必填 | 参数说明                                                                          | 配置示例                  |
+            |--------------------|------------|----------|-----------------------------------------------------------------------------------|---------------------------|
+            | Aqara Spec         | -          | ✔        | 用于将此点位关联到 Aqara Spec 协议中的对应功能点，实现标准化控制与管理。           | 门窗传感器/接触/接触状态    |
+            | 功能取值（布尔）   | true 文本  | ✔        | 配置布尔型功能点取值为 true 时显示的文本。                                        | 已关上                    |
+            |                    | false 文本 | ✔        | 配置布尔型功能点取值为 false 时显示的文本。                                       | 已打开                    |
+
+    - **数据映射规则**：开启后可对读取到的原始物理数值进行二次逻辑计算与状态映射。相关规则请阅读 [数值映射函数](./../numerical-mapping-functions.mdx)
+        - 当功能点值的类型与 **Aqara Spec 类型**不一致时（如数值型需要映射为布尔型，或布尔型需要映射为数值型），请开启此选项，实现物理值与标准功能点类型之间的转换与映射。
+        - 若功能点值的类型与 **Aqara Spec 类型**一致，则无需开启本选项。  

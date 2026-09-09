@@ -22,8 +22,14 @@ Before you start, please make sure:
 2. Select `KNX IP` in the popup.   
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Protocols-ChooseKNXIP.png" alt="Select KNX IP" style={{ width: '60%' }} /> 
 
-3. Click `KNX IP`, switch to the **Add Device** tab. fill in the following parameters, and then click the  **Save and continue** button.   
-    ![Add a KNX device](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/KNX-AddADevice.png)   
+3. Click `KNX IP`, switch to the **Add Device** tab.   
+
+    ![Click Add Device Button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/KNXIP-ClickAddDevice.png)  
+
+4. fill in the following parameters, and then click the  **Save and continue** button.    
+
+    ![Add KNX IP Device](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/KNXIP-AddKNXIPDevice.png)
+
     The relevant parameters are shown in the following table:   
     <table>
       <thead>
@@ -64,21 +70,29 @@ Before you start, please make sure:
       </tbody>
     </table>
 
-4. **Upload** the KNXPROJ file or group address XML file for the device (both can be exported via ETS6).    
-  ![Discover points](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/KNX-DiscoverPoints.png)
+4. **Import** the KNXPROJ file or group address XML file for the device (both can be exported via ETS6).    
+  <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/KNXIP-ImportFiles.png" alt="上传文件" />
 
 5. After a successful upload, click the **Discover Points** button. The system will automatically parse the file and generate a list of available data points to add.   
-  ![Discover points](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/KNX-DiscoverPoints.png)
+  <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/KNXIP-ClickDiscoverPoints.png" alt="单击发现功能点按钮" />
 
-6. Select data points and click the **+** button in the middle. The newly added data points will appear in the **Added Points** list on the right, and will also show up under the associated device in the device tree on the left.
+6. Select the points you need, then click the **+** button in the middle.
 
-    Aqara Studio will automatically map the points of BACnet devices to the feature points in the Aqara Spec protocol accordingly, enabling standardized control and management.
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/KNXIP-SelectPointsAndClickAdd.png" alt="Select points and click Add" />
 
-    :::tip
-    If Aqara Studio mapped a point type incorrectly, you can select the point in the device tree, go to the **Point detail** page, and click **Point Type** to adjust it.
+    Aqara Studio automatically maps each point to a matching type in the Aqara Spec protocol based on the point type. In the left **Point Configuration** panel, go to **Type Setting > Aqara Spec** and confirm that the recommended type matches the actual function of the point. If it does not, change it to the correct point type.
 
-    ![Modify feature point type](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/BACnet-ModifyTrait.png)
-    :::
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/KNXIP-ConfigurePointsAndSave.png" alt="Configure points and save" />
+
+    If the data type of a KNX IP device point does not match the selected Aqara Spec point data type, the system will trigger **Data Mapping**. Configure the mapping between the original values and the Aqara Spec target values in **Data Mapping Rules**.
+
+    Newly added points appear in the **Added Points** list on the right and are also shown under the related device in the device tree on the left.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/KNXIP-PointsAddedAndComplete.png" alt="Points added successfully" />
+
+7. Return to the **Devices** page. You will find the added device under the **KNX IP** node in the **Protocols & Devices** tree. Select the device to view its point list.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/KNXIP-CheckAddedDeviceAndPoints.png" alt="Check the added device and point list" />
 
 ## Next Steps
 
@@ -86,15 +100,49 @@ Now, you can [view details and control the device](./../device-management/basic-
 
 ## FAQ
 
-### How to edit or manually add KNX points
+### How to manually add KNX points
 
-On the "Point Discovery" tab, if you need to change details of a discovered point, or want to add a new point manually, click "Add" or "Manually Add".
+1. In the left sidebar, click to enter the **Devices** page. In the left **Protocols & Devices** tree, select the device to open its management page. Click the **Add Point** button.
+    
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/KNXIP-ClickAddPoint.png" alt="Click the Add Point button" />
 
-You will see a popup. Provide the following information to complete the configuration:
+2. On the Add Point page, click the **Manually Add** button.
 
-| Parameter   | Description |
-|------------------|-------------|
-| KNX Point Name   | Custom name for your point. |
-| KNX Group Address| The point's KNX group address, as set in ETS6. |
-| Data Point Type  | The DPT (data type) of the point, also set in ETS6. |
-| Aqara Object Type| The device type this point belongs to. |
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/KNXIP-ClickManualAdd.png" alt="Click the Manual Add button" />
+
+3. In the **Add Point** dialog, you can click the **+** button in the **Point** list on the left to manually add a point.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/KNXIP-ConfigureCustomPoints.png" alt="Configure custom points" />
+
+    After selecting the newly added point, you can configure its parameters as follows:
+    - Point Add:
+
+        | Parameter | Required | Description |
+        | ---- | ------ | ---- |
+        | KNX Point Name | ✔ | You can customize the name of this point. |
+        | KNX Group Address | ✔ | The KNX group address of the point, this field is configured on ETS6. |
+        | Data Point Type | ✔ | The data type (DPT) of the point, this field is configured on ETS6. |
+        
+    - **Type Setting**:
+        - When the value of the point is **numeric**:   
+
+            | Parameter Type  | Parameter Name | Required | Description | Example Configuration |
+            |----------------|---------------|----------|-------------|----------------------|
+            | Aqara Spec     | -             | ✔        | Associates this point with the corresponding function point in the Aqara Spec protocol for standardized control and management. | Air Conditioner/Heater Cooler/Set temperature |
+            | Point Value (Number) | Min value | ✔     | The minimum value for this numeric function point. | 16 |
+            |                | Max value       | ✔        | The maximum value for this numeric function point. | 30 |
+            |                | Step          | ✔        | The step of the value range for this point. | 1 |
+            |                | Unit          | ✔        | The unit of the value range for this point. | Celsius (℃) |
+            |                | Precision     | ✔        | The precision of the value range for this point. Supported: <ul><li>Integer</li><li>1 decimal place</li><li>2 decimal places</li><li>3 decimal places</li></ul> | Integer |
+            
+        - When the value of the point is **boolean**:   
+
+            | Parameter Type  | Parameter Name | Required | Description | Example Configuration |
+            |----------------|---------------|----------|-------------|----------------------|
+            | Aqara Spec     | -             | ✔        | Associates this point with the corresponding function point in the Aqara Spec protocol for standardized control and management. | Door and Window Sensor/Contact/Contact Status |
+            | Point Value (Boolean) | True text | ✔   | Display text when the boolean function point value is `true`. | Closed |
+            |                | False text    | ✔        | Display text when the boolean function point value is `false`. | Open |
+
+    - **Data Mapping Rules**: After enabled, the original physical value can be recalculated and mapped to a status. Please refer to [Numerical Mapping Functions](./../numerical-mapping-functions.mdx) for more details.
+        - When the **data area type** of the point is different from the **Aqara Spec type** (for example, a numeric type needs to be mapped to a boolean type, or a boolean type needs to be mapped to a numeric type), please enable this option to achieve conversion and mapping between the physical value and the standard function point type.
+        - If the **data area type** of the point and the **Aqara Spec type** are the same, you do not need to enable this option.

@@ -22,16 +22,25 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "Aqara Coap 设备接
 
 ## 导入五元组
 
-1. 在左侧侧边栏点击进入**设备管理**页面。在左侧设备树单击“+”按钮。   
-    ![单击添加按钮](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-ClickAddButton.png)
+1. 在左侧侧边栏点击进入**设备管理**页面。在左侧 **协议和设备** 单击 **...** 按钮，选择 **添加协议**。
 
-2. 在弹窗中选择 `AqaraCoap`。   
-3. 在左侧侧边栏选择 `AqaraCoap`，切换到 **导入五元组** 选项卡。
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Devices-AddProtocol.png" alt="添加协议" /> 
+
+2. 在弹窗中选择 `AqaraCoap Access`。   
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Protocols-ChooseAqaraCoapAccess.png" alt="选择 AqaraCoap Access" style={{ width: '60%' }} /> 
+ 
+3. 在左侧侧边栏选择 `AqaraCoap Access`，单击 `协议配置` 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraCoap-ClickProtocolConfiguration.png" alt="单击协议配置" style={{ width: '60%' }} />
+
 4. 联系**Aqara 商务人员** 提供待接入 Aqara Studio 的 **网关** 的 **设备 ID** 或 **MAC 地址**，从而获取其五元组信息文件（JSON）。
     :::tip
     只需获取网关的五元组信息，不需要其子设备的五元组信息
     :::
-5. 上传该文件，Aqara Studio 会自动解析文件内容，等待设备入网。
+
+    在 **协议配置** 页面切换至 **导入五元组** 标签页，上传该文件，Aqara Studio 会自动解析文件内容，等待设备入网。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/AqaraCoap-ImportFiveTuple.png" alt="上传五元组" style={{ width: '60%' }} />
 
 ## 下载 Aqara Tool
 

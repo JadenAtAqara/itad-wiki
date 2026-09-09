@@ -17,23 +17,27 @@ Before you begin, please ensure you have an Aqara Gateway device.
 
 Please refer to the [Plugin Market](./../plugin-center.mdx) instruction and go to [Aqara Builder](https://builder.aqara.com) to install the `AqaraCoap Protocol Access` plugin.
 
-
 ## Import the Five-Tuple
 
-1. Click the **Devices** page in the left sidebar. In the device tree on the left, click the "+" button.   
-    ![Click the addition button](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Devices-ClickAddButton.png)
+1. In the left sidebar, click to enter the **Devices** page. In the left **Protocols and Devices** panel, click the **...** button and select **Add Protocol**.
 
-2. In the pop-up, choose `AqaraCoap`.
-3. On the left sidebar, select `AqaraCoap` and switch to the **Five-Tuple Import** tab.
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Devices-AddProtocol.png" alt="Add Protocol" /> 
+
+2. Select `AqaraCoap Access` in the popup.   
+    
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Protocols-ChooseAqaraCoapAccess.png" alt="Select AqaraCoap Access" style={{ width: '60%' }} /> 
+
+3. On the left sidebar, select `AqaraCoap Access` and click the `Protocol Configuration` button.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/AqaraCoap-ClickProtocolConfiguration.png" alt="Click Protocol Configuration" style={{ width: '60%' }} />
+
 4. Contact **Aqara business staff** to obtain the five-tuple information file (JSON) for the **gateway itself** to be integrated into Aqara Studio.
     :::tip
     Only the gateway's five-tuple information is needed. Information for its sub-devices is not required.
     :::
-4. Contact **Aqara business staff** and provide the **device ID** or **MAC address** of the gateway to be integrated into Aqara Studio, in order to obtain its five-tuple information file (JSON).
-    :::tip
-    You only need to obtain the five-tuple information for the gateway itself, not its sub-devices.
-    :::
-5. Upload this file. Aqara Studio will automatically parse its contents and wait for the device to join the network.
+    On the **Protocol Configuration** page, switch to the **Five-Code Import** tab and upload this file. Aqara Studio will automatically parse its contents and wait for the device to join the network.
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/AqaraCoap-ImportFiveTuple.png" alt="Import Five-Tuple" style={{ width: '60%' }} />
 
 ## Download Aqara Tool
 
