@@ -36,7 +36,8 @@
 - Export via Haystack Framework: https://docs.aqara.com/docs/aqara-studio/device-export/haystack
 - View and Edit Basic Information: https://docs.aqara.com/docs/aqara-studio/device-management/basic-information
 - Firmware Upgrade: https://docs.aqara.com/docs/aqara-studio/device-management/firmware-upgrade
-- View and Control Function Points: https://docs.aqara.com/docs/aqara-studio/device-management/point-information
+- View and Control Function Points (Traits): https://docs.aqara.com/docs/aqara-studio/device-management/point-information
+- Control Devices By Commands: https://docs.aqara.com/docs/aqara-studio/device-management/commands
 - Display History: https://docs.aqara.com/docs/aqara-studio/device-management/history
 - Add Tags: https://docs.aqara.com/docs/aqara-studio/device-management/tags
 - Lights: https://docs.aqara.com/docs/aqara-studio/device-management/aqara-device-configuration/lights
