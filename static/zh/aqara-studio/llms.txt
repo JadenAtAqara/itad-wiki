@@ -36,7 +36,8 @@
 - 以 Haystack 框架转出: https://docs.aqara.com/zh/docs/aqara-studio/device-export/haystack
 - 查看和修改基本信息: https://docs.aqara.com/zh/docs/aqara-studio/device-management/basic-information
 - 固件升级: https://docs.aqara.com/zh/docs/aqara-studio/device-management/firmware-upgrade
-- 查看和控制功能点: https://docs.aqara.com/zh/docs/aqara-studio/device-management/point-information
+- 查看和控制功能点（Trait）: https://docs.aqara.com/zh/docs/aqara-studio/device-management/point-information
+- 通过指令（Command）控制设备: https://docs.aqara.com/zh/docs/aqara-studio/device-management/commands
 - 展示历史数据: https://docs.aqara.com/zh/docs/aqara-studio/device-management/history
 - 添加标签: https://docs.aqara.com/zh/docs/aqara-studio/device-management/tags
 - 灯: https://docs.aqara.com/zh/docs/aqara-studio/device-management/aqara-device-configuration/lights

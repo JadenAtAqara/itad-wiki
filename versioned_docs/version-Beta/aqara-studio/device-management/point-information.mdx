@@ -1,24 +1,31 @@
 ---
-title: "View and Control Function Points"
+title: "View and Control Function Points (Traits)"
 description: "This article explains how to view and operate device function points in Aqara Studio, including checking real-time status and controlling devices by writing function point fields."
 keywords: ["Aqara Docs", "Aqara Studio", "Device Management", "View and Control Function Points"]
 ---
-# View and Control Function Points
+# View and Control Function Points (Traits)
 
-This article explains how to view and operate device function points in Aqara Studio. You will learn how to check real-time status and control devices by writing function point fields.
+This article explains how to view and operate device function points (Traits) in Aqara Studio. You can read the real-time status of function points and control devices by writing function point fields.
+
+:::tip
+A Trait describes an attribute or state of a device and supports operations such as Read, Write, and Report.
+
+Difference from Command: Trait supports Read, Write, Report, and other operations, while Command is only a command, without status.
+:::
 
 ## Steps
 
-1. Go to the **Devices** page and find the device you want to view in the device tree on the left.
-2. Select the device to open its management page.
-3. Switch to the "Point" tab. Here, you will see a list of function points, with each point representing a field or status of the device. From this list, you can view the following fields:
+Go to the **Devices** page and select the device you want to view in the **Protocol and Device Tree** on the left. Here, you will see a list of function points.
 
-    | Field       | Description                         |
-    |-----------------|-------------------------------------|
-    | Point Name            | The name of the function point. |
-    | Point Type            | The category the function point belongs to. The editability of this filed varies based on the device protocol:<ul><li>Aqara and Home Assistant ecosystem devices: not editable.</li><li>BACnet IP, KNX IP, and Modbus TCP devices: editable.</li></ul> |
-    | Recent Value    | The most recent real-time value of the function point. |
-    | Value Status    | The status of the current value. Possible values:<ul><li>Disable: This function point is disabled.</li><li>Fault: There is a configuration error in the device or function point.</li><li>Down: Network issue causing offline status.</li><li>Alarm: The current value has triggered an alarm.</li><li>Unacked Alarm: The user hasn't acknowledged an alarm.</li><li>Expired: Latest value for the device or point is not available.</li><li>Unknown: Unknown status.</li><li>Normal</li></ul> |
-    | Control         | For **writable** function points, you can set fields or perform operations such as switching on or off directly here. Once configured successfully, the `Recent Value` will be automatically updated to reflect the new status. |
+![View the point page](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Points-CheckPoints.png)
 
-![View the point page](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/Device-Point.png)
+Each point represents a field or status of the device. You can view the following fields:
+
+| Field       | Description                         |
+|-----------------|-------------------------------------|
+| Point Name            | The display name of the function point. Default is the same as `Default Name`. You can modify it if needed. |
+| Default Name | The default name of the function point. Cannot be edited. |
+| Point Type            | The category the function point belongs to. The editability of this filed varies based on the device protocol:<ul><li>Modbus TCP devices: editable.</li><li>Other: not editable.</li></ul> |
+| Recent Value    | The most recent real-time value of the function point. |
+| Operation    | You can perform the following operations on the function point:<ul><li><strong>Point Detail</strong>: View basic information, control the function point, and view historical data.</li><li><strong>Copy</strong>: Copy the function point.</li><li><strong>Get the latest value</strong>: Refresh and get the latest value immediately.</li><li><strong>Delete</strong>: Delete the function point.</li></ul>**Note**: Based on the device protocol type, some function points may not support all the above operations. |
+| Control         | For **writable** function points, you can set fields or perform operations such as switching on or off directly here. Once configured successfully, the `Recent Value` will be automatically updated to reflect the new status. |
