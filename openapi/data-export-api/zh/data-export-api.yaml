@@ -2479,15 +2479,90 @@ components:
       example:
         type: GetDevicesResponse
         version: v1
-        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000008"
+        msgId: "17"
         code: 0
         message: success
         data:
-          - deviceId: "device-001"
-            gatewayId: "gateway-001"
-            name: "客厅灯"
-            deviceTypesList: ["light"]
-            endpoints: []
+          - deviceId: lumi3.86108040f2b03a4e
+            name: Device-001
+            gatewayId: lumi3.86108040f2b03a4e
+            deviceTypesList: ["Hub"]
+            endpoints:
+              - endpointId: 1
+                endpointName: Public
+                deviceType: Public
+                functions:
+                  - functionCode: Identify
+                    traits:
+                      - traitCode: IdentifyType
+                        parameter:
+                          type: Enum
+                          readable: true
+                          writable: true
+                          subscribable: true
+                          supportedValues:
+                            - key: None
+                              value: 0
+                            - key: Light
+                              value: 1
+                            - key: LEDIndicator
+                              value: 2
+                            - key: AudibleBeep
+                              value: 3
+                            - key: Display
+                              value: 4
+                            - key: Actuator
+                              value: 5
+                          unit: ""
+                        value: 3
+                        time: 0
+                        pointName: Root - Identify Type
+                        displayTags: ["3", "98"]
+                    commands:
+                      - commandCode: Identify
+                        fields:
+                          - fieldCode: IdentifyTime
+                            parameter:
+                              type: Integer
+                              mandatory: false
+                              min: 0
+                              max: 86400
+                              unit: S
+                        description: Identify
+                        pointName: Root - Identify
+                        displayTags: ["1"]
+              - endpointId: 2
+                endpointName: Hub
+                deviceType: Hub
+                functions:
+                  - functionCode: BridgeConfiguration
+                    traits:
+                      - traitCode: SupportedHubCapability
+                        parameter:
+                          type: Integer
+                          readable: true
+                          writable: false
+                          subscribable: true
+                          min: 0
+                          max: 4294967295
+                          unit: ""
+                          step: 1
+                        value: 103
+                        time: 0
+                        pointName: Hub - Supported Hub capability set
+                        displayTags: ["98"]
+                      - traitCode: BridgedNodeList
+                        parameter:
+                          type: List[X]
+                          readable: true
+                          writable: false
+                          subscribable: true
+                          unit: ""
+                        value: ""
+                        time: 0
+                        pointName: Hub - Bridge Node List
+                        displayTags: ["98"]
+                    commands: []
 
     GetMatchedDeviceCapabilitiesResponse:
       allOf:

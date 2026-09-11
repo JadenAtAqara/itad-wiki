@@ -5,25 +5,75 @@ keywords: ["Aqara 文档", "Aqara Studio", "以 MQTT 转出设备数据", "data 
 ---
 # 以 MQTT 转出设备数据
 
-Aqara Studio 内置 MQTT broker，支持您通过 MQTT 协议将设备数据转出，便于第三方平台查询和控制已接入的所有设备。
+您可以通过 Aqara Studio 内置的 MQTT broker，或集成您自有的 MQTT broker，将设备数据便捷地转发至第三方平台，实现对已接入设备的查询与控制。
 
 :::tip
 本文将以 MQTTX 桌面端应用为例，详细讲解如何建立 MQTT 连接，并进行消息的订阅与发布。
 :::
 
+## 您可以通过 MQTT 转出实现哪些功能？
+
+您可以通过 MQTT 转出实现 [数据转出 API v1 - API 列表](./api-references/data-export-api-v1.mdx#api-列表) 中所列的所有接口功能。
+
 ## 前提条件
 
 在开始之前，请确保您已下载并安装 [MQTTX](https://mqttx.app/zh/downloads) 桌面端应用。
 
-## 使用流程
+## 安装插件
 
-1. 在 Aqara Studio 左侧侧边栏进入 **开发者**，并开启 **MQTT转出** 服务。
+请参考 [插件市场](./plugin-center.mdx) 文档：
+1. 前往 [Aqara Builder](https://builder.aqara.com) 获取 `MQTT Export` 插件。
+2. 将其分配到 Aqara Studio。
+3. 并前往 Aqara Studio 的 **插件中心** 安装 `MQTT Export` 插件。
 
-    此时，界面会展示建立 MQTT 连接所需的所有信息（如 Aqara Studio 本机 IP、MQTT 端口、用户名、密码），以及请求和响应 Topic 的格式。
+## 启用 MQTT 转出服务
 
-    ![获取 MQTT 连接所需信息](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/mqtt-export-1.png) 
+1. 在 Aqara Studio 左侧侧边栏进入 **插件中心**，找到 `MQTT Export` 插件，点击 **转出**。
 
-2. 参考 MQTT 官方文档 [开始使用 - 快速建立连接](https://mqttx.app/zh/docs/get-started#%E5%BF%AB%E9%80%9F%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5)，使用上述获取的信息，建立 MQTT 连接。
+    ![在插件中心找到 MQTT Export 插件，点击转出](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MQTT-ClickTransferOut.png) 
+
+2. 页面会跳转至 **开发者** 页面，请 **启用MQTT转出** 服务。
+
+    ![启用 MQTT 转出服务](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MQTT-EnableMQTTTransferOut.png) 
+
+## 选择 Broker
+
+如果您没有自建的 MQTT Broker，可以 [使用 Aqara Studio 内置的本地 Broker](#使用本地-broker)。
+如果您有自建的 MQTT Broker，可以 [不使用本地 Broker](#不使用本地-broker)，直接使用您自建的 MQTT Broker。
+
+### 使用本地 Broker
+
+如需使用 Aqara Studio 内置的本地 Broker，请开启 **使用本地 Broker** 开关。
+
+![使用本地 Broker](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MQTT-EnableLocalBroker.png) 
+
+
+### 不使用本地 Broker
+
+如需使用你自己的 MQTT Broker，请：
+1. 保持 **使用本地 Broker** 开关为关闭状态。
+2. 填写如下信息：
+
+    | 名称       | 说明                         |
+    |----------|----------------------------|
+    | IP       | MQTT Broker 的地址。              |
+    | 端口     | MQTT Broker 的端口号。            |
+    | 客户端 ID | 用于连接的客户端唯一标识。         |
+    | 用户名    | 用于身份验证的用户名。            |
+    | 密码     | 用于身份验证的密码。              |
+    | 启用 TLS | 是否启用 TLS 加密传输。开启时，MQTT Broker 地址需使用 MQTTS 协议；关闭时，使用 MQTT 协议。 |
+
+3. 点击 *...* 按钮，呼出操作菜单，选择 **连接**，等待连接成功。
+ 
+![使用本地 Broker](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MQTT-DisableLocalBroker.png) 
+
+## 测试 MQTT Broker 连接
+
+1. 从上述 Aqara Studio 的 **开发者** 页面中获取 MQTT 连接所需的所有信息（如 IP、端口、用户名、密码），以及请求和响应 Topic 的格式。
+
+    ![获取 MQTT 连接所需信息](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MQTT-GetRequiredInfo.png) 
+
+2. 参考 MQTTX 官方文档 [开始使用 - 快速建立连接](https://mqttx.app/zh/docs/get-started#%E5%BF%AB%E9%80%9F%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5)，使用上述获取的信息，建立 MQTT 连接。
 
     ![建立 MQTT 连接](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/mqtt-export-2.png) 
 
@@ -31,7 +81,7 @@ Aqara Studio 内置 MQTT broker，支持您通过 MQTT 协议将设备数据转�
 
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/mqtt-export-3.png" alt="订阅响应" style={{width: '60%'}} /> 
 
-4. 在已创建的订阅中，将 Aqara Studio 提供的 **请求 Topic 格式**中的 ClientID 替换为 MQTTX 自动生成的实际 ClientID，并填写到 Topic 输入框。参照 [设备功能 API](./api-references/trait-api.mdx) 文档中各接口的请求参数说明，编写 JSON 格式的消息并发送，即可获得响应。
+4. 在已创建的订阅中，将 Aqara Studio 提供的 **请求 Topic 格式**中的 ClientID 替换为 MQTTX 自动生成的实际 ClientID，并填写到 Topic 输入框。参照 [设备功能 API](./api-references/trait-api.mdx) 或 [自动化 API](./api-references/automation-api.mdx) 文档中各接口的请求参数说明，编写 JSON 格式的消息并发送，即可获得响应。
 
     下图以 [查询设备 ID 列表](./api-references/trait-api.mdx#查询设备的-spec-配置) 的请求为例：
 
