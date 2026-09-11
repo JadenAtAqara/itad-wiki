@@ -9,22 +9,18 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备管理", "展示历史数据",
 
 ## 操作步骤
 
-1. 进入**设备管理**页面，在左侧设备树单击你想要查看的功能点。在该功能点的详情页面，找到“历史数据”，单击 **+** 按钮。
+1. 进入**设备管理**页面，在左侧 **协议和设备** 树中选择你想要查看的设备，以查看该设备的管理页面，您将看到一个功能点列表。
 
-    ![找到历史数据](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Device-FindHistory.png)
+    ![查看功能点标签页](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Points-CheckPoints.png)
 
-2. 在“历史数据配置”弹窗配置并保存如下参数：
+2. 找到您想要查看的功能点，呼出 **操作** 菜单，选择 **功能点详情**。
 
-    | 参数         | 说明 |
-    | ------------ | ---- |
-    | 名称 | 可自定义的历史数据配置名称，便于识别。 |
-    | 采集方式 | <ul><li>值变化：仅当值变化超过设定阈值时采集（如 5）。</li><li>时间间隔：按照设定的固定时间间隔采集（如 5000 ms）。</li></ul> |
-    | 阈值设置 | 当功能点类型为**数值型**，且`采集方式`选择为“值变化”时可设置。用于指定触发采集的数据变化幅度。 |
-    | 采集间隔 | 仅在`采集方式`为“时间间隔”时生效，单位为毫秒（ms），指采集的周期。 |
-    | 最大采集条数 | 限定可保存的历史数据最大数量，达到上限时将覆盖最早的数据。 |
+    ![呼出操作菜单](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/History-ClickPointDetail.png)
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Device-ConfigureHistoryRule.png" alt="配置历史数据" style={{ width: '60%' }} />
+3. 在 **功能点详情** 弹窗中，向下滚动至 **历史数据** 区域，配置 **采集策略**。
 
-3. 配置完成后，“历史数据”区域将会按照所设规则自动生成并展示相应的历史数据图表，便于您直观分析设备数据变化趋势。
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/History-FindHistoryAndAdjustCollectionPolicy.png" alt="找到历史数据并调整采集策略" style={{ width: '60%' }} />
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/Device-DisplayHistory.png" alt="展示历史数据" />
+4. 定义时间范围，下方会自动生成历史数据图表，您即可查看该功能点在指定时间范围内的运行趋势。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/History-DefineTimeRange.png" alt="定义时间范围" style={{ width: '60%' }}  />
