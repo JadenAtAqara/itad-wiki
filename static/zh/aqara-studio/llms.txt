@@ -39,7 +39,6 @@
 - 查看和控制功能点（Trait）: https://docs.aqara.com/zh/docs/aqara-studio/device-management/point-information
 - 通过指令（Command）控制设备: https://docs.aqara.com/zh/docs/aqara-studio/device-management/commands
 - 展示历史数据: https://docs.aqara.com/zh/docs/aqara-studio/device-management/history
-- 添加标签: https://docs.aqara.com/zh/docs/aqara-studio/device-management/tags
 - 灯: https://docs.aqara.com/zh/docs/aqara-studio/device-management/aqara-device-configuration/lights
 - 灯箱: https://docs.aqara.com/zh/docs/aqara-studio/device-management/aqara-device-configuration/light-boxes
 - 屏: https://docs.aqara.com/zh/docs/aqara-studio/device-management/aqara-device-configuration/screens
