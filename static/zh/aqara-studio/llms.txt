@@ -34,6 +34,7 @@
 - 灯箱设备接入: https://docs.aqara.com/zh/docs/aqara-studio/device-integration/virtual/light-box
 - 转出至 Aqara Home App: https://docs.aqara.com/zh/docs/aqara-studio/device-export/aiot
 - 以 Haystack 框架转出: https://docs.aqara.com/zh/docs/aqara-studio/device-export/haystack
+- 以 MQTT 转出设备数据: https://docs.aqara.com/zh/docs/aqara-studio/data-export-by-mqtt
 - 查看和修改基本信息: https://docs.aqara.com/zh/docs/aqara-studio/device-management/basic-information
 - 固件升级: https://docs.aqara.com/zh/docs/aqara-studio/device-management/firmware-upgrade
 - 查看和控制功能点（Trait）: https://docs.aqara.com/zh/docs/aqara-studio/device-management/point-information
@@ -77,7 +78,6 @@
 - 自动化 API: https://docs.aqara.com/zh/docs/aqara-studio/api-references/automation-api
 - JSON 自动化脚本定义: https://docs.aqara.com/zh/docs/aqara-studio/api-references/json-automation-script
 - 空间管理 API: https://docs.aqara.com/zh/docs/aqara-studio/api-references/space-management-api
-- 以 MQTT 转出设备数据: https://docs.aqara.com/zh/docs/aqara-studio/data-export-by-mqtt
 - 在 OpenClaw Web UI 中使用 Aqara Studio Skill: https://docs.aqara.com/zh/docs/aqara-studio/use-aqara-studio-skill-in-openclaw-web-ui
 - 连接至 Aqara Studio MCP Server: https://docs.aqara.com/zh/docs/aqara-studio/set-up-mcp-server
 - 常见问题: https://docs.aqara.com/zh/docs/aqara-studio/faq

@@ -62,7 +62,8 @@
                 },
                 "items": [
                   "aqara-studio/device-export/aiot",
-                  "aqara-studio/device-export/haystack"
+                  "aqara-studio/device-export/haystack",
+                  "aqara-studio/data-export-by-mqtt"
                 ]
               },
               {
@@ -220,7 +221,6 @@
             "aqara-studio/api-references/space-management-api"
           ]
         },
-        "aqara-studio/data-export-by-mqtt",
         "aqara-studio/use-aqara-studio-skill-in-openclaw-web-ui",
         "aqara-studio/set-up-mcp-server"
       ]      
