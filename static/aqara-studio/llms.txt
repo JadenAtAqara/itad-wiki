@@ -34,6 +34,7 @@
 - Light Box: https://docs.aqara.com/docs/aqara-studio/device-integration/virtual/light-box
 - Export to Aqara Home App: https://docs.aqara.com/docs/aqara-studio/device-export/aiot
 - Export via Haystack Framework: https://docs.aqara.com/docs/aqara-studio/device-export/haystack
+- Data Export by MQTT: https://docs.aqara.com/docs/aqara-studio/data-export-by-mqtt
 - View and Edit Basic Information: https://docs.aqara.com/docs/aqara-studio/device-management/basic-information
 - Firmware Upgrade: https://docs.aqara.com/docs/aqara-studio/device-management/firmware-upgrade
 - View and Control Function Points (Traits): https://docs.aqara.com/docs/aqara-studio/device-management/point-information
@@ -77,7 +78,6 @@
 - Automation API: https://docs.aqara.com/docs/aqara-studio/api-references/automation-api
 - JSON Automation Script: https://docs.aqara.com/docs/aqara-studio/api-references/json-automation-script
 - Space Management API: https://docs.aqara.com/docs/aqara-studio/api-references/space-management-api
-- Data Export by MQTT: https://docs.aqara.com/docs/aqara-studio/data-export-by-mqtt
 - Use Aqara Studio Skill in OpenClaw Web UI: https://docs.aqara.com/docs/aqara-studio/use-aqara-studio-skill-in-openclaw-web-ui
 - Connect to Aqara Studio MCP Server: https://docs.aqara.com/docs/aqara-studio/set-up-mcp-server
 - FAQ: https://docs.aqara.com/docs/aqara-studio/faq

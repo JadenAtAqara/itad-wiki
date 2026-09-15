@@ -15,10 +15,6 @@ keywords: ["Aqara 文档", "Aqara Studio", "以 MQTT 转出设备数据", "data 
 
 您可以通过 MQTT 转出实现 [数据转出 API v1 - API 列表](./api-references/data-export-api-v1.mdx#api-列表) 中所列的所有接口功能。
 
-## 前提条件
-
-在开始之前，请确保您已下载并安装 [MQTTX](https://mqttx.app/zh/downloads) 桌面端应用。
-
 ## 安装插件
 
 请参考 [插件市场](./plugin-center.mdx) 文档：
@@ -38,40 +34,95 @@ keywords: ["Aqara 文档", "Aqara Studio", "以 MQTT 转出设备数据", "data 
 
 ## 选择 Broker
 
-如果您没有自建的 MQTT Broker，可以 [使用 Aqara Studio 内置的本地 Broker](#使用本地-broker)。
-如果您有自建的 MQTT Broker，可以 [不使用本地 Broker](#不使用本地-broker)，直接使用您自建的 MQTT Broker。
+根据您的实际需求选择合适的 Broker：
+- 如果您没有自建的 MQTT Broker，可直接 [使用 Aqara Studio 内置的本地 Broker](#使用本地-broker)。
+- 如果您已有自建的 MQTT Broker，可选择 [使用第三方 Broker](#使用第三方-broker)。
 
 ### 使用本地 Broker
 
-如需使用 Aqara Studio 内置的本地 Broker，请开启 **使用本地 Broker** 开关。
+如需使用 Aqara Studio 内置的本地 Broker，请选择 **本地 Broker**。
 
-![使用本地 Broker](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MQTT-EnableLocalBroker.png) 
+此时，Aqara Studio 默认连接该 Broker。
 
+![使用本地 Broker](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MQTTExport-SelectLocalBroker.png) 
 
-### 不使用本地 Broker
+如果连接状态为 **未连接**，您可以选择 **... > 连接** 来手动连接。
+
+![手动连接](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MQTTExport-ConnectToLocalBroker.png) 
+
+### 使用第三方 Broker
 
 如需使用你自己的 MQTT Broker，请：
-1. 保持 **使用本地 Broker** 开关为关闭状态。
-2. 填写如下信息：
+1. 选择 **第三方 Broker**，填写如下信息：
 
     | 名称       | 说明                         |
     |----------|----------------------------|
-    | IP       | MQTT Broker 的地址。              |
+    | HOST       | MQTT Broker 的地址。              |
     | 端口     | MQTT Broker 的端口号。            |
     | 客户端 ID | 用于连接的客户端唯一标识。         |
     | 用户名    | 用于身份验证的用户名。            |
     | 密码     | 用于身份验证的密码。              |
-    | 启用 TLS | 是否启用 TLS 加密传输。开启时，MQTT Broker 地址需使用 MQTTS 协议；关闭时，使用 MQTT 协议。 |
+    | 启用 TLS | 是否启用 TLS 加密传输。<ul><li>开启：MQTT Broker 地址需使用 MQTTS 协议；</li><li>关闭：使用 MQTT 协议。</li></ul> |
+
+    ![选择第三方 Broker](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MQTTExport-SelectThirdPartyBroker.png) 
+
+2. （**若已启用 TLS**）根据您希望实现单向认证，或是双向认证，您需要提供的如下内容：
+
+    <table>
+        <thead>
+            <tr>
+                <th>认证方式</th>
+                <th>必需文件</th>
+                <th>文件后缀</th>
+                <th>说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>单向认证</td>
+                <td>CA 证书</td>
+                <td><ul><li>.pem</li><li>.crt</li><li>.cer（X.509）</li></ul></td>
+                <td>仅用于验证 Broker 身份。</td>
+            </tr>
+            <tr>
+                <td rowspan="3">双向认证</td>
+                <td>CA 证书</td>
+                <td rowspan="2"><ul><li>.pem</li><li>.crt</li><li>.cer（X.509）</li></ul></td>
+                <td rowspan="3">在单向基础上，额外提供客户端自己的证书和私钥，供 Broker 验证你的身份。</td>
+            </tr>
+            <tr>
+                <td>客户端证书</td>
+            </tr>
+            <tr>
+                <td>客户端私钥</td>
+                <td><ul><li>.pem</li><li>.key</li></ul>若私钥已加密，请填写私钥密码。</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    :::tip
+    - 若您清除已导入的证书，仅解除证书引用，不会删除证书文件。
+    - 如果您重新上传了新的证书，需要断开现有连接，重新连接才能生效。
+    :::
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MQTTExport-UploadCertificates.png" alt="上传证书" /> 
 
 3. 点击 *...* 按钮，呼出操作菜单，选择 **连接**，等待连接成功。
- 
-![使用本地 Broker](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MQTT-DisableLocalBroker.png) 
+
+    ![连接第三方 Broker](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MQTTExport-ConnectToThirdPartyBroker.png) 
 
 ## 测试 MQTT Broker 连接
 
-1. 从上述 Aqara Studio 的 **开发者** 页面中获取 MQTT 连接所需的所有信息（如 IP、端口、用户名、密码），以及请求和响应 Topic 的格式。
+:::tip
+- 开始测试前，请先下载并安装 [MQTTX](https://mqttx.app/zh/downloads) 桌面端应用，或其他同类 MQTT 客户端工具。
+- 下列步骤以 MQTTX 为例，其他 MQTT 客户端工具的使用方法请阅读其官方文档。
+:::
 
-    ![获取 MQTT 连接所需信息](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MQTT-GetRequiredInfo.png) 
+1. 从上述 Aqara Studio 的 **开发者** 页面中获取 MQTT 连接所需的所有信息（如 HOST、端口、用户名、密码），以及请求和响应 Topic 的格式。
+
+    下图以使用本地 Broker 为例：
+
+    ![获取 MQTT 连接所需信息](https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/MQTTExport-FindInfo.png) 
 
 2. 参考 MQTTX 官方文档 [开始使用 - 快速建立连接](https://mqttx.app/zh/docs/get-started#%E5%BF%AB%E9%80%9F%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5)，使用上述获取的信息，建立 MQTT 连接。
 
