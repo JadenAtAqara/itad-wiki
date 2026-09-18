@@ -31,12 +31,12 @@ import Heading from "@theme/Heading";
   path={"/devices/command/execute"}
   context={"endpoint"}
 >
-  
+
 </MethodEndpoint>
 
 
 
-通过 Command 实现对设备的功能控制。    
+通过 Command 实现对设备的功能控制。
 所需 endpointId、functionCode、commandCode、fieldCode 等参数请先通过 /devices/definitions 接口获取后传入本接口进行执行。
 
 
@@ -51,14 +51,14 @@ import Heading from "@theme/Heading";
 <ParamsDetails
   parameters={[]}
 >
-  
+
 </ParamsDetails>
 
 <RequestSchema
   title={"Body"}
   body={{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["data"],"properties":{"data":{"type":"array","items":{"type":"object","required":["deviceId","endpointId","functionCode","commandCode"],"properties":{"deviceId":{"type":"string","description":"设备 ID"},"endpointId":{"type":"integer","description":"端点 ID"},"functionCode":{"type":"string","description":"功能编码，如：NetworkCommissioning"},"commandCode":{"type":"string","description":"命令编码，如：TriggerZigbeeNetworkInfoUpload"},"args":{"type":"array","items":{"type":"object","description":"命令参数","required":["fieldCode","value"],"properties":{"fieldCode":{"type":"string","description":"字段编码"},"value":{"description":"字段值。类型与对应 field 的 parameter.type 保持一致。","oneOf":[{"type":"boolean"},{"type":"integer"},{"type":"number","format":"double"},{"type":"string"}],"title":"FlexibleValue"}},"title":"CommandArg"},"description":"命令字段对象列表"}},"title":"CommandExecuteItem"}}},"title":"CommandExecuteRequest"},"examples":{"executeCommand":{"value":{"data":[{"deviceId":"gateway001","endpointId":1,"functionCode":"NetworkCommissioning","commandCode":"TriggerZigbeeNetworkInfoUpload","args":[{"fieldCode":"InstallCode","value":"F9B34846413AB5DE81B60E63E440"},{"fieldCode":"MAC","value":"54EF441000EB0CCF"}]}]}}}}}}}
 >
-  
+
 </RequestSchema>
 
 <StatusCodes
@@ -66,8 +66,7 @@ import Heading from "@theme/Heading";
   label={undefined}
   responses={{"200":{"description":"请求发起成功，但不代表所有 command 执行成功。<br />code 为 0 表示至少部分成功；code 不为 0 表示全部失败。<br/>若 data 存在，表示为执行失败的 command 集合，若无则全部成功。","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"type":"array","description":"data 集合元素为执行失败的 command 数据","items":{"type":"object","required":["deviceId","endpointId","functionCode","commandCode","code","message"],"properties":{"deviceId":{"type":"string","description":"设备 ID"},"endpointId":{"type":"integer","description":"端点 ID"},"functionCode":{"type":"string","description":"功能编码"},"commandCode":{"type":"string","description":"命令编码"},"code":{"type":"integer","description":"错误码"},"message":{"type":"string","description":"错误信息"}},"title":"CommandExecuteResult"}}}}],"example":{"type":"ExecuteCommandResponse","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-000000000019","code":0,"message":"success","data":[]},"title":"CommandExecuteResponse"},"examples":{"commandFailed":{"value":{"type":"ExecuteCommandResponse","version":"v1","msgId":"2df2f431-a58d-4fdb-b39c-4f0d29e7ecf9","code":0,"message":"success","data":[{"deviceId":"gateway001","endpointId":1,"functionCode":"HubCoordination","commandCode":"APIBindSubdeviceWithSecurityCode","code":2201,"message":"invalid security code"}]}}}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 xxx 不能为空"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"token 已过期，请重新生成 token"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"无权限访问该资源"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"资源不存在"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"429":{"description":"请求频率过高","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000005","code":429,"message":"请求频率过高"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"服务内部异常"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
 >
-  
+
 </StatusCodes>
 
 
-      

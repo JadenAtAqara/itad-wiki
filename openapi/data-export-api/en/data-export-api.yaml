@@ -265,7 +265,10 @@ paths:
     get:
       tags: [Device]
       summary: List Devices
-      description: Get a list of devices under the specified space. It supports pagination and filtering conditions.
+      description: |
+        Paginated query of device information. Supports filtering by space, online status, gateway, device type, and device name.   
+        When `gatewayId` is omitted, empty, or whitespace-only, it does not affect filtering.   
+        When `gatewayId` is not empty, Aqara Studio trims leading and trailing whitespace and performs an exact match on the gateway ID. Gateway filtering is combined with other query conditions and applied before pagination.
       operationId: getDevices
       x-skill-intent: device.list
       x-idempotent: true
@@ -303,6 +306,13 @@ paths:
           schema:
             type: boolean
             nullable: true
+        - name: gatewayId
+          in: query
+          description: Gateway ID. When omitted, empty, or whitespace-only, it does not affect filtering; when a value is present, leading and trailing whitespace are trimmed and an exact match is performed.
+          required: false
+          schema:
+            type: string
+          example: gateway-001
         - name: deviceTypesList
           in: query
           description: "Device type list. Example: deviceTypesList=light,switch or deviceTypesList=light&deviceTypesList=switch"
@@ -367,7 +377,7 @@ paths:
                     code: 0
                     message: success
                     data:
-                      totalCount: 3
+                      totalCount: 2
                       pageNum: 1
                       pageSize: 200
                       data:
@@ -376,6 +386,16 @@ paths:
                           deviceName: "Living Room Light"
                           deviceTypesList: ["light"]
                           createTime: 1710001234567
+                          state: true
+                          space:
+                            parentSpaceId: "space-home-001"
+                            spaceId: "space-room-001"
+                            name: "Living Room"
+                        - deviceId: "device-002"
+                          gatewayId: "gateway-001"
+                          deviceName: "Living Room Switch"
+                          deviceTypesList: ["switch"]
+                          createTime: 1710002345678
                           state: true
                           space:
                             parentSpaceId: "space-home-001"
@@ -411,9 +431,10 @@ paths:
         - name: deviceIds
           in: query
           required: true
-          description: "Device ID list. Example: deviceIds=xx1,xx2 or deviceIds=xx1&deviceIds=xx2"
+          description: "Device ID list, up to 200. Example: deviceIds=xx1,xx2 or deviceIds=xx1&deviceIds=xx2"
           schema:
             type: array
+            maxItems: 200
             items:
               type: string
           style: form
@@ -1492,7 +1513,13 @@ paths:
     get:
       tags: [Automation]
       summary: Query Automation Details
-      description: Query automation details by automation ID.
+      description: |
+        Query automation details by automation ID.
+        Returns the actual persisted definition of the automation. Determine the structure of config based on configFormat:
+        - JSON_AUTOMATION uses automations[].starters, automations[].condition, and automations[].actions.
+        - FLOW_CANONICAL uses nodes and edges to express the complete canvas and execution relationships.
+        manualTriggers is only a shortcut index of manual triggers and does not represent the complete trigger list.
+        Returns HTTP 400 when the automationId format is invalid or the automation does not exist. 
       operationId: queryAutomationDetails
       x-skill-intent: automation.details
       x-idempotent: true
@@ -1728,6 +1755,15 @@ paths:
           schema:
             type: boolean
             default: false
+        - in: query
+          name: orderBy
+          required: false
+          description: Sorting method. Only support createTime asc and createTime desc; if not passed or an unsupported field is passed, the default is to sort by createTime asc.
+          schema:
+            type: string
+            default: createTime asc
+            enum: [createTime asc, createTime desc]
+          example: createTime asc
       responses:
         '200':
           description: Request succeeded
@@ -3547,7 +3583,7 @@ components:
         manualTriggers:
           type: array
           nullable: true
-          description: List of available manual triggers
+          description: Only includes brief information for manually executable triggers; does not represent the complete trigger list. The complete rules are based on the config in the details.
           items:
             $ref: '#/components/schemas/AutomationManualTriggerBrief'
         space:
@@ -3605,13 +3641,267 @@ components:
         - $ref: '#/components/schemas/AutomationSummary'
         - type: object
           properties:
-            config:
-              type: object
+            configFormat:
+              type: string
               nullable: true
-              description: Automation configuration details.  
-                - For automations with `definitionType` of `SCRIPT_JSON`, this field contains the full configuration object of the automation.  
-                - For all other automation types, an empty object is returned.
-              additionalProperties: true
+              enum: [JSON_AUTOMATION, FLOW_CANONICAL]
+              description: >-
+                The actual persistence format of config. SCRIPT_JSON typically returns
+                JSON_AUTOMATION, and SCRIPT_TEXT typically returns FLOW_CANONICAL; this
+                field may be omitted for other automation types or when there is no
+                persisted definition.
+            config:
+              nullable: true
+              description: >-
+                The complete actual persisted definition; must be interpreted together
+                with configFormat. This field may be omitted when there is no persisted
+                definition. Protocol extension fields such as node-internal config are
+                returned as-is, so callers should allow unknown fields.
+              anyOf:
+                - $ref: '#/components/schemas/JsonAutomationConfig'
+                - $ref: '#/components/schemas/FlowCanonicalConfig'
+
+    JsonAutomationConfig:
+      type: object
+      required: [automations]
+      description: JSON automation definition created via OpenAPI.
+      properties:
+        metadata:
+          $ref: '#/components/schemas/JsonAutomationMetadata'
+        automations:
+          type: array
+          description: List of automation rules
+          items:
+            $ref: '#/components/schemas/JsonAutomationRule'
+
+    JsonAutomationMetadata:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+          description: Automation name within the configuration
+        description:
+          type: string
+          nullable: true
+          description: Configuration description
+        scope:
+          type: array
+          description: Device property definitions that can be referenced by data.ref
+          items:
+            $ref: '#/components/schemas/JsonAutomationDevicePropertyDefinition'
+
+    JsonAutomationDevicePropertyDefinition:
+      type: object
+      required: [type, name, deviceId, endpointId, functionCode, traitCode]
+      properties:
+        type:
+          type: string
+          enum: [device.property]
+        name:
+          type: string
+        deviceId:
+          type: string
+        endpointId:
+          type: integer
+        functionCode:
+          type: string
+        traitCode:
+          type: string
+
+    JsonAutomationRule:
+      type: object
+      required: [starters, actions]
+      properties:
+        name:
+          type: string
+          nullable: true
+        starters:
+          type: array
+          description: List of triggers; the type of each item determines the remaining fields
+          items:
+            $ref: '#/components/schemas/JsonAutomationTypedItem'
+        condition:
+          allOf:
+            - $ref: '#/components/schemas/JsonAutomationTypedItem'
+          nullable: true
+          description: >-
+            Optional condition evaluated before actions are executed; the field name is
+            the singular condition. Compound conditions of type and/or use a conditions
+            array inside this object.
+        actions:
+          type: array
+          description: List of actions executed in order; the type of each item determines the remaining fields
+          items:
+            $ref: '#/components/schemas/JsonAutomationTypedItem'
+
+    JsonAutomationTypedItem:
+      type: object
+      required: [type]
+      description: >-
+        Polymorphic trigger, condition, or action for JSON_AUTOMATION. Fields other than
+        type are determined by the specific type; the server returns the persisted
+        content as-is.
+      properties:
+        type:
+          type: string
+          description: >-
+            For example: property.event, time.schedule, manual, property.state, and, or,
+            not, time.between, device.trait.write, device.command.call, delay
+      additionalProperties: true
+
+    FlowCanonicalConfig:
+      type: object
+      description: Complete automation definition used by the Studio frontend canvas.
+      properties:
+        kind:
+          type: string
+          enum: [flow.canonical]
+        flowVersion:
+          type: string
+          description: Canvas definition version; the current implementation defaults to 2.0
+        registryVersion:
+          type: string
+          description: Node registry version; the current implementation defaults to 2.0
+        metadata:
+          $ref: '#/components/schemas/FlowCanonicalMetadata'
+        variables:
+          type: array
+          description: Canvas variable declarations; not a list of triggers, conditions, or actions
+          items:
+            $ref: '#/components/schemas/FlowCanonicalVariable'
+        nodes:
+          type: array
+          description: >-
+            All flow nodes. Semantics are identified by the type prefix: event.* for
+            triggers, condition.* for conditions, and action.* for actions; array order
+            does not represent execution order.
+          items:
+            $ref: '#/components/schemas/FlowCanonicalNode'
+        edges:
+          type: array
+          description: >-
+            Connections between node ports; used to determine the execution relationships
+            among triggers, conditions, and actions
+          items:
+            $ref: '#/components/schemas/FlowCanonicalEdge'
+        editor:
+          $ref: '#/components/schemas/FlowCanonicalEditorState'
+
+    FlowCanonicalMetadata:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+
+    FlowCanonicalVariable:
+      type: object
+      required: [id, type, name]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        name:
+          type: string
+        config:
+          type: object
+          additionalProperties: true
+
+    FlowCanonicalNode:
+      type: object
+      required: [id, type]
+      properties:
+        id:
+          type: string
+          description: Node ID, also referenced by edges and editor mappings
+        type:
+          type: string
+          description: >-
+            Node type; event.* indicates a trigger, condition.* indicates a condition,
+            and action.* indicates an action
+        inputs:
+          type: array
+          items:
+            type: string
+        outputs:
+          type: array
+          items:
+            type: string
+        config:
+          type: object
+          description: Configuration specific to the node type; fields vary by type
+          additionalProperties: true
+        title:
+          type: string
+          nullable: true
+
+    FlowCanonicalEdge:
+      type: object
+      required: [id, source, target]
+      properties:
+        id:
+          type: string
+        source:
+          $ref: '#/components/schemas/FlowCanonicalPortRef'
+        target:
+          $ref: '#/components/schemas/FlowCanonicalPortRef'
+
+    FlowCanonicalPortRef:
+      type: object
+      required: [node, port]
+      properties:
+        node:
+          type: string
+          description: FlowCanonicalNode.id
+        port:
+          type: string
+          description: Node input or output port name
+
+    FlowCanonicalEditorState:
+      type: object
+      description: Frontend canvas display state; not used to determine automation execution order
+      properties:
+        positions:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/FlowCanonicalPosition'
+        nodes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/FlowCanonicalEditorNode'
+
+    FlowCanonicalPosition:
+      type: object
+      required: [x, y]
+      properties:
+        x:
+          type: number
+          format: double
+        y:
+          type: number
+          format: double
+
+    FlowCanonicalEditorNode:
+      type: object
+      properties:
+        summary:
+          type: string
+        description:
+          type: string
+        label:
+          type: string
+        icon:
+          type: string
+        iconColor:
+          type: string
+        detail:
+          type: object
+          additionalProperties: true
+        hidden:
+          type: boolean
 
     AutomationListData:
       type: object
@@ -3639,11 +3929,15 @@ components:
         name:
           type: string
           description: Automation name
+        autoSuffixOnDuplicate:
+          type: boolean
+          default: true
+          description: Name duplication handling strategy. If not passed or true, automatically add suffixes like (1), (2), etc. ; if false, return a name duplication error.
         definitionType:
           $ref: '#/components/schemas/AutomationDefinitionType'
         config:
           type: object
-          description: JSON automation script, please refer to [JSON automation script definition](../../aqara-studio/api-references/json-automation-script).
+          description: JSON automation script, please refer to [JSON automation script definition](https://docs.aqara.com/docs/aqara-developer/data-export-api/reference/json-automation-script).
           additionalProperties: true
 
     UpdateAutomationRequest:
@@ -3654,6 +3948,10 @@ components:
           type: string
           description: New name.
           nullable: true
+        autoSuffixOnDuplicate:
+          type: boolean
+          default: true
+          description: Name duplication handling strategy. If not passed or true, automatically add suffixes like (1), (2), etc. ; if false, return a name duplication error. This field does not need to be included in updateMask.
         enabled:
           type: boolean
           description: "New enabled state. true: enabled; false: disabled."

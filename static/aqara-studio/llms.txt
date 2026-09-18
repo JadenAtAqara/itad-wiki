@@ -32,6 +32,8 @@
 - Aqara Coap: https://docs.aqara.com/docs/aqara-studio/device-integration/aqara-coap
 - Infrared Equipment: https://docs.aqara.com/docs/aqara-studio/device-integration/virtual/infrared-equipment
 - Light Box: https://docs.aqara.com/docs/aqara-studio/device-integration/virtual/light-box
+- Group Control Equipment: https://docs.aqara.com/docs/aqara-studio/device-integration/virtual/group-control-equipment
+- Custom Device: https://docs.aqara.com/docs/aqara-studio/device-integration/virtual/custom-device
 - Export to Aqara Home App: https://docs.aqara.com/docs/aqara-studio/device-export/aiot
 - Export via Haystack Framework: https://docs.aqara.com/docs/aqara-studio/device-export/haystack
 - Data Export by MQTT: https://docs.aqara.com/docs/aqara-studio/data-export-by-mqtt
@@ -44,7 +46,6 @@
 - Light Boxes: https://docs.aqara.com/docs/aqara-studio/device-management/aqara-device-configuration/light-boxes
 - Screens: https://docs.aqara.com/docs/aqara-studio/device-management/aqara-device-configuration/screens
 - Automation: https://docs.aqara.com/docs/aqara-studio/automation
-- Classic: https://docs.aqara.com/docs/aqara-studio/classic-automation
 - Flow: https://docs.aqara.com/docs/aqara-studio/flow/flow-introduction
 - Trigger: https://docs.aqara.com/docs/aqara-studio/flow/trigger
 - Condition: https://docs.aqara.com/docs/aqara-studio/flow/condition
@@ -71,13 +72,6 @@
 - Plugin Center: https://docs.aqara.com/docs/aqara-studio/plugin-center
 - AIOT Data Migration: https://docs.aqara.com/docs/aqara-studio/plugin-center/aiot-data-migration
 - Developer Guide: https://docs.aqara.com/docs/aqara-studio/developer-guide
-- Data Export API v1: https://docs.aqara.com/docs/aqara-studio/api-references/data-export-api-v1
-- Device Function API: https://docs.aqara.com/docs/aqara-studio/api-references/trait-api
-- Device Types: https://docs.aqara.com/docs/aqara-studio/api-references/device-type
-- Trait Codes: https://docs.aqara.com/docs/aqara-studio/api-references/trait-codes
-- Automation API: https://docs.aqara.com/docs/aqara-studio/api-references/automation-api
-- JSON Automation Script: https://docs.aqara.com/docs/aqara-studio/api-references/json-automation-script
-- Space Management API: https://docs.aqara.com/docs/aqara-studio/api-references/space-management-api
 - Use Aqara Studio Skill in OpenClaw Web UI: https://docs.aqara.com/docs/aqara-studio/use-aqara-studio-skill-in-openclaw-web-ui
 - Connect to Aqara Studio MCP Server: https://docs.aqara.com/docs/aqara-studio/set-up-mcp-server
 - FAQ: https://docs.aqara.com/docs/aqara-studio/faq

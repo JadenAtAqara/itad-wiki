@@ -50,7 +50,9 @@
                   "aqara-studio/device-integration/sonos",
                   "aqara-studio/device-integration/aqara-coap",
                   "aqara-studio/device-integration/virtual/infrared-equipment",
-                  "aqara-studio/device-integration/virtual/light-box"
+                  "aqara-studio/device-integration/virtual/light-box",
+                  "aqara-studio/device-integration/virtual/group-control-equipment",
+                  "aqara-studio/device-integration/virtual/custom-device"
                 ]
               },
               {
@@ -102,7 +104,6 @@
                     "id": "aqara-studio/automation"
                 },
                 "items": [
-                    "aqara-studio/classic-automation", 
                     {
                       "type": "category",
                       "label": "Flow",
@@ -187,40 +188,6 @@
       "label": "Developer",
       "items": [
         "aqara-studio/developer-guide",
-        {
-          "type": "category",
-          "label": "Data Export API",
-          "link": {
-              "type": "doc",
-              "id": "aqara-studio/api-references/data-export-api-v1"
-          },
-          "items": [
-            {
-              "type": "category",
-              "label": "Device Function API",
-              "link": {
-                "type": "doc",
-                "id": "aqara-studio/api-references/trait-api"
-              },
-              "items": [
-                "aqara-studio/api-references/device-type",
-                "aqara-studio/api-references/trait-codes"
-              ]
-            },
-            {
-              "type": "category",
-              "label": "Automation API",
-              "link": {
-                "type": "doc",
-                "id": "aqara-studio/api-references/automation-api"
-              },
-              "items": [
-                "aqara-studio/api-references/json-automation-script"
-              ]
-            },
-            "aqara-studio/api-references/space-management-api"
-          ]
-        },
         "aqara-studio/use-aqara-studio-skill-in-openclaw-web-ui",
         "aqara-studio/set-up-mcp-server"
       ]      

@@ -264,7 +264,9 @@ paths:
     get:
       tags: [Device]
       summary: 查询设备信息列表
-      description: 获取指定空间下的设备列表，支持分页和过滤条件。
+      description: |
+        分页查询设备信息，支持按空间、在线状态、所属网关、设备类型和设备名称过滤。
+        `gatewayId` 不传、为空字符串或仅包含空白字符时，此字段不参与过滤；有值时去除首尾空白并按所属网关 ID 精确匹配。网关过滤与其他查询条件同时生效，并在分页前执行。
       operationId: getDevices
       x-skill-intent: device.list
       x-idempotent: true
@@ -302,6 +304,13 @@ paths:
           schema:
             type: boolean
             nullable: true
+        - name: gatewayId
+          in: query
+          description: 所属网关 ID。不传、为空字符串或仅包含空白字符时不参与过滤；有值时去除首尾空白后精确匹配。
+          required: false
+          schema:
+            type: string
+          example: gateway-001
         - name: deviceTypesList
           in: query
           description: 设备类型列表。示例：deviceTypesList=light,switch 或 deviceTypesList=light&deviceTypesList=switch
@@ -366,7 +375,7 @@ paths:
                     code: 0
                     message: success
                     data:
-                      totalCount: 3
+                      totalCount: 2
                       pageNum: 1
                       pageSize: 200
                       data:
@@ -375,6 +384,16 @@ paths:
                           deviceName: "客厅灯"
                           deviceTypesList: ["light"]
                           createTime: 1710001234567
+                          state: true
+                          space:
+                            parentSpaceId: "space-home-001"
+                            spaceId: "space-room-001"
+                            name: "客厅"
+                        - deviceId: "device-002"
+                          gatewayId: "gateway-001"
+                          deviceName: "客厅开关"
+                          deviceTypesList: ["switch"]
+                          createTime: 1710002345678
                           state: true
                           space:
                             parentSpaceId: "space-home-001"
@@ -1490,7 +1509,13 @@ paths:
     get:
       tags: [Automation]
       summary: 查询自动化详情
-      description: 查询自动化详情，支持通过自动化 ID 查询自动化详情。
+      description: |
+        查询自动化详情，支持通过自动化 ID 查询自动化详情。
+        返回自动化的实际持久化定义。先根据 configFormat 判断 config 的结构：
+        - JSON_AUTOMATION 使用 automations[].starters、automations[].condition 和 automations[].actions。
+        - FLOW_CANONICAL 使用 nodes 与 edges 表达完整画布和执行关系。
+        manualTriggers 仅是手动触发器快捷索引，不代表完整触发器列表。
+        automationId 格式错误或自动化不存在时返回 HTTP 400。
       operationId: queryAutomationDetails
       x-skill-intent: automation.details
       x-idempotent: true
@@ -1726,6 +1751,15 @@ paths:
           schema:
             type: boolean
             default: false
+        - in: query
+          name: orderBy
+          required: false
+          description: 排序方式，仅支持 createTime asc 和 createTime desc；未传或传入不支持的字段时默认按 createTime asc 排序
+          schema:
+            type: string
+            default: createTime asc
+            enum: [createTime asc, createTime desc]
+          example: createTime asc
       responses:
         '200':
           description: 成功
@@ -1761,7 +1795,7 @@ paths:
 
         手动触发器的添加方式取决于您创建 Flow 自动化的方式：
         1. 若通过 Aqara Studio Web 页面创建，可参考：[自动化 - Flow - 触发 - 手动触发](https://docs.aqara.com/zh/docs/aqara-studio/flow/trigger#%E6%89%8B%E5%8A%A8%E8%A7%A6%E5%8F%91)
-        2. 若通过 API 创建自动化，请在 JSON 脚本内添加手动触发器，参考：[JSON 自动化脚本定义 - Starter - Manual](https://docs.aqara.com/zh/docs/aqara-studio/api-references/json-automation-script#manual)
+        2. 若通过 API 创建自动化，请在 JSON 脚本内添加手动触发器，参考：[JSON 自动化脚本定义 - Starter - Manual](https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/reference/json-automation-script#manual)
         :::
         
       operationId: executeAutomationManualTrigger
@@ -3544,7 +3578,7 @@ components:
         manualTriggers:
           type: array
           nullable: true
-          description: 可用的手动触发器列表
+          description: 仅包含可手动执行的触发器快捷信息，不代表完整触发器列表；完整规则以详情中的 config 为准。
           items:
             $ref: '#/components/schemas/AutomationManualTriggerBrief'
         space:
@@ -3605,11 +3639,252 @@ components:
         - $ref: '#/components/schemas/AutomationSummary'
         - type: object
           properties:
-            config:
-              type: object
+            configFormat:
+              type: string
               nullable: true
-              description: 自动化的配置详情。仅当 definitionType 为 SCRIPT_JSON 时会返回具体配置，否则为空对象。
-              additionalProperties: true
+              enum: [JSON_AUTOMATION, FLOW_CANONICAL]
+              description: >-
+                config 的实际持久化格式。SCRIPT_JSON 通常返回 JSON_AUTOMATION，SCRIPT_TEXT 通常返回
+                FLOW_CANONICAL；其他自动化类型或无持久化定义时可以不返回该字段。
+            config:
+              nullable: true
+              description: >-
+                完整的实际持久化定义，必须结合 configFormat 解读；无持久化定义时可以不返回该字段。
+                节点内部 config 等协议扩展字段保持原样返回，因此调用方应允许未知字段。
+              anyOf:
+                - $ref: '#/components/schemas/JsonAutomationConfig'
+                - $ref: '#/components/schemas/FlowCanonicalConfig'
+
+    JsonAutomationConfig:
+      type: object
+      required: [automations]
+      description: OpenAPI 创建的 JSON 自动化定义。
+      properties:
+        metadata:
+          $ref: '#/components/schemas/JsonAutomationMetadata'
+        automations:
+          type: array
+          description: 自动化规则列表
+          items:
+            $ref: '#/components/schemas/JsonAutomationRule'
+
+    JsonAutomationMetadata:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+          description: 配置内的自动化名称
+        description:
+          type: string
+          nullable: true
+          description: 配置说明
+        scope:
+          type: array
+          description: 可被 data.ref 引用的设备属性定义
+          items:
+            $ref: '#/components/schemas/JsonAutomationDevicePropertyDefinition'
+
+    JsonAutomationDevicePropertyDefinition:
+      type: object
+      required: [type, name, deviceId, endpointId, functionCode, traitCode]
+      properties:
+        type:
+          type: string
+          enum: [device.property]
+        name:
+          type: string
+        deviceId:
+          type: string
+        endpointId:
+          type: integer
+        functionCode:
+          type: string
+        traitCode:
+          type: string
+
+    JsonAutomationRule:
+      type: object
+      required: [starters, actions]
+      properties:
+        name:
+          type: string
+          nullable: true
+        starters:
+          type: array
+          description: 触发器列表；每项的 type 决定其余字段
+          items:
+            $ref: '#/components/schemas/JsonAutomationTypedItem'
+        condition:
+          allOf:
+            - $ref: '#/components/schemas/JsonAutomationTypedItem'
+          nullable: true
+          description: >-
+            动作执行前的可选条件，字段名为单数 condition。and/or 类型的组合条件在该对象内部使用 conditions 数组。
+        actions:
+          type: array
+          description: 按顺序执行的动作列表；每项的 type 决定其余字段
+          items:
+            $ref: '#/components/schemas/JsonAutomationTypedItem'
+
+    JsonAutomationTypedItem:
+      type: object
+      required: [type]
+      description: >-
+        JSON_AUTOMATION 的多态触发器、条件或动作。除 type 外的字段由具体类型决定，服务端会原样返回持久化内容。
+      properties:
+        type:
+          type: string
+          description: 例如 property.event、time.schedule、manual、property.state、and、or、not、time.between、device.trait.write、device.command.call、delay
+      additionalProperties: true
+
+    FlowCanonicalConfig:
+      type: object
+      description: Studio 前端画布使用的完整自动化定义。
+      properties:
+        kind:
+          type: string
+          enum: [flow.canonical]
+        flowVersion:
+          type: string
+          description: 画布定义版本，当前实现默认值为 2.0
+        registryVersion:
+          type: string
+          description: 节点注册表版本，当前实现默认值为 2.0
+        metadata:
+          $ref: '#/components/schemas/FlowCanonicalMetadata'
+        variables:
+          type: array
+          description: 画布变量声明；不是触发器、条件或动作列表
+          items:
+            $ref: '#/components/schemas/FlowCanonicalVariable'
+        nodes:
+          type: array
+          description: >-
+            全部流程节点。通过 type 前缀识别语义：event.* 为触发器，condition.* 为条件，action.* 为动作；
+            数组顺序不代表执行顺序。
+          items:
+            $ref: '#/components/schemas/FlowCanonicalNode'
+        edges:
+          type: array
+          description: 节点端口之间的连线，是判断触发器、条件和动作执行关系的依据
+          items:
+            $ref: '#/components/schemas/FlowCanonicalEdge'
+        editor:
+          $ref: '#/components/schemas/FlowCanonicalEditorState'
+
+    FlowCanonicalMetadata:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+
+    FlowCanonicalVariable:
+      type: object
+      required: [id, type, name]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        name:
+          type: string
+        config:
+          type: object
+          additionalProperties: true
+
+    FlowCanonicalNode:
+      type: object
+      required: [id, type]
+      properties:
+        id:
+          type: string
+          description: 节点ID，同时被 edges 和 editor 的映射引用
+        type:
+          type: string
+          description: 节点类型；event.* 表示触发器，condition.* 表示条件，action.* 表示动作
+        inputs:
+          type: array
+          items:
+            type: string
+        outputs:
+          type: array
+          items:
+            type: string
+        config:
+          type: object
+          description: 节点类型专属配置，字段随 type 变化
+          additionalProperties: true
+        title:
+          type: string
+          nullable: true
+
+    FlowCanonicalEdge:
+      type: object
+      required: [id, source, target]
+      properties:
+        id:
+          type: string
+        source:
+          $ref: '#/components/schemas/FlowCanonicalPortRef'
+        target:
+          $ref: '#/components/schemas/FlowCanonicalPortRef'
+
+    FlowCanonicalPortRef:
+      type: object
+      required: [node, port]
+      properties:
+        node:
+          type: string
+          description: FlowCanonicalNode.id
+        port:
+          type: string
+          description: 节点输入或输出端口名
+
+    FlowCanonicalEditorState:
+      type: object
+      description: 前端画布显示状态，不用于判断自动化执行顺序
+      properties:
+        positions:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/FlowCanonicalPosition'
+        nodes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/FlowCanonicalEditorNode'
+
+    FlowCanonicalPosition:
+      type: object
+      required: [x, y]
+      properties:
+        x:
+          type: number
+          format: double
+        y:
+          type: number
+          format: double
+
+    FlowCanonicalEditorNode:
+      type: object
+      properties:
+        summary:
+          type: string
+        description:
+          type: string
+        label:
+          type: string
+        icon:
+          type: string
+        iconColor:
+          type: string
+        detail:
+          type: object
+          additionalProperties: true
+        hidden:
+          type: boolean
 
     AutomationListData:
       type: object
@@ -3638,11 +3913,15 @@ components:
         name:
           type: string
           description: 自动化名称
+        autoSuffixOnDuplicate:
+          type: boolean
+          default: true
+          description: 名称重名处理策略。未传或为 true 时自动添加 (1)、(2) 等后缀；为 false 时返回名称重复错误
         definitionType:
           $ref: '#/components/schemas/AutomationDefinitionType'
         config:
           type: object
-          description: JSON 自动化脚本，详情请参考 [JSON 自动化脚本定义](../../aqara-studio/api-references/json-automation-script)。
+          description: JSON 自动化脚本，详情请参考 [JSON 自动化脚本定义](https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/reference/json-automation-script)。
           additionalProperties: true
 
     UpdateAutomationRequest:
@@ -3653,6 +3932,10 @@ components:
           type: string
           description: 新名称。
           nullable: true
+        autoSuffixOnDuplicate:
+          type: boolean
+          default: true
+          description: 名称重名处理策略。未传或为 true 时自动添加 (1)、(2) 等后缀；为 false 时返回名称重复错误。该字段不需要加入 updateMask。
         enabled:
           type: boolean
           description: 新启用状态。true：启用；false：禁用。

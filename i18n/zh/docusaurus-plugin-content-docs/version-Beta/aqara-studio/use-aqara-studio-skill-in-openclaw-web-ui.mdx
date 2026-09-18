@@ -28,7 +28,9 @@ Aqara 提供了用于集成 Aqara Studio 能力的 OpenClaw skill。 OpenClaw We
 1. 安装完成后，Assistant 会要求您提供 `AQARA_ENDPOINT_URL` 和 `AQARA_OPEN_API_TOKEN`，用作鉴权。
 
     :::tip
-    - `AQARA_ENDPOINT_URL` 为 Aqara Studio 的 [HTTP 请求 URL](./api-references/data-export-api-v1.mdx#http-请求)，通常以 `/open/api/v1` 结尾
+    - `AQARA_ENDPOINT_URL` 为 Aqara Studio 的 HTTP 请求 URL，通常以 `/open/api/v1` 结尾，格式如下：
+        - 未开启远程访问：`http://Aqara Studio 的局域网内网IP/open/api/v1`
+        - 已开启远程访问：`https://Aqara Studio 的远程访问地址/open/api/v1`
     - `AQARA_OPEN_API_TOKEN` 为 Aqara Studio 用于鉴权的 [token](./developer-guide.mdx#获取-token)。
     :::
 

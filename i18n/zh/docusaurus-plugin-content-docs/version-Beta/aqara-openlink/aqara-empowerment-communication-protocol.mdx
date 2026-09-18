@@ -107,7 +107,7 @@ AECP 在逻辑上可分为四层，自底向上各层职责独立、依次封装
 | 命令 (Command) | 触发性动作，由 Command ID（uint16）标识，携带类型化参数。每条命令的合法发起方由所属 Profile 命令表中的 Direction 明确声明；接收方以 ACKNOWLEDGE 或配对 COMMAND 应答。 |
 | 操作码 (OPC) | 数据帧中标识消息类型与方向的 1 字节字段，共定义 10 种操作码，对应属性读写、属性上报、属性查询、属性上报（NOTIFY）和命令等交互模式。 |
 | Side | 属性归属方标注。**C**（Client）= 该属性由 Client 持有和维护；**S**（Server）= 该属性由 Server 持有和维护。每个属性 SHALL 在属性表中明确标注 C 或 S。 |
-| Conformance | 实现要求标注。**M**（Mandatory，必选）= 该条目 SHALL 实现；**O**（Optional，可选）= 该条目 MAY 实现。 |
+| Conformance | 实现要求标注。**M**（Mandatory，必选）= 该条目 SHALL 实现；**O**（Optional，可选）= 该条目 MAY 实现。`FeatureName`（无括号）= 对应 FeatureMap 位置位时 SHALL 实现；`[FeatureName]`（方括号）= 对应 FeatureMap 位置位时 MAY 实现。详见 [字段记号约定](#字段记号约定)。 |
 | Profile ID | 数据帧头部的 2 字节字段（原 Device Type），标识本帧通信所属的功能域，而非仅区分产品类型。 |
 | OTA | Over-The-Air，固件在线升级。本协议定义 IAP OTA 与 BootLoader OTA 两种升级方式。 |
 | Wake Pin（唤醒引脚） | 硬件引脚，低电平有效；Client 与 Server 各提供一个，供对端拉低以配合 Wake Signaling。参见第 2 章。
@@ -174,7 +174,7 @@ AECP 中的所有多字节字段均采用 **大端序（Big-Endian）** 传输�
 | `Default` / `默认值` | 缺省值或复位后的初始值；`—` 表示不规定统一默认值。 |
 | `Access` / `访问权限` | 合法访问方式。`R` = READ；`W` = WRITE；`RP` = REPORT；`Q` = QUERY；`NF` = NOTIFY。 |
 | `Side` / `归属方` | 属性归属方。`C` = Client 持有和维护；`S` = Server 持有和维护。 |
-| `Conformance` / `必选性` | 实现要求。`M` = Mandatory，必选，SHALL 实现；`O` = Optional，可选，MAY 实现。 |
+| `Conformance` / `必选性` | 实现要求。`M` = Mandatory，必选，SHALL 实现；`O` = Optional，可选，MAY 实现。`FeatureName`（无括号）= 同一 Profile 内已定义 FeatureMap 位 `FeatureName` 置位时 SHALL 实现（该 Feature 下必选）；`[FeatureName]`（方括号）= 该位置位时 MAY 实现（该 Feature 下可选）。两种 Feature 写法在对应位未置位时均 SHALL NOT 实现。`FeatureName` SHALL 为同一 Profile 内已定义 FeatureMap 位的名称。 |
 | `Direction` / `方向` | 命令合法发起方，由命令表定义。 |
 | `Response` / `应答` | 命令应答方式。可为 `ACKNOWLEDGE`、配对 COMMAND 名称，或 `N`（无应答）。 |
 | `Description` / `简述` / `说明` | 条目的简要说明。 |
@@ -1284,6 +1284,7 @@ Profile 发现完成后，Server **MAY** 通过 QUERY 拉取自身需要的 Clie
 | 0x0005 | LocalTime | Server 拉取当前本地时间 |
 | 0x0006 | ModuleSupportedProductProfileList | Server 拉取 Client 支持的产品 Profile ID 列表 |
 | 0x0007 | ClientUartBufferSize | Server 拉取 Client UART 缓冲区大小 |
+| 0x0008 | ModuleWirelessProtocol | Server 拉取 Client 模组当前无线协议 |
 
 若 Client 尚未完成 Profile 发现，Client **MAY** 对过早到达的 QUERY、REPORT 或 Server → Client 数据同步 COMMAND 返回 `ProfileDiscoveryInProgress`。
 
@@ -1333,7 +1334,7 @@ Profile 是协议的应用层组织单元，每个 Profile 由一组相关的**�
 | **C** | Client | 该属性由 Client 持有和维护。典型值为 Client 自身信息（固件版本、Unique ID）或网络能力（配网状态、网络状态、时间）。Server 需要读取时发起 QUERY，Client 回 QUERY_RESPONSE；Client 也可对 `Access` 含 `NF` 的属性主动发起 NOTIFY，Server 回 ACKNOWLEDGE。 |
 | **S** | Server | 该属性由 Server 持有和维护。典型值为传感器数据、设定值、设备硬件状态。Client 通过 READ/WRITE 访问；Server 通过 REPORT 主动上报。 |
 
-Conformance 列说明实现要求：**M**（Mandatory，必选，SHALL 实现）；**O**（Optional，可选，MAY 实现）。
+Conformance 列说明实现要求：**M**（Mandatory，必选，SHALL 实现）；**O**（Optional，可选，MAY 实现）；**`FeatureName`**（无括号，该 Feature 下必选）；**`[FeatureName]`**（方括号，该 Feature 下可选）。Feature 名称与未置位时的要求见 [字段记号约定](#字段记号约定)。
 
 ### 应答机制
 
@@ -1464,6 +1465,16 @@ Foundation Profile 是所有设备类型必须实现的基础功能域，包含�
 | 0x01 | Online | Client 已接入可用网络，可进行正常的网络通信与业务同步。 |
 | 0x02 | Connecting | Client 正在尝试接入网络、恢复连接或进行网络认证，当前网络能力尚不可用。 |
 
+#### ModuleWirelessProtocolEnum8 类型
+
+`ModuleWirelessProtocolEnum8` 定义 Client 模组当前运行固件所属的无线协议。该枚举的底层类型为 enum8。
+
+| 值    | 名称     | 说明 |
+|:---:|:---|:---|
+| 0x00  | Reserved | 预留。 |
+| 0x01  | Matter   | 模组当前运行 Matter 固件。 |
+| 0x02  | Zigbee   | 模组当前运行 Zigbee 固件。 |
+
 #### OtaUpgradeMethodEnum8 类型
 
 `OtaUpgradeMethodEnum8` 定义 Server 支持的固件升级方式。该枚举的底层类型为 enum8。
@@ -1529,16 +1540,17 @@ Foundation Profile 是所有设备类型必须实现的基础功能域，包含�
 
 ### Client 属性
 
-| ID | 名称 | 类型 | 约束 | 默认值 | 访问权限 | 归属方 | 必选性 | 简述 |
-|:---:|:---|:---|:---|:---:|:---:|:---:|:---:|:---|
-| 0x0000 | ProtocolVersion | uint16 | 从 0 开始 | 0x0000 | Q | C | M | AECP 版本号。 |
-| 0x0001 | ModuleFirmwareVersion | uint32 | 无额外约束 | — | Q | C | M | Client 固件版本。 |
-| 0x0002 | ModuleUniqueID | octstr | 最长 255 | — | Q | C | M | Client 唯一标识。 |
-| 0x0003 | PairingStatus | [PairingStatusEnum8](#pairingstatusenum8-类型) | 见枚举 | — | Q/NF | C | M | 配网状态。 |
-| 0x0004 | NetworkStatus | [NetworkStatusEnum8](#networkstatusenum8-类型) | 见枚举 | — | Q/NF | C | M | Client 网络状态。 |
-| 0x0005 | LocalTime | uint32 | 无额外约束 | — | Q/NF | C | O | Client 本地时间。 |
-| 0x0006 | ModuleSupportedProductProfileList | list[uint16] | 非保留 Profile ID | — | Q | C | M | Client 支持的产品 Profile 列表。 |
-| 0x0007 | ClientUartBufferSize | uint16 | >= 1024 字节 | 1024 | Q | C | M | Client UART 缓冲区大小。 |
+| ID | 名称 | 类型 | 约束 | 默认值 | 访问权限 | 必选性 | 简述 |
+|:---|:---|:---|:---|:---|:---|:---|:---|
+| 0x0000 | ProtocolVersion | uint16 | 从 0 开始 | 0x0000 | Q | M | AECP 版本号 |
+| 0x0001 | ModuleFirmwareVersion | uint32 | 无额外约束 | — | Q | M | Client 固件版本 |
+| 0x0002 | ModuleUniqueID | octstr | 最长 255 | — | Q | M | Client 唯一标识 |
+| 0x0003 | PairingStatus | [PairingStatusEnum8](#pairingstatusenum8-类型) | 见枚举 | — | Q/NF | M | 配网状态 |
+| 0x0004 | NetworkStatus | [NetworkStatusEnum8](#networkstatusenum8-类型) | 见枚举 | — | Q/NF | M | Client 网络状态 |
+| 0x0005 | LocalTime | uint32 | 无额外约束 | — | Q/NF | O | Client 本地时间 |
+| 0x0006 | ModuleSupportedProductProfileList | list[uint16] | 非保留 Profile ID | — | Q | M | 支持的产品 Profile 列表 |
+| 0x0007 | ClientUartBufferSize | uint16 | >= 1024 字节 | 1024 | Q | M | Client UART 缓冲区大小 |
+| 0x0008 | ModuleWirelessProtocol | [ModuleWirelessProtocolEnum8](#modulewirelessprotocolenum8-类型) | 见枚举 | — | Q | M | 模组无线协议 |
 
 #### ProtocolVersion 属性
 
@@ -1588,32 +1600,38 @@ Server 需要网络同步时间戳时 MAY 通过 QUERY 拉取该属性。Client 
 
 该属性类型为 `uint16`，默认值为 `1024`。Client UART 接收缓冲区和发送缓冲区 SHALL 均不小于该值；若接收和发送缓冲区大小不同，该属性 SHALL 使用较小值作为可用单帧长度能力。链路建立时，Client SHALL 在 `LinkEstablishmentRequest` 中携带与该属性一致的 `ClientUartBufferSize` 参数。
 
+#### ModuleWirelessProtocol 属性
+
+`ModuleWirelessProtocol` 由 Client 维护，用于声明模组当前运行固件所属的无线协议。该属性无默认值。有效值见 [ModuleWirelessProtocolEnum8 类型](#modulewirelessprotocolenum8-类型)。
+
+Server 需要识别 Client 无线协议时，SHALL 通过 QUERY 拉取该属性，Client SHALL 通过 QUERY_RESPONSE 返回当前值。
+
 ### Server 属性
 
-| ID | 名称 | 类型 | 约束 | 默认值 | 访问权限 | 归属方 | 必选性 | 简述 |
-|:---:|:---|:---|:---|:---:|:---:|:---:|:---:|:---|
-| 0x1000 | VendorID | uint16 | 1 ~ 0xFFFF | 0x0000 | R/RP | S | M | 厂商 ID。 |
-| 0x1001 | ProductID | uint16 | 1 ~ 0xFFFF | 0x0000 | R/RP | S | M | 产品 ID。 |
-| 0x1002 | ServerHardwareVersion | uint16 | 1 ~ 0xFFFF | 0x0001 | R/RP | S | M | Server 硬件版本。 |
-| 0x1003 | ServerSoftwareVersion | uint16 | 1 ~ 0xFFFF | 0x0001 | R/RP | S | M | Server 固件版本。 |
-| 0x1004 | OtaUpgradeMethod | [OtaUpgradeMethodEnum8](#otaupgrademethodenum8-类型) | 见枚举 | 0x00 | R/RP | S | M | OTA 升级方式。 |
-| 0x1005 | OtaStatus | [OtaStatusEnum8](#otastatusenum8-类型) | 见枚举 | 0x00 | RP | S | O | OTA 状态。 |
-| 0x1006 | HardwareFault | [HardwareFaultMap32](#hardwarefaultmap32-类型) | 见 map | — | R/RP | S | O | 硬件故障位图。 |
-| 0x1007 | ProductProfileID | uint16 | 非保留 Profile ID | — | R/RP | S | M | Server 唯一产品 Profile。 |
-| 0x1008 | ServerUartBufferSize | uint16 | >= 1024 字节 | 1024 | R/RP | S | M | Server UART 缓冲区大小。 |
-| 0xFFFB | ServerAttributeList | list[uint16] | 无额外约束 | — | R/RP | S | M | Server 支持的属性列表。 |
+| ID     | 名称                   | 类型                                                         | 约束              | 默认值   | 访问权限 | 必选性 | 简述                   |
+|:-------|:-----------------------|:-------------------------------------------------------------|:------------------|:---------|:---------|:-------|:-----------------------|
+| 0x1000 | VendorID               | uint16                                                       | 1 ~ 0xFFFF        | 0x0000   | R        | M      | 厂商 ID                |
+| 0x1001 | ProductID              | uint16                                                       | 1 ~ 0xFFFF        | 0x0000   | R        | M      | 产品 ID                |
+| 0x1002 | ServerHardwareVersion  | uint16                                                       | 1 ~ 0xFFFF        | 0x0001   | R        | M      | Server 硬件版本        |
+| 0x1003 | ServerSoftwareVersion  | uint16                                                       | 1 ~ 0xFFFF        | 0x0001   | R/RP     | M      | Server 固件版本        |
+| 0x1004 | OtaUpgradeMethod       | [OtaUpgradeMethodEnum8](#otaupgrademethodenum8-类型)         | 见枚举            | 0x00     | R        | M      | OTA 升级方式           |
+| 0x1005 | OtaStatus              | [OtaStatusEnum8](#otastatusenum8-类型)                       | 见枚举            | 0x00     | RP       | O      | OTA 状态               |
+| 0x1006 | HardwareFault          | [HardwareFaultMap32](#hardwarefaultmap32-类型)               | 见 map            | —        | R/RP     | O      | 硬件故障位图           |
+| 0x1007 | ProductProfileID       | uint16                                                       | 非保留 Profile ID | —        | R        | M      | 产品 Profile           |
+| 0x1008 | ServerUartBufferSize   | uint16                                                       | >= 1024 字节      | 1024     | R        | M      | Server UART 缓冲区大小 |
+| 0xFFFB | ServerAttributeList    | list[uint16]                                                 | 无额外约束        | —        | R        | M      | Server 属性列表        |
 
 #### VendorID 属性
 
-`VendorID` 标识设备制造商 ID。Server SHALL 支持 Client READ 读取该属性。
+`VendorID` 标识设备制造商 ID。Client SHALL 在 Profile Discovery 期间 READ 该属性。该属性为设备身份常量，不存在运行期变化上报场景，Server SHALL NOT REPORT。
 
 #### ProductID 属性
 
-`ProductID` 标识设备产品 ID。Server SHALL 支持 Client READ 读取该属性。
+`ProductID` 标识设备产品 ID。Client SHALL 在 Profile Discovery 期间 READ 该属性。该属性为设备身份常量，不存在运行期变化上报场景，Server SHALL NOT REPORT。
 
 #### ServerHardwareVersion 属性
 
-`ServerHardwareVersion` 标识 Server 硬件版本。Server SHALL 支持 Client READ 读取该属性。
+`ServerHardwareVersion` 标识 Server 硬件版本。Client SHALL 在 Profile Discovery 期间 READ 该属性。该属性为硬件身份常量，不存在运行期变化上报场景，Server SHALL NOT REPORT。
 
 #### ServerSoftwareVersion 属性
 
@@ -1625,7 +1643,7 @@ OTA 完成且新固件启动成功后，Server SHALL 通过 REPORT 上报该属�
 
 `OtaUpgradeMethod` 声明 Server 支持的固件升级方式。有效值见 [OtaUpgradeMethodEnum8](#otaupgrademethodenum8-类型)。
 
-Client 发起任何 OTA 流程前 SHALL 先 READ 该属性，并按 Server 返回的升级方式选择 IAP OTA、BootLoader OTA 或放弃 OTA。
+Client 发起任何 OTA 流程前 SHALL 先 READ 该属性，并按 Server 返回的升级方式选择 IAP OTA、BootLoader OTA 或放弃 OTA。该属性为能力常量，不存在运行期变化上报场景，Server SHALL NOT REPORT。
 
 #### HardwareFault 属性
 
@@ -1639,11 +1657,13 @@ Bit 定义见 [HardwareFaultMap32](#hardwarefaultmap32-类型)。
 
 Server SHALL 仅声明一个非保留产品 Profile ID。Profile ID 取值范围见 [Profile ID 命名空间](#profile-id-命名空间)。若设备实现 Thermostat Profile，则该值为 `0x1000`。
 
+Client SHALL 在 Profile Discovery 期间 READ 该属性。该属性仅用于能力发现，不存在运行期变化上报场景，Server SHALL NOT REPORT。若产品 Profile 发生变化，Server SHALL 发送 `ProfileDiscoveryRequest`，由 Client 重新 READ。
+
 #### ServerUartBufferSize 属性
 
 `ServerUartBufferSize` 由 Server 维护，用于声明 Server UART 接收和发送缓冲区大小，单位字节。
 
-该属性类型为 `uint16`，默认值为 `1024`。Server UART 接收缓冲区和发送缓冲区 SHALL 均不小于该值；若接收和发送缓冲区大小不同，该属性 SHALL 使用较小值作为可用单帧长度能力。
+该属性类型为 `uint16`，默认值为 `1024`。Server UART 接收缓冲区和发送缓冲区 SHALL 均不小于该值；若接收和发送缓冲区大小不同，该属性 SHALL 使用较小值作为可用单帧长度能力。链路建立时，Server SHALL 在 `LinkEstablishmentResponse` 中携带与该属性一致的 `ServerUartBufferSize` 参数。该属性为链路能力常量，不存在运行期变化上报场景，Server SHALL NOT REPORT。
 
 #### OtaStatus 属性
 
@@ -1656,6 +1676,8 @@ Server SHALL 仅声明一个非保留产品 Profile ID。Profile ID 取值范围
 `ServerAttributeList` 声明 Foundation Profile 下 Server 实际支持的 Attribute ID 列表。
 
 该属性类型为 `list[uint16]`。列表元素 SHALL 按 Attribute ID 从小到大排列，并包含 `ServerAttributeList` 自身的 Attribute ID `0xFFFB`。
+
+Client SHALL 在 Profile Discovery 期间 READ 该属性。该属性仅用于能力发现，不存在运行期变化上报场景，Server SHALL NOT REPORT。若支持的属性集合发生变化，Server SHALL 发送 `ProfileDiscoveryRequest`，由 Client 重新 READ。
 
 ### Foundation 命令
 
@@ -2068,14 +2090,14 @@ Thermostat Profile 定义恒温器设备的专有属性与命令，适用于帧�
 | 0x02 | Cool | 制冷模式。 |
 | 0x03 | Heat | 制热模式。 |
 
-#### KeypadLockoutEnum8 类型
+#### LocalConfigDisabledEnum8 类型
 
-`KeypadLockoutEnum8` 定义本地按键锁定状态。该枚举的底层类型为 enum8。
+`LocalConfigDisabledEnum8` 定义本地配置是否禁用。该枚举的底层类型为 enum8。
 
 | 值 | 名称 | 说明 |
 |:---:|:---|:---|
-| 0x00 | Unlocked | 童锁关闭。 |
-| 0x01 | Locked | 童锁打开。 |
+| 0x00 | Enabled  | 允许本地配置。|
+| 0x01 | Disabled | 禁用本地配置。|
 
 #### TemperatureDisplayModeEnum8 类型
 
@@ -2105,28 +2127,58 @@ Thermostat Profile 定义恒温器设备的专有属性与命令，适用于帧�
 | 0x00  | NoAlarm               | 无防冻告警。               |
 | 0x01  | FrostProtectionAlarm  | 防冻保护处于激活状态。     |
 
+#### ThermostatFeatureMap32 类型
+
+`ThermostatFeatureMap32` 定义恒温器功能位图。该类型的底层类型为 map32。
+
+| 位 | 掩码 | 名称 | 说明 |
+|:---:|:---|:---|:---|
+| 0 | 0x00000001 | Heating | Server 支持制热。 |
+| 1 | 0x00000002 | Cooling | Server 支持制冷。 |
+
+本 Profile 属性表与命令表中的 Feature 必选性使用上表 **名称**。
+
+#### AqaraThermostatFeatureMap32 类型
+
+`AqaraThermostatFeatureMap32` 定义 Aqara Thermostat 功能位图。该类型的底层类型为 map32。
+
+| 位 | 掩码 | 名称 | 说明 |
+|:---:|:---|:---|:---|
+| 0 | 0x00000001 | OpenWindowDetection | Server 支持开窗检测与告警。 |
+| 1 | 0x00000002 | FrostProtection | Server 支持防冻保护告警与可配置触发温度。 |
+
+本 Profile 属性表与命令表中的 Feature 必选性使用上表 **名称**。
+
 ### 属性
 
 | ID | 名称 | 类型 | 约束 | 默认值 | 访问权限 | 归属方 | 必选性 | 简述 |
 |:---:|:---|:---|:---|:---:|:---:|:---:|:---:|:---|
-| 0x1000 | [SystemMode](#systemmode-属性) | [ThermostatSystemModeEnum8](#thermostatsystemmodeenum8-类型) | 见枚举 | 0x00 | R/W/RP | S | M | 基础工作模式。 |
-| 0x1001 | [OccupiedHeatingSetpoint](#occupiedheatingsetpoint-属性) | int16 | 设备能力范围 | — | R/W/RP | S | M | 设定制热温度。 |
-| 0x1002 | [LocalTemperature](#localtemperature-属性) | int16 | 0.01℃ | — | R/RP | S | M | 设备环境温度测量值。 |
-| 0x1003 | [LocalTemperatureCalibration](#localtemperaturecalibration-属性) | int8 | 0.1℃ | 0 | R/W/RP | S | M | 本地温度校准。 |
-| 0x1004 | [KeypadLockout](#keypadlockout-属性) | [KeypadLockoutEnum8](#keypadlockoutenum8-类型) | 见枚举 | 0x00 | R/W/RP | S | O | 童锁状态。 |
-| 0x1005 | [TemperatureDisplayMode](#temperaturedisplaymode-属性) | [TemperatureDisplayModeEnum8](#temperaturedisplaymodeenum8-类型) | 见枚举 | 0x00 | R/W/RP | S | O | 温度显示单位。 |
-| 0x1006 | [FrostProtectionEnabled](#frostprotectionenabled-属性) | bool | true / false | false | R/W/RP | S | O | 防冻模式使能开关。 |
-| 0x1007 | [FrostProtectionTemperature](#frostprotectiontemperature-属性) | int16 | Min ~ Max，0.01℃ | 500 | R/W/RP | S | O | 防冻模式触发温度。 |
-| 0x1008 | [WindowDetectionEnabled](#windowdetectionenabled-属性) | bool | true / false | false | R/W/RP | S | O | 开窗检测功能使能开关。 |
-| 0x100A | [ActivePower](#activepower-属性) | uint32 | mW | — | RP | S | O | 当前功率。 |
-| 0x100B | [OpenWindowAlarm](#openwindowalarm-属性) | [OpenWindowAlarmEnum8](#openwindowalarmenum8-类型) | 见枚举 | 0x00 | R/RP | S | O | 当前开窗告警状态。 |
-| 0x100C | [OpenWindowTemperatureControlPauseDuration](#openwindowtemperaturecontrolpauseduration-属性) | uint16 | Min ~ Max，min | 30 | R/W/RP | S | O | 开窗告警触发后暂停主动温控输出的时长。 |
-| 0x100D | [OpenWindowTemperatureControlPauseDurationMin](#openwindowtemperaturecontrolpausedurationmin-属性) | uint16 | min | 1 | R/RP | S | O | 暂停时长下限。 |
-| 0x100E | [OpenWindowTemperatureControlPauseDurationMax](#openwindowtemperaturecontrolpausedurationmax-属性) | uint16 | min | 1440 | R/RP | S | O | 暂停时长上限。 |
-| 0x100F | [FrostProtectionAlarm](#frostprotectionalarm-属性) | [FrostProtectionAlarmEnum8](#frostprotectionalarmenum8-类型) | 见枚举 | 0x00 | R/RP | S | O | 当前防冻告警状态。 |
-| 0x1010 | [FrostProtectionTemperatureMin](#frostprotectiontemperaturemin-属性) | int16 | 0.01℃ | 500 | R/RP | S | O | 防冻触发温度下限。 |
-| 0x1011 | [FrostProtectionTemperatureMax](#frostprotectiontemperaturemax-属性) | int16 | 0.01℃ | 1500 | R/RP | S | O | 防冻触发温度上限。 |
-| 0xFFFB | [ServerAttributeList](#serverattributelist-属性) | list[uint16] | 无额外约束 | — | R/RP | S | M | Server 支持的属性列表。 |
+| 0x1000 | SystemMode                   | [ThermostatSystemModeEnum8](#thermostatsystemmodeenum8-类型) | 见枚举        | 0x00   | R/W/RP | S | M | 基础工作模式 |
+| 0x1001 | OccupiedHeatingSetpoint      | int16                            | 见描述        | —      | R/W/RP | S | Heating | 设定制热温度 |
+| 0x1002 | LocalTemperature             | int16                            | 0.01℃         | —      | R/RP   | S | M | 环境温度
+| 0x1003 | LocalTemperatureCalibration  | int8                             | 0.1℃          | 0      | R/W/RP | S | O | 本地温度校准
+| 0x1004 | LocalConfigDisabled          | [LocalConfigDisabledEnum8](#localconfigdisabledenum8-类型)  | 见枚举        | 0x00   | R/W/RP | S | O | 本地配置禁用
+| 0x1005 | TemperatureDisplayMode       | [TemperatureDisplayModeEnum8](#temperaturedisplaymodeenum8-类型) | 见枚举      | 0x00   | R/W/RP | S | O | 温度显示单位
+| 0x1006 | FrostProtectionEnabled       | bool                             | true / false  | false  | R/W/RP | S | `[FrostProtection]` | 防冻使能
+| 0x1007 | FrostProtectionTemperature   | int16                            | Min ~ Max，0.01℃ | 500 | R/W/RP | S | FrostProtection | 防冻触发温度
+| 0x1008 | WindowDetectionEnabled       | bool                             | true / false  | false  | R/W/RP | S | OpenWindowDetection | 开窗检测使能
+| 0x1009 | ActiveCurrent                | uint32                           | mA            | —      | RP     | S | O | 当前电流
+| 0x100A | ActivePower                  | uint32                           | mW            | —      | RP     | S | O | 当前功率
+| 0x100B | OpenWindowAlarm              | [OpenWindowAlarmEnum8](#openwindowalarmenum8-类型) | 见枚举       | 0x00 | R/RP | S | OpenWindowDetection | 开窗告警状态
+| 0x100C | OpenWindowTemperatureControlPauseDuration | uint16              | Min ~ Max，min | 30 | R/W/RP | S | `[OpenWindowDetection]` | 开窗后温控暂停时长
+| 0x100D | OpenWindowTemperatureControlPauseDurationMin | uint16           | min | 1 | R | S | `[OpenWindowDetection]` | 暂停时长下限
+| 0x100E | OpenWindowTemperatureControlPauseDurationMax | uint16           | min | 1440 | R | S | `[OpenWindowDetection]` | 暂停时长上限
+| 0x100F | FrostProtectionAlarm         | [FrostProtectionAlarmEnum8](#frostprotectionalarmenum8-类型) | 见枚举 | 0x00 | R/RP | S | FrostProtection | 防冻告警状态
+| 0x1010 | FrostProtectionTemperatureMin | int16                           | 0.01℃ | 500 | R | S | FrostProtection | 防冻温度下限
+| 0x1011 | FrostProtectionTemperatureMax | int16                           | 0.01℃ | 1500 | R | S | FrostProtection | 防冻温度上限
+| 0x1012 | CumulativeEnergy             | int64                            | mWh           | —      | RP     | S | O | 累计输入电能
+| 0x1014 | ThermostatFeatureMap         | [ThermostatFeatureMap32](#thermostatfeaturemap32-类型)    | Heating=0x1，Cooling=0x2 | 0x00000001 | R     | S | M | 恒温器功能位图
+| 0x1015 | AbsMinHeatSetpointLimit      | int16                            | 0.01℃         | 500    | R      | S | `[Heating]` | 制热设定绝对下限
+| 0x1016 | AbsMaxHeatSetpointLimit      | int16                            | 0.01℃         | 3000   | R      | S | `[Heating]` | 制热设定绝对上限
+| 0x1017 | MinHeatSetpointLimit         | int16                            | 0.01℃         | 500    | R/W/RP | S | `[Heating]` | 制热设定用户下限
+| 0x1018 | MaxHeatSetpointLimit         | int16                            | 0.01℃         | 3000   | R/W/RP | S | `[Heating]` | 制热设定用户上限
+| 0x1019 | AqaraThermostatFeatureMap    | [AqaraThermostatFeatureMap32](#aqarathermostatfeaturemap32-类型) | OpenWindowDetection=0x1，FrostProtection=0x2 | 0x00000003 | R | S | O | Aqara 恒温器功能位图
+| 0xFFFB | ServerAttributeList          | list[uint16]                    | 无额外约束    | — | R    | S | M | Server 属性列表
 
 #### SystemMode 属性
 
@@ -2136,9 +2188,22 @@ Thermostat Profile 定义恒温器设备的专有属性与命令，适用于帧�
 
 #### OccupiedHeatingSetpoint 属性
 
-`OccupiedHeatingSetpoint` 表示有人占用场景下的制热目标温度，单位 0.01℃。例如 `2650` 表示 26.50℃，`-900` 表示 -9.00℃。
+`OccupiedHeatingSetpoint` 表示有人占用场景下的制热目标温度，单位 0.01℃。例如 `2650` 表示 26.50℃，`-900` 表示 -9.00℃。当 `ThermostatFeatureMap` 的 Heating 位置位时，Server SHALL 实现该属性；未置位时 SHALL NOT 实现。
 
-Client MAY WRITE 该属性修改制热目标温度。Server SHALL 在目标温度变化后 REPORT 该属性。
+该属性已实现时，取值由以下已实现的限值共同决定。未实现的绝对限值分别以其表内默认值 `500` / `3000` 代替；未实现的用户上下限分别以对应的绝对限值（或其默认值）代替。
+
+* `AbsMinHeatSetpointLimit` / `AbsMaxHeatSetpointLimit` 是制造商声明的制热设定绝对上下限。
+* `MinHeatSetpointLimit` / `MaxHeatSetpointLimit` 是用户可配置的制热设定上下限。
+* 用户上下限与绝对上下限均已实现时，SHALL 满足：
++
+`AbsMinHeatSetpointLimit` ≤ `MinHeatSetpointLimit` ≤ `MaxHeatSetpointLimit` ≤ `AbsMaxHeatSetpointLimit`
+* `OccupiedHeatingSetpoint` SHALL 满足有效下限 ≤ `OccupiedHeatingSetpoint` ≤ 有效上限，其中有效下限为已实现的 `MinHeatSetpointLimit`，否则为已实现的 `AbsMinHeatSetpointLimit`，再否则为默认值 `500`；有效上限为已实现的 `MaxHeatSetpointLimit`，否则为已实现的 `AbsMaxHeatSetpointLimit`，再否则为默认值 `3000`。
+
+全部限值均已实现时，完整关系为：
+
+`AbsMinHeatSetpointLimit` ≤ `MinHeatSetpointLimit` ≤ `OccupiedHeatingSetpoint` ≤ `MaxHeatSetpointLimit` ≤ `AbsMaxHeatSetpointLimit`
+
+该属性已实现时，Server SHALL 在目标温度变化后 REPORT 该属性。
 
 #### LocalTemperature 属性
 
@@ -2148,15 +2213,15 @@ Client MAY WRITE 该属性修改制热目标温度。Server SHALL 在目标温�
 
 #### LocalTemperatureCalibration 属性
 
-`LocalTemperatureCalibration` 表示本地温度校准偏移，单位 0.1℃。例如 `20` 表示 +2.0℃。
+`LocalTemperatureCalibration` 表示本地温度校准偏移，单位 0.1℃。例如 `20` 表示 +2.0℃。Server MAY 实现该属性。
 
-最终本地温度 = `LocalTemperature` + `LocalTemperatureCalibration`。Client MAY WRITE 该属性调整校准偏移。
+该属性已实现时，最终本地温度 = `LocalTemperature` + `LocalTemperatureCalibration`，Client MAY WRITE 该属性调整校准偏移。未实现该属性时，不得叠加校准偏移，等效于校准值为 `0`。
 
-#### KeypadLockout 属性
+#### LocalConfigDisabled 属性
 
-`KeypadLockout` 表示本地按键锁定状态。Client MAY WRITE 该属性启用或关闭童锁。
+LocalConfigDisabled` 表示是否禁用本地配置。Client MAY WRITE 该属性。
 
-有效值见 [KeypadLockoutEnum8](#keypadlockoutenum8-类型)。
+有效值见 [LocalConfigDisabledEnum8](#localconfigdisabledenum8-类型)。
 
 #### TemperatureDisplayMode 属性
 
@@ -2208,11 +2273,11 @@ Client MAY WRITE 该属性修改制热目标温度。Server SHALL 在目标温�
 
 #### OpenWindowTemperatureControlPauseDurationMin 属性
 
-`OpenWindowTemperatureControlPauseDurationMin` 表示 `OpenWindowTemperatureControlPauseDuration` 支持的最小值，单位为分钟。
+`OpenWindowTemperatureControlPauseDurationMin` 表示 `OpenWindowTemperatureControlPauseDuration` 支持的最小值，单位为分钟。该属性由 Server 声明设备能力。Client SHALL 在 Profile Discovery 完成后 READ。该属性仅用于能力声明，Server SHALL NOT REPORT。
 
 #### OpenWindowTemperatureControlPauseDurationMax 属性
 
-`OpenWindowTemperatureControlPauseDurationMax` 表示 `OpenWindowTemperatureControlPauseDuration` 支持的最大值，单位为分钟。
+`OpenWindowTemperatureControlPauseDurationMax` 表示 `OpenWindowTemperatureControlPauseDuration` 支持的最大值，单位为分钟。该属性由 Server 声明设备能力。Client SHALL 在 Profile Discovery 完成后 READ。该属性仅用于能力声明，Server SHALL NOT REPORT。
 
 #### FrostProtectionAlarm 属性
 
@@ -2222,11 +2287,47 @@ Client MAY WRITE 该属性修改制热目标温度。Server SHALL 在目标温�
 
 #### FrostProtectionTemperatureMin 属性
 
-`FrostProtectionTemperatureMin` 表示 `FrostProtectionTemperature` 支持的最小值，单位为 0.01℃。
+`FrostProtectionTemperatureMin` 表示 `FrostProtectionTemperature` 支持的最小值，单位为 0.01℃。该属性由 Server 声明设备能力。Client SHALL 在 Profile Discovery 完成后 READ。该属性仅用于能力声明，Server SHALL NOT REPORT。
 
 #### FrostProtectionTemperatureMax 属性
 
-`FrostProtectionTemperatureMax` 表示 `FrostProtectionTemperature` 支持的最大值，单位为 0.01℃。
+`FrostProtectionTemperatureMax` 表示 `FrostProtectionTemperature` 支持的最大值，单位为 0.01℃。该属性由 Server 声明设备能力。Client SHALL 在 Profile Discovery 完成后 READ。该属性仅用于能力声明，Server SHALL NOT REPORT。
+
+#### CumulativeEnergy 属性
+
+`CumulativeEnergy` 表示累计输入电能，单位 mWh，底层类型为 int64。该值 SHALL 单调不减。Server SHOULD 按产品定义的周期或变化策略 REPORT 该属性。
+
+#### ThermostatFeatureMap 属性
+
+`ThermostatFeatureMap` 表示恒温器功能位图。有效值见 [ThermostatFeatureMap32](#thermostatfeaturemap32-类型)。该值由 Server 声明。
+
+Client SHALL 在 Profile Discovery 完成后 READ 该属性。该属性仅用于能力声明，不存在运行期变化上报场景，Server SHALL NOT REPORT。
+
+#### AbsMinHeatSetpointLimit 属性
+
+`AbsMinHeatSetpointLimit` 表示制热设定的绝对下限，单位 0.01℃。该属性由 Server 声明。
+
+若该属性出现在 `ServerAttributeList` 中，Client SHALL 在 Profile Discovery 完成后 READ 该属性。该属性仅用于能力声明，不存在运行期变化上报场景，Server SHALL NOT REPORT。与 `OccupiedHeatingSetpoint` 及其他制热限值的关系见 [OccupiedHeatingSetpoint 属性](#occupiedheatingsetpoint-属性)。
+
+#### AbsMaxHeatSetpointLimit 属性
+
+`AbsMaxHeatSetpointLimit` 表示制热设定的绝对上限，单位 0.01℃。该属性由 Server 声明。
+
+若该属性出现在 `ServerAttributeList` 中，Client SHALL 在 Profile Discovery 完成后 READ 该属性。该属性仅用于能力声明，不存在运行期变化上报场景，Server SHALL NOT REPORT。与 `OccupiedHeatingSetpoint` 及其他制热限值的关系见 [OccupiedHeatingSetpoint 属性](#occupiedheatingsetpoint-属性)。
+
+#### MinHeatSetpointLimit 属性
+
+`MinHeatSetpointLimit` 表示用户可设置的制热设定下限，单位 0.01℃。若 `AbsMinHeatSetpointLimit` 已实现，该值 SHALL 大于等于 `AbsMinHeatSetpointLimit`；若 `MaxHeatSetpointLimit` 已实现，该值 SHALL 小于等于 `MaxHeatSetpointLimit`。Client MAY WRITE 该属性。完整关系见 [OccupiedHeatingSetpoint 属性](#occupiedheatingsetpoint-属性)。
+
+#### MaxHeatSetpointLimit 属性
+
+`MaxHeatSetpointLimit` 表示用户可设置的制热设定上限，单位 0.01℃。若 `AbsMaxHeatSetpointLimit` 已实现，该值 SHALL 小于等于 `AbsMaxHeatSetpointLimit`；若 `MinHeatSetpointLimit` 已实现，该值 SHALL 大于等于 `MinHeatSetpointLimit`。Client MAY WRITE 该属性。完整关系见 [OccupiedHeatingSetpoint 属性](#occupiedheatingsetpoint-属性)。
+
+#### AqaraThermostatFeatureMap 属性
+
+`AqaraThermostatFeatureMap` 表示 Aqara Thermostat 功能位图。有效值见 [AqaraThermostatFeatureMap32](#aqarathermostatfeaturemap32-类型)。该值由 Server 声明。
+
+若该属性出现在 `ServerAttributeList` 中，Client SHALL 在 Profile Discovery 完成后 READ 该属性。该属性仅用于能力声明，不存在运行期变化上报场景，Server SHALL NOT REPORT。
 
 #### ServerAttributeList 属性
 
@@ -2234,12 +2335,15 @@ Client MAY WRITE 该属性修改制热目标温度。Server SHALL 在目标温�
 
 该属性类型为 `list[uint16]`。列表元素 SHALL 按 Attribute ID 从小到大排列，并包含 `ServerAttributeList` 自身的 Attribute ID `0xFFFB`。
 
+Client SHALL 在 Profile Discovery 期间 READ 该属性。该属性仅用于能力发现，不存在运行期变化上报场景，Server SHALL NOT REPORT。若支持的属性集合发生变化，Server SHALL 发送 `ProfileDiscoveryRequest`，由 Client 重新 READ。
+
+
 ### Thermostat 命令
 
 | ID      | 名称                      | 方向               | 应答                   | 必选性 | 简述                       |
 |---------|---------------------------|--------------------|------------------------|--------|----------------------------|
-| 0x1000  | [ClearOpenWindowAlarmReq](#clearopenwindowalarmreq-命令)   | Client → Server    | [ClearOpenWindowAlarmRsp](#clearopenwindowalarmrsp-命令)| O      | 清除当前开窗告警并立即恢复温控。 |
-| 0x1001  | [ClearOpenWindowAlarmRsp](#clearopenwindowalarmrsp-命令)   | Server → Client    | N                      | O      | 返回清除操作结果。          |
+| 0x1000 | ClearOpenWindowAlarmReq | Client → Server | ClearOpenWindowAlarmRsp | OpenWindowDetection | 清除当前开窗告警并立即恢复温控。 |
+| 0x1001 | ClearOpenWindowAlarmRsp | Server → Client | N | OpenWindowDetection | 返回清除操作结果。|
 
 有参命令的参数定义见各命令 **参数** 表；Data Segment 编码规则见 [Command](#commandopc--0x9)。
 

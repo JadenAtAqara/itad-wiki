@@ -108,7 +108,7 @@ Attributes Interaction follows a symmetric and closed set of operations. Centere
 | Commands (Command) | Triggered action, identified by Command ID (uint16), with typed parameters. The valid Initiator for each Command is explicitly declared by Direction in the Commands table of the owning Profile. The receiver responds with ACKNOWLEDGE or a paired COMMAND. |
 | Operation Code (OPC) | A 1-byte field in the data frame that identifies the message type and Direction. AECP defines 10 Operation Codes corresponding to the Interaction Model for Attributes read/write, Attributes report, Attributes query, Attributes notification (NOTIFY), and Commands. |
 | Side | Attributes ownership marker. **C** (Client) = the Attribute is owned and maintained by the Client; **S** (Server) = the Attribute is owned and maintained by the Server. Each Attribute SHALL be explicitly marked C or S in the Attributes table. |
-| Conformance | Implementation requirement marker. **M** (Mandatory) = the item SHALL be implemented; **O** (Optional) = the item MAY be implemented. |
+| Conformance | Implementation requirement marker. **M** (Mandatory) = the item SHALL be implemented; **O** (Optional) = the item MAY be implemented. `FeatureName` (no brackets) = SHALL be implemented when the corresponding FeatureMap bit is set; `[FeatureName]` (square brackets) = MAY be implemented when that bit is set. See [Field Notation Convention](#field-notation-convention). |
 | Profile ID | A 2-byte field in the data frame header (formerly Device Type) that identifies the functional domain to which the frame belongs, rather than only distinguishing product type. |
 | OTA | Over-The-Air firmware online upgrade. This protocol defines two Upgrade Methods: IAP OTA and BootLoader OTA. |
 | Wake Pin             | Hardware pin, active low. Client and Server each provide one for the peer to pull low during Wake Signaling. See Chapter 2. |
@@ -175,7 +175,7 @@ Attributes tables, Commands tables, and parameter tables in this specification S
 | `Default` / `Default` | Default value or initial value after reset. `-` means no unified Default is specified. |
 | `Access` / `Access` | Valid access methods. `R` = READ; `W` = WRITE; `RP` = REPORT; `Q` = QUERY; `NF` = NOTIFY. |
 | `Side` / `Side` | Attributes ownership marker. `C` = owned and maintained by the Client; `S` = owned and maintained by the Server. |
-| `Conformance` / `Conformance` | Implementation requirement. `M` = Mandatory, SHALL be implemented; `O` = Optional, MAY be implemented. |
+| `Conformance` / `Conformance` | Implementation requirement. `M` = Mandatory, SHALL be implemented; `O` = Optional, MAY be implemented. `FeatureName` (no brackets) = SHALL be implemented when FeatureMap bit `FeatureName` defined in the same Profile is set (mandatory under that Feature); `[FeatureName]` (square brackets) = MAY be implemented when that bit is set (optional under that Feature). For either Feature form, the item SHALL NOT be implemented when the corresponding bit is not set. `FeatureName` SHALL be the name of a FeatureMap bit defined in the same Profile. |
 | `Direction` / `Direction` | Valid Commands Initiator, as defined by the Commands table. |
 | `Response` / `Response` | Commands Response method. It may be `ACKNOWLEDGE`, a paired COMMAND name, or `N` (no Response). |
 | `Description` / `Description` / `Description` | Brief description of the item. |
@@ -1279,6 +1279,7 @@ After Profile discovery completes, Server MAY QUERY Client attributes it needs (
 | 0x0005 | LocalTime | Server retrieves current local time |
 | 0x0006 | ModuleSupportedProductProfileList | Server retrieves product Profile ID list supported by Client |
 | 0x0007 | ClientUartBufferSize | Server retrieves Client UART buffer size |
+| 0x0008 | ModuleWirelessProtocol | Server retrieves wireless protocol of Client module firmware | 
 
 If Client has not completed Profile discovery, Client MAY return `ProfileDiscoveryInProgress` for prematurely arriving QUERY, REPORT, or Server → Client data synchronization COMMAND messages.
 
@@ -1328,7 +1329,7 @@ Each Attribute SHALL mark its Side in the Attributes table through the **Side** 
 | **C** | Client | The Attribute is owned and maintained by the Client. Typical values include Client self information, such as firmware version and Unique ID, or network capabilities, such as pairing state, network status, and time. When the Server needs to read it, the Server initiates QUERY and the Client returns QUERY_RESPONSE. The Client may also proactively initiate NOTIFY for Attributes whose `Access` includes `NF`, and the Server returns ACKNOWLEDGE. |
 | **S** | Server | The Attribute is owned and maintained by the Server. Typical values include sensor data, setting values, and device hardware status. The Client accesses it through READ/WRITE, and the Server proactively reports it through REPORT. |
 
-The Conformance column describes implementation requirements: **M** (Mandatory, SHALL be implemented); **O** (Optional, MAY be implemented).
+The Conformance column describes implementation requirements: **M** (Mandatory, SHALL be implemented); **O** (Optional, MAY be implemented); **`FeatureName`** (no brackets, mandatory under that Feature); **`[FeatureName]`** (square brackets, optional under that Feature). Feature names and the requirement when the bit is not set follow [Field Notation Convention](#field-notation-convention).
 
 ### Response Mechanism
 
@@ -1459,6 +1460,16 @@ The column meanings of all attribute, command, and parameter tables in this chap
 | 0x01 | Online | Client is connected to an available network and can perform normal network communication and service synchronization. |
 | 0x02 | Connecting | Client is trying to join the network, restore connectivity, or perform network authentication; network capability is not yet available. |
 
+#### ModuleWirelessProtocolEnum8
+
+`ModuleWirelessProtocolEnum8` defines the wireless protocol of the firmware currently running on the Client module. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00  | Reserved | Reserved. |
+| 0x01  | Matter   | The module is currently running Matter firmware. |
+| 0x02  | Zigbee   | The module is currently running Zigbee firmware. |
+
 #### OtaUpgradeMethodEnum8
 
 `OtaUpgradeMethodEnum8` defines the firmware upgrade methods supported by Server. The underlying type of this enum is enum8.
@@ -1523,16 +1534,17 @@ The column meanings of all attribute, command, and parameter tables in this chap
 
 ### Client Attributes
 
-| ID | Name | Type | Constraint | Default | Access | Side | Conformance | Description |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0x0000 | ProtocolVersion | uint16 | Starts from 0 | 0x0000 | Q | C | M | AECP version number. |
-| 0x0001 | ModuleFirmwareVersion | uint32 | No additional constraints | - | Q | C | M | Client firmware version. |
-| 0x0002 | ModuleUniqueID | octstr | Maximum 255 | - | Q | C | M | unique identifier of Client. |
-| 0x0003 | PairingStatus | [PairingStatusEnum8](#pairingstatusenum8) | See enum | - | Q/NF | C | M | pairing state. |
-| 0x0004 | NetworkStatus | [NetworkStatusEnum8](#networkstatusenum8) | See enum | - | Q/NF | C | M | Client network status. |
-| 0x0005 | LocalTime | uint32 | No additional constraints | - | Q/NF | C | O | Client local time. |
-| 0x0006 | ModuleSupportedProductProfileList | list[uint16] | Non-reserved Profile ID | - | Q | C | M | product Profile list supported by Client. |
-| 0x0007 | ClientUartBufferSize | uint16 | >= 1024 bytes | 1024 | Q | C | M | Client UART buffer size. |
+| ID     | Name                              | Type                                                          | Constraint                | Default | Access | Conformance | Description                    |
+| ------ | --------------------------------- | ------------------------------------------------------------- | ------------------------- | ------- | ------ | ----------- | ------------------------------ |
+| 0x0000 | ProtocolVersion                   | uint16                                                        | Starts from 0             | 0x0000  | Q      | M           | AECP version                   |
+| 0x0001 | ModuleFirmwareVersion             | uint32                                                        | No additional constraints | -       | Q      | M           | Client firmware version        |
+| 0x0002 | ModuleUniqueID                    | octstr                                                        | Maximum 255               | -       | Q      | M           | Client unique identifier       |
+| 0x0003 | PairingStatus                     | [PairingStatusEnum8](#pairingstatusenum8)                     | See enum                  | -       | Q/NF   | M           | pairing status                 |
+| 0x0004 | NetworkStatus                     | [NetworkStatusEnum8](#networkstatusenum8)                     | See enum                  | -       | Q/NF   | M           | Client network status          |
+| 0x0005 | LocalTime                         | uint32                                                        | No additional constraints | -       | Q/NF   | O           | Client local time              |
+| 0x0006 | ModuleSupportedProductProfileList | list[uint16]                                                  | Non-reserved Profile ID   | -       | Q      | M           | supported product Profile list |
+| 0x0007 | ClientUartBufferSize              | uint16                                                        | >= 1024 bytes             | 1024    | Q      | M           | Client UART buffer size        |
+| 0x0008 | ModuleWirelessProtocol            | [ModuleWirelessProtocolEnum8](#modulewirelessprotocolenum8)   | See enum                  | -       | Q      | M           | module wireless protocol       |
 
 #### ProtocolVersion
 
@@ -1582,32 +1594,38 @@ The attribute type is `list[uint16]`. List elements SHALL be sorted by Profile I
 
 The attribute type is `uint16`, and the default value is `1024`. The Client UART receive buffer and transmit buffer SHALL both be no smaller than this value. If the receive and transmit buffer sizes differ, this attribute SHALL use the smaller value as the available single-frame length capability. During link establishment, Client SHALL carry a `ClientUartBufferSize` parameter in `LinkEstablishmentRequest` that is consistent with this attribute.
 
+#### ModuleWirelessProtocol
+
+`ModuleWirelessProtocol` is maintained by Client and declares the wireless protocol of the firmware currently running on the module. This attribute has no default value. Valid values are defined in [ModuleWirelessProtocolEnum8](#modulewirelessprotocolenum8).
+
+When Server needs to identify the Client wireless protocol, it SHALL retrieve this attribute by QUERY, and Client SHALL return the current value by QUERY_RESPONSE.
+
 ### Server Attributes
 
-| ID | Name | Type | Constraint | Default | Access | Side | Conformance | Description |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0x1000 | VendorID | uint16 | 1 ~ 0xFFFF | 0x0000 | R/RP | S | M | vendor ID. |
-| 0x1001 | ProductID | uint16 | 1 ~ 0xFFFF | 0x0000 | R/RP | S | M | product ID. |
-| 0x1002 | ServerHardwareVersion | uint16 | 1 ~ 0xFFFF | 0x0001 | R/RP | S | M | Server hardware version. |
-| 0x1003 | ServerSoftwareVersion | uint16 | 1 ~ 0xFFFF | 0x0001 | R/RP | S | M | Server firmware version. |
-| 0x1004 | OtaUpgradeMethod | [OtaUpgradeMethodEnum8](#otaupgrademethodenum8) | See enum | 0x00 | R/RP | S | M | OTA Upgrade Method. |
-| 0x1005 | OtaStatus | [OtaStatusEnum8](#otastatusenum8) | See enum | 0x00 | RP | S | O | OTA status. |
-| 0x1006 | HardwareFault | [HardwareFaultMap32](#hardwarefaultmap32) | See map | - | R/RP | S | O | hardware fault bitmap. |
-| 0x1007 | ProductProfileID | uint16 | Non-reserved Profile ID | - | R/RP | S | M | unique product Profile of Server. |
-| 0x1008 | ServerUartBufferSize | uint16 | >= 1024 bytes | 1024 | R/RP | S | M | Server UART buffer size. |
-| 0xFFFB | ServerAttributeList | list[uint16] | No additional constraints | - | R/RP | S | M | list of attributes supported by Server. |
+| ID     | Name                  | Type                                                         | Constraint                | Default | Access | Conformance | Description             |
+|--------|-----------------------|--------------------------------------------------------------|---------------------------|---------|--------|-------------|-------------------------|
+| 0x1000 | VendorID              | uint16                                                       | 1 ~ 0xFFFF                | 0x0000  | R      | M           | vendor ID               |
+| 0x1001 | ProductID             | uint16                                                       | 1 ~ 0xFFFF                | 0x0000  | R      | M           | product ID              |
+| 0x1002 | ServerHardwareVersion | uint16                                                       | 1 ~ 0xFFFF                | 0x0001  | R      | M           | Server hardware version |
+| 0x1003 | ServerSoftwareVersion | uint16                                                       | 1 ~ 0xFFFF                | 0x0001  | R/RP   | M           | Server firmware version |
+| 0x1004 | OtaUpgradeMethod      | [OtaUpgradeMethodEnum8](#otaupgrademethodenum8)              | See enum                  | 0x00    | R      | M           | OTA upgrade method      |
+| 0x1005 | OtaStatus             | [OtaStatusEnum8](#otastatusenum8)                            | See enum                  | 0x00    | RP     | O           | OTA status              |
+| 0x1006 | HardwareFault         | [HardwareFaultMap32](#hardwarefaultmap32)                    | See map                   | -       | R/RP   | O           | hardware fault bitmap   |
+| 0x1007 | ProductProfileID      | uint16                                                       | Non-reserved Profile ID   | -       | R      | M           | product Profile         |
+| 0x1008 | ServerUartBufferSize  | uint16                                                       | >= 1024 bytes             | 1024    | R      | M           | Server UART buffer size |
+| 0xFFFB | ServerAttributeList   | list[uint16]                                                 | No additional constraints | -       | R      | M           | Server attribute list   |
 
 #### VendorID
 
-`VendorID` identifies the device manufacturer ID. Server SHALL support Client READ access to this attribute.
+`VendorID` identifies the device manufacturer ID. Client SHALL READ this attribute during Profile Discovery. This attribute is a device-identity constant. There is no runtime change-reporting scenario, and the Server SHALL NOT REPORT it.
 
 #### ProductID
 
-`ProductID` identifies the device product ID. Server SHALL support Client READ access to this attribute.
+`ProductID` identifies the device product ID. Client SHALL READ this attribute during Profile Discovery. This attribute is a device-identity constant. There is no runtime change-reporting scenario, and the Server SHALL NOT REPORT it.
 
 #### ServerHardwareVersion
 
-`ServerHardwareVersion` identifies the Server hardware version. Server SHALL support Client READ access to this attribute.
+`ServerHardwareVersion` identifies the Server hardware version. Client SHALL READ this attribute during Profile Discovery. This attribute is a hardware-identity constant. There is no runtime change-reporting scenario, and the Server SHALL NOT REPORT it.
 
 #### ServerSoftwareVersion
 
@@ -1617,9 +1635,9 @@ After OTA completes and the new firmware starts successfully, Server SHALL repor
 
 #### OtaUpgradeMethod
 
-`OtaUpgradeMethod` declares the firmware upgrade method supported by Server.Valid values are defined in [OtaUpgradeMethodEnum8](#otaupgrademethodenum8).
+`OtaUpgradeMethod` declares the firmware upgrade method supported by Server. Valid values are defined in [OtaUpgradeMethodEnum8](#otaupgrademethodenum8).
 
-Before initiating any OTA flow, Client SHALL first READ this attribute and select IAP OTA, BootLoader OTA, or abandon OTA according to the upgrade method returned by Server.
+Before initiating any OTA flow, Client SHALL first READ this attribute and select IAP OTA, BootLoader OTA, or abandon OTA according to the upgrade method returned by Server. This attribute is a capability constant. There is no runtime change-reporting scenario, and the Server SHALL NOT REPORT it.
 
 #### HardwareFault
 
@@ -1633,11 +1651,13 @@ Bit definitions are provided in [HardwareFaultMap32](#hardwarefaultmap32).
 
 Server SHALL declare only one non-reserved product Profile ID. The value range of Profile IDs is provided in [Profile ID Namespace](#profile-id-namespace). If the device implements Thermostat Profile, the value is `0x1000`.
 
+Client SHALL READ this attribute during Profile Discovery. This attribute is used only for capability discovery. There is no runtime change-reporting scenario, and the Server SHALL NOT REPORT it. If the product Profile changes, the Server SHALL send `ProfileDiscoveryRequest` so that the Client READs it again.
+
 #### ServerUartBufferSize
 
 `ServerUartBufferSize` is maintained by Server and declares the Server UART receive and transmit buffer size, in bytes.
 
-The attribute type is `uint16`, and the default value is `1024`. The Server UART receive buffer and transmit buffer SHALL both be no smaller than this value. If the receive and transmit buffer sizes differ, this attribute SHALL use the smaller value as the available single-frame length capability. During link establishment, Server SHALL carry a `ServerUartBufferSize` parameter in `LinkEstablishmentResponse` that is consistent with this attribute.
+The attribute type is `uint16`, and the default value is `1024`. The Server UART receive buffer and transmit buffer SHALL both be no smaller than this value. If the receive and transmit buffer sizes differ, this attribute SHALL use the smaller value as the available single-frame length capability. During link establishment, Server SHALL carry a `ServerUartBufferSize` parameter in `LinkEstablishmentResponse` that is consistent with this attribute. This attribute is a link-capability constant. There is no runtime change-reporting scenario, and the Server SHALL NOT REPORT it.
 
 #### OtaStatus
 
@@ -1649,7 +1669,9 @@ Valid values are defined in [OtaStatusEnum8](#otastatusenum8).
 
 `ServerAttributeList` declares the list of Attribute IDs actually supported by Server under Foundation Profile.
 
-The attribute type is `list[uint16]`.List elements SHALL be sorted by Attribute ID in ascending order, and include `ServerAttributeList` 's own Attribute ID `0xFFFB`.
+The attribute type is `list[uint16]`. List elements SHALL be sorted by Attribute ID in ascending order, and include `ServerAttributeList`'s own Attribute ID `0xFFFB`.
+
+Client SHALL READ this attribute during Profile Discovery. This attribute is used only for capability discovery. There is no runtime change-reporting scenario, and the Server SHALL NOT REPORT it. If the supported attribute set changes, the Server SHALL send `ProfileDiscoveryRequest` so that the Client READs it again.
 
 ### Foundation Commands
 
@@ -2057,14 +2079,14 @@ The column meanings of all attribute tables in this chapter follow [Chapter 1 Fi
 | 0x02 | Cool | Cooling mode. |
 | 0x03 | Heat | Heating mode. |
 
-#### KeypadLockoutEnum8
+#### LocalConfigDisabledEnum8
 
-`KeypadLockoutEnum8` defines the local keypad lockout state. The underlying type of this enum is enum8.
+`LocalConfigDisabledEnum8` defines whether local configuration is disabled. The underlying type is enum8.
 
 | Value | Name | Description |
 | --- | --- | --- |
-| 0x00 | Unlocked | Keypad lock is disabled. |
-| 0x01 | Locked | Keypad lock enabled. |
+| 0x00 | Enabled  | Local configuration is allowed. |
+| 0x01 | Disabled | Local configuration is disabled. |
 
 #### TemperatureDisplayModeEnum8
 
@@ -2094,29 +2116,58 @@ The underlying type is enum8 and represents the frost-protection alarm state.
 | 0x00 | NoAlarm | No frost-protection alarm. |
 | 0x01 | FrostProtectionAlarm | Frost protection is active. |
 
+#### ThermostatFeatureMap32 
+
+`ThermostatFeatureMap32` defines the thermostat feature bitmap. The underlying type is map32.
+
+| Bit | Mask | Name | Description |
+| --- | --- | --- | --- |
+| 0 | 0x00000001 | Heating | The Server supports heating. |
+| 1 | 0x00000002 | Cooling | The Server supports cooling. |
+
+Feature conformance in this Profile's attribute and command tables uses the **Name** values in the table above.
+
+#### AqaraThermostatFeatureMap32
+
+`AqaraThermostatFeatureMap32` defines the Aqara Thermostat feature bitmap. The underlying type is map32.
+
+| Bit | Mask | Name | Description |
+| --- | --- | --- | --- |
+| 0 | 0x00000001 | OpenWindowDetection | The Server supports open-window detection and alarm. |
+| 1 | 0x00000002 | FrostProtection | The Server supports frost-protection alarm and a configurable trigger temperature. |
+
+Feature conformance in this Profile's attribute and command tables uses the **Name** values in the table above.
+
 ### Attributes
 
 | ID | Name | Type | Constraint | Default | Access | Side | Conformance | Description |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0x1000 | [SystemMode](#systemmode) | [ThermostatSystemModeEnum8](#thermostatsystemmodeenum8) | See enum | 0x00 | R/W/RP | S | M | basic operating mode. |
-| 0x1001 | [OccupiedHeatingSetpoint](#occupiedheatingsetpoint) | int16 | Device capability range | - | R/W/RP | S | M | heating setpoint. |
-| 0x1002 | [LocalTemperature](#localtemperature) | int16 | 0.01degC | - | R/RP | S | M | measured ambient temperature. |
-| 0x1003 | [LocalTemperatureCalibration](#localtemperaturecalibration) | int8 | 0.1degC | 0 | R/W/RP | S | M | local temperature calibration. |
-| 0x1004 | [KeypadLockout](#keypadlockout) | [KeypadLockoutEnum8](#keypadlockoutenum8) | See enum | 0x00 | R/W/RP | S | O | keypad lockout state. |
-| 0x1005 | [TemperatureDisplayMode](#temperaturedisplaymode) | [TemperatureDisplayModeEnum8](#temperaturedisplaymodeenum8) | See enum | 0x00 | R/W/RP | S | O | temperature display unit. |
-| 0x1006 | [FrostProtectionEnabled](#frostprotectionenabled) | bool | true / false | false | R/W/RP | S | O | frost-protection enable switch. |
-| 0x1007 | [FrostProtectionTemperature](#frostprotectiontemperature) | int16 | Min ~ Max, 0.01degC | 500 | R/W/RP | S | O | frost-protection trigger temperature. |
-| 0x1008 | [WindowDetectionEnabled](#windowdetectionenabled) | bool | true / false | false | R/W/RP | S | O | open-window detection enable switch. |
-| 0x1009 | [ActiveCurrent](#activecurrent) | uint32 | mA | - | RP | S | O | current. |
-| 0x100A | [ActivePower](#activepower) | uint32 | mW | - | RP | S | O | current power. |
-| 0x100B | [OpenWindowAlarm](#openwindowalarm) | [OpenWindowAlarmEnum8](#openwindowalarmenum8) | See enum | 0x00 | R/RP | S | O | current open-window alarm state. |
-| 0x100C | [OpenWindowTemperatureControlPauseDuration](#openwindowtemperaturecontrolpauseduration) | uint16 | Min ~ Max, min | 30 | R/W/RP | S | O | duration for which active temperature-control output is suspended after an open-window alarm. |
-| 0x100D | [OpenWindowTemperatureControlPauseDurationMin](#openwindowtemperaturecontrolpausedurationmin) | uint16 | min | 1 | R/RP | S | O | minimum pause duration. |
-| 0x100E | [OpenWindowTemperatureControlPauseDurationMax](#openwindowtemperaturecontrolpausedurationmax) | uint16 | min | 1440 | R/RP | S | O | maximum pause duration. |
-| 0x100F | [FrostProtectionAlarm](#frostprotectionalarm) | [FrostProtectionAlarmEnum8](#frostprotectionalarmenum8) | See enum | 0x00 | R/RP | S | O | current frost-protection alarm state. |
-| 0x1010 | [FrostProtectionTemperatureMin](#frostprotectiontemperaturemin) | int16 | 0.01degC | 500 | R/RP | S | O | minimum frost-protection temperature. |
-| 0x1011 | [FrostProtectionTemperatureMax](#frostprotectiontemperaturemax) | int16 | 0.01degC | 1500 | R/RP | S | O | maximum frost-protection temperature. |
-| 0xFFFB | [ServerAttributeList](#serverattributelist) | list[uint16] | No additional constraints | - | R/RP | S | M | list of attributes supported by Server. |
+| 0x1000 | SystemMode                   | [ThermostatSystemModeEnum8](#thermostatsystemmodeenum8) | See enum        | 0x00   | R/W/RP | S | M | basic operating mode
+| 0x1001 | OccupiedHeatingSetpoint      | int16                            | See description  | -      | R/W/RP | S | Heating | heating setpoint
+| 0x1002 | LocalTemperature             | int16                            | 0.01degC         | -      | R/RP   | S | M | ambient temperature
+| 0x1003 | LocalTemperatureCalibration  | int8                             | 0.1degC          | 0      | R/W/RP | S | O | local temperature calibration
+| 0x1004 | LocalConfigDisabled          | [LocalConfigDisabledEnum8](#localconfigdisabledenum8)  | See enum        | 0x00   | R/W/RP | S | O | local configuration disabled
+| 0x1005 | TemperatureDisplayMode       | [TemperatureDisplayModeEnum8](#temperaturedisplaymodeenum8) | See enum      | 0x00   | R/W/RP | S | O | temperature display unit
+| 0x1006 | FrostProtectionEnabled       | bool                             | true / false  | false  | R/W/RP | S | `[FrostProtection]` | frost-protection enable
+| 0x1007 | FrostProtectionTemperature   | int16                            | Min ~ Max, 0.01degC | 500 | R/W/RP | S | FrostProtection | frost-protection trigger temperature
+| 0x1008 | WindowDetectionEnabled       | bool                             | true / false  | false  | R/W/RP | S | OpenWindowDetection | open-window detection enable
+| 0x1009 | ActiveCurrent                | uint32                           | mA            | -      | RP     | S | O | current
+| 0x100A | ActivePower                  | uint32                           | mW            | -      | RP     | S | O | current power
+| 0x100B | OpenWindowAlarm              | [OpenWindowAlarmEnum8](#openwindowalarmenum8) | See enum | 0x00 | R/RP | S | OpenWindowDetection | open-window alarm state
+| 0x100C | OpenWindowTemperatureControlPauseDuration | uint16 | Min ~ Max, min | 30 | R/W/RP | S | `[OpenWindowDetection]` | temperature-control pause duration
+| 0x100D | OpenWindowTemperatureControlPauseDurationMin | uint16 | min | 1 | R | S | `[OpenWindowDetection]` | minimum pause duration
+| 0x100E | OpenWindowTemperatureControlPauseDurationMax | uint16 | min | 1440 | R | S | `[OpenWindowDetection]` | maximum pause duration
+| 0x100F | FrostProtectionAlarm         | [FrostProtectionAlarmEnum8](#frostprotectionalarmenum8) | See enum | 0x00 | R/RP | S | FrostProtection | frost-protection alarm state
+| 0x1010 | FrostProtectionTemperatureMin | int16 | 0.01degC | 500 | R | S | FrostProtection | minimum frost-protection temperature
+| 0x1011 | FrostProtectionTemperatureMax | int16 | 0.01degC | 1500 | R | S | FrostProtection | maximum frost-protection temperature
+| 0x1012 | CumulativeEnergy             | int64                            | mWh           | -      | RP     | S | O | cumulative imported energy
+| 0x1014 | ThermostatFeatureMap         | [ThermostatFeatureMap32](#thermostatfeaturemap32)    | Heating=0x1, Cooling=0x2 | 0x00000001 | R     | S | M | thermostat feature bitmap
+| 0x1015 | AbsMinHeatSetpointLimit      | int16                            | 0.01degC      | 500    | R      | S | `[Heating]` | absolute minimum heating setpoint
+| 0x1016 | AbsMaxHeatSetpointLimit      | int16                            | 0.01degC      | 3000   | R      | S | `[Heating]` | absolute maximum heating setpoint
+| 0x1017 | MinHeatSetpointLimit         | int16                            | 0.01degC      | 500    | R/W/RP | S | `[Heating]` | user minimum heating setpoint
+| 0x1018 | MaxHeatSetpointLimit         | int16                            | 0.01degC      | 3000   | R/W/RP | S | `[Heating]` | user maximum heating setpoint
+| 0x1019 | AqaraThermostatFeatureMap    | [AqaraThermostatFeatureMap32](#aqarathermostatfeaturemap32) | OpenWindowDetection=0x1, FrostProtection=0x2 | 0x00000003 | R | S | O | Aqara thermostat feature bitmap
+| 0xFFFB | ServerAttributeList          | list[uint16]                    | No additional constraints    | - | R    | S | M | Server attribute list
 
 #### SystemMode
 
@@ -2126,9 +2177,22 @@ Valid values are defined in [ThermostatSystemModeEnum8](#thermostatsystemmodeenu
 
 #### OccupiedHeatingSetpoint
 
-`OccupiedHeatingSetpoint` represents the occupied heating target temperature, in units of 0.01degC. For example, `2650` means 26.50degC, and `-900` means -9.00degC.
+`OccupiedHeatingSetpoint` represents the occupied heating target temperature, in units of 0.01degC. For example, `2650` means 26.50degC, and `-900` means -9.00degC. When the Heating bit of `ThermostatFeatureMap` is set, the Server SHALL implement this attribute. When that bit is not set, the Server SHALL NOT implement this attribute.
 
-Client MAY WRITE this attribute to modify the heating target temperature. Server SHALL REPORT this attribute after the target temperature changes.
+When this attribute is implemented, its value is constrained by the implemented heating limits. Unimplemented absolute limits SHALL be replaced by the table default values `500` / `3000`. Unimplemented user limits SHALL be replaced by the corresponding absolute limits, or by those defaults if the absolute limits are also unimplemented.
+
+* `AbsMinHeatSetpointLimit` / `AbsMaxHeatSetpointLimit` are the manufacturer-declared absolute heating setpoint limits.
+* `MinHeatSetpointLimit` / `MaxHeatSetpointLimit` are the user-configurable heating setpoint limits.
+* When both the user limits and the absolute limits are implemented, they SHALL satisfy:
++
+`AbsMinHeatSetpointLimit` ≤ `MinHeatSetpointLimit` ≤ `MaxHeatSetpointLimit` ≤ `AbsMaxHeatSetpointLimit`
+* `OccupiedHeatingSetpoint` SHALL satisfy effectiveMin ≤ `OccupiedHeatingSetpoint` ≤ effectiveMax, where effectiveMin is the implemented `MinHeatSetpointLimit`, else the implemented `AbsMinHeatSetpointLimit`, else the default `500`; and effectiveMax is the implemented `MaxHeatSetpointLimit`, else the implemented `AbsMaxHeatSetpointLimit`, else the default `3000`.
+
+When all limits are implemented, the complete relationship is:
+
+`AbsMinHeatSetpointLimit` ≤ `MinHeatSetpointLimit` ≤ `OccupiedHeatingSetpoint` ≤ `MaxHeatSetpointLimit` ≤ `AbsMaxHeatSetpointLimit`
+
+When this attribute is implemented, the Server SHALL REPORT it after the target temperature changes.
 
 #### LocalTemperature
 
@@ -2138,15 +2202,15 @@ This attribute is maintained by Server, Client MAY READ, Server SHALL REPORT whe
 
 #### LocalTemperatureCalibration
 
-`LocalTemperatureCalibration` represents the local temperature calibration offset, in units of 0.1degC. For example, `20` means +2.0degC.
+`LocalTemperatureCalibration` represents the local temperature calibration offset, in units of 0.1degC. For example, `20` means +2.0degC. The Server MAY implement this attribute.
 
-Final local temperature = `LocalTemperature` + `LocalTemperatureCalibration`. Client MAY WRITE this attribute to adjust the calibration offset.
+When this attribute is implemented, the final local temperature = `LocalTemperature` + `LocalTemperatureCalibration`, and the Client MAY WRITE this attribute to adjust the calibration offset. If this attribute is not implemented, no calibration offset SHALL be applied, which is equivalent to a calibration value of `0`.
 
-#### KeypadLockout
+#### LocalConfigDisabled
 
-`KeypadLockout` represents the local keypad lockout state.Client MAY WRITE this attribute to enable or disable keypad lockout.
+`LocalConfigDisabled` indicates whether local configuration is disabled. Client MAY WRITE this attribute.
 
-Valid values are defined in [KeypadLockoutEnum8](#keypadlockoutenum8).
+Valid values are defined in [LocalConfigDisabledEnum8](#localconfigdisabledenum8).
 
 #### TemperatureDisplayMode
 
@@ -2198,11 +2262,11 @@ After an open-window alarm is triggered, the Server SHALL enter the temperature-
 
 #### OpenWindowTemperatureControlPauseDurationMin
 
-`OpenWindowTemperatureControlPauseDurationMin` indicates the minimum value supported for `OpenWindowTemperatureControlPauseDuration`, in minutes.
+`OpenWindowTemperatureControlPauseDurationMin` indicates the minimum value supported for `OpenWindowTemperatureControlPauseDuration`, in minutes. Server declares this as a device capability. Client SHALL READ it after Profile Discovery. This attribute is used only for capability declaration, and the Server SHALL NOT REPORT it.
 
 #### OpenWindowTemperatureControlPauseDurationMax
 
-`OpenWindowTemperatureControlPauseDurationMax` indicates the maximum value supported for `OpenWindowTemperatureControlPauseDuration`, in minutes.
+`OpenWindowTemperatureControlPauseDurationMax` indicates the maximum value supported for `OpenWindowTemperatureControlPauseDuration`, in minutes. Server declares this as a device capability. Client SHALL READ it after Profile Discovery. This attribute is used only for capability declaration, and the Server SHALL NOT REPORT it.
 
 #### FrostProtectionAlarm
 
@@ -2212,11 +2276,45 @@ The Server SHALL REPORT this attribute when its value changes.
 
 #### FrostProtectionTemperatureMin
 
-`FrostProtectionTemperatureMin` indicates the minimum value supported for `FrostProtectionTemperature`, in units of 0.01degC.
+`FrostProtectionTemperatureMin` indicates the minimum value supported for `FrostProtectionTemperature`, in units of 0.01degC. Server declares this as a device capability. Client SHALL READ it after Profile Discovery. This attribute is used only for capability declaration, and the Server SHALL NOT REPORT it.
 
 #### FrostProtectionTemperatureMax
 
-`FrostProtectionTemperatureMax` indicates the maximum value supported for `FrostProtectionTemperature`, in units of 0.01degC.
+`FrostProtectionTemperatureMax` indicates the maximum value supported for `FrostProtectionTemperature`, in units of 0.01degC. Server declares this as a device capability. Client SHALL READ it after Profile Discovery. This attribute is used only for capability declaration, and the Server SHALL NOT REPORT it.
+
+#### CumulativeEnergy
+
+`CumulativeEnergy` represents the cumulative imported energy, in mWh. The underlying type is int64. The value SHALL be non-decreasing. Server SHOULD REPORT this attribute according to the product-defined period or change policy.
+
+#### ThermostatFeatureMap
+
+`ThermostatFeatureMap` is the thermostat feature bitmap. Valid values are defined in [ThermostatFeatureMap32](#thermostatfeaturemap32). Server declares the value.
+
+Client SHALL READ this attribute after Profile Discovery. This attribute is used only for capability declaration. There is no runtime change-reporting scenario, and the Server SHALL NOT REPORT it.
+
+#### AbsMinHeatSetpointLimit
+
+`AbsMinHeatSetpointLimit` is the absolute minimum heating setpoint, in units of 0.01degC. Server declares this attribute.
+
+If this attribute is present in `ServerAttributeList`, the Client SHALL READ it after Profile Discovery. This attribute is used only for capability declaration. There is no runtime change-reporting scenario, and the Server SHALL NOT REPORT it. See [OccupiedHeatingSetpoint](#occupiedheatingsetpoint) for its relationship with `OccupiedHeatingSetpoint` and the other heating limits.
+
+#### AbsMaxHeatSetpointLimit
+
+`AbsMaxHeatSetpointLimit` is the absolute maximum heating setpoint, in units of 0.01degC. Server declares this attribute.
+
+If this attribute is present in `ServerAttributeList`, the Client SHALL READ it after Profile Discovery. This attribute is used only for capability declaration. There is no runtime change-reporting scenario, and the Server SHALL NOT REPORT it. See [OccupiedHeatingSetpoint](#occupiedheatingsetpoint) for its relationship with `OccupiedHeatingSetpoint` and the other heating limits.
+
+#### MinHeatSetpointLimit
+
+`MinHeatSetpointLimit` is the user-configurable minimum heating setpoint, in units of 0.01degC. If `AbsMinHeatSetpointLimit` is implemented, the value SHALL be greater than or equal to `AbsMinHeatSetpointLimit`. If `MaxHeatSetpointLimit` is implemented, the value SHALL be less than or equal to `MaxHeatSetpointLimit`. Client MAY WRITE this attribute. See [OccupiedHeatingSetpoint](#occupiedheatingsetpoint) for the complete relationship.
+
+#### MaxHeatSetpointLimit
+
+`MaxHeatSetpointLimit` is the user-configurable maximum heating setpoint, in units of 0.01degC. If `AbsMaxHeatSetpointLimit` is implemented, the value SHALL be less than or equal to `AbsMaxHeatSetpointLimit`. If `MinHeatSetpointLimit` is implemented, the value SHALL be greater than or equal to `MinHeatSetpointLimit`. Client MAY WRITE this attribute. See [OccupiedHeatingSetpoint](#occupiedheatingsetpoint) for the complete relationship.
+
+`AqaraThermostatFeatureMap` is the Aqara Thermostat feature bitmap. Valid values are defined in [AqaraThermostatFeatureMap32](#aqarathermostatfeaturemap32). Server declares the value.
+
+If this attribute is present in `ServerAttributeList`, the Client SHALL READ it after Profile Discovery. This attribute is used only for capability declaration. There is no runtime change-reporting scenario, and the Server SHALL NOT REPORT it.
 
 #### ServerAttributeList
 
@@ -2224,12 +2322,14 @@ The Server SHALL REPORT this attribute when its value changes.
 
 The attribute type is `list[uint16]`. List elements SHALL be sorted by Attribute ID in ascending order and include `ServerAttributeList`'s own Attribute ID `0xFFFB`.
 
+Client SHALL READ this attribute during Profile Discovery. This attribute is used only for capability discovery. There is no runtime change-reporting scenario, and the Server SHALL NOT REPORT it. If the supported attribute set changes, the Server SHALL send `ProfileDiscoveryRequest` so that the Client READs it again.
+
 ### Thermostat Commands
 
 | ID      | Name                      | Direction         | Response               | Conformance | Description                                                                      |
 |---------|---------------------------|-------------------|------------------------|-------------|----------------------------------------------------------------------------------|
-| 0x1000  | [ClearOpenWindowAlarmReq](#clearopenwindowalarmreq)   | Client → Server   | [ClearOpenWindowAlarmRsp](#clearopenwindowalarmrsp)| O           | Clear the active open-window alarm and immediately resume temperature control.    |
-| 0x1001  | [ClearOpenWindowAlarmRsp](#clearopenwindowalarmrsp)   | Server → Client   | N                      | O           | Return the result of the clear operation.                                         |
+| 0x1000  | [ClearOpenWindowAlarmReq](#clearopenwindowalarmreq)   | Client → Server   | [ClearOpenWindowAlarmRsp](#clearopenwindowalarmrsp)| OpenWindowDetection           | Clear the active open-window alarm and immediately resume temperature control.    |
+| 0x1001  | [ClearOpenWindowAlarmRsp](#clearopenwindowalarmrsp)   | Server → Client   | N                      | OpenWindowDetection           | Return the result of the clear operation.                                         |
 
 Parameter definitions for commands with parameters are provided in each command's **Parameters** table. The Data Segment encoding is described in [COMMAND (OPC = 0x9)](#command-opc--0x9).
 
