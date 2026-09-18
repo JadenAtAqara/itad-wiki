@@ -1,0 +1,312 @@
+---
+id: mqtt-api
+title: "MQTT API"
+description: "通过 MQTT OpenAPI v1 Topic 调用 Aqara Studio API，并接收实时推送消息。"
+sidebar_label: "MQTT API"
+---
+
+# MQTT API
+
+MQTT 通道支持客户端通过 MQTT Broker 调用 Aqara Studio 已开放的 OpenAPI 接口，并接收订阅推送消息。API 请求参数和响应体与 HTTP OpenAPI 保持一致；心跳、订阅及推送消息与 WebSocket v1 保持一致。
+
+:::info 旧版 Topic 兼容说明
+原有可配置的请求和响应 Topic 继续兼容，其报文格式保持不变，并与本文介绍的固定 Topic 相互独立。本文只说明新版 MQTT OpenAPI v1 Topic。
+:::
+
+## 准备工作
+
+1. 在 Aqara Studio 中进入 **设置 > 开发者 > MQTT 转出**。
+2. 选择本地 Broker 或第三方 Broker，完成连接配置并启用 MQTT 转出。
+3. 应用使用该 Broker 配置的用户名和密码、TLS 或客户端证书连接同一个 Broker。
+
+MQTT 通道**不使用** OpenAPI Token，也不接受 `AuthRequest`。身份认证和 Topic 访问权限由 Broker 的连接凭据与 ACL 负责。
+
+生产环境应配置 Broker ACL，使应用只能向分配给自己的请求 Topic 发布消息，并且只能订阅分配给自己的响应 Topic。不要允许应用订阅 `/open/api/v1/response/+`。
+
+## Topic
+
+| 方向 | Topic | 用途 |
+| --- | --- | --- |
+| 应用到 Studio | `/open/api/v1/request/{clientId}` | API 请求、心跳、订阅和取消订阅消息 |
+| Studio 到应用 | `/open/api/v1/response/{clientId}` | API 响应、订阅响应、推送消息和错误消息 |
+
+Topic 开头的 `/` 是名称的一部分，不能省略。
+
+`clientId` 是逻辑会话和响应路由标识，可以与 MQTT 连接使用的物理 Client ID 不同。长度为 1～128 个字符，只能包含字母、数字、`.`、`_`、`:` 和 `-`。
+
+建议请求发布和响应订阅均使用 QoS 1。发送请求前应先订阅响应 Topic，避免遗漏立即返回的响应。
+
+## 调用 OpenAPI 接口
+
+向请求 Topic 发布 `OpenApiRequest` JSON 对象：
+
+```json
+{
+  "type": "OpenApiRequest",
+  "version": "v1",
+  "msgId": "devices-001",
+  "data": {
+    "method": "GET",
+    "path": "/open/api/v1/devices",
+    "query": {
+      "pageNum": 1,
+      "pageSize": 20
+    },
+    "headers": {
+      "Lang": "zh-CN"
+    },
+    "body": null
+  }
+}
+```
+
+### 请求字段
+
+| 字段 | 必填 | 说明 |
+| --- | --- | --- |
+| `type` | 是 | 固定为 `OpenApiRequest`。 |
+| `version` | 是 | 固定为 `v1`。 |
+| `msgId` | 是 | 请求标识，响应使用相同的值。长度为 1～128 个字符，只能包含字母、数字、`.`、`_`、`:`、`@` 或 `-`。每个逻辑操作使用一个新值；重试同一操作时保持不变。 |
+| `data.method` | 是 | 支持 `GET`、`POST`、`PATCH` 或 `DELETE`。 |
+| `data.path` | 是 | `/open/api/v1/` 下已对 MQTT 开放的路径，不能在路径中附加查询字符串或 fragment。 |
+| `data.query` | 否 | JSON 对象形式的查询参数。值可以是字符串、数字、布尔值或这些基础类型组成的数组。 |
+| `data.headers` | 否 | 可选的 OpenAPI 元数据 Header，例如 `Lang`。不能包含 `Authorization` 或 Cookie；路由使用的 `ClientId` 取自 Topic，不能在此覆盖。 |
+| `data.body` | 否 | JSON 请求体。接口没有请求体时可以省略或传 `null`。 |
+
+响应 Topic 会直接收到标准 HTTP OpenAPI 响应体，不再增加 MQTT 外层：
+
+```json
+{
+  "type": "GetDeviceInfoResponse",
+  "version": "v1",
+  "msgId": "devices-001",
+  "code": 0,
+  "message": "success",
+  "data": {
+    "totalCount": 1,
+    "pageNum": 1,
+    "pageSize": 20,
+    "data": []
+  }
+}
+```
+
+接口的 `method`、`path`、查询参数、请求体及响应数据定义与 HTTP 文档一致。MQTT 当前开放已启用的空间、设备和自动化接口；鉴权、Token 管理、文件传输、Studio 诊断、Cloud 绑定、MCP 及内部管理接口不通过 MQTT 开放。
+
+具体参数请参考 [HTTP API 列表](./introduction.mdx#http-api-列表)。只有明确为 MQTT 启用的 HTTP 接口才能通过 MQTT 调用。
+
+## 心跳
+
+客户端应在每 30 秒内至少发送一次心跳或其他请求。某个请求 Topic 连续 90 秒没有收到消息时，对应 MQTT 逻辑会话会过期，Studio 将清理该 `clientId` 的订阅。
+
+请求：
+
+```json
+{
+  "type": "ping",
+  "version": "v1",
+  "msgId": "ping-001",
+  "data": null
+}
+```
+
+响应：
+
+```json
+{
+  "type": "pong",
+  "version": "v1",
+  "msgId": "ping-001",
+  "data": "pong",
+  "code": 0,
+  "message": "success"
+}
+```
+
+## 订阅设备数据
+
+### 订阅全部或指定设备
+
+使用 `SubscribeAllRequest`。`data` 为 `null`、省略或空数组时，订阅当前可访问的全部设备；传非空设备 ID 数组时，只订阅指定设备。
+
+```json
+{
+  "type": "SubscribeAllRequest",
+  "version": "v1",
+  "msgId": "subscribe-devices-001",
+  "data": ["device-001", "device-002"]
+}
+```
+
+Studio 返回 `SubscribeAllResponse`。取消订阅时发送 `UnsubscribeAllRequest`：传设备 ID 数组可取消指定设备，`data` 为 `null` 或空数组时取消当前逻辑会话的全部设备数据订阅。
+
+`SubscribeAllRequest` 会替换当前会话的 Trait 单项订阅。`UnsubscribeAllRequest` 只修改设备数据和 Trait 订阅；独立事件及对象事件必须使用各自的取消订阅消息。
+
+### 订阅指定 Trait 值
+
+```json
+{
+  "type": "SubscribeTraitValueRequest",
+  "version": "v1",
+  "msgId": "subscribe-trait-001",
+  "data": [
+    {
+      "deviceId": "device-001",
+      "endpointId": 1,
+      "functionCode": "Light",
+      "traitCodes": ["OnOff"]
+    }
+  ]
+}
+```
+
+Studio 返回 `SubscribeTraitValueResponse`。取消指定 Trait 订阅时，使用相同的订阅项结构并将类型改为 `UnsubscribeTraitValueRequest`。订阅或取消订阅成功时 `code` 为 `0`，响应不包含 Trait 当前值。
+
+## 订阅事件
+
+### 告警事件
+
+独立事件通道当前支持 `ALARM`：
+
+```json
+{
+  "type": "SubscribeEventRequest",
+  "version": "v1",
+  "msgId": "subscribe-alarm-001",
+  "data": ["ALARM"]
+}
+```
+
+Studio 返回 `SubscribeEventResponse`。取消时发送 `UnsubscribeEventRequest`，并使用 `data: ["ALARM"]`。
+
+### 对象事件
+
+设备、空间及自动化变化通过对象事件订阅。`objectIds` 省略、为 `null` 或空集合时，表示订阅指定事件类型下当前可访问的全部对象。
+
+```json
+{
+  "type": "SubscribeObjectEventRequest",
+  "version": "v1",
+  "msgId": "subscribe-object-001",
+  "data": [
+    {
+      "eventTypes": ["SPACE_UPDATED", "AUTOMATION_UPDATED"],
+      "objectIds": []
+    }
+  ]
+}
+```
+
+Studio 返回 `SubscribeObjectEventResponse`。取消时发送 `UnsubscribeObjectEventRequest`，订阅项结构保持一致；`objectIds` 为空时，会移除指定事件类型下的全部对象规则。
+
+`SubscribeObjectEventRequest` 接受以下事件类型：
+
+- 设备空间关系：`DEVICE_SPACE_UPDATED`
+- 空间：`SPACE_ADDED`、`SPACE_REMOVED`、`SPACE_UPDATED`
+- 自动化：`AUTOMATION_ADDED`、`AUTOMATION_REMOVED`、`AUTOMATION_UPDATED`、`AUTOMATION_SPACE_UPDATED`
+
+`objectIds` 非空时，同一个订阅项内的全部 `eventTypes` 必须属于同一对象类别；新增类事件只能订阅全部可访问对象。
+
+## 推送消息
+
+所有推送均发布到 `/open/api/v1/response/{clientId}`。
+
+### Trait 值变化
+
+```json
+{
+  "type": "TraitValueUpdate",
+  "version": "v1",
+  "msgId": "1754469720110",
+  "data": [
+    {
+      "deviceId": "device-001",
+      "endpointId": 1,
+      "functionCode": "Light",
+      "traitCode": "OnOff",
+      "value": true,
+      "time": 1754469720110
+    }
+  ],
+  "code": 0,
+  "message": ""
+}
+```
+
+`value` 的类型由对应 Trait 定义决定，`time` 是毫秒级 Unix 时间戳。
+
+### 对象事件
+
+```json
+{
+  "type": "objectEvent",
+  "version": "v1",
+  "msgId": "object-event-001",
+  "data": {
+    "eventType": "SPACE_UPDATED",
+    "objectId": "space-001",
+    "time": 1754469720110,
+    "data": {
+      "spaceId": "space-001",
+      "name": "客厅",
+      "spatialMarking": "room"
+    }
+  },
+  "code": 0,
+  "message": "success"
+}
+```
+
+内层 `data.data` 的结构由 `eventType` 决定。建议先根据 `eventType` 和 `objectId` 分发事件，再解析对应事件的数据内容。
+
+设备数据订阅还可能收到 `DEVICE_ADDED`、`DEVICE_REMOVED`、`DEVICE_ENDPOINT_ADDED`、`DEVICE_ENDPOINT_REMOVED` 或 `DEVICE_TRAIT_PARAMETER_UPDATE` 类型的 `objectEvent` 推送。这些设备事件由 `SubscribeAllRequest` 或匹配的 Trait 订阅产生，不能用于 `SubscribeObjectEventRequest`。
+
+### 告警事件
+
+```json
+{
+  "type": "AlarmEvent",
+  "version": "v1",
+  "msgId": "alarm-notify-alarm-001",
+  "data": {
+    "uuid": "alarm-001",
+    "deviceName": "漏水传感器",
+    "deviceId": "device-001",
+    "devicePointName": "漏水状态",
+    "alarmClass": "critical",
+    "alarmRuleName": "漏水告警",
+    "alarmText": "检测到漏水",
+    "alarmValue": "true",
+    "sourceState": "active",
+    "alarmTime": 1754469720110,
+    "localized": {}
+  },
+  "code": 0,
+  "message": "success"
+}
+```
+
+### 错误响应
+
+消息格式错误、消息类型不支持、路由未开放或业务处理失败时，返回 `ErrorMessage`：
+
+```json
+{
+  "type": "ErrorMessage",
+  "version": "v1",
+  "msgId": "devices-001",
+  "data": null,
+  "code": 400,
+  "message": "Invalid MQTT OpenAPI request"
+}
+```
+
+请求响应必须通过 `msgId` 关联，并根据 `code` 判断是否成功。推送消息的 `msgId` 由 Studio 生成，不对应某条订阅请求。
+
+## 投递与重试规则
+
+- 单条 MQTT OpenAPI 请求不能超过 256 KiB。
+- 同一逻辑 `clientId` 的请求按 Broker 到达顺序处理，不同逻辑客户端可以并行处理。
+- 未收到响应时，使用原 `msgId` 重试同一逻辑操作。在确认实际操作状态前，不要改用新 `msgId` 重复执行。
+- Studio 会暂时复用写请求的最终响应，避免 QoS 1 重投造成同一修改重复执行。不同写请求复用同一 `msgId` 时会返回错误。
+- 重连时使用 clean session，并主动重试未收到结果的请求；不要依赖 Broker 在 Studio 断线期间积压控制请求。
