@@ -31,7 +31,7 @@ import Heading from "@theme/Heading";
   path={"/automations/status"}
   context={"endpoint"}
 >
-  
+
 </MethodEndpoint>
 
 
@@ -49,14 +49,14 @@ import Heading from "@theme/Heading";
 <ParamsDetails
   parameters={[]}
 >
-  
+
 </ParamsDetails>
 
 <RequestSchema
   title={"Body"}
   body={{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["automationIds","enabled"],"properties":{"automationIds":{"type":"array","description":"自动化 ID 列表。","minItems":1,"items":{"type":"string"}},"enabled":{"type":"boolean","description":"新启用状态。true：启用；false：禁用。"}},"title":"UpdateAutomationStatusRequest"}}}}}
 >
-  
+
 </RequestSchema>
 
 <StatusCodes
@@ -64,8 +64,7 @@ import Heading from "@theme/Heading";
   label={undefined}
   responses={{"200":{"description":"请求发起成功","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"type":"object","required":["successIds","failedItems"],"properties":{"successIds":{"type":"array","description":"成功的自动化 ID 列表。","items":{"type":"string"}},"failedItems":{"type":"array","description":"失败的自动化对象列表。","items":{"type":"object","required":["automationId","code","message"],"properties":{"automationId":{"type":"string","description":"自动化 ID。"},"code":{"type":"integer","description":"错误码。"},"message":{"type":"string","description":"错误信息。"}},"title":"AutomationBatchFailure"}}},"title":"AutomationBatchResultData"}}}],"title":"UpdateAutomationStatusResponse"}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 xxx 不能为空"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"token 已过期，请重新生成 token"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"无权限访问该资源"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"资源不存在"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"429":{"description":"请求频率过高","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000005","code":429,"message":"请求频率过高"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"服务内部异常"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
 >
-  
+
 </StatusCodes>
 
 
-      

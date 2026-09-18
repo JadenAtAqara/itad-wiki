@@ -31,25 +31,25 @@ import Heading from "@theme/Heading";
   path={"/devices/command/execute/await"}
   context={"endpoint"}
 >
-  
+
 </MethodEndpoint>
 
 
 
 通过 command 控制设备，并在服务端获取设备响应。<br />
 以下 command 可响应：<br />
-`APIGetIrDeviceCategoriesForApp(40263)`  
-`APIGetBrandsByCategoryForApp(40267)`  
-`APIGetMatchTreeForApp(40268)`  
-`APIClickIrKeyForApp(40273)`  
-`APISaveMatchedRemoteInfoForApp(40292)`  
-`SetIRDeviceInfo(40288)`  
-`IRCodeMatchStatus(20591)`  
-`APICreateIrVirtualDeviceForApp(40281)`  
+`APIGetIrDeviceCategoriesForApp(40263)`
+`APIGetBrandsByCategoryForApp(40267)`
+`APIGetMatchTreeForApp(40268)`
+`APIClickIrKeyForApp(40273)`
+`APISaveMatchedRemoteInfoForApp(40292)`
+`SetIRDeviceInfo(40288)`
+`IRCodeMatchStatus(20591)`
+`APICreateIrVirtualDeviceForApp(40281)`
 `SendIrKey(40305)`
-`APIStartIrLearningForApp(40280)`  
-`IRLearnResult(20618)`  
-`APIAddIrKeyForApp(40275)`    
+`APIStartIrLearningForApp(40280)`
+`IRLearnResult(20618)`
+`APIAddIrKeyForApp(40275)`
 
 
 <Heading
@@ -63,14 +63,14 @@ import Heading from "@theme/Heading";
 <ParamsDetails
   parameters={[]}
 >
-  
+
 </ParamsDetails>
 
 <RequestSchema
   title={"Body"}
   body={{"required":true,"content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["data"],"properties":{"data":{"type":"array","items":{"type":"object","required":["deviceId","endpointId","functionCode","commandCode"],"properties":{"deviceId":{"type":"string","description":"设备 ID"},"endpointId":{"type":"integer","description":"端点 ID"},"functionCode":{"type":"string","description":"功能编码，如：NetworkCommissioning"},"commandCode":{"type":"string","description":"命令编码，如：TriggerZigbeeNetworkInfoUpload"},"args":{"type":"array","items":{"type":"object","description":"命令参数","required":["fieldCode","value"],"properties":{"fieldCode":{"type":"string","description":"字段编码"},"value":{"description":"字段值。类型与对应 field 的 parameter.type 保持一致。","oneOf":[{"type":"boolean"},{"type":"integer"},{"type":"number","format":"double"},{"type":"string"}],"title":"FlexibleValue"}},"title":"CommandArg"},"description":"命令字段对象列表"}},"title":"CommandExecuteItem"}}},"title":"CommandExecuteRequest"},{"type":"object","properties":{"timeoutMs":{"type":"integer","format":"int32","description":"等待设备命令上报超时（毫秒）；不传使用服务端默认值。","minimum":1000,"maximum":10000}}}],"title":"CommandExecuteAwaitRequest"},"examples":{"executeCommandAwait":{"value":{"data":[{"deviceId":"gateway001","endpointId":1,"functionCode":"NetworkCommissioning","commandCode":"TriggerZigbeeNetworkInfoUpload","args":[{"fieldCode":"InstallCode","value":"F9B34846413AB5DE81B60E63E440"},{"fieldCode":"MAC","value":"54EF441000EB0CCF"}]}],"timeoutMs":5000}}}}}}}
 >
-  
+
 </RequestSchema>
 
 <StatusCodes
@@ -78,8 +78,7 @@ import Heading from "@theme/Heading";
   label={undefined}
   responses={{"200":{"description":"成功（data 返回每条命令的执行及设备上报结果）","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"type":"array","items":{"type":"object","required":["deviceId","endpointId","functionCode","commandCode","code","message","responded"],"properties":{"deviceId":{"type":"string","description":"设备 ID。"},"endpointId":{"type":"integer","description":"端点 ID。"},"functionCode":{"type":"string","description":"功能编码。"},"commandCode":{"type":"string","description":"命令编码。"},"code":{"type":"integer","description":"执行结果码。"},"message":{"type":"string","description":"执行结果描述。"},"responded":{"type":"boolean","description":"是否收到设备该 command 的上报。"},"commandReportValue":{"type":"string","description":"设备该 command 的上报原始字符串，由调用端自行解析。"},"responseTime":{"type":"integer","format":"int64","description":"设备 command 上报时间（毫秒时间戳）。"}},"title":"CommandExecuteAwaitResult"}}}}],"example":{"type":"ExecuteCommandAwaitResponse","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-00000000001a","code":0,"message":"success","data":[{"deviceId":"gateway001","endpointId":1,"functionCode":"NetworkCommissioning","commandCode":"TriggerZigbeeNetworkInfoUpload","code":0,"message":"success","responded":true,"commandReportValue":"{\"result\":\"ok\"}","responseTime":1710001234567}]},"title":"CommandExecuteAwaitResponse"},"examples":{"commandExecuteAwaitSuccess":{"value":{"type":"ExecuteCommandAwaitResponse","version":"v1","msgId":"2df2f431-a58d-4fdb-b39c-4f0d29e7ecfa","code":0,"message":"success","data":[{"deviceId":"gateway001","endpointId":1,"functionCode":"NetworkCommissioning","commandCode":"TriggerZigbeeNetworkInfoUpload","code":0,"message":"success","responded":true,"commandReportValue":"{\"result\":\"ok\"}","responseTime":1710001234567}]}}}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 xxx 不能为空"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"token 已过期，请重新生成 token"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"无权限访问该资源"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"资源不存在"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"429":{"description":"请求频率过高","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000005","code":429,"message":"请求频率过高"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"服务内部异常"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
 >
-  
+
 </StatusCodes>
 
 
-      

@@ -31,7 +31,7 @@ import Heading from "@theme/Heading";
   path={"/gateways"}
   context={"endpoint"}
 >
-  
+
 </MethodEndpoint>
 
 
@@ -54,14 +54,14 @@ Zigbee 网关并非支持所有 Zigbee 子设备。
 <ParamsDetails
   parameters={[{"name":"state","in":"query","description":"网关在线状态。","required":false,"schema":{"type":"boolean"}},{"name":"protocols","in":"query","description":"协议类型列表。URL 示例：`protocols=zigbee,matter` 或 `protocols=zigbee&protocols=matter`","required":false,"schema":{"type":"array","items":{"type":"string","enum":["zigbee","matter"]}},"style":"form","explode":true}]}
 >
-  
+
 </ParamsDetails>
 
 <RequestSchema
   title={"Body"}
   body={undefined}
 >
-  
+
 </RequestSchema>
 
 <StatusCodes
@@ -69,8 +69,7 @@ Zigbee 网关并非支持所有 Zigbee 子设备。
   label={undefined}
   responses={{"200":{"description":"接口请求成功","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"type":"array","items":{"type":"object","required":["deviceId","deviceName"],"properties":{"deviceId":{"type":"string","description":"网关设备 ID。"},"deviceName":{"type":"string","description":"网关设备名称。"},"supportZigbee":{"type":"boolean","description":"是否支持 Zigbee，缺省或 null 为不支持。"},"supportedMatterRoles":{"type":"integer","description":"支持的 Matter 角色，缺少或 null 为不支持。\n该字段为位掩码，使用 `supportedMatterRoles & 角色值 != 0` 判断是否支持对应角色：\n- 1：Matter controller\n- 2：Matter commissioner\n- 4：Thread border router\n- 8：Matter bridge\n例如 `supportedMatterRoles & 2 != 0` 表示支持 Matter 子设备入网。\n","nullable":true},"space":{"type":"object","required":["parentSpaceId","spaceId","name"],"properties":{"parentSpaceId":{"type":"string","description":"父空间 ID"},"spaceId":{"type":"string","description":"空间 ID"},"name":{"type":"string","description":"空间名称"}},"title":"DeviceSpace","nullable":true,"description":"网关所在空间。"}},"title":"GatewayInfo"}}}}],"example":{"type":"GetGatewaysResponse","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-00000000000e","code":0,"message":"success","data":[{"deviceId":"gateway-001","deviceName":"客厅网关M2","supportZigbee":true,"supportedMatterRoles":1}]},"title":"GatewaysResponse"}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 xxx 不能为空"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"token 已过期，请重新生成 token"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"无权限访问该资源"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"资源不存在"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"429":{"description":"请求频率过高","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000005","code":429,"message":"请求频率过高"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"服务内部异常"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
 >
-  
+
 </StatusCodes>
 
 
-      

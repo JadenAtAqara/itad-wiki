@@ -29,7 +29,9 @@ The entire process requires no coding. You only need to configure the necessary 
 1. After installation, the Assistant will prompt you to provide `AQARA_ENDPOINT_URL` and `AQARA_OPEN_API_TOKEN` for authentication.
 
     :::tip
-    - `AQARA_ENDPOINT_URL` is the [HTTP Request URL](./api-references/data-export-api-v1.mdx#http-request) of Aqara Studio, usually ending with `/open/api/v1`.
+    - `AQARA_ENDPOINT_URL` is the HTTP Request URL of Aqara Studio, usually ending with `/open/api/v1`. The format is as follows:
+        - Remote access disabled: `http://<Aqara_Studio_local_LAN_IP>/open/api/v1`
+        - Remote access enabled: `https://<Aqara_Studio_remote_access_address>/open/api/v1`
     - `AQARA_OPEN_API_TOKEN` is the [token](./developer-guide.mdx#obtain-token) used for authentication in Aqara Studio.
     :::
 
