@@ -1,0 +1,312 @@
+---
+id: mqtt-api
+title: "MQTT API"
+description: "Use the MQTT OpenAPI v1 topics to call Aqara Studio APIs and receive real-time push messages."
+sidebar_label: "MQTT API"
+---
+
+# MQTT API
+
+The MQTT channel lets a client call supported Aqara Studio OpenAPI endpoints and receive subscription push messages through an MQTT Broker. It uses the same API request parameters and response bodies as HTTP OpenAPI, and the same heartbeat, subscription, and push message formats as WebSocket v1.
+
+:::info Legacy topic compatibility
+The configurable legacy request and response topics remain supported. Their payload format is unchanged and is independent of the fixed topics documented on this page. This page only describes the new MQTT OpenAPI v1 topics.
+:::
+
+## Before you begin
+
+1. In Aqara Studio, go to **Settings > Developer > MQTT Export**.
+2. Select a local or third-party Broker, complete its connection settings, and enable MQTT Export.
+3. Connect your application to the same Broker with the Broker username and password, TLS, or client certificate configured for that Broker.
+
+The MQTT channel does **not** use an OpenAPI Token and does not accept `AuthRequest`. Authentication and topic access are enforced by the Broker connection credentials and ACL.
+
+For production deployments, configure the Broker ACL so that an application can only publish to its assigned request topic and subscribe to its assigned response topic. Do not grant an application access to `/open/api/v1/response/+`.
+
+## Topics
+
+| Direction | Topic | Purpose |
+| --- | --- | --- |
+| Application to Studio | `/open/api/v1/request/{clientId}` | API requests, heartbeat, subscribe, and unsubscribe messages |
+| Studio to application | `/open/api/v1/response/{clientId}` | API responses, subscription responses, push messages, and errors |
+
+The leading `/` is part of the topic name and must not be omitted.
+
+`clientId` is the logical session and response-routing identifier. It can be different from the MQTT connection's physical Client ID. It must contain 1–128 characters and may only contain letters, digits, `.`, `_`, `:`, and `-`.
+
+Use QoS 1 for request publication and response subscription. Subscribe to the response topic before publishing a request so that an immediate response is not missed.
+
+## Call an OpenAPI endpoint
+
+Publish an `OpenApiRequest` JSON object to the request topic:
+
+```json
+{
+  "type": "OpenApiRequest",
+  "version": "v1",
+  "msgId": "devices-001",
+  "data": {
+    "method": "GET",
+    "path": "/open/api/v1/devices",
+    "query": {
+      "pageNum": 1,
+      "pageSize": 20
+    },
+    "headers": {
+      "Lang": "en-US"
+    },
+    "body": null
+  }
+}
+```
+
+### Request fields
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `type` | Yes | Fixed value: `OpenApiRequest`. |
+| `version` | Yes | Fixed value: `v1`. |
+| `msgId` | Yes | Request identifier. The response uses the same value. It must contain 1–128 letters, digits, `.`, `_`, `:`, `@`, or `-`. Use a new value for each logical operation and keep it unchanged when retrying that operation. |
+| `data.method` | Yes | `GET`, `POST`, `PATCH`, or `DELETE`. |
+| `data.path` | Yes | An MQTT-enabled path under `/open/api/v1/`. Do not append a query string or fragment. |
+| `data.query` | No | Query parameters as an object. A value may be a string, number, boolean, or an array of those primitive values. |
+| `data.headers` | No | Optional OpenAPI metadata headers such as `Lang`. Do not include `Authorization` or Cookie headers. The routing `ClientId` is taken from the topic and cannot be overridden here. |
+| `data.body` | No | JSON request body. Omit it or use `null` when the endpoint has no body. |
+
+The response topic receives the standard HTTP OpenAPI response body directly, without an additional MQTT wrapper:
+
+```json
+{
+  "type": "GetDeviceInfoResponse",
+  "version": "v1",
+  "msgId": "devices-001",
+  "code": 0,
+  "message": "success",
+  "data": {
+    "totalCount": 1,
+    "pageNum": 1,
+    "pageSize": 20,
+    "data": []
+  }
+}
+```
+
+Use the endpoint's HTTP documentation to determine its `method`, `path`, query parameters, request body, and response data. MQTT currently exposes the enabled space, device, and automation APIs. Authentication, Token management, file transfer, Studio diagnostics, Cloud binding, MCP, and internal management endpoints are not available through MQTT.
+
+See the [HTTP API list](./introduction.mdx#http-api-list) for endpoint parameter definitions. An HTTP endpoint is callable through MQTT only when it is enabled for the MQTT channel.
+
+## Heartbeat
+
+Send a heartbeat or another request at least once every 30 seconds. An MQTT logical session expires after 90 seconds without any message on its request topic; when it expires, Studio removes the subscriptions associated with that `clientId`.
+
+Request:
+
+```json
+{
+  "type": "ping",
+  "version": "v1",
+  "msgId": "ping-001",
+  "data": null
+}
+```
+
+Response:
+
+```json
+{
+  "type": "pong",
+  "version": "v1",
+  "msgId": "ping-001",
+  "data": "pong",
+  "code": 0,
+  "message": "success"
+}
+```
+
+## Subscribe to device data
+
+### Subscribe to all or selected devices
+
+Use `SubscribeAllRequest`. Set `data` to `null`, omit it, or use an empty array to subscribe to all accessible devices. Set it to a non-empty device ID array to subscribe to selected devices.
+
+```json
+{
+  "type": "SubscribeAllRequest",
+  "version": "v1",
+  "msgId": "subscribe-devices-001",
+  "data": ["device-001", "device-002"]
+}
+```
+
+Studio returns `SubscribeAllResponse`. To cancel, send `UnsubscribeAllRequest` with the device IDs to remove, or with `data` set to `null` or an empty array to cancel all device-data subscriptions for this logical session.
+
+`SubscribeAllRequest` replaces the session's trait-only subscriptions. `UnsubscribeAllRequest` only changes device-data and Trait subscriptions; independent event and object-event subscriptions must be canceled with their corresponding unsubscribe messages.
+
+### Subscribe to selected Trait values
+
+```json
+{
+  "type": "SubscribeTraitValueRequest",
+  "version": "v1",
+  "msgId": "subscribe-trait-001",
+  "data": [
+    {
+      "deviceId": "device-001",
+      "endpointId": 1,
+      "functionCode": "Light",
+      "traitCodes": ["OnOff"]
+    }
+  ]
+}
+```
+
+Studio returns `SubscribeTraitValueResponse`. Send the same item structure with type `UnsubscribeTraitValueRequest` to cancel selected Trait subscriptions. A successful subscription or unsubscription response has `code: 0`; it does not contain the current Trait value.
+
+## Subscribe to events
+
+### Alarm events
+
+The independent event channel currently supports `ALARM`:
+
+```json
+{
+  "type": "SubscribeEventRequest",
+  "version": "v1",
+  "msgId": "subscribe-alarm-001",
+  "data": ["ALARM"]
+}
+```
+
+Studio returns `SubscribeEventResponse`. Use `UnsubscribeEventRequest` with `data: ["ALARM"]` to cancel it.
+
+### Object events
+
+Use object-event subscriptions for device, space, and automation changes. An omitted, `null`, or empty `objectIds` collection means all accessible objects matching the specified event types.
+
+```json
+{
+  "type": "SubscribeObjectEventRequest",
+  "version": "v1",
+  "msgId": "subscribe-object-001",
+  "data": [
+    {
+      "eventTypes": ["SPACE_UPDATED", "AUTOMATION_UPDATED"],
+      "objectIds": []
+    }
+  ]
+}
+```
+
+Studio returns `SubscribeObjectEventResponse`. Use `UnsubscribeObjectEventRequest` with the same item structure to cancel matching rules. Empty `objectIds` removes all object rules for the specified event types.
+
+The event types accepted by `SubscribeObjectEventRequest` are:
+
+- Device-space relationship: `DEVICE_SPACE_UPDATED`
+- Space: `SPACE_ADDED`, `SPACE_REMOVED`, `SPACE_UPDATED`
+- Automation: `AUTOMATION_ADDED`, `AUTOMATION_REMOVED`, `AUTOMATION_UPDATED`, `AUTOMATION_SPACE_UPDATED`
+
+When `objectIds` is non-empty, all `eventTypes` in the same item must belong to the same object category. Added events only support subscribing to all accessible objects.
+
+## Push messages
+
+All push messages are published to `/open/api/v1/response/{clientId}`.
+
+### Trait value update
+
+```json
+{
+  "type": "TraitValueUpdate",
+  "version": "v1",
+  "msgId": "1754469720110",
+  "data": [
+    {
+      "deviceId": "device-001",
+      "endpointId": 1,
+      "functionCode": "Light",
+      "traitCode": "OnOff",
+      "value": true,
+      "time": 1754469720110
+    }
+  ],
+  "code": 0,
+  "message": ""
+}
+```
+
+The value type is defined by the corresponding Trait. `time` is a Unix timestamp in milliseconds.
+
+### Object event
+
+```json
+{
+  "type": "objectEvent",
+  "version": "v1",
+  "msgId": "object-event-001",
+  "data": {
+    "eventType": "SPACE_UPDATED",
+    "objectId": "space-001",
+    "time": 1754469720110,
+    "data": {
+      "spaceId": "space-001",
+      "name": "Living Room",
+      "spatialMarking": "room"
+    }
+  },
+  "code": 0,
+  "message": "success"
+}
+```
+
+The nested `data.data` shape depends on `eventType`. Use `eventType` and `objectId` to route the event before parsing its event-specific content.
+
+Device-data subscriptions may additionally receive `objectEvent` pushes with `DEVICE_ADDED`, `DEVICE_REMOVED`, `DEVICE_ENDPOINT_ADDED`, `DEVICE_ENDPOINT_REMOVED`, or `DEVICE_TRAIT_PARAMETER_UPDATE`. These device event types are produced by `SubscribeAllRequest` or matching Trait subscriptions and are not accepted by `SubscribeObjectEventRequest`.
+
+### Alarm event
+
+```json
+{
+  "type": "AlarmEvent",
+  "version": "v1",
+  "msgId": "alarm-notify-alarm-001",
+  "data": {
+    "uuid": "alarm-001",
+    "deviceName": "Leak Sensor",
+    "deviceId": "device-001",
+    "devicePointName": "Leak status",
+    "alarmClass": "critical",
+    "alarmRuleName": "Water leak alarm",
+    "alarmText": "Water leak detected",
+    "alarmValue": "true",
+    "sourceState": "active",
+    "alarmTime": 1754469720110,
+    "localized": {}
+  },
+  "code": 0,
+  "message": "success"
+}
+```
+
+### Error response
+
+Malformed messages, unsupported message types, unavailable routes, and business errors return `ErrorMessage`:
+
+```json
+{
+  "type": "ErrorMessage",
+  "version": "v1",
+  "msgId": "devices-001",
+  "data": null,
+  "code": 400,
+  "message": "Invalid MQTT OpenAPI request"
+}
+```
+
+Always correlate a request response by `msgId` and determine success from `code`. Push-message `msgId` values are generated by Studio and do not correspond to a subscription request.
+
+## Delivery and retry rules
+
+- A single MQTT OpenAPI request must not exceed 256 KiB.
+- Requests from the same logical `clientId` are processed in Broker arrival order. Different logical clients may be processed concurrently.
+- If no response is received, retry the same logical operation with the same `msgId`. Do not assign a new `msgId` until the actual operation state has been reconciled.
+- Studio temporarily reuses the final response for write requests to prevent a QoS 1 redelivery from executing the same mutation twice. Reusing a `msgId` for a different write request returns an error.
+- Reconnect with a clean session and actively retry requests whose result was not received. Do not rely on the Broker to queue control requests while Studio is disconnected.

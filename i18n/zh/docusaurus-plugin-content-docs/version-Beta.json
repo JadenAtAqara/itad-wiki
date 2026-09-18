@@ -135,6 +135,10 @@
     "message": "设备",
     "description": "The label for category 'Device' in sidebar 'aqaraDeveloperSidebar'"
   },
+  "sidebar.aqaraDeveloperSidebar.category.local-api-mqtt": {
+    "message": "MQTT",
+    "description": "The label for category 'MQTT' in sidebar 'aqaraDeveloperSidebar'"
+  },
   "sidebar.aqaraDeveloperSidebar.category.cloud-api-http": {
     "message": "HTTP",
     "description": "The label for category 'HTTP' in sidebar 'aqaraDeveloperSidebar'"
