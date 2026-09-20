@@ -10,8 +10,8 @@
 ## All sidebar-listed docs
 - Overview: https://docs.aqara.com/docs/aqara-developer/introduction
 - Introduction: https://docs.aqara.com/docs/aqara-developer/data-export-api/introduction
-- Getting Started with the Data Export API: https://docs.aqara.com/docs/aqara-developer/data-export-api/getting-started-with-the-data-export-api
-- Try API Online: https://docs.aqara.com/docs/aqara-developer/data-export-api/try-api-online
+- Getting Started with HTTP API: https://docs.aqara.com/docs/aqara-developer/data-export-api/getting-started-with-the-data-export-api
+- Try HTTP API Online: https://docs.aqara.com/docs/aqara-developer/data-export-api/try-api-online
 - Test API with Postman: https://docs.aqara.com/docs/aqara-developer/data-export-api/postman
 - Space: https://docs.aqara.com/docs/aqara-developer/data-export-api/space
 - List Spaces: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-spaces
@@ -54,7 +54,7 @@
 - Get Energy Consumption of a Device: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-total-device
 - Query Energy Consumption for a Space: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-total-space
 - WebSocket API Playground: https://docs.aqara.com/docs/aqara-developer/data-export-api/websocket-api/websocket-api
-- MQTT API: https://docs.aqara.com/docs/aqara-developer/data-export-api/mqtt-api
+- MQTT: https://docs.aqara.com/docs/aqara-developer/data-export-api/mqtt-api/mqtt-api
 - Integrate the Infrared Remote Control SDK with UI: https://docs.aqara.com/docs/aqara-developer/local-studio-development/sdk/infrared/integration
 - Infrared Device Integration: https://docs.aqara.com/docs/aqara-developer/local-studio-development/features/infrared-device-integration
 - Introduction: https://docs.aqara.com/docs/aqara-developer/aiot-api/introduction

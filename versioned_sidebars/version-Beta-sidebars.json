@@ -549,14 +549,7 @@
                 "aqara-developer/data-export-api/websocket-api/websocket-api"
               ]
             },
-            {
-              "type": "category",
-              "label": "MQTT",
-              "key": "local-api-mqtt",
-              "items": [
-                "aqara-developer/data-export-api/mqtt-api"
-              ]
-            }
+            "aqara-developer/data-export-api/mqtt-api/mqtt-api"  
           ]
         },
         {
