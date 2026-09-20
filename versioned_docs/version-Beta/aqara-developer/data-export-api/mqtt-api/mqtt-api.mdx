@@ -6,7 +6,7 @@ sidebar_label: "MQTT"
 
 # MQTT API
 
-With the MQTT export feature, you can use an MQTT Broker to send request messages via publish/subscribe and call the [available data export HTTP APIs](#call-an-http-api). You can also implement heartbeat keep-alive, subscribe or unsubscribe to device data, and receive device data changes and other object events.
+With the MQTT export feature, you can use an MQTT Broker to send request messages via publish/subscribe and call the [available data export HTTP APIs](#call-an-http-api). You can also implement [heartbeat keep-alive](#heartbeat-and-subscription-lease-renewal), [subscribe or unsubscribe to device data](#subscribe-to-device-data), and [receive device data changes and other object events](#subscribe-to-events).
 
 ## Obtain MQTT Connection Information
 
@@ -45,7 +45,7 @@ Subscribe to the response topic before publishing a request so that an immediate
 
 ## Call an HTTP API
 
-To call the [following available data export HTTP APIs](./../introduction.mdx#http-api-list):
+To call the following available data export HTTP APIs:
 - [Space-related APIs](./../introduction.mdx#space)
 - [Device-related APIs](./../introduction.mdx#device)
 - [Automation-related APIs](./../introduction.mdx#automation)
@@ -54,16 +54,16 @@ Write and send a request message with `type` set to `OpenApiRequest`.
 
 ### Request fields
 
-| Field | Required | Description |
-| --- | --- | --- |
-| `type` | Yes | Fixed value: `OpenApiRequest`. |
-| `version` | Yes | Fixed value: `v1`. |
-| `msgId` | Yes | Request identifier. The response uses the same value. It must contain 1–128 letters, digits, `.`, `_`, `:`, `@`, or `-`. Use a new value for each logical operation and keep it unchanged when retrying that operation. |
-| `data.method` | Yes | `GET`, `POST`, `PATCH`, or `DELETE`. |
-| `data.path` | Yes | An MQTT-enabled path under `/open/api/v1/`. Do not append a query string or fragment. |
-| `data.query` | No | Query parameters as an object. A value may be a string, number, boolean, or an array of those primitive values. |
-| `data.headers` | No | Optional OpenAPI metadata headers such as `Lang`. Do not include `Authorization` or Cookie headers. The routing `ClientId` is taken from the topic and cannot be overridden here. |
-| `data.body` | No | JSON request body. Omit it or use `null` when the endpoint has no body. |
+| Field | Required | Type | Description |
+| --- | --- | --- | --- |
+| type | ✔ | string | Must be `OpenApiRequest`. |
+| version | ✔ | string | Must be `v1`. |
+| msgId | ✔ | string | Request identifier returned unchanged in the response. Must be 1–128 characters and may contain only letters, digits, `.`, `_`, `:`, `@`, and `-`. Use a new value for each logical operation, and keep it unchanged when retrying that operation. |
+| data.method | ✔ | string | One of `GET`, `POST`, `PATCH`, or `DELETE`. Use the method specified by the target HTTP API documentation. |
+| data.path | ✔ | string | Endpoint of the HTTP API to call, such as `/open/api/v1/devices`. |
+| data.query | ✘ | object | Query parameters as a JSON object. Values may be strings, numbers, booleans, or arrays of those types. See the **Request - Query Parameters** section of the corresponding HTTP API documentation. |
+| data.headers | ✘ | object | Optional OpenAPI metadata headers, such as `Lang`. Must not include `Authorization` or `Cookie`. Routing uses the `clientId` from the topic and cannot be overridden here. |
+| data.body | ✘ | object \| null | JSON request body. Omit this field or set it to `null` when the API has no body. See the **Request - Body** section of the corresponding HTTP API documentation. |
 
 ### Request example
 
@@ -87,9 +87,11 @@ Write and send a request message with `type` set to `OpenApiRequest`.
 }
 ```
 
-### Response example
+### Response description
 
-The response topic receives the standard HTTP OpenAPI response body directly, without an additional MQTT wrapper:
+The response topic receives the standard HTTP OpenAPI response body directly, so you can parse the response body according to the **Responses** section of the corresponding HTTP API documentation.
+
+### Response example
 
 ```json
 {
@@ -113,7 +115,7 @@ MQTT Keep Alive maintains the connection between an MQTT client and the Broker. 
 
 The `ping` described here is a Studio application-level **logical subscription lease renewal message**. It tells Studio that the `clientId` associated with the request topic is still using its previously established data subscriptions. Apply the following rules:
 
-- A client that only calls OpenAPI endpoints and has not established a data subscription does not need to send periodic `ping` messages.
+- A client that only calls OpenAPI endpoints and has not established a [data subscription](#subscribe-to-device-data) does not need to send periodic `ping` messages.
 - While a data subscription is active, any request received on that `clientId` request topic renews the subscription. If another request has been sent within the last 30 seconds, an additional `ping` is unnecessary.
 - When an active subscription is idle and there are no other requests to renew it, send a `ping` at least once every 30 seconds.
 - Studio renews the lease only from messages received on the request topic. Receiving push messages does not renew the subscription.
@@ -121,7 +123,16 @@ The `ping` described here is a Studio application-level **logical subscription l
 
 MQTT Keep Alive and Studio logical subscription lease renewal are independent and cannot replace each other. Configure MQTT Keep Alive separately according to the MQTT SDK and Broker being used.
 
-Request:
+### Request fields
+
+| Field | Required | Type | Description |
+| --- | --- | --- | --- |
+| type | ✔ | string | Fixed to `ping`. |
+| version | ✔ | string | Fixed to `v1`. |
+| msgId | ✔ | string | Request identifier. The response uses the same value. The length is 1–128 characters and may contain only letters, digits, `.`, `_`, `:`, `@`, or `-`. Use a new value for each logical operation; keep it unchanged when retrying the same operation. |
+| data | ✘ | null | Fixed to `null`. |
+
+### Request example
 
 ```json
 {
@@ -132,7 +143,20 @@ Request:
 }
 ```
 
-Response:
+### Response fields
+
+Receiving the matching `pong` confirms that the application message path from the client through the Broker to Studio and back is currently available. If no `pong` is received, check the MQTT connection and retry with the original `msgId`. If the idle period might have exceeded 90 seconds, subscribe again after the message path recovers.
+
+| Field | Type | Description |
+| --- | --- | --- |
+| type | string | Fixed to `pong`. |
+| version | string | Fixed to `v1`. |
+| msgId | string | Unique message identifier. A normal request and its response use the same msgId for correlation. Parsing failures, partial permission issues, or internal errors may return UNKNOWN. Server-initiated pushes are generated by the server and are not the same as the subscription request msgId. |
+| data | string | Fixed to `pong`. |
+| code | number | Response status code. 0 indicates success; a non-zero value indicates failure. |
+| message | string | Response message. |
+
+### Response example
 
 ```json
 {
@@ -144,8 +168,6 @@ Response:
   "message": "success"
 }
 ```
-
-Receiving the matching `pong` confirms that the application message path from the client through the Broker to Studio and back is currently available. If no `pong` is received, check the MQTT connection and retry with the original `msgId`. If the idle period might have exceeded 90 seconds, subscribe again after the message path recovers.
 
 ## Subscribe to device data
 
