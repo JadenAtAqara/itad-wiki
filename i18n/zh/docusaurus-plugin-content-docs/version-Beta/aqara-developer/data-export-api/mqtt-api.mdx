@@ -95,9 +95,19 @@ Topic 开头的 `/` 是名称的一部分，不能省略。
 
 具体参数请参考 [HTTP API 列表](./introduction.mdx#http-api-列表)。只有明确为 MQTT 启用的 HTTP 接口才能通过 MQTT 调用。
 
-## 心跳
+## 心跳与订阅续租
 
-客户端应在每 30 秒内至少发送一次心跳或其他请求。某个请求 Topic 连续 90 秒没有收到消息时，对应 MQTT 逻辑会话会过期，Studio 将清理该 `clientId` 的订阅。
+MQTT 协议自身的 Keep Alive 用于维护客户端与 Broker 之间的连接。通常由 MQTT SDK 自动发送 `PINGREQ` 并处理 `PINGRESP`，不需要应用为了保持 Broker 连接而额外发布下面的 JSON `ping`。
+
+本文的 `ping` 是 Studio 应用层的**逻辑订阅续租消息**，作用是告诉 Studio：该请求 Topic 对应的 `clientId` 仍在使用此前建立的数据订阅。请按以下规则使用：
+
+- 仅调用 OpenAPI、没有建立数据订阅的客户端，不需要周期性发送 `ping`。
+- 存在有效数据订阅时，发送到该 `clientId` 请求 Topic 的任意请求都会续期订阅；如果 30 秒内已经发送过其他请求，不需要再单独发送 `ping`。
+- 有效订阅处于空闲状态、没有其他请求可用于续期时，建议每 30 秒内发送一次 `ping`。
+- Studio 只根据请求 Topic 上收到的消息续期。客户端持续收到推送消息并不会自动续期订阅。
+- 请求 Topic 连续 90 秒没有收到任何消息时，逻辑会话会过期，Studio 将清理该 `clientId` 的全部订阅并停止相关推送。之后再次发送 `ping` 只会创建新的逻辑会话，不会恢复已经清理的订阅；客户端必须重新发送相应的订阅请求。
+
+MQTT Keep Alive 与 Studio 逻辑订阅续租相互独立，两者不能相互替代。客户端仍应根据所使用的 MQTT SDK 和 Broker 配置合适的 MQTT Keep Alive。
 
 请求：
 
@@ -122,6 +132,8 @@ Topic 开头的 `/` 是名称的一部分，不能省略。
   "message": "success"
 }
 ```
+
+收到对应的 `pong` 表示从客户端经过 Broker 到 Studio、再返回客户端的应用消息链路当前可用。若未收到 `pong`，客户端应先检查 MQTT 连接并保留原 `msgId` 重试；如果空闲时间可能已经超过 90 秒，应在链路恢复后重新订阅。
 
 ## 订阅设备数据
 

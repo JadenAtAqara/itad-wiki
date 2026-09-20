@@ -95,9 +95,19 @@ Use the endpoint's HTTP documentation to determine its `method`, `path`, query p
 
 See the [HTTP API list](./introduction.mdx#http-api-list) for endpoint parameter definitions. An HTTP endpoint is callable through MQTT only when it is enabled for the MQTT channel.
 
-## Heartbeat
+## Heartbeat and subscription lease renewal
 
-Send a heartbeat or another request at least once every 30 seconds. An MQTT logical session expires after 90 seconds without any message on its request topic; when it expires, Studio removes the subscriptions associated with that `clientId`.
+MQTT Keep Alive maintains the connection between an MQTT client and the Broker. The MQTT SDK normally sends `PINGREQ` packets and handles `PINGRESP` packets automatically. An application does not need to publish the JSON `ping` below merely to keep its Broker connection alive.
+
+The `ping` described here is a Studio application-level **logical subscription lease renewal message**. It tells Studio that the `clientId` associated with the request topic is still using its previously established data subscriptions. Apply the following rules:
+
+- A client that only calls OpenAPI endpoints and has not established a data subscription does not need to send periodic `ping` messages.
+- While a data subscription is active, any request received on that `clientId` request topic renews the subscription. If another request has been sent within the last 30 seconds, an additional `ping` is unnecessary.
+- When an active subscription is idle and there are no other requests to renew it, send a `ping` at least once every 30 seconds.
+- Studio renews the lease only from messages received on the request topic. Receiving push messages does not renew the subscription.
+- If Studio receives no message on the request topic for 90 consecutive seconds, the logical session expires. Studio removes all subscriptions for that `clientId` and stops their push messages. Sending `ping` after expiration creates a new logical session but does not restore removed subscriptions; the client must send the relevant subscription requests again.
+
+MQTT Keep Alive and Studio logical subscription lease renewal are independent and cannot replace each other. Configure MQTT Keep Alive separately according to the MQTT SDK and Broker being used.
 
 Request:
 
@@ -122,6 +132,8 @@ Response:
   "message": "success"
 }
 ```
+
+Receiving the matching `pong` confirms that the application message path from the client through the Broker to Studio and back is currently available. If no `pong` is received, check the MQTT connection and retry with the original `msgId`. If the idle period might have exceeded 90 seconds, subscribe again after the message path recovers.
 
 ## Subscribe to device data
 
