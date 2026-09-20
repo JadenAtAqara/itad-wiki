@@ -7,13 +7,11 @@ keywords: ["Aqara Docs", "Aqara Studio", "Data Export by MQTT"]
 
 You can use the built-in MQTT broker in Aqara Studio, or integrate your own MQTT broker, to forward device data to third-party platforms and query or control connected devices.
 
-:::tip
-This guide will show you how to connect to MQTT and send/receive messages using the MQTTX desktop app.
-:::
-
 ## What Can You Do with the Data Export by MQTT?
 
-With this feature, you can use all the interfaces listed in Data Export API v1 - API List.
+With the MQTT export feature, you can use an MQTT Broker to send request messages in a publish/subscribe manner and call the available Data Export HTTP APIs. You can also keep the connection alive with heartbeats, subscribe to or unsubscribe from device data, and receive device data changes and other object events. 
+
+For descriptions of the JSON objects in the above features' request and response bodies, see Aqara Developer [Studio Local Development - MQTT](./../aqara-developer/data-export-api/mqtt-api/mqtt-api.mdx).
 
 ## Install the plugin
 

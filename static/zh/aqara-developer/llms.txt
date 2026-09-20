@@ -10,8 +10,8 @@
 ## 侧边栏收录的全部文档
 - 概览: https://docs.aqara.com/zh/docs/aqara-developer/introduction
 - 数据转出 API 简介: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/introduction
-- 数据转出 API 入门: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/getting-started-with-the-data-export-api
-- 在线体验 API: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/try-api-online
+- HTTP API 入门: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/getting-started-with-the-data-export-api
+- 在线体验 HTTP API: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/try-api-online
 - 使用 Postman 调测: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/postman
 - Space: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/space
 - 查询空间列表: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-spaces
@@ -53,8 +53,8 @@
 - 查询单空间能耗趋势: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-ems-trend-space
 - 查询单设备能耗总量: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-ems-total-device
 - 查询单空间能耗总量: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-ems-total-space
-- WebSocket API Playground: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/websocket-api/websocket-api
-- MQTT API: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/mqtt-api
+- 在线体验 WebSocket API: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/websocket-api/websocket-api
+- MQTT: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/mqtt-api/mqtt-api
 - 集成红外遥控控制 SDK（含 UI）: https://docs.aqara.com/zh/docs/aqara-developer/local-studio-development/sdk/infrared/integration
 - 红外设备接入: https://docs.aqara.com/zh/docs/aqara-developer/local-studio-development/features/infrared-device-integration
 - AIOT API 简介: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/introduction

@@ -1,44 +1,71 @@
 ---
-id: mqtt-api
-title: "MQTT API"
+title: "MQTT"
 description: "Use the MQTT OpenAPI v1 topics to call Aqara Studio APIs and receive real-time push messages."
-sidebar_label: "MQTT API"
+sidebar_label: "MQTT"
 ---
 
 # MQTT API
 
-The MQTT channel lets a client call supported Aqara Studio OpenAPI endpoints and receive subscription push messages through an MQTT Broker. It uses the same API request parameters and response bodies as HTTP OpenAPI, and the same heartbeat, subscription, and push message formats as WebSocket v1.
+With the MQTT export feature, you can use an MQTT Broker to send request messages via publish/subscribe and call the [available data export HTTP APIs](#call-an-http-api). You can also implement heartbeat keep-alive, subscribe or unsubscribe to device data, and receive device data changes and other object events.
 
-:::info Legacy topic compatibility
-The configurable legacy request and response topics remain supported. Their payload format is unchanged and is independent of the fixed topics documented on this page. This page only describes the new MQTT OpenAPI v1 topics.
-:::
+## Obtain MQTT Connection Information
 
-## Before you begin
+Before you start publishing or subscribing to request messages, enable the MQTT Export service in Aqara Studio, select a local Broker or a third-party Broker, and obtain the MQTT connection information. For the related process, see [Data Export by MQTT](./../../../aqara-studio/data-export-by-mqtt.mdx).
 
-1. In Aqara Studio, go to **Settings > Developer > MQTT Export**.
-2. Select a local or third-party Broker, complete its connection settings, and enable MQTT Export.
-3. Connect your application to the same Broker with the Broker username and password, TLS, or client certificate configured for that Broker.
+## Authentication
 
-The MQTT channel does **not** use an OpenAPI Token and does not accept `AuthRequest`. Authentication and topic access are enforced by the Broker connection credentials and ACL.
+MQTT channel authentication and topic access are enforced by the Broker connection credentials and ACL. You do not need to provide an OpenAPI Token, nor need to send a `AuthRequest` message for authentication when using MQTT.
 
-For production deployments, configure the Broker ACL so that an application can only publish to its assigned request topic and subscribe to its assigned response topic. Do not grant an application access to `/open/api/v1/response/+`.
+For production deployments, you should configure the Broker ACL so that your application can only publish to its assigned request topic and subscribe to its assigned response topic. 
+
+Do not grant an application access to `/open/api/v1/response/+`.
 
 ## Topics
 
-| Direction | Topic | Purpose |
+| Topic Type | Direction | Format | Purpose |
+| --- | --- | --- | --- |
+| Request Topic | Application to Studio | `/open/api/v1/request/{clientId}` | API requests, heartbeat, subscribe, and unsubscribe messages |
+| Response Topic | Studio to application | `/open/api/v1/response/{clientId}` | API responses, subscription responses, push messages, and errors |
+
+:::tip
+The leading `/` in the request Topic and response Topic is part of the Topic name and must not be omitted.
+:::
+
+`clientId` identifies a third-party application's logical session and response route in the new MQTT channel. In the usual case, one MQTT connection represents one application, and the application should use the MQTT Client ID submitted in its `CONNECT` packet as the `{clientId}` in the topic.
+
+The `{clientId}` in the topic is not the Client ID configured for Aqara Studio under **MQTT Export**. Studio uses its own single MQTT connection to serve multiple third-party applications, so these two values should not be the same. The topic `{clientId}` may differ from an MQTT connection's Client ID only when a proxy uses one connection for multiple logical clients. In production, use the Broker ACL to restrict the request and response topics available to each application.
+
+`clientId` must contain 1–128 characters and may only contain letters, digits, `.`, `_`, `:`, and `-`.
+
+## Quality of Service
+
+Use QoS 1 for request publication and response subscription. 
+
+Subscribe to the response topic before publishing a request so that an immediate response is not missed.
+
+## Call an HTTP API
+
+To call the [following available data export HTTP APIs](./../introduction.mdx#http-api-list):
+- [Space-related APIs](./../introduction.mdx#space)
+- [Device-related APIs](./../introduction.mdx#device)
+- [Automation-related APIs](./../introduction.mdx#automation)
+
+Write and send a request message with `type` set to `OpenApiRequest`.
+
+### Request fields
+
+| Field | Required | Description |
 | --- | --- | --- |
-| Application to Studio | `/open/api/v1/request/{clientId}` | API requests, heartbeat, subscribe, and unsubscribe messages |
-| Studio to application | `/open/api/v1/response/{clientId}` | API responses, subscription responses, push messages, and errors |
+| `type` | Yes | Fixed value: `OpenApiRequest`. |
+| `version` | Yes | Fixed value: `v1`. |
+| `msgId` | Yes | Request identifier. The response uses the same value. It must contain 1–128 letters, digits, `.`, `_`, `:`, `@`, or `-`. Use a new value for each logical operation and keep it unchanged when retrying that operation. |
+| `data.method` | Yes | `GET`, `POST`, `PATCH`, or `DELETE`. |
+| `data.path` | Yes | An MQTT-enabled path under `/open/api/v1/`. Do not append a query string or fragment. |
+| `data.query` | No | Query parameters as an object. A value may be a string, number, boolean, or an array of those primitive values. |
+| `data.headers` | No | Optional OpenAPI metadata headers such as `Lang`. Do not include `Authorization` or Cookie headers. The routing `ClientId` is taken from the topic and cannot be overridden here. |
+| `data.body` | No | JSON request body. Omit it or use `null` when the endpoint has no body. |
 
-The leading `/` is part of the topic name and must not be omitted.
-
-`clientId` is the logical session and response-routing identifier. It can be different from the MQTT connection's physical Client ID. It must contain 1–128 characters and may only contain letters, digits, `.`, `_`, `:`, and `-`.
-
-Use QoS 1 for request publication and response subscription. Subscribe to the response topic before publishing a request so that an immediate response is not missed.
-
-## Call an OpenAPI endpoint
-
-Publish an `OpenApiRequest` JSON object to the request topic:
+### Request example
 
 ```json
 {
@@ -60,18 +87,7 @@ Publish an `OpenApiRequest` JSON object to the request topic:
 }
 ```
 
-### Request fields
-
-| Field | Required | Description |
-| --- | --- | --- |
-| `type` | Yes | Fixed value: `OpenApiRequest`. |
-| `version` | Yes | Fixed value: `v1`. |
-| `msgId` | Yes | Request identifier. The response uses the same value. It must contain 1–128 letters, digits, `.`, `_`, `:`, `@`, or `-`. Use a new value for each logical operation and keep it unchanged when retrying that operation. |
-| `data.method` | Yes | `GET`, `POST`, `PATCH`, or `DELETE`. |
-| `data.path` | Yes | An MQTT-enabled path under `/open/api/v1/`. Do not append a query string or fragment. |
-| `data.query` | No | Query parameters as an object. A value may be a string, number, boolean, or an array of those primitive values. |
-| `data.headers` | No | Optional OpenAPI metadata headers such as `Lang`. Do not include `Authorization` or Cookie headers. The routing `ClientId` is taken from the topic and cannot be overridden here. |
-| `data.body` | No | JSON request body. Omit it or use `null` when the endpoint has no body. |
+### Response example
 
 The response topic receives the standard HTTP OpenAPI response body directly, without an additional MQTT wrapper:
 
@@ -90,10 +106,6 @@ The response topic receives the standard HTTP OpenAPI response body directly, wi
   }
 }
 ```
-
-Use the endpoint's HTTP documentation to determine its `method`, `path`, query parameters, request body, and response data. MQTT currently exposes the enabled space, device, and automation APIs. Authentication, Token management, file transfer, Studio diagnostics, Cloud binding, MCP, and internal management endpoints are not available through MQTT.
-
-See the [HTTP API list](./introduction.mdx#http-api-list) for endpoint parameter definitions. An HTTP endpoint is callable through MQTT only when it is enabled for the MQTT channel.
 
 ## Heartbeat and subscription lease renewal
 
