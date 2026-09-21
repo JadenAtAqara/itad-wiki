@@ -173,22 +173,123 @@ MQTT Keep Alive 与 Studio 逻辑订阅续租相互独立，两者不能相互�
 
 ### 订阅全部或指定设备
 
-使用 `SubscribeAllRequest`。`data` 为 `null`、省略或空数组时，订阅当前可访问的全部设备；传非空设备 ID 数组时，只订阅指定设备。
+如需订阅全部或指定设备的数据时，发送 `type` 为 `SubscribeAllRequest` 的请求消息。相关请求字段和响应字段说明见下文。
+
+`SubscribeAllRequest` 会替换当前会话的 Trait 单项订阅。
+
+#### 请求字段
+
+| 字段 | 必填 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| type | ✔ | string | 固定为 `SubscribeAllRequest`。 |
+| version | ✔ | string | 固定为 `v1`。 |
+| msgId | ✔ | string | 请求标识，响应使用相同的值。长度为 1～128 个字符，只能包含字母、数字、`.`、`_`、`:`、`@` 或 `-`。每个逻辑操作使用一个新值；重试同一操作时保持不变。 |
+| data | ✘ | array | 设备 ID 数组。当此字段被省略、为 `null` 或空数组时，表示订阅当前可访问的全部设备的数据；当此字段非空，为非空设备 ID 数组时，表示只订阅指定设备的数据。 |
+
+#### 请求示例
 
 ```json
 {
   "type": "SubscribeAllRequest",
   "version": "v1",
-  "msgId": "subscribe-devices-001",
-  "data": ["device-001", "device-002"]
+  "msgId": "1789909097657_777ov8",
+  "data": null
 }
 ```
 
-Studio 返回 `SubscribeAllResponse`。取消订阅时发送 `UnsubscribeAllRequest`：传设备 ID 数组可取消指定设备，`data` 为 `null` 或空数组时取消当前逻辑会话的全部设备数据订阅。
+#### 响应字段
 
-`SubscribeAllRequest` 会替换当前会话的 Trait 单项订阅。`UnsubscribeAllRequest` 只修改设备数据和 Trait 订阅；独立事件及对象事件必须使用各自的取消订阅消息。
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| type | string | 固定为 `SubscribeAllResponse`。 |
+| version | string | 固定为 `v1`。 |
+| msgId | string | 消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。非空，且长度不超过 64 个字符。 |
+| data | string | 默认值为空。 |
+| code | number | 必填。处理结果码，0 表示成功，非 0 表示失败。 |
+| message | string | 处理结果描述。 |
+
+#### 响应示例
+
+```json
+{
+  "type": "SubscribeAllResponse",
+  "version": "v1",
+  "msgId": "1789909303093_0jwcut",
+  "data": "",
+  "code": 0,
+  "message": ""
+}
+```
+
+
+### 取消订阅全部或指定设备
+
+如需取消订阅全部或指定设备的数据时，发送 `type` 为 `UnsubscribeAllRequest` 的请求消息。相关请求字段和响应字段说明见下文。
+
+`UnsubscribeAllRequest` 只修改设备数据和 Trait 订阅；独立事件及对象事件必须使用各自的取消订阅消息。
+
+#### 请求字段
+
+| 字段 | 必填 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| type | ✔ | string | 固定为 `UnsubscribeAllRequest`。 |
+| version | ✔ | string | 固定为 `v1`。 |
+| msgId | ✔ | string | 消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。非空，且长度不超过 64 个字符。 |
+| data | ✘ | string[] \| null | 设备 ID 列表。省略、为 `null` 或空数组时，表示取消全部设备数据订阅；非空时，表示仅取消指定设备的数据订阅。默认值为 `null`。<br />若此前已订阅全部设备数据，则仅取消部分设备不会生效，需传空值取消全部订阅。<br />同一连接内，`UnsubscribeAllRequest` 会同时清理此前通过 `SubscribeTraitValueRequest` 建立的 Trait 订阅。<br />按特定设备取消订阅只取消设备级订阅，不等同于关闭当前连接的全部推送。 |
+
+#### 请求示例
+
+```json
+{
+  "type": "UnsubscribeAllRequest",
+  "version": "v1",
+  "msgId": "1789909759573_4ozfm7",
+  "data": null
+}
+```
+
+#### 响应字段
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| type | string | 固定为 `UnsubscribeAllResponse`。 |
+| version | string | 固定为 `v1`。 |
+| msgId | string | 消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。非空，且长度不超过 64 个字符。 |
+| data | string | 默认为空。 |
+| code | number | 处理结果码，0 表示成功，非 0 表示失败。 |
+| message | string | 处理结果描述。 |
+
+#### 响应示例
+
+```json
+{
+  "type": "UnsubscribeAllResponse",
+  "version": "v1",
+  "msgId": "1789909884409_ln6tck",
+  "data": "",
+  "code": 0,
+  "message": ""
+}
+```
 
 ### 订阅指定 Trait 值
+
+如需订阅指定 Trait 值时，发送 `type` 为 `SubscribeTraitValueRequest` 的请求消息。相关请求字段和响应字段说明见下文。
+
+#### 请求字段
+
+| 字段 | 必填 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| type | ✔ | string | 固定为 `SubscribeTraitValueRequest`。 |
+| version | ✔ | string | 固定为 `v1`。 |
+| msgId | ✔ | string | 消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。非空，且长度不超过 64 个字符。 |
+| data | ✔ | object[] | 需要订阅的 Trait 列表。建议传非空数组；省略 data 会解析失败。当前实现对空数组或 traitCodes 为空数组仍可能返回成功响应，但不会创建有效的 TraitValueUpdate 订阅。 |
+| data[].deviceId | ✔ | string | 设备 ID。 |
+| data[].endpointId | ✔ | int32 | 端点 ID。 |
+| data[].functionCode | ✔ | string | 功能代码。 |
+| data[].traitCodes | ✔ | string[] | Trait 功能点代码列表。建议传非空数组；为空数组时不会创建或取消具体 Trait 订阅，但当前实现仍可能返回成功响应。 |
+
+#### 请求示例
 
 ```json
 {
@@ -206,58 +307,117 @@ Studio 返回 `SubscribeAllResponse`。取消订阅时发送 `UnsubscribeAllRequ
 }
 ```
 
-Studio 返回 `SubscribeTraitValueResponse`。取消指定 Trait 订阅时，使用相同的订阅项结构并将类型改为 `UnsubscribeTraitValueRequest`。订阅或取消订阅成功时 `code` 为 `0`，响应不包含 Trait 当前值。
+#### 响应字段
 
-## 订阅事件
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| type | string | 固定为 `SubscribeTraitValueResponse`。 |
+| version | string | 固定为 `v1`。 |
+| msgId | string | 消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。非空，且长度不超过 64 个字符。 |
+| data | string| 默认值为空。 |
+| code | int32 | 处理结果码，0 表示成功，非 0 表示失败。 |
+| message | string | 处理结果描述。可为 `null`。 |
 
-### 告警事件
-
-独立事件通道当前支持 `ALARM`：
+#### 响应示例
 
 ```json
 {
-  "type": "SubscribeEventRequest",
+  "type": "SubscribeTraitValueResponse",
   "version": "v1",
-  "msgId": "subscribe-alarm-001",
-  "data": ["ALARM"]
+  "msgId": "1789957892004_ownm4j",
+  "data": "",
+  "code": 0,
+  "message": ""
 }
 ```
 
-Studio 返回 `SubscribeEventResponse`。取消时发送 `UnsubscribeEventRequest`，并使用 `data: ["ALARM"]`。
+### 取消订阅指定 Trait 值
 
-### 对象事件
+如需取消订阅指定 Trait 值时，发送 `type` 为 `UnsubscribeTraitValueRequest` 的请求消息。相关请求字段和响应字段说明见下文。
 
-设备、空间及自动化变化通过对象事件订阅。`objectIds` 省略、为 `null` 或空集合时，表示订阅指定事件类型下当前可访问的全部对象。
+#### 请求字段
+
+| 字段 | 必填 | 类型 | 说明 |
+| --- | --- | --- | --- |
+| type | ✔ | string | 固定为 `UnsubscribeTraitValueRequest`。 |
+| version | ✔ | string | 固定为 `v1`。 |
+| msgId | ✔ | string | 消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。非空，且长度不超过 64 个字符。 |
+| data | ✘ | object[] | 需要取消订阅的 Trait 列表。建议传非空数组。省略 data、传空数组或 traitCodes 为空数组不会取消任何 Trait 订阅，但当前实现仍可能返回成功响应。 |
+| data[].deviceId | ✔ | string | 设备 ID。 |
+| data[].endpointId | ✔ | int32 | 端点 ID。 |
+| data[].functionCode | ✔ | string | 功能代码。 |
+| data[].traitCodes | ✔ | string[] | Trait 功能点代码列表。建议传非空数组；为空数组时不会创建或取消具体 Trait 订阅，但当前实现仍可能返回成功响应。 |
+
+#### 请求示例
 
 ```json
 {
-  "type": "SubscribeObjectEventRequest",
+  "type": "UnsubscribeTraitValueRequest",
   "version": "v1",
-  "msgId": "subscribe-object-001",
+  "msgId": "1789960932713_6yexkw",
   "data": [
     {
-      "eventTypes": ["SPACE_UPDATED", "AUTOMATION_UPDATED"],
-      "objectIds": []
+      "deviceId": "lumi3.86108040f2b03a4e",
+      "endpointId": 2,
+      "functionCode": "Speaker",
+      "traitCodes": [
+        "Volume"
+      ]
     }
-  ]
+  ]  
 }
 ```
 
-Studio 返回 `SubscribeObjectEventResponse`。取消时发送 `UnsubscribeObjectEventRequest`，订阅项结构保持一致；`objectIds` 为空时，会移除指定事件类型下的全部对象规则。
+#### 响应字段
 
-`SubscribeObjectEventRequest` 接受以下事件类型：
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| type | string | 固定为 `UnsubscribeTraitValueResponse`。 |
+| version | string | 固定为 `v1`。 |
+| msgId | string | 消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。非空，且长度不超过 64 个字符。 |
+| data | string | 默认值为空。 |
+| code | int32 | 处理结果码，0 表示成功，非 0 表示失败。 |
+| message | string | 处理结果描述。可为 `null`。 |
 
-- 设备空间关系：`DEVICE_SPACE_UPDATED`
-- 空间：`SPACE_ADDED`、`SPACE_REMOVED`、`SPACE_UPDATED`
-- 自动化：`AUTOMATION_ADDED`、`AUTOMATION_REMOVED`、`AUTOMATION_UPDATED`、`AUTOMATION_SPACE_UPDATED`
+#### 响应示例
 
-`objectIds` 非空时，同一个订阅项内的全部 `eventTypes` 必须属于同一对象类别；新增类事件只能订阅全部可访问对象。
+```json
+{
+    "type": "UnsubscribeTraitValueResponse",
+    "version": "v1",
+    "msgId": "1789961117378_xd3ov7",
+    "data": "",
+    "code": 0,
+    "message": ""
+}
+```
 
-## 推送消息
+## 接收推送消息
 
 所有推送均发布到 `/open/api/v1/response/{clientId}`。
 
 ### Trait 值变化
+
+当您 [订阅设备数据](#订阅全部或指定设备) 或 [订阅指定 Trait 值](#订阅指定-trait-值) 后，只要目标 Trait 值发生变化，Aqara Studio 就会推送 `TraitValueUpdate` 消息。
+
+#### 字段说明
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| type | string | 固定为 `TraitValueUpdate`。 |
+| version | string | 固定为 `v1`。 |
+| msgId | string | 消息唯一标识。由 Aqara Studio 生成，不对应某条订阅请求。 |
+| data | object[] | Trait 值变化数组。 |
+| data[].deviceId | string | 设备 ID。 |
+| data[].endpointId | int32 | 端点 ID。 |
+| data[].functionCode | string | 功能代码。 |
+| data[].traitCode | string | Trait 功能点代码。 |
+| data[].value | — | Trait 功能点值，类型由具体功能点定义决定。 |
+| data[].time | int64 | 上报时间，毫秒级 Unix 时间戳。 |
+| code | int32 | 处理结果码，0 表示成功，非 0 表示失败。 |
+| message | string | 处理结果描述。可为 `null`。 |
+
+#### 示例
 
 ```json
 {
@@ -279,23 +439,54 @@ Studio 返回 `SubscribeObjectEventResponse`。取消时发送 `UnsubscribeObjec
 }
 ```
 
-`value` 的类型由对应 Trait 定义决定，`time` 是毫秒级 Unix 时间戳。
-
 ### 对象事件
+
+当您 [订阅了设备数据](#订阅全部或指定设备) 或 [订阅了指定 Trait 值](#订阅指定-trait-值) 时，只要目标设备发生增减、端点发生增减或目标 Trait 的参数发生变化，就会收到 `objectEvent` 类型的推送消息。具体事件类型包括：
+- `DEVICE_ADDED`：设备新增。
+- `DEVICE_REMOVED`：设备移除。
+- `DEVICE_ENDPOINT_ADDED`：端点新增。
+- `DEVICE_ENDPOINT_REMOVED`：端点移除。
+- `DEVICE_TRAIT_PARAMETER_UPDATE`：Trait 参数更新。
+
+因此，当您收到此事件推送后，应该先根据 `eventType` 和 `objectId` 分发事件，再解析 `data.data` 内的具体数据结构。
+
+#### 字段说明
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| type | string | 必填。固定为 `objectEvent`。 |
+| version | string | 必填。固定为 `v1`。 |
+| msgId | string | 消息唯一标识。由 Aqara Studio 生成，不对应某条订阅请求。 |
+| data | object | 必填。对象事件数据。 |
+| data.eventType | string | 必填。对象事件类型。可能值为 `DEVICE_ADDED`、`DEVICE_REMOVED`、`DEVICE_ENDPOINT_ADDED`、`DEVICE_ENDPOINT_REMOVED`、`DEVICE_TRAIT_PARAMETER_UPDATE`。 |
+| data.objectId | string | 必填。对象 ID，设备事件场景通常为设备 ID。 |
+| data.time | int64 | 必填。事件发生时间戳，单位毫秒。 |
+| data.data | object | 可为 `null`。根据 `eventType` 判断具体结构。 |
+| data.data.* | any | 可为 `null`。属性名不固定，根据 `eventType` 判断具体结构。 |
+| code | int32 | 必填。处理结果码，0 表示成功，非 0 表示失败。 |
+| message | string | 必填，可为 `null`。处理结果描述。 |
 
 ```json
 {
   "type": "objectEvent",
   "version": "v1",
-  "msgId": "object-event-001",
+  "msgId": "1789961719076_fneua4",
   "data": {
-    "eventType": "SPACE_UPDATED",
-    "objectId": "space-001",
+    "eventType": "DEVICE_ADDED",
+    "objectId": "14d3b91",
     "time": 1754469720110,
     "data": {
-      "spaceId": "space-001",
-      "name": "客厅",
-      "spatialMarking": "room"
+      "deviceId": "14d3b91",
+      "name": "",
+      "deviceTypesList": [
+        "Light"
+      ],
+      "endpointIds": [
+        0,
+        2,
+        3
+      ],
+      "time": 1754469720110
     }
   },
   "code": 0,
@@ -303,38 +494,23 @@ Studio 返回 `SubscribeObjectEventResponse`。取消时发送 `UnsubscribeObjec
 }
 ```
 
-内层 `data.data` 的结构由 `eventType` 决定。建议先根据 `eventType` 和 `objectId` 分发事件，再解析对应事件的数据内容。
 
-设备数据订阅还可能收到 `DEVICE_ADDED`、`DEVICE_REMOVED`、`DEVICE_ENDPOINT_ADDED`、`DEVICE_ENDPOINT_REMOVED` 或 `DEVICE_TRAIT_PARAMETER_UPDATE` 类型的 `objectEvent` 推送。这些设备事件由 `SubscribeAllRequest` 或匹配的 Trait 订阅产生，不能用于 `SubscribeObjectEventRequest`。
-
-### 告警事件
-
-```json
-{
-  "type": "AlarmEvent",
-  "version": "v1",
-  "msgId": "alarm-notify-alarm-001",
-  "data": {
-    "uuid": "alarm-001",
-    "deviceName": "漏水传感器",
-    "deviceId": "device-001",
-    "devicePointName": "漏水状态",
-    "alarmClass": "critical",
-    "alarmRuleName": "漏水告警",
-    "alarmText": "检测到漏水",
-    "alarmValue": "true",
-    "sourceState": "active",
-    "alarmTime": 1754469720110,
-    "localized": {}
-  },
-  "code": 0,
-  "message": "success"
-}
-```
 
 ### 错误响应
 
-消息格式错误、消息类型不支持、路由未开放或业务处理失败时，返回 `ErrorMessage`：
+当请求消息格式错误、请求消息类型不适用、路由未开放或业务处理失败时，您会收到一条 `type` 为 `ErrorMessage` 的推送消息，相关字段说明见下文。
+
+#### 字段说明
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| type | string | 固定为 `ErrorMessage`。 |
+| version | string | 固定为 `v1`。 |
+| msgId | string | 消息唯一标识。由 Aqara Studio 生成，不对应某条订阅请求。 |
+| data | object | 可为 `null`。 |
+| code | int32 | 错误码。 |
+| message | string | 错误原因描述。 |
+
+#### 示例
 
 ```json
 {
@@ -347,7 +523,6 @@ Studio 返回 `SubscribeObjectEventResponse`。取消时发送 `UnsubscribeObjec
 }
 ```
 
-请求响应必须通过 `msgId` 关联，并根据 `code` 判断是否成功。推送消息的 `msgId` 由 Studio 生成，不对应某条订阅请求。
 
 ## 投递与重试规则
 
