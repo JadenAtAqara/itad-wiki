@@ -6,7 +6,7 @@ sidebar_label: "MQTT"
 
 # MQTT API
 
-With the MQTT export feature, you can use an MQTT Broker to send request messages via publish/subscribe and call the [available data export HTTP APIs](#call-an-http-api). You can also implement [heartbeat keep-alive](#heartbeat-and-subscription-lease-renewal), [subscribe or unsubscribe to device data](#subscribe-to-device-data), and [receive device data changes and other object events](#subscribe-to-events).
+With the MQTT export feature, you can use an MQTT Broker to send request messages via publish/subscribe and call the [available data export HTTP APIs](#call-an-http-api). You can also implement [heartbeat keep-alive](#heartbeat-and-subscription-lease-renewal), [subscribe or unsubscribe to device data](#subscribe-to-device-data), and receive device data changes and other object events.
 
 ## Obtain MQTT Connection Information
 
@@ -170,6 +170,8 @@ Receiving the matching `pong` confirms that the application message path from th
 ```
 
 ## Subscribe to device data
+
+### Subscribe to all or specific devices
 
 To subscribe to data for all devices or for specified devices, send a request message with `type` set to `SubscribeAllRequest`. The related request and response fields are described below.
 
@@ -397,7 +399,7 @@ All push messages are published to `/open/api/v1/response/{clientId}`.
 
 ### Trait value update
 
-After you [subscribe to device data](#subscribe-to-all-or-specific-devices) or [subscribe to specific Trait values](#subscribe-to-specific-trait-value), Aqara Studio will push a `TraitValueUpdate` message whenever the target Trait value changes.
+After you [subscribe to device data](#subscribe-to-all-or-specific-devices) or [subscribe to specific Trait values](#subscribe-to-selected-trait-values), Aqara Studio will push a `TraitValueUpdate` message whenever the target Trait value changes.
 
 #### Field Descriptions
 
@@ -442,7 +444,7 @@ The value type is defined by the corresponding Trait. `time` is a Unix timestamp
 
 ### Object event
 
-When you [subscribe to device data](#subscribe-to-all-or-specific-devices) or [subscribe to specific Trait values](#subscribe-to-specific-trait-value), you will receive push messages of type `objectEvent` whenever the targeted device is added or removed, endpoints are added or removed, or the parameters of the target Trait are changed. The specific event types include:
+When you [subscribe to device data](#subscribe-to-all-or-specific-devices) or [subscribe to specific Trait values](#subscribe-to-selected-trait-values), you will receive push messages of type `objectEvent` whenever the targeted device is added or removed, endpoints are added or removed, or the parameters of the target Trait are changed. The specific event types include:
 - `DEVICE_ADDED`: Device added.
 - `DEVICE_REMOVED`: Device removed.
 - `DEVICE_ENDPOINT_ADDED`: Endpoint added.
