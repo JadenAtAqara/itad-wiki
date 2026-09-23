@@ -1,0 +1,71 @@
+---
+id: update-resource
+title: "修改已知资源属性"
+description: "仅允许修改资源定义和运行时 Schema 同时声明为可写的字段；全部字段校验通过后才开始写入，失败时尝试回滚。敏感字段可以按动态 Schema 写入，但成功响应不会回显请求值或历史值。"
+sidebar_label: "修改已知资源属性"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "post api-method"
+info_path: i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-developer/data-export-api/data-export-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"修改已知资源属性"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/resources/{id}"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+仅允许修改资源定义和运行时 Schema 同时声明为可写的字段；全部字段校验通过后才开始写入，失败时尝试回滚。敏感字段可以按动态 Schema 写入，但成功响应不会回显请求值或历史值。
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[{"name":"id","in":"path","required":true,"description":"全局唯一资源 ID；普通资源和协议资源均使用接口返回的 id 原样传入","schema":{"type":"string"}}]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["properties"],"properties":{"properties":{"type":"object","minProperties":1,"additionalProperties":true,"description":"待修改的白名单字段，使用普通 JSON 标量"}},"title":"ResourceUpdateRequest"}}}}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"成功","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","required":["data"],"properties":{"data":{"type":"object","description":"sequence 资源在列表和详情中将可解析的历史效果转换为 properties.data.type=commands。\n无法解析时保留 ID、名称、revision、绑定及原始 format，返回\nproperties.data={\"type\":\"unavailable\",\"reason\":\"Effect data cannot be represented as commands\"}，\n不返回步骤 commands 或原始协议字节，不修改存储。unavailable 资源禁止属性更新、assign 和 retry。\n用户配置仍可解绑，无绑定时可删除；仅绑定为 SYNCED 且 syncedRevision=revision 时可启动。\n资源顶层 commands 是允许的操作名称，与 properties.data.commands 效果步骤不同。\ncreate/preview 只接受 commands 数据，不接受 unavailable。\nsequence 的 assign 输入仅接受 deviceId，始终分配最新版本；传入 revision（包括 null）会被拒绝。\n","required":["id","type","properties"],"properties":{"id":{"type":"string"},"type":{"type":"string"},"protocolId":{"type":"string","description":"协议资源返回；普通 ANode 资源不返回"},"properties":{"type":"object","additionalProperties":true,"description":"对外属性值集合；值使用普通 JSON 标量或业务对象，不返回 Studio 内部 path/type/value 包装，也不包含动态 Schema 标记为 writeOnly 的敏感配置"},"schema":{"type":"object","additionalProperties":true,"description":"按 ID 读取协议资源时返回的动态配置 Schema；敏感字段标记 sensitive=true、writeOnly=true、readable=false"},"health":{"type":"object","required":["status"],"properties":{"status":{"type":"string","enum":["healthy","disabled","fault","down","stale","null","alarm","overridden","unackedAlarm","unknown"],"description":"根据 Studio 当前 enabled、status、faultCause 归一化的只读状态；不主动探测设备"},"enabled":{"type":"boolean"},"faultCause":{"type":"string"}},"title":"ResourceHealth"}},"title":"ResourceItem"}}}],"title":"ResourceResponse"}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 xxx 不能为空"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"token 已过期，请重新生成 token"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"无权限访问该资源"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"资源不存在"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"服务内部异常"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      

@@ -45,9 +45,25 @@ Whether you are managing devices or building automation scenarios, the Data Expo
 | [Query Trait Values](./get-trait-values.api.mdx) | /open/api/v1/devices/trait/read | POST |
 | [Control Devices by Commands](./execute-device-command.api.mdx) | /open/api/v1/devices/command/execute | POST |
 | [Send Command to Device and Wait for Response](./execute-device-command-await.api.mdx) | /open/api/v1/devices/command/execute/await | POST |
+| [Batch Query Device Point Information](./query-device-point-info.api.mdx) | /open/api/v1/devices/points/info | POST |
+| [Update Device Name](./update-device-name.api.mdx) | /open/api/v1/devices/name | POST |
+| [Update Device Point Name](./update-device-point-name.api.mdx) | /open/api/v1/devices/points/name | POST |
 | [Delete A Function](./delete-device-point.api.mdx) | /open/api/v1/devices/points/delete | POST |
 | [Add A Virtual Device](./add-virtual-device.api.mdx) | /open/api/v1/virtual-devices | POST |
+| [Bind Source Device Function Points](./bind-virtual-device-points.api.mdx) | /open/api/v1/virtual-devices/points/bind | POST |
+| [Unbind Source Device Function Points](./unbind-virtual-device-points.api.mdx) | /open/api/v1/virtual-devices/points/unbind | POST |
 | [Unbind A Device](./unbind-device.api.mdx) | /open/api/v1/devices/unbind | POST |
+
+### Resource
+
+| Name | API Endpoint | HTTP Method |
+| --- | --- | --- |
+| [Query Open Resource Type Directory](./list-resource-types.api.mdx) | /open/api/v1/resource-types | GET |
+| [Query Resource Type Definition](./describe-resource-type.api.mdx) | /open/api/v1/resource-types/\<type\> | GET |
+| [Paginated Query Resource](./query-resources.api.mdx) | /open/api/v1/resource-types/\<type\>/resources | GET |
+| [Read Known Resource](./get-resource.api.mdx) | /open/api/v1/resources/\<id\> | GET |
+| [Modify Known Resource Properties](./update-resource.api.mdx) | /open/api/v1/resources/\<id\> | POST |
+| [Execute Resource Command](./execute-resource-action.api.mdx) | /open/api/v1/actions/\<command\> | POST |
 
 ### Automation
 
@@ -64,6 +80,21 @@ Whether you are managing devices or building automation scenarios, the Data Expo
 | [Get Manual Trigger List](./query-automation-manual-trigger-list.api.mdx) | /open/api/v1/automations/manual-triggers | GET |
 | [Execute Manual Trigger](./execute-automation-manual-trigger.api.mdx) | /open/api/v1/automations/manual-triggers/execute | POST |
 
+### Firmware
+
+| Name | API Endpoint | HTTP Method |
+| --- | --- | --- |
+| [Query Upgradable Device Firmware by Device IDs](./search-upgradable-devices-firmware-by-device-ids.api.mdx) | /open/api/v1/firmware/upgradable-devices/search-by-device-ids | POST |
+| [Initiate Firmware Upgrade](./upgrade-firmware.api.mdx) | /open/api/v1/firmware/upgrade | POST |
+| [Query Firmware Upgrade Progress and Result](./search-firmware-upgrade-status.api.mdx) | /open/api/v1/firmware/upgrade/status/search | POST |
+| [Cancel firmware upgrade](./cancel-upgrade-firmware.api.mdx) | /open/api/v1/firmware/upgrade/cancel | POST |
+
+### History
+
+| Name | API Endpoint | HTTP Method |
+| --- | --- | --- |
+| [Query Device Point Value Change History](./query-device-point-history.api.mdx) | /open/api/v1/history/device-point-values/query | POST |
+
 ### Studio 
 
 | Name | API Endpoint | HTTP Method |
@@ -78,7 +109,19 @@ Whether you are managing devices or building automation scenarios, the Data Expo
 | [Get Energy Consumption Trend of a Space](./get-ems-trend-space.api.mdx) | /open/api/v1/ems/trend/space | POST |
 | [Get Energy Consumption of a Device](./get-ems-total-device.api.mdx) | /open/api/v1/ems/total/device | POST |
 | [Query Energy Consumption for a Space](./get-ems-total-space.api.mdx) | /open/api/v1/ems/total/space | POST |
+| [Query Space Energy Consumption Summary](./get-ems-summary-space.api.mdx) | /open/api/v1/ems/summary/space | POST |
+| [Query Multi-Device Energy Consumption Summary](./get-ems-summary-devices.api.mdx) | /open/api/v1/ems/summary/devices | POST |
 
+### Alarm
+
+| Name | API Endpoint | HTTP Method |
+| --- | --- | --- |
+| [Query Alarm List](./get-alarms.api.mdx) | /open/api/v1/alarms | GET |
+| [Delete Single Alarm](./delete-alarm.api.mdx) | /open/api/v1/alarms/delete | POST |
+| [Clear All Alarms](./clear-alarms.api.mdx) | /open/api/v1/alarms/clear | POST |
+| [Batch Acknowledge Alarms by UUID](./ack-alarms.api.mdx) | /open/api/v1/alarms/ack | POST |
+| [Batch Acknowledge Alarms by Point ID](./ack-alarms-by-point-id.api.mdx) | /open/api/v1/alarms/ack-by-pointId | POST |
+| [Query Alarm Rule List](./get-alarm-rules.api.mdx) | /open/api/v1/alarm-rules | GET |
 
 ## WebSocket API
 

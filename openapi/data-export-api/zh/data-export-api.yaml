@@ -37,12 +37,20 @@ tags:
     description: 设备查询、属性读写与命令执行接口
   - name: Gateway
     description: 网关相关接口
+  - name: Resource
+    description: Studio ANode 白名单资源目录、查询、读取和安全修改接口。
   - name: Automation
     description: 自动化创建、编辑、查询、删除与能力查询接口
+  - name: Firmware
+    description: 固件查询与升级相关接口
+  - name: History
+    description: 设备点位值变化历史查询接口
   - name: Studio
     description: Studio 统计信息查询接口
   - name: EMS
     description: 能源管理接口（能耗趋势查询、能耗总量查询）
+  - name: Alarm
+    description: 告警列表、确认与告警规则查询接口
 
 paths:
 
@@ -892,6 +900,135 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
 
+  # 批量查询设备点位信息
+  /devices/points/info:
+    post:
+      tags: [Device]
+      summary: 批量查询设备点位信息
+      description: 按 deviceId、endpointId、functionCode 和 traitCode/commandCode 查询点位所属空间、设备名称、点位名称等信息。
+      operationId: queryDevicePointInfo
+      x-skill-intent: device.point.info
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryDevicePointInfoRequest'
+            example:
+              data:
+                - deviceId: "device-001"
+                  endpointId: 1
+                  functionCode: "Output"
+                  traitCode: "OnOff"
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryDevicePointInfoResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # 修改设备名称
+  /devices/name:
+    post:
+      tags: [Device]
+      summary: 修改设备名称
+      description: 根据设备ID修改设备名称。
+      operationId: updateDeviceName
+      x-skill-intent: device.name.update
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: update
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDeviceNameRequest'
+            example:
+              deviceId: "device-001"
+              name: "客厅主灯"
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateDeviceNameResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # 修改设备点位名称
+  /devices/points/name:
+    post:
+      tags: [Device]
+      summary: 修改设备点位名称
+      description: 修改设备 trait 或 command 点位名称；traitCode 与 commandCode 必须且只能传一个。
+      operationId: updateDevicePointName
+      x-skill-intent: device.point.name.update
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: update
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDevicePointNameRequest'
+            example:
+              deviceId: "device-001"
+              endpointId: 1
+              functionCode: "Output"
+              traitCode: "OnOff"
+              pointName: "主灯开关"
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateDevicePointNameResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
   # ────────────────────────────────────────────────────────────────
   # 删除设备点位
   # ────────────────────────────────────────────────────────────────
@@ -954,7 +1091,11 @@ paths:
     post:
       tags: [Device]
       summary: 添加虚拟设备
-      description: 添加一个红外类型或灯箱类型的虚拟设备。
+      description:  |
+        添加虚拟设备，当前支持三种类型：
+        - `ir`：红外虚拟设备
+        - `lightbox`：灯箱虚拟设备
+        - `virtual`：虚拟自定义设备
       operationId: addVirtualDevice
       x-skill-intent: device.virtual.add
       x-idempotent: false
@@ -976,6 +1117,10 @@ paths:
                 value:
                   name: "Living Room Lightbox"
                   virtualDeviceType: lightbox
+              addCustomVirtualDevice:
+                value:
+                  name: "Living Room Custom Virtual Device"
+                  virtualDeviceType: virtual
       responses:
         '200':
           description: 成功
@@ -992,7 +1137,131 @@ paths:
                     code: 0
                     message: success
                     data:
-                      deviceId: "virtual-device-001"
+                      deviceId: "virtual.device-001"
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+
+  # ────────────────────────────────────────────────────────────────
+  # 绑定源设备功能点
+  # ────────────────────────────────────────────────────────────────
+  /virtual-devices/points/bind:
+    post:
+      tags: [Device]
+      summary: 绑定源设备功能点
+      description: |
+        将源设备功能点绑定到虚拟自定义设备。`deviceId` 为虚拟自定义设备 ID，
+        `sourcePoints` 中每一项使用开放协议定位源功能点，且 `traitCode` 与 `commandCode` 必须二选一。
+      operationId: bindVirtualDevicePoints
+      x-skill-intent: device.virtual.points.bind
+      x-idempotent: false
+      x-retryable: conditional
+      x-side-effects: device_point_bind
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VirtualDeviceBindPointsRequest'
+            examples:
+              bindTraitPoint:
+                summary: 绑定源设备属性点
+                value:
+                  deviceId: "virtual.device-001"
+                  sourcePoints:
+                    - deviceId: "lumi.source-001"
+                      endpointId: 1
+                      functionCode: "OnOff"
+                      traitCode: "OnOff"
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualDeviceBindPointsResponse'
+              examples:
+                bindVirtualDevicePointsSuccess:
+                  value:
+                    type: VirtualDeviceBindPointsResponse
+                    version: v1
+                    msgId: "1751609244331"
+                    code: 0
+                    message: success
+                    data: ""
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 解绑源设备功能点
+  # ────────────────────────────────────────────────────────────────
+  /virtual-devices/points/unbind:
+    post:
+      tags: [Device]
+      summary: 解绑源设备功能点
+      description: |
+        从虚拟自定义设备解绑源设备功能点，不影响源设备本身。
+        `deviceId` 为虚拟自定义设备 ID，`sourcePoints` 定位已绑定的源功能点，
+        且 `traitCode` 与 `commandCode` 必须二选一。
+      operationId: unbindVirtualDevicePoints
+      x-skill-intent: device.virtual.points.unbind
+      x-idempotent: true
+      x-retryable: conditional
+      x-side-effects: device_point_unbind
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VirtualDeviceBindPointsRequest'
+            examples:
+              unbindTraitPoint:
+                summary: 解绑源设备属性点
+                value:
+                  deviceId: "virtual.device-001"
+                  sourcePoints:
+                    - deviceId: "lumi.source-001"
+                      endpointId: 1
+                      functionCode: "OnOff"
+                      traitCode: "OnOff"
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualDeviceUnbindPointsResponse'
+              examples:
+                unbindVirtualDevicePointsSuccess:
+                  value:
+                    type: VirtualDeviceUnbindPointsResponse
+                    version: v1
+                    msgId: "1751609244332"
+                    code: 0
+                    message: success
+                    data: ""
         '400':
           $ref: '#/components/responses/BadRequestResponse'
         '401':
@@ -1056,6 +1325,269 @@ paths:
           $ref: '#/components/responses/NotFoundResponse'
         '429':
           $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 通用 ANode 资源
+  # ────────────────────────────────────────────────────────────────
+  /resource-types:
+    get:
+      tags: [Resource]
+      summary: 查询开放资源类型目录
+      operationId: listResourceTypes
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceTypesResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /resource-types/{type}:
+    get:
+      tags: [Resource]
+      summary: 查询资源类型定义
+      description: 返回对外字段 Schema、查询能力和操作能力，不暴露内部 beanId 或 property path。敏感字段以 `sensitive=true`、`writeOnly=true`、`readable=false` 标记。
+      operationId: describeResourceType
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - $ref: '#/components/parameters/ResourceType'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceTypeResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /resource-types/{type}/resources:
+    get:
+      tags: [Resource]
+      summary: 分页查询资源
+      description: |
+        分页查询指定类型的资源。仅可使用该资源类型定义中 query.properties 声明的筛选条件，传入未声明的查询参数会返回 400。
+        parentId 只适用于声明了该筛选条件的层级资源；protocolId 只适用于协议资源。page 默认 1，pageSize 默认 20、最大 100。
+        sort 格式为 `字段:asc` 或 `字段:desc`，字段必须出现在 query.sortable 中；未传时使用资源类型定义的 defaultSort。
+        分页结果不计算 total，以 hasMore 表示是否还有下一页。调用前可通过 GET /resource-types/{type} 获取当前运行时规则。
+      operationId: queryResources
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - $ref: '#/components/parameters/ResourceType'
+        - name: parentId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: protocolId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            default: id:asc
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceQueryResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /resources/{id}:
+    get:
+      tags: [Resource]
+      summary: 读取已知资源
+      description: 根据全局唯一资源 ID 自动识别资源类型。协议资源返回 properties、schema 和只读 health；properties 不包含 token、password、secret、credential、privateKey、apiKey 等敏感字段。
+      operationId: getResource
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+    post:
+      tags: [Resource]
+      summary: 修改已知资源属性
+      description: 仅允许修改资源定义和运行时 Schema 同时声明为可写的字段；全部字段校验通过后才开始写入，失败时尝试回滚。敏感字段可以按动态 Schema 写入，但成功响应不会回显请求值或历史值。
+      operationId: updateResource
+      x-idempotent: true
+      x-retryable: conditional
+      x-side-effects: config_update
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceUpdateRequest'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /actions/{command}:
+    post:
+      tags: [Resource]
+      summary: 执行资源命令
+      description: |
+        对资源执行其类型定义中声明的命令。请求体只允许 `id` 和 `input`：id 必须是非空字符串，input 必须是对象，额外字段会被拒绝。
+        具体输入、输出及可用命令以 GET /resource-types/{type} 返回的运行时定义为准。
+        协议资源常用命令：create 的 id 为 `protocol:{protocolId}`；创建 network 时不要传 parentId，创建 device/point 时 parentId 必填；
+        discover 的 id 为 `protocol:{protocolId}`；import 的 id 为发现任务资源 ID；delete 的 id 为待删除资源 ID，input 必须为空对象。
+      operationId: executeResourceAction
+      x-idempotent: false
+      x-retryable: false
+      x-side-effects: command_execute
+      parameters:
+        - name: command
+          in: path
+          required: true
+          description: 资源类型定义返回的命令名称。
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceActionRequest'
+            examples:
+              createNetwork:
+                summary: POST /actions/create 创建 Modbus 网络
+                value:
+                  id: protocol:modbus
+                  input:
+                    entityKind: network
+                    name: Modbus TCP 网络
+                    config:
+                      transport: tcp
+                      host: 127.0.0.1
+                      port: 1502
+              createDevice:
+                summary: POST /actions/create 创建网络下的设备
+                value:
+                  id: protocol:modbus
+                  input:
+                    entityKind: device
+                    parentId: network-resource-id
+                    name: PLC-1
+                    config:
+                      unitId: 1
+              discover:
+                summary: POST /actions/discover 启动发现
+                value:
+                  id: protocol:bacnet
+                  input:
+                    ownerKind: network
+                    ownerId: network-resource-id
+                    targetKind: device
+                    options: {}
+              import:
+                summary: POST /actions/import 导入发现对象
+                value:
+                  id: discovery-job-resource-id
+                  input:
+                    discoveryObjectIds: [discovery-object-id]
+                    ownerId: network-resource-id
+              delete:
+                summary: POST /actions/delete 删除协议资源
+                value:
+                  id: protocol-entity-resource-id
+                  input: {}
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceOpenApiResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
 
@@ -1831,6 +2363,259 @@ paths:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
+  # 按设备ID查询可升级设备固件（非分页）
+  # ────────────────────────────────────────────────────────────────
+  /firmware/upgradable-devices/search-by-device-ids:
+    post:
+      tags: [Firmware]
+      summary: 按设备ID查询可升级设备固件
+      description: |
+        在指定设备集合内查询可升级固件。
+        规则：`deviceIds` 必填，最少 1 个，最多 200 个，且去重；类型过滤可选，`excludeDeviceTypes` 优先于 `includeDeviceTypes`。
+      operationId: searchUpgradableDevicesFirmwareByDeviceIds
+      x-skill-intent: firmware.upgradable.search_by_device_ids
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchUpgradableFirmwareByDeviceIdsRequest'
+            examples:
+              searchUpgradableFirmwareByDeviceIds:
+                value:
+                  data:
+                    deviceIds: ["device-001", "device-002"]
+                    includeDeviceTypes: ["light", "switch"]
+                    excludeDeviceTypes: ["sensor"]
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchUpgradableFirmwareByDeviceIdsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 发起固件升级
+  # ────────────────────────────────────────────────────────────────
+  /firmware/upgrade:
+    post:
+      tags: [Firmware]
+      summary: 发起固件升级
+      description: |
+        通过 HubOtaServlet 现有 `upgrade_handler` 流程发起设备固件升级。
+        请求体直接使用设备升级数组，数组必须且只能包含一个设备。
+      operationId: upgradeFirmware
+      x-skill-intent: firmware.upgrade
+      x-idempotent: false
+      x-retryable: false
+      x-side-effects: command
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpgradeFirmwareRequestData'
+            examples:
+              upgradeFirmware:
+                value:
+                  - did: lumi3.823a998d7625a243
+                    firmware:
+                      - firmwareVersion: 1.2.3_12
+                        filePath: http://172.16.109.40:5000/download/lumi.models.4447_2059_studio_V1.2.3_12_20260811_8d2e0c.bin
+                        firmwareMd5: 6018b9b267a964f9d984c3c6558d2e0c
+                        fileSize: 185104191
+                        firmwareType: studio
+                        option: 1
+      responses:
+        '200':
+          description: 升级请求已受理
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpgradeFirmwareResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /firmware/upgrade/status/search:
+    post:
+      tags: [Firmware]
+      summary: 查询固件升级进度和结果
+      description: |
+        按设备 ID 查询固件升级进度和最终升级结果。请求体直接使用 data 对象，不包含 type、version、msgId。
+        规则：`deviceIds` 必填，最少 1 个，最多 1000 个；重复设备 ID 不算非法，服务端会去重后查询。
+        返回规则：`upgradeResult=null` 表示升级中，`upgradeResult=0` 表示升级成功，`upgradeResult!=0` 表示升级失败，失败原因见 `cause`。
+      operationId: searchFirmwareUpgradeStatus
+      x-skill-intent: firmware.upgrade.status.search
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchFirmwareUpgradeStatusRequestData'
+            examples:
+              searchFirmwareUpgradeStatus:
+                value:
+                  deviceIds: ["device-001", "device-002"]
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchFirmwareUpgradeStatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /firmware/upgrade/cancel:
+    post:
+      tags: [Firmware]
+      summary: 取消固件升级
+      description: |
+        按设备 ID 取消固件升级。请求体直接使用 data 对象，不包含 type、version、msgId。
+        规则：`deviceIds` 必填，最少 1 个，最多 200 个；重复设备 ID 不算非法，服务端会去重后下发。
+        返回规则：顶层 `code` 表示接口处理结果；`data.items[].resultCode` 表示单设备取消命令下发结果，0 仅表示取消命令成功下发给网关，不表示网关实际取消升级成功，非 0 表示取消命令下发失败。
+      operationId: cancelUpgradeFirmware
+      x-skill-intent: firmware.upgrade.cancel
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: command
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelUpgradeFirmwareRequestData'
+            examples:
+              cancelUpgradeFirmware:
+                value:
+                  deviceIds: ["device-001", "device-002"]
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelUpgradeFirmwareResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  
+  # ────────────────────────────────────────────────────────────────
+  # 查询设备点位值变化历史
+  # ────────────────────────────────────────────────────────────────
+  /history/device-point-values/query:
+    post:
+      tags: [History]
+      summary: 查询设备点位值变化历史
+      description: |
+        按设备、trait 和半开时间区间 `[startTime, endTime)` 查询设备点位值变化历史。请求体直接使用 data 对象，不包含 type、version、msgId。
+        `deviceIds` 为空时查询当前请求上下文可访问的全部当前设备；显式传入设备 ID 时，本地 HTTP 可查询已删除设备的历史。无设备权限的 ID 会被跳过；全部跳过时成功返回空列表。   
+        `traitCodes` 为空时不限制 trait；非空时无法识别的 code 会被忽略，全部无法识别为 trait 时返回参数错误。   
+        `cursor` 是上一页返回的 `nextCursor`，继续分页时必须保持 `deviceIds`、`traitCodes`、`startTime`、`endTime` 和 `descending` 不变。   
+        `startTime` 和 `endTime` 为可选参数：当两者都未填写时，默认查询最近七天的数据；当仅填写其中一个时，另一个参数将以 7 天时间窗口自动推算。对于 `cursor` 分页，必须保持的参数为首次响应返回的服务端解析后的 `data.startTime` 和 `data.endTime`，后续请求请将其作为新的 `startTime` 和 `endTime` 传递。
+      operationId: queryDevicePointHistory
+      x-skill-intent: history.device_point_values.query
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DevicePointHistoryQueryRequest'
+            examples:
+              queryLatestChanges:
+                value:
+                  deviceIds: ["device-001", "device-002"]
+                  traitCodes: ["OnOff"]
+                  startTime: 1770114300000
+                  endTime: 1770639900000
+                  descending: true
+                  pageSize: 50
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DevicePointHistoryQueryResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '502':
+          $ref: '#/components/responses/BadGatewayResponse'
+        '504':
+          description: Cloud-to-Edge tunnel request timed out
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+
+  # ────────────────────────────────────────────────────────────────
   # 获取 Studio 统计信息
   # ────────────────────────────────────────────────────────────────
   /studio/statistics:
@@ -2144,6 +2929,525 @@ paths:
         '503':
           $ref: '#/components/responses/ServiceUnavailableResponse'
 
+  # ────────────────────────────────────────────────────────────────
+  # 查询空间能耗摘要
+  # ────────────────────────────────────────────────────────────────
+  /ems/summary/space:
+    post:
+      tags: [EMS]
+      summary: 查询空间能耗摘要
+      description: |
+        查询指定空间内所有设备汇总的能耗摘要（今日、昨日、近7天、近30天、近365天），单位 kWh。
+        spaceId 自动识别家庭或房间。
+      operationId: getEmsSummarySpace
+      x-skill-intent: ems.summary.space
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmsSummarySpaceRequest'
+            examples:
+              spaceSummary:
+                value:
+                  spaceId: "home_001"
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmsSpaceSummaryResponse'
+              examples:
+                spaceSummarySuccess:
+                  value:
+                    type: EmsSpaceSummaryResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f010"
+                    code: 0
+                    message: success
+                    data:
+                      today: 0.112
+                      yesterday: 2.221
+                      week: 5.222
+                      month: 9.221
+                      year: 230.229
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 查询多设备能耗摘要
+  # ────────────────────────────────────────────────────────────────
+  /ems/summary/devices:
+    post:
+      tags: [EMS]
+      summary: 查询多设备能耗摘要
+      description: |
+        查询指定设备列表汇总的能耗摘要（今日、昨日、近7天、近30天、近365天），单位 kWh。
+        支持按 endpointId 过滤指定端点。
+      operationId: getEmsSummaryDevices
+      x-skill-intent: ems.summary.devices
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmsSummaryDevicesRequest'
+            examples:
+              devicesSummary:
+                value:
+                  devices:
+                    - did: "device_001"
+                      endpointId: [1, 2]
+                    - did: "device_002"
+                      endpointId: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmsDevicesSummaryResponse'
+              examples:
+                devicesSummarySuccess:
+                  value:
+                    type: EmsDevicesSummaryResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f010"
+                    code: 0
+                    message: success
+                    data:
+                      today: 0.112
+                      yesterday: 2.221
+                      week: 5.222
+                      month: 9.221
+                      year: 230.229
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 查询告警列表
+  # ────────────────────────────────────────────────────────────────
+  /alarms:
+    get:
+      tags: [Alarm]
+      summary: 查询告警列表
+      description: |
+        按告警时间范围分页查询告警列表。
+        时间过滤语义：`alarmTime >= startTime` 且 `alarmTime <= endTime`（UTC 毫秒，含边界）。
+      operationId: getAlarms
+      x-skill-intent: alarm.list
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - name: startTime
+          in: query
+          description: 查询起始时间（UTC 毫秒时间戳）
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1704067200000
+        - name: endTime
+          in: query
+          description: 查询结束时间（UTC 毫秒时间戳）
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1704153600000
+        - name: pageNum
+          in: query
+          description: 页码
+          required: false
+          schema:
+            type: integer
+          example: 1
+        - name: pageSize
+          in: query
+          description: 每页数量
+          required: false
+          schema:
+            type: integer
+          example: 200
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlarmsResponse'
+              examples:
+                alarmsPage:
+                  value:
+                    type: GetAlarmListResponse
+                    version: v1
+                    msgId: "1751609244328"
+                    code: 0
+                    message: success
+                    data:
+                      totalCount: 2
+                      pageNum: 1
+                      pageSize: 200
+                      data:
+                        - uuid: "alarm-uuid-001"
+                          deviceName: "客厅温湿度传感器"
+                          deviceId: "device-001"
+                          devicePointName: "温度"
+                          alarmClass: Warning
+                          alarmRuleName: "温度过高告警"
+                          alarmText: "温度超过阈值"
+                          alarmValue: "32.5"
+                          sourceState: OFF_NORMAL
+                          alarmTime: 1704100000000
+                        - uuid: "alarm-uuid-002"
+                          deviceName: "卧室烟雾传感器"
+                          deviceId: "device-002"
+                          devicePointName: "烟雾浓度"
+                          alarmClass: Critical
+                          alarmRuleName: "烟雾告警"
+                          alarmText: "检测到烟雾"
+                          alarmValue: "1"
+                          sourceState: OFF_NORMAL
+                          alarmTime: 1704110000000
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 删除单条告警
+  # ────────────────────────────────────────────────────────────────
+  /alarms/delete:
+    post:
+      tags: [Alarm]
+      summary: 删除单条告警
+      description: 根据告警记录 uuid 删除单条告警。
+      operationId: deleteAlarm
+      x-skill-intent: alarm.delete
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: delete
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteAlarmRequest'
+            example:
+              uuid: "alarm-uuid-001"
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteAlarmResponse'
+              examples:
+                deleteAlarm:
+                  value:
+                    type: DeleteAlarmResponse
+                    version: v1
+                    msgId: "1751609244329"
+                    code: 0
+                    message: success
+                    data: true
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 全量删除告警
+  # ────────────────────────────────────────────────────────────────
+  /alarms/clear:
+    post:
+      tags: [Alarm]
+      summary: 全量删除告警
+      description: 清空全部告警记录，无需请求体。
+      operationId: clearAlarms
+      x-skill-intent: alarm.clear
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: delete
+      parameters: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClearAlarmsResponse'
+              examples:
+                clearAlarms:
+                  value:
+                    type: ClearAlarmsResponse
+                    version: v1
+                    msgId: "1751609244330"
+                    code: 0
+                    message: success
+                    data: true
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 按 uuid 批量确认告警
+  # ────────────────────────────────────────────────────────────────
+  /alarms/ack:
+    post:
+      tags: [Alarm]
+      summary: 按 uuid 批量确认告警
+      description: |
+        根据告警记录 uuid 列表批量确认告警。
+        `forceCleared` 不对外暴露，服务端固定为 false。
+      operationId: ackAlarms
+      x-skill-intent: alarm.ack
+      x-idempotent: false
+      x-retryable: true
+      x-side-effects: update
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AckAlarmsRequest'
+            example:
+              uuids: ["alarm-uuid-001", "alarm-uuid-002"]
+              notes: "已现场确认"
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AckAlarmsResponse'
+              examples:
+                ackAlarms:
+                  value:
+                    type: AckAlarmsResponse
+                    version: v1
+                    msgId: "1751609244331"
+                    code: 0
+                    message: success
+                    data: true
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 按测点批量确认告警
+  # ────────────────────────────────────────────────────────────────
+  /alarms/ack-by-pointId:
+    post:
+      tags: [Alarm]
+      summary: 按测点批量确认告警
+      description: |
+        根据 `devicePointId` 批量确认该测点下未确认告警。
+        `forceCleared` 不对外暴露，服务端固定为 false。
+      operationId: ackAlarmsByPointId
+      x-skill-intent: alarm.ack.by-point
+      x-idempotent: false
+      x-retryable: true
+      x-side-effects: update
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AckAlarmsByPointIdRequest'
+            example:
+              devicePointId: "point-001"
+              notes: "已现场确认"
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AckAlarmsByPointIdResponse'
+              examples:
+                ackAlarmsByPointId:
+                  value:
+                    type: AckAlarmsByPointIdResponse
+                    version: v1
+                    msgId: "1751609244332"
+                    code: 0
+                    message: success
+                    data: true
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # 查询告警规则列表
+  # ────────────────────────────────────────────────────────────────
+  /alarm-rules:
+    get:
+      tags: [Alarm]
+      summary: 查询告警规则列表
+      description: |
+        分页查询告警规则列表（排除模板规则）。
+        可选按 `ruleName` 做不区分大小写的包含匹配过滤。
+      operationId: getAlarmRules
+      x-skill-intent: alarm.rule.list
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: 
+        - name: ruleName
+          in: query
+          description: 规则名称模糊匹配关键字（缺省时不做过滤）
+          required: false
+          schema:
+            type: string
+          example: 温度
+        - name: pageNum
+          in: query
+          description: 页码
+          required: false
+          schema:
+            type: integer
+          example: 1
+        - name: pageSize
+          in: query
+          description: 每页数量
+          required: false
+          schema:
+            type: integer
+          example: 200
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlarmRulesResponse'
+              examples:
+                alarmRulesPage:
+                  value:
+                    type: GetAlarmRuleListResponse
+                    version: v1
+                    msgId: "1751609244333"
+                    code: 0
+                    message: success
+                    data:
+                      totalCount: 2
+                      pageNum: 1
+                      pageSize: 200
+                      data:
+                        - ruleId: "rule-001"
+                          ruleName: "温度过高告警"
+                          alarmClass: Warning
+                          alarmText: "温度超过阈值"
+                          alarmTarget: "温度"
+                          delayToAlarmMs: 5000
+                          delayToNormalMs: 10000
+                          enabled: true
+                          updatedBy: "admin"
+                          updatedTime: 1704100000000
+                        - ruleId: "rule-002"
+                          ruleName: "烟雾告警"
+                          alarmClass: Critical
+                          alarmText: "检测到烟雾"
+                          alarmTarget: "烟雾浓度"
+                          delayToAlarmMs: 0
+                          delayToNormalMs: 0
+                          enabled: true
+                          updatedBy: "admin"
+                          updatedTime: 1704110000000
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
 # ══════════════════════════════════════════════════════════════════
 # Components
 # ══════════════════════════════════════════════════════════════════
@@ -2186,6 +3490,18 @@ components:
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000003"
               code: 403
               message: "无权限访问该资源"
+    ConflictResponse:
+      description: 当前资源状态与请求冲突
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    UnprocessableEntityResponse:
+      description: 请求格式正确，但协议、实体或配置不支持
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
     NotFoundResponse:
       description: 资源不存在
       content:
@@ -2222,8 +3538,20 @@ components:
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000006"
               code: 500
               message: "服务内部异常"
+    BadGatewayResponse:
+      description: Edge 或 Cloud 命令调用失败
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            example:
+              type: ErrorMessage
+              version: v1
+              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000007"
+              code: 502
+              message: "Edge or Cloud command call failed"
     ServiceUnavailableResponse:
-      description: 服务不可用
+      description: 服务不可用；通常表示当前为 Edge 端，或 Cloud 端 cloudlinkcloud 服务未加载
       content:
         application/json:
           schema:
@@ -2234,13 +3562,29 @@ components:
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000007"
               code: 503
               message: "服务暂时不可用"
-  
 
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
-      description: "Authorization: Bearer token"
+      description: "Authorization: Bearer <Token>"
+
+  # 公共请求头参数（所有接口均需携带，由客户端统一附加）
+  parameters:
+    ResourceType:
+      name: type
+      in: path
+      required: true
+      description: 稳定的对外资源类型，例如 system、protocol.network、protocol.device、protocol.point
+      schema:
+        type: string
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: 全局唯一资源 ID；普通资源和协议资源均使用接口返回的 id 原样传入
+      schema:
+        type: string
 
   schemas:
 
@@ -2270,6 +3614,161 @@ components:
       description: 错误响应，错误信息通过 code 与 message 提供
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
+
+    # ── 通用 ANode 资源 ──────────────────────────────────────────
+    ResourceUpdateRequest:
+      type: object
+      required: [properties]
+      properties:
+        properties:
+          type: object
+          minProperties: 1
+          additionalProperties: true
+          description: 待修改的白名单字段，使用普通 JSON 标量
+
+    ResourceActionRequest:
+      type: object
+      required: [id]
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          minLength: 1
+          description: 服务端返回的不透明资源 ID
+        input:
+          type: object
+          additionalProperties: true
+          default: {}
+          description: 命令输入参数；具体字段以资源类型定义返回的命令 Schema 为准
+
+    ResourceOpenApiResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              nullable: true
+              description: 命令的同步结果或后台任务信息，结构以资源类型定义中的命令输出 Schema 为准
+
+    ResourceHealth:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [healthy, disabled, fault, down, stale, "null", alarm, overridden, unackedAlarm, unknown]
+          description: 根据 Studio 当前 enabled、status、faultCause 归一化的只读状态；不主动探测设备
+        enabled:
+          type: boolean
+        faultCause:
+          type: string
+
+    ResourceItem:
+      type: object
+      description: |
+        sequence 资源在列表和详情中将可解析的历史效果转换为 properties.data.type=commands。
+        无法解析时保留 ID、名称、revision、绑定及原始 format，返回
+        properties.data={"type":"unavailable","reason":"Effect data cannot be represented as commands"}，
+        不返回步骤 commands 或原始协议字节，不修改存储。unavailable 资源禁止属性更新、assign 和 retry。
+        用户配置仍可解绑，无绑定时可删除；仅绑定为 SYNCED 且 syncedRevision=revision 时可启动。
+        资源顶层 commands 是允许的操作名称，与 properties.data.commands 效果步骤不同。
+        create/preview 只接受 commands 数据，不接受 unavailable。
+        sequence 的 assign 输入仅接受 deviceId，始终分配最新版本；传入 revision（包括 null）会被拒绝。
+      required: [id, type, properties]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        protocolId:
+          type: string
+          description: 协议资源返回；普通 ANode 资源不返回
+        properties:
+          type: object
+          additionalProperties: true
+          description: 对外属性值集合；值使用普通 JSON 标量或业务对象，不返回 Studio 内部 path/type/value 包装，也不包含动态 Schema 标记为 writeOnly 的敏感配置
+        schema:
+          type: object
+          additionalProperties: true
+          description: 按 ID 读取协议资源时返回的动态配置 Schema；敏感字段标记 sensitive=true、writeOnly=true、readable=false
+        health:
+          $ref: '#/components/schemas/ResourceHealth'
+
+    ResourceTypeSummary:
+      type: object
+      required: [type, operations, commands]
+      properties:
+        type:
+          type: string
+        operations:
+          type: array
+          items:
+            type: string
+            enum: [query, get, update]
+        commands:
+          type: array
+          items:
+            type: string
+
+    ResourceTypesResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: object
+              required: [items]
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ResourceTypeSummary'
+
+    ResourceTypeResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: object
+              additionalProperties: true
+              description: 对外资源类型定义；协议资源包含各 protocolId 的动态配置 Schema 和只读 health Schema
+
+    ResourceQueryResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: object
+              required: [type, items, page, pageSize, hasMore]
+              properties:
+                type:
+                  type: string
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ResourceItem'
+                page:
+                  type: integer
+                  minimum: 1
+                pageSize:
+                  type: integer
+                  minimum: 1
+                hasMore:
+                  type: boolean
+
+    ResourceResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: '#/components/schemas/ResourceItem'
 
     # ── Space ────────────────────────────────────────────────────
     SpaceNode:
@@ -2682,6 +4181,158 @@ components:
         message: success
         data: ""
 
+    QueryDevicePointInfoItem:
+      type: object
+      required: [deviceId, endpointId, functionCode]
+      properties:
+        deviceId:
+          type: string
+        endpointId:
+          type: integer
+        functionCode:
+          type: string
+        traitCode:
+          type: string
+          nullable: true
+        commandCode:
+          type: string
+          nullable: true
+      description: traitCode 与 commandCode 必须且只能传一个。
+
+    QueryDevicePointInfoRequest:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/QueryDevicePointInfoItem'
+
+    QueryDevicePointInfoResult:
+      allOf:
+        - $ref: '#/components/schemas/QueryDevicePointInfoItem'
+        - type: object
+          required: [code]
+          properties:
+            deviceName:
+              type: string
+              nullable: true
+            pointName:
+              type: string
+              nullable: true
+            space:
+              $ref: '#/components/schemas/DeviceSpace'
+              nullable: true
+            code:
+              type: integer
+            message:
+              type: string
+              nullable: true
+
+    QueryDevicePointInfoResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/QueryDevicePointInfoResult'
+      example:
+        type: QueryDevicePointInfoResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000029"
+        code: 0
+        message: success
+        data:
+          - deviceId: "device-001"
+            endpointId: 1
+            functionCode: "Output"
+            traitCode: "OnOff"
+            deviceName: "客厅灯"
+            pointName: "主灯开关"
+            space:
+              parentSpaceId: "space-home-001"
+              spaceId: "space-livingroom-001"
+              name: "客厅"
+            code: 0
+            message: success
+
+    UpdateDeviceNameRequest:
+      type: object
+      required: [deviceId, name]
+      properties:
+        deviceId:
+          type: string
+        name:
+          type: string
+          minLength: 1
+      example:
+        deviceId: "device-001"
+        name: "客厅主灯"
+
+    UpdateDeviceNameResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: 修改成功后返回空字符串
+              example: ""
+      example:
+        type: UpdateDeviceNameResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000002a"
+        code: 0
+        message: success
+        data: ""
+
+    UpdateDevicePointNameRequest:
+      type: object
+      required: [deviceId, endpointId, functionCode, pointName]
+      properties:
+        deviceId:
+          type: string
+        endpointId:
+          type: integer
+        functionCode:
+          type: string
+        traitCode:
+          type: string
+          nullable: true
+        commandCode:
+          type: string
+          nullable: true
+        pointName:
+          type: string
+          minLength: 1
+      description: traitCode 与 commandCode 必须且只能传一个。
+      example:
+        deviceId: "device-001"
+        endpointId: 1
+        functionCode: "Output"
+        traitCode: "OnOff"
+        pointName: "主灯开关"
+
+    UpdateDevicePointNameResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: 修改成功后返回空字符串
+              example: ""
+      example:
+        type: UpdateDevicePointNameResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000002b"
+        code: 0
+        message: success
+        data:
+
     VirtualDeviceAddRequest:
       type: object
       required: [name, virtualDeviceType]
@@ -2691,8 +4342,8 @@ components:
           description: 虚拟设备名称。
         virtualDeviceType:
           type: string
-          enum: [ir, lightbox]
-          description: 虚拟设备类型。<br />`ir` ：红外设备。<br />`lightbox` ：灯箱设备。
+          enum: [ir, lightbox, virtual]
+          description: 虚拟设备类型。<br />`ir` ：红外设备。<br />`lightbox` ：灯箱设备。<br />`virtual` ：虚拟自定义设备。
 
     VirtualDeviceAddData:
       type: object
@@ -2716,7 +4367,86 @@ components:
         code: 0
         message: success
         data:
-          deviceId: "virtual-device-001"
+          deviceId: "virtual.device-001"
+
+    VirtualDeviceSourcePoint:
+      type: object
+      required: [deviceId, endpointId, functionCode]
+      properties:
+        deviceId:
+          type: string
+          description: 源设备ID
+        endpointId:
+          type: integer
+          format: int32
+          description: 端点ID，必须大于等于0
+        functionCode:
+          type: string
+          description: 功能编码
+        traitCode:
+          type: string
+          nullable: true
+          description: 属性编码，与 commandCode 二选一
+        commandCode:
+          type: string
+          nullable: true
+          description: 命令编码，与 traitCode 二选一
+      description: traitCode 与 commandCode 必须且只能传一个。
+
+    VirtualDeviceBindPointsRequest:
+      type: object
+      required: [deviceId, sourcePoints]
+      properties:
+        deviceId:
+          type: string
+          description: 虚拟自定义设备ID
+        sourcePoints:
+          type: array
+          minItems: 1
+          description: 需要绑定或解绑的源功能点列表
+          items:
+            $ref: '#/components/schemas/VirtualDeviceSourcePoint'
+      example:
+        deviceId: "virtual.device-001"
+        sourcePoints:
+          - deviceId: "lumi.source-001"
+            endpointId: 1
+            functionCode: "OnOff"
+            traitCode: "OnOff"
+
+    VirtualDeviceBindPointsResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: 绑定成功后返回空字符串
+              example: ""
+      example:
+        type: VirtualDeviceBindPointsResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000001e"
+        code: 0
+        message: success
+        data: ""
+
+    VirtualDeviceUnbindPointsResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: 解绑成功后返回空字符串
+              example: ""
+      example:
+        type: VirtualDeviceUnbindPointsResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000001f"
+        code: 0
+        message: success
+        data: ""
 
     DeviceUnbindResponse:
       allOf:
@@ -3540,6 +5270,517 @@ components:
           description: 当前页设备列表
           items:
             $ref: '#/components/schemas/DeviceInfo'
+
+    # ── Firmware ───────────────────────────────────────────────────
+    SearchUpgradableFirmwareByDeviceIdsRequest:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: '#/components/schemas/SearchUpgradableFirmwareByDeviceIdsRequestData'
+
+    SearchUpgradableFirmwareByDeviceIdsRequestData:
+      type: object
+      required: [deviceIds]
+      properties:
+        deviceIds:
+          type: array
+          description: 设备ID列表，最少1个、最多200个
+          minItems: 1
+          maxItems: 200
+          uniqueItems: true
+          items:
+            type: string
+        includeDeviceTypes:
+          type: array
+          description: 包含的设备类型列表。为空时按缺省处理（不做白名单过滤）
+          uniqueItems: true
+          items:
+            type: string
+        excludeDeviceTypes:
+          type: array
+          description: 不包含的设备类型列表。为空时按缺省处理（不做黑名单过滤）
+          uniqueItems: true
+          items:
+            type: string
+
+    UpgradeFirmwareFile:
+      type: object
+      required: [firmwareVersion, filePath, firmwareMd5, fileSize, firmwareType, option]
+      properties:
+        firmwareVersion:
+          type: string
+          description: 目标固件版本
+        filePath:
+          type: string
+          format: uri
+          description: 固件下载地址
+        firmwareMd5:
+          type: string
+          description: 固件文件 MD5
+        fileSize:
+          type: integer
+          format: int64
+          minimum: 1
+          description: 固件文件大小，单位 byte
+        firmwareType:
+          type: string
+          description: 固件分区类型，例如 main、studio
+        option:
+          type: integer
+          description: 透传给 Hub OTA 的升级选项
+
+    UpgradeFirmwareDevice:
+      type: object
+      required: [did, firmware]
+      properties:
+        did:
+          type: string
+          description: Studio 网关设备 ID
+        firmware:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/UpgradeFirmwareFile'
+
+    UpgradeFirmwareRequestData:
+      type: array
+      minItems: 1
+      maxItems: 1
+      description: upgrade_handler 流程每次处理一个设备
+      items:
+        $ref: '#/components/schemas/UpgradeFirmwareDevice'
+
+    UpgradeFirmwareResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              additionalProperties: false
+            code:
+              type: integer
+              description: OTA 请求结果码，0 表示升级请求已受理
+      example:
+        type: UpgradeFirmwareResponse
+        version: v1
+        msgId: "3"
+        code: 0
+        message: success
+        data: {}
+
+    DevicePointHistoryQueryRequest:
+      type: object
+      properties:
+        deviceIds:
+          type: array
+          description: 设备 ID 列表，最多 200 个；省略或空数组时查询当前请求上下文可访问的全部当前设备。
+          maxItems: 200
+          default: []
+          items:
+            type: string
+        traitCodes:
+          type: array
+          description: trait code 列表，最多 200 个；省略或空数组时不限制 trait。非空但全部无法识别为 trait 时返回参数错误。
+          maxItems: 200
+          default: []
+          items:
+            type: string
+        startTime:
+          type: integer
+          format: int64
+          minimum: 0
+          description: 查询开始时间，Unix 毫秒时间戳，包含边界。
+        endTime:
+          type: integer
+          format: int64
+          minimum: 0
+          description: 查询结束时间，Unix 毫秒时间戳，不包含边界；必须大于 startTime，区间最长 7 天。
+        descending:
+          type: boolean
+          default: true
+          description: true 按时间倒序，false 按时间正序；同一 cursor 链中必须保持不变。
+        pageSize:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 50
+          description: 每页最大记录数，取值范围 1–200。
+        cursor:
+          type: string
+          nullable: true
+          description: 上一页返回的 nextCursor；首次查询省略。
+
+    DevicePointHistoryItem:
+      type: object
+      required: [deviceId, value, unit, time]
+      properties:
+        deviceId:
+          type: string
+          description: 历史记录所属设备 ID。
+        deviceName:
+          type: string
+          nullable: true
+          description: 当前设备名称；设备已删除或无法解析时省略。
+        endpointId:
+          type: integer
+          format: int32
+          nullable: true
+          description: 当前点位 endpoint ID；点位已删除或重标记时省略。
+        functionCode:
+          type: string
+          nullable: true
+          description: 当前点位 function 对应的 Spec code；无法解析时省略。
+        traitCode:
+          type: string
+          nullable: true
+          description: 历史 trait 对应的 Spec code；无法解析时省略。
+        value:
+          description: 类型化 JSON 标量；数值、布尔值、枚举序号或字符串。NaN 和正负 Infinity 返回 null。
+          oneOf:
+            - type: number
+            - type: boolean
+            - type: string
+              nullable: true
+        valueName:
+          type: string
+          nullable: true
+          description: Boolean 或枚举值对应的 trait 业务显示文本；无匹配或无翻译时省略。
+        pointName:
+          type: string
+          nullable: true
+          description: 当前点位名称；无法解析时省略。
+        triggerName:
+          type: string
+          nullable: true
+          description: 当前触发节点名称；无法解析时省略。
+        unit:
+          type: string
+          description: 历史记录单位。
+        time:
+          type: integer
+          format: int64
+          description: 历史记录时间，Unix 毫秒时间戳。
+
+    DevicePointHistoryQueryData:
+      type: object
+      required: [items, startTime, endTime]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DevicePointHistoryItem'
+        nextCursor:
+          type: string
+          nullable: true
+          description: 下一页不透明游标；为空或省略表示已到末页。
+        startTime:
+          type: integer
+          format: int64
+          description: Server-resolved query start time in Unix milliseconds. Reuse it when continuing with cursor.
+        endTime:
+          type: integer
+          format: int64
+          description: Server-resolved query end time in Unix milliseconds. Reuse it when continuing with cursor.
+
+    DevicePointHistoryQueryResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum: [DevicePointHistoryQueryResponse]
+            version:
+              type: string
+              enum: [v1]
+            data:
+              $ref: '#/components/schemas/DevicePointHistoryQueryData'
+      example:
+        type: DevicePointHistoryQueryResponse
+        version: v1
+        msgId: "history-query-1"
+        code: 0
+        message: success
+        data:
+          items:
+            - deviceId: "device-001"
+              deviceName: "Living room light"
+              endpointId: 1
+              functionCode: Light
+              traitCode: OnOff
+              value: true
+              valueName: "On"
+              pointName: "Switch"
+              triggerName: "Automation"
+              unit: ""
+              time: 1770639800000
+          startTime: 1770114300000
+          endTime: 1770639900000
+          nextCursor: "opaque-next-cursor"
+
+    SearchFirmwareUpgradeStatusRequestData:
+      type: object
+      required: [deviceIds]
+      properties:
+        deviceIds:
+          type: array
+          description: 设备 ID 列表，最少 1 个，最多 1000 个；重复设备 ID 不算非法，服务端会去重后查询。
+          minItems: 1
+          maxItems: 1000
+          items:
+            type: string
+
+    FirmwareUpgradeStatusItem:
+      type: object
+      required: [did, progress, firmwareType, time]
+      properties:
+        did:
+          type: string
+          description: 设备 ID
+        upgradeResult:
+          type: integer
+          nullable: true
+          description: 升级结果。null 表示升级中，0 表示升级成功，非 0 表示升级失败。
+        progress:
+          type: integer
+          description: 升级进度百分比
+          minimum: 0
+          maximum: 100
+        firmwareType:
+          type: string
+          description: 固件类型
+        cause:
+          type: string
+          nullable: true
+          description: 失败原因。upgradeResult 非 0 时返回。
+        time:
+          type: integer
+          format: int64
+          description: 升级状态更新时间戳，单位毫秒
+
+    SearchFirmwareUpgradeStatusResponseData:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          description: 固件升级状态列表
+          items:
+            $ref: '#/components/schemas/FirmwareUpgradeStatusItem'
+
+    SearchFirmwareUpgradeStatusResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/SearchFirmwareUpgradeStatusResponseData'
+      example:
+        type: SearchFirmwareUpgradeStatusResponse
+        version: v1
+        msgId: "3"
+        code: 0
+        message: success
+        data:
+          items:
+            - did: "device-001"
+              upgradeResult: null
+              progress: 50
+              firmwareType: "main"
+              cause: null
+              time: 1710000000000
+            - did: "device-002"
+              upgradeResult: 0
+              progress: 100
+              firmwareType: "studio"
+              cause: null
+              time: 1710000001000
+
+    CancelUpgradeFirmwareRequestData:
+      type: object
+      required: [deviceIds]
+      properties:
+        deviceIds:
+          type: array
+          description: 设备 ID 列表，最少 1 个，最多 200 个；重复设备 ID 不算非法，服务端会去重后下发。
+          minItems: 1
+          maxItems: 200
+          items:
+            type: string
+
+    CancelUpgradeFirmwareResultItem:
+      type: object
+      required: [deviceId, resultCode]
+      properties:
+        deviceId:
+          type: string
+          description: 设备 ID
+        resultCode:
+          type: integer
+          description: 单设备取消命令下发结果。0 仅表示取消命令成功下发给网关，不表示网关实际取消升级成功；非 0 表示取消命令下发失败。
+
+    CancelUpgradeFirmwareResponseData:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          description: 单设备取消命令下发结果列表
+          items:
+            $ref: '#/components/schemas/CancelUpgradeFirmwareResultItem'
+
+    CancelUpgradeFirmwareResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/CancelUpgradeFirmwareResponseData'
+            code:
+              type: integer
+              description: 接口处理结果码，0 表示接口处理成功；单设备取消命令下发结果请查看 data.items[].resultCode。
+      example:
+        type: CancelUpgradeFirmwareResponse
+        version: v1
+        msgId: "4"
+        code: 0
+        message: success
+        data:
+          items:
+            - deviceId: "device-001"
+              resultCode: 0
+            - deviceId: "device-002"
+              resultCode: -1
+
+    SearchUpgradableFirmwareByDeviceIdsResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              description: 设备可升级固件查询结果
+              required: [data]
+              properties:
+                data:
+                  type: array
+                  description: 设备可升级固件结果
+                  items:
+                    $ref: '#/components/schemas/UpgradableDeviceFirmwareItem'
+      example:
+        type: SearchUpgradableFirmwareByDeviceIdsResponse
+        version: v1
+        msgId: "2"
+        code: 0
+        message: success
+        data:
+          data:
+            - deviceId: "device-001"
+              deviceName: "卧室灯"
+              state: true
+              space:
+                parentSpaceId: "space-home-001"
+                name: "卧室"
+                spaceId: "15sd85"
+              upgradableFirmwares:
+                - firmwareVersion: "99.99.99"
+                  intVersion: null
+                  filePath: "https://xxx"
+                  fileSize: 123456
+                  firmwareMd5: "xx"
+                  firmwareCRC32: "xx"
+                  firmwareSha256: null
+                  firmwareType: "main"
+                  updateLog: "固件升级说明"
+                  model: ""
+                  isNecessary: false
+                  isForce: false
+                  state: 3
+                  releaseTime: 1710001234567
+
+    UpgradableFirmwareType:
+      type: string
+      description: 固件类型
+      enum: [main, zigbee, ai, matter, studio, rs485]
+
+    UpgradableFirmwareInfo:
+      type: object
+      required: [firmwareVersion, filePath, fileSize, firmwareMd5, firmwareCRC32, firmwareType, isNecessary, isForce, state]
+      properties:
+        firmwareVersion:
+          type: string
+          description: 固件版本号
+        intVersion:
+          type: integer
+          nullable: true
+          description: Matter 类型固件整型版本号
+        filePath:
+          type: string
+          description: 固件文件地址
+        fileSize:
+          type: integer
+          format: int64
+          description: 固件文件大小（byte）
+        firmwareMd5:
+          type: string
+          description: 固件文件 MD5
+        firmwareCRC32:
+          type: string
+          description: 固件文件 CRC32
+        firmwareSha256:
+          type: string
+          nullable: true
+          description: 固件文件 SHA256
+        firmwareType:
+          $ref: '#/components/schemas/UpgradableFirmwareType'
+        updateLog:
+          type: string
+          nullable: true
+          description: 固件升级说明
+        model:
+          type: string
+          nullable: true
+          description: 设备型号
+        isNecessary:
+          type: boolean
+          description: 是否必经版本。true 表示必经，false 表示非必经
+        isForce:
+          type: boolean
+          description: 是否强制升级
+        state:
+          type: integer
+          description: 固件状态。1 测试中，2 灰度，3 已上线，5 beta版本
+          enum: [1, 2, 3, 5]
+        releaseTime:
+          type: integer
+          format: int64
+          nullable: true
+          description: 固件上线生效时间（毫秒时间戳）
+
+    UpgradableDeviceFirmwareItem:
+      type: object
+      required: [deviceId, deviceName, state, upgradableFirmwares]
+      properties:
+        deviceId:
+          type: string
+          description: 设备ID
+        deviceName:
+          type: string
+          description: 设备名称
+        state:
+          type: boolean
+          description: 设备在线状态
+        space:
+          $ref: '#/components/schemas/DeviceSpace'
+          description: 设备关联的空间
+        upgradableFirmwares:
+          type: array
+          description: 设备可升级固件列表
+          items:
+            $ref: '#/components/schemas/UpgradableFirmwareInfo'
+
             
     # ── Automation ────────────────────────────────────────────────
     AutomationDefinitionType:
@@ -4453,6 +6694,111 @@ components:
         message: success
         data:
           totalValue: 156.2
+
+    EmsSummarySpaceRequest:
+      type: object
+      required: [spaceId]
+      properties:
+        spaceId:
+          type: string
+          description: 空间ID（自动识别家庭或房间）
+          example: "home_001"
+
+    EmsSummaryDeviceItem:
+      type: object
+      required: [did]
+      properties:
+        did:
+          type: string
+          description: 设备ID
+          example: "device_001"
+        endpointId:
+          type: array
+          items:
+            type: integer
+          description: 端点ID列表，为空或不传时查询该设备全部端点
+          example: [1, 2]
+
+    EmsSummaryDevicesRequest:
+      type: object
+      required: [devices]
+      properties:
+        devices:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/EmsSummaryDeviceItem'
+          description: 设备列表
+
+    EmsSummaryData:
+      type: object
+      required: [today, yesterday, week, month, year]
+      properties:
+        today:
+          type: number
+          format: double
+          description: 今日能耗（kWh）
+          example: 0.112
+        yesterday:
+          type: number
+          format: double
+          description: 昨日能耗（kWh）
+          example: 2.221
+        week:
+          type: number
+          format: double
+          description: 近7天能耗（kWh）
+          example: 5.222
+        month:
+          type: number
+          format: double
+          description: 近30天能耗（kWh）
+          example: 9.221
+        year:
+          type: number
+          format: double
+          description: 近365天能耗（kWh）
+          example: 230.229
+
+    EmsSpaceSummaryResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/EmsSummaryData'
+      example:
+        type: EmsSpaceSummaryResponse
+        version: v1
+        msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f010"
+        code: 0
+        message: success
+        data:
+          today: 0.112
+          yesterday: 2.221
+          week: 5.222
+          month: 9.221
+          year: 230.229
+
+    EmsDevicesSummaryResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/EmsSummaryData'
+      example:
+        type: EmsDevicesSummaryResponse
+        version: v1
+        msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f010"
+        code: 0
+        message: success
+        data:
+          today: 0.112
+          yesterday: 2.221
+          week: 5.222
+          month: 9.221
+          year: 230.229
     
     StudioStatisticsDimension:
       type: string
@@ -4498,3 +6844,360 @@ components:
           linkageCount: 24
           spaceCount: 16
           sceneCount: 12
+
+    # ── Alarm ─────────────────────────────────────────────────────
+    AlarmClass:
+      type: string
+      enum: [Info, Warning, Critical]
+      description: 告警等级
+
+    AlarmSourceState:
+      type: string
+      enum: [NORMAL, OFF_NORMAL, FAULT, ALERT]
+      description: 告警状态
+
+    AlarmInfo:
+      type: object
+      required:
+        - uuid
+        - deviceName
+        - deviceId
+        - devicePointName
+        - alarmClass
+        - alarmRuleName
+        - alarmText
+        - alarmValue
+        - sourceState
+        - alarmTime
+      properties:
+        uuid:
+          type: string
+          description: 告警记录唯一标识
+          example: "alarm-uuid-001"
+        deviceName:
+          type: string
+          description: 告警源设备名称
+          example: "客厅温湿度传感器"
+        deviceId:
+          type: string
+          description: 设备ID
+          example: "device-001"
+        devicePointName:
+          type: string
+          description: 测点名称
+          example: "温度"
+        alarmClass:
+          $ref: '#/components/schemas/AlarmClass'
+        alarmRuleName:
+          type: string
+          description: 告警规则名称
+          example: "温度过高告警"
+        alarmText:
+          type: string
+          description: 告警文案
+          example: "温度超过阈值"
+        alarmValue:
+          type: string
+          description: 告警数值/值文案
+          example: "32.5"
+        sourceState:
+          $ref: '#/components/schemas/AlarmSourceState'
+        alarmTime:
+          type: integer
+          format: int64
+          description: 告警时间（UTC 毫秒时间戳）
+          example: 1704100000000
+
+    AlarmListData:
+      type: object
+      required: [totalCount, pageNum, pageSize, data]
+      properties:
+        totalCount:
+          type: integer
+          description: 满足条件的告警总数
+          example: 2
+        pageNum:
+          type: integer
+          description: 当前页码
+          example: 1
+        pageSize:
+          type: integer
+          description: 当前页大小
+          example: 200
+        data:
+          type: array
+          description: 当前页告警列表
+          items:
+            $ref: '#/components/schemas/AlarmInfo'
+
+    AlarmsResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/AlarmListData'
+      example:
+        type: GetAlarmListResponse
+        version: v1
+        msgId: "1751609244328"
+        code: 0
+        message: success
+        data:
+          totalCount: 2
+          pageNum: 1
+          pageSize: 200
+          data:
+            - uuid: "alarm-uuid-001"
+              deviceName: "客厅温湿度传感器"
+              deviceId: "device-001"
+              devicePointName: "温度"
+              alarmClass: Warning
+              alarmRuleName: "温度过高告警"
+              alarmText: "温度超过阈值"
+              alarmValue: "32.5"
+              sourceState: OFF_NORMAL
+              alarmTime: 1704100000000
+            - uuid: "alarm-uuid-002"
+              deviceName: "卧室烟雾传感器"
+              deviceId: "device-002"
+              devicePointName: "烟雾浓度"
+              alarmClass: Critical
+              alarmRuleName: "烟雾告警"
+              alarmText: "检测到烟雾"
+              alarmValue: "1"
+              sourceState: OFF_NORMAL
+              alarmTime: 1704110000000
+
+    DeleteAlarmRequest:
+      type: object
+      required: [uuid]
+      properties:
+        uuid:
+          type: string
+          description: 告警记录唯一标识
+          example: "alarm-uuid-001"
+      example:
+        uuid: "alarm-uuid-001"
+
+    DeleteAlarmResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: boolean
+              description: 删除是否成功
+              example: true
+      example:
+        type: DeleteAlarmResponse
+        version: v1
+        msgId: "1751609244329"
+        code: 0
+        message: success
+        data: true
+
+    AckAlarmsRequest:
+      type: object
+      required: [uuids]
+      properties:
+        uuids:
+          type: array
+          description: 告警记录 uuid 列表
+          minItems: 1
+          items:
+            type: string
+          example: ["alarm-uuid-001", "alarm-uuid-002"]
+        notes:
+          type: string
+          nullable: true
+          description: 确认备注（可选）
+          example: "已现场确认"
+      example:
+        uuids: ["alarm-uuid-001", "alarm-uuid-002"]
+        notes: "已现场确认"
+
+    AckAlarmsResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: boolean
+              description: 确认是否成功
+              example: true
+      example:
+        type: AckAlarmsResponse
+        version: v1
+        msgId: "1751609244331"
+        code: 0
+        message: success
+        data: true
+
+    AckAlarmsByPointIdRequest:
+      type: object
+      required: [devicePointId]
+      properties:
+        devicePointId:
+          type: string
+          description: 设备测点 ID
+          example: "point-001"
+        notes:
+          type: string
+          nullable: true
+          description: 确认备注（可选）
+          example: "已现场确认"
+      example:
+        devicePointId: "point-001"
+        notes: "已现场确认"
+
+    AckAlarmsByPointIdResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: boolean
+              description: 确认是否成功
+              example: true
+      example:
+        type: AckAlarmsByPointIdResponse
+        version: v1
+        msgId: "1751609244332"
+        code: 0
+        message: success
+        data: true
+
+    AlarmRuleInfo:
+      type: object
+      required:
+        - ruleId
+        - ruleName
+        - alarmClass
+        - alarmText
+        - alarmTarget
+        - delayToAlarmMs
+        - delayToNormalMs
+        - enabled
+        - updatedBy
+        - updatedTime
+      properties:
+        ruleId:
+          type: string
+          description: 告警规则 ID
+          example: "rule-001"
+        ruleName:
+          type: string
+          description: 告警规则名称
+          example: "温度过高告警"
+        alarmClass:
+          $ref: '#/components/schemas/AlarmClass'
+        alarmText:
+          type: string
+          description: 告警文案
+          example: "温度超过阈值"
+        alarmTarget:
+          type: string
+          description: 告警目标（测点/能力显示名）
+          example: "温度"
+        delayToAlarmMs:
+          type: integer
+          format: int64
+          description: 触发告警延时（毫秒）
+          example: 5000
+        delayToNormalMs:
+          type: integer
+          format: int64
+          description: 恢复正常延时（毫秒）
+          example: 10000
+        enabled:
+          type: boolean
+          description: 规则是否启用
+          example: true
+        updatedBy:
+          type: string
+          description: 最近更新人
+          example: "admin"
+        updatedTime:
+          type: integer
+          format: int64
+          description: 最近更新时间（UTC 毫秒时间戳）
+          example: 1704100000000
+
+    AlarmRuleListData:
+      type: object
+      required: [totalCount, pageNum, pageSize, data]
+      properties:
+        totalCount:
+          type: integer
+          description: 满足条件的告警规则总数
+          example: 2
+        pageNum:
+          type: integer
+          description: 当前页码
+          example: 1
+        pageSize:
+          type: integer
+          description: 当前页大小
+          example: 200
+        data:
+          type: array
+          description: 当前页告警规则列表
+          items:
+            $ref: '#/components/schemas/AlarmRuleInfo'
+
+    AlarmRulesResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/AlarmRuleListData'
+      example:
+        type: GetAlarmRuleListResponse
+        version: v1
+        msgId: "1751609244333"
+        code: 0
+        message: success
+        data:
+          totalCount: 2
+          pageNum: 1
+          pageSize: 200
+          data:
+            - ruleId: "rule-001"
+              ruleName: "温度过高告警"
+              alarmClass: Warning
+              alarmText: "温度超过阈值"
+              alarmTarget: "温度"
+              delayToAlarmMs: 5000
+              delayToNormalMs: 10000
+              enabled: true
+              updatedBy: "admin"
+              updatedTime: 1704100000000
+            - ruleId: "rule-002"
+              ruleName: "烟雾告警"
+              alarmClass: Critical
+              alarmText: "检测到烟雾"
+              alarmTarget: "烟雾浓度"
+              delayToAlarmMs: 0
+              delayToNormalMs: 0
+              enabled: true
+              updatedBy: "admin"
+              updatedTime: 1704110000000
+
+    ClearAlarmsResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: boolean
+              description: 全量删除是否成功
+              example: true
+      example:
+        type: ClearAlarmsResponse
+        version: v1
+        msgId: "1751609244330"
+        code: 0
+        message: success
+        data: true

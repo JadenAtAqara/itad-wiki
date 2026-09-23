@@ -1,0 +1,74 @@
+---
+id: search-firmware-upgrade-status
+title: "查询固件升级进度和结果"
+description: "按设备 ID 查询固件升级进度和最终升级结果。请求体直接使用 data 对象，不包含 type、version、msgId。"
+sidebar_label: "查询固件升级进度和结果"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "post api-method"
+info_path: i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-developer/data-export-api/data-export-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"查询固件升级进度和结果"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/firmware/upgrade/status/search"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+按设备 ID 查询固件升级进度和最终升级结果。请求体直接使用 data 对象，不包含 type、version、msgId。
+规则：`deviceIds` 必填，最少 1 个，最多 1000 个；重复设备 ID 不算非法，服务端会去重后查询。
+返回规则：`upgradeResult=null` 表示升级中，`upgradeResult=0` 表示升级成功，`upgradeResult!=0` 表示升级失败，失败原因见 `cause`。
+
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["deviceIds"],"properties":{"deviceIds":{"type":"array","description":"设备 ID 列表，最少 1 个，最多 1000 个；重复设备 ID 不算非法，服务端会去重后查询。","minItems":1,"maxItems":1000,"items":{"type":"string"}}},"title":"SearchFirmwareUpgradeStatusRequestData"},"examples":{"searchFirmwareUpgradeStatus":{"value":{"deviceIds":["device-001","device-002"]}}}}}}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"成功","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"type":"object","required":["items"],"properties":{"items":{"type":"array","description":"固件升级状态列表","items":{"type":"object","required":["did","progress","firmwareType","time"],"properties":{"did":{"type":"string","description":"设备 ID"},"upgradeResult":{"type":"integer","nullable":true,"description":"升级结果。null 表示升级中，0 表示升级成功，非 0 表示升级失败。"},"progress":{"type":"integer","description":"升级进度百分比","minimum":0,"maximum":100},"firmwareType":{"type":"string","description":"固件类型"},"cause":{"type":"string","nullable":true,"description":"失败原因。upgradeResult 非 0 时返回。"},"time":{"type":"integer","format":"int64","description":"升级状态更新时间戳，单位毫秒"}},"title":"FirmwareUpgradeStatusItem"}}},"title":"SearchFirmwareUpgradeStatusResponseData"}}}],"example":{"type":"SearchFirmwareUpgradeStatusResponse","version":"v1","msgId":"3","code":0,"message":"success","data":{"items":[{"did":"device-001","upgradeResult":null,"progress":50,"firmwareType":"main","cause":null,"time":1710000000000},{"did":"device-002","upgradeResult":0,"progress":100,"firmwareType":"studio","cause":null,"time":1710000001000}]}},"title":"SearchFirmwareUpgradeStatusResponse"}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 xxx 不能为空"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"token 已过期，请重新生成 token"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"无权限访问该资源"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"资源不存在"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"429":{"description":"请求频率过高","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000005","code":429,"message":"请求频率过高"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"服务内部异常"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      
