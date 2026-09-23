@@ -37,12 +37,20 @@ tags:
     description: APIs for device query, properties read/write, and command execution
   - name: Gateway
     description: APIs for managing gateway subdevice pairing, binding, and unbinding operations
+  - name: Resource
+    description: Studio ANode whitelist resource directory, query, reading, and secure modification APIs. 
   - name: Automation
     description: APIs for automation creation, editing, query, deletion, and capability query
+  - name: Firmware
+    description: APIs for firmware query and upgrade
+  - name: History
+    description: APIs for device point value change history query
   - name: Studio
     description: Studio statistics query API
   - name: EMS
     description: Energy Management System APIs (energy consumption trend query, energy consumption total query)
+  - name: Alarm
+    description: APIs for alarm list, confirmation, and alarm rule query
 
 paths:
 
@@ -895,6 +903,136 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
 
+  # Batch Query Device Point Information
+  /devices/points/info:
+    post:
+      tags: [Device]
+      summary: Batch Query Device Point Information
+      description: Query the associated space, device name, and point name for points by deviceId, endpointId, functionCode and traitCode/commandCode.
+      operationId: queryDevicePointInfo
+      x-skill-intent: device.point.info
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryDevicePointInfoRequest'
+            example:
+              data:
+                - deviceId: "device-001"
+                  endpointId: 1
+                  functionCode: "Output"
+                  traitCode: "OnOff"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryDevicePointInfoResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # Update Device Name
+  /devices/name:
+    post:
+      tags: [Device]
+      summary: Update Device Name
+      description: Update the device name by device ID.
+      operationId: updateDeviceName
+      x-skill-intent: device.name.update
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: update
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDeviceNameRequest'
+            example:
+              deviceId: "device-001"
+              name: "Living Room Main Light"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateDeviceNameResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # Update Device Point Name
+  /devices/points/name:
+    post:
+      tags: [Device]
+      summary: Update Device Point Name
+      description: Update the trait or command point name for a device; either traitCode or commandCode must be provided, but not both.
+      operationId: updateDevicePointName
+      x-skill-intent: device.point.name.update
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: update
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDevicePointNameRequest'
+            example:
+              deviceId: "device-001"
+              endpointId: 1
+              functionCode: "Output"
+              traitCode: "OnOff"
+              pointName: "Main Light Switch"
+      responses:
+        '200':
+          description: Success
+    
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateDevicePointNameResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
   # ────────────────────────────────────────────────────────────────
   # Delete Device Point
   # ────────────────────────────────────────────────────────────────
@@ -957,7 +1095,11 @@ paths:
     post:
       tags: [Device]
       summary: Add A Virtual Device
-      description: Add a virtual device of either IR type or lightbox type.
+      description:  |
+        Add a virtual device. Currently, three types are supported:
+        - `ir`: Infrared virtual device
+        - `lightbox`: Lightbox virtual device
+        - `virtual`: Custom virtual device
       operationId: addVirtualDevice
       x-skill-intent: device.virtual.add
       x-idempotent: false
@@ -979,6 +1121,10 @@ paths:
                 value:
                   name: "Living Room Lightbox"
                   virtualDeviceType: lightbox
+              addCustomVirtualDevice:
+                value:
+                  name: "Living Room Custom Virtual Device"
+                  virtualDeviceType: virtual
       responses:
         '200':
           description: Request succeeded
@@ -995,7 +1141,131 @@ paths:
                     code: 0
                     message: success
                     data:
-                      deviceId: "virtual-device-001"
+                      deviceId: "virtual.device-001"
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Bind Source Device Function Points
+  # ────────────────────────────────────────────────────────────────
+  /virtual-devices/points/bind:
+    post:
+      tags: [Device]
+      summary: Bind source device function points
+      description: |
+        Bind source device function points to a custom virtual device. `deviceId` refers to the virtual custom device ID.
+        Each item in `sourcePoints` locates a source function point using the open protocol, and either `traitCode` or `commandCode` must be present (choose one of the two).
+      operationId: bindVirtualDevicePoints
+      x-skill-intent: device.virtual.points.bind
+      x-idempotent: false
+      x-retryable: conditional
+      x-side-effects: device_point_bind
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VirtualDeviceBindPointsRequest'
+            examples:
+              bindTraitPoint:
+                summary: Bind source device trait point
+                value:
+                  deviceId: "virtual.device-001"
+                  sourcePoints:
+                    - deviceId: "lumi.source-001"
+                      endpointId: 1
+                      functionCode: "OnOff"
+                      traitCode: "OnOff"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualDeviceBindPointsResponse'
+              examples:
+                bindVirtualDevicePointsSuccess:
+                  value:
+                    type: VirtualDeviceBindPointsResponse
+                    version: v1
+                    msgId: "1751609244331"
+                    code: 0
+                    message: success
+                    data: ""
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Unbind Source Device Function Points
+  # ────────────────────────────────────────────────────────────────
+  /virtual-devices/points/unbind:
+    post:
+      tags: [Device]
+      summary: Unbind source device function points
+      description: |
+        Unbind source device function points from the custom virtual device. This does not affect the original source device.
+        `deviceId` refers to the virtual custom device ID. `sourcePoints` locates the already bound source function points,
+        and either `traitCode` or `commandCode` must be present (choose one of the two).
+      operationId: unbindVirtualDevicePoints
+      x-skill-intent: device.virtual.points.unbind
+      x-idempotent: true
+      x-retryable: conditional
+      x-side-effects: device_point_unbind
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VirtualDeviceBindPointsRequest'
+            examples:
+              unbindTraitPoint:
+                summary: Unbind source device trait point
+                value:
+                  deviceId: "virtual.device-001"
+                  sourcePoints:
+                    - deviceId: "lumi.source-001"
+                      endpointId: 1
+                      functionCode: "OnOff"
+                      traitCode: "OnOff"
+      responses:
+        '200':
+          description: Success
+    
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualDeviceUnbindPointsResponse'
+              examples:
+                unbindVirtualDevicePointsSuccess:
+                  value:
+                    type: VirtualDeviceUnbindPointsResponse
+                    version: v1
+                    msgId: "1751609244332"
+                    code: 0
+                    message: success
+                    data: ""
         '400':
           $ref: '#/components/responses/BadRequestResponse'
         '401':
@@ -1059,6 +1329,270 @@ paths:
           $ref: '#/components/responses/NotFoundResponse'
         '429':
           $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # General ANode Resources
+  # ────────────────────────────────────────────────────────────────
+  /resource-types:
+    get:
+      tags: [Resource]
+      summary: Query Open Resource Type Directory
+      operationId: listResourceTypes
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceTypesResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /resource-types/{type}:
+    get:
+      tags: [Resource]
+      summary: Query Resource Type Definition
+      description: Returns the external field schema, query capabilities and operational capabilities, without exposing internal beanId or property path. Sensitive fields are marked with `sensitive=true`, `writeOnly=true`, or `readable=false`.
+      operationId: describeResourceType
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - $ref: '#/components/parameters/ResourceType'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceTypeResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /resource-types/{type}/resources:
+    get:
+      tags: [Resource]
+      summary: Paginated Query Resource
+      description: |
+        Paginated query for resources of the specified type. Only filtering conditions declared in query.properties of the resource type definition can be used. Passing in undeclared query parameters will return 400.
+        parentId is only applicable to hierarchical resources that declare this filter; protocolId is only applicable to protocol resources. page defaults to 1, pageSize defaults to 20, max 100.
+        sort format is `field:asc` or `field:desc`, field must appear in query.sortable; if not passed, uses the resource type definition's defaultSort.
+        Pagination results do not calculate total, hasMore indicates whether there is a next page. You can use GET /resource-types/{type} to get the current runtime rules before calling.
+      operationId: queryResources
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - $ref: '#/components/parameters/ResourceType'
+        - name: parentId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: protocolId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+            default: id:asc
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceQueryResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /resources/{id}:
+    get:
+      tags: [Resource]
+      summary: Read Known Resource
+      description: Automatically identifies the resource type based on the globally unique resource ID. For protocol resources, returns properties, schema, and read-only health; properties do not include sensitive fields such as token, password, secret, credential, privateKey, apiKey, etc.
+      operationId: getResource
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+    post:
+      tags: [Resource]
+      summary: Modify Known Resource Properties
+      description: Only allows modification of fields declared as writable by both resource definition and runtime schema; all field checks must pass before writing, and if it fails, a rollback will be attempted. Sensitive fields can be written via dynamic schema, but successful responses will not echo the request value or historical value.
+      operationId: updateResource
+      x-idempotent: true
+      x-retryable: conditional
+      x-side-effects: config_update
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceUpdateRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /actions/{command}:
+    post:
+      tags: [Resource]
+      summary: Execute Resource Command
+      description: |
+        Execute the command declared in the resource type definition on the resource. The request body only allows `id` and `input`: id must be a non-empty string, input must be an object, and extra fields will be rejected.
+        The specific input, output, and available commands are subject to the runtime definition returned by GET /resource-types/{type}.
+        Common protocol resource commands: the id for create is `protocol:{protocolId}`; when creating a network, do not include parentId, when creating device/point, parentId is required;
+        the id for discover is `protocol:{protocolId}`; the id for import is the discovery task resource ID; the id for delete is the resource ID to delete, input must be an empty object.
+      operationId: executeResourceAction
+      x-idempotent: false
+      x-retryable: false
+      x-side-effects: command_execute
+      parameters:
+        - name: command
+          in: path
+          required: true
+          description: Command name returned by the resource type definition.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceActionRequest'
+            examples:
+              createNetwork:
+                summary: POST /actions/create Create Modbus Network
+                value:
+                  id: protocol:modbus
+                  input:
+                    entityKind: network
+                    name: Modbus TCP Network
+                    config:
+                      transport: tcp
+                      host: 127.0.0.1
+                      port: 1502
+              createDevice:
+                summary: POST /actions/create Create Device Under Network
+                value:
+                  id: protocol:modbus
+                  input:
+                    entityKind: device
+                    parentId: network-resource-id
+                    name: PLC-1
+                    config:
+                      unitId: 1
+              discover:
+                summary: POST /actions/discover Start Discovery
+                value:
+                  id: protocol:bacnet
+                  input:
+                    ownerKind: network
+                    ownerId: network-resource-id
+                    targetKind: device
+                    options: {}
+              import:
+                summary: POST /actions/import Import Discovered Object
+                value:
+                  id: discovery-job-resource-id
+                  input:
+                    discoveryObjectIds: [discovery-object-id]
+                    ownerId: network-resource-id
+              delete:
+                summary: POST /actions/delete Delete Protocol Resource
+           
+                value:
+                  id: protocol-entity-resource-id
+                  input: {}
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceOpenApiResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
 
@@ -1835,6 +2369,260 @@ paths:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
+  # Query upgradable device firmware by device IDs (not paginated)
+  # ────────────────────────────────────────────────────────────────
+  /firmware/upgradable-devices/search-by-device-ids:
+    post:
+      tags: [Firmware]
+      summary: Query upgradable device firmware by device IDs
+      description: |
+        Query upgradable firmware within a specified set of devices.
+        Rules: `deviceIds` is required, minimum 1, maximum 200, and must be deduplicated; type filtering is optional, `excludeDeviceTypes` takes precedence over `includeDeviceTypes`.
+      operationId: searchUpgradableDevicesFirmwareByDeviceIds
+      x-skill-intent: firmware.upgradable.search_by_device_ids
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchUpgradableFirmwareByDeviceIdsRequest'
+            examples:
+              searchUpgradableFirmwareByDeviceIds:
+                value:
+                  data:
+                    deviceIds: ["device-001", "device-002"]
+                    includeDeviceTypes: ["light", "switch"]
+                    excludeDeviceTypes: ["sensor"]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchUpgradableFirmwareByDeviceIdsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Initiate firmware upgrade
+  # ────────────────────────────────────────────────────────────────
+  /firmware/upgrade:
+    post:
+      tags: [Firmware]
+      summary: Initiate firmware upgrade
+      description: |
+        Initiate device firmware upgrade via the existing `upgrade_handler` process of HubOtaServlet.
+        The request body should directly use the device upgrade array, and the array must and can only contain one device.
+      operationId: upgradeFirmware
+      x-skill-intent: firmware.upgrade
+      x-idempotent: false
+      x-retryable: false
+      x-side-effects: command
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpgradeFirmwareRequestData'
+            examples:
+              upgradeFirmware:
+                value:
+                  - did: lumi3.823a998d7625a243
+                    firmware:
+                      - firmwareVersion: 1.2.3_12
+                        filePath: http://172.16.109.40:5000/download/lumi.models.4447_2059_studio_V1.2.3_12_20260811_8d2e0c.bin
+                        firmwareMd5: 6018b9b267a964f9d984c3c6558d2e0c
+                        fileSize: 185104191
+                        firmwareType: studio
+                        option: 1
+      responses:
+        '200':
+          description: Upgrade request accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpgradeFirmwareResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /firmware/upgrade/status/search:
+    post:
+      tags: [Firmware]
+      summary: Query firmware upgrade progress and result
+      description: |
+        Query firmware upgrade progress and final result by device ID. The request body should directly use the data object, without type, version, or msgId.
+        Rules: `deviceIds` is required, minimum 1, maximum 1000; duplicate device IDs are not considered invalid, the service will deduplicate before querying.
+        Return rules: `upgradeResult=null` means upgrading, `upgradeResult=0` means upgrade successful, `upgradeResult!=0` means upgrade failed, failure reason is shown in `cause`.
+      operationId: searchFirmwareUpgradeStatus
+      x-skill-intent: firmware.upgrade.status.search
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchFirmwareUpgradeStatusRequestData'
+            examples:
+              searchFirmwareUpgradeStatus:
+                value:
+                  deviceIds: ["device-001", "device-002"]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchFirmwareUpgradeStatusResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /firmware/upgrade/cancel:
+    post:
+      tags: [Firmware]
+      summary: Cancel firmware upgrade
+      description: |
+        Cancel firmware upgrade by device ID. The request body should directly use the data object, without type, version, or msgId.
+        Rules: `deviceIds` is required, minimum 1, maximum 200; duplicate device IDs are not considered invalid, the service will deduplicate before sending.
+        Return rules: the root `code` indicates the interface processing result; `data.items[].resultCode` indicates the result of cancelling command for each device, 0 means cancel command was successfully sent to the gateway (not that the gateway actually canceled the upgrade), non-0 means cancel command sending failed.
+      operationId: cancelUpgradeFirmware
+      x-skill-intent: firmware.upgrade.cancel
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: command
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelUpgradeFirmwareRequestData'
+            examples:
+              cancelUpgradeFirmware:
+                value:
+                  deviceIds: ["device-001", "device-002"]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelUpgradeFirmwareResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  
+  # ────────────────────────────────────────────────────────────────
+  # Query device point value change history
+  # ────────────────────────────────────────────────────────────────
+  /history/device-point-values/query:
+    post:
+      tags: [History]
+      summary: Query device point value change history
+      description: |
+        Query device point value change history by device, trait, and half-open time interval `[startTime, endTime)`. The request body should directly use the data object, without type, version, or msgId.   
+        If `deviceIds` is empty, all currently available devices accessible in the current request context are queried; when device IDs are explicitly provided, local HTTP can query the history of deleted devices. Device IDs without permission will be skipped; if all are skipped, an empty list is returned successfully.   
+        If `traitCodes` is empty, there is no trait restriction; if non-empty, codes that cannot be recognized are ignored. If all cannot be recognized as a trait, a parameter error is returned.   
+        `cursor` is the `nextCursor` returned by the previous page; to continue pagination, the values of `deviceIds`, `traitCodes`, `startTime`, `endTime`, and `descending` must remain unchanged.   
+        `startTime` and `endTime` are optional: when both are omitted, the latest seven days are queried; when one is omitted, the other endpoint is derived with a seven-day window. For `cursor` pagination, the values that must remain unchanged are the server-resolved `data.startTime` and `data.endTime` returned by the first response; send them as the next request's `startTime` and `endTime`.
+      operationId: queryDevicePointHistory
+      x-skill-intent: history.device_point_values.query
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DevicePointHistoryQueryRequest'
+            examples:
+              queryLatestChanges:
+                value:
+                  deviceIds: ["device-001", "device-002"]
+                  traitCodes: ["OnOff"]
+                  startTime: 1770114300000
+                  endTime: 1770639900000
+                  descending: true
+                  pageSize: 50
+      responses:
+        '200':
+          description: Success
+  
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DevicePointHistoryQueryResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '502':
+          $ref: '#/components/responses/BadGatewayResponse'
+        '504':
+          description: Cloud-to-Edge tunnel request timed out
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+
+  # ────────────────────────────────────────────────────────────────
   # Get Studio Statistics
   # ────────────────────────────────────────────────────────────────
   /studio/statistics:
@@ -2148,6 +2936,525 @@ paths:
         '503':
           $ref: '#/components/responses/ServiceUnavailableResponse'
 
+  # ────────────────────────────────────────────────────────────────
+  # Query Space Energy Consumption Summary
+  # ────────────────────────────────────────────────────────────────
+  /ems/summary/space:
+    post:
+      tags: [EMS]
+      summary: Query Space Energy Consumption Summary
+      description: |
+        Query the energy consumption summary (today, yesterday, last 7 days, last 30 days, last 365 days) aggregated for all devices in a specified space (unit: kWh).
+        The spaceId automatically identifies whether it is a family or a room.
+      operationId: getEmsSummarySpace
+      x-skill-intent: ems.summary.space
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmsSummarySpaceRequest'
+            examples:
+              spaceSummary:
+                value:
+                  spaceId: "home_001"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmsSpaceSummaryResponse'
+              examples:
+                spaceSummarySuccess:
+                  value:
+                    type: EmsSpaceSummaryResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f010"
+                    code: 0
+                    message: success
+                    data:
+                      today: 0.112
+                      yesterday: 2.221
+                      week: 5.222
+                      month: 9.221
+                      year: 230.229
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Query Multi-Device Energy Consumption Summary
+  # ────────────────────────────────────────────────────────────────
+  /ems/summary/devices:
+    post:
+      tags: [EMS]
+      summary: Query Multi-Device Energy Consumption Summary
+      description: |
+        Query the energy consumption summary (today, yesterday, last 7 days, last 30 days, last 365 days) aggregated for the given list of devices (unit: kWh).
+        Supports filtering by endpointId.
+      operationId: getEmsSummaryDevices
+      x-skill-intent: ems.summary.devices
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmsSummaryDevicesRequest'
+            examples:
+              devicesSummary:
+                value:
+                  devices:
+                    - did: "device_001"
+                      endpointId: [1, 2]
+                    - did: "device_002"
+                      endpointId: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmsDevicesSummaryResponse'
+              examples:
+                devicesSummarySuccess:
+                  value:
+                    type: EmsDevicesSummaryResponse
+                    version: v1
+                    msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f010"
+                    code: 0
+                    message: success
+                    data:
+                      today: 0.112
+                      yesterday: 2.221
+                      week: 5.222
+                      month: 9.221
+                      year: 230.229
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailableResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Query Alarm List
+  # ────────────────────────────────────────────────────────────────
+  /alarms:
+    get:
+      tags: [Alarm]
+      summary: Query Alarm List
+      description: |
+        Query alarm list with pagination by alarm time range.
+        Time filter semantics: `alarmTime >= startTime` and `alarmTime <= endTime` (UTC milliseconds, inclusive).
+      operationId: getAlarms
+      x-skill-intent: alarm.list
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+        - name: startTime
+          in: query
+          description: Query start time (UTC milliseconds timestamp)
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1704067200000
+        - name: endTime
+          in: query
+          description: Query end time (UTC milliseconds timestamp)
+          required: true
+          schema:
+            type: integer
+            format: int64
+          example: 1704153600000
+        - name: pageNum
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+          example: 1
+        - name: pageSize
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+          example: 200
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlarmsResponse'
+              examples:
+                alarmsPage:
+                  value:
+                    type: GetAlarmListResponse
+                    version: v1
+                    msgId: "1751609244328"
+                    code: 0
+                    message: success
+                    data:
+                      totalCount: 2
+                      pageNum: 1
+                      pageSize: 200
+                      data:
+                        - uuid: "alarm-uuid-001"
+                          deviceName: "Living Room Temp-Humidity Sensor"
+                          deviceId: "device-001"
+                          devicePointName: "Temperature"
+                          alarmClass: Warning
+                          alarmRuleName: "High Temperature Alarm"
+                          alarmText: "Temperature exceeds threshold"
+                          alarmValue: "32.5"
+                          sourceState: OFF_NORMAL
+                          alarmTime: 1704100000000
+                        - uuid: "alarm-uuid-002"
+                          deviceName: "Bedroom Smoke Sensor"
+                          deviceId: "device-002"
+                          devicePointName: "Smoke Concentration"
+                          alarmClass: Critical
+                          alarmRuleName: "Smoke Alarm"
+                          alarmText: "Smoke Detected"
+                          alarmValue: "1"
+                          sourceState: OFF_NORMAL
+                          alarmTime: 1704110000000
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Delete Single Alarm
+  # ────────────────────────────────────────────────────────────────
+  /alarms/delete:
+    post:
+      tags: [Alarm]
+      summary: Delete Single Alarm
+      description: Delete a single alarm by alarm record uuid.
+      operationId: deleteAlarm
+      x-skill-intent: alarm.delete
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: delete
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteAlarmRequest'
+            example:
+              uuid: "alarm-uuid-001"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteAlarmResponse'
+              examples:
+                deleteAlarm:
+                  value:
+                    type: DeleteAlarmResponse
+                    version: v1
+                    msgId: "1751609244329"
+                    code: 0
+                    message: success
+                    data: true
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Clear All Alarms
+  # ────────────────────────────────────────────────────────────────
+  /alarms/clear:
+    post:
+      tags: [Alarm]
+      summary: Clear All Alarms
+      description: Clear all alarm records, no request body required.
+      operationId: clearAlarms
+      x-skill-intent: alarm.clear
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: delete
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClearAlarmsResponse'
+              examples:
+                clearAlarms:
+                  value:
+                    type: ClearAlarmsResponse
+                    version: v1
+                    msgId: "1751609244330"
+                    code: 0
+                    message: success
+                    data: true
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Batch Acknowledge Alarms by UUID
+  # ────────────────────────────────────────────────────────────────
+  /alarms/ack:
+    post:
+      tags: [Alarm]
+      summary: Batch Acknowledge Alarms by UUID
+      description: |
+        Batch acknowledge alarms by a list of alarm record UUIDs.
+        The parameter `forceCleared` is not exposed to the client and is fixed as false on the server side.
+      operationId: ackAlarms
+      x-skill-intent: alarm.ack
+      x-idempotent: false
+      x-retryable: true
+      x-side-effects: update
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AckAlarmsRequest'
+            example:
+              uuids: ["alarm-uuid-001", "alarm-uuid-002"]
+              notes: "Acknowledged on site"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AckAlarmsResponse'
+              examples:
+                ackAlarms:
+                  value:
+                    type: AckAlarmsResponse
+                    version: v1
+                    msgId: "1751609244331"
+                    code: 0
+                    message: success
+                    data: true
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Batch Acknowledge Alarms by Point ID
+  # ────────────────────────────────────────────────────────────────
+  /alarms/ack-by-pointId:
+    post:
+      tags: [Alarm]
+      summary: Batch Acknowledge Alarms by Point ID
+      description: |
+        Batch acknowledge unacknowledged alarms for a measurement point based on `devicePointId`.
+        The parameter `forceCleared` is not exposed to the client and is fixed as false on the server side.
+      operationId: ackAlarmsByPointId
+      x-skill-intent: alarm.ack.by-point
+      x-idempotent: false
+      x-retryable: true
+      x-side-effects: update
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AckAlarmsByPointIdRequest'
+            example:
+              devicePointId: "point-001"
+              notes: "Acknowledged on site"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AckAlarmsByPointIdResponse'
+              examples:
+                ackAlarmsByPointId:
+                  value:
+                    type: AckAlarmsByPointIdResponse
+                    version: v1
+                    msgId: "1751609244332"
+                    code: 0
+                    message: success
+                    data: true
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  # ────────────────────────────────────────────────────────────────
+  # Query Alarm Rule List
+  # ────────────────────────────────────────────────────────────────
+  /alarm-rules:
+    get:
+      tags: [Alarm]
+      summary: Query Alarm Rule List
+      description: |
+        Query paginated alarm rule list (excluding template rules).
+        Optionally filter by `ruleName` (case-insensitive, contains match).
+      operationId: getAlarmRules
+      x-skill-intent: alarm.rule.list
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: 
+        - name: ruleName
+          in: query
+          description: Fuzzy match keyword for rule name (optional, defaults to no filtering)
+          required: false
+          schema:
+            type: string
+          example: Temperature
+        - name: pageNum
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+          example: 1
+        - name: pageSize
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+          example: 200
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlarmRulesResponse'
+              examples:
+                alarmRulesPage:
+                  value:
+                    type: GetAlarmRuleListResponse
+                    version: v1
+                    msgId: "1751609244333"
+                    code: 0
+                    message: success
+                    data:
+                      totalCount: 2
+                      pageNum: 1
+                      pageSize: 200
+                      data:
+                        - ruleId: "rule-001"
+                          ruleName: "High Temperature Alarm"
+                          alarmClass: Warning
+                          alarmText: "Temperature exceeds threshold"
+                          alarmTarget: "Temperature"
+                          delayToAlarmMs: 5000
+                          delayToNormalMs: 10000
+                          enabled: true
+                          updatedBy: "admin"
+                          updatedTime: 1704100000000
+                        - ruleId: "rule-002"
+                          ruleName: "Smoke Alarm"
+                          alarmClass: Critical
+                          alarmText: "Smoke Detected"
+                          alarmTarget: "Smoke Concentration"
+                          delayToAlarmMs: 0
+                          delayToNormalMs: 0
+                          enabled: true
+                          updatedBy: "admin"
+                          updatedTime: 1704110000000
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
 # ══════════════════════════════════════════════════════════════════
 # Components
 # ══════════════════════════════════════════════════════════════════
@@ -2190,6 +3497,18 @@ components:
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000003"
               code: 403
               message: "No permission to access this resource"
+    ConflictResponse:
+      description: The current resource state conflicts with the request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    UnprocessableEntityResponse:
+      description: The request format is correct, but the protocol, entity, or configuration is not supported
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
     NotFoundResponse:
       description: Resource not found
       content:
@@ -2226,8 +3545,20 @@ components:
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000006"
               code: 500
               message: "Internal server error"
+    BadGatewayResponse:
+      description: Edge or Cloud command call failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            example:
+              type: ErrorMessage
+              version: v1
+              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000007"
+              code: 502
+              message: "Edge or Cloud command call failed"
     ServiceUnavailableResponse:
-      description: Service unavailable
+      description: Service unavailable; usually indicates the current environment is Edge, or the Cloud service 'cloudlinkcloud' is not loaded
       content:
         application/json:
           schema:
@@ -2238,13 +3569,29 @@ components:
               msgId: "a1b2c3d4-e5f6-7890-abcd-err000000007"
               code: 503
               message: "Service temporarily unavailable"
-  
 
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
-      description: "Authorization: Bearer token"
+      description: "Authorization: Bearer <Token>"
+
+  # Common request header parameters
+  parameters:
+    ResourceType:
+      name: type
+      in: path
+      required: true
+      description: "Stable external resource type, for example: system, protocol.network, protocol.device, protocol.point"
+      schema:
+        type: string
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: Globally unique resource ID; for both standard and protocol resources, use the id returned from the API as-is
+      schema:
+        type: string
 
   schemas:
 
@@ -2275,6 +3622,162 @@ components:
      
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
+
+    # ── Common ANode Resource ──────────────────────────────────────────
+    ResourceUpdateRequest:
+      type: object
+      required: [properties]
+      properties:
+        properties:
+          type: object
+          minProperties: 1
+          additionalProperties: true
+          description: Whitelisted fields to be modified, using standard JSON scalars
+
+    ResourceActionRequest:
+      type: object
+      required: [id]
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          minLength: 1
+          description: The opaque resource ID returned by the server
+        input:
+          type: object
+          additionalProperties: true
+          default: {}
+          description: Command input parameters; specific fields are defined by the resource type's command schema
+
+    ResourceOpenApiResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              nullable: true
+              description: The synchronous result of a command or background task information, structure as defined by the resource command output schema
+
+    ResourceHealth:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [healthy, disabled, fault, down, stale, "null", alarm, overridden, unackedAlarm, unknown]
+          description: Read-only status normalized based on current Studio enabled, status, and faultCause; does not actively probe devices
+        enabled:
+          type: boolean
+        faultCause:
+          type: string
+
+    ResourceItem:
+      type: object
+      description: |
+        For sequence resources, parsable historical effects are converted into properties.data.type=commands in lists and details.
+        If parsing fails, ID, name, revision, binding, and original format are retained,
+        and properties.data={"type":"unavailable","reason":"Effect data cannot be represented as commands"} is returned.
+        Command steps or raw protocol bytes are not returned and storage is not modified. Unavailable resources prohibit attribute updates, assign, and retry.
+        User configuration can still be unbound; if unbound, they can be deleted; only bindings with SYNCED and syncedRevision=revision can be started.
+        Top-level "commands" of the resource are allowed operation names, which are different from the step effects in properties.data.commands.
+        create/preview only accepts commands data, not unavailable.
+        For sequence "assign" input, only deviceId is accepted, and always assigns the latest version; passing revision (including null) will be rejected.
+      required: [id, type, properties]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        protocolId:
+          type: string
+          description: Returned for protocol resources; not returned for regular ANode resources
+        properties:
+          type: object
+          additionalProperties: true
+          description: Collection of external attribute values; values use standard JSON scalars or business objects. Studio internal path/type/value wrappers are not returned, nor are sensitive configurations marked as writeOnly in dynamic schemas included.
+        schema:
+          type: object
+          additionalProperties: true
+          description: The dynamic configuration schema returned when reading a protocol resource by ID; sensitive fields are marked with sensitive=true, writeOnly=true, readable=false
+        health:
+          $ref: '#/components/schemas/ResourceHealth'
+
+    ResourceTypeSummary:
+      type: object
+      required: [type, operations, commands]
+      properties:
+        type:
+          type: string
+        operations:
+          type: array
+          items:
+            type: string
+            enum: [query, get, update]
+        commands:
+          type: array
+          items:
+            type: string
+
+    ResourceTypesResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: object
+              required: [items]
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ResourceTypeSummary'
+
+    ResourceTypeResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: object
+              additionalProperties: true
+              description: External resource type definition; protocol resources contain the dynamic configuration schema for each protocolId and a read-only health schema
+
+    ResourceQueryResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: object
+              required: [type, items, page, pageSize, hasMore]
+              properties:
+                type:
+                  type: string
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ResourceItem'
+                page:
+                  type: integer
+                  minimum: 1
+                pageSize:
+                  type: integer
+                  minimum: 1
+                hasMore:
+                  type: boolean
+
+    ResourceResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              $ref: '#/components/schemas/ResourceItem'
+        
 
     # ── Space ────────────────────────────────────────────────────
     SpaceNode:
@@ -2687,6 +4190,158 @@ components:
         message: success
         data: ""
 
+    QueryDevicePointInfoItem:
+      type: object
+      required: [deviceId, endpointId, functionCode]
+      properties:
+        deviceId:
+          type: string
+        endpointId:
+          type: integer
+        functionCode:
+          type: string
+        traitCode:
+          type: string
+          nullable: true
+        commandCode:
+          type: string
+          nullable: true
+      description: Only one of traitCode or commandCode must be provided.
+
+    QueryDevicePointInfoRequest:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/QueryDevicePointInfoItem'
+
+    QueryDevicePointInfoResult:
+      allOf:
+        - $ref: '#/components/schemas/QueryDevicePointInfoItem'
+        - type: object
+          required: [code]
+          properties:
+            deviceName:
+              type: string
+              nullable: true
+            pointName:
+              type: string
+              nullable: true
+            space:
+              $ref: '#/components/schemas/DeviceSpace'
+              nullable: true
+            code:
+              type: integer
+            message:
+              type: string
+              nullable: true
+
+    QueryDevicePointInfoResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/QueryDevicePointInfoResult'
+      example:
+        type: QueryDevicePointInfoResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000029"
+        code: 0
+        message: success
+        data:
+          - deviceId: "device-001"
+            endpointId: 1
+            functionCode: "Output"
+            traitCode: "OnOff"
+            deviceName: "Living Room Light"
+            pointName: "Main Light Switch"
+            space:
+              parentSpaceId: "space-home-001"
+              spaceId: "space-livingroom-001"
+              name: "Living Room"
+            code: 0
+            message: success
+
+    UpdateDeviceNameRequest:
+      type: object
+      required: [deviceId, name]
+      properties:
+        deviceId:
+          type: string
+        name:
+          type: string
+          minLength: 1
+      example:
+        deviceId: "device-001"
+        name: "Living Room Main Light"
+
+    UpdateDeviceNameResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: Returns an empty string after successful update.
+              example: ""
+      example:
+        type: UpdateDeviceNameResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000002a"
+        code: 0
+        message: success
+        data: ""
+
+    UpdateDevicePointNameRequest:
+      type: object
+      required: [deviceId, endpointId, functionCode, pointName]
+      properties:
+        deviceId:
+          type: string
+        endpointId:
+          type: integer
+        functionCode:
+          type: string
+        traitCode:
+          type: string
+          nullable: true
+        commandCode:
+          type: string
+          nullable: true
+        pointName:
+          type: string
+          minLength: 1
+      description: Only one of traitCode or commandCode must be provided.
+      example:
+        deviceId: "device-001"
+        endpointId: 1
+        functionCode: "Output"
+        traitCode: "OnOff"
+        pointName: "Main Light Switch"
+
+    UpdateDevicePointNameResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: Returns an empty string after successful update.
+              example: ""
+      example:
+        type: UpdateDevicePointNameResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000002b"
+        code: 0
+        message: success
+        data:
+
     VirtualDeviceAddRequest:
       type: object
       required: [name, virtualDeviceType]
@@ -2696,8 +4351,9 @@ components:
           description: Virtual device name
         virtualDeviceType:
           type: string
-          enum: [ir, lightbox]
-          description: "Virtual device type.<br />`ir`: Infrared device.<br />`lightbox`: Lightbox device."
+          enum: [ir, lightbox, virtual]
+          description: |
+            Virtual device type.<br />`ir` : Infrared device.<br />`lightbox` : Lightbox device.<br />`virtual` : Virtual custom device.
 
     VirtualDeviceAddData:
       type: object
@@ -2721,7 +4377,87 @@ components:
         code: 0
         message: success
         data:
-          deviceId: "virtual-device-001"
+          deviceId: "virtual.device-001"
+
+    VirtualDeviceSourcePoint:
+      type: object
+      required: [deviceId, endpointId, functionCode]
+      properties:
+        deviceId:
+          type: string
+          description: Source device ID
+        endpointId:
+          type: integer
+          format: int32
+          description: Endpoint ID, must be greater than or equal to 0
+        functionCode:
+          type: string
+          description: Function code
+        traitCode:
+          type: string
+          nullable: true
+          description: Property code; mutually exclusive with commandCode
+        commandCode:
+          type: string
+          nullable: true
+          description: Command code; mutually exclusive with traitCode
+      description: Only one of traitCode or commandCode must be provided.
+
+    VirtualDeviceBindPointsRequest:
+      type: object
+      required: [deviceId, sourcePoints]
+      properties:
+        deviceId:
+          type: string
+          description: Virtual custom device ID
+        sourcePoints:
+          type: array
+          minItems: 1
+          description: List of source functional points to bind or unbind
+          items:
+            $ref: '#/components/schemas/VirtualDeviceSourcePoint'
+      example:
+        deviceId: "virtual.device-001"
+        sourcePoints:
+          - deviceId: "lumi.source-001"
+            endpointId: 1
+            functionCode: "OnOff"
+            traitCode: "OnOff"
+
+    VirtualDeviceBindPointsResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: Returns an empty string after successful binding
+              example: ""
+      example:
+        type: VirtualDeviceBindPointsResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000001e"
+        code: 0
+        message: success
+        data: ""
+
+    VirtualDeviceUnbindPointsResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: string
+              description: Returns an empty string after successful unbinding
+         
+              example: ""
+      example:
+        type: VirtualDeviceUnbindPointsResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000001f"
+        code: 0
+        message: success
+        data: ""
 
     DeviceUnbindResponse:
       allOf:
@@ -3545,7 +5281,519 @@ components:
           description: List of devices on the current page
           items:
             $ref: '#/components/schemas/DeviceInfo'
-            
+
+    # ── Firmware ───────────────────────────────────────────────────
+    SearchUpgradableFirmwareByDeviceIdsRequest:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: '#/components/schemas/SearchUpgradableFirmwareByDeviceIdsRequestData'
+
+    SearchUpgradableFirmwareByDeviceIdsRequestData:
+      type: object
+      required: [deviceIds]
+      properties:
+        deviceIds:
+          type: array
+          description: List of device IDs, at least 1, at most 200.
+          minItems: 1
+          maxItems: 200
+          uniqueItems: true
+          items:
+            type: string
+        includeDeviceTypes:
+          type: array
+          description: List of device types to include. If empty, acts as default (no whitelist filtering).
+          uniqueItems: true
+          items:
+            type: string
+        excludeDeviceTypes:
+          type: array
+          description: List of device types to exclude. If empty, acts as default (no blacklist filtering).
+          uniqueItems: true
+          items:
+            type: string
+
+    UpgradeFirmwareFile:
+      type: object
+      required: [firmwareVersion, filePath, firmwareMd5, fileSize, firmwareType, option]
+      properties:
+        firmwareVersion:
+          type: string
+          description: Target firmware version
+        filePath:
+          type: string
+          format: uri
+          description: Firmware download URL
+        firmwareMd5:
+          type: string
+          description: Firmware file MD5
+        fileSize:
+          type: integer
+          format: int64
+          minimum: 1
+          description: Firmware file size, in bytes
+        firmwareType:
+          type: string
+          description: Firmware partition type, e.g. main, studio
+        option:
+          type: integer
+          description: Upgrade option passed through to Hub OTA
+
+    UpgradeFirmwareDevice:
+      type: object
+      required: [did, firmware]
+      properties:
+        did:
+          type: string
+          description: Studio gateway device ID
+        firmware:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/UpgradeFirmwareFile'
+
+    UpgradeFirmwareRequestData:
+      type: array
+      minItems: 1
+      maxItems: 1
+      description: The upgrade_handler process only processes one device at a time.
+      items:
+        $ref: '#/components/schemas/UpgradeFirmwareDevice'
+
+    UpgradeFirmwareResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              additionalProperties: false
+            code:
+              type: integer
+              description: OTA request result code, 0 means upgrade request accepted
+      example:
+        type: UpgradeFirmwareResponse
+        version: v1
+        msgId: "3"
+        code: 0
+        message: success
+        data: {}
+
+    DevicePointHistoryQueryRequest:
+      type: object
+      properties:
+        deviceIds:
+          type: array
+          description: List of device IDs, up to 200. If omitted or empty array, query all accessible current devices in the current request context.
+          maxItems: 200
+          default: []
+          items:
+            type: string
+        traitCodes:
+          type: array
+          description: List of trait codes, up to 200. If omitted or empty array, there is no trait filter. If non-empty but all are not recognized as traits, parameter error is returned.
+          maxItems: 200
+          default: []
+          items:
+            type: string
+        startTime:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Query start time, Unix millisecond timestamp, inclusive.
+        endTime:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Query end time, Unix millisecond timestamp, exclusive; must be greater than startTime, max range 7 days.
+        descending:
+          type: boolean
+          default: true
+          description: true for descending order by time, false for ascending; must remain same in a cursor chain.
+        pageSize:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 50
+          description: Max number of records per page, range 1–200.
+        cursor:
+          type: string
+          nullable: true
+          description: nextCursor returned by previous page, omit for initial query.
+
+    DevicePointHistoryItem:
+      type: object
+      required: [deviceId, value, unit, time]
+      properties:
+        deviceId:
+          type: string
+          description: The device ID to which the historical record belongs.
+        deviceName:
+          type: string
+          nullable: true
+          description: Current device name; omitted if the device has been deleted or cannot be resolved.
+        endpointId:
+          type: integer
+          format: int32
+          nullable: true
+          description: Current point endpoint ID; omitted if the point has been deleted or remapped.
+        functionCode:
+          type: string
+          nullable: true
+          description: Current point function Spec code; omitted if cannot be resolved.
+        traitCode:
+          type: string
+          nullable: true
+          description: Trait Spec code of the history record; omitted if cannot be resolved.
+        value:
+          description: Typed JSON scalar; number, boolean, enum index, or string. NaN and positive/negative Infinity return null.
+          oneOf:
+            - type: number
+            - type: boolean
+            - type: string
+              nullable: true
+        valueName:
+          type: string
+          nullable: true
+          description: The business display text for boolean and enum trait values; omitted if unmatched or untranslated.
+        pointName:
+          type: string
+          nullable: true
+          description: Current point name; omitted if cannot be resolved.
+        triggerName:
+          type: string
+          nullable: true
+          description: Current trigger node name; omitted if cannot be resolved.
+        unit:
+          type: string
+          description: Unit of historical record.
+        time:
+          type: integer
+          format: int64
+          description: History record time, Unix millisecond timestamp.
+
+    DevicePointHistoryQueryData:
+      type: object
+      required: [items, startTime, endTime]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DevicePointHistoryItem'
+        nextCursor:
+          type: string
+          nullable: true
+          description: Next page opaque cursor; empty or omitted indicates last page.
+        startTime:
+          type: integer
+          format: int64
+          description: Server-resolved query start time in Unix milliseconds. Reuse when continuing with cursor.
+        endTime:
+          type: integer
+          format: int64
+          description: Server-resolved query end time in Unix milliseconds. Reuse when continuing with cursor.
+
+    DevicePointHistoryQueryResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum: [DevicePointHistoryQueryResponse]
+            version:
+              type: string
+              enum: [v1]
+            data:
+              $ref: '#/components/schemas/DevicePointHistoryQueryData'
+      example:
+        type: DevicePointHistoryQueryResponse
+        version: v1
+        msgId: "history-query-1"
+        code: 0
+        message: success
+        data:
+          items:
+            - deviceId: "device-001"
+              deviceName: "Living room light"
+              endpointId: 1
+              functionCode: Light
+              traitCode: OnOff
+              value: true
+              valueName: "On"
+              pointName: "Switch"
+              triggerName: "Automation"
+              unit: ""
+              time: 1770639800000
+          startTime: 1770114300000
+          endTime: 1770639900000
+          nextCursor: "opaque-next-cursor"
+
+    SearchFirmwareUpgradeStatusRequestData:
+      type: object
+      required: [deviceIds]
+      properties:
+        deviceIds:
+          type: array
+          description: List of device IDs, at least 1, at most 1000. Duplicate IDs are not illegal, the server will deduplicate before querying.
+          minItems: 1
+          maxItems: 1000
+          items:
+            type: string
+
+    FirmwareUpgradeStatusItem:
+      type: object
+      required: [did, progress, firmwareType, time]
+      properties:
+        did:
+          type: string
+          description: Device ID
+        upgradeResult:
+          type: integer
+          nullable: true
+          description: Upgrade result. null means upgrading, 0 means upgrade success, non-zero means upgrade failed.
+        progress:
+          type: integer
+          description: Upgrade progress percent
+          minimum: 0
+          maximum: 100
+        firmwareType:
+          type: string
+          description: Firmware type
+        cause:
+          type: string
+          nullable: true
+          description: Reason for failure. Returned when upgradeResult is not zero.
+        time:
+          type: integer
+          format: int64
+          description: Upgrade status update timestamp, in milliseconds
+
+    SearchFirmwareUpgradeStatusResponseData:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          description: List of firmware upgrade statuses
+          items:
+            $ref: '#/components/schemas/FirmwareUpgradeStatusItem'
+
+    SearchFirmwareUpgradeStatusResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/SearchFirmwareUpgradeStatusResponseData'
+      example:
+        type: SearchFirmwareUpgradeStatusResponse
+        version: v1
+        msgId: "3"
+        code: 0
+        message: success
+        data:
+          items:
+            - did: "device-001"
+              upgradeResult: null
+              progress: 50
+              firmwareType: "main"
+              cause: null
+              time: 1710000000000
+            - did: "device-002"
+              upgradeResult: 0
+              progress: 100
+              firmwareType: "studio"
+              cause: null
+              time: 1710000001000
+
+    CancelUpgradeFirmwareRequestData:
+      type: object
+      required: [deviceIds]
+      properties:
+        deviceIds:
+          type: array
+          description: List of device IDs, at least 1, at most 200. Duplicate IDs are not illegal, the server will deduplicate before sending.
+          minItems: 1
+          maxItems: 200
+          items:
+            type: string
+
+    CancelUpgradeFirmwareResultItem:
+      type: object
+      required: [deviceId, resultCode]
+      properties:
+        deviceId:
+          type: string
+          description: Device ID
+        resultCode:
+          type: integer
+          description: Cancel command dispatch result for a single device. 0 means command was sent to gateway successfully, not that cancel succeeded on the gateway; non-zero means command send failed.
+
+    CancelUpgradeFirmwareResponseData:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          description: List of dispatch results for single device cancel commands
+          items:
+            $ref: '#/components/schemas/CancelUpgradeFirmwareResultItem'
+
+    CancelUpgradeFirmwareResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/CancelUpgradeFirmwareResponseData'
+            code:
+              type: integer
+              description: Interface result code, 0 means succeeded; check data.items[].resultCode for individual device cancel result.
+      example:
+        type: CancelUpgradeFirmwareResponse
+        version: v1
+        msgId: "4"
+        code: 0
+        message: success
+        data:
+          items:
+            - deviceId: "device-001"
+              resultCode: 0
+            - deviceId: "device-002"
+              resultCode: -1
+
+    SearchUpgradableFirmwareByDeviceIdsResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              description: Search results for upgradable firmware per device
+              required: [data]
+              properties:
+                data:
+                  type: array
+                  description: List of upgradable firmware results per device
+                  items:
+                    $ref: '#/components/schemas/UpgradableDeviceFirmwareItem'
+      example:
+        type: SearchUpgradableFirmwareByDeviceIdsResponse
+        version: v1
+        msgId: "2"
+        code: 0
+        message: success
+        data:
+          data:
+            - deviceId: "device-001"
+              deviceName: "Bedroom light"
+              state: true
+              space:
+                parentSpaceId: "space-home-001"
+                name: "Bedroom"
+                spaceId: "15sd85"
+              upgradableFirmwares:
+                - firmwareVersion: "99.99.99"
+                  intVersion: null
+                  filePath: "https://xxx"
+                  fileSize: 123456
+                  firmwareMd5: "xx"
+                  firmwareCRC32: "xx"
+                  firmwareSha256: null
+                  firmwareType: "main"
+                  updateLog: "Firmware upgrade notes"
+                  model: ""
+                  isNecessary: false
+                  isForce: false
+                  state: 3
+                  releaseTime: 1710001234567
+
+    UpgradableFirmwareType:
+      type: string
+      description: Firmware type
+      enum: [main, zigbee, ai, matter, studio, rs485]
+
+    UpgradableFirmwareInfo:
+      type: object
+      required: [firmwareVersion, filePath, fileSize, firmwareMd5, firmwareCRC32, firmwareType, isNecessary, isForce, state]
+      properties:
+        firmwareVersion:
+          type: string
+          description: Firmware version number
+        intVersion:
+          type: integer
+          nullable: true
+          description: Integer version for Matter-type firmware
+        filePath:
+          type: string
+          description: Firmware file URL
+        fileSize:
+          type: integer
+          format: int64
+          description: Firmware file size (bytes)
+        firmwareMd5:
+          type: string
+          description: Firmware file MD5
+        firmwareCRC32:
+          type: string
+          description: Firmware file CRC32
+        firmwareSha256:
+          type: string
+          nullable: true
+          description: Firmware file SHA256
+        firmwareType:
+          $ref: '#/components/schemas/UpgradableFirmwareType'
+        updateLog:
+          type: string
+          nullable: true
+          description: Firmware upgrade notes
+        model:
+          type: string
+          nullable: true
+          description: Device model
+        isNecessary:
+          type: boolean
+          description: Whether this is a mandatory through-version. true is required, false is optional.
+        isForce:
+          type: boolean
+          description: Whether the upgrade is forced
+        state:
+          type: integer
+          description: Firmware state. 1 = Testing, 2 = Gray release, 3 = Released, 5 = Beta
+          enum: [1, 2, 3, 5]
+        releaseTime:
+          type: integer
+          format: int64
+          nullable: true
+          description: Firmware release effective time (milliseconds timestamp)
+
+    UpgradableDeviceFirmwareItem:
+      type: object
+      required: [deviceId, deviceName, state, upgradableFirmwares]
+      properties:
+        deviceId:
+          type: string
+          description: Device ID
+        deviceName:
+          type: string
+          description: Device name
+        state:
+          type: boolean
+          description: Device online status
+        space:
+          $ref: '#/components/schemas/DeviceSpace'
+          description: Device associated space
+        upgradableFirmwares:
+          type: array
+          description: List of upgradable firmware for this device
+    
+          items:
+            $ref: '#/components/schemas/UpgradableFirmwareInfo' 
+
+    
     # ── Automation ────────────────────────────────────────────────
     AutomationDefinitionType:
       type: string
@@ -4470,6 +6718,112 @@ components:
         data:
           totalValue: 156.2
     
+    EmsSummarySpaceRequest:
+      type: object
+      required: [spaceId]
+      properties:
+        spaceId:
+          type: string
+          description: Space ID (automatically identifies home or room)
+          example: "home_001"
+
+    EmsSummaryDeviceItem:
+      type: object
+      required: [did]
+      properties:
+        did:
+          type: string
+          description: Device ID
+          example: "device_001"
+        endpointId:
+          type: array
+          items:
+            type: integer
+          description: Endpoint ID list. Query all endpoints of the device when empty or not provided.
+          example: [1, 2]
+
+    EmsSummaryDevicesRequest:
+      type: object
+      required: [devices]
+      properties:
+        devices:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/EmsSummaryDeviceItem'
+          description: Device list
+
+    EmsSummaryData:
+      type: object
+      required: [today, yesterday, week, month, year]
+      properties:
+        today:
+          type: number
+          format: double
+          description: Today's energy consumption (kWh)
+          example: 0.112
+        yesterday:
+          type: number
+          format: double
+          description: Yesterday's energy consumption (kWh)
+          example: 2.221
+        week:
+          type: number
+          format: double
+          description: Energy consumption in the last 7 days (kWh)
+          example: 5.222
+        month:
+          type: number
+          format: double
+          description: Energy consumption in the last 30 days (kWh)
+          example: 9.221
+        year:
+          type: number
+          format: double
+          description: Energy consumption in the last 365 days (kWh)
+     
+          example: 230.229
+
+    EmsSpaceSummaryResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/EmsSummaryData'
+      example:
+        type: EmsSpaceSummaryResponse
+        version: v1
+        msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f010"
+        code: 0
+        message: success
+        data:
+          today: 0.112
+          yesterday: 2.221
+          week: 5.222
+          month: 9.221
+          year: 230.229
+
+    EmsDevicesSummaryResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/EmsSummaryData'
+      example:
+        type: EmsDevicesSummaryResponse
+        version: v1
+        msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7f010"
+        code: 0
+        message: success
+        data:
+          today: 0.112
+          yesterday: 2.221
+          week: 5.222
+          month: 9.221
+          year: 230.229
+
     StudioStatisticsDimension:
       type: string
       description: Studio statistics dimension
@@ -4514,3 +6868,361 @@ components:
           linkageCount: 24
           spaceCount: 16
           sceneCount: 12
+
+    # ── Alarm ─────────────────────────────────────────────────────
+    AlarmClass:
+      type: string
+      enum: [Info, Warning, Critical]
+      description: Alarm severity level
+
+    AlarmSourceState:
+      type: string
+      enum: [NORMAL, OFF_NORMAL, FAULT, ALERT]
+      description: Alarm status
+
+    AlarmInfo:
+      type: object
+      required:
+        - uuid
+        - deviceName
+        - deviceId
+        - devicePointName
+        - alarmClass
+        - alarmRuleName
+        - alarmText
+        - alarmValue
+        - sourceState
+        - alarmTime
+      properties:
+        uuid:
+          type: string
+          description: Unique identifier for the alarm record
+          example: "alarm-uuid-001"
+        deviceName:
+          type: string
+          description: Name of the alarm source device
+          example: "Living Room Temperature & Humidity Sensor"
+        deviceId:
+          type: string
+          description: Device ID
+          example: "device-001"
+        devicePointName:
+          type: string
+          description: Data point name
+          example: "Temperature"
+        alarmClass:
+          $ref: '#/components/schemas/AlarmClass'
+        alarmRuleName:
+          type: string
+          description: Name of the alarm rule
+          example: "High Temperature Alarm"
+        alarmText:
+          type: string
+          description: Alarm message text
+          example: "Temperature exceeds threshold"
+        alarmValue:
+          type: string
+          description: Alarm value / value description
+          example: "32.5"
+        sourceState:
+          $ref: '#/components/schemas/AlarmSourceState'
+        alarmTime:
+          type: integer
+          format: int64
+          description: Alarm time (UTC millisecond timestamp)
+          example: 1704100000000
+
+    AlarmListData:
+      type: object
+      required: [totalCount, pageNum, pageSize, data]
+      properties:
+        totalCount:
+          type: integer
+          description: Total number of alarms matching the criteria
+          example: 2
+        pageNum:
+          type: integer
+          description: Current page number
+          example: 1
+        pageSize:
+          type: integer
+          description: Current page size
+          example: 200
+        data:
+          type: array
+          description: List of alarms on the current page
+          items:
+            $ref: '#/components/schemas/AlarmInfo'
+
+    AlarmsResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/AlarmListData'
+      example:
+        type: GetAlarmListResponse
+        version: v1
+        msgId: "1751609244328"
+        code: 0
+        message: success
+        data:
+          totalCount: 2
+          pageNum: 1
+          pageSize: 200
+          data:
+            - uuid: "alarm-uuid-001"
+              deviceName: "Living Room Temperature & Humidity Sensor"
+              deviceId: "device-001"
+              devicePointName: "Temperature"
+              alarmClass: Warning
+              alarmRuleName: "High Temperature Alarm"
+              alarmText: "Temperature exceeds threshold"
+              alarmValue: "32.5"
+              sourceState: OFF_NORMAL
+              alarmTime: 1704100000000
+            - uuid: "alarm-uuid-002"
+              deviceName: "Bedroom Smoke Sensor"
+              deviceId: "device-002"
+              devicePointName: "Smoke Concentration"
+              alarmClass: Critical
+              alarmRuleName: "Smoke Alarm"
+              alarmText: "Smoke detected"
+              alarmValue: "1"
+              sourceState: OFF_NORMAL
+              alarmTime: 1704110000000
+
+    DeleteAlarmRequest:
+      type: object
+      required: [uuid]
+      properties:
+        uuid:
+          type: string
+          description: Unique identifier for the alarm record
+          example: "alarm-uuid-001"
+      example:
+        uuid: "alarm-uuid-001"
+
+    DeleteAlarmResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: boolean
+              description: Whether the deletion was successful
+              example: true
+      example:
+        type: DeleteAlarmResponse
+        version: v1
+        msgId: "1751609244329"
+        code: 0
+        message: success
+        data: true
+
+    AckAlarmsRequest:
+      type: object
+      required: [uuids]
+      properties:
+        uuids:
+          type: array
+          description: List of alarm record UUIDs
+          minItems: 1
+          items:
+            type: string
+          example: ["alarm-uuid-001", "alarm-uuid-002"]
+        notes:
+          type: string
+          nullable: true
+          description: Acknowledgment notes (optional)
+          example: "Confirmed onsite"
+      example:
+        uuids: ["alarm-uuid-001", "alarm-uuid-002"]
+        notes: "Confirmed onsite"
+
+    AckAlarmsResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: boolean
+              description: Whether the acknowledgment was successful
+              example: true
+      example:
+        type: AckAlarmsResponse
+        version: v1
+        msgId: "1751609244331"
+        code: 0
+        message: success
+        data: true
+
+    AckAlarmsByPointIdRequest:
+      type: object
+      required: [devicePointId]
+      properties:
+        devicePointId:
+          type: string
+          description: Device data point ID
+          example: "point-001"
+        notes:
+          type: string
+          nullable: true
+          description: Acknowledgment notes (optional)
+          example: "Confirmed onsite"
+      example:
+        devicePointId: "point-001"
+        notes: "Confirmed onsite"
+
+    AckAlarmsByPointIdResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: boolean
+              description: Whether the acknowledgment was successful
+              example: true
+      example:
+        type: AckAlarmsByPointIdResponse
+        version: v1
+        msgId: "1751609244332"
+        code: 0
+        message: success
+        data: true
+
+    AlarmRuleInfo:
+      type: object
+      required:
+        - ruleId
+        - ruleName
+        - alarmClass
+        - alarmText
+        - alarmTarget
+        - delayToAlarmMs
+        - delayToNormalMs
+        - enabled
+        - updatedBy
+        - updatedTime
+      properties:
+        ruleId:
+          type: string
+          description: Alarm rule ID
+          example: "rule-001"
+        ruleName:
+          type: string
+          description: Alarm rule name
+          example: "High Temperature Alarm"
+        alarmClass:
+          $ref: '#/components/schemas/AlarmClass'
+        alarmText:
+          type: string
+          description: Alarm message text
+          example: "Temperature exceeds threshold"
+        alarmTarget:
+          type: string
+          description: Alarm target (data point/ability display name)
+          example: "Temperature"
+        delayToAlarmMs:
+          type: integer
+          format: int64
+          description: Alarm trigger delay (ms)
+          example: 5000
+        delayToNormalMs:
+          type: integer
+          format: int64
+          description: Recovery to normal delay (ms)
+          example: 10000
+        enabled:
+          type: boolean
+          description: Whether the rule is enabled
+          example: true
+        updatedBy:
+          type: string
+          description: Last updater
+          example: "admin"
+        updatedTime:
+          type: integer
+          format: int64
+          description: Last update time (UTC millisecond timestamp)
+          example: 1704100000000
+
+    AlarmRuleListData:
+      type: object
+      required: [totalCount, pageNum, pageSize, data]
+      properties:
+        totalCount:
+          type: integer
+          description: Total number of alarm rules matching the criteria
+          example: 2
+        pageNum:
+          type: integer
+          description: Current page number
+          example: 1
+        pageSize:
+          type: integer
+          description: Current page size
+          example: 200
+        data:
+          type: array
+          description: List of alarm rules on the current page
+          items:
+            $ref: '#/components/schemas/AlarmRuleInfo'
+
+    AlarmRulesResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/AlarmRuleListData'
+      example:
+        type: GetAlarmRuleListResponse
+        version: v1
+        msgId: "1751609244333"
+        code: 0
+        message: success
+        data:
+          totalCount: 2
+          pageNum: 1
+          pageSize: 200
+          data:
+            - ruleId: "rule-001"
+              ruleName: "High Temperature Alarm"
+              alarmClass: Warning
+              alarmText: "Temperature exceeds threshold"
+              alarmTarget: "Temperature"
+              delayToAlarmMs: 5000
+              delayToNormalMs: 10000
+              enabled: true
+              updatedBy: "admin"
+              updatedTime: 1704100000000
+            - ruleId: "rule-002"
+              ruleName: "Smoke Alarm"
+              alarmClass: Critical
+              alarmText: "Smoke detected"
+              alarmTarget: "Smoke Concentration"
+              delayToAlarmMs: 0
+              delayToNormalMs: 0
+              enabled: true
+              updatedBy: "admin"
+              updatedTime: 1704110000000
+
+    ClearAlarmsResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: boolean
+              description: Whether clearing all alarms was successful
+         
+              example: true
+      example:
+        type: ClearAlarmsResponse
+        version: v1
+        msgId: "1751609244330"
+        code: 0
+        message: success
+        data: true

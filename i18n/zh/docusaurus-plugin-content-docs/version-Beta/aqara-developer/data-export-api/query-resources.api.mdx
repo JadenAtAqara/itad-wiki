@@ -1,0 +1,75 @@
+---
+id: query-resources
+title: "分页查询资源"
+description: "分页查询指定类型的资源。仅可使用该资源类型定义中 query.properties 声明的筛选条件，传入未声明的查询参数会返回 400。"
+sidebar_label: "分页查询资源"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "get api-method"
+info_path: i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-developer/data-export-api/data-export-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"分页查询资源"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"get"}
+  path={"/resource-types/{type}/resources"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+分页查询指定类型的资源。仅可使用该资源类型定义中 query.properties 声明的筛选条件，传入未声明的查询参数会返回 400。
+parentId 只适用于声明了该筛选条件的层级资源；protocolId 只适用于协议资源。page 默认 1，pageSize 默认 20、最大 100。
+sort 格式为 `字段:asc` 或 `字段:desc`，字段必须出现在 query.sortable 中；未传时使用资源类型定义的 defaultSort。
+分页结果不计算 total，以 hasMore 表示是否还有下一页。调用前可通过 GET /resource-types/\{type\} 获取当前运行时规则。
+
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[{"name":"type","in":"path","required":true,"description":"稳定的对外资源类型，例如 system、protocol.network、protocol.device、protocol.point","schema":{"type":"string"}},{"name":"parentId","in":"query","required":false,"schema":{"type":"string"}},{"name":"protocolId","in":"query","required":false,"schema":{"type":"string"}},{"name":"page","in":"query","required":false,"schema":{"type":"integer","minimum":1,"default":1}},{"name":"pageSize","in":"query","required":false,"schema":{"type":"integer","minimum":1,"maximum":100,"default":20}},{"name":"sort","in":"query","required":false,"schema":{"type":"string","default":"id:asc"}}]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={undefined}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"成功","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","required":["data"],"properties":{"data":{"type":"object","required":["type","items","page","pageSize","hasMore"],"properties":{"type":{"type":"string"},"items":{"type":"array","items":{"type":"object","description":"sequence 资源在列表和详情中将可解析的历史效果转换为 properties.data.type=commands。\n无法解析时保留 ID、名称、revision、绑定及原始 format，返回\nproperties.data={\"type\":\"unavailable\",\"reason\":\"Effect data cannot be represented as commands\"}，\n不返回步骤 commands 或原始协议字节，不修改存储。unavailable 资源禁止属性更新、assign 和 retry。\n用户配置仍可解绑，无绑定时可删除；仅绑定为 SYNCED 且 syncedRevision=revision 时可启动。\n资源顶层 commands 是允许的操作名称，与 properties.data.commands 效果步骤不同。\ncreate/preview 只接受 commands 数据，不接受 unavailable。\nsequence 的 assign 输入仅接受 deviceId，始终分配最新版本；传入 revision（包括 null）会被拒绝。\n","required":["id","type","properties"],"properties":{"id":{"type":"string"},"type":{"type":"string"},"protocolId":{"type":"string","description":"协议资源返回；普通 ANode 资源不返回"},"properties":{"type":"object","additionalProperties":true,"description":"对外属性值集合；值使用普通 JSON 标量或业务对象，不返回 Studio 内部 path/type/value 包装，也不包含动态 Schema 标记为 writeOnly 的敏感配置"},"schema":{"type":"object","additionalProperties":true,"description":"按 ID 读取协议资源时返回的动态配置 Schema；敏感字段标记 sensitive=true、writeOnly=true、readable=false"},"health":{"type":"object","required":["status"],"properties":{"status":{"type":"string","enum":["healthy","disabled","fault","down","stale","null","alarm","overridden","unackedAlarm","unknown"],"description":"根据 Studio 当前 enabled、status、faultCause 归一化的只读状态；不主动探测设备"},"enabled":{"type":"boolean"},"faultCause":{"type":"string"}},"title":"ResourceHealth"}},"title":"ResourceItem"}},"page":{"type":"integer","minimum":1},"pageSize":{"type":"integer","minimum":1},"hasMore":{"type":"boolean"}}}}}],"title":"ResourceQueryResponse"}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 xxx 不能为空"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"token 已过期，请重新生成 token"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"无权限访问该资源"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"资源不存在"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"服务内部异常"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      

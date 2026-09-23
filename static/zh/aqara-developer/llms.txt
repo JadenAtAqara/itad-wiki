@@ -32,9 +32,21 @@
 - 查询 Trait 值: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-trait-values
 - 通过 Command 控制设备: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/execute-device-command
 - 向设备下发 Command 并等待响应: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/execute-device-command-await
+- 批量查询设备点位信息: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/query-device-point-info
+- 修改设备名称: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/update-device-name
+- 修改设备点位名称: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/update-device-point-name
 - 删除设备点位: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/delete-device-point
 - 添加虚拟设备: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/add-virtual-device
+- 绑定源设备功能点: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/bind-virtual-device-points
+- 解绑源设备功能点: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/unbind-virtual-device-points
 - 设备解绑: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/unbind-device
+- Resource: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/resource
+- 查询开放资源类型目录: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/list-resource-types
+- 查询资源类型定义: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/describe-resource-type
+- 分页查询资源: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/query-resources
+- 读取已知资源: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-resource
+- 修改已知资源属性: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/update-resource
+- 执行资源命令: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/execute-resource-action
 - Automation: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/automation
 - 查询支持自动化的端点能力列表: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-automation-capabilities
 - 创建自动化: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/create-automation
@@ -46,6 +58,13 @@
 - 删除自动化: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/delete-automations
 - 获取手动触发器列表: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/query-automation-manual-trigger-list
 - 执行手动触发器: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/execute-automation-manual-trigger
+- Firmware: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/firmware
+- 按设备ID查询可升级设备固件: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/search-upgradable-devices-firmware-by-device-ids
+- 发起固件升级: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/upgrade-firmware
+- 查询固件升级进度和结果: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/search-firmware-upgrade-status
+- 取消固件升级: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/cancel-upgrade-firmware
+- History: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/history
+- 查询设备点位值变化历史: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/query-device-point-history
 - Studio: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/studio
 - 获取 Studio 统计信息: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-studio-statistics
 - EMS: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/ems
@@ -53,6 +72,15 @@
 - 查询单空间能耗趋势: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-ems-trend-space
 - 查询单设备能耗总量: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-ems-total-device
 - 查询单空间能耗总量: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-ems-total-space
+- 查询空间能耗摘要: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-ems-summary-space
+- 查询多设备能耗摘要: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-ems-summary-devices
+- Alarm: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/alarm
+- 查询告警列表: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-alarms
+- 删除单条告警: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/delete-alarm
+- 全量删除告警: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/clear-alarms
+- 按 uuid 批量确认告警: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/ack-alarms
+- 按测点批量确认告警: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/ack-alarms-by-point-id
+- 查询告警规则列表: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-alarm-rules
 - 在线体验 WebSocket API: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/websocket-api/websocket-api
 - MQTT: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/mqtt-api/mqtt-api
 - 集成红外遥控控制 SDK（含 UI）: https://docs.aqara.com/zh/docs/aqara-developer/local-studio-development/sdk/infrared/integration

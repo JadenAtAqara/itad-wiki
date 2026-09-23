@@ -105,6 +105,24 @@ const sidebar: SidebarsConfig = {
         },
         {
           type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/query-device-point-info",
+          label: "批量查询设备点位信息",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/update-device-name",
+          label: "修改设备名称",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/update-device-point-name",
+          label: "修改设备点位名称",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/delete-device-point",
           label: "删除设备点位",
           className: "api-method post",
@@ -113,6 +131,18 @@ const sidebar: SidebarsConfig = {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/add-virtual-device",
           label: "添加虚拟设备",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/bind-virtual-device-points",
+          label: "绑定源设备功能点",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/unbind-virtual-device-points",
+          label: "解绑源设备功能点",
           className: "api-method post",
         },
         {
@@ -154,6 +184,53 @@ const sidebar: SidebarsConfig = {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/get-device-bind-result",
           label: "查询子设备入网结果",
+          className: "api-method post",
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "Resource",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-developer/data-export-api/resource",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/list-resource-types",
+          label: "查询开放资源类型目录",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/describe-resource-type",
+          label: "查询资源类型定义",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/query-resources",
+          label: "分页查询资源",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-resource",
+          label: "读取已知资源",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/update-resource",
+          label: "修改已知资源属性",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/execute-resource-action",
+          label: "执行资源命令",
           className: "api-method post",
         },
       ],
@@ -231,6 +308,58 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
+      label: "Firmware",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-developer/data-export-api/firmware",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/search-upgradable-devices-firmware-by-device-ids",
+          label: "按设备ID查询可升级设备固件",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/upgrade-firmware",
+          label: "发起固件升级",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/search-firmware-upgrade-status",
+          label: "查询固件升级进度和结果",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/cancel-upgrade-firmware",
+          label: "取消固件升级",
+          className: "api-method post",
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "History",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-developer/data-export-api/history",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/query-device-point-history",
+          label: "查询设备点位值变化历史",
+          className: "api-method post",
+        },
+      ],
+    },
+    {
+      type: "category",
       label: "Studio",
       link: {
         type: "doc",
@@ -278,6 +407,65 @@ const sidebar: SidebarsConfig = {
           id: "version-Beta/aqara-developer/data-export-api/get-ems-total-space",
           label: "查询单空间能耗总量",
           className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-ems-summary-space",
+          label: "查询空间能耗摘要",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-ems-summary-devices",
+          label: "查询多设备能耗摘要",
+          className: "api-method post",
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "Alarm",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-developer/data-export-api/alarm",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-alarms",
+          label: "查询告警列表",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/delete-alarm",
+          label: "删除单条告警",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/clear-alarms",
+          label: "全量删除告警",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/ack-alarms",
+          label: "按 uuid 批量确认告警",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/ack-alarms-by-point-id",
+          label: "按测点批量确认告警",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-alarm-rules",
+          label: "查询告警规则列表",
+          className: "api-method get",
         },
       ],
     },

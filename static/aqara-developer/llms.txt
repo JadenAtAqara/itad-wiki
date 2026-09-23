@@ -32,9 +32,21 @@
 - Query Trait Values: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-trait-values
 - Control Devices by Commands: https://docs.aqara.com/docs/aqara-developer/data-export-api/execute-device-command
 - Send Command to Device and Wait for Response: https://docs.aqara.com/docs/aqara-developer/data-export-api/execute-device-command-await
+- Batch Query Device Point Information: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-device-point-info
+- Update Device Name: https://docs.aqara.com/docs/aqara-developer/data-export-api/update-device-name
+- Update Device Point Name: https://docs.aqara.com/docs/aqara-developer/data-export-api/update-device-point-name
 - Delete A Function: https://docs.aqara.com/docs/aqara-developer/data-export-api/delete-device-point
 - Add A Virtual Device: https://docs.aqara.com/docs/aqara-developer/data-export-api/add-virtual-device
+- Bind source device function points: https://docs.aqara.com/docs/aqara-developer/data-export-api/bind-virtual-device-points
+- Unbind source device function points: https://docs.aqara.com/docs/aqara-developer/data-export-api/unbind-virtual-device-points
 - Unbind A Device: https://docs.aqara.com/docs/aqara-developer/data-export-api/unbind-device
+- Resource: https://docs.aqara.com/docs/aqara-developer/data-export-api/resource
+- Query Open Resource Type Directory: https://docs.aqara.com/docs/aqara-developer/data-export-api/list-resource-types
+- Query Resource Type Definition: https://docs.aqara.com/docs/aqara-developer/data-export-api/describe-resource-type
+- Paginated Query Resource: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-resources
+- Read Known Resource: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-resource
+- Modify Known Resource Properties: https://docs.aqara.com/docs/aqara-developer/data-export-api/update-resource
+- Execute Resource Command: https://docs.aqara.com/docs/aqara-developer/data-export-api/execute-resource-action
 - Automation: https://docs.aqara.com/docs/aqara-developer/data-export-api/automation
 - List Endpoint Capabilities for Automation: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-automation-capabilities
 - Create An Automation: https://docs.aqara.com/docs/aqara-developer/data-export-api/create-automation
@@ -46,6 +58,13 @@
 - Delete Automations: https://docs.aqara.com/docs/aqara-developer/data-export-api/delete-automations
 - Get Manual Trigger List: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-automation-manual-trigger-list
 - Execute A Manual Trigger: https://docs.aqara.com/docs/aqara-developer/data-export-api/execute-automation-manual-trigger
+- Firmware: https://docs.aqara.com/docs/aqara-developer/data-export-api/firmware
+- Query upgradable device firmware by device IDs: https://docs.aqara.com/docs/aqara-developer/data-export-api/search-upgradable-devices-firmware-by-device-ids
+- Initiate firmware upgrade: https://docs.aqara.com/docs/aqara-developer/data-export-api/upgrade-firmware
+- Query firmware upgrade progress and result: https://docs.aqara.com/docs/aqara-developer/data-export-api/search-firmware-upgrade-status
+- Cancel firmware upgrade: https://docs.aqara.com/docs/aqara-developer/data-export-api/cancel-upgrade-firmware
+- History: https://docs.aqara.com/docs/aqara-developer/data-export-api/history
+- Query device point value change history: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-device-point-history
 - Studio: https://docs.aqara.com/docs/aqara-developer/data-export-api/studio
 - Get Studio Statistics: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-studio-statistics
 - EMS: https://docs.aqara.com/docs/aqara-developer/data-export-api/ems
@@ -53,6 +72,15 @@
 - Get Energy Consumption Trend of a Space: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-trend-space
 - Get Energy Consumption of a Device: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-total-device
 - Query Energy Consumption for a Space: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-total-space
+- Query Space Energy Consumption Summary: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-summary-space
+- Query Multi-Device Energy Consumption Summary: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-summary-devices
+- Alarm: https://docs.aqara.com/docs/aqara-developer/data-export-api/alarm
+- Query Alarm List: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-alarms
+- Delete Single Alarm: https://docs.aqara.com/docs/aqara-developer/data-export-api/delete-alarm
+- Clear All Alarms: https://docs.aqara.com/docs/aqara-developer/data-export-api/clear-alarms
+- Batch Acknowledge Alarms by UUID: https://docs.aqara.com/docs/aqara-developer/data-export-api/ack-alarms
+- Batch Acknowledge Alarms by Point ID: https://docs.aqara.com/docs/aqara-developer/data-export-api/ack-alarms-by-point-id
+- Query Alarm Rule List: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-alarm-rules
 - WebSocket API Playground: https://docs.aqara.com/docs/aqara-developer/data-export-api/websocket-api/websocket-api
 - MQTT: https://docs.aqara.com/docs/aqara-developer/data-export-api/mqtt-api/mqtt-api
 - Integrate the Infrared Remote Control SDK with UI: https://docs.aqara.com/docs/aqara-developer/local-studio-development/sdk/infrared/integration

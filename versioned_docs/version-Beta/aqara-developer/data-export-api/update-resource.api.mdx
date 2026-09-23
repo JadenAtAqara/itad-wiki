@@ -1,0 +1,71 @@
+---
+id: update-resource
+title: "Modify Known Resource Properties"
+description: "Only allows modification of fields declared as writable by both resource definition and runtime schema; all field checks must pass before writing, and if it fails, a rollback will be attempted. Sensitive fields can be written via dynamic schema, but successful responses will not echo the request value or historical value."
+sidebar_label: "Modify Known Resource Properties"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "post api-method"
+info_path: versioned_docs/version-Beta/aqara-developer/data-export-api/data-export-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Modify Known Resource Properties"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/resources/{id}"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Only allows modification of fields declared as writable by both resource definition and runtime schema; all field checks must pass before writing, and if it fails, a rollback will be attempted. Sensitive fields can be written via dynamic schema, but successful responses will not echo the request value or historical value.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[{"name":"id","in":"path","required":true,"description":"Globally unique resource ID; for both standard and protocol resources, use the id returned from the API as-is","schema":{"type":"string"}}]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["properties"],"properties":{"properties":{"type":"object","minProperties":1,"additionalProperties":true,"description":"Whitelisted fields to be modified, using standard JSON scalars"}},"title":"ResourceUpdateRequest"}}}}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Success","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"Message type"},"version":{"type":"string","description":"API version","example":"v1"},"msgId":{"type":"string","description":"Message ID"},"code":{"type":"integer","description":"Business status code, 0 indicates success"},"message":{"type":"string","description":"Message"}},"title":"BaseResponse"},{"type":"object","required":["data"],"properties":{"data":{"type":"object","description":"For sequence resources, parsable historical effects are converted into properties.data.type=commands in lists and details.\nIf parsing fails, ID, name, revision, binding, and original format are retained,\nand properties.data={\"type\":\"unavailable\",\"reason\":\"Effect data cannot be represented as commands\"} is returned.\nCommand steps or raw protocol bytes are not returned and storage is not modified. Unavailable resources prohibit attribute updates, assign, and retry.\nUser configuration can still be unbound; if unbound, they can be deleted; only bindings with SYNCED and syncedRevision=revision can be started.\nTop-level \"commands\" of the resource are allowed operation names, which are different from the step effects in properties.data.commands.\ncreate/preview only accepts commands data, not unavailable.\nFor sequence \"assign\" input, only deviceId is accepted, and always assigns the latest version; passing revision (including null) will be rejected.\n","required":["id","type","properties"],"properties":{"id":{"type":"string"},"type":{"type":"string"},"protocolId":{"type":"string","description":"Returned for protocol resources; not returned for regular ANode resources"},"properties":{"type":"object","additionalProperties":true,"description":"Collection of external attribute values; values use standard JSON scalars or business objects. Studio internal path/type/value wrappers are not returned, nor are sensitive configurations marked as writeOnly in dynamic schemas included."},"schema":{"type":"object","additionalProperties":true,"description":"The dynamic configuration schema returned when reading a protocol resource by ID; sensitive fields are marked with sensitive=true, writeOnly=true, readable=false"},"health":{"type":"object","required":["status"],"properties":{"status":{"type":"string","enum":["healthy","disabled","fault","down","stale","null","alarm","overridden","unackedAlarm","unknown"],"description":"Read-only status normalized based on current Studio enabled, status, and faultCause; does not actively probe devices"},"enabled":{"type":"boolean"},"faultCause":{"type":"string"}},"title":"ResourceHealth"}},"title":"ResourceItem"}}}],"title":"ResourceResponse"}}}},"400":{"description":"Request parameter error","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"Parameter xxx is required"},"description":"Error response. Read code and message for details.","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"Message type"},"version":{"type":"string","description":"API version","example":"v1"},"msgId":{"type":"string","description":"Message ID"},"code":{"type":"integer","description":"Business status code, 0 indicates success"},"message":{"type":"string","description":"Message"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"Unauthorized or authentication expired","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"Token expired. Please generate a new token"},"description":"Error response. Read code and message for details.","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"Message type"},"version":{"type":"string","description":"API version","example":"v1"},"msgId":{"type":"string","description":"Message ID"},"code":{"type":"integer","description":"Business status code, 0 indicates success"},"message":{"type":"string","description":"Message"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"No permission to access","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"No permission to access this resource"},"description":"Error response. Read code and message for details.","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"Message type"},"version":{"type":"string","description":"API version","example":"v1"},"msgId":{"type":"string","description":"Message ID"},"code":{"type":"integer","description":"Business status code, 0 indicates success"},"message":{"type":"string","description":"Message"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"Resource not found","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"Resource not found"},"description":"Error response. Read code and message for details.","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"Message type"},"version":{"type":"string","description":"API version","example":"v1"},"msgId":{"type":"string","description":"Message ID"},"code":{"type":"integer","description":"Business status code, 0 indicates success"},"message":{"type":"string","description":"Message"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"Internal server error","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"Internal server error"},"description":"Error response. Read code and message for details.","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"Message type"},"version":{"type":"string","description":"API version","example":"v1"},"msgId":{"type":"string","description":"Message ID"},"code":{"type":"integer","description":"Business status code, 0 indicates success"},"message":{"type":"string","description":"Message"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      

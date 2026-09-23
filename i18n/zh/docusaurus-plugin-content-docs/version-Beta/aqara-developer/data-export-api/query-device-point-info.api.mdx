@@ -1,0 +1,71 @@
+---
+id: query-device-point-info
+title: "批量查询设备点位信息"
+description: "按 deviceId、endpointId、functionCode 和 traitCode/commandCode 查询点位所属空间、设备名称、点位名称等信息。"
+sidebar_label: "批量查询设备点位信息"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "post api-method"
+info_path: i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-developer/data-export-api/data-export-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"批量查询设备点位信息"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/devices/points/info"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+按 deviceId、endpointId、functionCode 和 traitCode/commandCode 查询点位所属空间、设备名称、点位名称等信息。
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["data"],"properties":{"data":{"type":"array","minItems":1,"items":{"type":"object","required":["deviceId","endpointId","functionCode"],"properties":{"deviceId":{"type":"string"},"endpointId":{"type":"integer"},"functionCode":{"type":"string"},"traitCode":{"type":"string","nullable":true},"commandCode":{"type":"string","nullable":true}},"description":"traitCode 与 commandCode 必须且只能传一个。","title":"QueryDevicePointInfoItem"}}},"title":"QueryDevicePointInfoRequest"},"example":{"data":[{"deviceId":"device-001","endpointId":1,"functionCode":"Output","traitCode":"OnOff"}]}}}}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"成功","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"type":"array","items":{"allOf":[{"type":"object","required":["deviceId","endpointId","functionCode"],"properties":{"deviceId":{"type":"string"},"endpointId":{"type":"integer"},"functionCode":{"type":"string"},"traitCode":{"type":"string","nullable":true},"commandCode":{"type":"string","nullable":true}},"description":"traitCode 与 commandCode 必须且只能传一个。","title":"QueryDevicePointInfoItem"},{"type":"object","required":["code"],"properties":{"deviceName":{"type":"string","nullable":true},"pointName":{"type":"string","nullable":true},"space":{"type":"object","required":["parentSpaceId","spaceId","name"],"properties":{"parentSpaceId":{"type":"string","description":"父空间 ID"},"spaceId":{"type":"string","description":"空间 ID"},"name":{"type":"string","description":"空间名称"}},"title":"DeviceSpace","nullable":true},"code":{"type":"integer"},"message":{"type":"string","nullable":true}}}],"title":"QueryDevicePointInfoResult"}}}}],"example":{"type":"QueryDevicePointInfoResponse","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-000000000029","code":0,"message":"success","data":[{"deviceId":"device-001","endpointId":1,"functionCode":"Output","traitCode":"OnOff","deviceName":"客厅灯","pointName":"主灯开关","space":{"parentSpaceId":"space-home-001","spaceId":"space-livingroom-001","name":"客厅"},"code":0,"message":"success"}]},"title":"QueryDevicePointInfoResponse"}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 xxx 不能为空"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"token 已过期，请重新生成 token"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"无权限访问该资源"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"资源不存在"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"429":{"description":"请求频率过高","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000005","code":429,"message":"请求频率过高"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"服务内部异常"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      

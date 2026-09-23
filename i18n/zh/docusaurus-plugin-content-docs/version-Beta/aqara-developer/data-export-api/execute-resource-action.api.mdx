@@ -1,0 +1,75 @@
+---
+id: execute-resource-action
+title: "执行资源命令"
+description: "对资源执行其类型定义中声明的命令。请求体只允许 `id` 和 `input`：id 必须是非空字符串，input 必须是对象，额外字段会被拒绝。"
+sidebar_label: "执行资源命令"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "post api-method"
+info_path: i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-developer/data-export-api/data-export-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"执行资源命令"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/actions/{command}"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+对资源执行其类型定义中声明的命令。请求体只允许 `id` 和 `input`：id 必须是非空字符串，input 必须是对象，额外字段会被拒绝。
+具体输入、输出及可用命令以 GET /resource-types/\{type\} 返回的运行时定义为准。
+协议资源常用命令：create 的 id 为 `protocol:{protocolId}`；创建 network 时不要传 parentId，创建 device/point 时 parentId 必填；
+discover 的 id 为 `protocol:{protocolId}`；import 的 id 为发现任务资源 ID；delete 的 id 为待删除资源 ID，input 必须为空对象。
+
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[{"name":"command","in":"path","required":true,"description":"资源类型定义返回的命令名称。","schema":{"type":"string"}}]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["id"],"additionalProperties":false,"properties":{"id":{"type":"string","minLength":1,"description":"服务端返回的不透明资源 ID"},"input":{"type":"object","additionalProperties":true,"default":{},"description":"命令输入参数；具体字段以资源类型定义返回的命令 Schema 为准"}},"title":"ResourceActionRequest"},"examples":{"createNetwork":{"summary":"POST /actions/create 创建 Modbus 网络","value":{"id":"protocol:modbus","input":{"entityKind":"network","name":"Modbus TCP 网络","config":{"transport":"tcp","host":"127.0.0.1","port":1502}}}},"createDevice":{"summary":"POST /actions/create 创建网络下的设备","value":{"id":"protocol:modbus","input":{"entityKind":"device","parentId":"network-resource-id","name":"PLC-1","config":{"unitId":1}}}},"discover":{"summary":"POST /actions/discover 启动发现","value":{"id":"protocol:bacnet","input":{"ownerKind":"network","ownerId":"network-resource-id","targetKind":"device","options":{}}}},"import":{"summary":"POST /actions/import 导入发现对象","value":{"id":"discovery-job-resource-id","input":{"discoveryObjectIds":["discovery-object-id"],"ownerId":"network-resource-id"}}},"delete":{"summary":"POST /actions/delete 删除协议资源","value":{"id":"protocol-entity-resource-id","input":{}}}}}}}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"成功","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"nullable":true,"description":"命令的同步结果或后台任务信息，结构以资源类型定义中的命令输出 Schema 为准"}}}],"title":"ResourceOpenApiResponse"}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 xxx 不能为空"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000002","code":401,"message":"token 已过期，请重新生成 token"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000003","code":403,"message":"无权限访问该资源"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000004","code":404,"message":"资源不存在"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000006","code":500,"message":"服务内部异常"},"description":"错误响应，错误信息通过 code 与 message 提供","allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码，0 表示成功"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"}],"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      
