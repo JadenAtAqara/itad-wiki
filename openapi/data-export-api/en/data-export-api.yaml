@@ -1098,7 +1098,6 @@ paths:
       description:  |
         Add a virtual device. Currently, three types are supported:
         - `ir`: Infrared virtual device
-        - `lightbox`: Lightbox virtual device
         - `virtual`: Custom virtual device
       operationId: addVirtualDevice
       x-skill-intent: device.virtual.add
@@ -1117,10 +1116,6 @@ paths:
                 value:
                   name: "Living Room IR Remote"
                   virtualDeviceType: ir
-              addLightboxVirtualDevice:
-                value:
-                  name: "Living Room Lightbox"
-                  virtualDeviceType: lightbox
               addCustomVirtualDevice:
                 value:
                   name: "Living Room Custom Virtual Device"
@@ -4351,9 +4346,9 @@ components:
           description: Virtual device name
         virtualDeviceType:
           type: string
-          enum: [ir, lightbox, virtual]
+          enum: [ir, virtual]
           description: |
-            Virtual device type.<br />`ir` : Infrared device.<br />`lightbox` : Lightbox device.<br />`virtual` : Virtual custom device.
+            Virtual device type.<br />`ir` : Infrared device.<br />virtual` : Virtual custom device.
 
     VirtualDeviceAddData:
       type: object
