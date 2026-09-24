@@ -727,7 +727,8 @@
           "type": "category",
           "label": "Features",
           "items": [
-            "aqara-developer/local-studio-development/features/infrared-device-integration"
+            "aqara-developer/local-studio-development/features/infrared-device-integration",
+            "aqara-developer/local-studio-development/features/custom-device-integration"
           ]
         }
       ]

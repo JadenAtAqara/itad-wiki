@@ -85,6 +85,7 @@
 - MQTT: https://docs.aqara.com/docs/aqara-developer/data-export-api/mqtt-api/mqtt-api
 - Integrate the Infrared Remote Control SDK with UI: https://docs.aqara.com/docs/aqara-developer/local-studio-development/sdk/infrared/integration
 - Infrared Device Integration: https://docs.aqara.com/docs/aqara-developer/local-studio-development/features/infrared-device-integration
+- 自定义设备接入: https://docs.aqara.com/docs/aqara-developer/local-studio-development/features/custom-device-integration
 - Introduction: https://docs.aqara.com/docs/aqara-developer/aiot-api/introduction
 - Getting Started with the AIOT API: https://docs.aqara.com/docs/aqara-developer/aiot-api/getting-started-with-the-aiot-api
 - Try API Online: https://docs.aqara.com/docs/aqara-developer/aiot-api/try-api-online

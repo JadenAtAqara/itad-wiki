@@ -85,6 +85,7 @@
 - MQTT: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/mqtt-api/mqtt-api
 - 集成红外遥控控制 SDK（含 UI）: https://docs.aqara.com/zh/docs/aqara-developer/local-studio-development/sdk/infrared/integration
 - 红外设备接入: https://docs.aqara.com/zh/docs/aqara-developer/local-studio-development/features/infrared-device-integration
+- 自定义设备接入: https://docs.aqara.com/zh/docs/aqara-developer/local-studio-development/features/custom-device-integration
 - AIOT API 简介: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/introduction
 - AIOT API 入门: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/getting-started-with-the-aiot-api
 - 在线体验 API: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/try-api-online
