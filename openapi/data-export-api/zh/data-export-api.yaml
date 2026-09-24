@@ -1094,7 +1094,6 @@ paths:
       description:  |
         添加虚拟设备，当前支持三种类型：
         - `ir`：红外虚拟设备
-        - `lightbox`：灯箱虚拟设备
         - `virtual`：虚拟自定义设备
       operationId: addVirtualDevice
       x-skill-intent: device.virtual.add
@@ -4342,8 +4341,8 @@ components:
           description: 虚拟设备名称。
         virtualDeviceType:
           type: string
-          enum: [ir, lightbox, virtual]
-          description: 虚拟设备类型。<br />`ir` ：红外设备。<br />`lightbox` ：灯箱设备。<br />`virtual` ：虚拟自定义设备。
+          enum: [ir, virtual]
+          description: 虚拟设备类型。<br />`ir` ：红外设备。<br />`virtual` ：虚拟自定义设备。
 
     VirtualDeviceAddData:
       type: object
