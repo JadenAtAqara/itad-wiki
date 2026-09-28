@@ -180,7 +180,9 @@
           "id": "aqara-studio/plugin-center"
       },
       "items": [
-        "aqara-studio/plugin-center/aiot-data-migration"
+        "aqara-studio/plugin-center/aiot-data-migration",
+        "aqara-studio/plugin-center/openapi-gateway-export"
+
       ]
     },
     {
