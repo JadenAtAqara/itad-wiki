@@ -75,6 +75,7 @@
 - 开发者指南: https://docs.aqara.com/zh/docs/aqara-studio/developer-guide
 - 在 OpenClaw Web UI 中使用 Aqara Studio Skill: https://docs.aqara.com/zh/docs/aqara-studio/use-aqara-studio-skill-in-openclaw-web-ui
 - 连接至 Aqara Studio MCP Server: https://docs.aqara.com/zh/docs/aqara-studio/set-up-mcp-server
+- Matter Bridge: https://docs.aqara.com/zh/docs/aqara-studio/matter-bridge
 - 常见问题: https://docs.aqara.com/zh/docs/aqara-studio/faq
 - JavaScript 脚本（适用于 MQTT）: https://docs.aqara.com/zh/docs/aqara-studio/javascript-for-mqtt-integration
 - JavaScript 脚本（适用于 HTTP）: https://docs.aqara.com/zh/docs/aqara-studio/javascript-for-http-integration

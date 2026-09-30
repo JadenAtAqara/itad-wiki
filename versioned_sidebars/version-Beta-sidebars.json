@@ -194,6 +194,7 @@
         "aqara-studio/set-up-mcp-server"
       ]      
     },
+    "aqara-studio/matter-bridge",
     "aqara-studio/faq",
     {
       "type": "category",
