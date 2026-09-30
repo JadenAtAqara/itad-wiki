@@ -75,6 +75,7 @@
 - Developer Guide: https://docs.aqara.com/docs/aqara-studio/developer-guide
 - Use Aqara Studio Skill in OpenClaw Web UI: https://docs.aqara.com/docs/aqara-studio/use-aqara-studio-skill-in-openclaw-web-ui
 - Connect to Aqara Studio MCP Server: https://docs.aqara.com/docs/aqara-studio/set-up-mcp-server
+- Matter Bridge: https://docs.aqara.com/docs/aqara-studio/matter-bridge
 - FAQ: https://docs.aqara.com/docs/aqara-studio/faq
 - JavaScript Script for MQTT Integration: https://docs.aqara.com/docs/aqara-studio/javascript-for-mqtt-integration
 - JavaScript for HTTP Integration: https://docs.aqara.com/docs/aqara-studio/javascript-for-http-integration
