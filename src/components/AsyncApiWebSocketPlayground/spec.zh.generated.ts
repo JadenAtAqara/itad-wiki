@@ -5,22 +5,14 @@ import type { PlaygroundSpec } from "./types";
 const aqaraLifeWebSocketSpecZh = {
   "title": "Studio WebSocket API",
   "version": "v1",
-  "description": "本文件描述客户端与 Studio WebSocket 服务之间的异步消息：\n- 客户端发送鉴权、心跳、订阅、取消订阅请求。\n- Studio 返回请求响应，并在订阅命中或设备事件发生时主动推送消息。\n- WebSocket 支持握手 Header `Authorization: Bearer <accessToken>` 与首包 `AuthRequest` 两种认证方式。\n",
+  "description": "本文件描述客户端与 Studio WebSocket 服务之间的异步消息：\n- 客户端发送鉴权、心跳、订阅、取消订阅请求。\n- Studio 返回请求响应，并在订阅命中或设备事件发生时主动推送消息。\n- 本契约覆盖设备、Trait 和对象事件订阅，不覆盖 SubscribeEventRequest、UnsubscribeEventRequest 等独立告警事件订阅。\n- Studio 局域网 Studio 环境如未在握手阶段携带 Token，可在连接建立后首包发送 `AuthRequest`。\n\n视角说明：本 AsyncAPI 描述客户端应用需要实现的接入行为；`send` 表示客户端发送到 Studio，`receive` 表示客户端从 Studio 接收。\n",
   "servers": [
     {
-      "id": "remoteAccess",
-      "label": "远程访问",
-      "description": "Studio 远程访问域名。",
+      "id": "lanStudio",
+      "label": "lanStudio",
+      "description": "局域网 Studio WebSocket 服务，仅用于本地连接；地址由部署配置或服务发现结果提供，不得用于生产或云端连接。",
       "protocol": "wss",
-      "hostDefault": "xxx.edge-xxx.aqara.cn",
-      "pathname": "/open/ws"
-    },
-    {
-      "id": "local",
-      "label": "局域网 / 本地",
-      "description": "Studio 本地访问 IP 地址或主机访问域名。",
-      "protocol": "ws",
-      "hostDefault": "xxx.xxx.xxx.xxx",
+      "hostDefault": "{localStudioEndpoint}",
       "pathname": "/open/ws"
     }
   ],
@@ -62,7 +54,9 @@ const aqaraLifeWebSocketSpecZh = {
         "SubscribeAllRequest",
         "UnsubscribeAllRequest",
         "SubscribeTraitValueRequest",
-        "UnsubscribeTraitValueRequest"
+        "UnsubscribeTraitValueRequest",
+        "SubscribeObjectEventRequest",
+        "UnsubscribeObjectEventRequest"
       ]
     },
     {
@@ -73,6 +67,8 @@ const aqaraLifeWebSocketSpecZh = {
         "UnsubscribeAllResponse",
         "SubscribeTraitValueResponse",
         "UnsubscribeTraitValueResponse",
+        "SubscribeObjectEventResponse",
+        "UnsubscribeObjectEventResponse",
         "ErrorMessage"
       ]
     },
@@ -90,7 +86,7 @@ const aqaraLifeWebSocketSpecZh = {
     "AuthRequest": {
       "name": "AuthRequest",
       "title": "WebSocket 鉴权请求",
-      "summary": "首包认证方式；未在握手 Header 携带 Authorization 时使用。",
+      "summary": "Studio 自身域名地址和局域网 Studio 环境的首包认证方式；生产或云端环境不使用。",
       "examples": [
         {
           "name": "bearerToken",
@@ -100,7 +96,9 @@ const aqaraLifeWebSocketSpecZh = {
             "msgId": "10001",
             "data": {
               "authType": "token",
-              "token": "Bearer <Token>"
+              "token": "<accessToken>",
+              "deviceUniqueId": "<deviceUniqueId>",
+              "clientId": "<clientId>"
             }
           }
         }
@@ -128,7 +126,7 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "msgId": {
             "type": "string",
-            "description": "消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
             "minLength": 1,
             "maxLength": 64
           },
@@ -196,7 +194,7 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "msgId": {
             "type": "string",
-            "description": "消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
             "minLength": 1,
             "maxLength": 64
           },
@@ -258,7 +256,7 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "msgId": {
             "type": "string",
-            "description": "消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
             "minLength": 1,
             "maxLength": 64
           },
@@ -313,7 +311,7 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "msgId": {
             "type": "string",
-            "description": "消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
             "minLength": 1,
             "maxLength": 64
           },
@@ -340,7 +338,7 @@ const aqaraLifeWebSocketSpecZh = {
     },
     "SubscribeAllRequest": {
       "name": "SubscribeAllRequest",
-      "title": "订阅全部/部分设备请求",
+      "title": "全量/设备级订阅",
       "examples": [
         {
           "name": "allDevices",
@@ -349,6 +347,15 @@ const aqaraLifeWebSocketSpecZh = {
             "version": "v1",
             "msgId": "1751609244328",
             "data": null
+          }
+        },
+        {
+          "name": "allDevicesWithEmptyArray",
+          "payload": {
+            "type": "SubscribeAllRequest",
+            "version": "v1",
+            "msgId": "1751609244329",
+            "data": []
           }
         },
         {
@@ -385,7 +392,7 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "msgId": {
             "type": "string",
-            "description": "消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
             "minLength": 1,
             "maxLength": 64
           },
@@ -395,7 +402,7 @@ const aqaraLifeWebSocketSpecZh = {
               "null"
             ],
             "default": null,
-            "description": "设备 ID 列表。为 null 或省略时表示订阅当前权限范围内全部设备数据，并清理此前的设备级订阅。\ndata 不为空时会取消“订阅所有设备”状态并追加这些设备级订阅，但不会自动清理此前已追加的其他设备级订阅。\n若使用受限 API AccessToken，data 为空数组可能返回 code=0 但不建立有效订阅；订阅权限范围内全部设备时建议传 null 或省略 data。\n若需要缩小或替换设备级订阅范围，应先用 UnsubscribeAllRequest 取消不再需要的设备。\n若需要清理当前连接全部订阅，应发送 data 为空数组或不传的 UnsubscribeAllRequest。\n若当前账号或 Token 权限范围内没有可访问设备，服务端可能返回 code=0 但不会产生后续推送。\n同一连接内，SubscribeAllRequest 会覆盖并清理此前通过 SubscribeTraitValueRequest 建立的 Trait 订阅。\n若需从全部设备或指定设备订阅切换回仅 Trait 维度订阅，应先发送 UnsubscribeAllRequest 清理全量/设备级订阅。\n",
+            "description": "设备 ID 列表。为 null、省略或空数组时表示订阅当前权限范围内全部设备数据，并清理此前的设备级订阅。\ndata 不为空时会取消“订阅所有设备”状态并追加这些设备级订阅，但不会自动清理此前已追加的其他设备级订阅。\n若需要缩小或替换设备级订阅范围，应先用 UnsubscribeAllRequest 取消不再需要的设备。\n若需要清理当前连接全部设备数据和 Trait 订阅，应发送 data 为空数组或不传的 UnsubscribeAllRequest；该请求不清理独立事件或对象事件订阅。\n若当前账号或 Token 权限范围内没有可访问设备，服务端可能返回 code=0 但不会产生后续推送。\n同一连接内，SubscribeAllRequest 会覆盖并清理此前通过 SubscribeTraitValueRequest 建立的 Trait 订阅。\n若需从全部设备或指定设备订阅切换回仅 Trait 维度订阅，应先发送 UnsubscribeAllRequest 清理全量/设备级订阅。\n",
             "items": {
               "type": "string"
             }
@@ -405,7 +412,7 @@ const aqaraLifeWebSocketSpecZh = {
     },
     "SubscribeAllResponse": {
       "name": "SubscribeAllResponse",
-      "title": "订阅全部/部分设备响应",
+      "title": "全量/设备级订阅响应",
       "examples": [],
       "payloadSchema": {
         "type": "object",
@@ -432,7 +439,7 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "msgId": {
             "type": "string",
-            "description": "消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
             "minLength": 1,
             "maxLength": 64
           },
@@ -460,7 +467,8 @@ const aqaraLifeWebSocketSpecZh = {
     },
     "UnsubscribeAllRequest": {
       "name": "UnsubscribeAllRequest",
-      "title": "取消订阅全部/部分设备请求",
+      "title": "取消全量/设备级订阅",
+      "description": "清理全部或指定设备的数据订阅，并同时清理当前会话的 Trait 订阅。\n不清理独立事件订阅、精确对象事件订阅，也不关闭认证连接默认接收的 DEVICE_ADDED、DEVICE_REMOVED。\n",
       "examples": [],
       "payloadSchema": {
         "type": "object",
@@ -484,7 +492,7 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "msgId": {
             "type": "string",
-            "description": "消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
             "minLength": 1,
             "maxLength": 64
           },
@@ -494,7 +502,7 @@ const aqaraLifeWebSocketSpecZh = {
               "null"
             ],
             "default": null,
-            "description": "设备 ID 列表。为空或 null 时表示取消全部订阅。\n若当前为全部设备订阅，按特定设备取消订阅不会生效，需传空值取消全部订阅。\n同一连接内，UnsubscribeAllRequest 会同时清理此前通过 SubscribeTraitValueRequest 建立的 Trait 订阅。\n按特定设备取消订阅只取消设备级订阅，不等同于关闭当前连接的全部推送。\n",
+            "description": "设备 ID 列表。为空或 null 时表示取消全部设备数据和 Trait 订阅。\n若当前为全部设备订阅，按特定设备取消订阅不会生效，需传空值取消全部设备数据订阅。\n同一连接内，UnsubscribeAllRequest 会同时清理此前通过 SubscribeTraitValueRequest 建立的 Trait 订阅。\n按特定设备取消订阅只取消设备级订阅，不等同于关闭当前连接的全部推送。\n本请求不清理 SubscribeEventRequest 或 SubscribeObjectEventRequest 建立的规则，也不关闭默认 DEVICE_ADDED、DEVICE_REMOVED 推送。\n",
             "items": {
               "type": "string"
             }
@@ -504,7 +512,7 @@ const aqaraLifeWebSocketSpecZh = {
     },
     "UnsubscribeAllResponse": {
       "name": "UnsubscribeAllResponse",
-      "title": "取消订阅全部/部分设备响应",
+      "title": "取消全量/设备级订阅响应",
       "examples": [],
       "payloadSchema": {
         "type": "object",
@@ -531,7 +539,7 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "msgId": {
             "type": "string",
-            "description": "消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
             "minLength": 1,
             "maxLength": 64
           },
@@ -559,7 +567,7 @@ const aqaraLifeWebSocketSpecZh = {
     },
     "SubscribeTraitValueRequest": {
       "name": "SubscribeTraitValueRequest",
-      "title": "订阅指定 Trait 值请求",
+      "title": "订阅指定 Trait 功能值",
       "examples": [
         {
           "name": "subscribeTrait",
@@ -603,7 +611,7 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "msgId": {
             "type": "string",
-            "description": "消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
             "minLength": 1,
             "maxLength": 64
           },
@@ -647,7 +655,7 @@ const aqaraLifeWebSocketSpecZh = {
     },
     "SubscribeTraitValueResponse": {
       "name": "SubscribeTraitValueResponse",
-      "title": "订阅指定 Trait 值响应",
+      "title": "订阅指定 Trait 功能值响应",
       "examples": [],
       "payloadSchema": {
         "type": "object",
@@ -674,7 +682,7 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "msgId": {
             "type": "string",
-            "description": "消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
             "minLength": 1,
             "maxLength": 64
           },
@@ -702,7 +710,7 @@ const aqaraLifeWebSocketSpecZh = {
     },
     "UnsubscribeTraitValueRequest": {
       "name": "UnsubscribeTraitValueRequest",
-      "title": "取消订阅指定 Trait 值请求",
+      "title": "取消订阅指定 Trait 功能值",
       "examples": [],
       "payloadSchema": {
         "type": "object",
@@ -726,7 +734,7 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "msgId": {
             "type": "string",
-            "description": "消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
             "minLength": 1,
             "maxLength": 64
           },
@@ -771,7 +779,7 @@ const aqaraLifeWebSocketSpecZh = {
     },
     "UnsubscribeTraitValueResponse": {
       "name": "UnsubscribeTraitValueResponse",
-      "title": "取消订阅指定 Trait 值响应",
+      "title": "取消订阅指定 Trait 功能值响应",
       "examples": [],
       "payloadSchema": {
         "type": "object",
@@ -798,7 +806,367 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "msgId": {
             "type": "string",
-            "description": "消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "data": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "default": ""
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "处理结果码，0 表示成功，非 0 表示失败。"
+          },
+          "message": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "处理结果描述。"
+          }
+        }
+      }
+    },
+    "SubscribeObjectEventRequest": {
+      "name": "SubscribeObjectEventRequest",
+      "title": "订阅空间、设备空间关系和自动化对象事件",
+      "summary": "按当前 WebSocket 会话增量增加对象事件订阅；重复订阅幂等。",
+      "description": "objectIds 不传、为 null 或空数组时订阅对应 eventTypes 下当前可访问的全部对象；非空时订阅指定对象。\n后续订阅请求与已有规则合并，不会覆盖之前的指定对象规则。订阅全部对象会覆盖同一事件类型已有的 ID 列表。\nApp 可使用全部对象订阅维护完整列表；带屏设备和第三方服务通常按业务范围订阅指定对象。\n",
+      "examples": [
+        {
+          "name": "subscribeAllPreciseObjectEvents",
+          "payload": {
+            "type": "SubscribeObjectEventRequest",
+            "version": "v1",
+            "msgId": "object-subscribe-1",
+            "data": [
+              {
+                "eventTypes": [
+                  "SPACE_ADDED",
+                  "SPACE_REMOVED",
+                  "SPACE_UPDATED",
+                  "AUTOMATION_ADDED",
+                  "AUTOMATION_REMOVED",
+                  "AUTOMATION_UPDATED",
+                  "AUTOMATION_SPACE_UPDATED",
+                  "DEVICE_SPACE_UPDATED"
+                ],
+                "objectIds": []
+              }
+            ]
+          }
+        },
+        {
+          "name": "subscribeSelectedObjects",
+          "payload": {
+            "type": "SubscribeObjectEventRequest",
+            "version": "v1",
+            "msgId": "object-subscribe-2",
+            "data": [
+              {
+                "eventTypes": [
+                  "DEVICE_SPACE_UPDATED"
+                ],
+                "objectIds": [
+                  "device-1",
+                  "device-2"
+                ]
+              },
+              {
+                "eventTypes": [
+                  "AUTOMATION_REMOVED",
+                  "AUTOMATION_UPDATED",
+                  "AUTOMATION_SPACE_UPDATED"
+                ],
+                "objectIds": [
+                  "automation-1"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "required": [
+          "type",
+          "version",
+          "msgId",
+          "data"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "SubscribeObjectEventRequest"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "enum": [
+              "v1"
+            ]
+          },
+          "msgId": {
+            "type": "string",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "data": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100,
+            "items": {
+              "type": "object",
+              "required": [
+                "eventTypes"
+              ],
+              "properties": {
+                "eventTypes": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "DEVICE_SPACE_UPDATED",
+                      "SPACE_ADDED",
+                      "SPACE_REMOVED",
+                      "SPACE_UPDATED",
+                      "AUTOMATION_ADDED",
+                      "AUTOMATION_REMOVED",
+                      "AUTOMATION_UPDATED",
+                      "AUTOMATION_SPACE_UPDATED"
+                    ]
+                  }
+                },
+                "objectIds": {
+                  "type": [
+                    "array",
+                    "null"
+                  ],
+                  "maxItems": 1000,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "description": "订阅时，不传、null 或空数组表示当前权限范围内全部对象；非空时只匹配指定对象。\n取消订阅时，不传、null 或空数组表示清空对应 eventTypes，非空时只移除指定对象。\n同一 WebSocket 会话在每个 eventType 下最多累计订阅 1000 个不同 objectId。\nobjectIds 非空时，同一项的 eventTypes 必须属于同一种对象类型；SPACE_ADDED、AUTOMATION_ADDED 只支持全部对象语义。\n协议不使用 scope 字段；全部对象语义统一由 objectIds 表示。\n"
+                }
+              }
+            },
+            "description": "必须包含 1 至 100 个订阅项。请求按会话增量合并，重复订阅幂等。\nSPACE_ADDED、AUTOMATION_ADDED 只允许 objectIds 为全部对象语义。\n"
+          }
+        }
+      }
+    },
+    "SubscribeObjectEventResponse": {
+      "name": "SubscribeObjectEventResponse",
+      "title": "对象事件订阅响应",
+      "examples": [],
+      "payloadSchema": {
+        "type": "object",
+        "required": [
+          "type",
+          "version",
+          "msgId",
+          "code",
+          "message",
+          "data"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "SubscribeObjectEventResponse"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "enum": [
+              "v1"
+            ]
+          },
+          "msgId": {
+            "type": "string",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "data": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "default": ""
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "处理结果码，0 表示成功，非 0 表示失败。"
+          },
+          "message": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "处理结果描述。"
+          }
+        }
+      }
+    },
+    "UnsubscribeObjectEventRequest": {
+      "name": "UnsubscribeObjectEventRequest",
+      "title": "取消空间、设备空间关系和自动化对象事件订阅",
+      "summary": "按当前 WebSocket 会话移除指定对象规则或清空指定事件类型。",
+      "description": "objectIds 非空时只移除指定对象；不传、为 null 或空数组时清空对应 eventTypes 的全部对象规则。\n全量订阅不支持排除部分对象；要从全量切换为指定对象，应先清空事件类型，再发送新的指定对象订阅。\n",
+      "examples": [
+        {
+          "name": "unsubscribeSelectedObject",
+          "payload": {
+            "type": "UnsubscribeObjectEventRequest",
+            "version": "v1",
+            "msgId": "object-unsubscribe-1",
+            "data": [
+              {
+                "eventTypes": [
+                  "AUTOMATION_UPDATED"
+                ],
+                "objectIds": [
+                  "automation-1"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "clearEventType",
+          "payload": {
+            "type": "UnsubscribeObjectEventRequest",
+            "version": "v1",
+            "msgId": "object-unsubscribe-2",
+            "data": [
+              {
+                "eventTypes": [
+                  "AUTOMATION_UPDATED"
+                ],
+                "objectIds": []
+              }
+            ]
+          }
+        }
+      ],
+      "payloadSchema": {
+        "type": "object",
+        "required": [
+          "type",
+          "version",
+          "msgId",
+          "data"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "UnsubscribeObjectEventRequest"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "enum": [
+              "v1"
+            ]
+          },
+          "msgId": {
+            "type": "string",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "data": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100,
+            "items": {
+              "type": "object",
+              "required": [
+                "eventTypes"
+              ],
+              "properties": {
+                "eventTypes": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "DEVICE_SPACE_UPDATED",
+                      "SPACE_ADDED",
+                      "SPACE_REMOVED",
+                      "SPACE_UPDATED",
+                      "AUTOMATION_ADDED",
+                      "AUTOMATION_REMOVED",
+                      "AUTOMATION_UPDATED",
+                      "AUTOMATION_SPACE_UPDATED"
+                    ]
+                  }
+                },
+                "objectIds": {
+                  "type": [
+                    "array",
+                    "null"
+                  ],
+                  "maxItems": 1000,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "description": "订阅时，不传、null 或空数组表示当前权限范围内全部对象；非空时只匹配指定对象。\n取消订阅时，不传、null 或空数组表示清空对应 eventTypes，非空时只移除指定对象。\n同一 WebSocket 会话在每个 eventType 下最多累计订阅 1000 个不同 objectId。\nobjectIds 非空时，同一项的 eventTypes 必须属于同一种对象类型；SPACE_ADDED、AUTOMATION_ADDED 只支持全部对象语义。\n协议不使用 scope 字段；全部对象语义统一由 objectIds 表示。\n"
+                }
+              }
+            },
+            "description": "必须包含 1 至 100 个取消项；空数组是参数错误，不表示取消全部事件类型。\nobjectIds 不传、null 或空数组时，清除对应 eventTypes 下当前会话的全部对象规则；非空时只移除指定对象。\n"
+          }
+        }
+      }
+    },
+    "UnsubscribeObjectEventResponse": {
+      "name": "UnsubscribeObjectEventResponse",
+      "title": "取消对象事件订阅响应",
+      "examples": [],
+      "payloadSchema": {
+        "type": "object",
+        "required": [
+          "type",
+          "version",
+          "msgId",
+          "code",
+          "message",
+          "data"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "UnsubscribeObjectEventResponse"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "enum": [
+              "v1"
+            ]
+          },
+          "msgId": {
+            "type": "string",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
             "minLength": 1,
             "maxLength": 64
           },
@@ -826,7 +1194,7 @@ const aqaraLifeWebSocketSpecZh = {
     },
     "TraitValueUpdate": {
       "name": "TraitValueUpdate",
-      "title": "Trait 值变化推送",
+      "title": "Trait 功能值变化推送",
       "examples": [
         {
           "name": "traitValueUpdate",
@@ -842,6 +1210,26 @@ const aqaraLifeWebSocketSpecZh = {
                 "traitCode": "TargetPlaybackState",
                 "value": "0",
                 "time": 1754469720110
+              }
+            ],
+            "code": 0,
+            "message": ""
+          }
+        },
+        {
+          "name": "deviceNameUpdated",
+          "payload": {
+            "type": "TraitValueUpdate",
+            "version": "v1",
+            "msgId": "1789113600000",
+            "data": [
+              {
+                "deviceId": "device-1",
+                "endpointId": 0,
+                "functionCode": "EndpointLabel",
+                "traitCode": "EndpointName",
+                "value": "客厅灯",
+                "time": 1789113600000
               }
             ],
             "code": 0,
@@ -874,7 +1262,7 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "msgId": {
             "type": "string",
-            "description": "消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
             "minLength": 1,
             "maxLength": 64
           },
@@ -936,8 +1324,8 @@ const aqaraLifeWebSocketSpecZh = {
     "ObjectEvent": {
       "name": "objectEvent",
       "title": "对象事件推送",
-      "summary": "对象事件按连接级推送注册发送；客户端应按 eventType 和 objectId 自行分发与过滤。",
-      "description": "对象事件按当前连接的推送注册状态推送，不按 objectId、设备 ID 或 Trait 订阅条件做精确过滤。\n即使某些订阅请求未形成有效的 TraitValueUpdate 订阅，当前连接仍可能收到对象事件。\n若不希望当前连接继续收到任何推送，应发送 data 为空数组或不传的 UnsubscribeAllRequest，或直接关闭 WebSocket 连接。\n",
+      "summary": "设备增删默认推送；空间、自动化和空间关联变化按精确对象订阅投递。",
+      "description": "DEVICE_ADDED、DEVICE_REMOVED 在认证连接建立后默认推送。\nSPACE_*、AUTOMATION_*、DEVICE_SPACE_UPDATED 仅投递给命中 eventType、objectId 和当前权限的 SubscribeObjectEventRequest 会话。\nDEVICE_ENDPOINT_*、DEVICE_TRAIT_PARAMETER_UPDATE 继续跟随现有设备数据订阅。\n场景是自动化内部的 manualTriggers，不提供独立场景事件；数量变化不提供独立事件。\n协议不提供全局唯一的事件 ID；推送 msgId 只用于链路追踪，调用端应按对象状态幂等处理，不应仅按 objectId、eventType、time 去重。\n",
       "examples": [
         {
           "name": "deviceAdded",
@@ -961,6 +1349,79 @@ const aqaraLifeWebSocketSpecZh = {
                   3
                 ],
                 "time": 1754469720110
+              }
+            },
+            "code": 0,
+            "message": "success"
+          }
+        },
+        {
+          "name": "deviceSpaceUpdated",
+          "payload": {
+            "type": "objectEvent",
+            "version": "v1",
+            "msgId": "object-event-1",
+            "data": {
+              "eventType": "DEVICE_SPACE_UPDATED",
+              "objectId": "device-1",
+              "time": 1789113600000,
+              "data": {
+                "deviceId": "device-1",
+                "oldSpaceId": "space-1",
+                "space": {
+                  "spaceId": "space-2",
+                  "name": "卧室",
+                  "spatialMarking": "room",
+                  "parentSpaceId": "home-1"
+                }
+              }
+            },
+            "code": 0,
+            "message": "success"
+          }
+        },
+        {
+          "name": "automationUpdated",
+          "payload": {
+            "type": "objectEvent",
+            "version": "v1",
+            "msgId": "object-event-2",
+            "data": {
+              "eventType": "AUTOMATION_UPDATED",
+              "objectId": "automation-1",
+              "time": 1789113600000,
+              "data": {
+                "automationId": "automation-1",
+                "definitionType": "WHEN_IF_THEN",
+                "name": "回家模式",
+                "enabled": true,
+                "createTime": 1789000000000,
+                "manualTriggers": [
+                  {
+                    "triggerNodeId": "manual-trigger-1",
+                    "triggerName": "回家"
+                  }
+                ]
+              }
+            },
+            "code": 0,
+            "message": "success"
+          }
+        },
+        {
+          "name": "automationSpaceUnassigned",
+          "payload": {
+            "type": "objectEvent",
+            "version": "v1",
+            "msgId": "object-event-3",
+            "data": {
+              "eventType": "AUTOMATION_SPACE_UPDATED",
+              "objectId": "automation-1",
+              "time": 1789113600000,
+              "data": {
+                "automationId": "automation-1",
+                "oldSpaceId": "space-2",
+                "space": null
               }
             },
             "code": 0,
@@ -993,45 +1454,87 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "msgId": {
             "type": "string",
-            "description": "消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。",
+            "description": "请求使用的非空标识，应至少在当前连接尚未完成的请求中保持唯一；正常响应使用相同 msgId 关联，服务端推送的 msgId 仅用于链路追踪，不等同于订阅请求 msgId，也不保证全局唯一。",
             "minLength": 1,
             "maxLength": 64
           },
           "data": {
-            "type": "object",
-            "required": [
-              "eventType",
-              "objectId",
-              "time"
-            ],
-            "properties": {
-              "eventType": {
-                "type": "string",
-                "description": "对象事件类型。",
-                "enum": [
-                  "DEVICE_ADDED",
-                  "DEVICE_REMOVED",
-                  "DEVICE_ENDPOINT_ADDED",
-                  "DEVICE_ENDPOINT_REMOVED",
-                  "DEVICE_TRAIT_PARAMETER_UPDATE"
-                ]
-              },
-              "objectId": {
-                "type": "string",
-                "description": "对象 ID，设备事件场景通常为设备 ID。"
-              },
-              "time": {
-                "type": "integer",
-                "format": "int64",
-                "description": "事件发生时间戳，单位毫秒。"
-              },
-              "data": {
-                "description": "根据 eventType 判断具体结构。",
-                "type": [
-                  "object",
-                  "null"
-                ],
-                "additionalProperties": true
+            "if": {
+              "properties": {
+                "eventType": {
+                  "enum": [
+                    "AUTOMATION_SPACE_UPDATED"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "data"
+              ],
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "automationId",
+                    "oldSpaceId",
+                    "space"
+                  ],
+                  "properties": {
+                    "automationId": {
+                      "type": "string",
+                      "description": "自动化 ID。"
+                    },
+                    "oldSpaceId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "变化前空间 ID；首次关联时为 null。"
+                    },
+                    "space": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "description": "空间最新摘要。客户端应按 spaceId 维护统一空间缓存，避免在设备或自动化关系数据中重复保存可能过期的名称、标记和父级；parentSpaceId 表示该摘要所属父空间，根空间为 null。",
+                          "required": [
+                            "spaceId",
+                            "name",
+                            "parentSpaceId"
+                          ],
+                          "properties": {
+                            "spaceId": {
+                              "type": "string",
+                              "description": "空间 ID。"
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "空间名称。"
+                            },
+                            "spatialMarking": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "description": "空间标记；没有标记时为 null。"
+                            },
+                            "parentSpaceId": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "description": "空间所属父空间 ID；根空间为 null。SPACE_ADDED 和 SPACE_UPDATED 为事件后的父空间，SPACE_REMOVED 为删除前的父空间。"
+                            }
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "关系变化时的空间摘要；解除关联时为 null。空间 ID 读取 space.spaceId，后续名称、标记或父级变化由 SPACE_UPDATED 更新统一空间缓存；该关系同时适用于自动化内部场景。"
+                    }
+                  }
+                }
               }
             }
           },
@@ -1053,7 +1556,19 @@ const aqaraLifeWebSocketSpecZh = {
     "ErrorMessage": {
       "name": "ErrorMessage",
       "title": "错误响应",
-      "examples": [],
+      "examples": [
+        {
+          "name": "missingMsgId",
+          "payload": {
+            "type": "ErrorMessage",
+            "version": "v1",
+            "msgId": "",
+            "data": null,
+            "code": 400,
+            "message": "Missing msgId"
+          }
+        }
+      ],
       "payloadSchema": {
         "type": "object",
         "required": [
@@ -1078,15 +1593,16 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "msgId": {
             "type": "string",
-            "description": "消息唯一标识。正常请求和响应使用相同 msgId 关联；解析失败、部分权限或内部异常可能返回 UNKNOWN；服务端推送由服务端生成，不等同于订阅请求 msgId。",
-            "minLength": 1,
+            "description": "能关联原请求时返回请求 msgId；服务端无法关联原请求时可能返回 UNKNOWN 或空字符串。",
+            "minLength": 0,
             "maxLength": 64
           },
           "data": {
             "type": [
               "string",
               "null"
-            ]
+            ],
+            "description": "错误响应通常不携带业务数据。"
           },
           "code": {
             "type": "integer",
@@ -1098,7 +1614,7 @@ const aqaraLifeWebSocketSpecZh = {
               "string",
               "null"
             ],
-            "description": "处理结果描述。"
+            "description": "错误说明。"
           }
         }
       }

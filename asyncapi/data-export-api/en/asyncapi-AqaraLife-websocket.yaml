@@ -7,40 +7,36 @@ info:
     This document describes the asynchronous messages exchanged between the client and the Studio WebSocket service:
     - The client sends authentication, heartbeat, subscribe, and unsubscribe requests.
     - Studio returns responses to requests and proactively pushes messages when subscriptions match or device events occur.
-    - WebSocket supports two authentication methods: the handshake header `Authorization: Bearer <accessToken>` and an initial `AuthRequest` message after connection establishment.
+    - This contract covers device, Trait, and object-event subscriptions, but does not cover standalone alarm-event subscriptions such as SubscribeEventRequest and UnsubscribeEventRequest.
+    - For the Studio self-domain endpoint and LAN Studio environments, if the token is not included during the handshake, `AuthRequest` may be sent as the first message after the connection is established.
+
+    Perspective note: this AsyncAPI describes the integration behavior that client applications need to implement; `send` means the client sends to Studio, and `receive` means the client receives from Studio.
 defaultContentType: application/json
 
 servers:
-  remoteAccess:
-    host: '{host}'
-    protocol: wss
-    pathname: /open/ws
-    description: Studio remote-access domain name.
-    variables:
-      host:
-        default: xxx.edge-xxx.aqara.com
-  local:
-    host: '{host}'
+  lanStudio:
+    host: '{localStudioEndpoint}'
     protocol: ws
     pathname: /open/ws
-    description: Studio local-access IP address or host domain name.
+    description: LAN Studio WebSocket service, for local connections only; the address is provided by deployment configuration or service discovery and must not be used for production or cloud connections.
     variables:
-      host:
-        default: xxx.xxx.xxx.xxx
+      localStudioEndpoint:
+        default: studio.local
+        description: The actual Studio host address and environment-specific port. Clients should not hardcode a fixed IP address or port.
 
 channels:
   studioWebSocket:
     address: null
     title: Studio WebSocket channel
     description: |
-      A bidirectional JSON text message channel over a single connection. Choose one of the following authentication methods:
-      - Include `Authorization: Bearer <accessToken>` in the handshake header.
-      - Send `AuthRequest` as the first message after the connection is established.
+      A bidirectional JSON text message channel over a single connection.
 
-      Before authentication is completed, only `AuthRequest` may be sent. After authentication succeeds, business messages such as heartbeat, subscribe, and unsubscribe may be sent.
-      If Authorization is not provided in the handshake header, the client must send `AuthRequest` within 7 seconds after the connection is established.
-      To keep the connection alive, the client should periodically send `ping` or another outbound business message. It is recommended to send at least one message every 30 seconds. If no message is sent within 30 seconds, a gateway or proxy in the path may disconnect the WebSocket connection.
-      When using an API AccessToken with scoped permissions, subscribe and unsubscribe messages require authorization for `POST /api/v1/devices/trait/read` or `*`.
+      New integrations should consistently use `studio-id`; the server currently remains compatible with legacy names such as `X-Studio-Id`, `Studio-Id`, and `studioId`.
+      The LAN Studio environments may use handshake-header authentication; if Authorization is not provided in the handshake header, the client must send `AuthRequest` within 7 seconds after the connection is established.
+      When the LAN Studio environments use `AuthRequest`, only `AuthRequest` may be sent before authentication completes; after authentication succeeds, business messages such as heartbeat, subscribe, and unsubscribe may be sent.
+      The client should periodically send `ping` or another business message to keep the connection alive, and the interval should not exceed 30 seconds. If no message is sent for more than 30 seconds, a gateway or proxy in the path may proactively disconnect the WebSocket connection.
+      When an API AccessToken is used with a configured access scope, device/Trait subscriptions require authorization for `POST /api/v1/devices/trait/read`, or alternatively `*`. Object-event subscription is a hidden default capability available on authenticated connections and does not require an additional scope.
+      After the WebSocket connection is established, the client should immediately start message reception and temporary buffering, then complete authentication, restore subscriptions, and perform snapshot reconciliation to avoid missing the default device add/remove events pushed after authentication completes.
     messages:
       AuthRequest:
         $ref: '#/components/messages/AuthRequest'
@@ -66,6 +62,14 @@ channels:
         $ref: '#/components/messages/UnsubscribeTraitValueRequest'
       UnsubscribeTraitValueResponse:
         $ref: '#/components/messages/UnsubscribeTraitValueResponse'
+      SubscribeObjectEventRequest:
+        $ref: '#/components/messages/SubscribeObjectEventRequest'
+      SubscribeObjectEventResponse:
+        $ref: '#/components/messages/SubscribeObjectEventResponse'
+      UnsubscribeObjectEventRequest:
+        $ref: '#/components/messages/UnsubscribeObjectEventRequest'
+      UnsubscribeObjectEventResponse:
+        $ref: '#/components/messages/UnsubscribeObjectEventResponse'
       TraitValueUpdate:
         $ref: '#/components/messages/TraitValueUpdate'
       ObjectEvent:
@@ -76,6 +80,7 @@ channels:
 operations:
   sendAuthRequest:
     action: send
+    description: Used only for the Studio self-domain endpoint and LAN Studio environments; AuthRequest is not used in production or cloud environments.
     channel:
       $ref: '#/channels/studioWebSocket'
     messages:
@@ -109,8 +114,13 @@ operations:
       - $ref: '#/channels/studioWebSocket/messages/UnsubscribeAllRequest'
       - $ref: '#/channels/studioWebSocket/messages/SubscribeTraitValueRequest'
       - $ref: '#/channels/studioWebSocket/messages/UnsubscribeTraitValueRequest'
+      - $ref: '#/channels/studioWebSocket/messages/SubscribeObjectEventRequest'
+      - $ref: '#/channels/studioWebSocket/messages/UnsubscribeObjectEventRequest'
   receiveSubscriptionCommandResponse:
     action: receive
+    description: |
+      When a subscribe or unsubscribe operation fails, the server may return ErrorMessage, or it may return the corresponding business response type with a non-zero code.
+      The caller should correlate requests by msgId and evaluate code consistently across all responses instead of waiting only for a fixed response type.
     channel:
       $ref: '#/channels/studioWebSocket'
     messages:
@@ -118,6 +128,8 @@ operations:
       - $ref: '#/channels/studioWebSocket/messages/UnsubscribeAllResponse'
       - $ref: '#/channels/studioWebSocket/messages/SubscribeTraitValueResponse'
       - $ref: '#/channels/studioWebSocket/messages/UnsubscribeTraitValueResponse'
+      - $ref: '#/channels/studioWebSocket/messages/SubscribeObjectEventResponse'
+      - $ref: '#/channels/studioWebSocket/messages/UnsubscribeObjectEventResponse'
       - $ref: '#/channels/studioWebSocket/messages/ErrorMessage'
   receivePushMessage:
     action: receive
@@ -133,7 +145,7 @@ components:
     AuthRequest:
       name: AuthRequest
       title: WebSocket authentication request
-      summary: First-message authentication flow; used when Authorization is not included in the handshake header.
+      summary: First-message authentication flow for the Studio self-domain endpoint and LAN Studio environments; not used in production or cloud environments.
       payload:
         $ref: '#/components/schemas/AuthRequestMessage'
       examples:
@@ -144,7 +156,9 @@ components:
             msgId: '10001'
             data:
               authType: token
-              token: 'Bearer <Token>'
+              token: '<accessToken>'
+              deviceUniqueId: '<deviceUniqueId>'
+              clientId: '<clientId>'
     AuthResponse:
       name: AuthResponse
       title: WebSocket authentication response
@@ -201,6 +215,12 @@ components:
             version: v1
             msgId: '1751609244328'
             data: null
+        - name: allDevicesWithEmptyArray
+          payload:
+            type: SubscribeAllRequest
+            version: v1
+            msgId: '1751609244329'
+            data: []
         - name: specifiedDevices
           payload:
             type: SubscribeAllRequest
@@ -218,6 +238,9 @@ components:
     UnsubscribeAllRequest:
       name: UnsubscribeAllRequest
       title: Unsubscribe from all or selected devices request
+      description: |
+        Clears subscriptions for all or selected device data and also clears Trait subscriptions for the current session.
+        It does not clear standalone event subscriptions or precise object-event subscriptions, and it does not disable the default DEVICE_ADDED and DEVICE_REMOVED events received on authenticated connections.
       payload:
         $ref: '#/components/schemas/UnsubscribeAllRequestMessage'
     UnsubscribeAllResponse:
@@ -263,6 +286,93 @@ components:
         location: $message.payload#/msgId
       payload:
         $ref: '#/components/schemas/UnsubscribeTraitValueResponseMessage'
+    SubscribeObjectEventRequest:
+      name: SubscribeObjectEventRequest
+      title: Subscribe to space, device-space relationship, and automation object events
+      summary: Incrementally adds object-event subscriptions for the current WebSocket session; duplicate subscriptions are idempotent.
+      description: |
+        When `objectIds` is omitted, null, or an empty array, subscribe to all currently accessible objects under the specified `eventTypes`; when non-empty, subscribe only to the specified objects.
+        Subsequent subscription requests are merged with existing rules and do not overwrite previously specified object rules. Subscribing to all objects replaces the existing ID list for the same event type.
+        Apps may use all-object subscriptions to maintain a complete list; screen devices and third-party services typically subscribe to specified objects according to their business scope.
+      payload:
+        $ref: '#/components/schemas/SubscribeObjectEventRequestMessage'
+      examples:
+        - name: subscribeAllPreciseObjectEvents
+          payload:
+            type: SubscribeObjectEventRequest
+            version: v1
+            msgId: object-subscribe-1
+            data:
+              - eventTypes:
+                  - SPACE_ADDED
+                  - SPACE_REMOVED
+                  - SPACE_UPDATED
+                  - AUTOMATION_ADDED
+                  - AUTOMATION_REMOVED
+                  - AUTOMATION_UPDATED
+                  - AUTOMATION_SPACE_UPDATED
+                  - DEVICE_SPACE_UPDATED
+                objectIds: []
+        - name: subscribeSelectedObjects
+          payload:
+            type: SubscribeObjectEventRequest
+            version: v1
+            msgId: object-subscribe-2
+            data:
+              - eventTypes:
+                  - DEVICE_SPACE_UPDATED
+                objectIds:
+                  - device-1
+                  - device-2
+              - eventTypes:
+                  - AUTOMATION_REMOVED
+                  - AUTOMATION_UPDATED
+                  - AUTOMATION_SPACE_UPDATED
+                objectIds:
+                  - automation-1
+    SubscribeObjectEventResponse:
+      name: SubscribeObjectEventResponse
+      title: Object-event subscription response
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/SubscribeObjectEventResponseMessage'
+    UnsubscribeObjectEventRequest:
+      name: UnsubscribeObjectEventRequest
+      title: Unsubscribe from space, device-space relationship, and automation object events
+      summary: Removes specified object rules or clears specified event types for the current WebSocket session.
+      description: |
+        When `objectIds` is non-empty, only the specified objects are removed; when omitted, null, or an empty array, all object rules for the corresponding `eventTypes` are cleared.
+        All-object subscriptions do not support excluding selected objects. To switch from all objects to specified objects, first clear the event type and then send a new specified-object subscription.
+      payload:
+        $ref: '#/components/schemas/UnsubscribeObjectEventRequestMessage'
+      examples:
+        - name: unsubscribeSelectedObject
+          payload:
+            type: UnsubscribeObjectEventRequest
+            version: v1
+            msgId: object-unsubscribe-1
+            data:
+              - eventTypes:
+                  - AUTOMATION_UPDATED
+                objectIds:
+                  - automation-1
+        - name: clearEventType
+          payload:
+            type: UnsubscribeObjectEventRequest
+            version: v1
+            msgId: object-unsubscribe-2
+            data:
+              - eventTypes:
+                  - AUTOMATION_UPDATED
+                objectIds: []
+    UnsubscribeObjectEventResponse:
+      name: UnsubscribeObjectEventResponse
+      title: Object-event unsubscription response
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/UnsubscribeObjectEventResponseMessage'
     TraitValueUpdate:
       name: TraitValueUpdate
       title: Trait value change push
@@ -283,14 +393,30 @@ components:
                 time: 1754469720110
             code: 0
             message: ''
+        - name: deviceNameUpdated
+          payload:
+            type: TraitValueUpdate
+            version: v1
+            msgId: '1789113600000'
+            data:
+              - deviceId: device-1
+                endpointId: 0
+                functionCode: EndpointLabel
+                traitCode: EndpointName
+                value: Living Room Light
+                time: 1789113600000
+            code: 0
+            message: ''
     ObjectEvent:
       name: objectEvent
       title: Object event push
-      summary: Object events are pushed at the connection-registration level; the client should dispatch and filter them based on `eventType` and `objectId`.
+      summary: Device add/remove events are pushed by default; changes to spaces, automations, and space relationships are delivered according to precise object subscriptions.
       description: |
-        Object events are pushed according to the current connection's push registration state and are not precisely filtered by `objectId`, device ID, or Trait subscription conditions.
-        Even if some subscription requests do not result in an effective `TraitValueUpdate` subscription, the current connection may still receive object events.
-        If the current connection should stop receiving all push messages, send `UnsubscribeAllRequest` with an empty `data` array or omit `data`, or close the WebSocket connection directly.
+        DEVICE_ADDED and DEVICE_REMOVED are pushed by default after an authenticated connection is established.
+        SPACE_*, AUTOMATION_*, and DEVICE_SPACE_UPDATED are delivered only to SubscribeObjectEventRequest sessions that match the eventType, objectId, and current permissions.
+        DEVICE_ENDPOINT_* and DEVICE_TRAIT_PARAMETER_UPDATE continue to follow the existing device-data subscriptions.
+        Scenes are represented by the `manualTriggers` inside an automation; no standalone scene event is provided, and changes in count do not produce separate events.
+        The protocol does not provide a globally unique event ID; the push `msgId` is only for link tracing. Callers should process events idempotently according to object state rather than deduplicating only by `objectId`, `eventType`, and `time`.
       payload:
         $ref: '#/components/schemas/PushObjectEventMessageV1'
       examples:
@@ -315,6 +441,60 @@ components:
                 time: 1754469720110
             code: 0
             message: success
+        - name: deviceSpaceUpdated
+          payload:
+            type: objectEvent
+            version: v1
+            msgId: object-event-1
+            data:
+              eventType: DEVICE_SPACE_UPDATED
+              objectId: device-1
+              time: 1789113600000
+              data:
+                deviceId: device-1
+                oldSpaceId: space-1
+                space:
+                  spaceId: space-2
+                  name: Bedroom
+                  spatialMarking: room
+                  parentSpaceId: home-1
+            code: 0
+            message: success
+        - name: automationUpdated
+          payload:
+            type: objectEvent
+            version: v1
+            msgId: object-event-2
+            data:
+              eventType: AUTOMATION_UPDATED
+              objectId: automation-1
+              time: 1789113600000
+              data:
+                automationId: automation-1
+                definitionType: WHEN_IF_THEN
+                name: Home Mode
+                enabled: true
+                createTime: 1789000000000
+                manualTriggers:
+                  - triggerNodeId: manual-trigger-1
+                    triggerName: Home
+            code: 0
+            message: success
+        - name: automationSpaceUnassigned
+          payload:
+            type: objectEvent
+            version: v1
+            msgId: object-event-3
+            data:
+              eventType: AUTOMATION_SPACE_UPDATED
+              objectId: automation-1
+              time: 1789113600000
+              data:
+                automationId: automation-1
+                oldSpaceId: space-2
+                space: null
+            code: 0
+            message: success
     ErrorMessage:
       name: ErrorMessage
       title: Error response
@@ -322,11 +502,20 @@ components:
         location: $message.payload#/msgId
       payload:
         $ref: '#/components/schemas/ErrorMessageV1'
+      examples:
+        - name: missingMsgId
+          payload:
+            type: ErrorMessage
+            version: v1
+            msgId: ''
+            data: null
+            code: 400
+            message: Missing msgId
 
   schemas:
     MessageType:
       type: string
-      description: WebSocket message type. This document only lists types related to subscription and push delivery.
+      description: Message types used by this protocol and shared push schemas; actual available messages are determined by the corresponding channel and operation.
       enum:
         - AuthRequest
         - AuthResponse
@@ -340,13 +529,60 @@ components:
         - SubscribeTraitValueResponse
         - UnsubscribeTraitValueRequest
         - UnsubscribeTraitValueResponse
+        - SubscribeObjectEventRequest
+        - SubscribeObjectEventResponse
+        - UnsubscribeObjectEventRequest
+        - UnsubscribeObjectEventResponse
         - TraitValueUpdate
         - objectEvent
+        - AlarmEvent
         - ErrorMessage
+    PushAlarmEventMessageV1:
+      description: Shared raw alarm-push schema. It only defines the payload body and does not add alarm-subscription operations to the WebSocket channel in this document. HTTP push reuses this schema and does not use the app notification payload.
+      allOf:
+        - $ref: '#/components/schemas/BasePushMessage'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum: [AlarmEvent]
+            data:
+              $ref: '#/components/schemas/AlarmEventDataV1'
+    AlarmEventDataV1:
+      type: object
+      required: [uuid, deviceName, deviceId, devicePointName, alarmClass, alarmRuleName, alarmText, alarmValue, sourceState, alarmTime, localized]
+      properties:
+        uuid: {type: string}
+        deviceName: {type: string}
+        deviceId: {type: string}
+        devicePointName: {type: string}
+        alarmClass: {type: string}
+        alarmRuleName: {type: string}
+        alarmText: {type: string}
+        alarmValue: {type: string}
+        sourceState: {type: string}
+        alarmTime: {type: integer, format: int64, description: Unix timestamp in milliseconds}
+        localized:
+          type: object
+          minProperties: 1
+          description: Provides text by language tag. Some languages may be absent when localized text generation fails; in that case, the top-level text uses the system default language or an available fallback language.
+          additionalProperties:
+            type: object
+            required: [devicePointName, alarmText, alarmValue, sourceStateText]
+            properties:
+              devicePointName: {type: string}
+              alarmText: {type: string}
+              alarmValue: {type: string}
+              sourceStateText: {type: string}
     MsgId:
       type: string
-      description: Unique message identifier. Normal requests and responses are correlated by the same `msgId`; parse failures, partial-permission issues, or internal errors may return `UNKNOWN`; server push messages are generated by the server and do not correspond to the subscription request `msgId`.
+      description: A non-empty identifier used by the request. It should remain unique at least among unfinished requests on the current connection. Normal responses correlate with the same msgId, while msgIds on server push messages are used only for link tracing, do not correspond to subscription request msgIds, and are not guaranteed to be globally unique.
       minLength: 1
+      maxLength: 64
+    ErrorMsgId:
+      type: string
+      description: Returns the original request msgId when it can be correlated; the server may return UNKNOWN or an empty string when it cannot correlate the original request.
+      minLength: 0
       maxLength: 64
     Version:
       type: string
@@ -383,11 +619,11 @@ components:
         msgId:
           $ref: '#/components/schemas/MsgId'
         data:
-          description: Response data. When no data is returned, it is usually an empty string or `null`.
+          description: Response data. When no data is returned, it is usually an empty string or null.
         code:
           type: integer
           format: int32
-          description: Processing result code. `0` indicates success, and any non-zero value indicates failure.
+          description: Processing result code. 0 indicates success, and any non-zero value indicates failure.
         message:
           type:
             - string
@@ -414,7 +650,7 @@ components:
         code:
           type: integer
           format: int32
-          description: Processing result code. `0` indicates success, and any non-zero value indicates failure.
+          description: Processing result code. 0 indicates success, and any non-zero value indicates failure.
         message:
           type:
             - string
@@ -504,6 +740,24 @@ components:
               type: string
               enum:
                 - UnsubscribeTraitValueResponse
+    SubscribeObjectEventResponseMessage:
+      allOf:
+        - $ref: '#/components/schemas/CommonEmptyResponse'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - SubscribeObjectEventResponse
+    UnsubscribeObjectEventResponseMessage:
+      allOf:
+        - $ref: '#/components/schemas/CommonEmptyResponse'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - UnsubscribeObjectEventResponse
     PingRequestMessage:
       allOf:
         - $ref: '#/components/schemas/BaseRequest'
@@ -548,14 +802,13 @@ components:
                 - 'null'
               default: null
               description: |
-                List of device IDs. When `null` or omitted, it subscribes to all device data within the current permission scope and clears previously established device-level subscriptions.
-                When `data` is non-empty, the "subscribe all devices" state is cancelled and these device-level subscriptions are appended, but any other previously appended device-level subscriptions are not automatically cleared.
-                When using a restricted API AccessToken, an empty `data` array may return `code=0` without creating an effective subscription; when subscribing to all devices within the authorized scope, it is recommended to pass `null` or omit `data`.
-                To narrow or replace the device-level subscription scope, first use `UnsubscribeAllRequest` to remove devices that are no longer needed.
-                To clear all subscriptions on the current connection, send `UnsubscribeAllRequest` with an empty `data` array or omit `data`.
-                If the current account or token permission scope has no accessible devices, the server may return `code=0` but no subsequent push messages will be generated.
-                Within the same connection, `SubscribeAllRequest` overrides and clears Trait subscriptions previously established via `SubscribeTraitValueRequest`.
-                To switch from all-device or selected-device subscriptions back to Trait-only subscriptions, first send `UnsubscribeAllRequest` to clear the all-device/device-level subscriptions.
+                List of device IDs. When null, omitted, or an empty array, this subscribes to all device data within the current permission scope and clears previously established device-level subscriptions.
+                When `data` is non-empty, the “subscribe all devices” state is cancelled and these device-level subscriptions are appended, but previously appended device-level subscriptions are not automatically cleared.
+                To narrow or replace the device-level subscription scope, first use UnsubscribeAllRequest to remove devices that are no longer needed.
+                To clear all device-data and Trait subscriptions on the current connection, send UnsubscribeAllRequest with an empty data array or omit data; this request does not clear standalone event or object-event subscriptions.
+                If the current account or token permission scope has no accessible devices, the server may return code=0 but no subsequent push messages will be generated.
+                Within the same connection, SubscribeAllRequest overrides and clears Trait subscriptions previously established via SubscribeTraitValueRequest.
+                To switch from all-device or selected-device subscriptions back to Trait-only subscriptions, first send UnsubscribeAllRequest to clear the all-device/device-level subscriptions.
               items:
                 type: string
     UnsubscribeAllRequestMessage:
@@ -573,10 +826,11 @@ components:
                 - 'null'
               default: null
               description: |
-                List of device IDs. Empty or `null` means unsubscribe from everything.
-                If the current connection is subscribed to all devices, unsubscribing by specific device IDs has no effect; pass an empty value to cancel all subscriptions.
-                Within the same connection, `UnsubscribeAllRequest` also clears Trait subscriptions previously established via `SubscribeTraitValueRequest`.
+                List of device IDs. Empty or null means unsubscribe from all device-data and Trait subscriptions.
+                If the current connection is subscribed to all devices, unsubscribing by specific device IDs has no effect; an empty value must be passed to cancel all device-data subscriptions.
+                Within the same connection, UnsubscribeAllRequest also clears Trait subscriptions previously established via SubscribeTraitValueRequest.
                 Unsubscribing specific devices only removes device-level subscriptions and does not mean stopping all push messages on the current connection.
+                This request does not clear rules established by SubscribeEventRequest or SubscribeObjectEventRequest, nor does it disable the default DEVICE_ADDED and DEVICE_REMOVED push messages.
               items:
                 type: string
     TraitSubscriptionItem:
@@ -616,8 +870,8 @@ components:
             data:
               type: array
               description: |
-                List of Traits to subscribe to. A non-empty array is recommended; omitting `data` causes parsing to fail.
-                In the current implementation, an empty array or empty `traitCodes` may still return a success response, but no effective `TraitValueUpdate` subscription will be created.
+                List of Traits to subscribe to. A non-empty array is recommended; omitting data causes parsing to fail.
+                In the current implementation, an empty array or empty traitCodes may still return a success response, but no effective TraitValueUpdate subscription will be created.
               items:
                 $ref: '#/components/schemas/TraitSubscriptionItem'
     UnsubscribeTraitValueRequestMessage:
@@ -634,9 +888,86 @@ components:
               default: []
               description: |
                 List of Traits to unsubscribe from. A non-empty array is recommended.
-                Omitting `data`, passing an empty array, or using empty `traitCodes` will not cancel any Trait subscriptions, although the current implementation may still return a success response.
+                Omitting data, passing an empty array, or using empty traitCodes will not cancel any Trait subscriptions, although the current implementation may still return a success response.
               items:
                 $ref: '#/components/schemas/TraitSubscriptionItem'
+    PreciseObjectEventType:
+      type: string
+      enum:
+        - DEVICE_SPACE_UPDATED
+        - SPACE_ADDED
+        - SPACE_REMOVED
+        - SPACE_UPDATED
+        - AUTOMATION_ADDED
+        - AUTOMATION_REMOVED
+        - AUTOMATION_UPDATED
+        - AUTOMATION_SPACE_UPDATED
+    ObjectEventSubscriptionItem:
+      type: object
+      required:
+        - eventTypes
+      properties:
+        eventTypes:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/PreciseObjectEventType'
+        objectIds:
+          type:
+            - array
+            - 'null'
+          maxItems: 1000
+          uniqueItems: true
+          items:
+            type: string
+            minLength: 1
+          description: |
+            When subscribing, omitted, null, or empty objectIds means all objects within the current permission scope; when non-empty, only the specified objects are matched.
+            When unsubscribing, omitted, null, or empty objectIds means clearing all rules for the corresponding eventTypes; when non-empty, only the specified objects are removed.
+            Within the same WebSocket session, at most 1000 distinct objectIds may be cumulatively subscribed under each eventType.
+            When objectIds is non-empty, the eventTypes in the same item must belong to the same object type; SPACE_ADDED and AUTOMATION_ADDED support only the all-objects semantic.
+            The protocol does not use a scope field; the all-objects semantic is represented uniformly through objectIds.
+    SubscribeObjectEventRequestMessage:
+      allOf:
+        - $ref: '#/components/schemas/BaseRequest'
+        - type: object
+          required:
+            - data
+          properties:
+            type:
+              type: string
+              enum:
+                - SubscribeObjectEventRequest
+            data:
+              type: array
+              minItems: 1
+              maxItems: 100
+              items:
+                $ref: '#/components/schemas/ObjectEventSubscriptionItem'
+              description: |
+                Must contain 1 to 100 subscription items. Requests are merged incrementally by session, and duplicate subscriptions are idempotent.
+                SPACE_ADDED and AUTOMATION_ADDED only allow the all-objects semantic for objectIds.
+    UnsubscribeObjectEventRequestMessage:
+      allOf:
+        - $ref: '#/components/schemas/BaseRequest'
+        - type: object
+          required:
+            - data
+          properties:
+            type:
+              type: string
+              enum:
+                - UnsubscribeObjectEventRequest
+            data:
+              type: array
+              minItems: 1
+              maxItems: 100
+              items:
+                $ref: '#/components/schemas/ObjectEventSubscriptionItem'
+              description: |
+                Must contain 1 to 100 unsubscribe items; an empty array is a parameter error and does not mean unsubscribing from all event types.
+                When objectIds is omitted, null, or an empty array, all object rules under the corresponding eventTypes for the current session are removed; when non-empty, only the specified objects are removed.
     PushTraitValueUpdateItem:
       type: object
       required:
@@ -783,8 +1114,136 @@ components:
             - $ref: '#/components/schemas/TraitParameterValue'
             - type: 'null'
           description: Previous Trait parameter value; when empty, this field may be omitted during serialization.
+    DeviceSpaceUpdateEventData:
+      type: object
+      required:
+        - deviceId
+        - oldSpaceId
+        - space
+      properties:
+        deviceId:
+          type: string
+          description: Device ID.
+        oldSpaceId:
+          type:
+            - string
+            - 'null'
+          description: Space ID before the change; null when associated for the first time.
+        space:
+          anyOf:
+            - $ref: '#/components/schemas/SpaceEventData'
+            - type: 'null'
+          description: Space summary at the time the relationship changes; null when the relationship is removed. Read the space ID from `space.spaceId`; subsequent name, marking, or parent changes should update a unified space cache via SPACE_UPDATED.
+    SpaceEventData:
+      type: object
+      description: Latest space summary. The client should maintain a unified space cache by `spaceId` to avoid repeatedly storing potentially stale names, markings, and parent relationships in device or automation relationship data; `parentSpaceId` indicates the parent space of the summary, and is null for a root space.
+      required:
+        - spaceId
+        - name
+        - parentSpaceId
+      properties:
+        spaceId:
+          type: string
+          description: Space ID.
+        name:
+          type: string
+          description: Space name.
+        spatialMarking:
+          type:
+            - string
+            - 'null'
+          description: Space marking; null when no marking exists.
+        parentSpaceId:
+          type:
+            - string
+            - 'null'
+          description: Parent space ID of the space; null for a root space. For SPACE_ADDED and SPACE_UPDATED this is the parent space after the event; for SPACE_REMOVED it is the parent space before deletion.
+    AutomationManualTriggerBrief:
+      type: object
+      required:
+        - triggerNodeId
+        - triggerName
+      properties:
+        triggerNodeId:
+          type: string
+          description: Manual trigger block node ID inside the automation.
+        triggerName:
+          type: string
+          description: Scene name.
+    AutomationPushSnapshot:
+      type: object
+      description: A lightweight snapshot used in automation change notifications; it does not include the full config. When the caller needs the complete configuration, it should query the details through GET /automations/{automationId}.
+      required:
+        - automationId
+        - definitionType
+        - name
+        - enabled
+        - createTime
+        - manualTriggers
+      properties:
+        automationId:
+          type: string
+          description: Automation ID.
+        definitionType:
+          type: string
+          description: Automation definition type.
+        name:
+          type: string
+          description: Automation name.
+        enabled:
+          type: boolean
+          description: Whether it is enabled.
+        createTime:
+          type: integer
+          format: int64
+          description: Creation timestamp in milliseconds.
+        manualTriggers:
+          type: array
+          description: Latest snapshot of the scenes inside the automation.
+          items:
+            $ref: '#/components/schemas/AutomationManualTriggerBrief'
+    AutomationSpaceUpdateEventData:
+      type: object
+      required:
+        - automationId
+        - oldSpaceId
+        - space
+      properties:
+        automationId:
+          type: string
+          description: Automation ID.
+        oldSpaceId:
+          type:
+            - string
+            - 'null'
+          description: Space ID before the change; null when associated for the first time.
+        space:
+          anyOf:
+            - $ref: '#/components/schemas/SpaceEventData'
+            - type: 'null'
+          description: Space summary at the time the relationship changes; null when the relationship is removed. Read the space ID from `space.spaceId`; subsequent name, marking, or parent changes should update a unified space cache via SPACE_UPDATED. This relationship also applies to scenes inside the automation.
+    KnownPushObjectEventType:
+      type: string
+      description: Known pushed object events in the current version; used to validate the data for known events without restricting pushed `eventType` values to a closed enum.
+      enum:
+        - DEVICE_ADDED
+        - DEVICE_REMOVED
+        - DEVICE_ENDPOINT_ADDED
+        - DEVICE_ENDPOINT_REMOVED
+        - DEVICE_TRAIT_PARAMETER_UPDATE
+        - DEVICE_SPACE_UPDATED
+        - SPACE_ADDED
+        - SPACE_REMOVED
+        - SPACE_UPDATED
+        - AUTOMATION_ADDED
+        - AUTOMATION_REMOVED
+        - AUTOMATION_UPDATED
+        - AUTOMATION_SPACE_UPDATED
     PushObjectEventData:
       type: object
+      description: |
+        Generic data for objectEvent. The currently known values are listed under eventType, but the receiving side should treat it as an extensible string.
+        When HTTP ALL_SUPPORTED is selected, Studio may, after an upgrade, send events and data structures that are not listed in older versions of the documentation.
       required:
         - eventType
         - objectId
@@ -792,26 +1251,77 @@ components:
       properties:
         eventType:
           type: string
-          description: Object event type.
-          enum:
-            - DEVICE_ADDED
-            - DEVICE_REMOVED
-            - DEVICE_ENDPOINT_ADDED
-            - DEVICE_ENDPOINT_REMOVED
-            - DEVICE_TRAIT_PARAMETER_UPDATE
+          minLength: 1
+          description: Extensible object event type; see KnownPushObjectEventType for currently known values.
         objectId:
           type: string
-          description: Object ID; in device event scenarios, this is typically the device ID.
+          description: Object ID; depending on the event type, this is a device, space, or automation ID.
         time:
           type: integer
           format: int64
           description: Event timestamp in milliseconds.
         data:
-          description: Concrete structure determined by `eventType`.
           type:
             - object
             - 'null'
-          additionalProperties: true
+          description: |
+            The concrete structure is determined by `eventType`. The current structures are described by PushObjectEventDeviceData, PushObjectEventTraitParameterData, DeviceSpaceUpdateEventData, SpaceEventData, AutomationPushSnapshot, and AutomationSpaceUpdateEventData.
+            Future new structures may be added on the push side; PreciseObjectEventType in subscription requests remains a strict enum in the current version.
+      allOf:
+        - if:
+            properties:
+              eventType:
+                enum: [DEVICE_ADDED, DEVICE_REMOVED, DEVICE_ENDPOINT_ADDED, DEVICE_ENDPOINT_REMOVED]
+          then:
+            required: [data]
+            properties:
+              data:
+                $ref: '#/components/schemas/PushObjectEventDeviceData'
+        - if:
+            properties:
+              eventType:
+                enum: [DEVICE_TRAIT_PARAMETER_UPDATE]
+          then:
+            required: [data]
+            properties:
+              data:
+                $ref: '#/components/schemas/PushObjectEventTraitParameterData'
+        - if:
+            properties:
+              eventType:
+                enum: [DEVICE_SPACE_UPDATED]
+          then:
+            required: [data]
+            properties:
+              data:
+                $ref: '#/components/schemas/DeviceSpaceUpdateEventData'
+        - if:
+            properties:
+              eventType:
+                enum: [SPACE_ADDED, SPACE_REMOVED, SPACE_UPDATED]
+          then:
+            required: [data]
+            properties:
+              data:
+                $ref: '#/components/schemas/SpaceEventData'
+        - if:
+            properties:
+              eventType:
+                enum: [AUTOMATION_ADDED, AUTOMATION_REMOVED, AUTOMATION_UPDATED]
+          then:
+            required: [data]
+            properties:
+              data:
+                $ref: '#/components/schemas/AutomationPushSnapshot'
+        - if:
+            properties:
+              eventType:
+                enum: [AUTOMATION_SPACE_UPDATED]
+          then:
+            required: [data]
+            properties:
+              data:
+                $ref: '#/components/schemas/AutomationSpaceUpdateEventData'
     PushObjectEventMessageV1:
       allOf:
         - $ref: '#/components/schemas/BasePushMessage'
@@ -826,21 +1336,33 @@ components:
             data:
               $ref: '#/components/schemas/PushObjectEventData'
     ErrorMessageV1:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          required:
-            - message
-          properties:
-            type:
-              type: string
-              enum:
-                - ErrorMessage
-            code:
-              type: integer
-              format: int32
-              description: Processing result code. Any non-zero value indicates failure; clients are discouraged from relying on specific error codes for fixed business logic decisions.
-            data:
-              type:
-                - string
-                - 'null'
+      type: object
+      required:
+        - type
+        - version
+        - msgId
+        - code
+        - message
+      properties:
+        type:
+          type: string
+          enum:
+            - ErrorMessage
+        version:
+          $ref: '#/components/schemas/Version'
+        msgId:
+          $ref: '#/components/schemas/ErrorMsgId'
+        data:
+          type:
+            - string
+            - 'null'
+          description: Error responses typically do not carry business data.
+        code:
+          type: integer
+          format: int32
+          description: Processing result code. Any non-zero value indicates failure; clients are discouraged from relying on specific error codes for fixed business logic decisions.
+        message:
+          type:
+            - string
+            - 'null'
+          description: Error message.
