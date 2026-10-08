@@ -1,14 +1,14 @@
 ---
-title: "将网关作为 Studio 本地 API 服务端"
+title: "OpenAPI（Gateway） Export 插件使用流程"
 description: "本文将详细介绍如何将 Studio 内的网关作为本地 API 服务端。通过网关的本地 API 服务端，即使与 Aqara Studio 连接中断，仍可对网关及其子设备进行查询和控制，并在局域网内独立提供设备与自动化能力。"
-keywords: ["Aqara 文档", "Aqara Studio", "将网关作为 Studio 本地 API 服务端", "openapi"]
+keywords: ["Aqara 文档", "Aqara Studio", "OpenAPI（Gateway） Export 插件使用流程", "openapi"]
 ---
 
-# 将网关作为 Studio 本地 API 服务端
+# OpenAPI（Gateway） Export 插件使用流程
 
 Aqara Studio 提供了一套丰富的接口，支持用户高效、安全地访问和管理设备与自动化相关数据。但默认情况下，调用这些接口必须依赖 Aqara Studio 与各网关之间的连接。一旦网关与 Aqara Studio 连接中断，便无法再通过该链路获取断联网关及其子设备的最新状态，也无法对其进行控制。
 
-为解决上述问题，您可安装相应插件，使 Aqara Studio 支持将网关作为本地 API 服务端。通过网关的本地 API 服务端，可以实现：
+为解决上述问题，您可安装 **OpenAPI（Gateway） Export 插件**，使 Aqara Studio 支持将网关作为本地 API 服务端。通过网关的本地 API 服务端，可以实现：
 - 即使网关与 Aqara Studio 连接中断，仍可对网关及其子设备进行查询和控制。
 - 网关作为独立服务端，在局域网内提供设备与自动化能力。
 - 独立管理各网关的服务状态、Token 与 API 白名单。

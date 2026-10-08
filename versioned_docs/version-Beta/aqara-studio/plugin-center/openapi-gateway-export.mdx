@@ -1,14 +1,14 @@
 ---
-title: "Use Gateways as Studio Local API Servers"
+title: "OpenAPI (Gateway) Export Plugin Instruction"
 description: "This article explains how to use gateways in Studio as a local API server. With the gateway’s local API server, you can still query and control the gateway and its sub-devices even if the connection to Aqara Studio is interrupted, and independently provide device and automation capabilities within the local network."
-keywords: ["Aqara Docs", "Aqara Studio", "Use Gateways as Studio Local API Servers", "openapi"]
+keywords: ["Aqara Docs", "Aqara Studio", "OpenAPI (Gateway) Export Plugin Instruction", "openapi"]
 ---
 
-# Use Gateways as Studio Local API Servers
+# OpenAPI (Gateway) Export Plugin Instruction
 
 Aqara Studio provides a rich set of APIs that let you efficiently and securely access and manage device and automation data. By default, however, calling these APIs depends on the connection between Aqara Studio and each gateway. Once a gateway disconnects from Aqara Studio, you can no longer obtain the latest status of that gateway and its sub-devices through that link, nor control them.
 
-To address this, you can install the corresponding plugin so that Aqara Studio supports using a gateway as a local API server. With the gateway’s local API server, you can:
+To address this, you can install the **OpenAPI (Gateway) Export** plugin so that Aqara Studio supports using a gateway as a local API server. With the gateway’s local API server, you can:
 - Query and control the gateway and its sub-devices even if the connection between the gateway and Aqara Studio is interrupted.
 - Use the gateway as an independent server that provides device and automation capabilities within the local network.
 - Independently manage each gateway’s service status, Token, and API whitelist.
