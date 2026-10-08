@@ -1,0 +1,148 @@
+asyncapi: 3.0.0
+id: urn:studio:http-push:receiver:v1
+info:
+  title: Studio HTTP Push Receiver API
+  version: v1
+  description: |
+    第三方接收端视角。Studio Open 向在 Studio 中配置的唯一全局 endpoint 发送 HTTP/1.1 POST。
+    支持 HTTP/HTTPS，HTTPS 必须验证证书；不跟随重定向。地址禁止 query、fragment 和 userinfo，保留路径中的连续斜杠和已有百分号转义。
+    固定 Header 总容量最多 32 KiB，按每项名称字节数、值字节数及额外 4 字节分隔和换行开销累加计算。
+    业务正文只推送 v1，完整 Schema 复用 WebSocket。实时 best-effort，无持久化消息队列、历史补发或全局顺序保证。
+    必须同时 HTTP 2xx 和 JSON 顶层 code 的词法整数值为 0 才算成功。0.0、0e0、"0"、null 均失败。
+    单条业务消息最多重试一次，普通等待 1 秒；429 的 Retry-After 仅接受 0..30 秒整数。
+    连接超时 2 秒，单次 HTTP 调用采用 5 秒的超时取消期限。逻辑投递窗口从进入发送阶段起计算，为 45 秒，不含此前的排队等待，窗口到期后不再启动重试。
+    这些期限不是端到端送达或底层资源立即释放的保证；DNS 等底层操作不响应取消时，实际结束可能更晚。验证消息不重试。
+    连续 5 条最终失败熔断，探测退避 1 分钟、5 分钟、15 分钟、1 小时、6 小时封顶；恢复后不补发，连续 10 条业务投递成功后重置退避档位。
+    推送启用后默认发送 DEVICE_ADDED/DEVICE_REMOVED，不受其他订阅项影响。TraitValueUpdate、DEVICE_ENDPOINT_ADDED、DEVICE_ENDPOINT_REMOVED 和 DEVICE_TRAIT_PARAMETER_UPDATE 共用设备数据与结构事件组合项，默认开启。
+    自主订阅可逐项选择当前 8 个可配置对象事件，默认全部选中；告警默认关闭。允许取消全部可选项，此时仅推送设备新增、移除。全订阅包含全部可选项及后续新增对象事件；关闭推送后默认事件也停止。
+    单条业务请求正文默认上限 1 MiB，可由 Studio 管理员调整，硬上限 64 MiB；超限消息不会发送。
+    接收端必须支持 WebhookVerification；不发送 WebhookResyncRequired，不要求额外 resync 确认。
+    保存配置时自动验证当前配置，成功后才启用并开始业务推送；独立验证地址仅用于可选调试，每次重新启用都会重新验证。
+    详见 HTTP推送接入指南.md。此签名与 OpenAPI/WebSocket 网关签名独立，不使用 Studio 生成的 AppKey。
+defaultContentType: application/json
+servers:
+  receiver:
+    host: receiver.example
+    protocol: https
+    protocolVersion: '1.1'
+    description: 示例地址；实际主机、端口和路径在 Studio 中配置，不是 Studio 服务端接口。
+channels:
+  webhook:
+    address: /hook
+    description: HTTP POST 请求正文为一条消息；响应为同一请求的 JSON 确认。固定 Header 名称和值原样发送。
+    messages:
+      TraitValueUpdate:
+        $ref: '#/components/messages/TraitValueUpdate'
+      ObjectEvent:
+        $ref: '#/components/messages/ObjectEvent'
+      AlarmEvent:
+        $ref: '#/components/messages/AlarmEvent'
+      Verification:
+        $ref: '#/components/messages/Verification'
+      Acknowledgement:
+        $ref: '#/components/messages/Acknowledgement'
+operations:
+  receivePush:
+    action: receive
+    bindings:
+      http:
+        method: POST
+        bindingVersion: '0.3.0'
+    channel:
+      $ref: '#/channels/webhook'
+    messages:
+      - $ref: '#/channels/webhook/messages/TraitValueUpdate'
+      - $ref: '#/channels/webhook/messages/ObjectEvent'
+      - $ref: '#/channels/webhook/messages/AlarmEvent'
+      - $ref: '#/channels/webhook/messages/Verification'
+    reply:
+      channel:
+        $ref: '#/channels/webhook'
+      messages:
+        - $ref: '#/channels/webhook/messages/Acknowledgement'
+components:
+  messages:
+    TraitValueUpdate:
+      headers:
+        $ref: '#/components/schemas/PushHeaders'
+      payload:
+        $ref: './asyncapi-AqaraLife-websocket.yaml#/components/schemas/PushTraitValueUpdateMessageV1'
+    ObjectEvent:
+      headers:
+        $ref: '#/components/schemas/PushHeaders'
+      payload:
+        $ref: './asyncapi-AqaraLife-websocket.yaml#/components/schemas/PushObjectEventMessageV1'
+    AlarmEvent:
+      headers:
+        $ref: '#/components/schemas/PushHeaders'
+      payload:
+        $ref: './asyncapi-AqaraLife-websocket.yaml#/components/schemas/PushAlarmEventMessageV1'
+    Verification:
+      headers:
+        $ref: '#/components/schemas/PushHeaders'
+      payload:
+        $ref: '#/components/schemas/WebhookVerification'
+      examples:
+        - payload:
+            type: WebhookVerification
+            version: v1
+            msgId: verify-39c63800-c8c1-4f4b-b77c-57f24f0de240
+            data: {challenge: '00112233445566778899aabbccddeeff'}
+          headers:
+            X-Studio-Delivery-Id: 0c9c109a-e724-469c-ae96-1f96e824c127
+    Acknowledgement:
+      description: HTTP 2xx，未压缩的 UTF-8 JSON。默认响应正文上限 4096 字节，由 Studio 全局配置，硬上限 65536 字节。JSON 最大嵌套深度 128（含根对象）；未知字段同样受限。避免复杂响应和大量 Header。
+      payload:
+        $ref: '#/components/schemas/Acknowledgement'
+      examples:
+        - payload: {code: 0}
+        - payload: {code: 0, challenge: '00112233445566778899aabbccddeeff'}
+        - payload: {code: 1}
+  schemas:
+    PushHeaders:
+      type: object
+      required: [X-Studio-Delivery-Id]
+      description: |
+        Header 名称不区分大小写。始终包含 Delivery-Id；仅开启签名时同时包含以下五个签名字段。
+        Time 为 Unix 毫秒；Nonce 为 128 bit 随机数的小写 hex。Sign 为 HMAC-SHA256 小写 hex。
+        UTF-8 签名原文为 v1、AppKey、Delivery-Id、Time、Nonce、原始正文 SHA256 小写 hex 六行，以 LF 连接，末尾无 LF。
+        HMAC 密钥为第三方提供的 AppSecret UTF-8 字节。重试保持 Delivery-Id 和正文，重新生成 Time/Nonce/Sign。
+      properties:
+        X-Studio-Delivery-Id: {type: string, format: uuid}
+        X-Studio-App-Key: {type: string, minLength: 1, maxLength: 128, pattern: '^[!-~]+$'}
+        X-Studio-Time: {type: string, pattern: '^[0-9]{1,16}$'}
+        X-Studio-Nonce: {type: string, pattern: '^[0-9a-f]{32}$'}
+        X-Studio-Sign-Version: {type: string, enum: [v1]}
+        X-Studio-Sign: {type: string, pattern: '^[0-9a-f]{64}$'}
+      allOf:
+        - if:
+            anyOf:
+              - required: [X-Studio-App-Key]
+              - required: [X-Studio-Time]
+              - required: [X-Studio-Nonce]
+              - required: [X-Studio-Sign-Version]
+              - required: [X-Studio-Sign]
+          then:
+            required: [X-Studio-App-Key, X-Studio-Time, X-Studio-Nonce, X-Studio-Sign-Version, X-Studio-Sign]
+    WebhookVerification:
+      type: object
+      required: [type, version, msgId, data]
+      properties:
+        type: {type: string, enum: [WebhookVerification]}
+        version: {type: string, enum: [v1]}
+        msgId: {type: string, minLength: 1, maxLength: 64}
+        data:
+          type: object
+          required: [challenge]
+          properties:
+            challenge: {type: string, pattern: '^[0-9a-f]{32}$'}
+    Acknowledgement:
+      type: object
+      required: [code]
+      properties:
+        code:
+          type: integer
+          description: 0 表示成功，非 0 表示失败。成功值必须按词法整数编码；JSON Schema 的 integer 无法表达拒绝 0.0/0e0 的额外协议规则。
+        challenge:
+          type: string
+          description: 验证响应必填，必须原样返回该次请求 challenge；业务响应无需此字段。
