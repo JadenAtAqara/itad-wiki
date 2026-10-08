@@ -5,7 +5,7 @@ keywords: ["Aqara 文档", "Aqara Studio", "HTTP Push", "Webhook", "数据转出
 ---
 # HTTP Push 推送
 
-Aqara Studio 支持通过 HTTP Push 将设备数据、对象事件和告警实时推送到第三方系统。您只需在 Studio 中配置一个全局 Webhook 地址，Studio 就会以 HTTP `POST` 的方式，将消息逐条发送到该地址。
+Aqara Studio 支持通过 HTTP Push 将设备数据、对象事件和告警实时推送给您。您只需在 Studio 中配置一个全局 Webhook 地址，Studio 就会以 HTTP `POST` 的方式，将消息逐条发送到该地址。
 
 这类能力适合以下场景：
 - 将设备数据同步到自建平台、数据中台或告警中心。
@@ -69,20 +69,20 @@ Aqara Studio 会向接收端发送以下几类消息：
 
 1. 登录 Aqara Studio，从侧边栏进入 **开发者** 页面。找到 **开放 API 与 MCP 访问** 区域，选择 **消息推送** 按钮。
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HttpPush-Client.png" alt="在 Aqara Studio 配置消息推送" />
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HTTPPush-Client.png" alt="在 Aqara Studio 配置消息推送" />
 
 2. 在弹窗中填写并保存如下信息：
 
-<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HttpPush-Configure.png" alt="在 Aqara Studio 配置消息推送" style={{width: '60%'}} />
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HTTPPush-Configure.png" alt="在 Aqara Studio 配置消息推送" style={{width: '60%'}} />
 
-    | 项目 | 说明 |
+    | 项目 | 必需 | 说明 |
     | --- | --- |
-    | 推送地址（Push URL） | 传入您用于接收推送的地址，请确保该地址满足 [接收端要求](#接收端要求)。 |
-    | 消息订阅模式 | 您可以选择消息订阅模式，支持如下：<ul><li>自主订阅：选择需要订阅的事件类型。</li><li>全订阅：订阅所有事件类型。</li></ul>。更多说明见 [订阅与默认推送规则](#订阅与默认推送规则) |
-    | 推送事件类型 | 仅当 *消息订阅模式* 为 *自主订阅* 时，您可以勾选需要订阅的事件类型。 |
-    | 固定 Header | 您可以添加 Header 字段，用于自定义请求头。但是，不可以为以下任意字段：<ul><li>`X-Studio-Delivery-Id`</li><li>`X-Studio-App-Key`</li><li>`X-Studio-Time`</li><li>`X-Studio-Nonce`</li><li>`X-Studio-Sign-Version`</li><li>`X-Studio-Sign`</li></ul>。 |
-    | AppKey | AppKey 是 1～128 个可打印 ASCII 字符，由您定义，不允许空格。 |
-    | AppSecret | AppSecret 是 1～4096 个 UTF-8 字节，由您定义，不能包含控制字符 |
+    | 推送地址（Push URL） | ✓ | 传入您用于接收推送的地址，请确保该地址满足 [接收端要求](#接收端要求)。 |
+    | 消息订阅模式 | ✓ | 您可以选择消息订阅模式，支持如下：<ul><li>自主订阅：选择需要订阅的事件类型。</li><li>全订阅：订阅所有事件类型。</li></ul>。更多说明见 [订阅与默认推送规则](#订阅与默认推送规则) |
+    | 推送事件类型 | ✗ | 仅当 *消息订阅模式* 为 *自主订阅* 时，您可以勾选需要订阅的事件类型。 |
+    | 固定 Header | ✗ | 您可以添加 Header 字段，用于自定义请求头。但是，不可以为以下任意字段：<ul><li>`X-Studio-Delivery-Id`</li><li>`X-Studio-App-Key`</li><li>`X-Studio-Time`</li><li>`X-Studio-Nonce`</li><li>`X-Studio-Sign-Version`</li><li>`X-Studio-Sign`</li></ul>。 |
+    | AppKey | ✗ | AppKey 是 1～128 个可打印 ASCII 字符，由您定义，不允许空格。 |
+    | AppSecret | ✗ | AppSecret 是 1～4096 个 UTF-8 字节，由您定义，不能包含控制字符 |
 
 ## Webhook 验证
 
