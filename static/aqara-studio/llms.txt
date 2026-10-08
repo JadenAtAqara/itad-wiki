@@ -73,7 +73,7 @@
 - AIOT Data Migration: https://docs.aqara.com/docs/aqara-studio/plugin-center/aiot-data-migration
 - OpenAPI (Gateway) Export Plugin Instruction: https://docs.aqara.com/docs/aqara-studio/plugin-center/openapi-gateway-export
 - Developer Guide: https://docs.aqara.com/docs/aqara-studio/developer-guide
-- HTTP Push 推送: https://docs.aqara.com/docs/aqara-studio/http-push
+- HTTP Push: https://docs.aqara.com/docs/aqara-studio/http-push
 - Use Aqara Studio Skill in OpenClaw Web UI: https://docs.aqara.com/docs/aqara-studio/use-aqara-studio-skill-in-openclaw-web-ui
 - Connect to Aqara Studio MCP Server: https://docs.aqara.com/docs/aqara-studio/set-up-mcp-server
 - Matter Bridge: https://docs.aqara.com/docs/aqara-studio/matter-bridge

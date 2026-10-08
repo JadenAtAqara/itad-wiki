@@ -69,20 +69,66 @@ Aqara Studio 会向接收端发送以下几类消息：
 
 1. 登录 Aqara Studio，从侧边栏进入 **开发者** 页面。找到 **开放 API 与 MCP 访问** 区域，选择 **消息推送** 按钮。
 
-    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HTTPPush-Client.png" alt="在 Aqara Studio 配置消息推送" />
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HTTPPush-Click.png" alt="在 Aqara Studio 配置消息推送" />
 
 2. 在弹窗中填写并保存如下信息：
 
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/HTTPPush-Configure.png" alt="在 Aqara Studio 配置消息推送" style={{width: '60%'}} />
 
-    | 项目 | 必需 | 说明 |
-    | --- | --- |
-    | 推送地址（Push URL） | ✓ | 传入您用于接收推送的地址，请确保该地址满足 [接收端要求](#接收端要求)。 |
-    | 消息订阅模式 | ✓ | 您可以选择消息订阅模式，支持如下：<ul><li>自主订阅：选择需要订阅的事件类型。</li><li>全订阅：订阅所有事件类型。</li></ul>。更多说明见 [订阅与默认推送规则](#订阅与默认推送规则) |
-    | 推送事件类型 | ✗ | 仅当 *消息订阅模式* 为 *自主订阅* 时，您可以勾选需要订阅的事件类型。 |
-    | 固定 Header | ✗ | 您可以添加 Header 字段，用于自定义请求头。但是，不可以为以下任意字段：<ul><li>`X-Studio-Delivery-Id`</li><li>`X-Studio-App-Key`</li><li>`X-Studio-Time`</li><li>`X-Studio-Nonce`</li><li>`X-Studio-Sign-Version`</li><li>`X-Studio-Sign`</li></ul>。 |
-    | AppKey | ✗ | AppKey 是 1～128 个可打印 ASCII 字符，由您定义，不允许空格。 |
-    | AppSecret | ✗ | AppSecret 是 1～4096 个 UTF-8 字节，由您定义，不能包含控制字符 |
+    <table>
+      <thead>
+        <tr>
+          <th>项目</th>
+          <th>是否必需</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>推送地址（Push URL）</td>
+          <td>是</td>
+          <td>传入您用于接收推送的地址，请确保该地址满足<a href="#接收端要求">接收端要求</a>。</td>
+        </tr>
+        <tr>
+          <td>消息订阅模式</td>
+          <td>是</td>
+          <td>
+            您可以选择消息订阅模式，支持如下：<br/>
+            - 自主订阅：选择需要订阅的事件类型。<br/>
+            - 全订阅：订阅所有事件类型。<br/>
+            更多说明见 <a href="#订阅与默认推送规则">订阅与默认推送规则</a>
+          </td>
+        </tr>
+        <tr>
+          <td>推送事件类型</td>
+          <td>否</td>
+          <td>仅当 <em>消息订阅模式</em> 为 <em>自主订阅</em> 时，您可以勾选需要订阅的事件类型。</td>
+        </tr>
+        <tr>
+          <td>固定 Header</td>
+          <td>否</td>
+          <td>
+            您可以添加 Header 字段，用于自定义请求头。但是，不可以为以下任意字段：<br/>
+            - <code>X-Studio-Delivery-Id</code><br/>
+            - <code>X-Studio-App-Key</code><br/>
+            - <code>X-Studio-Time</code><br/>
+            - <code>X-Studio-Nonce</code><br/>
+            - <code>X-Studio-Sign-Version</code><br/>
+            - <code>X-Studio-Sign</code>
+          </td>
+        </tr>
+        <tr>
+          <td>AppKey</td>
+          <td>否</td>
+          <td>AppKey 是 1～128 个可打印 ASCII 字符，由您定义，不允许空格。</td>
+        </tr>
+        <tr>
+          <td>AppSecret</td>
+          <td>否</td>
+          <td>AppSecret 是 1～4096 个 UTF-8 字节，由您定义，不能包含控制字符。</td>
+        </tr>
+      </tbody>
+    </table>
 
 ## Webhook 验证
 
