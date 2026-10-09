@@ -100,6 +100,24 @@ const sidebar: SidebarsConfig = {
         },
         {
           type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/query-device-point-info",
+          label: "Batch Query Device Point Information",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/update-device-name",
+          label: "Update Device Name",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/update-device-point-name",
+          label: "Update Device Point Name",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/delete-device-point",
           label: "Delete A Function",
           className: "api-method post",
@@ -108,6 +126,18 @@ const sidebar: SidebarsConfig = {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/add-virtual-device",
           label: "Add A Virtual Device",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/bind-virtual-device-points",
+          label: "Bind source device function points",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/unbind-virtual-device-points",
+          label: "Unbind source device function points",
           className: "api-method post",
         },
         {
@@ -149,6 +179,53 @@ const sidebar: SidebarsConfig = {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/get-device-bind-result",
           label: "Query Sub-device Joining Results",
+          className: "api-method post",
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "Resource",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-developer/data-export-api/resource",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/list-resource-types",
+          label: "Query Open Resource Type Directory",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/describe-resource-type",
+          label: "Query Resource Type Definition",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/query-resources",
+          label: "Paginated Query Resource",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-resource",
+          label: "Read Known Resource",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/update-resource",
+          label: "Modify Known Resource Properties",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/execute-resource-action",
+          label: "Execute Resource Command",
           className: "api-method post",
         },
       ],
@@ -226,6 +303,58 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
+      label: "Firmware",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-developer/data-export-api/firmware",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/search-upgradable-devices-firmware-by-device-ids",
+          label: "Query upgradable device firmware by device IDs",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/upgrade-firmware",
+          label: "Initiate firmware upgrade",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/search-firmware-upgrade-status",
+          label: "Query firmware upgrade progress and result",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/cancel-upgrade-firmware",
+          label: "Cancel firmware upgrade",
+          className: "api-method post",
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "History",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-developer/data-export-api/history",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/query-device-point-history",
+          label: "Query device point value change history",
+          className: "api-method post",
+        },
+      ],
+    },
+    {
+      type: "category",
       label: "Studio",
       link: {
         type: "doc",
@@ -273,6 +402,65 @@ const sidebar: SidebarsConfig = {
           id: "version-Beta/aqara-developer/data-export-api/get-ems-total-space",
           label: "Query Energy Consumption for a Space",
           className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-ems-summary-space",
+          label: "Query Space Energy Consumption Summary",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-ems-summary-devices",
+          label: "Query Multi-Device Energy Consumption Summary",
+          className: "api-method post",
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "Alarm",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-developer/data-export-api/alarm",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-alarms",
+          label: "Query Alarm List",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/delete-alarm",
+          label: "Delete Single Alarm",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/clear-alarms",
+          label: "Clear All Alarms",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/ack-alarms",
+          label: "Batch Acknowledge Alarms by UUID",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/ack-alarms-by-point-id",
+          label: "Batch Acknowledge Alarms by Point ID",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-alarm-rules",
+          label: "Query Alarm Rule List",
+          className: "api-method get",
         },
       ],
     },
