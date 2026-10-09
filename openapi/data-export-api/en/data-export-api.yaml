@@ -1096,7 +1096,7 @@ paths:
       tags: [Device]
       summary: Add A Virtual Device
       description:  |
-        Add a virtual device. Currently, three types are supported:
+        Add a virtual device. Currently, two types are supported:
         - `ir`: Infrared virtual device
         - `virtual`: Custom virtual device
       operationId: addVirtualDevice
@@ -1158,8 +1158,7 @@ paths:
       tags: [Device]
       summary: Bind source device function points
       description: |
-        Bind source device function points to a custom virtual device. `deviceId` refers to the virtual custom device ID.
-        Each item in `sourcePoints` locates a source function point using the open protocol, and either `traitCode` or `commandCode` must be present (choose one of the two).
+        Bind source device function points to a custom virtual device (i.e., virtual device of type `virtual`).
       operationId: bindVirtualDevicePoints
       x-skill-intent: device.virtual.points.bind
       x-idempotent: false
@@ -1219,9 +1218,7 @@ paths:
       tags: [Device]
       summary: Unbind source device function points
       description: |
-        Unbind source device function points from the custom virtual device. This does not affect the original source device.
-        `deviceId` refers to the virtual custom device ID. `sourcePoints` locates the already bound source function points,
-        and either `traitCode` or `commandCode` must be present (choose one of the two).
+        Unbind source device function points from the custom virtual device (i.e., virtual device of type `virtual`). This does not affect the original source device.
       operationId: unbindVirtualDevicePoints
       x-skill-intent: device.virtual.points.unbind
       x-idempotent: true
@@ -4191,16 +4188,21 @@ components:
       properties:
         deviceId:
           type: string
+          description: Device ID
         endpointId:
           type: integer
+          description: Endpoint ID
         functionCode:
           type: string
+          description: Function code
         traitCode:
           type: string
           nullable: true
+          description: Trait code
         commandCode:
           type: string
           nullable: true
+          description: Command code
       description: Only one of traitCode or commandCode must be provided.
 
     QueryDevicePointInfoRequest:
@@ -4222,17 +4224,22 @@ components:
             deviceName:
               type: string
               nullable: true
+              description: Device name
             pointName:
               type: string
               nullable: true
+              description: Point name
             space:
               $ref: '#/components/schemas/DeviceSpace'
               nullable: true
+              description: Space information
             code:
               type: integer
+              description: Status code
             message:
               type: string
               nullable: true
+              description: Message
 
     QueryDevicePointInfoResponse:
       allOf:
@@ -4269,9 +4276,11 @@ components:
       properties:
         deviceId:
           type: string
+          description: Device ID
         name:
           type: string
           minLength: 1
+          description: New name
       example:
         deviceId: "device-001"
         name: "Living Room Main Light"
@@ -4299,19 +4308,25 @@ components:
       properties:
         deviceId:
           type: string
+          description: Device ID
         endpointId:
           type: integer
+          description: Endpoint ID
         functionCode:
+          description: Function code
           type: string
         traitCode:
+          description: Trait code
           type: string
           nullable: true
         commandCode:
+          description: Command code
           type: string
           nullable: true
         pointName:
           type: string
           minLength: 1
+          description: New point name
       description: Only one of traitCode or commandCode must be provided.
       example:
         deviceId: "device-001"
@@ -4391,7 +4406,7 @@ components:
         traitCode:
           type: string
           nullable: true
-          description: Property code; mutually exclusive with commandCode
+          description: Trait code; mutually exclusive with commandCode
         commandCode:
           type: string
           nullable: true

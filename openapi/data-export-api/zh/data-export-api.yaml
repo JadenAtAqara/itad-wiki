@@ -949,7 +949,7 @@ paths:
     post:
       tags: [Device]
       summary: 修改设备名称
-      description: 根据设备ID修改设备名称。
+      description: 根据设备 ID 修改设备名称。
       operationId: updateDeviceName
       x-skill-intent: device.name.update
       x-idempotent: true
@@ -1092,7 +1092,7 @@ paths:
       tags: [Device]
       summary: 添加虚拟设备
       description:  |
-        添加虚拟设备，当前支持三种类型：
+        添加虚拟设备，当前支持两种类型：
         - `ir`：红外虚拟设备
         - `virtual`：虚拟自定义设备
       operationId: addVirtualDevice
@@ -1159,8 +1159,7 @@ paths:
       tags: [Device]
       summary: 绑定源设备功能点
       description: |
-        将源设备功能点绑定到虚拟自定义设备。`deviceId` 为虚拟自定义设备 ID，
-        `sourcePoints` 中每一项使用开放协议定位源功能点，且 `traitCode` 与 `commandCode` 必须二选一。
+        将源设备功能点绑定到虚拟自定义设备（即 virtual 类型虚拟设备）。
       operationId: bindVirtualDevicePoints
       x-skill-intent: device.virtual.points.bind
       x-idempotent: false
@@ -1221,8 +1220,6 @@ paths:
       summary: 解绑源设备功能点
       description: |
         从虚拟自定义设备解绑源设备功能点，不影响源设备本身。
-        `deviceId` 为虚拟自定义设备 ID，`sourcePoints` 定位已绑定的源功能点，
-        且 `traitCode` 与 `commandCode` 必须二选一。
       operationId: unbindVirtualDevicePoints
       x-skill-intent: device.virtual.points.unbind
       x-idempotent: true
@@ -4186,16 +4183,21 @@ components:
       properties:
         deviceId:
           type: string
+          description: 设备 ID。
         endpointId:
           type: integer
+          description: 端点 ID。
         functionCode:
           type: string
+          description: 功能编码。
         traitCode:
           type: string
           nullable: true
+          description: 功能点编码。
         commandCode:
           type: string
           nullable: true
+          description: 命令编码。
       description: traitCode 与 commandCode 必须且只能传一个。
 
     QueryDevicePointInfoRequest:
@@ -4204,6 +4206,7 @@ components:
       properties:
         data:
           type: array
+          description: 需要查询的设备点位信息列表。
           minItems: 1
           items:
             $ref: '#/components/schemas/QueryDevicePointInfoItem'
@@ -4217,17 +4220,22 @@ components:
             deviceName:
               type: string
               nullable: true
+              description: 设备名称。
             pointName:
               type: string
               nullable: true
+              description: 点位名称。
             space:
               $ref: '#/components/schemas/DeviceSpace'
               nullable: true
+              description: 空间信息。
             code:
               type: integer
+              description: 状态码。
             message:
               type: string
               nullable: true
+              description: 提示信息。
 
     QueryDevicePointInfoResponse:
       allOf:
@@ -4264,9 +4272,11 @@ components:
       properties:
         deviceId:
           type: string
+          description: 设备 ID。
         name:
           type: string
           minLength: 1
+          description: 新名称。
       example:
         deviceId: "device-001"
         name: "客厅主灯"
@@ -4294,19 +4304,25 @@ components:
       properties:
         deviceId:
           type: string
+          description: 设备 ID。
         endpointId:
           type: integer
+          description: 端点 ID。
         functionCode:
           type: string
+          description: 功能编码。
         traitCode:
+          description: 功能点编码。
           type: string
           nullable: true
         commandCode:
           type: string
           nullable: true
+          description: 命令编码。
         pointName:
           type: string
           minLength: 1
+          description: 点位新名称。
       description: traitCode 与 commandCode 必须且只能传一个。
       example:
         deviceId: "device-001"
@@ -4374,22 +4390,22 @@ components:
       properties:
         deviceId:
           type: string
-          description: 源设备ID
+          description: 源设备 ID。
         endpointId:
           type: integer
           format: int32
-          description: 端点ID，必须大于等于0
+          description: 端点 ID，必须大于等于 0。
         functionCode:
           type: string
-          description: 功能编码
+          description: 功能编码。
         traitCode:
           type: string
           nullable: true
-          description: 属性编码，与 commandCode 二选一
+          description: 功能点编码，与 commandCode 二选一。
         commandCode:
           type: string
           nullable: true
-          description: 命令编码，与 traitCode 二选一
+          description: 命令编码，与 traitCode 二选一。
       description: traitCode 与 commandCode 必须且只能传一个。
 
     VirtualDeviceBindPointsRequest:
@@ -4398,11 +4414,11 @@ components:
       properties:
         deviceId:
           type: string
-          description: 虚拟自定义设备ID
+          description: 虚拟自定义设备ID。
         sourcePoints:
           type: array
           minItems: 1
-          description: 需要绑定或解绑的源功能点列表
+          description: 需要绑定或解绑的源功能点列表。
           items:
             $ref: '#/components/schemas/VirtualDeviceSourcePoint'
       example:
