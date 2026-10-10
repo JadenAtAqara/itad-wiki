@@ -1331,6 +1331,7 @@ paths:
     get:
       tags: [Resource]
       summary: Query Open Resource Type Directory
+      description: Query the open resource type directory.
       operationId: listResourceTypes
       x-idempotent: true
       x-retryable: true
@@ -1353,7 +1354,7 @@ paths:
     get:
       tags: [Resource]
       summary: Query Resource Type Definition
-      description: Returns the external field schema, query capabilities and operational capabilities, without exposing internal beanId or property path. Sensitive fields are marked with `sensitive=true`, `writeOnly=true`, or `readable=false`.
+      description: Returns the external field schema, query capabilities and operational capabilities.
       operationId: describeResourceType
       x-idempotent: true
       x-retryable: true
@@ -1381,10 +1382,11 @@ paths:
       tags: [Resource]
       summary: Paginated Query Resource
       description: |
-        Paginated query for resources of the specified type. Only filtering conditions declared in query.properties of the resource type definition can be used. Passing in undeclared query parameters will return 400.
-        parentId is only applicable to hierarchical resources that declare this filter; protocolId is only applicable to protocol resources. page defaults to 1, pageSize defaults to 20, max 100.
-        sort format is `field:asc` or `field:desc`, field must appear in query.sortable; if not passed, uses the resource type definition's defaultSort.
-        Pagination results do not calculate total, hasMore indicates whether there is a next page. You can use GET /resource-types/{type} to get the current runtime rules before calling.
+        Paginated query for resources of the specified type. 
+        
+        Only filtering conditions declared in query.properties of the resource type definition can be used. Passing in undeclared query parameters will return 400.
+
+        You can use [GET /resource-types/{type}](https://docs.aqara.com/docs/aqara-developer/data-export-api/describe-resource-type) to get the definition of the query target resource type.
       operationId: queryResources
       x-idempotent: true
       x-retryable: true
@@ -1394,16 +1396,19 @@ paths:
         - name: parentId
           in: query
           required: false
+          description: parentId only applies to hierarchical resources that declare this filter condition.
           schema:
             type: string
         - name: protocolId
           in: query
           required: false
+          description: protocolId only applies to protocol resources.
           schema:
             type: string
         - name: page
           in: query
           required: false
+          description: Page number, default is 1.
           schema:
             type: integer
             minimum: 1
@@ -1411,6 +1416,7 @@ paths:
         - name: pageSize
           in: query
           required: false
+          description: Number of items per page, default is 20, maximum is 100.
           schema:
             type: integer
             minimum: 1
@@ -1419,6 +1425,7 @@ paths:
         - name: sort
           in: query
           required: false
+          description: The sort format is `field:asc` or `field:desc`, where the field must appear in query.sortable. If not specified, the defaultSort defined in the resource type is used.
           schema:
             type: string
             default: id:asc
@@ -3700,13 +3707,16 @@ components:
       properties:
         type:
           type: string
+          description: Resource type.
         operations:
           type: array
+          description: List of operations supported by this type.
           items:
             type: string
             enum: [query, get, update]
         commands:
           type: array
+          description: List of commands supported by this type.
           items:
             type: string
 
@@ -3718,6 +3728,7 @@ components:
           properties:
             data:
               type: object
+              description: Resource type definition list.
               required: [items]
               properties:
                 items:

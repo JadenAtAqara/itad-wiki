@@ -1331,6 +1331,7 @@ paths:
     get:
       tags: [Resource]
       summary: 查询开放资源类型目录
+      description: 查询开放资源类型目录。
       operationId: listResourceTypes
       x-idempotent: true
       x-retryable: true
@@ -1353,7 +1354,7 @@ paths:
     get:
       tags: [Resource]
       summary: 查询资源类型定义
-      description: 返回对外字段 Schema、查询能力和操作能力，不暴露内部 beanId 或 property path。敏感字段以 `sensitive=true`、`writeOnly=true`、`readable=false` 标记。
+      description: 返回对外字段 Schema、查询能力和操作能力。
       operationId: describeResourceType
       x-idempotent: true
       x-retryable: true
@@ -1381,10 +1382,11 @@ paths:
       tags: [Resource]
       summary: 分页查询资源
       description: |
-        分页查询指定类型的资源。仅可使用该资源类型定义中 query.properties 声明的筛选条件，传入未声明的查询参数会返回 400。
-        parentId 只适用于声明了该筛选条件的层级资源；protocolId 只适用于协议资源。page 默认 1，pageSize 默认 20、最大 100。
-        sort 格式为 `字段:asc` 或 `字段:desc`，字段必须出现在 query.sortable 中；未传时使用资源类型定义的 defaultSort。
-        分页结果不计算 total，以 hasMore 表示是否还有下一页。调用前可通过 GET /resource-types/{type} 获取当前运行时规则。
+        分页查询指定类型的资源。
+        
+        仅可使用该资源类型定义中 query.properties 声明的筛选条件，传入未声明的查询参数会返回 400。
+        
+        调用此接口前，请通过调用 [GET /resource-types/{type}](https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/describe-resource-type) 接口，查询待查询资源类型的定义。
       operationId: queryResources
       x-idempotent: true
       x-retryable: true
@@ -1394,16 +1396,19 @@ paths:
         - name: parentId
           in: query
           required: false
+          description: parentId 只适用于声明了该筛选条件的层级资源。
           schema:
             type: string
         - name: protocolId
           in: query
           required: false
+          description: protocolId 只适用于协议资源。
           schema:
             type: string
         - name: page
           in: query
           required: false
+          description: 页码，默认为 1。
           schema:
             type: integer
             minimum: 1
@@ -1411,6 +1416,7 @@ paths:
         - name: pageSize
           in: query
           required: false
+          description: 每页条数，默认为 20，最大为 100。
           schema:
             type: integer
             minimum: 1
@@ -1419,6 +1425,7 @@ paths:
         - name: sort
           in: query
           required: false
+          description: sort 格式为 `字段:asc` 或 `字段:desc`，字段必须出现在 query.sortable 中；未传时使用资源类型定义的 defaultSort。
           schema:
             type: string
             default: id:asc
@@ -3696,13 +3703,16 @@ components:
       properties:
         type:
           type: string
+          description: 资源类型。
         operations:
           type: array
+          description: 此类型支持的操作列表。
           items:
             type: string
             enum: [query, get, update]
         commands:
           type: array
+          description: 此类型支持的命令列表。
           items:
             type: string
 
@@ -3714,6 +3724,7 @@ components:
           properties:
             data:
               type: object
+              description: 对外资源类型定义列表。
               required: [items]
               properties:
                 items:
@@ -3730,7 +3741,7 @@ components:
             data:
               type: object
               additionalProperties: true
-              description: 对外资源类型定义；协议资源包含各 protocolId 的动态配置 Schema 和只读 health Schema
+              description: 对外资源类型定义；协议资源包含各 protocolId 的动态配置 Schema 和只读 health Schema。
 
     ResourceQueryResponse:
       allOf:
@@ -3741,21 +3752,27 @@ components:
             data:
               type: object
               required: [type, items, page, pageSize, hasMore]
+              description: 分页结果不计算 total，以 hasMore 表示是否还有下一页。
               properties:
                 type:
                   type: string
+                  description: 资源类型。
                 items:
                   type: array
+                  description: 资源列表。
                   items:
                     $ref: '#/components/schemas/ResourceItem'
                 page:
                   type: integer
+                  description: 当前页码。
                   minimum: 1
                 pageSize:
                   type: integer
+                  description: 每页条数。
                   minimum: 1
                 hasMore:
                   type: boolean
+                  description: 是否还有下一页。
 
     ResourceResponse:
       allOf:
