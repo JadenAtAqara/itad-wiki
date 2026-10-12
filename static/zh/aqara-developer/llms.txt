@@ -1,15 +1,15 @@
 # Aqara Developer
-> 面向开发者的 Aqara 文档索引，涵盖云 API、Studio 本地 API 与数据模型规范。
+> 面向开发者的 Aqara 文档索引，涵盖云 API、Studio API 与数据模型规范。
 
 ## 推荐优先阅读
 - 概览: https://docs.aqara.com/zh/docs/aqara-developer/introduction
 - AIOT API 简介: https://docs.aqara.com/zh/docs/aqara-developer/aiot-api/introduction
-- 数据转出 API 简介: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/introduction
+- 简介: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/introduction
 - 核心概念: https://docs.aqara.com/zh/docs/aqara-developer/aqara-data-model-specification/core-concepts
 
 ## 侧边栏收录的全部文档
 - 概览: https://docs.aqara.com/zh/docs/aqara-developer/introduction
-- 数据转出 API 简介: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/introduction
+- 简介: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/introduction
 - HTTP API 入门: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/getting-started-with-the-data-export-api
 - 在线体验 HTTP API: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/try-api-online
 - 使用 Postman 调测: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/postman
@@ -59,7 +59,7 @@
 - 获取手动触发器列表: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/query-automation-manual-trigger-list
 - 执行手动触发器: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/execute-automation-manual-trigger
 - Firmware: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/firmware
-- 按设备ID查询可升级设备固件: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/search-upgradable-devices-firmware-by-device-ids
+- 按设备 ID 查询可升级设备固件: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/search-upgradable-devices-firmware-by-device-ids
 - 发起固件升级: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/upgrade-firmware
 - 查询固件升级进度和结果: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/search-firmware-upgrade-status
 - 取消固件升级: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/cancel-upgrade-firmware

@@ -1,5 +1,5 @@
 # Aqara Developer
-> Cloud API, Studio local API, and data model documentation for developers integrating with Aqara.
+> Cloud API, Studio API, and data model documentation for developers integrating with Aqara.
 
 ## Recommended starting points
 - Overview: https://docs.aqara.com/docs/aqara-developer/introduction
@@ -59,10 +59,10 @@
 - Get Manual Trigger List: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-automation-manual-trigger-list
 - Execute A Manual Trigger: https://docs.aqara.com/docs/aqara-developer/data-export-api/execute-automation-manual-trigger
 - Firmware: https://docs.aqara.com/docs/aqara-developer/data-export-api/firmware
-- Query upgradable device firmware by device IDs: https://docs.aqara.com/docs/aqara-developer/data-export-api/search-upgradable-devices-firmware-by-device-ids
-- Initiate firmware upgrade: https://docs.aqara.com/docs/aqara-developer/data-export-api/upgrade-firmware
-- Query firmware upgrade progress and result: https://docs.aqara.com/docs/aqara-developer/data-export-api/search-firmware-upgrade-status
-- Cancel firmware upgrade: https://docs.aqara.com/docs/aqara-developer/data-export-api/cancel-upgrade-firmware
+- Query Upgradable Device Firmware by Device IDs: https://docs.aqara.com/docs/aqara-developer/data-export-api/search-upgradable-devices-firmware-by-device-ids
+- Initiate Firmware Upgrade: https://docs.aqara.com/docs/aqara-developer/data-export-api/upgrade-firmware
+- Query Firmware Upgrade Progress and Result: https://docs.aqara.com/docs/aqara-developer/data-export-api/search-firmware-upgrade-status
+- Cancel Firmware Upgrade: https://docs.aqara.com/docs/aqara-developer/data-export-api/cancel-upgrade-firmware
 - History: https://docs.aqara.com/docs/aqara-developer/data-export-api/history
 - Query device point value change history: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-device-point-history
 - Studio: https://docs.aqara.com/docs/aqara-developer/data-export-api/studio

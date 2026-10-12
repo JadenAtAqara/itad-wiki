@@ -2366,15 +2366,14 @@ paths:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
-  # 按设备ID查询可升级设备固件（非分页）
+  # 按设备 ID 查询可升级设备固件（非分页）
   # ────────────────────────────────────────────────────────────────
   /firmware/upgradable-devices/search-by-device-ids:
     post:
       tags: [Firmware]
-      summary: 按设备ID查询可升级设备固件
+      summary: 按设备 ID 查询可升级设备固件
       description: |
-        在指定设备集合内查询可升级固件。
-        规则：`deviceIds` 必填，最少 1 个，最多 200 个，且去重；类型过滤可选，`excludeDeviceTypes` 优先于 `includeDeviceTypes`。
+        在指定设备 ID 集合内查询具备可升级固件的设备，并返回对应的可升级固件信息。
       operationId: searchUpgradableDevicesFirmwareByDeviceIds
       x-skill-intent: firmware.upgradable.search_by_device_ids
       x-idempotent: true
@@ -2422,8 +2421,9 @@ paths:
       tags: [Firmware]
       summary: 发起固件升级
       description: |
-        通过 HubOtaServlet 现有 `upgrade_handler` 流程发起设备固件升级。
-        请求体直接使用设备升级数组，数组必须且只能包含一个设备。
+        为指定设备发起固件升级，将其固件升级到指定版本。本接口仅受理升级请求，实际进度与结果需通过状态查询接口获取。
+
+        在调用本接口前，请先通过 [POST /firmware/upgradable-devices/search-by-device-ids](https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/search-upgradable-devices-firmware-by-device-ids) 接口获取目标设备的可用固件版本信息，以确保升级操作的正确性和有效性。
       operationId: upgradeFirmware
       x-skill-intent: firmware.upgrade
       x-idempotent: false
@@ -2440,13 +2440,6 @@ paths:
               upgradeFirmware:
                 value:
                   - did: lumi3.823a998d7625a243
-                    firmware:
-                      - firmwareVersion: 1.2.3_12
-                        filePath: http://172.16.109.40:5000/download/lumi.models.4447_2059_studio_V1.2.3_12_20260811_8d2e0c.bin
-                        firmwareMd5: 6018b9b267a964f9d984c3c6558d2e0c
-                        fileSize: 185104191
-                        firmwareType: studio
-                        option: 1
       responses:
         '200':
           description: 升级请求已受理
@@ -2472,9 +2465,7 @@ paths:
       tags: [Firmware]
       summary: 查询固件升级进度和结果
       description: |
-        按设备 ID 查询固件升级进度和最终升级结果。请求体直接使用 data 对象，不包含 type、version、msgId。
-        规则：`deviceIds` 必填，最少 1 个，最多 1000 个；重复设备 ID 不算非法，服务端会去重后查询。
-        返回规则：`upgradeResult=null` 表示升级中，`upgradeResult=0` 表示升级成功，`upgradeResult!=0` 表示升级失败，失败原因见 `cause`。
+        查询多个设备的固件升级进度和结果。
       operationId: searchFirmwareUpgradeStatus
       x-skill-intent: firmware.upgrade.status.search
       x-idempotent: true
@@ -2516,9 +2507,7 @@ paths:
       tags: [Firmware]
       summary: 取消固件升级
       description: |
-        按设备 ID 取消固件升级。请求体直接使用 data 对象，不包含 type、version、msgId。
-        规则：`deviceIds` 必填，最少 1 个，最多 200 个；重复设备 ID 不算非法，服务端会去重后下发。
-        返回规则：顶层 `code` 表示接口处理结果；`data.items[].resultCode` 表示单设备取消命令下发结果，0 仅表示取消命令成功下发给网关，不表示网关实际取消升级成功，非 0 表示取消命令下发失败。
+        按设备 ID 取消固件升级。
       operationId: cancelUpgradeFirmware
       x-skill-intent: firmware.upgrade.cancel
       x-idempotent: true
@@ -5317,7 +5306,7 @@ components:
       properties:
         deviceIds:
           type: array
-          description: 设备ID列表，最少1个、最多200个
+          description: 设备 ID 列表，最少 1 个、最多 200 个，且去重。
           minItems: 1
           maxItems: 200
           uniqueItems: true
@@ -5325,42 +5314,16 @@ components:
             type: string
         includeDeviceTypes:
           type: array
-          description: 包含的设备类型列表。为空时按缺省处理（不做白名单过滤）
+          description: 包含的设备类型列表。为空时按缺省处理（不做白名单过滤）。
           uniqueItems: true
           items:
             type: string
         excludeDeviceTypes:
           type: array
-          description: 不包含的设备类型列表。为空时按缺省处理（不做黑名单过滤）
+          description: 不包含的设备类型列表。为空时按缺省处理（不做黑名单过滤）。`excludeDeviceTypes` 优先级高于 `includeDeviceTypes`。
           uniqueItems: true
           items:
             type: string
-
-    UpgradeFirmwareFile:
-      type: object
-      required: [firmwareVersion, filePath, firmwareMd5, fileSize, firmwareType, option]
-      properties:
-        firmwareVersion:
-          type: string
-          description: 目标固件版本
-        filePath:
-          type: string
-          format: uri
-          description: 固件下载地址
-        firmwareMd5:
-          type: string
-          description: 固件文件 MD5
-        fileSize:
-          type: integer
-          format: int64
-          minimum: 1
-          description: 固件文件大小，单位 byte
-        firmwareType:
-          type: string
-          description: 固件分区类型，例如 main、studio
-        option:
-          type: integer
-          description: 透传给 Hub OTA 的升级选项
 
     UpgradeFirmwareDevice:
       type: object
@@ -5368,12 +5331,7 @@ components:
       properties:
         did:
           type: string
-          description: Studio 网关设备 ID
-        firmware:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/UpgradeFirmwareFile'
+          description: 目标设备 ID
 
     UpgradeFirmwareRequestData:
       type: array
@@ -5390,10 +5348,11 @@ components:
           properties:
             data:
               type: object
+              description: 升级请求结果
               additionalProperties: false
             code:
               type: integer
-              description: OTA 请求结果码，0 表示升级请求已受理
+              description: 请求结果码，0 表示升级请求已受理。
       example:
         type: UpgradeFirmwareResponse
         version: v1
@@ -5574,23 +5533,23 @@ components:
         upgradeResult:
           type: integer
           nullable: true
-          description: 升级结果。null 表示升级中，0 表示升级成功，非 0 表示升级失败。
+          description: 升级结果。<br />null：升级中。<br />0：升级成功。<br />非 0：升级失败。
         progress:
           type: integer
-          description: 升级进度百分比
+          description: 升级进度百分比。
           minimum: 0
           maximum: 100
         firmwareType:
           type: string
-          description: 固件类型
+          description: 固件类型。
         cause:
           type: string
           nullable: true
-          description: 失败原因。upgradeResult 非 0 时返回。
+          description: 失败原因。`upgradeResult` 非 0 时返回。
         time:
           type: integer
           format: int64
-          description: 升级状态更新时间戳，单位毫秒
+          description: 升级状态更新时间戳，单位毫秒。
 
     SearchFirmwareUpgradeStatusResponseData:
       type: object
@@ -5651,7 +5610,7 @@ components:
           description: 设备 ID
         resultCode:
           type: integer
-          description: 单设备取消命令下发结果。0 仅表示取消命令成功下发给网关，不表示网关实际取消升级成功；非 0 表示取消命令下发失败。
+          description: 单设备取消命令下发结果。<br />0：取消命令成功下发给网关，不表示网关实际取消升级成功；非 0：取消命令下发失败。
 
     CancelUpgradeFirmwareResponseData:
       type: object
@@ -5672,7 +5631,7 @@ components:
               $ref: '#/components/schemas/CancelUpgradeFirmwareResponseData'
             code:
               type: integer
-              description: 接口处理结果码，0 表示接口处理成功；单设备取消命令下发结果请查看 data.items[].resultCode。
+              description: 接口处理结果码，0 表示接口处理成功。单设备取消命令下发结果请查看 data.items[].resultCode。
       example:
         type: CancelUpgradeFirmwareResponse
         version: v1
@@ -5783,7 +5742,7 @@ components:
           description: 是否强制升级
         state:
           type: integer
-          description: 固件状态。1 测试中，2 灰度，3 已上线，5 beta版本
+          description: 固件状态。<br />1：测试中，<br />2：灰度，<br />3：已上线，<br />5：beta 版本
           enum: [1, 2, 3, 5]
         releaseTime:
           type: integer

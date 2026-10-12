@@ -289,17 +289,19 @@
     "aqara-developer/introduction",
     {
       "type": "category",
-      "label": "Local Studio Development",
+      "label": "Studio Development",
+      "collapsed": false,
       "items": [
         {
           "type": "category",
-          "label": "Local API for Studio",
+          "label": "Studio API",
+          "collapsed": false,
           "items": [
             "aqara-developer/data-export-api/introduction",
             {
               "type": "category",
               "label": "HTTP",
-              "key": "local-api-http",
+              "key": "studio-api-http",
               "items": [
                 "aqara-developer/data-export-api/getting-started-with-the-data-export-api",
                 "aqara-developer/data-export-api/try-api-online",
@@ -307,7 +309,7 @@
                 {
                   "type": "category",
                   "label": "Space",
-                  "key": "local-api-space",
+                  "key": "studio-api-space",
                   "link": {
                     "type": "doc",
                     "id": "aqara-developer/data-export-api/space"
@@ -339,7 +341,7 @@
                 {
                   "type": "category",
                   "label": "Gateway",
-                  "key": "local-api-gateway",
+                  "key": "studio-api-gateway",
                   "link": {
                     "type": "doc",
                     "id": "aqara-developer/data-export-api/gateway"
@@ -371,7 +373,7 @@
                 {
                   "type": "category",
                   "label": "Device",
-                  "key": "local-api-device",
+                  "key": "studio-api-device",
                   "link": {
                     "type": "doc",
                     "id": "aqara-developer/data-export-api/device"
@@ -712,7 +714,7 @@
             {
               "type": "category",
               "label": "WebSocket",
-              "key": "local-api-websocket",
+              "key": "studio-api-websocket",
               "items": [
                 "aqara-developer/data-export-api/websocket-api/websocket-api"
               ]

@@ -1,15 +1,15 @@
 ---
 title: "Getting Started with HTTP API"
 description: "This article introduces the request and response elements of the Aqara HTTP API."
-keywords: ["Aqara Docs", "Aqara Developer", "Data Export API", "Getting Started with HTTP API"]
+keywords: ["Aqara Docs", "Aqara Developer", "Studio API", "Getting Started with HTTP API"]
 ---
 # Getting Started with HTTP API
 
-This article introduces the request and response elements of the Aqara Data Export HTTP API.
+This article introduces the request and response elements of the Aqara Studio HTTP API.
 
 ## Request Elements
 
-This section describes the elements that make up a data export API request:
+This section describes the elements that make up a Studio API request:
 
 - [HTTP Methods](#http-methods)
 - [Endpoints](#endpoints)
@@ -17,9 +17,9 @@ This section describes the elements that make up a data export API request:
 - [Authentication](#authentication)
 - [Parameters](#parameters)
 
-Every request by the data export API includes an HTTP method and a path. Depending on the specific API endpoint, you may also need to specify request headers, authentication details, query parameters, or request body parameters.
+Every request by the Studio API includes an HTTP method and a path. Depending on the specific API endpoint, you may also need to specify request headers, authentication details, query parameters, or request body parameters.
 
-The data export API documentation provides detailed information for each endpoint, including their HTTP method, path, required parameters, and request/response examples. It is recommended to first refer to the [HTTP API list](./introduction.mdx#http-api-list) to quickly understand all available endpoints.
+The Studio API documentation provides detailed information for each endpoint, including their HTTP method, path, required parameters, and request/response examples. It is recommended to first refer to the [HTTP API list](./introduction.mdx#http-api-list) to quickly understand all available endpoints.
 
 ### HTTP Methods
 
@@ -27,7 +27,7 @@ The HTTP method of an endpoint defines the type of operation it performs on a gi
 
 For example, the [List Spaces” endpoint](./get-spaces.api.mdx) uses the `GET` method.
 
-Currently, the Aqara Data Export API supports the following HTTP methods:
+Currently, the Aqara Studio API supports the following HTTP methods:
 
 - `GET`
 - `POST`
@@ -45,13 +45,13 @@ Please consult [Aqara Studio - Developer Guide - Obtain Required Information - O
 
 #### Path
 
-The Aqara Data Export API reference documentation provides the path for each endpoint. For example, the [“Query Automation Details” endpoint](./query-automation-details.api.mdx) has the path `/open/api/v1/automations/<automationId>`.
+The Aqara Studio API reference documentation provides the path for each endpoint. For example, the [“Query Automation Details” endpoint](./query-automation-details.api.mdx) has the path `/open/api/v1/automations/<automationId>`.
 
 Angle brackets `<>` in the path indicate parameters you need to specify. Path parameters are used to modify the endpoint path and are required in your request. For example, the [“Query Automation Details” endpoint](./query-automation-details.api.mdx) has `{automationId}` as its path parameter. In your request, replace `{automationId}` with the ID of the automation you wish to query.
 
 ### Request Header
 
-Below is the common request header that is required for all Aqara Data Export API calls.
+Below is the common request header that is required for all Aqara Studio API calls.
 
 | Parameter | Type | Description |
 | ------------- | ------ | ------------------------------------------------------------ |
@@ -59,7 +59,7 @@ Below is the common request header that is required for all Aqara Data Export AP
 
 ### Authentication
 
-When calling the Aqara Data Export API, you must include the Authorization header in the request headers.
+When calling the Aqara Studio API, you must include the Authorization header in the request headers.
 
 Set the Authorization header to `Bearer <token>`, where `<token>` is the access token you obtained from Aqara Studio. If your token already includes the `Bearer` prefix, you can copy and use it directly without adding it again. For details on how to obtain an access token, refer to [Developer Guide - Obtain Token](../../aqara-studio/developer-guide.mdx#obtain-token).
 

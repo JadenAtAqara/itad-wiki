@@ -38,8 +38,8 @@ const PRODUCT_CONFIG = [
     slug: 'aqara-developer',
     names: {en: 'Aqara Developer', zh: 'Aqara Developer'},
     description: {
-      en: 'Cloud API, Studio local API, and data model documentation for developers integrating with Aqara.',
-      zh: '面向开发者的 Aqara 文档索引，涵盖云 API、Studio 本地 API 与数据模型规范。',
+      en: 'Cloud API, Studio API, and data model documentation for developers integrating with Aqara.',
+      zh: '面向开发者的 Aqara 文档索引，涵盖云 API、Studio API 与数据模型规范。',
     },
     recommendedDocIds: [
       'aqara-developer/introduction',
