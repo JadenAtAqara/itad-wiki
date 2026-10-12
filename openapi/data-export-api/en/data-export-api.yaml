@@ -2373,10 +2373,9 @@ paths:
   /firmware/upgradable-devices/search-by-device-ids:
     post:
       tags: [Firmware]
-      summary: Query upgradable device firmware by device IDs
+      summary: Query Upgradable Device Firmware by Device IDs
       description: |
-        Query upgradable firmware within a specified set of devices.
-        Rules: `deviceIds` is required, minimum 1, maximum 200, and must be deduplicated; type filtering is optional, `excludeDeviceTypes` takes precedence over `includeDeviceTypes`.
+        Query devices with upgradable firmware within the specified device ID set, and return the related upgradable firmware information.
       operationId: searchUpgradableDevicesFirmwareByDeviceIds
       x-skill-intent: firmware.upgradable.search_by_device_ids
       x-idempotent: true
@@ -2422,10 +2421,11 @@ paths:
   /firmware/upgrade:
     post:
       tags: [Firmware]
-      summary: Initiate firmware upgrade
+      summary: Initiate Firmware Upgrade
       description: |
-        Initiate device firmware upgrade via the existing `upgrade_handler` process of HubOtaServlet.
-        The request body should directly use the device upgrade array, and the array must and can only contain one device.
+        Initiate a firmware upgrade for the specified device to the given version. This API only accepts the upgrade request; actual progress and results must be obtained through the status query API.
+
+        Before calling this API, please obtain the available firmware version information for the target device using the [POST /firmware/upgradable-devices/search-by-device-ids](https://docs.aqara.com/docs/aqara-developer/data-export-api/search-upgradable-devices-firmware-by-device-ids) API to ensure the correctness and validity of the upgrade operation.
       operationId: upgradeFirmware
       x-skill-intent: firmware.upgrade
       x-idempotent: false
@@ -2444,8 +2444,8 @@ paths:
                   - did: lumi3.823a998d7625a243
                     firmware:
                       - firmwareVersion: 1.2.3_12
-                        filePath: http://172.16.109.40:5000/download/lumi.models.4447_2059_studio_V1.2.3_12_20260811_8d2e0c.bin
-                        firmwareMd5: 6018b9b267a964f9d984c3c6558d2e0c
+                        filePath: http://xxx.xx.xxx.xx:xxxx/download/lumi.models.4447_2059_studio_V1.2.3_12_20260811_8d2e0c.bin
+                        firmwareMd5: xxxxxxxxxxxxxxxxx
                         fileSize: 185104191
                         firmwareType: studio
                         option: 1
@@ -2472,11 +2472,9 @@ paths:
   /firmware/upgrade/status/search:
     post:
       tags: [Firmware]
-      summary: Query firmware upgrade progress and result
+      summary: Query Firmware Upgrade Progress and Result
       description: |
-        Query firmware upgrade progress and final result by device ID. The request body should directly use the data object, without type, version, or msgId.
-        Rules: `deviceIds` is required, minimum 1, maximum 1000; duplicate device IDs are not considered invalid, the service will deduplicate before querying.
-        Return rules: `upgradeResult=null` means upgrading, `upgradeResult=0` means upgrade successful, `upgradeResult!=0` means upgrade failed, failure reason is shown in `cause`.
+        Query the upgrade progress and result of multiple devices.
       operationId: searchFirmwareUpgradeStatus
       x-skill-intent: firmware.upgrade.status.search
       x-idempotent: true
@@ -2516,11 +2514,9 @@ paths:
   /firmware/upgrade/cancel:
     post:
       tags: [Firmware]
-      summary: Cancel firmware upgrade
+      summary: Cancel Firmware Upgrade
       description: |
-        Cancel firmware upgrade by device ID. The request body should directly use the data object, without type, version, or msgId.
-        Rules: `deviceIds` is required, minimum 1, maximum 200; duplicate device IDs are not considered invalid, the service will deduplicate before sending.
-        Return rules: the root `code` indicates the interface processing result; `data.items[].resultCode` indicates the result of cancelling command for each device, 0 means cancel command was successfully sent to the gateway (not that the gateway actually canceled the upgrade), non-0 means cancel command sending failed.
+        Cancel firmware upgrade by device ID.
       operationId: cancelUpgradeFirmware
       x-skill-intent: firmware.upgrade.cancel
       x-idempotent: true
@@ -5317,7 +5313,7 @@ components:
       properties:
         deviceIds:
           type: array
-          description: List of device IDs, at least 1, at most 200.
+          description: List of device IDs. Minimum 1, maximum 200, and must be unique.
           minItems: 1
           maxItems: 200
           uniqueItems: true
@@ -5325,42 +5321,18 @@ components:
             type: string
         includeDeviceTypes:
           type: array
-          description: List of device types to include. If empty, acts as default (no whitelist filtering).
+          description: List of included device types. When empty, the default applies (no whitelist filtering).
           uniqueItems: true
           items:
             type: string
         excludeDeviceTypes:
           type: array
-          description: List of device types to exclude. If empty, acts as default (no blacklist filtering).
+          description: List of excluded device types. When empty, the default applies (no blacklist filtering). `excludeDeviceTypes` takes precedence over `includeDeviceTypes`.
           uniqueItems: true
           items:
             type: string
 
-    UpgradeFirmwareFile:
-      type: object
-      required: [firmwareVersion, filePath, firmwareMd5, fileSize, firmwareType, option]
-      properties:
-        firmwareVersion:
-          type: string
-          description: Target firmware version
-        filePath:
-          type: string
-          format: uri
-          description: Firmware download URL
-        firmwareMd5:
-          type: string
-          description: Firmware file MD5
-        fileSize:
-          type: integer
-          format: int64
-          minimum: 1
-          description: Firmware file size, in bytes
-        firmwareType:
-          type: string
-          description: Firmware partition type, e.g. main, studio
-        option:
-          type: integer
-          description: Upgrade option passed through to Hub OTA
+
 
     UpgradeFirmwareDevice:
       type: object
@@ -5368,12 +5340,7 @@ components:
       properties:
         did:
           type: string
-          description: Studio gateway device ID
-        firmware:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/UpgradeFirmwareFile'
+          description: Target device ID
 
     UpgradeFirmwareRequestData:
       type: array
@@ -5390,10 +5357,11 @@ components:
           properties:
             data:
               type: object
+              description: Upgrade request result
               additionalProperties: false
             code:
               type: integer
-              description: OTA request result code, 0 means upgrade request accepted
+              description: Request result code, 0 means upgrade request accepted
       example:
         type: UpgradeFirmwareResponse
         version: v1
@@ -5574,7 +5542,7 @@ components:
         upgradeResult:
           type: integer
           nullable: true
-          description: Upgrade result. null means upgrading, 0 means upgrade success, non-zero means upgrade failed.
+          description: Upgrade result. <br />null：upgrading, <br />0：upgrade success, <br />non-zero：upgrade failed.
         progress:
           type: integer
           description: Upgrade progress percent
@@ -5586,7 +5554,7 @@ components:
         cause:
           type: string
           nullable: true
-          description: Reason for failure. Returned when upgradeResult is not zero.
+          description: Reason for failure. Returned when `upgradeResult` is not zero.
         time:
           type: integer
           format: int64
@@ -5636,7 +5604,7 @@ components:
       properties:
         deviceIds:
           type: array
-          description: List of device IDs, at least 1, at most 200. Duplicate IDs are not illegal, the server will deduplicate before sending.
+          description: List of device IDs, at least 1, at most 200. Duplicate IDs are not illegal, and the server will deduplicate before sending.
           minItems: 1
           maxItems: 200
           items:
@@ -5651,7 +5619,7 @@ components:
           description: Device ID
         resultCode:
           type: integer
-          description: Cancel command dispatch result for a single device. 0 means command was sent to gateway successfully, not that cancel succeeded on the gateway; non-zero means command send failed.
+          description: "Cancel command dispatch result for a single device. <br />0: command was sent to gateway successfully, not that cancel succeeded on the gateway; <br />non-zero: command send failed."
 
     CancelUpgradeFirmwareResponseData:
       type: object
@@ -5783,7 +5751,7 @@ components:
           description: Whether the upgrade is forced
         state:
           type: integer
-          description: Firmware state. 1 = Testing, 2 = Gray release, 3 = Released, 5 = Beta
+          description: Firmware state. <br />1：Testing, <br />2：Gray release, <br />3：Released, <br />5：Beta
           enum: [1, 2, 3, 5]
         releaseTime:
           type: integer
@@ -5810,10 +5778,8 @@ components:
         upgradableFirmwares:
           type: array
           description: List of upgradable firmware for this device
-    
           items:
             $ref: '#/components/schemas/UpgradableFirmwareInfo' 
-
     
     # ── Automation ────────────────────────────────────────────────
     AutomationDefinitionType:

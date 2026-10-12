@@ -313,7 +313,7 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/search-upgradable-devices-firmware-by-device-ids",
-          label: "按设备ID查询可升级设备固件",
+          label: "按设备 ID 查询可升级设备固件",
           className: "api-method post",
         },
         {

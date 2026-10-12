@@ -111,27 +111,23 @@
     "message": "调光照明",
     "description": "The label for category 'Lighting' in sidebar 'aqaraStudioSidebar'"
   },
-  "sidebar.aqaraDeveloperSidebar.category.Local API for Studio": {
-    "message": "Studio 本地 API",
-    "description": "The label for category 'Local API for Studio' in sidebar 'aqaraDeveloperSidebar'"
-  },
   "sidebar.aqaraDeveloperSidebar.category.Auth": {
     "message": "鉴权",
     "description": "The label for category 'Auth' in sidebar 'aqaraDeveloperSidebar'"
   },
-  "sidebar.aqaraDeveloperSidebar.category.local-api-http": {
+  "sidebar.aqaraDeveloperSidebar.category.studio-api-http": {
     "message": "HTTP",
     "description": "The label for category 'HTTP' in sidebar 'aqaraDeveloperSidebar'"
   },
-  "sidebar.aqaraDeveloperSidebar.category.local-api-space": {
+  "sidebar.aqaraDeveloperSidebar.category.studio-api-space": {
     "message": "空间",
     "description": "The label for category 'Space' in sidebar 'aqaraDeveloperSidebar'"
   },
-  "sidebar.aqaraDeveloperSidebar.category.local-api-gateway": {
+  "sidebar.aqaraDeveloperSidebar.category.studio-api-gateway": {
     "message": "网关",
     "description": "The label for category 'Gateway' in sidebar 'aqaraDeveloperSidebar'"
   },
-  "sidebar.aqaraDeveloperSidebar.category.local-api-device": {
+  "sidebar.aqaraDeveloperSidebar.category.studio-api-device": {
     "message": "设备",
     "description": "The label for category 'Device' in sidebar 'aqaraDeveloperSidebar'"
   },
@@ -179,9 +175,9 @@
     "message": "告警",
     "description": "The label for category 'Alarm' in sidebar 'aqaraDeveloperSidebar'"
   },
-  "sidebar.aqaraDeveloperSidebar.category.Local Studio Development": {
-    "message": "Studio 本地开发",
-    "description": "The label for category 'Local Studio Development' in sidebar 'aqaraDeveloperSidebar'"
+  "sidebar.aqaraDeveloperSidebar.category.Studio Development": {
+    "message": "Studio 开发",
+    "description": "The label for category 'Studio Development' in sidebar 'aqaraDeveloperSidebar'"
   },
   "sidebar.aqaraDeveloperSidebar.category.Cloud Development": {
     "message": "云开发",

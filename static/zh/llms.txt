@@ -15,7 +15,7 @@
 - 平台概述: https://docs.aqara.com/zh/docs/aqara-studio/overview/introduction
 - AI 原生架构: https://docs.aqara.com/zh/docs/aqara-studio/overview/ai-native-architecture
 - 概览: https://docs.aqara.com/zh/docs/aqara-developer/introduction
-- 数据转出 API 简介: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/introduction
+- 简介: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/introduction
 - 概览: https://docs.aqara.com/zh/docs/aqara-life/overview
 - 功能介绍: https://docs.aqara.com/zh/docs/aqara-life/feature-overview
 

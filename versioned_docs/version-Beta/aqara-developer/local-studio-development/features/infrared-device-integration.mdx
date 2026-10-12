@@ -13,7 +13,7 @@ This article describes how to integrate infrared devices into Aqara Studio throu
 sequenceDiagram
 autonumber
 actor App as Developer App / Service
-participant Studio as Aqara Studio (Local API)
+participant Studio as Aqara Studio (Studio API)
 participant Gateway as Target Gateway
 actor Remote as Remote Control (User Action)
 
@@ -86,11 +86,11 @@ Studio-->>App: ExecuteCommandResponse
 
 ## 1 Create an Infrared Device
 
-Use the Studio local API [`POST` /open/api/v1/virtual-devices](./../../data-export-api/add-virtual-device.api.mdx) to create an infrared device and obtain its device ID.
+Use the Studio API [`POST` /open/api/v1/virtual-devices](./../../data-export-api/add-virtual-device.api.mdx) to create an infrared device and obtain its device ID.
 
 ## 2 Query Device Model Definitions
 
-Use the Studio local API [`GET` /open/api/v1/devices/definitions](./../../data-export-api/get-device-definitions.api.mdx), passing in the infrared device ID and target gateway ID, to query the device model definitions and obtain the **endpointId**, **functionCode**, and **commandCode** required for subsequent operations.
+Use the Studio API [`GET` /open/api/v1/devices/definitions](./../../data-export-api/get-device-definitions.api.mdx), passing in the infrared device ID and target gateway ID, to query the device model definitions and obtain the **endpointId**, **functionCode**, and **commandCode** required for subsequent operations.
 
 Common `commandCode` values are described below:
 
@@ -694,7 +694,7 @@ The following is an example of gateway device details:
 
 First, assign a device type to the newly created infrared device, such as an air conditioner or fan, so it matches the real device type you want to control.
 
-Call the Studio local API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx) with `commandCode` set to `APIGetIrDeviceCategoriesForApp` and `data.args` set to `[]` to retrieve the list of infrared device types currently supported by Aqara Studio.
+Call the Studio API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx) with `commandCode` set to `APIGetIrDeviceCategoriesForApp` and `data.args` set to `[]` to retrieve the list of infrared device types currently supported by Aqara Studio.
 
 The following is an example request body (JSON):
 
@@ -766,7 +766,7 @@ If you choose the **Custom** type, skip directly to [Learn IR Codes](#4-learn-ir
 
 After determining the infrared device type, the next step is to retrieve the list of brands for that type, such as Gree or Midea, for the subsequent IR code matching process.
 
-Use the Studio local API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx), set `commandCode` to `APIGetBrandsByCategoryForApp`, and provide the following parameters in the `data.args` array:
+Use the Studio API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx), set `commandCode` to `APIGetBrandsByCategoryForApp`, and provide the following parameters in the `data.args` array:
 
 | Parameter | Type | Required | Description |
 | ------------ | -------- | -------- | ---------------------------------------------------------------------------- |
@@ -950,7 +950,7 @@ The following is an example of the deserialized array:
 
 After identifying the brand used by your actual infrared device, retrieve the IR codes that can be matched for that brand.
 
-Use the Studio local API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx), set `commandCode` to `APIGetMatchTreeForApp`, and provide the following parameters in the `data.args` array:
+Use the Studio API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx), set `commandCode` to `APIGetMatchTreeForApp`, and provide the following parameters in the `data.args` array:
 | Parameter | Type | Required | Description |
 | ------------ | -------- | -------- | ---------------------------------------------------------------------------- |
 | Type | integer | Yes | Must be `1`. |
@@ -1200,7 +1200,7 @@ The `commandReportValue` field in the response body is the match tree. A single 
 
 Use the gateway to test **all** infrared commands under the current match tree one by one and observe how the infrared device responds. If **all commands** in a specific code library can control the device correctly, that code library is suitable for the current infrared device.
 
-Use the Studio local API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx), set `commandCode` to `APIClickIrKeyForApp`, and provide the following parameters in the `data.args` array:
+Use the Studio API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx), set `commandCode` to `APIClickIrKeyForApp`, and provide the following parameters in the `data.args` array:
 | Parameter | Type | Required | Description |
 |-------------|----------|----------|--------------|
 | Did | string | Yes | Device ID of the target gateway. |
@@ -1264,7 +1264,7 @@ The following is an example response body (JSON):
 ### 3.5 Save the Matching Result
 After confirming which code library works, save the matching information.
 
-Use the Studio local API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx), set `commandCode` to `APISaveMatchedRemoteInfoForApp`, and provide the following parameters in the `data.args` array:
+Use the Studio API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx), set `commandCode` to `APISaveMatchedRemoteInfoForApp`, and provide the following parameters in the `data.args` array:
 | Parameter | Type | Required | Description |
 | ------------ | -------- | -------- | ---------------------------------------------------------------------------- |
 | CategoryId | integer | Yes | Enter the `commandReportValue.id` returned by [Get Device Types](#31-get-device-types). |
@@ -1329,7 +1329,7 @@ The following is an example response body (JSON):
 
 You must have the **target gateway** download the code library so it can send infrared commands correctly.
 
-Use the Studio local API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx), set `commandCode` to `SetIRDeviceInfo`, and provide the following parameters in the `data.args` array:
+Use the Studio API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx), set `commandCode` to `SetIRDeviceInfo`, and provide the following parameters in the `data.args` array:
 
 | Parameter | Type | Required | Description |
 |-----------|---------|--------|--------|
@@ -1391,7 +1391,7 @@ The following is an example response body (JSON):
 
 After the gateway starts downloading the code library, query the download result to confirm that the download succeeded.
 
-Use the Studio local API [`POST` /open/api/v1/devices/trait/read](./../../data-export-api/get-trait-values.api.mdx), set `traitCodes` to `IRCodeMatchStatus`, and query the latest value.
+Use the Studio API [`POST` /open/api/v1/devices/trait/read](./../../data-export-api/get-trait-values.api.mdx), set `traitCodes` to `IRCodeMatchStatus`, and query the latest value.
 
 The following is an example request body (JSON):
 ```json
@@ -1442,7 +1442,7 @@ If your infrared device type is **Custom**, or the matched IR code library does 
 
 First, put the gateway into learning mode.
 
-Use the Studio local API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx), set `commandCode` to `APIStartIrLearningForApp`, and provide the following parameters in the `data.args` array:
+Use the Studio API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx), set `commandCode` to `APIStartIrLearningForApp`, and provide the following parameters in the `data.args` array:
 | Parameter | Type | Required | Description |
 |-----------|---------|--------|--------|
 | ParentId | string | Yes | Device ID of the target gateway. |
@@ -1503,7 +1503,7 @@ After obtaining the key, pick up the remote control, aim it at the gateway, and 
 
 You need to actively read the learning result from the **gateway** to confirm that learning succeeded.
 
-Use the Studio local API [`POST` /open/api/v1/devices/trait/read](./../../data-export-api/get-trait-values.api.mdx), set `traitCodes` to `IRLearnResult`, and query the latest value.
+Use the Studio API [`POST` /open/api/v1/devices/trait/read](./../../data-export-api/get-trait-values.api.mdx), set `traitCodes` to `IRLearnResult`, and query the latest value.
 
 ```json
 {
@@ -1555,7 +1555,7 @@ The following is an example response body (JSON):
 
 You need to actively save the infrared command that was just learned, including the button name, button ID, infrared code, and related information.
 
-Call the Studio local API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx), set `commandCode` to `APIAddIrKeyForApp`, and provide the following parameters in the `data.args` array:
+Call the Studio API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx), set `commandCode` to `APIAddIrKeyForApp`, and provide the following parameters in the `data.args` array:
 
 | Parameter | Type | Required | Description |
 |------------|---------|----------|------------------|
@@ -1625,7 +1625,7 @@ The following is an example response body (JSON):
 
 After the gateway has matched an IR code library or learned an infrared command, you need to send the infrared device information to the gateway so that it can send infrared commands normally.
 
-Use the Studio local API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx), set `commandCode` to `APICreateIrVirtualDeviceForApp`, and provide the following parameters in the `data.args` array:
+Use the Studio API [`POST` /open/api/v1/devices/command/execute/await](./../../data-export-api/execute-device-command-await.api.mdx), set `commandCode` to `APICreateIrVirtualDeviceForApp`, and provide the following parameters in the `data.args` array:
 
 | Parameter | Type | Required | Description |
 |-----------|---------|--------|--------|
@@ -1684,7 +1684,7 @@ The following is an example response body (JSON):
 
 After completing either [Match an IR Code Library](#3-match-an-ir-code-library) or [Learn IR Codes](#4-learn-ir-codes), query the infrared device's model definitions to obtain the available control command information.
 
-Call the Studio local API [`GET` /open/api/v1/devices/definitions](./../../data-export-api/get-device-definitions.api.mdx) with the infrared device ID to retrieve the device model definitions. In the response, you can obtain the **endpointId**, **functionCode**, and **commandCode** required for subsequent infrared control, including the mandatory `SendIrKey` command.
+Call the Studio API [`GET` /open/api/v1/devices/definitions](./../../data-export-api/get-device-definitions.api.mdx) with the infrared device ID to retrieve the device model definitions. In the response, you can obtain the **endpointId**, **functionCode**, and **commandCode** required for subsequent infrared control, including the mandatory `SendIrKey` command.
 
 :::tip
 A single infrared device may contain multiple infrared commands, and each command usually includes the `SendIrKey` command.
@@ -1758,7 +1758,7 @@ The following is an example response body (JSON):
 
 After completing [Query the Infrared Device](#61-query-the-infrared-device), use the `SendIrKey` command to have the gateway send the infrared command.
 
-Use the Studio local API [`POST` /open/api/v1/devices/command/execute](./../../data-export-api/execute-device-command.api.mdx) and set `commandCode` to `SendIrKey`.
+Use the Studio API [`POST` /open/api/v1/devices/command/execute](./../../data-export-api/execute-device-command.api.mdx) and set `commandCode` to `SendIrKey`.
 
 :::tip
 For the format and valid values of elements in the `data.args` array, refer to the `data.endpoints.functions.commands.fields` field in [Device Model Definitions](./../../data-export-api/get-device-definitions.api.mdx).

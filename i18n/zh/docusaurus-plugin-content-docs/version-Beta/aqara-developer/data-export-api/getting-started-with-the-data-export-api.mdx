@@ -1,16 +1,15 @@
 ---
 title: "HTTP API 入门"
-description: "本文介绍 Aqara 数据转出 HTTP API 的请求和响应要素。"
-keywords: ["Aqara 文档", "Aqara Developer", "数据转出 API", "HTTP API 入门", "Getting Started with the Data Export API"]
+description: "本文介绍 Aqara Studio HTTP API 的请求和响应要素。"
+keywords: ["Aqara 文档", "Aqara Developer", "Aqara Studio API", "HTTP API 入门", "Getting Started with the Studio API"]
 ---
-
 # HTTP API 入门
 
-本文介绍 Aqara 数据转出 HTTP API 的请求和响应要素。
+本文介绍 Aqara Studio API 的请求和响应要素。
 
 ## 请求要素
 
-本节介绍组成数据转出 API 请求的各个要素：
+本节介绍组成 Aqara Studio API 请求的各个要素：
 
 - [HTTP 方法](#http-方法)
 - [端点](#端点)
@@ -18,9 +17,9 @@ keywords: ["Aqara 文档", "Aqara Developer", "数据转出 API", "HTTP API 入�
 - [认证](#认证)
 - [参数](#参数)
 
-每个对 Aqara 数据转出 API 的请求都包含一个 HTTP 方法和一个路径。根据不同的 API 端点，您可能还需要指定请求头、认证信息、查询参数或请求体参数。
+每个对 Aqara Studio API的请求都包含一个 HTTP 方法和一个路径。根据不同的 API 端点，您可能还需要指定请求头、认证信息、查询参数或请求体参数。
 
-Aqara 数据转出 API 参考文档为每个端点详细说明了对应的 HTTP 方法、路径及所需参数，并提供了请求和响应的示例。建议先查阅[HTTP API 列表](./introduction.mdx#http-api-列表)，快速了解所有可用端点。
+Aqara Studio API参考文档为每个端点详细说明了对应的 HTTP 方法、路径及所需参数，并提供了请求和响应的示例。建议先查阅[HTTP API 列表](./introduction.mdx#http-api-列表)，快速了解所有可用端点。
 
 ### HTTP 方法
 
@@ -28,7 +27,7 @@ Aqara 数据转出 API 参考文档为每个端点详细说明了对应的 HTTP 
 
 例如，[“查询空间列表”端点](./get-spaces.api.mdx) 的 HTTP 方法是 `GET`。
 
-当前 Aqara 数据转出 API 支持以下 HTTP 方法：
+当前 Aqara Studio API支持以下 HTTP 方法：
 
 - `GET`。
 - `POST`。
@@ -46,13 +45,13 @@ Base URL 是 [Aqara Studio](../../aqara-studio/overview/introduction.mdx) 的访
 
 #### 路径
 
-Aqara 数据转出 API 参考文档为每个端点提供了路径。例如，[“查询自动化详情”端点](./query-automation-details.api.mdx) 的路径是 `/open/api/v1/automations/<automationId>`。
+Aqara Studio API参考文档为每个端点提供了路径。例如，[“查询自动化详情”端点](./query-automation-details.api.mdx) 的路径是 `/open/api/v1/automations/<automationId>`。
 
 路径中的大括号 `<>` 表示需要您明确指定的路径参数。路径参数用来修改端点路径，并且在您的请求中是必需的。例如，[“查询自动化详情”端点](./query-automation-details.api.mdx) 的路径参数为 `{automationId}`。在请求时，需要将 `{automationId}` 替换为您希望查询的自动化 ID。
 
 ### 请求头
 
-以下是您在调用所有 Aqara 数据转出 API 时都必需的公共请求头。
+以下是您在调用所有 Aqara Studio API时都必需的公共请求头。
 
 | 参数 | 类型 | 说明 |
 | ------------- | ------ | ------------------------------------------------------------ |
@@ -60,7 +59,7 @@ Aqara 数据转出 API 参考文档为每个端点提供了路径。例如，[�
 
 ### 认证
 
-调用 Aqara 数据转出 API 时，必须在请求头中携带 Authorization 信息进行身份验证。
+调用 Aqara Studio API时，必须在请求头中携带 Authorization 信息进行身份验证。
 
 请将 Authorization 设置为 `Bearer <token>`，其中 `<token>` 为您在 Aqara Studio 获取的访问令牌。如果令牌本身已包含 `Bearer` 前缀，可直接复制使用，无需重复添加。关于如何获取 Access Token，请参阅 [开发者指南 - 获取 Token](../../aqara-studio/developer-guide.mdx#获取-token)。
 
@@ -107,5 +106,3 @@ Aqara 数据转出 API 参考文档为每个端点提供了路径。例如，[�
 | msgId | String | 消息 ID。|
 | code | Integer | 业务状态码，0 表示成功。|
 | message | String | 请求结果的说明信息。|
-
-
