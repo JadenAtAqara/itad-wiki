@@ -2936,7 +2936,6 @@ paths:
       summary: Query Space Energy Consumption Summary
       description: |
         Query the energy consumption summary (today, yesterday, last 7 days, last 30 days, last 365 days) aggregated for all devices in a specified space (unit: kWh).
-        The spaceId automatically identifies whether it is a family or a room.
       operationId: getEmsSummarySpace
       x-skill-intent: ems.summary.space
       x-idempotent: true
@@ -2998,7 +2997,7 @@ paths:
       summary: Query Multi-Device Energy Consumption Summary
       description: |
         Query the energy consumption summary (today, yesterday, last 7 days, last 30 days, last 365 days) aggregated for the given list of devices (unit: kWh).
-        Supports filtering by endpointId.
+        You can filter by endpointId to calculate the energy consumption summary for the specified endpoints of the target devices.
       operationId: getEmsSummaryDevices
       x-skill-intent: ems.summary.devices
       x-idempotent: true
@@ -6730,7 +6729,7 @@ components:
       properties:
         spaceId:
           type: string
-          description: Space ID (automatically identifies home or room)
+          description: Space ID.
           example: "home_001"
 
     EmsSummaryDeviceItem:
@@ -6739,13 +6738,13 @@ components:
       properties:
         did:
           type: string
-          description: Device ID
+          description: Device ID.
           example: "device_001"
         endpointId:
           type: array
           items:
             type: integer
-          description: Endpoint ID list. Query all endpoints of the device when empty or not provided.
+          description: 端点 ID 列表，为空或不传时，则查询该设备全部端点的能耗摘要。
           example: [1, 2]
 
     EmsSummaryDevicesRequest:

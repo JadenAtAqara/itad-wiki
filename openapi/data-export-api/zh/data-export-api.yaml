@@ -2925,8 +2925,7 @@ paths:
       tags: [EMS]
       summary: 查询空间能耗摘要
       description: |
-        查询指定空间内所有设备汇总的能耗摘要（今日、昨日、近7天、近30天、近365天），单位 kWh。
-        spaceId 自动识别家庭或房间。
+        查询指定空间内所有设备汇总的能耗摘要（今日、昨日、近 7 天、近 30 天、近 365 天），单位 kWh。
       operationId: getEmsSummarySpace
       x-skill-intent: ems.summary.space
       x-idempotent: true
@@ -2987,8 +2986,8 @@ paths:
       tags: [EMS]
       summary: 查询多设备能耗摘要
       description: |
-        查询指定设备列表汇总的能耗摘要（今日、昨日、近7天、近30天、近365天），单位 kWh。
-        支持按 endpointId 过滤指定端点。
+        查询指定设备列表汇总的能耗摘要（今日、昨日、近 7 天、近 30 天、近 365 天），单位 kWh。
+        可按 endpointId 筛选，统计目标设备指定端点的能耗摘要。
       operationId: getEmsSummaryDevices
       x-skill-intent: ems.summary.devices
       x-idempotent: true
@@ -6710,7 +6709,7 @@ components:
       properties:
         spaceId:
           type: string
-          description: 空间ID（自动识别家庭或房间）
+          description: 空间 ID。
           example: "home_001"
 
     EmsSummaryDeviceItem:
@@ -6719,13 +6718,13 @@ components:
       properties:
         did:
           type: string
-          description: 设备ID
+          description: 设备 ID
           example: "device_001"
         endpointId:
           type: array
           items:
             type: integer
-          description: 端点ID列表，为空或不传时查询该设备全部端点
+          description: 端点 ID 列表，为空或不传时，则查询该设备全部端点的能耗摘要。
           example: [1, 2]
 
     EmsSummaryDevicesRequest:
@@ -6756,17 +6755,17 @@ components:
         week:
           type: number
           format: double
-          description: 近7天能耗（kWh）
+          description: 近 7 天能耗（kWh）
           example: 5.222
         month:
           type: number
           format: double
-          description: 近30天能耗（kWh）
+          description: 近 30 天能耗（kWh）
           example: 9.221
         year:
           type: number
           format: double
-          description: 近365天能耗（kWh）
+          description: 近 365 天能耗（kWh）
           example: 230.229
 
     EmsSpaceSummaryResponse:
