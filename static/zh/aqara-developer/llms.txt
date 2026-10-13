@@ -64,7 +64,7 @@
 - 查询固件升级进度和结果: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/search-firmware-upgrade-status
 - 取消固件升级: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/cancel-upgrade-firmware
 - History: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/history
-- 查询设备点位值变化历史: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/query-device-point-history
+- 查询设备 Trait 值变化历史: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/query-device-point-history
 - Studio: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/studio
 - 获取 Studio 统计信息: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/get-studio-statistics
 - EMS: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/ems

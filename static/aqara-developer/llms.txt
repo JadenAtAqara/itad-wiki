@@ -64,7 +64,7 @@
 - Query Firmware Upgrade Progress and Result: https://docs.aqara.com/docs/aqara-developer/data-export-api/search-firmware-upgrade-status
 - Cancel Firmware Upgrade: https://docs.aqara.com/docs/aqara-developer/data-export-api/cancel-upgrade-firmware
 - History: https://docs.aqara.com/docs/aqara-developer/data-export-api/history
-- Query device point value change history: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-device-point-history
+- Query Device Trait Value Change History: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-device-point-history
 - Studio: https://docs.aqara.com/docs/aqara-developer/data-export-api/studio
 - Get Studio Statistics: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-studio-statistics
 - EMS: https://docs.aqara.com/docs/aqara-developer/data-export-api/ems

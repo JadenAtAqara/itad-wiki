@@ -2546,18 +2546,14 @@ paths:
 
   
   # ────────────────────────────────────────────────────────────────
-  # 查询设备点位值变化历史
+  # 查询设备 Trait 值变化历史
   # ────────────────────────────────────────────────────────────────
   /history/device-point-values/query:
     post:
       tags: [History]
-      summary: 查询设备点位值变化历史
+      summary: 查询设备 Trait 值变化历史
       description: |
-        按设备、trait 和半开时间区间 `[startTime, endTime)` 查询设备点位值变化历史。请求体直接使用 data 对象，不包含 type、version、msgId。
-        `deviceIds` 为空时查询当前请求上下文可访问的全部当前设备；显式传入设备 ID 时，本地 HTTP 可查询已删除设备的历史。无设备权限的 ID 会被跳过；全部跳过时成功返回空列表。   
-        `traitCodes` 为空时不限制 trait；非空时无法识别的 code 会被忽略，全部无法识别为 trait 时返回参数错误。   
-        `cursor` 是上一页返回的 `nextCursor`，继续分页时必须保持 `deviceIds`、`traitCodes`、`startTime`、`endTime` 和 `descending` 不变。   
-        `startTime` 和 `endTime` 为可选参数：当两者都未填写时，默认查询最近七天的数据；当仅填写其中一个时，另一个参数将以 7 天时间窗口自动推算。对于 `cursor` 分页，必须保持的参数为首次响应返回的服务端解析后的 `data.startTime` 和 `data.endTime`，后续请求请将其作为新的 `startTime` 和 `endTime` 传递。
+        本接口适用于查询多个设备的多个 Trait 在一定时间内的变化历史。支持通过分页游标 `cursor` 连续获取历史记录。
       operationId: queryDevicePointHistory
       x-skill-intent: history.device_point_values.query
       x-idempotent: true
@@ -5366,14 +5362,25 @@ components:
       properties:
         deviceIds:
           type: array
-          description: 设备 ID 列表，最多 200 个；省略或空数组时查询当前请求上下文可访问的全部当前设备。
+          description: |
+            设备 ID 列表，最多支持 200 个。
+
+            <ul><li>如果未传递 <code>deviceIds</code> 或为 <code>[]</code>，将查询当前请求上下文下可访问的所有设备。</li>
+            <li><code>deviceIds</code> 如包含已被删除的设备，仍可获取对应设备的历史数据。</li>
+            <li><code>deviceIds</code> 如含不存在的设备 ID，则该 ID 会被忽略；如全部设备 ID 无效，则响应为空列表。</li>
+            </ul>
+       
           maxItems: 200
           default: []
           items:
             type: string
         traitCodes:
           type: array
-          description: trait code 列表，最多 200 个；省略或空数组时不限制 trait。非空但全部无法识别为 trait 时返回参数错误。
+          description: |
+            Trait（功能点）code 列表，最多支持 200 个。
+
+            <ul><li>若未传递或传递空数组，则查询目标设备的所有开放 traitCode。</li><li>若传递了本参数，无法识别的 code 会被忽略；如全部 code 都无法识别为 trait，则响应返回参数错误。</li></ul>
+       
           maxItems: 200
           default: []
           items:
@@ -5382,27 +5389,38 @@ components:
           type: integer
           format: int64
           minimum: 0
-          description: 查询开始时间，Unix 毫秒时间戳，包含边界。
+          description: |
+            查询的起始时间，Unix 毫秒时间戳，包含该时间点。
+
+            <ul><li>若未填写 <code>startTime</code> 和 <code>endTime</code>，默认查询最近 7 天的数据。</li><li>如仅填写其中一个参数，另一个将以 7 天为时间窗口自动推算补全。</li><li>cursor 分页时，需固定传递首次响应中的 <code>data.startTime</code> 和 <code>data.endTime</code>，保证数据连续一致。</li></ul>
         endTime:
           type: integer
           format: int64
           minimum: 0
-          description: 查询结束时间，Unix 毫秒时间戳，不包含边界；必须大于 startTime，区间最长 7 天。
+          description: |
+            查询的结束时间，Unix 毫秒时间戳，不包含该时间点。必须大于 <code>startTime</code>，最大区间长度为 7 天。
+
+            其他规则与 <code>startTime</code> 相同。
+     
         descending:
           type: boolean
           default: true
-          description: true 按时间倒序，false 按时间正序；同一 cursor 链中必须保持不变。
+          description: |
+            是否按时间倒序。分页请求时，必须保证 <code>descending</code> 参数与首次请求一致。
+            
+            <ul><li><code>true</code>：是，按时间倒序。</li><li><code>false</code>：否，按时间正序。</li></ul>
         pageSize:
           type: integer
           minimum: 1
           maximum: 200
           default: 50
-          description: 每页最大记录数，取值范围 1–200。
+          description: 每页最大记录数，取值范围 [1, 200]。
         cursor:
           type: string
           nullable: true
-          description: 上一页返回的 nextCursor；首次查询省略。
-
+          description: |
+            分页游标。<ul><li>首次请求无需传递；如需获取下一页数据，请传递上一次响应中的 nextCursor。</li><li>分页请求时，必须保证 <code>deviceIds</code>、<code>traitCodes</code>、<code>startTime</code>、<code>endTime</code> 和 <code>descending</code> 参数与首次请求一致。</li></ul>
+            
     DevicePointHistoryItem:
       type: object
       required: [deviceId, value, unit, time]
