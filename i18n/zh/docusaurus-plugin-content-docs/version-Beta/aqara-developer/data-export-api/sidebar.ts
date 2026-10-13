@@ -348,7 +348,7 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/query-device-point-history",
-          label: "查询设备点位值变化历史",
+          label: "查询设备 Trait 值变化历史",
           className: "api-method post",
         },
       ],

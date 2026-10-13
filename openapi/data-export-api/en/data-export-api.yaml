@@ -2555,18 +2555,14 @@ paths:
 
   
   # ────────────────────────────────────────────────────────────────
-  # Query device point value change history
+  # Query Device Trait Value Change History
   # ────────────────────────────────────────────────────────────────
   /history/device-point-values/query:
     post:
       tags: [History]
-      summary: Query device point value change history
+      summary: Query Device Trait Value Change History
       description: |
-        Query device point value change history by device, trait, and half-open time interval `[startTime, endTime)`. The request body should directly use the data object, without type, version, or msgId.   
-        If `deviceIds` is empty, all currently available devices accessible in the current request context are queried; when device IDs are explicitly provided, local HTTP can query the history of deleted devices. Device IDs without permission will be skipped; if all are skipped, an empty list is returned successfully.   
-        If `traitCodes` is empty, there is no trait restriction; if non-empty, codes that cannot be recognized are ignored. If all cannot be recognized as a trait, a parameter error is returned.   
-        `cursor` is the `nextCursor` returned by the previous page; to continue pagination, the values of `deviceIds`, `traitCodes`, `startTime`, `endTime`, and `descending` must remain unchanged.   
-        `startTime` and `endTime` are optional: when both are omitted, the latest seven days are queried; when one is omitted, the other endpoint is derived with a seven-day window. For `cursor` pagination, the values that must remain unchanged are the server-resolved `data.startTime` and `data.endTime` returned by the first response; send them as the next request's `startTime` and `endTime`.
+        This API is used to query the change history of multiple traits for multiple devices within a given time range. It supports continuous retrieval of historical records through the pagination cursor `cursor`.
       operationId: queryDevicePointHistory
       x-skill-intent: history.device_point_values.query
       x-idempotent: true
@@ -5375,14 +5371,26 @@ components:
       properties:
         deviceIds:
           type: array
-          description: List of device IDs, up to 200. If omitted or empty array, query all accessible current devices in the current request context.
+          description: |
+            List of device IDs, up to 200.
+
+            <ul><li>If <code>deviceIds</code> is omitted or <code>[]</code>, all devices accessible in the current request context are queried.</li>
+            <li>If <code>deviceIds</code> includes deleted devices, historical data for those devices can still be retrieved.</li>
+            <li>If <code>deviceIds</code> contains nonexistent device IDs, those IDs are ignored; if all device IDs are invalid, the response is an empty list.</li>
+            </ul>
+       
           maxItems: 200
           default: []
           items:
             type: string
         traitCodes:
           type: array
-          description: List of trait codes, up to 200. If omitted or empty array, there is no trait filter. If non-empty but all are not recognized as traits, parameter error is returned.
+          description: |
+            List of trait codes, up to 200.
+
+            <ul><li>If <code>traitCodes</code> is omitted or <code>[]</code>, all traits accessible in the current request context are queried.</li>
+            <li>If <code>traitCodes</code> contains traits that cannot be recognized, those traits are ignored; if all traits cannot be recognized, a parameter error is returned.</li>
+            </ul>
           maxItems: 200
           default: []
           items:
@@ -5391,27 +5399,38 @@ components:
           type: integer
           format: int64
           minimum: 0
-          description: Query start time, Unix millisecond timestamp, inclusive.
+          description: |
+            Query start time, Unix millisecond timestamp, inclusive of this time point.
+
+            <ul><li>If both <code>startTime</code> and <code>endTime</code> are omitted, data from the most recent 7 days is queried by default.</li><li>If only one of the parameters is provided, the other is automatically inferred using a 7-day time window.</li><li>When using cursor pagination, you must pass the fixed <code>data.startTime</code> and <code>data.endTime</code> from the first response to ensure continuous and consistent data.</li></ul>
         endTime:
           type: integer
           format: int64
           minimum: 0
-          description: Query end time, Unix millisecond timestamp, exclusive; must be greater than startTime, max range 7 days.
+          description: |
+            Query end time, Unix millisecond timestamp, exclusive of this time point. Must be greater than <code>startTime</code>; the maximum interval length is 7 days.
+
+            Other rules are the same as for <code>startTime</code>.
+
         descending:
           type: boolean
           default: true
-          description: true for descending order by time, false for ascending; must remain same in a cursor chain.
+          description: |
+            Whether to sort by time in descending order. For paginated requests, the <code>descending</code> parameter must be consistent with the first request.
+            
+            <ul><li><code>true</code>: Yes, sort by time in descending order.</li><li><code>false</code>: No, sort by time in ascending order.</li></ul>
         pageSize:
           type: integer
           minimum: 1
           maximum: 200
           default: 50
-          description: Max number of records per page, range 1–200.
+          description: Maximum number of records per page, range [1, 200].
         cursor:
           type: string
           nullable: true
-          description: nextCursor returned by previous page, omit for initial query.
-
+          description: |
+            Pagination cursor.<ul><li>Not required for the first request; to get the next page, pass the nextCursor from the previous response.</li><li>For paginated requests, <code>deviceIds</code>, <code>traitCodes</code>, <code>startTime</code>, <code>endTime</code>, and <code>descending</code> must be consistent with the first request.</li></ul>
+    
     DevicePointHistoryItem:
       type: object
       required: [deviceId, value, unit, time]
