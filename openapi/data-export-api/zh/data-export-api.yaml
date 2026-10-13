@@ -5365,9 +5365,9 @@ components:
           description: |
             设备 ID 列表，最多支持 200 个。
 
-            <ul><li>如果未传递 <code>deviceIds</code> 或为 <code>[]</code>，将查询当前请求上下文下可访问的所有设备。</li>
-            <li><code>deviceIds</code> 如包含已被删除的设备，仍可获取对应设备的历史数据。</li>
-            <li><code>deviceIds</code> 如含不存在的设备 ID，则该 ID 会被忽略；如全部设备 ID 无效，则响应为空列表。</li>
+            <ul>
+              <li>如果未传递 <code>deviceIds</code> 或为 <code>[]</code>，将查询当前请求上下文下可访问的所有设备。</li>
+              <li><code>deviceIds</code> 如包含已被删除的设备，仍可获取对应设备的历史数据。</li>
             </ul>
        
           maxItems: 200
@@ -5420,7 +5420,7 @@ components:
           nullable: true
           description: |
             分页游标。<ul><li>首次请求无需传递；如需获取下一页数据，请传递上一次响应中的 nextCursor。</li><li>分页请求时，必须保证 <code>deviceIds</code>、<code>traitCodes</code>、<code>startTime</code>、<code>endTime</code> 和 <code>descending</code> 参数与首次请求一致。</li></ul>
-            
+
     DevicePointHistoryItem:
       type: object
       required: [deviceId, value, unit, time]

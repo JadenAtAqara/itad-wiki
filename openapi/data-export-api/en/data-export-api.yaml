@@ -5374,9 +5374,9 @@ components:
           description: |
             List of device IDs, up to 200.
 
-            <ul><li>If <code>deviceIds</code> is omitted or <code>[]</code>, all devices accessible in the current request context are queried.</li>
-            <li>If <code>deviceIds</code> includes deleted devices, historical data for those devices can still be retrieved.</li>
-            <li>If <code>deviceIds</code> contains nonexistent device IDs, those IDs are ignored; if all device IDs are invalid, the response is an empty list.</li>
+            <ul>
+              <li>If <code>deviceIds</code> is omitted or <code>[]</code>, all devices accessible in the current request context are queried.</li>
+              <li>If <code>deviceIds</code> includes deleted devices, historical data for those devices can still be retrieved.</li>
             </ul>
        
           maxItems: 200
