@@ -120,8 +120,8 @@ TCP/UDP 上报 ACK 输入还包括 requestId/deviceId 和当时可用的 pointId
 | `pointId` | 非空、设备内稳定且唯一 |
 | `pointName` | 可选，默认 pointId |
 | `dataType` | 通用类型推荐 `bool`、`number`、`text`、`enum`；`numerical` 等别名由现有规范化器处理 |
-| `devType` / `functionCode` / `traitCode` | 使用实例实际 Spec 目录中的合法组合 |
-| `commandCode` | Spec Command；不能同时声明 `traitCode`，Command 使用 `access: 2` |
+| `devType` / `functionCode` / `traitCode` | 使用实例实际 Spec 目录中的合法组合；概念见[物模型核心概念](../aqara-developer/aqara-data-model-specification/core-concepts.mdx) |
+| `commandCode` | Spec Command；不能同时声明 `traitCode`，Command 使用 `access: 2`；概念见[物模型核心概念](../aqara-developer/aqara-data-model-specification/core-concepts.mdx) |
 | `customSchema` | 对象，用于该设备 Command 的定制参数约束；不是字符串 `customSchemeJson` |
 | `enumRange` | 静态枚举的非空 `{value: 整数, label: 非空字符串}` 数组 |
 | `dynamicEnumRange` | 动态枚举布尔标记，见下文 |
@@ -596,7 +596,7 @@ connectionSnapshot 的 CONNECTED 表示 Broker 连接，subscriptionRegistered �
 
 前端仍可编辑完整源码。保存通过脚本命令校验后写入托管 `.js` 文件，Network 只持久化 AOrd 路径 `scriptMessageParser/extensionScriptPath`。Open 的 `scriptContent` 是 `validateScript` / `uploadScript` 输入，不是可写 Network 属性。
 
-路径形如 `file:%/protocol-scripts/tcp_TcpNetwork/vendor-v1.js`，命名空间由 Network 类型决定；使用上传返回值，不猜绝对磁盘路径。同类型多个 Network 可引用同一文件，覆盖会触发所有引用者重载并使旧调试会话失效；优先用唯一新文件名。当前没有文件版本 CAS，读取 `referenceCount` 后再决定是否允许覆盖。
+路径形如 `file:%/protocol-scripts/tcp_TcpNetwork/vendor-v1.js`，命名空间由 Network 类型决定，首次上传见[脚本文件命令](./protocol-script-mcp-api.mdx#script-files)；绑定时使用上传返回值，不猜绝对磁盘路径。同类型多个 Network 可引用同一文件，覆盖会触发所有引用者重载并使旧调试会话失效；优先用唯一新文件名。当前没有文件版本 CAS，读取 `referenceCount` 后再决定是否允许覆盖。
 
 升级迁移保留 Network/Device/Point 身份及绑定，将旧正文/路径转为托管引用；迁移失败保留旧字段供修复重试。**文件迁移不转换 JS 接口**：旧脚本必须重写三个入口，新运行时没有旧契约自动回退。
 

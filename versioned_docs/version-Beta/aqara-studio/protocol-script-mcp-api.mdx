@@ -102,7 +102,16 @@ Source limit: **1,048,576 characters**, with an additional file limit of **3,145
 
 Each fixture is exactly `{entry:"encode" or "decode",input:{...},expected:complete normalized result}`. No describe fixture. valid=true and fixturesPassed are offline evidence, not deviceCommunicationVerified=true.
 
-Managed paths are `file:%/protocol-scripts/<namespace>/...js` for the Network type, not arbitrary disk paths/traversal. Use networkBeanId, current type and returned upload values to determine namespace.
+Managed paths are `file:%/protocol-scripts/<namespace>/...js` for the Network type, not arbitrary disk paths/traversal. Before the first upload, call `listScripts` and read `data.networkBeanId`; an empty `data.scripts` does not prevent constructing the path. To derive the namespace, trim whitespace from networkBeanId, replace each character outside `[A-Za-z0-9._-]` with `_`, then trim leading/trailing `_`; the result must not be empty, `.` or `..`. Do not use a colon-containing beanId directly as the directory name.
+
+| networkBeanId | namespace | Example scriptPath |
+| --- | --- | --- |
+| `tcp:TcpNetwork` | `tcp_TcpNetwork` | `file:%/protocol-scripts/tcp_TcpNetwork/vendor.js` |
+| `udp:UdpNetwork` | `udp_UdpNetwork` | `file:%/protocol-scripts/udp_UdpNetwork/vendor.js` |
+| `http:HttpNetwork` | `http_HttpNetwork` | `file:%/protocol-scripts/http_HttpNetwork/vendor.js` |
+| `mqtt:MqttConnNetwork` | `mqtt_MqttConnNetwork` | `file:%/protocol-scripts/mqtt_MqttConnNetwork/vendor.js` |
+
+These are examples for the four current types; use the deployed instance's networkBeanId. For a custom Network type, pass the same networkBeanId to listScripts, uploadScript and readScript. After uploading, bind and read back the returned `extensionScriptPath`.
 
 Validation failure leaves the file unchanged. Successful upload still requires checking reloadFailedCount and referenced Network status. Replacement reloads shared references; no version CAS exists. Prefer unique names.
 

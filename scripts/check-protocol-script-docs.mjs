@@ -35,6 +35,42 @@ const plain = value => value === undefined ? undefined : JSON.parse(JSON.stringi
 const jsonBlocks = text => [...text.matchAll(/^```json[^\r\n]*\r?\n([\s\S]*?)^```\s*$/gm)]
   .map(match => JSON.parse(match[1]));
 
+const specConceptsLink = '../aqara-developer/aqara-data-model-specification/core-concepts.mdx';
+function checkSpecConceptLinks(text) {
+  for (const field of ['`devType` / `functionCode` / `traitCode`', '`commandCode`']) {
+    const row = text.split(/\r?\n/).find(line => line.startsWith(`| ${field} |`));
+    assert.ok(row, `Missing point definition row: ${field}`);
+    assert.deepEqual([...row.matchAll(/\]\(([^)]+)\)/g)].map(match => match[1]), [specConceptsLink],
+      `Point definition must link to the relative data-model source: ${field}`);
+  }
+  return 4;
+}
+
+function checkFirstUploadPaths(text) {
+  for (const term of ['`data.networkBeanId`', '`data.scripts`', '`[A-Za-z0-9._-]`']) {
+    assert.ok(text.includes(term), `Missing first-upload namespace rule: ${term}`);
+  }
+  assert.match(text, /首尾的 `_`|leading\/trailing `_`/);
+  const rows = [...text.matchAll(/^\| `([^`\r\n]+)` \| `([^`\r\n]+)` \| `(file:%\/protocol-scripts\/[^`\r\n]+)` \|\r?$/gm)];
+  assert.deepEqual(rows.map(row => row[1]).sort(),
+    ['tcp:TcpNetwork', 'udp:UdpNetwork', 'http:HttpNetwork', 'mqtt:MqttConnNetwork'].sort());
+  for (const [, beanId, namespace, path] of rows) {
+    const normalized = beanId.trim().replace(/[^A-Za-z0-9._-]/g, '_').replace(/^_+|_+$/g, '');
+    assert.equal(namespace, normalized, `Wrong documented namespace for ${beanId}`);
+    assert.equal(path, `file:%/protocol-scripts/${normalized}/vendor.js`, `Wrong first-upload path for ${beanId}`);
+  }
+  return 5 + rows.length * 2;
+}
+
+function checkGenerationTemplate(text) {
+  const template = text.match(/^## 11\. .*?\r?\n([\s\S]*?)(?=^## 12\.)/m)?.[1];
+  assert.ok(template, 'Missing reusable generation template');
+  assert.ok(template.includes('describe().configSchema.network/device'), 'JS declaration path must remain configSchema');
+  assert.match(template, /resource_read[^\r\n]*data\.schema/, 'Template must read the public instance schema');
+  assert.doesNotMatch(template, /data\.configSchema|回读实例\s+configSchema/, 'Template uses the internal schema name');
+  return 4;
+}
+
 // 这里只检查文档示例，不替代 Studio 的 GraalJS 校验或实机通信。
 function call(context, entry, input) {
   context.__docInput = structuredClone(input);
@@ -186,9 +222,20 @@ for (const locale of Object.keys(locales)) {
   ok(reference.includes('Station.station.communication'), 'Script-file permission owner must be explicit');
   ok(reference.includes('captureWindow') && reference.includes('readPayloadCapture.frames[].sequence'),
     'Payload replay must distinguish its cursor from metadata capture');
-  ok(documents.get(`${locale}/unified-protocol-script`).includes('encode(ack)'), 'Report ACK input must be documented');
-  ok(documents.get(`${locale}/unified-protocol-script`).includes('128'), 'TCP fallback chunk limit missing');
-  ok(documents.get(`${locale}/unified-protocol-script`).includes('connectionType=4'), 'X.509 mode boundary missing');
+  const specification = documents.get(`${locale}/unified-protocol-script`);
+  checks += checkSpecConceptLinks(specification);
+  checks += checkFirstUploadPaths(reference);
+  ok(specification.includes('./protocol-script-mcp-api.mdx#script-files'), 'First-upload storage reference missing');
+  // 旧链接或缺少命名空间规则/任一协议示例必须失败，防止只检查关键词而漏掉具体入口。
+  assert.throws(() => checkSpecConceptLinks(specification.replace(specConceptsLink, 'http://localhost:3000/core-concepts')));
+  assert.throws(() => checkFirstUploadPaths(reference.replace('`[A-Za-z0-9._-]`', '')));
+  assert.throws(() => checkFirstUploadPaths(reference.replace(/^\| `mqtt:MqttConnNetwork`.*\r?\n/m, '')));
+  assert.throws(() => checkFirstUploadPaths(reference.replace(
+    'file:%/protocol-scripts/mqtt_MqttConnNetwork/vendor.js', 'file:%/protocol-scripts/mqtt:MqttConnNetwork/vendor.js')));
+  checks += 4;
+  ok(specification.includes('encode(ack)'), 'Report ACK input must be documented');
+  ok(specification.includes('128'), 'TCP fallback chunk limit missing');
+  ok(specification.includes('connectionType=4'), 'X.509 mode boundary missing');
 }
 console.log('Replay example regression checked: missing topic or missing vendor value fails the expected output (Node VM only).');
 
@@ -266,6 +313,11 @@ if (process.env.STUDIO_SOURCE_ROOT) {
   for (const key of ['extensionScriptPath', 'replaced', 'reloadFailedCount']) {
     ok(!readKeys.includes(key), `readScript now returns ${key}; recheck docs`);
   }
+  const fileStore = await source('AIOT_studio_script', 'src/main/kotlin/com/lumi/framework/script/ScriptFileStore.kt');
+  ok(fileStore.includes('beanId.trim().replace(Regex("[^A-Za-z0-9._-]"), "_").trim(\'_\')'),
+    'Script namespace normalization changed; recheck first-upload examples');
+  ok(scripts.includes('put("networkBeanId", beanId)') && scripts.includes('putJsonArray("scripts")'),
+    'listScripts must return the beanId even when the file list is empty');
   const debug = await source(open, `${base}server/service/ProtocolDebugService.kt`);
   ok(debug.includes('operation != "probe" && point == null'), 'Debug report/read target contract changed');
   ok(debug.includes('value.toString().toByteArray(Charsets.UTF_8).size <= 512'), 'Expected-value budget changed');
@@ -323,6 +375,11 @@ if (process.env.STUDIO_SOURCE_ROOT) {
   }
   const generationGuide = await source(open, 'src/main/resources/protocol-script-generation-guide.md');
   const debugGuide = await source(open, 'src/main/resources/protocol-debug-guide.md');
+  checks += checkFirstUploadPaths(generationGuide);
+  checks += checkGenerationTemplate(generationGuide);
+  assert.throws(() => checkGenerationTemplate(generationGuide.replace(
+    '用 resource_read 回读实例 data.schema', '回读实例 configSchema')));
+  checks += 1;
   for (const guide of [generationGuide, debugGuide]) {
     ok(guide.includes('data.schema') && guide.includes('hasMore'), 'Bundled guide uses stale Resource paths');
     ok(guide.includes('Station.station.communication'), 'Bundled guide omits permission owner');
