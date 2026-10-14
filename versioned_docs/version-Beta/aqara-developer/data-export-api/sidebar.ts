@@ -429,13 +429,13 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/get-alarms",
-          label: "Query Alarm List",
+          label: "List Alarms",
           className: "api-method get",
         },
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/delete-alarm",
-          label: "Delete Single Alarm",
+          label: "Delete An Alarm",
           className: "api-method post",
         },
         {
@@ -447,19 +447,19 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/ack-alarms",
-          label: "Batch Acknowledge Alarms by UUID",
+          label: "Batch Acknowledge Alarms by UUIDs",
           className: "api-method post",
         },
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/ack-alarms-by-point-id",
-          label: "Batch Acknowledge Alarms by Point ID",
+          label: "Batch Acknowledge Alarms by Point ids",
           className: "api-method post",
         },
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/get-alarm-rules",
-          label: "Query Alarm Rule List",
+          label: "List Alarm Rules",
           className: "api-method get",
         },
       ],

@@ -3060,10 +3060,9 @@ paths:
   /alarms:
     get:
       tags: [Alarm]
-      summary: Query Alarm List
+      summary: List Alarms
       description: |
-        Query alarm list with pagination by alarm time range.
-        Time filter semantics: `alarmTime >= startTime` and `alarmTime <= endTime` (UTC milliseconds, inclusive).
+        Retrieve a paginated list of alarms within a specified time range.
       operationId: getAlarms
       x-skill-intent: alarm.list
       x-idempotent: true
@@ -3072,7 +3071,7 @@ paths:
       parameters:
         - name: startTime
           in: query
-          description: Query start time (UTC milliseconds timestamp)
+          description: Query start time (UTC milliseconds timestamp, inclusive)
           required: true
           schema:
             type: integer
@@ -3080,7 +3079,7 @@ paths:
           example: 1704067200000
         - name: endTime
           in: query
-          description: Query end time (UTC milliseconds timestamp)
+          description: Query end time (UTC milliseconds timestamp, inclusive)
           required: true
           schema:
             type: integer
@@ -3088,8 +3087,11 @@ paths:
           example: 1704153600000
         - name: pageNum
           in: query
-          description: Page number
+          description: |
+            Page number.
+            When making subsequent paginated requests, you must keep all other parameters consistent with the initial request.
           required: false
+       
           schema:
             type: integer
           example: 1
@@ -3159,8 +3161,8 @@ paths:
   /alarms/delete:
     post:
       tags: [Alarm]
-      summary: Delete Single Alarm
-      description: Delete a single alarm by alarm record uuid.
+      summary: Delete An Alarm
+      description: Delete a specified alarm record by its unique identifier (uuid).
       operationId: deleteAlarm
       x-skill-intent: alarm.delete
       x-idempotent: true
@@ -3211,7 +3213,7 @@ paths:
     post:
       tags: [Alarm]
       summary: Clear All Alarms
-      description: Clear all alarm records, no request body required.
+      description: Clear all Alarms, no request body required.
       operationId: clearAlarms
       x-skill-intent: alarm.clear
       x-idempotent: true
@@ -3253,10 +3255,9 @@ paths:
   /alarms/ack:
     post:
       tags: [Alarm]
-      summary: Batch Acknowledge Alarms by UUID
+      summary: Batch Acknowledge Alarms by UUIDs
       description: |
-        Batch acknowledge alarms by a list of alarm record UUIDs.
-        The parameter `forceCleared` is not exposed to the client and is fixed as false on the server side.
+        Batch acknowledge alarms based on a list of unique identifiers (UUIDs) for the alarms.
       operationId: ackAlarms
       x-skill-intent: alarm.ack
       x-idempotent: false
@@ -3307,10 +3308,9 @@ paths:
   /alarms/ack-by-pointId:
     post:
       tags: [Alarm]
-      summary: Batch Acknowledge Alarms by Point ID
+      summary: Batch Acknowledge Alarms by Point ids
       description: |
         Batch acknowledge unacknowledged alarms for a measurement point based on `devicePointId`.
-        The parameter `forceCleared` is not exposed to the client and is fixed as false on the server side.
       operationId: ackAlarmsByPointId
       x-skill-intent: alarm.ack.by-point
       x-idempotent: false
@@ -3361,7 +3361,7 @@ paths:
   /alarm-rules:
     get:
       tags: [Alarm]
-      summary: Query Alarm Rule List
+      summary: List Alarm Rules
       description: |
         Query paginated alarm rule list (excluding template rules).
         Optionally filter by `ruleName` (case-insensitive, contains match).
@@ -3373,7 +3373,7 @@ paths:
       parameters: 
         - name: ruleName
           in: query
-          description: Fuzzy match keyword for rule name (optional, defaults to no filtering)
+          description: Rule name fuzzy match keyword (case-insensitive, ignored when omitted)
           required: false
           schema:
             type: string
@@ -6744,7 +6744,7 @@ components:
           type: array
           items:
             type: integer
-          description: 端点 ID 列表，为空或不传时，则查询该设备全部端点的能耗摘要。
+          description: Endpoint ID list. If empty or omitted, the energy summary for all endpoints of the device will be queried.
           example: [1, 2]
 
     EmsSummaryDevicesRequest:
@@ -7032,7 +7032,7 @@ components:
       properties:
         uuids:
           type: array
-          description: List of alarm record UUIDs
+          description: List of alarm unique identifiers (UUIDs)
           minItems: 1
           items:
             type: string
