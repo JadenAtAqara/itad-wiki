@@ -6,6 +6,7 @@
 - Core Concepts: https://docs.aqara.com/docs/aqara-studio/overview/core-concepts
 - Developer Guide: https://docs.aqara.com/docs/aqara-studio/developer-guide
 - Connect to Aqara Studio MCP Server: https://docs.aqara.com/docs/aqara-studio/set-up-mcp-server
+- Third-Party Device Script Integration Guide: https://docs.aqara.com/docs/aqara-studio/ai-agent-device-onboarding
 
 ## All sidebar-listed docs
 - Introduction: https://docs.aqara.com/docs/aqara-studio/overview/introduction
@@ -78,9 +79,10 @@
 - Connect to Aqara Studio MCP Server: https://docs.aqara.com/docs/aqara-studio/set-up-mcp-server
 - Matter Bridge: https://docs.aqara.com/docs/aqara-studio/matter-bridge
 - FAQ: https://docs.aqara.com/docs/aqara-studio/faq
-- JavaScript Script for MQTT Integration: https://docs.aqara.com/docs/aqara-studio/javascript-for-mqtt-integration
+- Third-Party Device Script Integration Guide: https://docs.aqara.com/docs/aqara-studio/ai-agent-device-onboarding
+- JavaScript for MQTT Integration: https://docs.aqara.com/docs/aqara-studio/javascript-for-mqtt-integration
 - JavaScript for HTTP Integration: https://docs.aqara.com/docs/aqara-studio/javascript-for-http-integration
-- JavaScript Script for UDP and TCP Integration: https://docs.aqara.com/docs/aqara-studio/javascript-for-udp-tcp-integration
+- JavaScript for UDP and TCP Integration: https://docs.aqara.com/docs/aqara-studio/javascript-for-udp-tcp-integration
 - Unit Names and Symbols Supported by Scripts: https://docs.aqara.com/docs/aqara-studio/script-supported-unit-symbols
 - Numerical Mapping Functions: https://docs.aqara.com/docs/aqara-studio/numerical-mapping-functions
 - 参考格式: https://docs.aqara.com/docs/aqara-studio/product-knowledge/reference

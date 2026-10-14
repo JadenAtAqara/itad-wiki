@@ -1,0 +1,228 @@
+---
+title: "统一协议脚本契约 v1"
+description: "TCP、UDP、HTTP、MQTT 共用的 describe、encode、decode 契约，包含点定义、现场参数、动态枚举、Command 和升级规则。"
+keywords: ["Aqara Studio", "脚本", "contractVersion", "describe", "encode", "decode", "AI Agent"]
+displayed_sidebar: aqaraStudioSidebar
+---
+
+# 统一协议脚本契约 v1
+
+TCP、UDP、HTTP、MQTT 共用同一套 JavaScript 业务契约。脚本负责组包、解析和数据转换，Studio 负责连接、收发、发现任务、轮询、权限和点值应用。
+
+`contractVersion: 1` 表示脚本契约版本，不是 Studio 产品版本。配置流程见 [接入指南](./ai-agent-device-onboarding.mdx)，各协议字段见 [TCP/UDP](./javascript-for-udp-tcp-integration.mdx)、[HTTP](./javascript-for-http-integration.mdx) 或 [MQTT](./javascript-for-mqtt-integration.mdx)。
+
+## 三个全局入口 {#entry-points}
+
+| 入口 | 输入 | 返回值 |
+| --- | --- | --- |
+| `describe()` | 无 | 描述对象，必须包含整数 `contractVersion: 1` |
+| `encode(request)` | 统一操作上下文 | 传输消息对象，或 `null` 表示本次不发报文 |
+| `decode(message)` | 入站消息及可取得的上下文 | 标准业务结果对象；忽略消息时返回 `{ operation: "ignore" }` |
+
+必须在全局暴露三个**同步**函数。不能返回 Promise、裸字节数组、顶层设备/点数组或标量读值。没有 Node.js `require`/`Buffer`、浏览器 `fetch`/`window` 或任意 Java 类访问的保证。不要在脚本中创建连接、定时器或重连循环。
+
+```javascript title="入口骨架（不具备设备通信能力）"
+(function () {
+    "use strict";
+    function describe() {
+        return { contractVersion: 1, scriptVersion: "V1.0" };
+    }
+    function encode(request) {
+        return null;
+    }
+    function decode(message) {
+        if (message.operation === "discoverDevices") return { devices: [] };
+        if (message.operation === "discoverPoints") return { pointDefinitions: [] };
+        return { operation: "ignore" };
+    }
+    globalThis.describe = describe;
+    globalThis.encode = encode;
+    globalThis.decode = decode;
+})();
+```
+
+`scriptVersion` 只是脚本自身标记，不改变运行时契约。加载失败时查看只读 `scriptCheckResult`；`success` 只证明脚本加载及契约检查通过，不证明设备可通信。
+
+## describe 描述对象 {#describe}
+
+| 字段 | 规则 |
+| --- | --- |
+| `contractVersion` | 必填整数 `1` |
+| `scriptVersion` | 可选脚本版本标记，例如 `"V1.0"` |
+| `protocol.msgIdMatch` | 可选布尔值，默认 `false`；TCP/UDP 请求 ID 匹配 |
+| `protocol.stateSyncMode` | `"push"`、`"query"`、`"mixed"`，默认 `"mixed"` |
+| `discovery` | TCP/UDP 发现目标；见 [发现配置](./javascript-for-udp-tcp-integration.mdx#discovery) |
+| `framing` | TCP/UDP 帧配置；见 [分帧限制](./javascript-for-udp-tcp-integration.mdx#framing) |
+| `configSchema` | Network/Device 普通现场参数定义，见下文 |
+
+`describe()` 应快速、确定且无副作用，可能被重复读取。协议配置在加载时解析缓存，不应依赖调用次数推进会话状态。
+
+### 请求关联与状态反馈
+
+只有厂商协议提供稳定请求标识、脚本能够把框架 `requestId` 编入请求并从响应还原时，才启用 `msgIdMatch`。关闭时请求 ID 为空字符串；开启时响应缺少、错误或过期的 ID 不能完成等待事务。旧 Network 上保存的 `msgIdMatch` 不再是运行依据。
+
+`stateSyncMode` 描述写入后的状态反馈，不等于点的访问权限，也不等于 `isResponseExpected`：
+
+- `push`：每次写入都有可靠 `report`，普通写入不额外自动读回或发布查询。
+- `query` / `mixed`：普通写成功后，对可读且已订阅的点触发一次立即读回；MQTT 是发布查询后应用后续 report，不创建同步响应事务。周期轮询仍按原调度器执行。调试会话的状态确认按调试流程独立执行。
+- Command 不轮询，也不自动读回；观察其副作用应指定另一个可读属性。
+- MQTT 查询是发布 `read` 请求后等待异步 `report`，不是新增一套业务 ACK 事务。
+
+设备反馈可能延迟。ACK 成功后的一次旧状态读取不能证明动作失败；只能在既定次数和时间预算内再次**读取**，不能为等待状态而反复控制。
+
+## 统一输入 {#inputs}
+
+所有输入包含 `transport`，值为 `tcp`、`udp`、`http` 或 `mqtt`。TCP 插件通过 UDP 发现时仍为 `tcp`。
+
+| 字段 | 含义 |
+| --- | --- |
+| `operation` | `discoverDevices`、`discoverPoints`、`probe`、`read`、`write`、`report`、`ack`；正常 TCP/UDP 收帧时尚未知 |
+| `deviceId` / `pointId` | 厂商业务标识，不是 Open Resource 实例 ID |
+| `requestId` | 框架请求标识；正常 TCP/UDP 收帧前不会替脚本猜测 |
+| `value` | 写入业务值；布尔、数值、文本分别为 JS 原始类型，枚举为整数序号 |
+| `config` | 本次调用的隔离普通参数快照 |
+| `ip` / `port` | 仅 encode(discoverDevices) 的发送目标，不是发现响应的来源地址 |
+| `bytes` / `body` / `topic` / `path` | 由传输适配器提供，不能假定每次均存在 |
+| `statusCode` / `headers` | 仅真实 HTTP 客户端响应提供 |
+| `code` / `errorMsg` | TCP/UDP encode(ack) 的框架落点结果，不是厂商原始状态码 |
+
+没有上下文的字段可能缺失或为 `null`。Command 的 `value` 是按数字 fieldId 归一化后的 **JSON 字符串**，包括无参数命令的 `"{}"`；脚本需要时自行 `JSON.parse(request.value)`。厂商要求的 0/1、HEX、字节序、倍率由脚本显式转换。
+
+TCP/UDP 上报 ACK 输入还包括 requestId/deviceId 和当时可用的 pointId，但不会把上报 points 复制给 encode(ack)。厂商 ACK 还需要其他字段时，可按设备暂存有界关联信息，再依协议构造 ACK 字节。
+
+## decode 结果 {#results}
+
+| 操作 | 业务字段 | 成功语义 |
+| --- | --- | --- |
+| `discoverDevices` | `devices: [{deviceId, deviceName?, ...}]` | 返回设备候选，不自动导入 |
+| `discoverPoints` | `pointDefinitions: [...]` | 返回点定义，不是实时点值 |
+| `read` / `report` | `points: [{pointId, value}]`，可附 `enumRangeUpdates` | 通过校验后由对应 Proxy 应用 |
+| `write` / `probe` | 整数 `code`，可附 `errorMsg`、`pointId` | `0` 成功，非零失败；缺失 `code` 不算成功 |
+| `ignore` | 无 | 其余业务字段一并丢弃，不落点、不完成事务 |
+
+可附 `operation`、`deviceId`、`requestId`。输入已有操作上下文时可省略输出 `operation`，框架补齐；显式输出不匹配操作会被拒绝。TCP/UDP 正常收帧必须自行识别并返回 `operation`，不能只返回请求 ID。
+
+`points.value` 只能是字符串、布尔或有限数值。空字符串有效；`null`、对象、数组、`NaN`、`Infinity` 无效。同一结果中的 `pointId` 不能重复。不要用 `0`、`false` 或空串掩盖缺失数据。
+
+`read` 必须包含本次请求点，否则本次结果的其他点也不会应用；显式非零 `code` 表示读取被设备拒绝。`write` / `probe` 附加的 `points` 不用于更新状态。主动上报不能借相同请求 ID 完成其他事务。
+
+## 点定义 {#point-definitions}
+
+新契约所有点定义，包括 Spec 点，均须提供整数 `access` 位掩码：`1`=读、`2`=写、`4`=上报，组合为 `3`、`5`、`6`、`7`。
+
+| 字段 | 说明 |
+| --- | --- |
+| `pointId` | 非空、设备内稳定且唯一 |
+| `pointName` | 可选，默认 pointId |
+| `dataType` | 通用类型推荐 `bool`、`number`、`text`、`enum`；`numerical` 等别名由现有规范化器处理 |
+| `devType` / `functionCode` / `traitCode` | 使用实例实际 Spec 目录中的合法组合 |
+| `commandCode` | Spec Command；不能同时声明 `traitCode`，Command 使用 `access: 2` |
+| `customSchema` | 对象，用于该设备 Command 的定制参数约束；不是字符串 `customSchemeJson` |
+| `enumRange` | 静态枚举的非空 `{value: 整数, label: 非空字符串}` 数组 |
+| `dynamicEnumRange` | 动态枚举布尔标记，见下文 |
+| `min` / `max` | 数值范围；也接受 `minimum` / `maximum` |
+| `step` | 控件增减步长，必须大于 0 |
+| `resolution` | 设备最小可分辨粒度，必须大于 0；不是 step 的别名 |
+| `decimals` | 非负整数，显示/写入格式的小数位配置；`precision` 已不再解析 |
+| `unit` | 设备数据单位；也接受 `units` / `unitName`，见 [单位表](./script-supported-unit-symbols.mdx) |
+| `trueText` / `falseText` | 通用布尔点的自定义显示文本；默认 On / Off |
+
+```json title="公共点定义示例"
+{
+  "pointDefinitions": [
+    {"pointId":"power","pointName":"电源","dataType":"bool","access":7},
+    {"pointId":"temperature","dataType":"number","access":5,"min":-20,"max":80,"step":0.1,"resolution":0.1,"decimals":1,"unit":"celsius"},
+    {"pointId":"mode","dataType":"enum","access":3,"enumRange":[{"value":0,"label":"自动"},{"value":1,"label":"手动"}]}
+  ]
+}
+```
+
+Spec Code 必须查询运行实例，不能依据中文名称编造。不要把所有只写基础点自动当成一个不存在的公共 Command。可查询状态适合作为属性；播放/暂停等一次性动作按实际 Spec Command 定义。设备定制 Schema 不应修改其他设备使用的全局 Spec。
+
+单位表示设备上报/下发的数据单位，系统显示单位可能由系统设置转换。倍率只换算一次；验证时同时核对数值、单位和时间。不要把 `configSchema` 中的字符串枚举与功能点数值枚举混淆。
+
+### 设备级 Command Schema 示例
+
+customSchema 是命令描述包装对象，不是直接把裸 JSON Schema 放在点上。包装中的 inputSchema 以**数字 fieldId 字符串**为属性键，保留 Spec 字段元信息供表单和校验使用；按当前目录取得 commandId 与字段，不能照抄其他型号。
+
+下面以当前目录 MediaPlaybackCommand（40001）为例：该设备只接受 Music 和整段 Command 文本，不接受 Title。定制仅属于该点，不影响其他设备：
+
+```json title="该设备的命令参数约束"
+{
+  "pointId":"onDemandPlay","pointName":"语音点播","devType":"Speaker","functionCode":"MediaPlayback","commandCode":"MediaPlaybackCommand","access":2,
+  "customSchema":{
+    "commandId":40001,"commandCode":"MediaPlaybackCommand","title":"媒体点播",
+    "inputSchema":{"type":"object","additionalProperties":false,
+      "properties":{
+        "0":{"type":"integer","title":"媒体类型","default":0,"oneOf":[{"const":0,"title":"Music","x-value":"0"}],"x-enums":[{"value":"0","key":"Music"}],"x-fieldCode":"MediaType","x-fieldId":0,"x-format":6,"x-paramType":1},
+        "1":{"type":"string","title":"命令内容","minLength":1,"x-fieldCode":"Command","x-fieldId":1,"x-format":11,"x-paramType":3}
+      },"required":["0","1"]},
+    "returnSchema":{"type":"object"},"valueExample":"{\"0\":0,\"1\":\"\"}"
+  }
+}
+```
+
+调试调用 args 为 `{"0":0,"1":"播放周杰伦的歌"}`；encode(write) 收到的 value 是这个对象的 JSON 字符串。厂商自行理解整段文本，Studio 不负责拆分歌手/歌名。需要运行期设备 Schema 的其他能力应核对实际点与映射入口，不能把 Kotlin 属性名 customDynamicSchema 当作已支持的 JS 字段。
+
+## 动态枚举 {#dynamic-enums}
+
+发现时声明 `{pointId:"scene", dataType:"enum", access:7, dynamicEnumRange:true}`。不能同时声明静态 `enumRange` 或 `traitCode`。不要手工生成运行时元数据 key。
+
+收到厂商选项配置后，在合法的 `read` / `report` 结果中返回：
+
+```json title="设备选项与当前状态共同更新"
+{
+  "operation":"report",
+  "deviceId":"demo-1",
+  "points":[{"pointId":"scene","value":1}],
+  "enumRangeUpdates":[{"pointId":"scene","enumRange":[{"value":0,"label":"电影"},{"value":1,"label":"音乐"}]}]
+}
+```
+
+只在报文确实包含选项字段时生成更新，不能每个属性响应都重复全量查询/更新。更新内部 JS 数组不等于发布前端枚举。动态范围是临时元数据，不写点结构/binlog；重启或生命周期清理后需要重新从设备取得。未收到配置前列表可以为空，不能伪造默认选项。选项必须匹配已导入且声明了动态枚举的点；运行时范围可用空数组明确清空。
+
+## 普通现场参数 {#parameters}
+
+```json title="describe().configSchema 的可选内容"
+{
+  "network":{"type":"object","properties":{"siteCode":{"type":"string","title":"项目号","maxLength":32}},"required":["siteCode"]},
+  "device":{"type":"object","properties":{"channel":{"type":"integer","minimum":1,"maximum":255,"default":1},"mode":{"type":"string","enum":["normal","extended"],"default":"normal"}}}
+}
+```
+
+Network/Device 使用现有 `scriptParameters` 容器保存值。调用时设备同名值覆盖 Network 值，分别校验每层必填项；每次传入独立 `config`，修改它不会回写节点。可选且无值/默认值的字段不注入，`0` 与 `false` 不能当成未填。
+
+仅支持扁平 `string / integer / number / boolean`，字符串 `enum`、`title`、`description`、`default`、`required`、数值上下限、字符串长度约束。每层最多 64 项，字符串最多 4096 字符，整数为 32 位；不支持嵌套对象、数组、`$ref`、正则等任意 JSON Schema。参数名必须是以英文字母开头的字母/数字/下划线，长度不超过 64，且不能使用保留名或含 password/secret/token/credential 的名称。
+
+普通参数不是凭据存储，不能改变 TCP/UDP 地址、HTTP 服务器、MQTT Broker/订阅。身份/认证仍使用协议已有配置。缺必填项可保存脚本和节点，但实际调用会失败。Schema 变化保留兼容同名值，不兼容类型/约束报错；已移除字段不再注入或由 Open 暴露。
+
+设备发现只有 Network 参数。HTTP/MQTT 上报在 decode 前尚未识别设备，因此也只有 Network 参数；不能依赖某设备的私有参数识别该上报。
+
+## 状态、限额和轮询 {#runtime}
+
+同一 Network 的设备复用 JS Context。`globalThis.studioScriptState` 默认是普通对象，可保存有界 JSON 状态；必须按 `deviceId` 隔离半帧、请求关联和快照。不要保存函数、BigInt、循环对象、宿主资源或凭据。Context 回收、更新或超时后会重建，不能把它当成持久化数据库。
+
+默认状态大小告警阈值为 2 MiB，管理员可修改 `maxPersistentStateBytes`，`0` 关闭告警；越界不自动删除状态。`heapRejectPercent` 默认 `0`，即不开启堆压力拒绝；不能把堆保护当成脚本本身可以无界分配的理由。
+
+默认 `scriptExecutionTimeout` 为 5 秒；默认 `maxMessageBytes` 为 TCP/UDP 64 KiB、HTTP/MQTT 256 KiB。默认每次最多发现 128 台设备、512 个点、解析 512 个实时点值，实际以 Parser 配置为准。过量结果不能作为完整成功清单使用。
+
+点轮询由 Proxy 的 `pollFrequency` 及 Network 的现有 Poll Scheduler 控制。脚本不要另建定时器。全量查询协议可缓存按设备隔离的有界快照、合并返回多个点，或按协议实现主动上报；不能因为返回缓存就宣称 `readOnce` 已取得新的设备响应。
+
+## 保存、编辑和升级 {#migration}
+
+前端仍可编辑完整源码。保存通过脚本命令校验后写入托管 `.js` 文件，Network 只持久化 AOrd 路径 `scriptMessageParser/extensionScriptPath`。Open 的 `scriptContent` 是 `validateScript` / `uploadScript` 输入，不是可写 Network 属性。
+
+路径形如 `file:%/protocol-scripts/tcp_TcpNetwork/vendor-v1.js`，命名空间由 Network 类型决定；使用上传返回值，不猜绝对磁盘路径。同类型多个 Network 可引用同一文件，覆盖会触发所有引用者重载并使旧调试会话失效；优先用唯一新文件名。当前没有文件版本 CAS，读取 `referenceCount` 后再决定是否允许覆盖。
+
+升级迁移保留 Network/Device/Point 身份及绑定，将旧正文/路径转为托管引用；迁移失败保留旧字段供修复重试。**文件迁移不转换 JS 接口**：旧脚本必须重写三个入口，新运行时没有旧契约自动回退。
+
+| 旧 JS 入口/返回格式 | 新契约 |
+| --- | --- |
+| `protocolConfig()` / `discoveryConfig()` / `packetProcessConfig()` | `describe().protocol` / `.discovery` / `.framing` |
+| `build*Request` / `buildReportResponse` | 按 `request.operation` 分支的 `encode`；上报回复对应 `ack` |
+| `dispatch` + 各 `parse*Response` | 一次 `decode` 识别操作并返回标准结果 |
+| 顶层设备/点数组、标量读值 | `{devices}`、`{pointDefinitions}`、`{points}` |
+| HTTP 字符串 headers / postParams | headers 对象 / body 字符串 |
+| MQTT 裸正文字符串、猜测 HEX | `{body}` 或 `{bytes}` |
+
+已有点定义语义变化（例如数值点改动态枚举、属性拆为 Command）可能需要重新发现/创建点；替换前检查自动化和其他引用。不能承诺仅替换 JS 就自动重构所有旧点。

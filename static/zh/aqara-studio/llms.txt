@@ -6,6 +6,7 @@
 - 核心概念: https://docs.aqara.com/zh/docs/aqara-studio/overview/core-concepts
 - 开发者指南: https://docs.aqara.com/zh/docs/aqara-studio/developer-guide
 - 连接至 Aqara Studio MCP Server: https://docs.aqara.com/zh/docs/aqara-studio/set-up-mcp-server
+- 第三方设备脚本接入指南: https://docs.aqara.com/zh/docs/aqara-studio/ai-agent-device-onboarding
 
 ## 侧边栏收录的全部文档
 - 平台概述: https://docs.aqara.com/zh/docs/aqara-studio/overview/introduction
@@ -78,6 +79,7 @@
 - 连接至 Aqara Studio MCP Server: https://docs.aqara.com/zh/docs/aqara-studio/set-up-mcp-server
 - Matter Bridge: https://docs.aqara.com/zh/docs/aqara-studio/matter-bridge
 - 常见问题: https://docs.aqara.com/zh/docs/aqara-studio/faq
+- 第三方设备脚本接入指南: https://docs.aqara.com/zh/docs/aqara-studio/ai-agent-device-onboarding
 - JavaScript 脚本（适用于 MQTT）: https://docs.aqara.com/zh/docs/aqara-studio/javascript-for-mqtt-integration
 - JavaScript 脚本（适用于 HTTP）: https://docs.aqara.com/zh/docs/aqara-studio/javascript-for-http-integration
 - JavaScript 脚本（适用于 UDP 和 TCP）: https://docs.aqara.com/zh/docs/aqara-studio/javascript-for-udp-tcp-integration

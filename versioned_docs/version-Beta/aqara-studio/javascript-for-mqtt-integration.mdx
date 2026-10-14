@@ -1,491 +1,119 @@
 ---
-title: "JavaScript Script for MQTT Integration"
-description: "This document introduces how to use a JavaScript script in Aqara Studio to add MQTT device points and their parsing methods."
-keywords: ["Aqara Docs", "Aqara Studio", "JavaScript Script for MQTT Integration"]
+title: "JavaScript for MQTT Integration"
+description: "Unified MQTT static discovery, topics, binary payloads, per-message publishing options, queries and Commands."
+keywords: ["Aqara Studio", "MQTT", "script", "binary", "Topic", "Command"]
 ---
-# JavaScript Script for MQTT Integration
 
-This document introduces how to use a JavaScript script in Aqara Studio to add MQTT device points and their parsing methods.
+# JavaScript for MQTT Integration
 
-## Script Overview
+MQTT uses `describe`, `encode` and `decode` from the [unified v1 contract](./unified-protocol-script.mdx). The MQTT module manages Broker connections, subscriptions, publishing and authentication.
 
-This script **must** include the following 4 JavaScript methods:
+## Device and point discovery {#discovery}
 
-- [parseDiscoveryResponse](#parsediscoveryresponse)
-- [parseDiscoverPointsResponse](#parsediscoverpointsresponse)
-- [parseReportRequest](#parsereportrequest)
-- [buildWriteRequest](#buildwriterequest)
+Discovery is static decode with operation discoverDevices/discoverPoints and body=null, not a remote discovery publish. Return `{devices:[...]}` / `{pointDefinitions:[...]}` and perform separate discovery, selection and import.
 
-:::tip
-Do not modify the parameters of these methods or their input/output structures.
-:::
+Device fields include deviceId, deviceName, brokerEndpoint, brokerPort, connectionType, username, password and clientId. deviceId/brokerEndpoint must be valid. Omitted brokerPort defaults to 1883, connectionType to 3. Types: 0 anonymous, 1 anonymous SSL, 2 username/password SSL, 3 username/password without SSL. Use real plugin authentication configuration; never place real passwords in public scripts, fixtures or logs.
 
-## Script Global Variables
+The plugin also defines **connectionType=4 (X.509 over SSL)**. Script discovery does not import certificate/key paths; this mode additionally needs root CA, client certificate and private-key configuration in the existing authenticator. A discovered type number alone is not a usable X.509 configuration. Read the deployed configuration schema and use authorized credential provisioning; do not invent certificate fields inside devices or configSchema.
 
-A protocol script can use `globalThis.studioScriptState` to share a small amount of temporary state across multiple function calls in the same Context. This variable is initialized as an empty object by default:
+The current Open MQTT template exposes Broker, clientID, connectionType and username/password fields, but not certificate/key paths. Existing X.509 configuration can be reused; the Resource workflow documented here cannot provision its certificates from scratch.
 
-```javascript
-globalThis.studioScriptState = {
-	reportCount: 0,
-	lastValue: null
-};
+| Point extension | Purpose |
+| --- | --- |
+| `subTopic` | Incoming state/query responses; subscriptions may use vendor-appropriate +/# |
+| `pubTopic` | Default publishing destination; writes and queries need a valid publishing route |
+| `receiveBinding` | Optional cross-point targetPoint Ord, with optional sourcePropertyName/targetPropertyName |
+| `publishBinding` | Optional cross-point sourcePoint Ord, with optional sourcePropertyName/targetPropertyName; writable points only |
+
+Omit bindings when unnecessary. All definitions require [common access](./unified-protocol-script.mdx#point-definitions), including Spec points; do not retain the old rule that only generic points need access.
+
+## Payloads and ownership {#messages}
+
+Read/write encode requires **exactly one of body or bytes**:
+
+```json title="Binary publish with per-message options"
+{"bytes":[0,128,255],"topic":"vendor/demo-1/set","qos":1,"retained":false}
 ```
 
-Keep this variable as a plain object. Its properties may contain strings, finite numbers, booleans, `null`, plain objects, and arrays, including nested combinations of those types. Convert dates to strings first. Do not store `undefined`, functions, `Symbol`, `BigInt`, `NaN`, `Infinity`, circular references, `Map`, `Set`, Java/host objects, or custom class instances; such values may be ignored, lose information, or cause serialization failures.
+body is UTF-8 text; bytes is an exact Uint8Array/integer array. Optional topic/qos/retained override this message only, otherwise point defaults apply. Topic remains on the current device Broker, nonempty valid UTF-8, without NUL/+/#, at most 1024 UTF-8 bytes. QoS is integer 0..2; retained is Boolean. Overrides do not persist bindings, subscribe or create connections.
 
-State size is measured by the serialized UTF-8 JSON byte length. The warning threshold is 2 MiB. Studio performs a rate-limited check after script calls. When the state first exceeds the threshold, Studio writes one `[warn]` entry to both the service log and `Console Content` on the protocol configuration page. Repeated overflow does not produce periodic warnings, does not delete the state automatically, and does not terminate the current call. Keep this variable below 2 MiB during normal development and operation.
+Incoming decode receives `{transport:"mqtt",operation:"report",topic,bytes,body,config}`. bytes preserves exact payload; body exists only for valid UTF-8, otherwise null. Each Parser group decodes a message once, not once per subscribed point.
 
-`globalThis.studioScriptState` is reinitialized after idle Context reclamation, memory-pressure reclamation, script updates, or execution timeouts. Do not use it for durable device state, credentials, or an unbounded history of messages.
+Top-level deviceId identifies ownership. It may be omitted in a single-device subscription group; multiple devices sharing topics must identify the device or application is rejected. Never apply same-name points to every device. Reports have only Network parameters before identity is known.
 
-## parseDiscoveryResponse
+Within a subscription group, an ID must identify exactly one device instance. If distinct devices have the same business ID, routing rejects the report rather than applying it to both. Multiple points owned by the same device remain valid.
 
-The `parseDiscoveryResponse` method is mainly used to declare the basic configuration of the MQTT devices that should be integrated into Aqara Studio.
+For unified MqttDevice, point discovery, ordinary read/write encode, report ownership and Open debugging all use the **business deviceId**, not the Broker connection's clientId. The clientId remains a separate MQTT connection identifier. This behavior requires the corresponding business-ID routing fix; older packages may still pass/match clientId in ordinary paths. Verify the deployed package, and do not change an existing connection's clientId merely to make it look like a business ID.
 
-You need to return the basic information of devices to be integrated as an **array of objects**. For details, see [Device Object Structure](#device-object-structure).
+## Queries and Commands {#commands}
 
-Aqara Studio calls this method to discover all available devices and enable automatic onboarding and management.
+encode(read) publishes a query and later reports update state. Establish subscriptions first. The publish route, query payload, response subscription and pointId must all exist. Do not fabricate queries for report-only devices to make readOnce appear supported.
 
-#### Device Object Structure
+The script Proxy currently uses the fixed normal refresh tier, whose interval belongs to the Network Poll Scheduler; changing another device-frequency field does not necessarily change per-point query frequency. After ordinary writes on readable, subscribed points, query/mixed triggers one query publish; push does not add that query.
 
-| Field Name | Required | Description |
-| --- | --- | --- |
-| deviceName | Optional | Device name. |
-| deviceId | Required | Device ID. |
-| brokerEndpoint | Required | MQTT broker address. |
-| brokerPort | Required | MQTT broker port. |
-| connectionType | Required | Connection type. Supported values:<ul><li>0: Anonymous</li><li>1: Anonymous over SSL</li><li>2: Username/password over SSL</li><li>3: Username/password without SSL</li></ul> |
-| username | Conditionally required | Username, depending on `connectionType`. |
-| password | Conditionally required | Password, depending on `connectionType`. |
+Spec Commands use commandCode/customSchema, access=2 and write publishing. Commands default to retained=false to avoid replaying one-shot actions on reconnect; review any explicit override against vendor semantics. Command value is a fieldId JSON string, not an ordinary number.
 
-Required field notes:
+**SDK publish completion and PUBACK/PUBCOMP are not device business ACKs.** MQTT probeOnce/protocolAck are unsupported; no generic publish-and-wait business transaction was added. Confirm send or observe a real same-device report for effects.
 
-- `deviceId`, `brokerEndpoint`, `brokerPort`, and `connectionType` are required.
-- The default `brokerPort` is `1883`, and the default `connectionType` is `3`.
-- Whether `username` and `password` are required depends on `connectionType`.
-- `deviceName` is optional and defaults to an empty string when omitted.
+## Demonstration script {#example}
 
-#### Example
+This **fictional protocol** uses demo-1, example Broker `192.0.2.20` (replace before deployment), state messages `{"deviceId":"demo-1","volume":20}`, set accepting volume, and get accepting `{get:"volume"}`. Volume is integer 0..100. Anonymous demo authentication is not suitable for vendors requiring credentials.
 
-```javascript
-function parseDiscoveryResponse() {
-	return [
-		{
-			deviceName: "TestDevice",
-			deviceId: "device-001",
-			brokerEndpoint: "127.0.0.1",
-			brokerPort: 1883,
-			connectionType: 3,
-			username: "admin",
-			password: "public"
-		}
-	];
-}
-```
-
-## parseDiscoverPointsResponse
-
-This method declares to Aqara Studio which points the device supports. Aqara Studio passes `deviceId` as the first argument when calling this function.
-
-You need to return one or more point definitions in the returned array, such as `pointId`. For details, see [Point Object Structure](#point-object-structure). Aqara Studio calls this function during point discovery and parses the returned value to identify all supported points, enabling seamless onboarding and control.
-
-#### Point Object Structure
-
-| Field Name | Required | Description |
-| --- | --- | --- |
-| pointId | Required | Point ID. Consult the device manufacturer for the actual point ID so Aqara Studio can discover the point. |
-| pointName | Required | Custom point name defined by you. |
-| devType | Conditionally required | Corresponds to `deviceType` in the Aqara data model specification. Fill this when defining a point based on Aqara Spec. For available values, see [Device Types](../aqara-developer/aqara-data-model-specification/device-types.mdx). |
-| functionCode | Conditionally required | Corresponds to `functionCode` in the Aqara data model specification. Fill this when defining a point based on Aqara Spec. For available values, see [Function Codes](../aqara-developer/aqara-data-model-specification/function-codes.mdx). |
-| traitCode | Conditionally required | Corresponds to `traitCode` in the Aqara data model specification. Fill this when defining a point based on Aqara Spec. For available values, see [Trait Codes](../aqara-developer/aqara-data-model-specification/trait-codes.mdx). |
-| dataType | Conditionally required | Required for general points. Supported values:<ul><li><code>bool</code>: Boolean</li><li><code>numerical</code>: Numeric</li><li><code>enum</code>: Enumeration</li><li><code>text</code>: Text</li></ul> |
-| enumRange | Conditionally required | Enumeration option array. Required only when `dataType` is `enum` for a general point. The array must not be empty. Each item must contain an integer `value` and a string `label`. Both `value` and `label` must be unique, and `label` must not be empty. |
-| trueText / falseText | Optional | Display labels for a general Boolean point. Effective only when `dataType` is `bool`. If not configured, `trueText` defaults to `On` and `falseText` defaults to `Off`. Configure them only when custom labels such as `Enabled` / `Disabled` are needed. `activeText` / `onText` and `inactiveText` / `offText` are also accepted as aliases. |
-| min | Optional | Minimum value for a general numeric point. Effective only when `dataType` is `numerical`. `minimum` is also accepted as an alias. |
-| max | Optional | Maximum value for a general numeric point. Effective only when `dataType` is `numerical`. `maximum` is also accepted as an alias. |
-| step | Optional | Step value for a general numeric point. It must be greater than 0. Effective only when `dataType` is `numerical`. `resolution` is also accepted as an alias. |
-| precision | Optional | Precision value for a general numeric point. It must be greater than or equal to 0. Effective only when `dataType` is `numerical`. |
-| decimals | Optional | Number of decimal places for a general numeric point. It must be an integer greater than or equal to 0. Effective only when `dataType` is `numerical`. |
-| unit / units | Optional | Unit for a general numeric point. Effective only when `dataType` is `numerical`. It is recommended to use a registered unit name such as `kilowatt hour`, `watt`, `volt`, `ampere`, `celsius`, or `percent`. Studio displays the corresponding symbols such as `kWh`, `W`, `V`, `A`, `°C`, and `%`. For the full mapping, see [Unit Names and Symbols Supported by Scripts](./script-supported-unit-symbols.mdx). The system can also match registered unit symbols. |
-| access | Conditionally required | Required for general points. Access capability flag:<ul><li>1: Readable</li><li>2: Writable</li><li>3: Readable and writable</li></ul> |
-| subTopic | Conditionally required | (**MQTT devices only**) Required for readable or reportable points. Aqara Studio subscribes to this topic to receive the latest point data. Fill it according to the device protocol or vendor documentation. If one point needs to receive multiple upstream topics, you can use MQTT wildcards such as `+` or `#`. |
-| pubTopic | Conditionally required | (**MQTT devices only**) Required for writable points. Aqara Studio sends control messages to this topic to control the point. Fill it according to the device protocol or vendor documentation. Leave this field empty for read-only points. |
-
-:::note
-For `numerical` points, when Aqara Studio calls `buildWriteRequest`, it formats the write value by `decimals` first. If `decimals` is not configured, it infers the number of decimal places from `step` / `resolution`. To avoid binary floating-point artifacts such as `0.30000030249357224`, explicitly configure `decimals` or `step` for points that write fractional values. `precision` only describes precision and is not used as the decimal-place truncation rule for outgoing write payloads.
-
-If a numeric point is used by energy statistics or other unit-dependent features, configure `unit` or `units`. For example, use `kilowatt hour` (displayed as `kWh`) for accumulated energy, `watt` (`W`) for current power, `volt` (`V`) for voltage, `ampere` (`A`) for current, and `celsius` (`°C`) for temperature. Enter unit names exactly as shown in [Unit Names and Symbols Supported by Scripts](./script-supported-unit-symbols.mdx), including case and spaces.
-:::
-
-:::tip
-You can define point data structures in either of the following ways:
-
-- **Based on Aqara Spec**: Fill in fields such as `devType`, `functionCode`, and `traitCode` to map the device point to the corresponding point in the Aqara data model specification.
-- **General approach**: Fill in basic fields such as `dataType` and `access`.
-:::
-
-#### Example
-
-```javascript
-function parseDiscoverPointsResponse(deviceId) {
-	return [
-		// Add points based on Aqara Spec
-		{
-			pointId: "1#Chiller Operation Status",
-			pointName: "1#Chiller Operation Status",
-			devType: "AirConditioner",
-			functionCode: "Output",
-			traitCode: "OnOff",
-			subTopic: "/WEI-iEdge/realdata/7a1dd258f32940d95a542c68",
-			pubTopic: "/WEI-iEdge/write/req/7a1dd258f32940d95a542c68"
-		},
-		// Add points by the general approach
-		{
-			pointId: "1#Chiller Off/On Read",
-			pointName: "1#Chiller Off/On Read",
-			dataType: "bool",
-			access: 1,
-			subTopic: "/WEI-iEdge/realdata/7a1dd258f32940d95a542c68",
-			pubTopic: "/WEI-iEdge/write/req/7a1dd258f32940d95a542c68"
-		},
-		{
-			pointId: "1#Chiller Operating Mode",
-			pointName: "1#Chiller Operating Mode",
-			dataType: "enum",
-			enumRange: [
-				{ value: 0, label: "Off" },
-				{ value: 1, label: "Cooling" }
-			],
-			access: 3,
-			subTopic: "/WEI-iEdge/realdata/7a1dd258f32940d95a542c68",
-			pubTopic: "/WEI-iEdge/write/req/7a1dd258f32940d95a542c68"
-		},
-		{
-			pointId: "1#Chiller Leaving Water Temperature Setpoint Read",
-			pointName: "1#Chiller Leaving Water Temperature Setpoint Read",
-			dataType: "numerical",
-			min: -20,
-			max: 50,
-			step: 0.1,
-			precision: 0.1,
-			decimals: 1,
-			unit: "celsius",
-			access: 2,
-			subTopic: "/WEI-iEdge/realdata/7a1dd258f32940d95a542c68",
-			pubTopic: "/WEI-iEdge/write/req/7a1dd258f32940d95a542c68"
-		},
-		{
-			pointId: "1#Chiller Cooling Capacity Percentage",
-			pointName: "1#Chiller Cooling Capacity Percentage",
-			dataType: "numerical",
-			min: 0,
-			max: 100,
-			step: 1,
-			precision: 1,
-			decimals: 0,
-			unit: "percent",
-			access: 2,
-			subTopic: "/WEI-iEdge/realdata/7a1dd258f32940d95a542c68",
-			pubTopic: "/WEI-iEdge/write/req/7a1dd258f32940d95a542c68"
-		}
-	];
-}
-```
-
-## parseReportRequest
-
-This method parses one MQTT device report message and returns all point values contained in that message at once. The script is called only once for the same message and is not executed repeatedly per subscribed point.
-
-| Parameter | Type | Description |
-| --- | --- | --- |
-| topic | String | The MQTT topic on which the message was received |
-| jsonStr | String | The raw MQTT payload string |
-
-The return value must be an object containing a `points` array. Each item in the array contains `pointId` and `value`. Only the returned points are updated.
-
-#### Example
-
-```javascript
-function parseReportRequest(topic, jsonStr) {
-	try {
-		const obj = JSON.parse(jsonStr);
-		const values = obj.values || {};
-		return {
-			points: Object.keys(values).map(function (pointId) {
-				return {
-					pointId: pointId,
-					value: String(values[pointId])
-				};
-			})
-		};
-	} catch (e) {
-		return { points: [] };
-	}
-}
-```
-
-## buildWriteRequest
-
-This method constructs the control command string to send to the device based on the target point ID and the value to set.
-
-When Aqara Studio needs to send a control command to the device, such as switching a device on or off or setting a temperature, it calls this function and passes in the device ID, target point ID, and target value. The function must return a string that matches the command format required by the device protocol, usually including fields such as the device identifier, timestamp, and specific value payload.
-
-Construct the object structure inside the function according to the actual message format accepted by the device. For example, for an MQTT device, the payload may include fields such as `node`, `group`, and `timestamp`, and the value corresponding to `pointId` should be written into the `values` field.
-
-#### Example
-
-```javascript
-// Example: control an MQTT device via a JSON string
-// The value parameter is automatically passed in by Aqara Studio and does not need to be declared or assigned manually
-function buildWriteRequest(deviceId, pointId, value) {
-	try {
-		const obj = {
-			"node": "Chiller",
-			"group": "1#Chiller",
-			"timestamp": 1768204054654,
-			"values": {
-				
-			},
-			"errors": {
-				
-			},
-			"metas": {
-				
-			}
-		};
-		obj.values[pointId] = parseFloat(value);
-		return JSON.stringify(obj);
-	} catch (e) {
-		return null;
-	}
-}
-```
-
-## Complete Example
-
-Below is a complete example of adding points for an MQTT device:
-
-The `globalThis` registrations in the example are dynamic: register only the functions you actually implement. Functions that are not implemented do not need to be registered.
-
-:::note
-The example below only demonstrates a common MQTT integration flow: subscribe to one topic filter that receives multiple upstream message types, parse status, event, and command-response messages by type, and correlate write requests with responses by request ID. Replace the topics, field names, and enum values according to the actual device protocol.
-:::
-
-```javascript
-(function() {
-	// Store only JSON-serializable temporary state. It is cleared when the Context is rebuilt.
-	var scriptState = globalThis.studioScriptState;
-	scriptState.reportCount = 0;
-	scriptState.lastReportAt = null;
-
-	var DEVICE_ID = "device-001";
-	var SUB_TOPIC = "/example/" + DEVICE_ID + "/+/json";
-	var PUB_TOPIC = "/example/" + DEVICE_ID + "/cmd/json";
-	var nextRequestIdValue = 1;
-	var pendingWrites = {};
-
-	function parseDiscoveryResponse() {
-		return [
-			{
-				deviceName: "Example MQTT Device",
-				deviceId: DEVICE_ID,
-				brokerEndpoint: "127.0.0.1",
-				brokerPort: 1883,
-				connectionType: 3,
-				username: "username",
-				password: "password"
-			}
-		];
-	}
-
-	function parseDiscoverPointsResponse(deviceId) {
-		return [
-			{
-				pointId: "switch.on",
-				pointName: "Switch",
-				dataType: "bool",
-				access: 3,
-				subTopic: SUB_TOPIC,
-				pubTopic: PUB_TOPIC
-			}
-		];
-	}
-
-	function parseReportRequest(topic, jsonStr) {
-		scriptState.reportCount += 1;
-		scriptState.lastReportAt = new Date().toISOString();
-		try {
-			var obj = JSON.parse(jsonStr);
-			var value = parseStatusReport(obj)
-				|| parseEventReport(obj)
-				|| parseCommandResponse(obj);
-			return {
-				points: value === null
-					? []
-					: [{ pointId: "switch.on", value: value }]
-			};
-		} catch (e) {
-			return { points: [] };
-		}
-	}
-
-	function parseStatusReport(obj) {
-		if (obj.type !== "status") {
-			return null;
-		}
-		return toBoolString(obj.values && obj.values["switch.on"]);
-	}
-
-	function parseEventReport(obj) {
-		if (obj.type !== "event" || obj.pointId !== "switch.on") {
-			return null;
-		}
-		return toBoolString(obj.value);
-	}
-
-	function parseCommandResponse(obj) {
-		if (obj.type !== "response" || obj.requestId === undefined) {
-			return null;
-		}
-
-		var key = String(obj.requestId);
-		var pending = pendingWrites[key];
-		delete pendingWrites[key];
-
-		if (!pending || obj.success !== true) {
-			return null;
-		}
-		return pending.value;
-	}
-
-	function buildWriteRequest(deviceId, pointId, value) {
-		try {
-			if (pointId !== "switch.on") {
-				return null;
-			}
-
-			var writeValue = toBoolString(value);
-			if (writeValue === null) {
-				return null;
-			}
-
-			var requestId = nextRequestId();
-			pendingWrites[String(requestId)] = {
-				pointId: pointId,
-				value: writeValue
-			};
-
-			var values = {};
-			values[pointId] = writeValue === "1";
-
-			return JSON.stringify({
-				type: "command",
-				requestId: requestId,
-				values: values
-			});
-		} catch (e) {
-			return null;
-		}
-	}
-
-	function toBoolString(value) {
-		if (value === true || value === 1) {
-			return "1";
-		}
-		if (value === false || value === 0) {
-			return "0";
-		}
-
-		var text = String(value).toLowerCase();
-		if (text === "true" || text === "on" || text === "1") {
-			return "1";
-		}
-		if (text === "false" || text === "off" || text === "0") {
-			return "0";
-		}
-		return null;
-	}
-
-	function nextRequestId() {
-		nextRequestIdValue += 1;
-		return nextRequestIdValue;
-	}
-
-	globalThis.parseDiscoveryResponse = parseDiscoveryResponse;
-	globalThis.parseDiscoverPointsResponse = parseDiscoverPointsResponse;
-	globalThis.buildWriteRequest = buildWriteRequest;
-	globalThis.parseReportRequest = parseReportRequest;
-	return null;
+```javascript title="Complete MQTT demonstration"
+(function () {
+    "use strict";
+    function describe() {
+        return {contractVersion: 1, scriptVersion: "V1.0",
+                protocol: {stateSyncMode: "mixed"}};
+    }
+    function encode(r) {
+        if (r.deviceId !== "demo-1" || r.pointId !== "volume") return null;
+        if (r.operation === "read") {
+            return {body: "{\"get\":\"volume\"}", topic: "vendor/demo-1/get", retained: false};
+        }
+        if (r.operation !== "write") return null;
+        if (typeof r.value !== "number" || !isFinite(r.value) ||
+                Math.floor(r.value) !== r.value || r.value < 0 || r.value > 100) {
+            throw new Error("Invalid volume");
+        }
+        return {body: JSON.stringify({volume: r.value}), qos: 1, retained: false};
+    }
+    function decode(m) {
+        if (m.operation === "discoverDevices") {
+            return {devices: [{deviceId: "demo-1", deviceName: "MQTT demo",
+                    brokerEndpoint: "192.0.2.20", brokerPort: 1883, connectionType: 0,
+                    clientId: "studio-demo-client"}]};
+        }
+        if (m.operation === "discoverPoints") {
+            return {pointDefinitions: m.deviceId === "demo-1" ? [
+                {pointId: "volume", pointName: "Volume", dataType: "number", access: 7,
+                 min: 0, max: 100, step: 1, decimals: 0,
+                 subTopic: "vendor/demo-1/state", pubTopic: "vendor/demo-1/set"}
+            ] : []};
+        }
+        if (m.operation !== "report" || m.topic !== "vendor/demo-1/state" ||
+                typeof m.body !== "string") return {operation: "ignore"};
+        var j;
+        try { j = JSON.parse(m.body); } catch (_) { return {operation: "ignore"}; }
+        if (!j || j.deviceId !== "demo-1" || typeof j.volume !== "number" ||
+                !isFinite(j.volume) || Math.floor(j.volume) !== j.volume ||
+                j.volume < 0 || j.volume > 100) return {operation: "ignore"};
+        return {deviceId: j.deviceId, points: [{pointId: "volume", value: j.volume}]};
+    }
+    globalThis.describe = describe;
+    globalThis.encode = encode;
+    globalThis.decode = decode;
 })();
 ```
 
-## Troubleshooting Script Issues
+For binary vendor protocols, parse m.bytes; do not turn body=null into empty text and report success.
 
-After you finish developing the script, if Aqara Studio still cannot discover devices or points, check the following:
-1. Use [Console Logging](#console-logging) to verify whether each method in the script is being called as expected.
-2. Review [Script Checklist](#script-checklist) and check each item against Aqara Studio's validation requirements.
-3. If the issue still cannot be resolved, it may be caused by Aqara Studio's [Runtime Resource Limits](#runtime-resource-limits).
+## Agent checks {#debugging}
 
-### Console Logging
+The debug adapter is for unified-script MqttDevice, not legacy MqttConnDevice. Inspect command, mqttBinaryPayload, mqttPublishOptions and read/write/report capabilities.
 
-1. To debug and troubleshoot methods such as `parseDiscoveryResponse` and `parseDiscoverPointsResponse`, you can add any of the following console logging methods anywhere inside a function:
+connectionSnapshot CONNECTED means a Broker connection. subscriptionRegistered is local registration, and subscriptionReady is currently null, not Broker SUBACK or proof of device health. readOnce must publish and observe a real target report. writeAndWait(stateUpdate) needs a working feedback route; correlation is observationOnly, not strict causality.
 
-   - `console.log`
-   - `console.info`
-   - `console.debug`
-   - `console.warn`
-   - `console.error`
+Normal MqttDevice probing also checks the Broker connection rather than invoking encode(probe); an Online label does not prove that the third-party device processed a query or control.
 
-   :::tip
-   Do not print logs unconditionally inside loops or high-frequency message handlers. Use conditional switches or sampled logging during debugging.
-   :::
-
-   Example:
-
-   ```javascript {2}
-   function parseDiscoveryResponse() {
-       console.info("Start parsing discovery response", arguments);
-       return [
-           {
-               deviceName: "xxx",
-               // ...
-           }
-       ];
-   }
-   ```
-
-   :::tip
-   - When multiple arguments are passed, the log output joins them with spaces.
-   - Output from `console.warn` and `console.error` includes the `[warn]` and `[error]` prefixes respectively.
-   :::
-
-2. Trigger the related action again in Aqara Studio, such as device discovery, point discovery, point read, point write, or reporting, to execute the method that contains logs.
-3. Open the **MQTT Protocol Configuration** page and check whether the `Console Content` field contains log output:
-
-   - If logs appear correctly, the method has been integrated successfully.
-   - If no logs appear, check whether the method implementation is incorrect.
-
-   :::tip
-   - `Console Content` keeps at most 2048 characters. When the limit is exceeded, older content is replaced.
-   - Each script parser accepts at most 20 log entries per second. Excess logs are ignored and summarized in the next time window.
-   - Each log entry keeps at most 512 characters and converts only the first 16 arguments.
-   :::
-
-### Script Checklist
-
-It is recommended that you review the script item by item according to the validation flow of each Aqara Studio business node so that all key checks pass and the script remains reliable and compatible.
-
-| Business node | Called function | Main validation |
-| --- | --- | --- |
-| Script loading | Complete script | The script must not exceed 1,048,576 characters and must be executable by the JavaScript engine. Whether each business function exists and is callable is checked again when it is actually invoked. |
-| Device discovery | `parseDiscoveryResponse()` | The return value must be an array. At most 128 devices are processed in a single call. Invalid device entries are ignored, and `deviceId` must be valid. |
-| Point discovery | `parseDiscoverPointsResponse(deviceId)` | The return value must be an array. At most 512 points are processed in a single call. Each item is validated for `pointId`, data type, access capability, and enum or numeric configuration. |
-| Device report | `parseReportRequest(topic, msg)` | The UTF-8 message must not exceed 256 KiB. The function is called once per message. The return value must contain a `points` array. At most 512 items are processed in a single call, and each item's `pointId` and `value` are validated. |
-| Point write | `buildWriteRequest(deviceId, pointId, value)` | The function must return a non-empty string. The generated content is sent through the publish topic configured for the point. |
-
-### Runtime Resource Limits
-
-- A single MQTT message passed to `parseReportRequest` must not exceed 256 KiB when encoded as UTF-8. Oversized messages are not passed to JavaScript.
-- A single device discovery call processes at most 128 devices, and a single point discovery call processes at most 512 points. Additional entries are ignored.
-- `parseReportRequest` returns at most 512 point values in a single call. Additional entries are ignored.
-- A script Context may be reclaimed after a long idle period or when the system is under memory pressure, and it is rebuilt on the next call. Do not rely on global variables to permanently store device state. Durable state should be stored on the device or in Studio points.
-- A script call may be rejected when the execution queue is full or system memory pressure is high. Active device reports should support reasonable retries or later full-state resubmission.
+For validation, configuration and communication checks, see the [integration guide](./ai-agent-device-onboarding.mdx#api-workflow). Debug sessions do not require a device-detail page subscription.

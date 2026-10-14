@@ -15,7 +15,8 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "gen-asyncapi-playground-specs": "node scripts/generate-asyncapi-playground-specs.mjs",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "check-protocol-docs": "node scripts/check-protocol-script-docs.mjs"
   },
   "dependencies": {
     "@docusaurus/core": "3.9.2",

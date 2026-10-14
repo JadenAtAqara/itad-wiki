@@ -31,6 +31,7 @@ const PRODUCT_CONFIG = [
       'aqara-studio/overview/core-concepts',
       'aqara-studio/developer-guide',
       'aqara-studio/set-up-mcp-server',
+      'aqara-studio/ai-agent-device-onboarding',
     ],
   },
   {

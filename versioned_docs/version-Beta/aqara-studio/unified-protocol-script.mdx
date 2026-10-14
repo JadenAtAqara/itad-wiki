@@ -1,0 +1,228 @@
+---
+title: "Unified Protocol Script Contract v1"
+description: "The shared describe, encode and decode contract for TCP, UDP, HTTP and MQTT, including parameters, points, dynamic enums, Commands and migration."
+keywords: ["Aqara Studio", "script", "contractVersion", "describe", "encode", "decode", "AI Agent"]
+displayed_sidebar: aqaraStudioSidebar
+---
+
+# Unified Protocol Script Contract v1
+
+TCP, UDP, HTTP and MQTT share one JavaScript business contract. Scripts build messages, parse responses and convert values. Studio owns connections, transport, discovery jobs, polling, permissions and point application.
+
+`contractVersion: 1` identifies the script contract, not the Studio product version. For the configuration workflow, see the [integration guide](./ai-agent-device-onboarding.mdx); for transport-specific fields, see [TCP/UDP](./javascript-for-udp-tcp-integration.mdx), [HTTP](./javascript-for-http-integration.mdx) or [MQTT](./javascript-for-mqtt-integration.mdx).
+
+## Three global entry points {#entry-points}
+
+| Entry | Input | Result |
+| --- | --- | --- |
+| `describe()` | None | Descriptor with integer `contractVersion: 1` |
+| `encode(request)` | Unified operation context | Transport message object, or `null` to send nothing |
+| `decode(message)` | Incoming message and available context | Business result object; `{ operation: "ignore" }` to discard a message |
+
+Expose all three **synchronous** functions globally. Promises, bare byte arrays, top-level device/point arrays and scalar read results are not accepted. Do not assume Node.js `require`/`Buffer`, browser `fetch`/`window` or arbitrary Java access. Do not create sockets, timers or reconnect loops.
+
+```javascript title="Entry skeleton (no device communication)"
+(function () {
+    "use strict";
+    function describe() {
+        return { contractVersion: 1, scriptVersion: "V1.0" };
+    }
+    function encode(request) {
+        return null;
+    }
+    function decode(message) {
+        if (message.operation === "discoverDevices") return { devices: [] };
+        if (message.operation === "discoverPoints") return { pointDefinitions: [] };
+        return { operation: "ignore" };
+    }
+    globalThis.describe = describe;
+    globalThis.encode = encode;
+    globalThis.decode = decode;
+})();
+```
+
+`scriptVersion` is an author-controlled label. Read `scriptCheckResult` for loading errors; `success` proves loading and contract validation, not device connectivity.
+
+## Descriptor {#describe}
+
+| Field | Rule |
+| --- | --- |
+| `contractVersion` | Required integer `1` |
+| `scriptVersion` | Optional script label, for example `"V1.0"` |
+| `protocol.msgIdMatch` | Optional Boolean, default `false`; TCP/UDP request correlation |
+| `protocol.stateSyncMode` | `"push"`, `"query"` or `"mixed"`; default `"mixed"` |
+| `discovery` | TCP/UDP target; see [discovery](./javascript-for-udp-tcp-integration.mdx#discovery) |
+| `framing` | TCP/UDP configuration; see [framing limits](./javascript-for-udp-tcp-integration.mdx#framing) |
+| `configSchema` | Ordinary Network/Device parameters, described below |
+
+Keep `describe()` fast, deterministic and free of side effects. It may be read repeatedly. Protocol settings are parsed and cached at loading, not a place to advance session state.
+
+### Correlation and state feedback
+
+Enable `msgIdMatch` only if the device protocol has a stable identifier and the script can encode Studio's `requestId` and recover it from responses. Otherwise the request ID is an empty string. With matching enabled, missing, incorrect or expired IDs cannot complete a pending transaction. Historical Network `msgIdMatch` values are no longer authoritative.
+
+`stateSyncMode` describes feedback, not point access or `isResponseExpected`:
+
+- `push`: every write reliably produces a `report`; ordinary writes do not add automatic readback/query publishing.
+- `query` / `mixed`: successful ordinary writes trigger one immediate readback on readable, subscribed points. MQTT publishes a query and applies a later report instead of creating a synchronous response transaction. Existing periodic polling remains. Debug-session state confirmation has its own execution path.
+- Commands are not polled or automatically read back. Observe a readable property to verify a side effect.
+- MQTT reads publish queries and wait for asynchronous `report`; no new business-ACK transaction is created.
+
+Device state may lag behind an ACK. One stale read is not proof of failure. Within a predetermined time/count budget, read again; do not repeat the control to wait for state.
+
+## Unified inputs {#inputs}
+
+Every input contains `transport`: `tcp`, `udp`, `http` or `mqtt`. A TCP plugin performing UDP discovery still passes `tcp`.
+
+| Field | Meaning |
+| --- | --- |
+| `operation` | `discoverDevices`, `discoverPoints`, `probe`, `read`, `write`, `report`, `ack`; unknown on ordinary TCP/UDP receive |
+| `deviceId` / `pointId` | Vendor business identifiers, not Open Resource IDs |
+| `requestId` | Framework request identifier; not guessed before TCP/UDP decoding |
+| `value` | Primitive write value: Boolean, number, text, or integer enum ordinal |
+| `config` | Isolated parameter snapshot for this call |
+| `ip` / `port` | Destination supplied to encode(discoverDevices), not discovery-response sender metadata |
+| `bytes` / `body` / `topic` / `path` | Transport-specific fields, not always present |
+| `statusCode` / `headers` | Real HTTP client responses only |
+| `code` / `errorMsg` | TCP/UDP encode(ack): framework point-application result, not the raw vendor status |
+
+Unavailable fields can be absent or `null`. Command `value` is a normalized **JSON string** keyed by numeric fieldId, including `"{}"` for a parameterless Command. Parse it when needed. Explicitly convert vendor 0/1, HEX, endianness and scale factors.
+
+For TCP/UDP report ACKs, requestId/deviceId and any available pointId accompany code/errorMsg; report points are not copied into encode(ack). Keep any vendor-specific ACK fields in bounded per-device state if required, then construct the ACK bytes according to the vendor protocol.
+
+## Decode results {#results}
+
+| Operation | Business fields | Meaning |
+| --- | --- | --- |
+| `discoverDevices` | `devices: [{deviceId, deviceName?, ...}]` | Candidates, not automatic imports |
+| `discoverPoints` | `pointDefinitions: [...]` | Definitions, not live values |
+| `read` / `report` | `points: [{pointId, value}]`, optional `enumRangeUpdates` | Validated values applied through the transport Proxy |
+| `write` / `probe` | Integer `code`, optional `errorMsg`, `pointId` | `0` succeeds; nonzero fails; missing code is not success |
+| `ignore` | None | Drops all other fields, without application or transaction completion |
+
+Results may include `operation`, `deviceId` and `requestId`. When the input already has an operation, output may omit it and Studio fills it in. An explicitly different operation is rejected. Ordinary TCP/UDP receive must classify and return `operation`; an ID alone is insufficient.
+
+Point values must be strings, Booleans or finite numbers. Empty strings are valid; `null`, objects, arrays, `NaN` and `Infinity` are not. Point IDs must not repeat within a result. Never conceal missing data with `0`, `false` or an empty string.
+
+A `read` must contain the requested point; otherwise its other values are not applied either. A nonzero read `code` means device rejection. Extra `points` on `write` / `probe` are not applied. Reports cannot complete unrelated transactions by reusing a request ID.
+
+## Point definitions {#point-definitions}
+
+Every definition, **including Spec points**, requires integer `access`: read=`1`, write=`2`, report=`4`; combine as `3`, `5`, `6` or `7`.
+
+| Field | Meaning |
+| --- | --- |
+| `pointId` | Nonblank, stable and unique within the device |
+| `pointName` | Optional; defaults to pointId |
+| `dataType` | Prefer `bool`, `number`, `text`, `enum` for generic points; existing normalization also accepts aliases such as `numerical` |
+| `devType` / `functionCode` / `traitCode` | A valid combination from the deployed Spec catalog |
+| `commandCode` | Spec Command; mutually exclusive with traitCode; Commands use `access: 2` |
+| `customSchema` | Object containing device-specific Command constraints, not a `customSchemeJson` string |
+| `enumRange` | Nonempty static array of `{value: integer, label: nonblank string}` |
+| `dynamicEnumRange` | Boolean flag, described below |
+| `min` / `max` | Numeric bounds; aliases `minimum` / `maximum` are accepted |
+| `step` | Positive UI increment |
+| `resolution` | Positive device resolution, not an alias for step |
+| `decimals` | Nonnegative integer display/write-format decimal-place setting; `precision` is no longer parsed |
+| `unit` | Device data unit; aliases `units` / `unitName`; see [unit table](./script-supported-unit-symbols.mdx) |
+| `trueText` / `falseText` | Generic Boolean labels, default On / Off |
+
+```json title="Shared point definition example"
+{
+  "pointDefinitions": [
+    {"pointId":"power","pointName":"Power","dataType":"bool","access":7},
+    {"pointId":"temperature","dataType":"number","access":5,"min":-20,"max":80,"step":0.1,"resolution":0.1,"decimals":1,"unit":"celsius"},
+    {"pointId":"mode","dataType":"enum","access":3,"enumRange":[{"value":0,"label":"Auto"},{"value":1,"label":"Manual"}]}
+  ]
+}
+```
+
+Query actual Spec Codes rather than inventing them from names. A write-only primitive is not automatically a nonexistent generic Command. Queryable values are usually attributes; one-shot actions such as Play/Pause can use existing Spec Commands. Device-specific schema must not change the global Spec used by other devices.
+
+Units describe device data, while system settings can convert displayed units. Apply scaling only once and verify value, unit and timestamp together. Parameter string enums are different from numeric point enums.
+
+### Device-specific Command schema
+
+customSchema is a command descriptor wrapper, not a bare JSON Schema on the point. Its inputSchema uses **numeric fieldId strings** as keys and retains Spec metadata for forms/validation. Obtain commandId and fields from the deployed catalog, not another model.
+
+For example, the current MediaPlaybackCommand catalog ID is 40001. This example device accepts Music and full Command text, without Title. The override belongs only to this point:
+
+```json title="Device-specific Command constraints"
+{
+  "pointId":"onDemandPlay","pointName":"Voice request","devType":"Speaker","functionCode":"MediaPlayback","commandCode":"MediaPlaybackCommand","access":2,
+  "customSchema":{
+    "commandId":40001,"commandCode":"MediaPlaybackCommand","title":"Media request",
+    "inputSchema":{"type":"object","additionalProperties":false,
+      "properties":{
+        "0":{"type":"integer","title":"Media type","default":0,"oneOf":[{"const":0,"title":"Music","x-value":"0"}],"x-enums":[{"value":"0","key":"Music"}],"x-fieldCode":"MediaType","x-fieldId":0,"x-format":6,"x-paramType":1},
+        "1":{"type":"string","title":"Command content","minLength":1,"x-fieldCode":"Command","x-fieldId":1,"x-format":11,"x-paramType":3}
+      },"required":["0","1"]},
+    "returnSchema":{"type":"object"},"valueExample":"{\"0\":0,\"1\":\"\"}"
+  }
+}
+```
+
+Debug args could be `{"0":0,"1":"Play music by Jay Chou"}`; encode(write) receives the object's JSON string. The vendor parses the full text, not Studio splitting artist/title. For other runtime device-schema needs inspect actual supported points/mapping entries; the Kotlin property customDynamicSchema is not automatically an available JS field.
+
+## Dynamic enums {#dynamic-enums}
+
+Discover `{pointId:"scene", dataType:"enum", access:7, dynamicEnumRange:true}`. Do not also declare static `enumRange` or `traitCode`. Do not invent runtime metadata keys.
+
+Return vendor-provided options in a valid `read` / `report`:
+
+```json title="Options and current state"
+{
+  "operation":"report",
+  "deviceId":"demo-1",
+  "points":[{"pointId":"scene","value":1}],
+  "enumRangeUpdates":[{"pointId":"scene","enumRange":[{"value":0,"label":"Movie"},{"value":1,"label":"Music"}]}]
+}
+```
+
+Only emit updates when the message actually contains option configuration. Do not query or regenerate the full configuration for every property read. Changing an internal JS array does not publish UI choices. Ranges are transient metadata, not point-structure/binlog updates, and must be reacquired after restart/lifecycle cleanup. Empty choices before a configuration response are possible; do not invent options. Updates must match imported dynamic-enum points. A runtime empty array explicitly clears a range.
+
+## Ordinary site parameters {#parameters}
+
+```json title="Optional describe().configSchema"
+{
+  "network":{"type":"object","properties":{"siteCode":{"type":"string","title":"Site code","maxLength":32}},"required":["siteCode"]},
+  "device":{"type":"object","properties":{"channel":{"type":"integer","minimum":1,"maximum":255,"default":1},"mode":{"type":"string","enum":["normal","extended"],"default":"normal"}}}
+}
+```
+
+Network/Device values live in `scriptParameters`. Device values override same-name Network values for device calls, with required fields validated per scope. Each call receives an isolated `config`; mutation does not write back. Optional unset fields without defaults are omitted. Preserve explicit `0` and `false`.
+
+Supported schema is flat `string / integer / number / boolean`, string `enum`, `title`, `description`, `default`, `required`, numeric bounds and string lengths. Each scope has at most 64 fields; strings at most 4096 characters; integers are 32-bit. Nested objects, arrays, `$ref`, patterns and arbitrary JSON Schema are unsupported. Names start with a letter, contain only letters/digits/underscores and are at most 64 characters. Reserved names and names containing password/secret/token/credential are rejected.
+
+These are not secret storage or transport configuration. TCP/UDP addresses, HTTP servers, MQTT Brokers/subscriptions and authentication use existing protocol fields. Missing required values may be saved, but execution fails. Schema updates retain compatible same-name values and reject incompatible constraints/types; removed fields are not injected or exposed by Open.
+
+Device discovery has only Network parameters. HTTP/MQTT reports also have only Network parameters before device identity is decoded; do not depend on private Device parameters to recognize a report.
+
+## State, limits and polling {#runtime}
+
+Devices in one Network reuse a JS Context. `globalThis.studioScriptState` starts as a plain object and may hold bounded JSON state. Isolate partial frames, request associations and snapshots by deviceId. Do not store functions, BigInt, circular data, host resources or credentials. Reclamation, updates or timeouts can rebuild the Context; it is not a durable database.
+
+The default state-size warning threshold is 2 MiB, configurable through `maxPersistentStateBytes`; `0` disables warnings. Overflow does not automatically delete state. `heapRejectPercent` defaults to `0`, disabling heap-pressure rejection; scripts must still bound allocations.
+
+Default `scriptExecutionTimeout` is 5 seconds. Default `maxMessageBytes` is 64 KiB for TCP/UDP and 256 KiB for HTTP/MQTT. Default per-call limits are 128 discovered devices, 512 discovered points and 512 live values; consult Parser configuration. Do not treat a rejected/partial over-limit result as a complete success.
+
+Proxy `pollFrequency` and the existing Network Poll Scheduler own polling. Do not add script timers. For vendor bulk queries, keep bounded per-device snapshots or return multiple values and use reports where supported. Cached values alone do not prove a `readOnce` acquired a fresh response.
+
+## Storage, editing and migration {#migration}
+
+The frontend can still edit full source. Saving validates and writes a managed `.js` file; the Network persists only the AOrd `scriptMessageParser/extensionScriptPath`. Open `scriptContent` is an input to `validateScript` / `uploadScript`, not a writable Network property.
+
+An address looks like `file:%/protocol-scripts/tcp_TcpNetwork/vendor-v1.js`; namespace follows Network type. Use the returned upload address, not a guessed disk path. Same-type Networks can share a file; replacement reloads all references and invalidates old debug sessions. Prefer unique new names. No file-version CAS is provided; inspect `referenceCount` before authorizing replacement.
+
+Upgrade migration preserves Network/Device/Point identity and bindings, converting old source/path storage to managed references. Failure retains old fields for repair/retry. **Storage migration does not translate JavaScript**: rewrite legacy entry points; the new runtime has no automatic legacy fallback.
+
+| Legacy entry/result | New contract |
+| --- | --- |
+| `protocolConfig()` / `discoveryConfig()` / `packetProcessConfig()` | `describe().protocol` / `.discovery` / `.framing` |
+| `build*Request` / `buildReportResponse` | `encode` branches by request.operation; report replies use `ack` |
+| `dispatch` + separate `parse*Response` | One `decode` returning classified business results |
+| Top-level lists/scalar reads | `{devices}`, `{pointDefinitions}`, `{points}` |
+| HTTP string headers / postParams | Object headers / string body |
+| MQTT bare text / implicit HEX guessing | `{body}` or `{bytes}` |
+
+Changed point semantics, such as converting a numeric point to a dynamic enum or splitting attributes/Commands, may require rediscovery/recreation. Check automations and references first. Replacing JS does not automatically rebuild every old point.
