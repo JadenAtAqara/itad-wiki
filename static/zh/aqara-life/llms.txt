@@ -1,12 +1,14 @@
 # Aqara Life
 > Aqara Life 文档的精简入口索引。
 
+链接以当前索引所在站点为基准；页面的“复制 llms.txt”会补齐当前站点地址。
+
 ## 推荐优先阅读
-- 概览: https://docs.aqara.com/zh/docs/aqara-life/overview
+- 概览: /zh/docs/aqara-life/overview
 
 ## 侧边栏收录的全部文档
-- 概览: https://docs.aqara.com/zh/docs/aqara-life/overview
-- 功能介绍: https://docs.aqara.com/zh/docs/aqara-life/feature-overview
-- 插件化架构的未来: https://docs.aqara.com/zh/docs/aqara-life/future-of-the-plugin-based-architecture
-- Life Agent: https://docs.aqara.com/zh/docs/aqara-life/life-agent/overview
+- 概览: /zh/docs/aqara-life/overview
+- 功能介绍: /zh/docs/aqara-life/feature-overview
+- 插件化架构的未来: /zh/docs/aqara-life/future-of-the-plugin-based-architecture
+- Life Agent: /zh/docs/aqara-life/life-agent/overview
 

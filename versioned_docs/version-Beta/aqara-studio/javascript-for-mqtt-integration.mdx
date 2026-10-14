@@ -1,119 +1,14 @@
 ---
 title: "JavaScript for MQTT Integration"
-description: "Unified MQTT static discovery, topics, binary payloads, per-message publishing options, queries and Commands."
-keywords: ["Aqara Studio", "MQTT", "script", "binary", "Topic", "Command"]
+description: "This reference is consolidated into the protocol script specification; old links remain supported."
+unlisted: true
+displayed_sidebar: aqaraStudioSidebar
 ---
+
+import ProtocolScriptRedirect from '@site/src/components/ProtocolScriptRedirect';
 
 # JavaScript for MQTT Integration
 
-MQTT uses `describe`, `encode` and `decode` from the [unified v1 contract](./unified-protocol-script.mdx). The MQTT module manages Broker connections, subscriptions, publishing and authentication.
-
-## Device and point discovery {#discovery}
-
-Discovery is static decode with operation discoverDevices/discoverPoints and body=null, not a remote discovery publish. Return `{devices:[...]}` / `{pointDefinitions:[...]}` and perform separate discovery, selection and import.
-
-Device fields include deviceId, deviceName, brokerEndpoint, brokerPort, connectionType, username, password and clientId. deviceId/brokerEndpoint must be valid. Omitted brokerPort defaults to 1883, connectionType to 3. Types: 0 anonymous, 1 anonymous SSL, 2 username/password SSL, 3 username/password without SSL. Use real plugin authentication configuration; never place real passwords in public scripts, fixtures or logs.
-
-The plugin also defines **connectionType=4 (X.509 over SSL)**. Script discovery does not import certificate/key paths; this mode additionally needs root CA, client certificate and private-key configuration in the existing authenticator. A discovered type number alone is not a usable X.509 configuration. Read the deployed configuration schema and use authorized credential provisioning; do not invent certificate fields inside devices or configSchema.
-
-The current Open MQTT template exposes Broker, clientID, connectionType and username/password fields, but not certificate/key paths. Existing X.509 configuration can be reused; the Resource workflow documented here cannot provision its certificates from scratch.
-
-| Point extension | Purpose |
-| --- | --- |
-| `subTopic` | Incoming state/query responses; subscriptions may use vendor-appropriate +/# |
-| `pubTopic` | Default publishing destination; writes and queries need a valid publishing route |
-| `receiveBinding` | Optional cross-point targetPoint Ord, with optional sourcePropertyName/targetPropertyName |
-| `publishBinding` | Optional cross-point sourcePoint Ord, with optional sourcePropertyName/targetPropertyName; writable points only |
-
-Omit bindings when unnecessary. All definitions require [common access](./unified-protocol-script.mdx#point-definitions), including Spec points; do not retain the old rule that only generic points need access.
-
-## Payloads and ownership {#messages}
-
-Read/write encode requires **exactly one of body or bytes**:
-
-```json title="Binary publish with per-message options"
-{"bytes":[0,128,255],"topic":"vendor/demo-1/set","qos":1,"retained":false}
-```
-
-body is UTF-8 text; bytes is an exact Uint8Array/integer array. Optional topic/qos/retained override this message only, otherwise point defaults apply. Topic remains on the current device Broker, nonempty valid UTF-8, without NUL/+/#, at most 1024 UTF-8 bytes. QoS is integer 0..2; retained is Boolean. Overrides do not persist bindings, subscribe or create connections.
-
-Incoming decode receives `{transport:"mqtt",operation:"report",topic,bytes,body,config}`. bytes preserves exact payload; body exists only for valid UTF-8, otherwise null. Each Parser group decodes a message once, not once per subscribed point.
-
-Top-level deviceId identifies ownership. It may be omitted in a single-device subscription group; multiple devices sharing topics must identify the device or application is rejected. Never apply same-name points to every device. Reports have only Network parameters before identity is known.
-
-Within a subscription group, an ID must identify exactly one device instance. If distinct devices have the same business ID, routing rejects the report rather than applying it to both. Multiple points owned by the same device remain valid.
-
-For unified MqttDevice, point discovery, ordinary read/write encode, report ownership and Open debugging all use the **business deviceId**, not the Broker connection's clientId. The clientId remains a separate MQTT connection identifier. This behavior requires the corresponding business-ID routing fix; older packages may still pass/match clientId in ordinary paths. Verify the deployed package, and do not change an existing connection's clientId merely to make it look like a business ID.
-
-## Queries and Commands {#commands}
-
-encode(read) publishes a query and later reports update state. Establish subscriptions first. The publish route, query payload, response subscription and pointId must all exist. Do not fabricate queries for report-only devices to make readOnce appear supported.
-
-The script Proxy currently uses the fixed normal refresh tier, whose interval belongs to the Network Poll Scheduler; changing another device-frequency field does not necessarily change per-point query frequency. After ordinary writes on readable, subscribed points, query/mixed triggers one query publish; push does not add that query.
-
-Spec Commands use commandCode/customSchema, access=2 and write publishing. Commands default to retained=false to avoid replaying one-shot actions on reconnect; review any explicit override against vendor semantics. Command value is a fieldId JSON string, not an ordinary number.
-
-**SDK publish completion and PUBACK/PUBCOMP are not device business ACKs.** MQTT probeOnce/protocolAck are unsupported; no generic publish-and-wait business transaction was added. Confirm send or observe a real same-device report for effects.
-
-## Demonstration script {#example}
-
-This **fictional protocol** uses demo-1, example Broker `192.0.2.20` (replace before deployment), state messages `{"deviceId":"demo-1","volume":20}`, set accepting volume, and get accepting `{get:"volume"}`. Volume is integer 0..100. Anonymous demo authentication is not suitable for vendors requiring credentials.
-
-```javascript title="Complete MQTT demonstration"
-(function () {
-    "use strict";
-    function describe() {
-        return {contractVersion: 1, scriptVersion: "V1.0",
-                protocol: {stateSyncMode: "mixed"}};
-    }
-    function encode(r) {
-        if (r.deviceId !== "demo-1" || r.pointId !== "volume") return null;
-        if (r.operation === "read") {
-            return {body: "{\"get\":\"volume\"}", topic: "vendor/demo-1/get", retained: false};
-        }
-        if (r.operation !== "write") return null;
-        if (typeof r.value !== "number" || !isFinite(r.value) ||
-                Math.floor(r.value) !== r.value || r.value < 0 || r.value > 100) {
-            throw new Error("Invalid volume");
-        }
-        return {body: JSON.stringify({volume: r.value}), qos: 1, retained: false};
-    }
-    function decode(m) {
-        if (m.operation === "discoverDevices") {
-            return {devices: [{deviceId: "demo-1", deviceName: "MQTT demo",
-                    brokerEndpoint: "192.0.2.20", brokerPort: 1883, connectionType: 0,
-                    clientId: "studio-demo-client"}]};
-        }
-        if (m.operation === "discoverPoints") {
-            return {pointDefinitions: m.deviceId === "demo-1" ? [
-                {pointId: "volume", pointName: "Volume", dataType: "number", access: 7,
-                 min: 0, max: 100, step: 1, decimals: 0,
-                 subTopic: "vendor/demo-1/state", pubTopic: "vendor/demo-1/set"}
-            ] : []};
-        }
-        if (m.operation !== "report" || m.topic !== "vendor/demo-1/state" ||
-                typeof m.body !== "string") return {operation: "ignore"};
-        var j;
-        try { j = JSON.parse(m.body); } catch (_) { return {operation: "ignore"}; }
-        if (!j || j.deviceId !== "demo-1" || typeof j.volume !== "number" ||
-                !isFinite(j.volume) || Math.floor(j.volume) !== j.volume ||
-                j.volume < 0 || j.volume > 100) return {operation: "ignore"};
-        return {deviceId: j.deviceId, points: [{pointId: "volume", value: j.volume}]};
-    }
-    globalThis.describe = describe;
-    globalThis.encode = encode;
-    globalThis.decode = decode;
-})();
-```
-
-For binary vendor protocols, parse m.bytes; do not turn body=null into empty text and report success.
-
-## Agent checks {#debugging}
-
-The debug adapter is for unified-script MqttDevice, not legacy MqttConnDevice. Inspect command, mqttBinaryPayload, mqttPublishOptions and read/write/report capabilities.
-
-connectionSnapshot CONNECTED means a Broker connection. subscriptionRegistered is local registration, and subscriptionReady is currently null, not Broker SUBACK or proof of device health. readOnce must publish and observe a real target report. writeAndWait(stateUpdate) needs a working feedback route; correlation is observationOnly, not strict causality.
-
-Normal MqttDevice probing also checks the Broker connection rather than invoking encode(probe); an Online label does not prove that the third-party device processed a query or control.
-
-For validation, configuration and communication checks, see the [integration guide](./ai-agent-device-onboarding.mdx#api-workflow). Debug sessions do not require a device-detail page subscription.
+<ProtocolScriptRedirect transport="mqtt" href="/docs/aqara-studio/unified-protocol-script">
+Read the MQTT section in the protocol script specification.
+</ProtocolScriptRedirect>

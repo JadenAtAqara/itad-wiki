@@ -87,7 +87,7 @@ Content-Type: application/json
 
 业务 deviceId/pointId、发现候选 ID、框架实例 ID、Command 字段 ID 各不相同。必须保存并使用接口返回的 ID。
 
-### 脚本文件命令
+### 脚本文件命令 {#script-files}
 
 在 protocol 资源调用：
 
@@ -106,17 +106,39 @@ fixtures 每项严格为 `{entry:"encode"或"decode",input:{...},expected:完整
 
 上传校验失败不替换文件。上传成功也必须检查 reloadFailedCount 并回读引用 Network。覆盖共享文件会重载其他引用者；没有版本 CAS，优先唯一文件名。
 
+使用非空夹具覆盖编码、正常解析、负 ACK、错误身份和缺失字段；检查外层 code 及内层 valid/fixturesPassed，零夹具不能作为验收依据。上传后，将返回的 extensionScriptPath 传给 readScript.input.scriptPath：
+
+```json title="resource_invoke_command arguments：回读已保存源码"
+{"id":"<protocol-resource-id>","command":"readScript","input":{"scriptPath":"<upload-returned extensionScriptPath>"}}
+```
+
+比较 readScript.scriptContent 与候选源码、scriptPath 与上传地址。上传不自动绑定 Network；readScript 不返回 replaced、reloadFailedCount 或 extensionScriptPath。
+
 Network 只写 `scriptMessageParser/extensionScriptPath`，不接受把 scriptContent 或整个 scriptMessageParser 对象作为配置保存。scriptParameters 字段须按绑定脚本后的实例 `data.schema` 取得；JS 中声明它们的字段仍叫 describe().configSchema。
 
-### 创建与发现导入
+### 创建与发现导入 {#discovery}
 
 protocol.create input 为 `{entityKind,parentId?,name?,config}`，Network 用 entityKind=network；Device/Point 的 parentId 为真实父实例。手工创建脚本 Device 必须填写合法业务 deviceId，优先发现导入。
+
+以下仅示范 TCP 的脚本文件绑定；连接字段从 `data.protocols.<protocolId>` 及现场资料取得：
+
+```json title="resource_invoke_command arguments：创建 Network"
+{"id":"<protocol-resource-id>","command":"create","input":{"entityKind":"network","name":"Vendor integration","config":{"scriptMessageParser/extensionScriptPath":"<upload-returned extensionScriptPath>"}}}
+```
+
+绑定后回读 scriptCheckResult，再按 data.schema 配置 Network 参数；Device 参数在导入后配置。脚本加载成功不代表必填参数齐备，缺失参数会阻止执行。
 
 protocol.discover input 为 `{ownerKind,ownerId,targetKind,options?}`。发现设备用 network/device；发现点用 device/point。当前通用命令只把 options 公开为 object，不提供每种协议的详细选项 Schema。新脚本优先在 describe().discovery 声明已知目标并省略 options；需要覆盖时必须取得同版本的明确字段契约，不能猜 ip/port 或扫描参数。
 
 读取返回 job.id：pending/running 继续等待；succeeded/failed/cancelled 为终态；unknown、not-found 都不是成功。按 job 类型公布策略约每 1000 ms 查询，单轮客户端等待最多 120 秒；超时保留同一 ID，不重提任务。通用 job 没有取消命令。
 
 成功后查询 discovery，检查候选；在该 job 执行 import：`{ownerId,discoveryObjectIds:[...]}`，单次最多 200 个不同候选，更多时分批。检查逐项结果，再回读实际 Device/Point 清单。不能把已导入成功项再次创建。
+
+```json title="resource_query arguments：设备候选"
+{"type":"discovery","filters":{"jobId":"<discovery-job-id>","kind":"device"}}
+```
+
+导入目标设备后，以 `ownerKind=device`、`ownerId=<device-instance-id>`、`targetKind=point` 发起点发现，等待这个独立任务，查询 kind=point 并导入。静态候选也遵守相同的选择、导入流程。
 
 ## Spec 点映射 MCP 工具 {#point-tools}
 
@@ -166,6 +188,8 @@ Network.startDebugSession input 默认为 `{ttlMs:60000,payloadMode:"metadata"}`
 
 ### 控制确认语义
 
+授权控制前先读取初始状态、实际单位和合法范围。读写比例不一致时，同值下发也可能改变设备；发现值域不符应停止该功能测试。不能把页面回显、请求值或旧缓存当成设备反馈。
+
 | waitFor | 确认条件 |
 | --- | --- |
 | send | 发送完成；HTTP 为已收到响应，不表示设备成功 |
@@ -182,6 +206,8 @@ expectedValue 必须是有限标量，序列化 JSON 最多 **512 UTF-8 字节**
 
 同会话相同 clientOperationId + 相同输入返回同一操作，不重复发包；同 ID 不同输入拒绝，新会话不继承去重。不是跨重启 exactly-once 保证，超时/取消也不能撤销已发送控制。
 
+ACK 成功但反馈滞后时，在厂商允许的延时预算内有界执行新的 readOnce/report 等待，不为等待状态重复控制。仍未观察到预期状态时报告状态验收失败；没有可读反馈的设备只能达到发送或 ACK 确认等级。
+
 ### 预算与生命周期
 
 - TTL 默认 60000 ms、最大 120000 ms；单次 timeoutMs 默认 10000、最大 30000。
@@ -192,6 +218,8 @@ expectedValue 必须是有限标量，序列化 JSON 最多 **512 UTF-8 字节**
 - stop、TTL、目标停止、脚本重载、Open 停止、凭据撤销/登出使任务取消。停止后元数据保留 60 秒，但正文立即清空；保留期后 SESSION_EXPIRED。
 
 目标权限、凭据和生命周期在准入与执行时复核，发包前也复核取消。已进入发送阶段的控制无法撤回，取消后核对实际设备状态。
+
+在 finally 停止本次拥有的会话，不关闭共享业务连接。仅按已授权的安全方案恢复初始状态；保留正式 Network、Device、Point 和脚本，仅删除明确允许清理的任务自有临时资源。修复、重载后使用新会话，不混用不同脚本版本的证据。
 
 ## 结果与失败原因 {#results}
 
@@ -213,11 +241,13 @@ correlation 包括 protocolId、serializedWindow、observationOnly、none；离�
 
 ENCODE_FAILED、STATE_NOT_OBSERVED 是保留原因；当前空请求为 NO_REQUEST_BUILT，状态等待未达条件通常为 TIMEOUT。
 
+交付时逐功能记录脚本及厂商版本、目标 ID、映射、单位、预期与观察状态、操作及采集证据。区分已生成、离线校验、保存绑定、导入、通信验收；这些是客户端报告分类，不是新增接口。模拟器、厂商设备、自主 Agent 与 Native Image/M300 验证各自独立。
+
 ## 安全正文采集与离线重放 {#payload}
 
 默认 metadata 不保留正文。显式 sanitized 会话需 payloadPolicy，且创建者拥有 Network 及其全部已导入 Device/Point 的管理权限。读取、重放准入、执行前后和结果读取仍会复核。
 
-白名单选择的是**厂商报文正文**中的叶子，不是统一输入外层或 decode 结果。以下沿用 [MQTT 演示](./javascript-for-mqtt-integration.mdx#example)，收到的正文为 `{"deviceId":"demo-1","volume":20}`：
+白名单选择的是**厂商报文正文**中的叶子，不是统一输入外层或 decode 结果。以下沿用 [MQTT 演示](./unified-protocol-script.mdx#mqtt-example)，收到的正文为 `{"deviceId":"demo-1","volume":20}`：
 
 ```json title="MQTT 演示的 JSON 正文白名单"
 {"ttlMs":60000,"payloadMode":"sanitized","payloadPolicy":{"format":"json","jsonPointers":["/deviceId","/volume"],"maxFrames":16,"maxBytes":8192,"maxFrameBytes":1024}}

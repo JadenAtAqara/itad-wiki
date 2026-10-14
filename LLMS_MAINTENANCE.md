@@ -87,6 +87,14 @@
    - `static/zh/{product}/llms.txt`
 6. 构建后再将中文版本覆盖到最终 `build/zh/...`
 
+### 链接与部署环境
+
+静态索引中的站内链接使用 `/docs/...`、`/zh/docs/...` 等根相对路径，不固定到正式环境域名。直接读取索引时，应使用该索引所在站点的 origin 解析链接；本地预览、测试环境和正式环境遵守相同规则。
+
+页面的“复制 llms.txt”按钮在复制时将站内链接转换为当前站点的绝对地址，便于把内容交给独立客户端。它也兼容旧索引中的 `docs.aqara.com` / `docs-preview.aqara.com` 地址，但不改写外部链接。实现位于 `src/components/DocLLMActions/llms.ts`。
+
+协议脚本文档只收录接入指南、协议脚本规范、MCP/API 参考三个入口。合并前的 TCP/UDP、HTTP、MQTT 地址保留跳转页面，不进入侧栏或索引；原有章节锚点由 `src/components/ProtocolScriptRedirect/anchors.ts` 映射。
+
 ## How To Update Existing llms.txt
 
 如果你只是更新现有产品文档，通常不需要手改任何 `llms.txt` 文件。
@@ -288,6 +296,7 @@ npm run build
 - 中英文分别从各自文档源目录生成
 - 新增产品时，除了 `PRODUCT_CONFIG`，还必须同步更新 `filesToCopy`
 - 产品级 `llms.txt` 当前不再包含 `Site root index` / `站点根索引`
+- 站内链接不绑定特定环境，复制结果使用当前页面所在站点
 
 ## Recommended Workflow
 
@@ -298,6 +307,14 @@ npm run build
 3. 更新 `PRODUCT_CONFIG`（如有必要）
 4. 运行 `npm run build`
 5. 检查 `build/.../llms.txt`
+
+修改索引生成、复制或协议文档导航后，还应运行：
+
+```bash
+npm run check-protocol-docs
+```
+
+该检查覆盖文档示例、旧链接与锚点、侧栏、索引语言及当前站点链接转换；不替代 Studio 的 GraalJS 或实机通信验收。
 
 ## Troubleshooting
 

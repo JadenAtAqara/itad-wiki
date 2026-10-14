@@ -11,7 +11,7 @@ This guide will show you how to integrate TCP protocol devices into Aqara Studio
 
 For the shared script structure and configuration workflow, see the [third-party device script integration guide](../ai-agent-device-onboarding.mdx).
 
-Please refer to the [JavaScript script (for UDP and TCP)](./../javascript-for-udp-tcp-integration.mdx) guide to write a JavaScript script that complies with the **Aqara Data Model Specification**. This script instructs Aqara Studio how to discover devices, and add and control function points.
+Please refer to the [JavaScript script (for UDP and TCP)](./../unified-protocol-script.mdx#tcp-udp) guide to write a JavaScript script that complies with the **Aqara Data Model Specification**. This script instructs Aqara Studio how to discover devices, and add and control function points.
 
 ## Install the Plugin
 
@@ -58,17 +58,17 @@ Please refer to the [Plugin Market](./../plugin-center.mdx) instruction, and go 
     If your TCP device is discovered via the TCP protocol, select the **TCP** option; if your TCP device is discovered via the UDP protocol, select the **UDP** option.
 
     :::tip
-    Supply a fixed target in [describe().discovery](../javascript-for-udp-tcp-integration.mdx#discovery) or editable dialog settings. encode(discoverDevices) builds the request and decode returns actual device candidates/addresses. A static address list alone is not completed discovery; use published manual creation when no discovery protocol exists.
+    Supply a fixed target in [describe().discovery](../unified-protocol-script.mdx#tcp-udp-discovery) or editable dialog settings. encode(discoverDevices) builds the request and decode returns actual device candidates/addresses. A static address list alone is not completed discovery; use published manual creation when no discovery protocol exists.
     :::
 
     - **TCP**:   
-        Enter the TCP target IP/port or use script discovery settings. [encode(discoverDevices)](../javascript-for-udp-tcp-integration.mdx#discovery) builds/sends a request; decode parses the real response into candidates.
+        Enter the TCP target IP/port or use script discovery settings. [encode(discoverDevices)](../unified-protocol-script.mdx#tcp-udp-discovery) builds/sends a request; decode parses the real response into candidates.
         <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/TCP-TCPIPConfiguration.png" alt="Configure server IP address and Port" style={{width: '50%'}} />
 
     - **UDP**:   
         Set `Discovery Type` to `UDP`.   
         <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/TCP-DiscoveryType.png" alt="Configure discovery type" style={{width: '50%'}} />   
-        Configure the actual UDP broadcast/multicast target or describe().discovery. [encode(discoverDevices)](../javascript-for-udp-tcp-integration.mdx#discovery) sends and decode obtains identity/TCP address from replies. Configure responseIp/responsePort separately when a fixed reply port is required.
+        Configure the actual UDP broadcast/multicast target or describe().discovery. [encode(discoverDevices)](../unified-protocol-script.mdx#tcp-udp-discovery) sends and decode obtains identity/TCP address from replies. Configure responseIp/responsePort separately when a fixed reply port is required.
         <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/TCP-IPConfiguration.png" alt="Configure server IP address and Port" style={{width: '50%'}} />
 
 10. Click the **Discover Devices** button.
