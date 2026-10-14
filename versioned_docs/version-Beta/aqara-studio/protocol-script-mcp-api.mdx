@@ -87,7 +87,7 @@ Content-Type: application/json
 
 Business deviceId/pointId, candidate IDs, instance IDs and Command field IDs are distinct. Preserve returned identifiers.
 
-### Script file commands
+### Script file commands {#script-files}
 
 Invoke on the protocol resource:
 
@@ -106,17 +106,39 @@ Managed paths are `file:%/protocol-scripts/<namespace>/...js` for the Network ty
 
 Validation failure leaves the file unchanged. Successful upload still requires checking reloadFailedCount and referenced Network status. Replacement reloads shared references; no version CAS exists. Prefer unique names.
 
+Use nonempty fixtures covering encoding, valid parsing, negative ACKs, wrong IDs and missing fields. Check the outer code and inner valid/fixturesPassed; zero fixtures is not sufficient acceptance. After upload, pass its extensionScriptPath to readScript.input.scriptPath:
+
+```json title="resource_invoke_command arguments: read back saved source"
+{"id":"<protocol-resource-id>","command":"readScript","input":{"scriptPath":"<upload-returned extensionScriptPath>"}}
+```
+
+Compare readScript.scriptContent with the candidate and its scriptPath with the uploaded address. Upload does not bind a Network; readScript does not return replaced, reloadFailedCount or extensionScriptPath.
+
 Write only Network `scriptMessageParser/extensionScriptPath`, not scriptContent or an entire scriptMessageParser object. Obtain scriptParameters fields from instance `data.schema` after binding; their JS declaration remains describe().configSchema.
 
-### Create, discover and import
+### Create, discover and import {#discovery}
 
 protocol.create input is `{entityKind,parentId?,name?,config}`. Use network for a Network; Device/Point parentId is the actual parent instance. Manually created script Devices require a valid business deviceId; prefer discovery/import.
+
+The following demonstrates TCP file binding only; take connection fields from `data.protocols.<protocolId>` and site information:
+
+```json title="resource_invoke_command arguments: create Network"
+{"id":"<protocol-resource-id>","command":"create","input":{"entityKind":"network","name":"Vendor integration","config":{"scriptMessageParser/extensionScriptPath":"<upload-returned extensionScriptPath>"}}}
+```
+
+Read scriptCheckResult after binding, then configure Network parameters using data.schema. Configure Device parameters after import. Missing required parameters blocks execution even if script loading succeeded.
 
 protocol.discover takes `{ownerKind,ownerId,targetKind,options?}`: network/device for device discovery; device/point for point discovery. The generic command currently exposes options only as an object, without detailed per-protocol option schemas. Prefer known targets in describe().discovery and omit options. Overrides require explicit same-version field contracts; never guess ip/port or scan parameters.
 
 Read job.id: pending/running are active; succeeded/failed/cancelled terminal; unknown/not-found never success. Follow published polling policy, about 1000 ms and at most 120 seconds per client wait. Timeout retains the same job ID, not resubmission. Generic jobs have no cancellation command.
 
 After success, query discovery candidates and invoke that job's import with `{ownerId,discoveryObjectIds:[...]}`, at most 200 distinct candidates per call; split larger batches. Inspect per-item results and query actual Device/Point lists. Never recreate successfully imported candidates.
+
+```json title="resource_query arguments: device candidates"
+{"type":"discovery","filters":{"jobId":"<discovery-job-id>","kind":"device"}}
+```
+
+After importing the intended devices, start point discovery with `ownerKind=device`, `ownerId=<device-instance-id>`, `targetKind=point`. Wait for that separate job, query kind=point and import. Static candidates use the same selection/import flow.
 
 ## Dedicated Spec mapping MCP tools {#point-tools}
 
@@ -166,6 +188,8 @@ Operations return operation.id. Read that ID until properties.status is succeede
 
 ### Write confirmation
 
+Read initial state, actual units and legal ranges before authorized control. A same-value write can change the device if read/write scaling differs; stop testing that function on a domain mismatch. Do not treat UI echo, requested values or stale cache as feedback.
+
 | waitFor | Condition |
 | --- | --- |
 | send | Transport completion; HTTP received a response, not business success |
@@ -182,6 +206,8 @@ expectedValue is a finite scalar with serialized JSON size at most **512 UTF-8 b
 
 Same clientOperationId/input within the session returns the same operation without resending. Same ID with different input fails. New sessions do not inherit deduplication. This is not exactly-once across restarts; timeout/cancellation cannot retract sent controls.
 
+When ACK succeeds but feedback lags, use bounded new readOnce/report waits within the vendor's delay budget. Do not resend the control to wait for state. If expected state is still absent, report state acceptance failure; devices without readable feedback can only reach send/ACK confirmation.
+
 ### Budgets and lifecycle
 
 - TTL default 60000 ms, max 120000; timeout default 10000, max 30000.
@@ -192,6 +218,8 @@ Same clientOperationId/input within the session returns the same operation witho
 - stop, expiry, target stop, script reload, Open stop, credential revocation/logout cancel tasks. Metadata remains 60 seconds after stop, but payloads clear immediately; later SESSION_EXPIRED.
 
 Credentials, target permissions and lifecycle are rechecked at admission/execution and before sending. Already-started transmission cannot be undone; check real device state after cancellation.
+
+Stop the owned session in finally without closing shared business connections. Restore initial state only through an authorized safe plan; preserve production Networks, Devices, Points and scripts. Delete only explicitly disposable task-owned resources. After a repair/reload, use a new session and do not mix evidence from different script versions.
 
 ## Results and failures {#results}
 
@@ -213,11 +241,13 @@ Correlation can be protocolId, serializedWindow, observationOnly, none, or offli
 
 ENCODE_FAILED and STATE_NOT_OBSERVED are reserved; current empty requests use NO_REQUEST_BUILT, and state waits generally TIMEOUT.
 
+For delivery, report script/vendor versions, target IDs, mappings, units, expected/observed state and operation/capture evidence per function. Distinguish generated, offline-validated, saved/bound, imported and communication-verified. These are client report categories, not new endpoints; simulator, vendor-device, autonomous-Agent and Native Image/M300 evidence are separate.
+
 ## Safe payload capture and offline replay {#payload}
 
 Default metadata retains no payload. Explicit sanitized mode requires payloadPolicy and management permission on the Network and all imported Device/Points. Reads, replay admission/execution and result reads recheck permissions.
 
-Pointers select leaves in the **vendor payload body**, not the unified input envelope or decode result. For the [MQTT demonstration](./javascript-for-mqtt-integration.mdx#example), the incoming body is `{"deviceId":"demo-1","volume":20}`:
+Pointers select leaves in the **vendor payload body**, not the unified input envelope or decode result. For the [MQTT demonstration](./unified-protocol-script.mdx#mqtt-example), the incoming body is `{"deviceId":"demo-1","volume":20}`:
 
 ```json title="MQTT demonstration JSON body allowlist"
 {"ttlMs":60000,"payloadMode":"sanitized","payloadPolicy":{"format":"json","jsonPointers":["/deviceId","/volume"],"maxFrames":16,"maxBytes":8192,"maxFrameBytes":1024}}

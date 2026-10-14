@@ -7,6 +7,7 @@ import {compile} from '@mdx-js/mdx';
 import {createRequire} from 'node:module';
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkGfm from 'remark-gfm';
+import {checkDocNavigation} from './check-doc-navigation.mjs';
 
 const require = createRequire(import.meta.url);
 const {default: remarkHeadings} = require('@docusaurus/mdx-loader/lib/remark/headings/index.js');
@@ -18,6 +19,7 @@ const names = [
   'javascript-for-http-integration', 'javascript-for-mqtt-integration',
   'ai-agent-device-onboarding', 'protocol-script-mcp-api',
 ];
+const scriptKinds = ['skeleton', 'tcp-udp', 'http', 'mqtt'];
 const locales = {
   en: 'versioned_docs/version-Beta/aqara-studio',
   zh: 'i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-studio',
@@ -68,7 +70,10 @@ for (const [locale, directory] of Object.entries(locales)) {
     const scripts = [...text.matchAll(/^```javascript[^\r\n]*\r?\n([\s\S]*?)^```\s*$/gm)]
       .map(match => match[1]);
     examples.set(`${locale}/${name}`, scripts);
-    for (const source of scripts) {
+    if (name === 'unified-protocol-script') equal(scripts.length, scriptKinds.length);
+    else equal(scripts.length, 0);
+    for (const [index, source] of scripts.entries()) {
+      const kind = scriptKinds[index];
       const context = vm.createContext({});
       new vm.Script(source, {filename: path}).runInContext(context, {timeout: 500});
       equal(typeof context.describe, 'function');
@@ -81,10 +86,10 @@ for (const [locale, directory] of Object.entries(locales)) {
         fixtures.push({entry, input, expected});
         return expected;
       };
-      if (name === 'unified-protocol-script') {
+      if (kind === 'skeleton') {
         equal(invoke('encode', {operation: 'read'}), null);
         equal(invoke('decode', {operation: 'discoverDevices'}), {operation: 'discoverDevices', devices: []});
-      } else if (name === 'javascript-for-udp-tcp-integration') {
+      } else if (kind === 'tcp-udp') {
         equal(invoke('encode', {transport: 'tcp', operation: 'write', deviceId: 'demo-1', pointId: 'volume', value: 20}),
           {bytes: [170, 17, 1, 20, 85]});
         equal(invoke('decode', {transport: 'tcp', deviceId: 'demo-1', bytes: [170, 144, 1, 20, 85]}),
@@ -94,7 +99,7 @@ for (const [locale, directory] of Object.entries(locales)) {
         equal(invoke('decode', {transport: 'tcp', deviceId: 'demo-1', bytes: [170, 144, 2, 20, 85]}), {operation: 'ignore'});
         assert.throws(() => invoke('encode', {operation: 'write', deviceId: 'demo-1', pointId: 'volume', value: 20.5}));
         checks += 1;
-      } else if (name === 'javascript-for-http-integration') {
+      } else if (kind === 'http') {
         equal(invoke('decode', {transport: 'http', operation: 'read', deviceId: 'demo-1', pointId: 'power', body: '{"value":false}'}),
           {operation: 'read', points: [{pointId: 'power', value: false}]});
         equal(invoke('decode', {transport: 'http', operation: 'write', deviceId: 'demo-1', body: '{"ok":false}'}),
@@ -106,7 +111,7 @@ for (const [locale, directory] of Object.entries(locales)) {
         const fixtures = blocks.map(match => JSON.parse(match[1])).find(Array.isArray);
         ok(fixtures?.length === 2, 'HTTP fixtures must exist');
         for (const fixture of fixtures) equal(invoke(fixture.entry, fixture.input), fixture.expected);
-      } else if (name === 'javascript-for-mqtt-integration') {
+      } else if (kind === 'mqtt') {
         const discovery = invoke('decode', {transport: 'mqtt', operation: 'discoverDevices'}).devices[0];
         equal(discovery.deviceId, 'demo-1');
         ok(discovery.clientId !== discovery.deviceId, 'MQTT example must distinguish connection and business identity');
@@ -119,13 +124,11 @@ for (const [locale, directory] of Object.entries(locales)) {
         equal(invoke('decode', {transport: 'mqtt', operation: 'report', topic: 'vendor/demo-1/state', body: null}), {operation: 'ignore'});
         equal(invoke('decode', {transport: 'mqtt', operation: 'report', topic: 'vendor/demo-1/state', body: '{"deviceId":"other","volume":20}'}), {operation: 'ignore'});
       }
-      if (name !== 'unified-protocol-script') {
+      if (kind !== 'skeleton') {
         invoke('decode', {operation: 'discoverPoints', deviceId: 'demo-1', bytes: null, body: null});
       }
-      const transports = name === 'javascript-for-udp-tcp-integration' ? ['tcp', 'udp']
-        : [name === 'javascript-for-http-integration' ? 'http'
-          : name === 'javascript-for-mqtt-integration' ? 'mqtt' : 'tcp'];
-      for (const transport of transports) graalCases.push({name: `${locale}/${name}/${transport}`, source, transport,
+      const transports = kind === 'tcp-udp' ? ['tcp', 'udp'] : [kind === 'skeleton' ? 'tcp' : kind];
+      for (const transport of transports) graalCases.push({name: `${locale}/${kind}/${transport}`, source, transport,
         fixtures: fixtures.map(fixture => ({...fixture, input: {...fixture.input, transport}}))});
     }
   }
@@ -150,7 +153,7 @@ for (const locale of Object.keys(locales)) {
   }));
   const retainedInput = {transport: 'mqtt', operation: 'report', body: JSON.stringify(selected)};
   const context = vm.createContext({});
-  new vm.Script(examples.get(`${locale}/javascript-for-mqtt-integration`)[0])
+  new vm.Script(examples.get(`${locale}/unified-protocol-script`)[3])
     .runInContext(context, {timeout: 500});
   const invoke = input => call(context, 'decode', input);
   equal(invoke({...retainedInput, ...replay.context}), replay.frames[0].expected);
@@ -169,23 +172,23 @@ for (const locale of Object.keys(locales)) {
   ok(title && !title.includes('AI Agent'), 'The integration guide must address both people and Agents');
   ok(playbook.split(/\r?\n/).includes(`# ${title}`), 'The page title and visible heading must match');
   equal((playbook.match(/^## /gm) || []).length, 4);
-  equal((playbook.match(/^<details>$/gm) || []).length, 3);
-  equal((playbook.match(/^<\/details>$/gm) || []).length, 3);
+  equal((playbook.match(/^<details>$/gm) || []).length, 1);
+  equal((playbook.match(/^<\/details>$/gm) || []).length, 1);
   for (const name of ['unified-protocol-script', 'protocol-script-mcp-api']) {
     ok(playbook.includes(`./${name}.mdx`), `Missing secondary reference ${name}`);
     ok(documents.get(`${locale}/${name}`).includes('displayed_sidebar: aqaraStudioSidebar'),
       'Secondary references must retain the original site navigation');
   }
   ok(playbook.includes('{#api-workflow}') && playbook.includes('{#workflow}'), 'Both integration entrances must be present');
-  const read = jsonBlocks(playbook).find(value => value.command === 'readScript');
-  ok(read, 'Agent playbook needs an explicit saved-source readback command');
+  const read = blocks.find(value => value.command === 'readScript');
+  ok(read, 'The API reference needs an explicit saved-source readback command');
   equal(Object.keys(read.input), ['scriptPath']);
   ok(reference.includes('Station.station.communication'), 'Script-file permission owner must be explicit');
   ok(reference.includes('captureWindow') && reference.includes('readPayloadCapture.frames[].sequence'),
     'Payload replay must distinguish its cursor from metadata capture');
   ok(documents.get(`${locale}/unified-protocol-script`).includes('encode(ack)'), 'Report ACK input must be documented');
-  ok(documents.get(`${locale}/javascript-for-udp-tcp-integration`).includes('128'), 'TCP fallback chunk limit missing');
-  ok(documents.get(`${locale}/javascript-for-mqtt-integration`).includes('connectionType=4'), 'X.509 mode boundary missing');
+  ok(documents.get(`${locale}/unified-protocol-script`).includes('128'), 'TCP fallback chunk limit missing');
+  ok(documents.get(`${locale}/unified-protocol-script`).includes('connectionType=4'), 'X.509 mode boundary missing');
 }
 console.log('Replay example regression checked: missing topic or missing vendor value fails the expected output (Node VM only).');
 
@@ -216,7 +219,10 @@ ok(developerCategory && scriptCategory, 'Original navigation categories must rem
 ok(!JSON.stringify(developerCategory).includes('ai-agent-device-onboarding'), 'Keep the script guide out of Developer navigation');
 equal(scriptCategory.items.filter(item => item === 'aqara-studio/ai-agent-device-onboarding').length, 1);
 for (const name of ['unified-protocol-script', 'protocol-script-mcp-api']) {
-  ok(!JSON.stringify(sidebars).includes(`aqara-studio/${name}`), 'Technical references should not add primary navigation entries');
+  equal(scriptCategory.items.filter(item => item === `aqara-studio/${name}`).length, 1);
+}
+for (const name of names.filter(name => name.startsWith('javascript-for-'))) {
+  ok(!JSON.stringify(sidebars).includes(`aqara-studio/${name}`), 'Merged references must not remain in navigation');
 }
 
 // 从实际源码核对公开命令及 REST 路由，避免文档凭方案名称编造接口。
@@ -335,6 +341,7 @@ if (process.env.STUDIO_SOURCE_ROOT) {
 } else {
   console.log('Source conformance skipped: set STUDIO_SOURCE_ROOT to the reviewed Studio checkout root.');
 }
+checks += await checkDocNavigation(root);
 console.log(`Protocol documentation checks passed: ${checks}; no device I/O or GraalJS execution performed.`);
 if (process.env.PROTOCOL_DOC_FIXTURES_OUT) {
   // 导出已校验的文档正文及完整断言，供独立 Studio/GraalJS 校验器消费；不发送设备报文。

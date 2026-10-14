@@ -3,19 +3,21 @@
 
 此索引面向简体中文文档；如需英文文档，请使用英文根索引。
 
-- 其他语言的根索引: https://docs.aqara.com/llms.txt
+链接以当前索引所在站点为基准；页面的“复制 llms.txt”会补齐当前站点地址。
+
+- 其他语言的根索引: /llms.txt
 
 ## 产品索引
-- Aqara Studio: https://docs.aqara.com/zh/aqara-studio/llms.txt
-- Aqara Developer: https://docs.aqara.com/zh/aqara-developer/llms.txt
-- Aqara Life: https://docs.aqara.com/zh/aqara-life/llms.txt
-- Aqara OpenLink: https://docs.aqara.com/zh/aqara-openlink/llms.txt
+- Aqara Studio: /zh/aqara-studio/llms.txt
+- Aqara Developer: /zh/aqara-developer/llms.txt
+- Aqara Life: /zh/aqara-life/llms.txt
+- Aqara OpenLink: /zh/aqara-openlink/llms.txt
 
 ## 推荐优先阅读
-- 平台概述: https://docs.aqara.com/zh/docs/aqara-studio/overview/introduction
-- AI 原生架构: https://docs.aqara.com/zh/docs/aqara-studio/overview/ai-native-architecture
-- 概览: https://docs.aqara.com/zh/docs/aqara-developer/introduction
-- 简介: https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/introduction
-- 概览: https://docs.aqara.com/zh/docs/aqara-life/overview
-- 功能介绍: https://docs.aqara.com/zh/docs/aqara-life/feature-overview
+- 平台概述: /zh/docs/aqara-studio/overview/introduction
+- AI 原生架构: /zh/docs/aqara-studio/overview/ai-native-architecture
+- 概览: /zh/docs/aqara-developer/introduction
+- 简介: /zh/docs/aqara-developer/data-export-api/introduction
+- 概览: /zh/docs/aqara-life/overview
+- 功能介绍: /zh/docs/aqara-life/feature-overview
 
