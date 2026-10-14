@@ -1,12 +1,14 @@
 # Aqara Life
 > A compact entry point for Aqara Life documentation.
 
+Resolve site-relative links against this index's origin. Copy llms.txt on the page supplies absolute URLs for the current site.
+
 ## Recommended starting points
-- Overview: https://docs.aqara.com/docs/aqara-life/overview
+- Overview: /docs/aqara-life/overview
 
 ## All sidebar-listed docs
-- Overview: https://docs.aqara.com/docs/aqara-life/overview
-- Feature Overview: https://docs.aqara.com/docs/aqara-life/feature-overview
-- The Future of the Plugin-Based Architecture: https://docs.aqara.com/docs/aqara-life/future-of-the-plugin-based-architecture
-- Life Agent: https://docs.aqara.com/docs/aqara-life/life-agent/overview
+- Overview: /docs/aqara-life/overview
+- Feature Overview: /docs/aqara-life/feature-overview
+- The Future of the Plugin-Based Architecture: /docs/aqara-life/future-of-the-plugin-based-architecture
+- Life Agent: /docs/aqara-life/life-agent/overview
 

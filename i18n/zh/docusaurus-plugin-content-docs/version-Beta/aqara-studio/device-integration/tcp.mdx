@@ -11,7 +11,7 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "TCP 设备接入"]
 
 脚本结构与配置流程，参见 [第三方设备脚本接入指南](../ai-agent-device-onboarding.mdx)。
 
-请参考 [JavaScript 脚本（适用于 UDP 和 TCP）](./../javascript-for-udp-tcp-integration.mdx) 的编写方法，编写符合 **Aqara 物模型规范** 的 JavaScript 脚本。此脚本将用于指导 Aqara Studio 如何发现设备、添加与控制功能点等。
+请参考 [JavaScript 脚本（适用于 UDP 和 TCP）](./../unified-protocol-script.mdx#tcp-udp) 的编写方法，编写符合 **Aqara 物模型规范** 的 JavaScript 脚本。此脚本将用于指导 Aqara Studio 如何发现设备、添加与控制功能点等。
 
 ## 安装插件
 
@@ -61,17 +61,17 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "TCP 设备接入"]
     若您的 TCP 设备是通过 TCP 协议被发现，请选择 **TCP** 选项；若您的 TCP 设备是通过 UDP 协议被发现，请选择 **UDP** 选项。
 
     :::tip
-    固定发现目标可由 [describe().discovery](../javascript-for-udp-tcp-integration.mdx#discovery) 提供，或在允许编辑时填写弹窗。encode(discoverDevices) 构造请求，decode 返回带真实设备地址的 devices 候选；仅写一份地址清单不等于完成设备发现。没有发现协议时使用当前公开的手工创建入口。
+    固定发现目标可由 [describe().discovery](../unified-protocol-script.mdx#tcp-udp-discovery) 提供，或在允许编辑时填写弹窗。encode(discoverDevices) 构造请求，decode 返回带真实设备地址的 devices 候选；仅写一份地址清单不等于完成设备发现。没有发现协议时使用当前公开的手工创建入口。
     :::
 
     - **TCP**：   
-        在弹窗内填写 TCP 目标的 IP 地址和端口号，或使用脚本提供的发现配置。该目标通过 [encode(discoverDevices)](../javascript-for-udp-tcp-integration.mdx#discovery) 组包并发送，decode 解析设备响应形成候选。
+        在弹窗内填写 TCP 目标的 IP 地址和端口号，或使用脚本提供的发现配置。该目标通过 [encode(discoverDevices)](../unified-protocol-script.mdx#tcp-udp-discovery) 组包并发送，decode 解析设备响应形成候选。
         <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-TCPIPConfiguration.png" alt="配置服务端 IP 地址和 Port" style={{width: '50%'}} />
 
     - **UDP**：   
         设置 `Discovery Type` 为 `UDP`。   
         <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-DiscoveryType.png" alt="配置发现类型" style={{width: '50%'}} />   
-        配置实际 UDP 广播/组播目标，或由 describe().discovery 提供；[encode(discoverDevices)](../javascript-for-udp-tcp-integration.mdx#discovery) 发送后由 decode 解析回复中的设备身份和 TCP 地址。厂商要求固定回复端口时另配 responseIp/responsePort。
+        配置实际 UDP 广播/组播目标，或由 describe().discovery 提供；[encode(discoverDevices)](../unified-protocol-script.mdx#tcp-udp-discovery) 发送后由 decode 解析回复中的设备身份和 TCP 地址。厂商要求固定回复端口时另配 responseIp/responsePort。
         <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/TCP-IPConfiguration.png" alt="配置服务端 IP 地址和 Port" style={{width: '50%'}} />
 
 10. 选择 **发现设备** 按钮。

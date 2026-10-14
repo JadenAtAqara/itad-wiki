@@ -1,109 +1,111 @@
 # Aqara Developer
 > Cloud API, Studio API, and data model documentation for developers integrating with Aqara.
 
+Resolve site-relative links against this index's origin. Copy llms.txt on the page supplies absolute URLs for the current site.
+
 ## Recommended starting points
-- Overview: https://docs.aqara.com/docs/aqara-developer/introduction
-- Introduction: https://docs.aqara.com/docs/aqara-developer/aiot-api/introduction
-- Introduction: https://docs.aqara.com/docs/aqara-developer/data-export-api/introduction
-- Core Concepts: https://docs.aqara.com/docs/aqara-developer/aqara-data-model-specification/core-concepts
+- Overview: /docs/aqara-developer/introduction
+- Introduction: /docs/aqara-developer/aiot-api/introduction
+- Introduction: /docs/aqara-developer/data-export-api/introduction
+- Core Concepts: /docs/aqara-developer/aqara-data-model-specification/core-concepts
 
 ## All sidebar-listed docs
-- Overview: https://docs.aqara.com/docs/aqara-developer/introduction
-- Introduction: https://docs.aqara.com/docs/aqara-developer/data-export-api/introduction
-- Getting Started with HTTP API: https://docs.aqara.com/docs/aqara-developer/data-export-api/getting-started-with-the-data-export-api
-- Try HTTP API Online: https://docs.aqara.com/docs/aqara-developer/data-export-api/try-api-online
-- Test API with Postman: https://docs.aqara.com/docs/aqara-developer/data-export-api/postman
-- Space: https://docs.aqara.com/docs/aqara-developer/data-export-api/space
-- List Spaces: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-spaces
-- Create A Space: https://docs.aqara.com/docs/aqara-developer/data-export-api/create-space
-- Update A Space Name: https://docs.aqara.com/docs/aqara-developer/data-export-api/update-space-name
-- Delete A Space: https://docs.aqara.com/docs/aqara-developer/data-export-api/delete-space
-- Gateway: https://docs.aqara.com/docs/aqara-developer/data-export-api/gateway
-- List Gateways: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-gateways
-- Enable Sub-device Joining: https://docs.aqara.com/docs/aqara-developer/data-export-api/join-subdevice
-- Disable Sub-device Joining: https://docs.aqara.com/docs/aqara-developer/data-export-api/stop-subdevice-join
-- Query Sub-device Joining Results: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-device-bind-result
-- Device: https://docs.aqara.com/docs/aqara-developer/data-export-api/device
-- List Device Types: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-device-types
-- List Devices: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-devices
-- Query Device Model Definition: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-device-definitions
-- Query Device Matching Capabilities: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-matched-device-capabilities
-- Control Devices by Traits: https://docs.aqara.com/docs/aqara-developer/data-export-api/execute-device-trait
-- Query Trait Values: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-trait-values
-- Control Devices by Commands: https://docs.aqara.com/docs/aqara-developer/data-export-api/execute-device-command
-- Send Command to Device and Wait for Response: https://docs.aqara.com/docs/aqara-developer/data-export-api/execute-device-command-await
-- Batch Query Device Point Information: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-device-point-info
-- Update Device Name: https://docs.aqara.com/docs/aqara-developer/data-export-api/update-device-name
-- Update Device Point Name: https://docs.aqara.com/docs/aqara-developer/data-export-api/update-device-point-name
-- Delete A Function: https://docs.aqara.com/docs/aqara-developer/data-export-api/delete-device-point
-- Add A Virtual Device: https://docs.aqara.com/docs/aqara-developer/data-export-api/add-virtual-device
-- Bind source device function points: https://docs.aqara.com/docs/aqara-developer/data-export-api/bind-virtual-device-points
-- Unbind source device function points: https://docs.aqara.com/docs/aqara-developer/data-export-api/unbind-virtual-device-points
-- Unbind A Device: https://docs.aqara.com/docs/aqara-developer/data-export-api/unbind-device
-- Resource: https://docs.aqara.com/docs/aqara-developer/data-export-api/resource
-- Query Open Resource Type Directory: https://docs.aqara.com/docs/aqara-developer/data-export-api/list-resource-types
-- Query Resource Type Definition: https://docs.aqara.com/docs/aqara-developer/data-export-api/describe-resource-type
-- Paginated Query Resource: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-resources
-- Read Known Resource: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-resource
-- Modify Known Resource Properties: https://docs.aqara.com/docs/aqara-developer/data-export-api/update-resource
-- Execute Resource Command: https://docs.aqara.com/docs/aqara-developer/data-export-api/execute-resource-action
-- Automation: https://docs.aqara.com/docs/aqara-developer/data-export-api/automation
-- List Endpoint Capabilities for Automation: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-automation-capabilities
-- Create An Automation: https://docs.aqara.com/docs/aqara-developer/data-export-api/create-automation
-- List Automations: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-automation-list
-- Query Automation Details: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-automation-details
-- Edit An Automation: https://docs.aqara.com/docs/aqara-developer/data-export-api/update-automation
-- Batch Update Automation Statuses: https://docs.aqara.com/docs/aqara-developer/data-export-api/update-automation-status
-- Update Space Association for Automations: https://docs.aqara.com/docs/aqara-developer/data-export-api/update-automation-space
-- Delete Automations: https://docs.aqara.com/docs/aqara-developer/data-export-api/delete-automations
-- Get Manual Trigger List: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-automation-manual-trigger-list
-- Execute A Manual Trigger: https://docs.aqara.com/docs/aqara-developer/data-export-api/execute-automation-manual-trigger
-- Firmware: https://docs.aqara.com/docs/aqara-developer/data-export-api/firmware
-- Query Upgradable Device Firmware by Device IDs: https://docs.aqara.com/docs/aqara-developer/data-export-api/search-upgradable-devices-firmware-by-device-ids
-- Initiate Firmware Upgrade: https://docs.aqara.com/docs/aqara-developer/data-export-api/upgrade-firmware
-- Query Firmware Upgrade Progress and Result: https://docs.aqara.com/docs/aqara-developer/data-export-api/search-firmware-upgrade-status
-- Cancel Firmware Upgrade: https://docs.aqara.com/docs/aqara-developer/data-export-api/cancel-upgrade-firmware
-- History: https://docs.aqara.com/docs/aqara-developer/data-export-api/history
-- Query Device Trait Value Change History: https://docs.aqara.com/docs/aqara-developer/data-export-api/query-device-point-history
-- Studio: https://docs.aqara.com/docs/aqara-developer/data-export-api/studio
-- Get Studio Statistics: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-studio-statistics
-- EMS: https://docs.aqara.com/docs/aqara-developer/data-export-api/ems
-- Get Energy Consumption Trend of a Device: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-trend-device
-- Get Energy Consumption Trend of a Space: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-trend-space
-- Get Energy Consumption of a Device: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-total-device
-- Query Energy Consumption for a Space: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-total-space
-- Query Space Energy Consumption Summary: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-summary-space
-- Query Multi-Device Energy Consumption Summary: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-ems-summary-devices
-- Alarm: https://docs.aqara.com/docs/aqara-developer/data-export-api/alarm
-- List Alarms: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-alarms
-- Delete An Alarm: https://docs.aqara.com/docs/aqara-developer/data-export-api/delete-alarm
-- Clear All Alarms: https://docs.aqara.com/docs/aqara-developer/data-export-api/clear-alarms
-- Batch Acknowledge Alarms by UUIDs: https://docs.aqara.com/docs/aqara-developer/data-export-api/ack-alarms
-- Batch Acknowledge Alarms by Point ids: https://docs.aqara.com/docs/aqara-developer/data-export-api/ack-alarms-by-point-id
-- List Alarm Rules: https://docs.aqara.com/docs/aqara-developer/data-export-api/get-alarm-rules
-- WebSocket API Playground: https://docs.aqara.com/docs/aqara-developer/data-export-api/websocket-api/websocket-api
-- MQTT: https://docs.aqara.com/docs/aqara-developer/data-export-api/mqtt-api/mqtt-api
-- Integrate the Infrared Remote Control SDK with UI: https://docs.aqara.com/docs/aqara-developer/local-studio-development/sdk/infrared/integration
-- Infrared Device Integration: https://docs.aqara.com/docs/aqara-developer/local-studio-development/features/infrared-device-integration
-- Custom Device Integration: https://docs.aqara.com/docs/aqara-developer/local-studio-development/features/custom-device-integration
-- Introduction: https://docs.aqara.com/docs/aqara-developer/aiot-api/introduction
-- Getting Started with the AIOT API: https://docs.aqara.com/docs/aqara-developer/aiot-api/getting-started-with-the-aiot-api
-- Try API Online: https://docs.aqara.com/docs/aqara-developer/aiot-api/try-api-online
-- Space: https://docs.aqara.com/docs/aqara-developer/aiot-api/space
-- List Spaces: https://docs.aqara.com/docs/aqara-developer/aiot-api/get-spaces
-- Create A Space: https://docs.aqara.com/docs/aqara-developer/aiot-api/create-space
-- Update A Space Name: https://docs.aqara.com/docs/aqara-developer/aiot-api/update-space-name
-- Device: https://docs.aqara.com/docs/aqara-developer/aiot-api/device
-- List Device Types: https://docs.aqara.com/docs/aqara-developer/aiot-api/get-device-types
-- List Devices: https://docs.aqara.com/docs/aqara-developer/aiot-api/get-devices
-- Query Device Model Definition: https://docs.aqara.com/docs/aqara-developer/aiot-api/get-device-definitions
-- Control Devices by Traits: https://docs.aqara.com/docs/aqara-developer/aiot-api/execute-device-trait
-- Query Trait Values: https://docs.aqara.com/docs/aqara-developer/aiot-api/get-trait-values
-- Control Devices by Commands: https://docs.aqara.com/docs/aqara-developer/aiot-api/execute-device-command
-- Core Concepts: https://docs.aqara.com/docs/aqara-developer/aqara-data-model-specification/core-concepts
-- Device Types: https://docs.aqara.com/docs/aqara-developer/aqara-data-model-specification/device-types
-- Function Codes: https://docs.aqara.com/docs/aqara-developer/aqara-data-model-specification/function-codes
-- Trait Codes: https://docs.aqara.com/docs/aqara-developer/aqara-data-model-specification/trait-codes
-- Command Codes: https://docs.aqara.com/docs/aqara-developer/aqara-data-model-specification/command-codes
-- Data Types: https://docs.aqara.com/docs/aqara-developer/aqara-data-model-specification/data-types
+- Overview: /docs/aqara-developer/introduction
+- Introduction: /docs/aqara-developer/data-export-api/introduction
+- Getting Started with HTTP API: /docs/aqara-developer/data-export-api/getting-started-with-the-data-export-api
+- Try HTTP API Online: /docs/aqara-developer/data-export-api/try-api-online
+- Test API with Postman: /docs/aqara-developer/data-export-api/postman
+- Space: /docs/aqara-developer/data-export-api/space
+- List Spaces: /docs/aqara-developer/data-export-api/get-spaces
+- Create A Space: /docs/aqara-developer/data-export-api/create-space
+- Update A Space Name: /docs/aqara-developer/data-export-api/update-space-name
+- Delete A Space: /docs/aqara-developer/data-export-api/delete-space
+- Gateway: /docs/aqara-developer/data-export-api/gateway
+- List Gateways: /docs/aqara-developer/data-export-api/get-gateways
+- Enable Sub-device Joining: /docs/aqara-developer/data-export-api/join-subdevice
+- Disable Sub-device Joining: /docs/aqara-developer/data-export-api/stop-subdevice-join
+- Query Sub-device Joining Results: /docs/aqara-developer/data-export-api/get-device-bind-result
+- Device: /docs/aqara-developer/data-export-api/device
+- List Device Types: /docs/aqara-developer/data-export-api/get-device-types
+- List Devices: /docs/aqara-developer/data-export-api/get-devices
+- Query Device Model Definition: /docs/aqara-developer/data-export-api/get-device-definitions
+- Query Device Matching Capabilities: /docs/aqara-developer/data-export-api/get-matched-device-capabilities
+- Control Devices by Traits: /docs/aqara-developer/data-export-api/execute-device-trait
+- Query Trait Values: /docs/aqara-developer/data-export-api/get-trait-values
+- Control Devices by Commands: /docs/aqara-developer/data-export-api/execute-device-command
+- Send Command to Device and Wait for Response: /docs/aqara-developer/data-export-api/execute-device-command-await
+- Batch Query Device Point Information: /docs/aqara-developer/data-export-api/query-device-point-info
+- Update Device Name: /docs/aqara-developer/data-export-api/update-device-name
+- Update Device Point Name: /docs/aqara-developer/data-export-api/update-device-point-name
+- Delete A Function: /docs/aqara-developer/data-export-api/delete-device-point
+- Add A Virtual Device: /docs/aqara-developer/data-export-api/add-virtual-device
+- Bind source device function points: /docs/aqara-developer/data-export-api/bind-virtual-device-points
+- Unbind source device function points: /docs/aqara-developer/data-export-api/unbind-virtual-device-points
+- Unbind A Device: /docs/aqara-developer/data-export-api/unbind-device
+- Resource: /docs/aqara-developer/data-export-api/resource
+- Query Open Resource Type Directory: /docs/aqara-developer/data-export-api/list-resource-types
+- Query Resource Type Definition: /docs/aqara-developer/data-export-api/describe-resource-type
+- Paginated Query Resource: /docs/aqara-developer/data-export-api/query-resources
+- Read Known Resource: /docs/aqara-developer/data-export-api/get-resource
+- Modify Known Resource Properties: /docs/aqara-developer/data-export-api/update-resource
+- Execute Resource Command: /docs/aqara-developer/data-export-api/execute-resource-action
+- Automation: /docs/aqara-developer/data-export-api/automation
+- List Endpoint Capabilities for Automation: /docs/aqara-developer/data-export-api/get-automation-capabilities
+- Create An Automation: /docs/aqara-developer/data-export-api/create-automation
+- List Automations: /docs/aqara-developer/data-export-api/query-automation-list
+- Query Automation Details: /docs/aqara-developer/data-export-api/query-automation-details
+- Edit An Automation: /docs/aqara-developer/data-export-api/update-automation
+- Batch Update Automation Statuses: /docs/aqara-developer/data-export-api/update-automation-status
+- Update Space Association for Automations: /docs/aqara-developer/data-export-api/update-automation-space
+- Delete Automations: /docs/aqara-developer/data-export-api/delete-automations
+- Get Manual Trigger List: /docs/aqara-developer/data-export-api/query-automation-manual-trigger-list
+- Execute A Manual Trigger: /docs/aqara-developer/data-export-api/execute-automation-manual-trigger
+- Firmware: /docs/aqara-developer/data-export-api/firmware
+- Query Upgradable Device Firmware by Device IDs: /docs/aqara-developer/data-export-api/search-upgradable-devices-firmware-by-device-ids
+- Initiate Firmware Upgrade: /docs/aqara-developer/data-export-api/upgrade-firmware
+- Query Firmware Upgrade Progress and Result: /docs/aqara-developer/data-export-api/search-firmware-upgrade-status
+- Cancel Firmware Upgrade: /docs/aqara-developer/data-export-api/cancel-upgrade-firmware
+- History: /docs/aqara-developer/data-export-api/history
+- Query Device Trait Value Change History: /docs/aqara-developer/data-export-api/query-device-point-history
+- Studio: /docs/aqara-developer/data-export-api/studio
+- Get Studio Statistics: /docs/aqara-developer/data-export-api/get-studio-statistics
+- EMS: /docs/aqara-developer/data-export-api/ems
+- Get Energy Consumption Trend of a Device: /docs/aqara-developer/data-export-api/get-ems-trend-device
+- Get Energy Consumption Trend of a Space: /docs/aqara-developer/data-export-api/get-ems-trend-space
+- Get Energy Consumption of a Device: /docs/aqara-developer/data-export-api/get-ems-total-device
+- Query Energy Consumption for a Space: /docs/aqara-developer/data-export-api/get-ems-total-space
+- Query Space Energy Consumption Summary: /docs/aqara-developer/data-export-api/get-ems-summary-space
+- Query Multi-Device Energy Consumption Summary: /docs/aqara-developer/data-export-api/get-ems-summary-devices
+- Alarm: /docs/aqara-developer/data-export-api/alarm
+- List Alarms: /docs/aqara-developer/data-export-api/get-alarms
+- Delete An Alarm: /docs/aqara-developer/data-export-api/delete-alarm
+- Clear All Alarms: /docs/aqara-developer/data-export-api/clear-alarms
+- Batch Acknowledge Alarms by UUIDs: /docs/aqara-developer/data-export-api/ack-alarms
+- Batch Acknowledge Alarms by Point ids: /docs/aqara-developer/data-export-api/ack-alarms-by-point-id
+- List Alarm Rules: /docs/aqara-developer/data-export-api/get-alarm-rules
+- WebSocket API Playground: /docs/aqara-developer/data-export-api/websocket-api/websocket-api
+- MQTT: /docs/aqara-developer/data-export-api/mqtt-api/mqtt-api
+- Integrate the Infrared Remote Control SDK with UI: /docs/aqara-developer/local-studio-development/sdk/infrared/integration
+- Infrared Device Integration: /docs/aqara-developer/local-studio-development/features/infrared-device-integration
+- Custom Device Integration: /docs/aqara-developer/local-studio-development/features/custom-device-integration
+- Introduction: /docs/aqara-developer/aiot-api/introduction
+- Getting Started with the AIOT API: /docs/aqara-developer/aiot-api/getting-started-with-the-aiot-api
+- Try API Online: /docs/aqara-developer/aiot-api/try-api-online
+- Space: /docs/aqara-developer/aiot-api/space
+- List Spaces: /docs/aqara-developer/aiot-api/get-spaces
+- Create A Space: /docs/aqara-developer/aiot-api/create-space
+- Update A Space Name: /docs/aqara-developer/aiot-api/update-space-name
+- Device: /docs/aqara-developer/aiot-api/device
+- List Device Types: /docs/aqara-developer/aiot-api/get-device-types
+- List Devices: /docs/aqara-developer/aiot-api/get-devices
+- Query Device Model Definition: /docs/aqara-developer/aiot-api/get-device-definitions
+- Control Devices by Traits: /docs/aqara-developer/aiot-api/execute-device-trait
+- Query Trait Values: /docs/aqara-developer/aiot-api/get-trait-values
+- Control Devices by Commands: /docs/aqara-developer/aiot-api/execute-device-command
+- Core Concepts: /docs/aqara-developer/aqara-data-model-specification/core-concepts
+- Device Types: /docs/aqara-developer/aqara-data-model-specification/device-types
+- Function Codes: /docs/aqara-developer/aqara-data-model-specification/function-codes
+- Trait Codes: /docs/aqara-developer/aqara-data-model-specification/trait-codes
+- Command Codes: /docs/aqara-developer/aqara-data-model-specification/command-codes
+- Data Types: /docs/aqara-developer/aqara-data-model-specification/data-types
 

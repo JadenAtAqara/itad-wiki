@@ -11,7 +11,7 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "UDP 设备接入"]
 
 脚本结构与配置流程，参见 [第三方设备脚本接入指南](../ai-agent-device-onboarding.mdx)。
 
-请参考 [JavaScript 脚本（适用于 UDP 和 TCP）](./../javascript-for-udp-tcp-integration.mdx) 的编写方法，编写符合 **Aqara 物模型规范** 的 JavaScript 脚本。此脚本将用于指导 Aqara Studio 如何发现设备、添加与控制功能点等。
+请参考 [JavaScript 脚本（适用于 UDP 和 TCP）](./../unified-protocol-script.mdx#tcp-udp) 的编写方法，编写符合 **Aqara 物模型规范** 的 JavaScript 脚本。此脚本将用于指导 Aqara Studio 如何发现设备、添加与控制功能点等。
 
 ## 安装插件
 
@@ -59,10 +59,10 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "UDP 设备接入"]
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/UDP-Gear.png" alt="单击齿轮图标" /> 
 
     :::tip
-    [describe().discovery](../javascript-for-udp-tcp-integration.mdx#discovery) 可提供固定目标，或省略 UDP IP 由有效本机网卡计算广播地址。decode 根据真实发现回包返回 devices；没有发现协议时使用当前公开的手工创建入口，不能把静态地址清单当作已完成发现。
+    [describe().discovery](../unified-protocol-script.mdx#tcp-udp-discovery) 可提供固定目标，或省略 UDP IP 由有效本机网卡计算广播地址。decode 根据真实发现回包返回 devices；没有发现协议时使用当前公开的手工创建入口，不能把静态地址清单当作已完成发现。
     :::
 
-    按厂商协议填写 UDP 单播/广播/组播目标和端口，或使用脚本提供的发现配置；[encode(discoverDevices)](../javascript-for-udp-tcp-integration.mdx#discovery) 构造请求，decode 解析响应中的身份和通信地址。
+    按厂商协议填写 UDP 单播/广播/组播目标和端口，或使用脚本提供的发现配置；[encode(discoverDevices)](../unified-protocol-script.mdx#tcp-udp-discovery) 构造请求，decode 解析响应中的身份和通信地址。
 
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/zh/UDP-DiscoveryConfiguration.png" alt="配置服务端 IP 地址和 Port" style={{width: '50%'}} />
 

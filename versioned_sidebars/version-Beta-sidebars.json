@@ -206,9 +206,8 @@
           "label": "JavaScript for Integration",
           "items": [
             "aqara-studio/ai-agent-device-onboarding",
-            "aqara-studio/javascript-for-mqtt-integration",
-            "aqara-studio/javascript-for-http-integration",
-            "aqara-studio/javascript-for-udp-tcp-integration",
+            "aqara-studio/unified-protocol-script",
+            "aqara-studio/protocol-script-mcp-api",
             "aqara-studio/script-supported-unit-symbols"
           ]
         },

@@ -2,7 +2,6 @@ const fs = require('fs/promises');
 const path = require('path');
 const yaml = require('js-yaml');
 
-const SITE_URL = 'https://docs.aqara.com';
 const VERSION_NAME = 'Beta';
 const SIDEBAR_PATH = path.join(
   'versioned_sidebars',
@@ -86,6 +85,7 @@ const UI_TEXT = {
     startHere: 'Recommended starting points',
     allDocs: 'All sidebar-listed docs',
     noDocs: 'No eligible docs were found for this locale.',
+    relativeLinks: "Resolve site-relative links against this index's origin. Copy llms.txt on the page supplies absolute URLs for the current site.",
   },
   zh: {
     siteTitle: 'Aqara 文档中心',
@@ -97,6 +97,7 @@ const UI_TEXT = {
     startHere: '推荐优先阅读',
     allDocs: '侧边栏收录的全部文档',
     noDocs: '当前语言下没有可导出的文档。',
+    relativeLinks: '链接以当前索引所在站点为基准；页面的“复制 llms.txt”会补齐当前站点地址。',
   },
 };
 
@@ -219,7 +220,6 @@ async function buildDocMap(rootDir, locale) {
           title,
           locale,
           permalink,
-          absoluteUrl: `${SITE_URL}${permalink}`,
           frontMatter: data,
           body: cleanedBody,
         },
@@ -280,7 +280,7 @@ function rootLlmsPath(locale) {
 }
 
 function formatDocLine(doc) {
-  return `- ${doc.title}: ${doc.absoluteUrl}`;
+  return `- ${doc.title}: ${doc.permalink}`;
 }
 
 function renderProductIndex(product, docs, locale) {
@@ -292,6 +292,8 @@ function renderProductIndex(product, docs, locale) {
   const lines = [
     `# ${product.names[locale]}`,
     `> ${product.description[locale]}`,
+    '',
+    text.relativeLinks,
     '',
     `## ${text.startHere}`,
   ];
@@ -323,14 +325,16 @@ function renderRootIndex(products, locale) {
     '',
     text.rootLanguageNote,
     '',
-    `- ${text.otherLocaleRootLabel}: ${SITE_URL}${rootLlmsPath(otherLocale)}`,
+    text.relativeLinks,
+    '',
+    `- ${text.otherLocaleRootLabel}: ${rootLlmsPath(otherLocale)}`,
     '',
     `## ${text.productIndexes}`,
   ];
 
   for (const product of products) {
     lines.push(
-      `- ${product.names[locale]}: ${SITE_URL}${productLlmsPath(
+      `- ${product.names[locale]}: ${productLlmsPath(
         locale,
         product.slug,
       )}`,

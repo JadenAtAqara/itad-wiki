@@ -11,7 +11,7 @@ This guide will show you how to integrate UDP protocol devices into Aqara Studio
 
 For the shared script structure and configuration workflow, see the [third-party device script integration guide](../ai-agent-device-onboarding.mdx).
 
-Please refer to the [JavaScript script (for UDP and TCP)](./../javascript-for-udp-tcp-integration.mdx) guide to write a JavaScript script that complies with the **Aqara Data Model Specification**. This script instructs Aqara Studio how to discover devices, and add and control function points.
+Please refer to the [JavaScript script (for UDP and TCP)](./../unified-protocol-script.mdx#tcp-udp) guide to write a JavaScript script that complies with the **Aqara Data Model Specification**. This script instructs Aqara Studio how to discover devices, and add and control function points.
 
 ## Install the Plugin
 
@@ -56,10 +56,10 @@ Please refer to the [Plugin Market](./../plugin-center.mdx) instruction, and go 
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/UDP-Gear.png" alt="Click the gear icon" /> 
 
     :::tip
-    [describe().discovery](../javascript-for-udp-tcp-integration.mdx#discovery) may specify a target or omit UDP IP for local broadcast calculation. Decode real replies into devices; use published manual creation if no discovery protocol exists. A static address list is not completed discovery.
+    [describe().discovery](../unified-protocol-script.mdx#tcp-udp-discovery) may specify a target or omit UDP IP for local broadcast calculation. Decode real replies into devices; use published manual creation if no discovery protocol exists. A static address list is not completed discovery.
     :::
 
-    Enter the vendor unicast/broadcast/multicast destination and port or use script discovery settings. [encode(discoverDevices)](../javascript-for-udp-tcp-integration.mdx#discovery) builds requests; decode parses identity/communication addresses from responses.
+    Enter the vendor unicast/broadcast/multicast destination and port or use script discovery settings. [encode(discoverDevices)](../unified-protocol-script.mdx#tcp-udp-discovery) builds requests; decode parses identity/communication addresses from responses.
 
     <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-studio/en/UDP-DiscoveryConfiguration.png" alt="Configure server IP address and Port" style={{width: '50%'}} />
 
