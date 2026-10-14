@@ -3053,7 +3053,6 @@ paths:
       summary: 查询告警列表
       description: |
         按告警时间范围分页查询告警列表。
-        时间过滤语义：`alarmTime >= startTime` 且 `alarmTime <= endTime`（UTC 毫秒，含边界）。
       operationId: getAlarms
       x-skill-intent: alarm.list
       x-idempotent: true
@@ -3062,7 +3061,7 @@ paths:
       parameters:
         - name: startTime
           in: query
-          description: 查询起始时间（UTC 毫秒时间戳）
+          description: 查询起始时间（UTC 毫秒时间戳，包含该时刻）。
           required: true
           schema:
             type: integer
@@ -3070,7 +3069,7 @@ paths:
           example: 1704067200000
         - name: endTime
           in: query
-          description: 查询结束时间（UTC 毫秒时间戳）
+          description: 查询结束时间（UTC 毫秒时间戳，包含该时刻）。
           required: true
           schema:
             type: integer
@@ -3078,7 +3077,9 @@ paths:
           example: 1704153600000
         - name: pageNum
           in: query
-          description: 页码
+          description: |
+            页码。
+            分页请求时，必须保证其他参数与首次请求一致。
           required: false
           schema:
             type: integer
@@ -3150,7 +3151,7 @@ paths:
     post:
       tags: [Alarm]
       summary: 删除单条告警
-      description: 根据告警记录 uuid 删除单条告警。
+      description: 通过告警的唯一标识（uuid）精确删除指定告警记录。
       operationId: deleteAlarm
       x-skill-intent: alarm.delete
       x-idempotent: true
@@ -3201,7 +3202,7 @@ paths:
     post:
       tags: [Alarm]
       summary: 全量删除告警
-      description: 清空全部告警记录，无需请求体。
+      description: 清空全部告警，无需请求体。
       operationId: clearAlarms
       x-skill-intent: alarm.clear
       x-idempotent: true
@@ -3245,8 +3246,7 @@ paths:
       tags: [Alarm]
       summary: 按 uuid 批量确认告警
       description: |
-        根据告警记录 uuid 列表批量确认告警。
-        `forceCleared` 不对外暴露，服务端固定为 false。
+        根据告警的唯一标识（uuid）列表批量确认告警。
       operationId: ackAlarms
       x-skill-intent: alarm.ack
       x-idempotent: false
@@ -3300,7 +3300,6 @@ paths:
       summary: 按测点批量确认告警
       description: |
         根据 `devicePointId` 批量确认该测点下未确认告警。
-        `forceCleared` 不对外暴露，服务端固定为 false。
       operationId: ackAlarmsByPointId
       x-skill-intent: alarm.ack.by-point
       x-idempotent: false
@@ -3354,7 +3353,6 @@ paths:
       summary: 查询告警规则列表
       description: |
         分页查询告警规则列表（排除模板规则）。
-        可选按 `ruleName` 做不区分大小写的包含匹配过滤。
       operationId: getAlarmRules
       x-skill-intent: alarm.rule.list
       x-idempotent: true
@@ -3363,7 +3361,7 @@ paths:
       parameters: 
         - name: ruleName
           in: query
-          description: 规则名称模糊匹配关键字（缺省时不做过滤）
+          description: 规则名称模糊匹配关键字（不区分大小写，缺省时不做过滤）
           required: false
           schema:
             type: string
@@ -6857,12 +6855,12 @@ components:
     AlarmClass:
       type: string
       enum: [Info, Warning, Critical]
-      description: 告警等级
+      description: 告警等级。
 
     AlarmSourceState:
       type: string
       enum: [NORMAL, OFF_NORMAL, FAULT, ALERT]
-      description: 告警状态
+      description: 告警状态。
 
     AlarmInfo:
       type: object
@@ -6880,40 +6878,40 @@ components:
       properties:
         uuid:
           type: string
-          description: 告警记录唯一标识
+          description: 告警记录唯一标识。
           example: "alarm-uuid-001"
         deviceName:
           type: string
-          description: 告警源设备名称
+          description: 告警源设备名称。
           example: "客厅温湿度传感器"
         deviceId:
           type: string
-          description: 设备ID
+          description: 设备 ID。
           example: "device-001"
         devicePointName:
           type: string
-          description: 测点名称
+          description: 测点名称。
           example: "温度"
         alarmClass:
           $ref: '#/components/schemas/AlarmClass'
         alarmRuleName:
           type: string
-          description: 告警规则名称
+          description: 告警规则名称。
           example: "温度过高告警"
         alarmText:
           type: string
-          description: 告警文案
+          description: 告警文案。
           example: "温度超过阈值"
         alarmValue:
           type: string
-          description: 告警数值/值文案
+          description: 告警数值/值文案。
           example: "32.5"
         sourceState:
           $ref: '#/components/schemas/AlarmSourceState'
         alarmTime:
           type: integer
           format: int64
-          description: 告警时间（UTC 毫秒时间戳）
+          description: 告警时间（UTC 毫秒时间戳）。
           example: 1704100000000
 
     AlarmListData:
@@ -6922,19 +6920,19 @@ components:
       properties:
         totalCount:
           type: integer
-          description: 满足条件的告警总数
+          description: 满足条件的告警总数。
           example: 2
         pageNum:
           type: integer
-          description: 当前页码
+          description: 当前页码。
           example: 1
         pageSize:
           type: integer
-          description: 当前页大小
+          description: 当前页大小。
           example: 200
         data:
           type: array
-          description: 当前页告警列表
+          description: 当前页告警列表。
           items:
             $ref: '#/components/schemas/AlarmInfo'
 
@@ -7011,7 +7009,7 @@ components:
       properties:
         uuids:
           type: array
-          description: 告警记录 uuid 列表
+          description: 告警的唯一标识（uuid）列表。
           minItems: 1
           items:
             type: string
@@ -7019,7 +7017,7 @@ components:
         notes:
           type: string
           nullable: true
-          description: 确认备注（可选）
+          description: 确认备注（可选）。
           example: "已现场确认"
       example:
         uuids: ["alarm-uuid-001", "alarm-uuid-002"]
@@ -7032,7 +7030,7 @@ components:
           properties:
             data:
               type: boolean
-              description: 确认是否成功
+              description: 确认是否成功。
               example: true
       example:
         type: AckAlarmsResponse
@@ -7048,12 +7046,12 @@ components:
       properties:
         devicePointId:
           type: string
-          description: 设备测点 ID
+          description: 设备测点 ID。
           example: "point-001"
         notes:
           type: string
           nullable: true
-          description: 确认备注（可选）
+          description: 确认备注（可选）。
           example: "已现场确认"
       example:
         devicePointId: "point-001"
@@ -7066,7 +7064,7 @@ components:
           properties:
             data:
               type: boolean
-              description: 确认是否成功
+              description: 确认是否成功。
               example: true
       example:
         type: AckAlarmsByPointIdResponse
@@ -7092,44 +7090,44 @@ components:
       properties:
         ruleId:
           type: string
-          description: 告警规则 ID
+          description: 告警规则 ID。
           example: "rule-001"
         ruleName:
           type: string
-          description: 告警规则名称
+          description: 告警规则名称。
           example: "温度过高告警"
         alarmClass:
           $ref: '#/components/schemas/AlarmClass'
         alarmText:
           type: string
-          description: 告警文案
+          description: 告警文案。
           example: "温度超过阈值"
         alarmTarget:
           type: string
-          description: 告警目标（测点/能力显示名）
+          description: 告警目标（测点/能力显示名）。
           example: "温度"
         delayToAlarmMs:
           type: integer
           format: int64
-          description: 触发告警延时（毫秒）
+          description: 触发告警延时（毫秒）。
           example: 5000
         delayToNormalMs:
           type: integer
           format: int64
-          description: 恢复正常延时（毫秒）
+          description: 恢复正常延时（毫秒）。
           example: 10000
         enabled:
           type: boolean
-          description: 规则是否启用
+          description: 规则是否启用。
           example: true
         updatedBy:
           type: string
-          description: 最近更新人
+          description: 最近更新人。
           example: "admin"
         updatedTime:
           type: integer
           format: int64
-          description: 最近更新时间（UTC 毫秒时间戳）
+          description: 最近更新时间（UTC 毫秒时间戳）。
           example: 1704100000000
 
     AlarmRuleListData:
@@ -7138,19 +7136,19 @@ components:
       properties:
         totalCount:
           type: integer
-          description: 满足条件的告警规则总数
+          description: 满足条件的告警规则总数。
           example: 2
         pageNum:
           type: integer
-          description: 当前页码
+          description: 当前页码。
           example: 1
         pageSize:
           type: integer
-          description: 当前页大小
+          description: 当前页大小。
           example: 200
         data:
           type: array
-          description: 当前页告警规则列表
+          description: 当前页告警规则列表。 
           items:
             $ref: '#/components/schemas/AlarmRuleInfo'
 
@@ -7200,7 +7198,7 @@ components:
           properties:
             data:
               type: boolean
-              description: 全量删除是否成功
+              description: 全量删除是否成功。
               example: true
       example:
         type: ClearAlarmsResponse
