@@ -102,7 +102,16 @@ Content-Type: application/json
 
 fixtures 每项严格为 `{entry:"encode"或"decode",input:{...},expected:完整规范化结果}`。不支持 describe 夹具。`valid:true`、fixturesPassed 仅为离线证据，deviceCommunicationVerified 不因此为 true。
 
-文件路径必须在该 Network 类型的 `file:%/protocol-scripts/<namespace>/...js` 下；不能遍历目录或使用任意绝对路径。可从 listScripts 返回 networkBeanId、当前类型和上传结果确定命名空间。
+文件路径必须在该 Network 类型的 `file:%/protocol-scripts/<namespace>/...js` 下；不能遍历目录或使用任意绝对路径。首次上传先调用 `listScripts`，读取 `data.networkBeanId`，即使 `data.scripts` 为空也能构造路径。命名空间规则：去掉 networkBeanId 两端空白，将 `[A-Za-z0-9._-]` 之外的每个字符替换为 `_`，再去掉首尾的 `_`；结果不能是空串、`.` 或 `..`。不要直接把含冒号的 beanId 用作目录名。
+
+| networkBeanId | namespace | scriptPath 示例 |
+| --- | --- | --- |
+| `tcp:TcpNetwork` | `tcp_TcpNetwork` | `file:%/protocol-scripts/tcp_TcpNetwork/vendor.js` |
+| `udp:UdpNetwork` | `udp_UdpNetwork` | `file:%/protocol-scripts/udp_UdpNetwork/vendor.js` |
+| `http:HttpNetwork` | `http_HttpNetwork` | `file:%/protocol-scripts/http_HttpNetwork/vendor.js` |
+| `mqtt:MqttConnNetwork` | `mqtt_MqttConnNetwork` | `file:%/protocol-scripts/mqtt_MqttConnNetwork/vendor.js` |
+
+以上为当前四种类型的示例，以部署实例返回的 networkBeanId 为准。使用自定义 Network 类型时，listScripts、uploadScript 和 readScript 传入同一 networkBeanId；上传后绑定并回读返回的 `extensionScriptPath`。
 
 上传校验失败不替换文件。上传成功也必须检查 reloadFailedCount 并回读引用 Network。覆盖共享文件会重载其他引用者；没有版本 CAS，优先唯一文件名。
 

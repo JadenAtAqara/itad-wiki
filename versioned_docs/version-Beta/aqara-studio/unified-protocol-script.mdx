@@ -120,8 +120,8 @@ Every definition, **including Spec points**, requires integer `access`: read=`1`
 | `pointId` | Nonblank, stable and unique within the device |
 | `pointName` | Optional; defaults to pointId |
 | `dataType` | Prefer `bool`, `number`, `text`, `enum` for generic points; existing normalization also accepts aliases such as `numerical` |
-| `devType` / `functionCode` / `traitCode` | A valid combination from the deployed Spec catalog |
-| `commandCode` | Spec Command; mutually exclusive with traitCode; Commands use `access: 2` |
+| `devType` / `functionCode` / `traitCode` | A valid combination from the deployed Spec catalog; see [data model core concepts](../aqara-developer/aqara-data-model-specification/core-concepts.mdx) |
+| `commandCode` | Spec Command; mutually exclusive with traitCode; Commands use `access: 2`; see [data model core concepts](../aqara-developer/aqara-data-model-specification/core-concepts.mdx) |
 | `customSchema` | Object containing device-specific Command constraints, not a `customSchemeJson` string |
 | `enumRange` | Nonempty static array of `{value: integer, label: nonblank string}` |
 | `dynamicEnumRange` | Boolean flag, described below |
@@ -594,7 +594,7 @@ Proxy `pollFrequency` and the existing Network Poll Scheduler own polling. Do no
 
 The frontend can still edit full source. Saving validates and writes a managed `.js` file; the Network persists only the AOrd `scriptMessageParser/extensionScriptPath`. Open `scriptContent` is an input to `validateScript` / `uploadScript`, not a writable Network property.
 
-An address looks like `file:%/protocol-scripts/tcp_TcpNetwork/vendor-v1.js`; namespace follows Network type. Use the returned upload address, not a guessed disk path. Same-type Networks can share a file; replacement reloads all references and invalidates old debug sessions. Prefer unique new names. No file-version CAS is provided; inspect `referenceCount` before authorizing replacement.
+An address looks like `file:%/protocol-scripts/tcp_TcpNetwork/vendor-v1.js`; namespace follows Network type. See [script file commands](./protocol-script-mcp-api.mdx#script-files) for the first upload; bind the returned upload address, not a guessed disk path. Same-type Networks can share a file; replacement reloads all references and invalidates old debug sessions. Prefer unique new names. No file-version CAS is provided; inspect `referenceCount` before authorizing replacement.
 
 Upgrade migration preserves Network/Device/Point identity and bindings, converting old source/path storage to managed references. Failure retains old fields for repair/retry. **Storage migration does not translate JavaScript**: rewrite legacy entry points; the new runtime has no automatic legacy fallback.
 
