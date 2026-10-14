@@ -3097,7 +3097,7 @@ paths:
           example: 1
         - name: pageSize
           in: query
-          description: Number of items per page
+          description: "Number of items per page (default: 200)."
           required: false
           schema:
             type: integer
@@ -3387,7 +3387,7 @@ paths:
           example: 1
         - name: pageSize
           in: query
-          description: Number of items per page
+          description: "Number of items per page (default: 200)."
           required: false
           schema:
             type: integer

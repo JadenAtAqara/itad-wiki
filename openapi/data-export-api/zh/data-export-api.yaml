@@ -3086,7 +3086,7 @@ paths:
           example: 1
         - name: pageSize
           in: query
-          description: 每页数量。
+          description: 每页数量。默认为 200。
           required: false
           schema:
             type: integer
@@ -3375,7 +3375,7 @@ paths:
           example: 1
         - name: pageSize
           in: query
-          description: 每页数量。
+          description: 每页数量。默认为 200。
           required: false
           schema:
             type: integer
