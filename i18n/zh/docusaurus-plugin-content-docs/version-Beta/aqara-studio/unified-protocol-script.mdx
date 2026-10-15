@@ -498,9 +498,11 @@ body 是 UTF-8 字符串，bytes 是准确 Uint8Array/0 到 255 整数数组。�
 
 顶层 deviceId 明确上报归属。订阅分组只有一台设备时可以省略，由绑定决定；多设备共享主题时必须明确，否则拒绝应用，不能把同名点广播更新到其他设备。上报解码前仅有 Network 参数。
 
-在同一订阅分组内，一个 ID 必须唯一对应一台设备实例。不同设备业务 ID 重复时，路由拒绝该上报，不能同时应用到两台设备；同一设备的多个点不受此限制。
+在同一订阅分组内，一个 ID 必须唯一对应一台设备实例。不同设备的业务 ID 或回退标识重复时，路由拒绝该上报，不能同时应用到两台设备；同一设备的多个点不受此限制。
 
-统一脚本 MqttDevice 的点发现、普通读写 encode、上报归属与 Open 调试均使用**业务 deviceId**，不是 Broker 连接的 clientId；clientId 继续只作为独立 MQTT 连接标识。此行为要求版本包含对应的业务 ID 路由修复，旧包普通入口仍可能传入/匹配 clientId。先确认部署版本，不应仅为迁就脚本而修改已有连接的 clientId。
+统一脚本 MqttDevice 的点发现、重复发现/导入匹配、普通读写 encode、上报归属与 Open 调试使用同一有效标识：非空白的业务 `deviceId` 原样传递；空字符串或纯空白时回退到 `getDeviceUuid()`。MqttDevice 与旧 MqttConnDevice 的回退值是既有 `clientId`，不修改已保存的 deviceId/clientId。业务 ID 有效时，上报不能用 clientId 替代；clientId 仍是独立的 Broker 连接标识。
+
+新发现设备仍必须提供非空白 deviceId，回退仅用于已存在的未初始化或遗留设备。先确认部署版本同时包含业务 ID 路由及空白 ID 回退修复，旧包各入口使用的 ID 可能不同。
 
 #### 查询与 Command {#mqtt-commands}
 

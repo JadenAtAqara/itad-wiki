@@ -496,9 +496,11 @@ Incoming decode receives `{transport:"mqtt",operation:"report",topic,bytes,body,
 
 Top-level deviceId identifies ownership. It may be omitted in a single-device subscription group; multiple devices sharing topics must identify the device or application is rejected. Never apply same-name points to every device. Reports have only Network parameters before identity is known.
 
-Within a subscription group, an ID must identify exactly one device instance. If distinct devices have the same business ID, routing rejects the report rather than applying it to both. Multiple points owned by the same device remain valid.
+Within a subscription group, an ID must identify exactly one device instance. If distinct devices have the same business ID or fallback ID, routing rejects the report rather than applying it to both. Multiple points owned by the same device remain valid.
 
-For unified MqttDevice, point discovery, ordinary read/write encode, report ownership and Open debugging all use the **business deviceId**, not the Broker connection's clientId. The clientId remains a separate MQTT connection identifier. This behavior requires the corresponding business-ID routing fix; older packages may still pass/match clientId in ordinary paths. Verify the deployed package, and do not change an existing connection's clientId merely to make it look like a business ID.
+For unified MqttDevice, point discovery, rediscovery/import matching, ordinary read/write encode, report ownership and Open debugging use the same effective ID: a nonblank business `deviceId` is passed unchanged; an empty or whitespace-only ID falls back to `getDeviceUuid()`. For MqttDevice and legacy MqttConnDevice, that fallback is the existing `clientId`. This does not modify persisted deviceId/clientId. A valid business ID cannot be replaced by clientId when routing reports; clientId remains the separate Broker connection identifier.
+
+Newly discovered devices must still provide a nonblank deviceId; fallback only supports existing uninitialized or legacy devices. Verify that the deployed package includes both business-ID routing and blank-ID fallback fixes; older packages may use different IDs across these entry points.
 
 #### Queries and Commands {#mqtt-commands}
 

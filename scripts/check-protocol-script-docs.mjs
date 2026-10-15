@@ -71,6 +71,25 @@ function checkGenerationTemplate(text) {
   return 4;
 }
 
+function checkMqttIdentityCompatibility(text, locale) {
+  for (const term of ['`deviceId`', '`getDeviceUuid()`', '`clientId`']) {
+    assert.ok(text.includes(term), `Missing MQTT identity term: ${term}`);
+  }
+  const rules = locale === 'zh' ? [
+    /非空白(?:的业务|业务) `deviceId` 原样传递/,
+    /空字符串或纯空白时回退到 `getDeviceUuid\(\)`/,
+    /不修改已保存的 deviceId\/clientId/,
+    /新发现设备仍必须提供非空白 deviceId/,
+  ] : [
+    /nonblank business `deviceId` is passed unchanged/,
+    /empty or whitespace-only ID falls back to `getDeviceUuid\(\)`/,
+    /does not modify persisted deviceId\/clientId/,
+    /Newly discovered devices must still provide a nonblank deviceId/,
+  ];
+  for (const rule of rules) assert.match(text, rule);
+  return 3 + rules.length;
+}
+
 // 这里只检查文档示例，不替代 Studio 的 GraalJS 校验或实机通信。
 function call(context, entry, input) {
   context.__docInput = structuredClone(input);
@@ -106,7 +125,14 @@ for (const [locale, directory] of Object.entries(locales)) {
     const scripts = [...text.matchAll(/^```javascript[^\r\n]*\r?\n([\s\S]*?)^```\s*$/gm)]
       .map(match => match[1]);
     examples.set(`${locale}/${name}`, scripts);
-    if (name === 'unified-protocol-script') equal(scripts.length, scriptKinds.length);
+    if (name === 'unified-protocol-script') {
+      equal(scripts.length, scriptKinds.length);
+      checks += checkMqttIdentityCompatibility(text, locale);
+      assert.throws(() => checkMqttIdentityCompatibility(text.replace(
+        locale === 'zh' ? '空字符串或纯空白时回退到' : 'empty or whitespace-only ID falls back to',
+        'identity-rule-removed'), locale));
+      checks += 1;
+    }
     else equal(scripts.length, 0);
     for (const [index, source] of scripts.entries()) {
       const kind = scriptKinds[index];
@@ -345,8 +371,11 @@ if (process.env.STUDIO_SOURCE_ROOT) {
   ok(udpFrames.includes('return data.copyOfRange(start, start + totalLength)'), 'UDP frame extraction changed');
   const mqttAuth = await source('AIOT_studio_mqtt', 'src/main/kotlin/com/lumi/framework/mqtt/util/AMqttConnectionType.kt');
   ok(mqttAuth.includes('X509_OVER_SSL = 4'), 'MQTT X.509 mode changed');
+  const mqttIdentity = await source('AIOT_studio_mqtt', 'src/main/kotlin/com/lumi/framework/mqtt/MqttScriptIdentity.kt');
+  ok(mqttIdentity.includes('?.deviceId?.takeIf(String::isNotBlank) ?: getDeviceUuid()'),
+    'MQTT empty/whitespace business-ID fallback changed; recheck docs');
   const mqttProxy = await source('AIOT_studio_mqtt', 'src/main/kotlin/com/lumi/framework/mqtt/proxyExt/subAndPub/MqttSubAndPubExt.kt');
-  ok(mqttProxy.includes('getScriptDevice()?.deviceId ?: getDevice().getDeviceUuid()'), 'MQTT business-ID resolver missing');
+  ok(mqttProxy.includes('getDevice().getMqttScriptDeviceId()'), 'MQTT ordinary paths do not use the common identity resolver');
   ok(mqttProxy.includes('parser.buildReadRequest(getScriptDeviceId(), pointUuid)'), 'MQTT ordinary read identity differs from docs');
   ok(mqttProxy.includes('parser.buildWriteRequest(getScriptDeviceId(), pointUuid, rValue)'), 'MQTT ordinary write identity differs from docs');
   ok(mqttProxy.includes('getRefreshFrequency(): ARefreshFrequency = ARefreshFrequency.normal'), 'MQTT refresh tier changed');
@@ -355,7 +384,15 @@ if (process.env.STUDIO_SOURCE_ROOT) {
   ok(!mqttRoute.includes('getDeviceUuid()'), 'MQTT report ownership still uses a connection ID');
   ok(mqttRoute.includes('targetPoints.any { it.getDevice() !== targetDevice }'), 'MQTT ambiguous-device report guard missing');
   const mqttDebug = await source('AIOT_studio_mqtt', 'src/main/kotlin/com/lumi/framework/mqtt/MqttProtocolDebugAdapter.kt');
-  ok(mqttDebug.includes('parser.buildReadRequest(request.device.deviceId,'), 'MQTT debug identity changed');
+  ok(mqttDebug.includes('val deviceId = request.device.getMqttScriptDeviceId()') &&
+    mqttDebug.includes('parser.buildReadRequest(deviceId,') && mqttDebug.includes('parser.buildWriteRequest(deviceId,'),
+    'MQTT debug read/write identity differs from ordinary paths');
+  const mqttPointDiscovery = await source('AIOT_studio_mqtt', 'src/main/kotlin/com/lumi/framework/mqtt/discover/MqttDeviceDiscoverPointsJob.kt');
+  ok(mqttPointDiscovery.includes('val deviceId = device.getMqttScriptDeviceId()'), 'MQTT point discovery identity differs from runtime');
+  const mqttDiscovery = await source('AIOT_studio_mqtt', 'src/main/kotlin/com/lumi/framework/mqtt/discover/MqttDiscoverDevicesJob.kt');
+  ok(mqttDiscovery.includes('it.getMqttScriptDeviceId()'), 'MQTT rediscovery ignores the effective identity');
+  const mqttImport = await source('AIOT_studio_mqtt', 'src/main/kotlin/com/lumi/framework/mqtt/discover/MqttDiscoveryDevice.kt');
+  ok(mqttImport.includes('it.getMqttScriptDeviceId() == this.deviceId'), 'MQTT import identity differs from rediscovery');
   const httpDevice = await source('AIOT_studio_http', 'src/main/kotlin/com/lumi/framework/http/HttpDevice.kt');
   ok(httpDevice.includes('override fun doProbe()') && httpDevice.includes('probeOk()') && !httpDevice.includes('buildDebugProbeRequest'),
     'HTTP ordinary probing changed; recheck docs');
@@ -381,6 +418,10 @@ if (process.env.STUDIO_SOURCE_ROOT) {
     '用 resource_read 回读实例 data.schema', '回读实例 configSchema')));
   checks += 1;
   for (const guide of [generationGuide, debugGuide]) {
+    checks += checkMqttIdentityCompatibility(guide, 'zh');
+    assert.throws(() => checkMqttIdentityCompatibility(guide.replace(
+      '空字符串或纯空白时回退到', 'identity-rule-removed'), 'zh'));
+    checks += 1;
     ok(guide.includes('data.schema') && guide.includes('hasMore'), 'Bundled guide uses stale Resource paths');
     ok(guide.includes('Station.station.communication'), 'Bundled guide omits permission owner');
   }
