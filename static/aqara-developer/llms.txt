@@ -108,4 +108,5 @@ Resolve site-relative links against this index's origin. Copy llms.txt on the pa
 - Trait Codes: /docs/aqara-developer/aqara-data-model-specification/trait-codes
 - Command Codes: /docs/aqara-developer/aqara-data-model-specification/command-codes
 - Data Types: /docs/aqara-developer/aqara-data-model-specification/data-types
+- Aqara Spec 物模型标签: /docs/aqara-developer/aqara-data-model-specification/aqara-data-model-specification
 

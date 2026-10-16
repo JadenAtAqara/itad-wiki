@@ -108,4 +108,5 @@
 - 功能点代码: /zh/docs/aqara-developer/aqara-data-model-specification/trait-codes
 - 命令代码: /zh/docs/aqara-developer/aqara-data-model-specification/command-codes
 - 数据类型: /zh/docs/aqara-developer/aqara-data-model-specification/data-types
+- Aqara Spec 物模型标签: /zh/docs/aqara-developer/aqara-data-model-specification/aqara-data-model-specification
 
