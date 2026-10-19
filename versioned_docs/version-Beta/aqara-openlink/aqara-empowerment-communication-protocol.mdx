@@ -26,8 +26,8 @@ This specification covers:
 - Data Types, data frame encoding, and application Interaction formats (see [Chapter 3](#chapter-3-data-types-and-interaction-format))
 - Power-on initialization flow, including Link Establishment, Profile Discovery, Server data sync, and Wake Signaling (see [Chapter 4](#chapter-4-initialization))
 - Profile model, Response, retry, and related implementation rules (see [Chapter 5](#chapter-5-profile-model-and-implementation-rules))
-- Attributes and Commands definitions for the Foundation Profile and product Profiles (see [Chapter 6](#chapter-6-foundation-profile-profile-id--0x0000) and [Chapter 7](#chapter-7-thermostat-profile-profile-id--0x1000))
-- Firmware online upgrade (OTA) sub-protocol (see [Chapter 6 Foundation Profile](#chapter-6-foundation-profile-profile-id--0x0000))
+- Attributes and Commands definitions for the Foundation Profile and product Profiles (see [Chapter 6](#chapter-6-foundation-profile-profile-id--0x0000), [Chapter 7](#chapter-7-thermostat-profile-profile-id--0x1000), [Chapter 8](#chapter-8-clothes-rack-profile-profile-id--0x1001), [Chapter 9](#chapter-9-toilet-profile-profile-id--0x1002))
+- Firmware online upgrade (OTA) sub-protocol (see [Chapter 6](#chapter-6-foundation-profile-profile-id--0x0000))
 - Serial message encoding and decoding examples (see [Appendix A](#appendix-a-uart-message-examples))
 
 This specification is intended for embedded firmware developers and provides the technical details required for interoperability.
@@ -74,7 +74,7 @@ Logically, AECP can be divided into four layers. From bottom to top, each layer 
 | Physical Layer     | UART electrical characteristics and timing, Wake Pin and Wake Signaling         | [Chapter 2](#chapter-2-hardware-interface), [Chapter 4](#chapter-4-initialization)                                                                                 |
 | Frame Layer        | Frame structure, field encoding, byte order, HCS, and CRC checks              | [Chapter 3](#chapter-3-data-types-and-interaction-format)                                                                                                                     |
 | Transaction Layer  | Operation Code semantics, request and Response pairing, Seq correlation, timeout, and retry | [Chapter 3](#chapter-3-data-types-and-interaction-format), [Chapter 5](#chapter-5-profile-model-and-implementation-rules)                                            |
-| Application Layer  | Attributes, Commands, Profiles, and OTA sub-protocols                         | [Chapter 5](#chapter-5-profile-model-and-implementation-rules), [Chapter 6](#chapter-6-foundation-profile-profile-id--0x0000), [Chapter 7](#chapter-7-thermostat-profile-profile-id--0x1000) |
+| Application Layer  | Attributes, Commands, Profiles, and OTA sub-protocols                         | [Chapter 5](#chapter-5-profile-model-and-implementation-rules), [Chapter 6](#chapter-6-foundation-profile-profile-id--0x0000), [Chapter 7](#chapter-7-thermostat-profile-profile-id--0x1000), [Chapter 8](#chapter-8-clothes-rack-profile-profile-id--0x1001), [Chapter 9](#chapter-9-toilet-profile-profile-id--0x1002) |
 
 #### Core Concepts and Interaction Model
 
@@ -1314,6 +1314,8 @@ The Data Type of `Profile ID` is `uint16`, and its value range SHALL follow the 
 | --- | --- | --- |
 | `0x0000` | Foundation Profile | All devices SHALL support it. Attributes: `0x0000~0x0FFF` (Client Attributes), `0x1000~0x1FFF` (Server Attributes); Commands are uniformly defined by the Foundation Profile Commands table. |
 | `0x1000` | Thermostat Profile | Attributes and Commands specific to thermostat devices. Server Attributes SHALL use the `0x1000 ~ 0x1FFF` segment. If a Server declares the Thermostat Profile, its `ProductProfileID` is `0x1000`. |
+| `0x1001` | Clothes Rack Profile | Attributes and Commands specific to clothes rack devices. Server Attributes SHALL use the `0x1000 ~ 0x1FFF` segment. If a Server declares the Clothes Rack Profile, its `ProductProfileID` is `0x1001`. |
+| `0x1002` | Toilet Profile | Attributes and Commands specific to toilet devices. Server Attributes SHALL use the `0x1000 ~ 0x1FFF` segment. If a Server declares the  Toilet Profile, its `ProductProfileID` is `0x1002`. |
 
 ### Attributes and Commands Addressing Rules
 
@@ -1429,6 +1431,8 @@ Attributes, Commands, enumerations, bitmaps, and parameter tables for specific P
 
 - [Foundation Profile (0x0000)](#chapter-6-foundation-profile-profile-id--0x0000)
 - [Thermostat Profile (0x1000)](#chapter-7-thermostat-profile-profile-id--0x1000)
+- [Clothes Rack Profile (0x1001)](#chapter-8-clothes-rack-profile-profile-id--0x1001)
+- [Toilet Profile (0x1002)](#chapter-9-toilet-profile-profile-id--0x1002)
 
 ## Chapter 6 Foundation Profile (Profile ID = 0x0000)
 
@@ -2772,9 +2776,9 @@ This Command requests that the target light color temperature be set.
 
 `ColorTemperature` is expressed in kelvins. The final setting SHALL be reported through `ColorTemperature`.
 
-## Chapter 9 Toilet Profile (Profile ID = 0x1001)
+## Chapter 9 Toilet Profile (Profile ID = 0x1002)
 
-Toilet Profile defines Toilet-specific Attributes, Commands, and AECP report mappings for device events, and applies to communication frames whose Profile ID in the frame header is `0x1001`.
+Toilet Profile defines Toilet-specific Attributes, Commands, and AECP report mappings for device events, and applies to communication frames whose Profile ID in the frame header is `0x1002`.
 
 All devices that implement Toilet Profile SHALL also implement all Mandatory Attributes and Commands defined in [Foundation Profile (0x0000)](#chapter-6-foundation-profile-profile-id--0x0000).
 
