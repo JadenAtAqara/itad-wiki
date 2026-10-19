@@ -26,7 +26,7 @@ Client 负责实现 IoT 无线协议的接入与赋能，承担网络管理、�
 - 数据类型、数据帧编码与应用交互格式（参见 [第三章](#第三章-数据类型与交互格式)）
 - 上电初始化流程，包括 Link Establishment、Profile Discovery、Server 数据同步与 Wake Signaling（参见 [第四章](#第四章-初始化)）
 - Profile 体系、应答与重传等实现规则（参见 [第五章](#第五章-profile-体系与实现规则)）
-- Foundation Profile 与产品 Profile 的属性、命令定义（参见 [第六章](#第六章-foundation-profileprofile-id--0x0000)、[第七章](#第七章-thermostat-profileprofile-id--0x1000)、[第八章](#第八章-clothes-rack-profileprofile-id--0x1001)、[第九章](#第九章-toilet-profileprofile-id--0x1001)）
+- Foundation Profile 与产品 Profile 的属性、命令定义（参见 [第六章](#第六章-foundation-profileprofile-id--0x0000)、[第七章](#第七章-thermostat-profileprofile-id--0x1000)、[第八章](#第八章-clothes-rack-profileprofile-id--0x1001)、[第九章](#第九章-toilet-profileprofile-id--0x1002)）
 - 固件在线升级（OTA）子协议（参见 [第六章](#第六章-foundation-profileprofile-id--0x0000)）
 - 串口消息编解码示例（参见 [附录 A](#附录-a串口消息示例)）
 
@@ -73,7 +73,7 @@ AECP 在逻辑上可分为四层，自底向上各层职责独立、依次封装
 | 物理层 | UART 电气与时序、Wake Pin 与 Wake Signaling | [第二章](#第二章-硬件接口)、[第四章](#第四章-初始化) |
 | 帧层 | 帧结构、字段编码、字节序、HCS 与 CRC 校验 | [第三章](#第三章-数据类型与交互格式) |
 | 事务层 | 操作码语义、请求与应答配对、Seq 关联、超时与重传 | [第三章](#第三章-数据类型与交互格式)、[第五章](#第五章-profile-体系与实现规则) |
-| 应用层 | 属性、命令、Profile 与 OTA 子协议 | [第五章](#第五章-profile-体系与实现规则)、[第六章](#第六章-foundation-profileprofile-id--0x0000)、[第七章](#第七章-thermostat-profileprofile-id--0x1000)、[第八章](#第八章-clothes-rack-profileprofile-id--0x1001)、[第九章](#第九章-toilet-profileprofile-id--0x1001) |
+| 应用层 | 属性、命令、Profile 与 OTA 子协议 | [第五章](#第五章-profile-体系与实现规则)、[第六章](#第六章-foundation-profileprofile-id--0x0000)、[第七章](#第七章-thermostat-profileprofile-id--0x1000)、[第八章](#第八章-clothes-rack-profileprofile-id--0x1001)、[第九章](#第九章-toilet-profileprofile-id--0x1002) |
 
 #### 核心概念与交互模型
 
@@ -2791,7 +2791,7 @@ Server SHALL 将计算得到的目标位置限制在有效位置范围内。运�
 
 `ColorTemperature` 的单位为开尔文。最终设置结果 SHALL 通过 `ColorTemperature` REPORT。
 
-## 第九章 Toilet Profile（Profile ID = 0x1001）
+## 第九章 Toilet Profile（Profile ID = 0x1002）
 
 Toilet Profile 定义智能马桶设备的专有属性、命令及设备事件的 AECP 上报映射，适用于帧头 Profile ID = `0x1001` 的通信帧。
 
@@ -3418,95 +3418,95 @@ Event 上报 SHALL 遵循 Profile Discovery 规则。在 `ProfileDiscoveryComple
 | --- | --- | --- | --- | --- |
 | 1 | Action | [ToggleActionEnum8](#toggleactionenum8-类型) | 见枚举 | — |
 
-##### 字段说明
+###### 字段说明
 
 `Close` 请求关闭座盖，`Open` 请求打开座盖，`Toggle` 请求切换到与当前稳定状态相反的状态。座盖不处于可确定的稳定状态时，Server SHOULD 在 `LidControlRsp` 中返回 `InvalidInState` 或 `Busy`。
 
 最终稳定状态由 `LidState` 表示。
 
-### LidControlRsp 命令
+#### LidControlRsp 命令
 
 该命令 SHALL 作为 [LidControlReq](#lidcontrolreq-命令) 的响应发送。
 
-#### 参数
+##### 参数
 
 | 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
 | --- | --- | --- | --- | --- |
 | 1 | Status | [StatusCodeEnum8](#statuscodeenum8-类型) | 见枚举 | — |
 
-#### 字段说明
+##### 字段说明
 
 `Status` 表示座盖控制处理结果。`Success` 表示请求已接受；最终座盖状态由 `LidState` 表示。
 
-### SeatControlReq 命令
+#### SeatControlReq 命令
 
 该命令请求 Server 关闭、打开或切换座圈状态。Server SHALL 遵守座盖与座圈之间的机械互锁和着座安全条件。
 
-#### 参数
+##### 参数
 
 | 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
 | --- | --- | --- | --- | --- |
 | 1 | Action | [ToggleActionEnum8](#toggleactionenum8-类型) | 见枚举 | — |
 
-#### 字段说明
+###### 字段说明
 
 `Close` 请求关闭座圈，`Open` 请求打开座圈，`Toggle` 请求切换到与当前稳定状态相反的状态。最终稳定状态由 `SeatState` 表示。
 
-### SeatControlRsp 命令
+#### SeatControlRsp 命令
 
 该命令 SHALL 作为 [SeatControlReq](#seatcontrolreq-命令) 的响应发送。
 
-#### 参数
+##### 参数
 
 | 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
 | --- | --- | --- | --- | --- |
 | 1 | Status | [StatusCodeEnum8](#statuscodeenum8-类型) | 见枚举 | — |
 
-#### 字段说明
+###### 字段说明
 
 `Status` 表示座圈控制处理结果。`Success` 表示请求已接受；最终座圈状态由 `SeatState` 表示。
 
-### FlushControlReq 命令
+#### FlushControlReq 命令
 
 该命令请求 Server 执行指定类型的冲水。Server SHALL 根据当前状态和安全条件决定是否接受请求，并 MAY 停止与冲水冲突的清洗或烘干操作。
 
-#### 参数
+##### 参数
 
 | 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
 | --- | --- | --- | --- | --- |
 | 1 | FlushType | [FlushTypeEnum8](#flushtypeenum8-类型) | 见枚举 | — |
 
-#### 字段说明
+###### 字段说明
 
 `LargeFlush` 请求大冲水，`SmallFlush` 请求小冲水。每次冲水的最终结果 SHALL 通过 `FlushExecutionResult` 事件映射属性 REPORT。
 
-### FlushControlRsp 命令
+#### FlushControlRsp 命令
 
 该命令 SHALL 作为 [FlushControlReq](#flushcontrolreq-命令) 的响应发送。
 
-#### 参数
+##### 参数
 
 | 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
 | --- | --- | --- | --- | --- |
 | 1 | Status | [StatusCodeEnum8](#statuscodeenum8-类型) | 见枚举 | — |
 
-#### 字段说明
+###### 字段说明
 
 `Status` 表示冲水请求处理结果。`Success` 表示请求已接受，不表示冲水已经完成。冲水完成或失败由 `FlushExecutionResult` REPORT 表示。
 
-### WashDryCombinationControlReq 命令
+#### WashDryCombinationControlReq 命令
 
 该命令请求 Server 启动或停止清洗和烘干流程。Server SHALL 使用当前配置的清洗模式、水温、水压、喷嘴位置、`DryingTemperatureLevel`、`FanSpeedLevel` 和持续时间属性处理请求。
 
 要求人体清洗或暖风烘干的请求仅在检测到用户着座且满足安全条件时 MAY 执行。已接受的请求启动或停止暖风烘干时，Server SHALL 同步更新并 REPORT `EnableDrying`。
 
-#### 参数
+##### 参数
 
 | 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
 | --- | --- | --- | --- | --- |
 | 1 | Action | [WashDryActionEnum8](#washdryactionenum8-类型) | 见枚举 | — |
 
-#### 字段说明
+###### 字段说明
 
 - `Stop`：停止当前清洗或烘干。
 - `DryOnly`：启动暖风烘干。
@@ -3515,31 +3515,31 @@ Event 上报 SHALL 遵循 Profile Discovery 规则。在 `ProfileDiscoveryComple
 
 人体清洗完成或失败 SHALL 通过 `WashExecutionResult` 事件映射属性 REPORT。
 
-### WashDryCombinationControlRsp 命令
+#### WashDryCombinationControlRsp 命令
 
 该命令 SHALL 作为 [WashDryCombinationControlReq](#washdrycombinationcontrolreq-命令) 的响应发送。
 
-#### 参数
+##### 参数
 
 | 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
 | --- | --- | --- | --- | --- |
 | 1 | Status | [StatusCodeEnum8](#statuscodeenum8-类型) | 见枚举 | — |
 
-#### 字段说明
+###### 字段说明
 
 `Status` 表示清洗/烘干请求处理结果。`Success` 表示请求已接受。人体清洗完成或失败由 `WashExecutionResult` REPORT 表示。
 
-### NozzleCleanReq 命令
+#### NozzleCleanReq 命令
 
 该命令请求 Server 控制喷嘴清洁或人工维护位置。自动清洁和人工维护伸出 SHOULD 仅在无人着座且不存在冲突操作时执行。检测到用户着座时，Server SHALL 停止维护动作，并在安全条件允许时收回喷嘴。
 
-#### 参数
+##### 参数
 
 | 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
 | --- | --- | --- | --- | --- |
 | 1 | Action | [NozzleCleanActionEnum8](#nozzlecleanactionenum8-类型) | 见枚举 | — |
 
-#### 字段说明
+###### 字段说明
 
 - `Off`：停止清洁并收回喷嘴。
 - `AutoClean`：执行自动喷嘴清洁。
@@ -3547,73 +3547,73 @@ Event 上报 SHALL 遵循 Profile Discovery 规则。在 `ProfileDiscoveryComple
 
 自动喷嘴清洁完成或失败 SHALL 通过 `NozzleCleanExecutionResult` 事件映射属性 REPORT。
 
-### NozzleCleanRsp 命令
+#### NozzleCleanRsp 命令
 
 该命令 SHALL 作为 [NozzleCleanReq](#nozzlecleanreq-命令) 的响应发送。
 
-#### 参数
+##### 参数
 
 | 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
 | --- | --- | --- | --- | --- |
 | 1 | Status | [StatusCodeEnum8](#statuscodeenum8-类型) | 见枚举 | — |
 
-#### 字段说明
+###### 字段说明
 
 `Status` 表示喷嘴清洁或维护请求处理结果。`Success` 表示请求已接受。自动喷嘴清洁完成或失败由 `NozzleCleanExecutionResult` REPORT 表示。
 
-### FoamShieldControlReq 命令
+#### FoamShieldControlReq 命令
 
 该命令请求 Server 开始或停止手动泡沫盾释放。Server SHALL 对连续释放时间应用产品定义的安全上限。
 
-#### 参数
+##### 参数
 
 | 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
 | --- | --- | --- | --- | --- |
 | 1 | Action | [FoamShieldActionEnum8](#foamshieldactionenum8-类型) | 见枚举 | — |
 
-#### 字段说明
+###### 字段说明
 
 `Start` 请求开始释放泡沫，`Stop` 请求停止释放泡沫。每次泡沫释放完成或失败 SHALL 通过 `FoamShieldExecutionResult` 事件映射属性 REPORT。
 
-### FoamShieldControlRsp 命令
+#### FoamShieldControlRsp 命令
 
 该命令 SHALL 作为 [FoamShieldControlReq](#foamshieldcontrolreq-命令) 的响应发送。
 
-#### 参数
+##### 参数
 
 | 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
 | --- | --- | --- | --- | --- |
 | 1 | Status | [StatusCodeEnum8](#statuscodeenum8-类型) | 见枚举 | — |
 
-#### 字段说明
+###### 字段说明
 
 `Status` 表示泡沫盾控制处理结果。`Success` 表示请求已接受。泡沫释放完成或失败由 `FoamShieldExecutionResult` REPORT 表示。
 
-### CleanFoamSystemControlReq 命令
+#### CleanFoamSystemControlReq 命令
 
 该命令请求 Server 释放防溅泡沫或执行一次发泡装置水路清洗。Server 仅在所需物料或供水可用且不存在冲突或不安全操作时 MAY 接受该命令。
 
-#### 参数
+##### 参数
 
 | 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
 | --- | --- | --- | --- | --- |
 | 1 | Action | [CleanFoamSystemActionEnum8](#cleanfoamsystemactionenum8-类型) | 见枚举 | — |
 
-#### 字段说明
+###### 字段说明
 
 `ReleaseAntiSplashFoam` 请求向便池内释放防溅泡沫；`CleanFoamSystem` 请求执行一次发泡装置水路清洗。对于不支持的值，Server SHALL 在 `CleanFoamSystemControlRsp` 中返回 `InvalidParameter`。
 
-### CleanFoamSystemControlRsp 命令
+#### CleanFoamSystemControlRsp 命令
 
 该命令 SHALL 作为 [CleanFoamSystemControlReq](#cleanfoamsystemcontrolreq-命令) 的响应发送。
 
-#### 参数
+##### 参数
 
 | 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
 | --- | --- | --- | --- | --- |
 | 1 | Status | [StatusCodeEnum8](#statuscodeenum8-类型) | 见枚举 | — |
 
-#### 字段说明
+###### 字段说明
 
 `Status` 表示所请求发泡装置动作的处理结果。`Success` 表示请求已接受。
 
