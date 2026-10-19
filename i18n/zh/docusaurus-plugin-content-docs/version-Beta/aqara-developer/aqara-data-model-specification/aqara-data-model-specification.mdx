@@ -355,6 +355,12 @@ Parameter ID 采用 16 位整数标识，有效范围为 `0x0001` ~ `0xFFFE`（1
       <td>-</td>
       <td>Present Value 为 Array/List 时允许的最大元素个数（Uint32）</td>
     </tr>
+    <tr>
+      <td>0x0010</td>
+      <td>Counter Generation</td>
+      <td>-</td>
+      <td>Trait 的可选只读 Parameter（Uint32），用于标识累计计数器代际；当实现无法保证逻辑累计值连续且要求精确计算差值时必须提供。</td>
+    </tr>
   </tbody>
 </table>
 
@@ -529,7 +535,7 @@ Parameter ID 采用 16 位整数标识，有效范围为 `0x0001` ~ `0xFFFE`（1
     <tr>
       <td><a href="#ref_Aqara_Spec_Speaker">0x0092</a></td>
       <td>Speaker</td>
-      <td>描述设备扬声器输出能力，包括音量控制及静音等音频输出属性。</td>
+      <td>描述设备扬声器输出能力，包括文本转语音播报、音量控制及静音等音频输出功能。</td>
     </tr>
     <tr>
       <td><a href="#ref_Aqara_Spec_PowerSource">0x0093</a></td>
@@ -1104,7 +1110,7 @@ Parameter ID 采用 16 位整数标识，有效范围为 `0x0001` ~ `0xFFFE`（1
     <tr>
       <td><a href="#ref_Aqara_Spec_VoiceAssistant">0x0105</a></td>
       <td>VoiceAssistant</td>
-      <td>管理设备语音交互能力，包括唤醒词、语音控制开关、近场唤醒及空间区域配置。</td>
+      <td>管理设备语音交互能力，包括唤醒词、语音控制开关、语音音色、连续对话、语音控制语言、近场唤醒及空间区域配置。</td>
     </tr>
     <tr>
       <td><a href="#ref_Aqara_Spec_VoiceIntercom">TBD</a></td>
@@ -1290,6 +1296,26 @@ Parameter ID 采用 16 位整数标识，有效范围为 `0x0001` ~ `0xFFFE`（1
       <td><a href="#ref_Aqara_Spec_Buzzer">0x013A</a></td>
       <td>Buzzer</td>
       <td>表示设备蜂鸣器的控制功能域，用于播放或停止蜂鸣器声音，支持设置播放音量和播放时长，适用于门铃提示、报警提醒、操作反馈等场景。</td>
+    </tr>
+    <tr>
+      <td><a href="#ref_Aqara_Spec_GasMetering">0x013B</a></td>
+      <td>GasMetering</td>
+      <td>提供燃气计量相关能力，包括燃气热值及工况体积到标准体积的换算系数，用于燃气用量的能量折算和标准化换算。</td>
+    </tr>
+    <tr>
+      <td><a href="#ref_Aqara_Spec_EnergyStorage">0x013C</a></td>
+      <td>EnergyStorage</td>
+      <td>管理储能电池的 SOC、额定/可用容量、以电池侧为边界的累计充放电量和充放电功率，以及电池健康状态。</td>
+    </tr>
+    <tr>
+      <td><a href="#ref_Aqara_Spec_ElectricityMetering">0x013D</a></td>
+      <td>ElectricityMetering</td>
+      <td>提供电能表和并网点计量能力，包括功率方向、需量及按费率寄存器分别累计的进口/出口电量。</td>
+    </tr>
+    <tr>
+      <td><a href="#ref_Aqara_Spec_PowerGeneration">0x013E</a></td>
+      <td>PowerGeneration</td>
+      <td>描述发电设备的额定功率和运行状态，以及燃气热电联产相关的能量、功率和热回收数据。</td>
     </tr>
   </tbody>
 </table>
@@ -1808,7 +1834,7 @@ Device Type 用于描述 Endpoint 的设备类型，一个 Device 可以由一�
       <td>ElectricalSensor（电气参数传感器）</td>
       <td>EnergyManagement</td>
       <td>O</td>
-      <td></td>
+      <td>通用电气参数传感器；不表示具备并网点电表的进口/出口、需量或分时计量能力。</td>
     </tr>
     <tr>
       <td>0x0043</td>
@@ -1862,6 +1888,13 @@ Device Type 用于描述 Endpoint 的设备类型，一个 Device 可以由一�
       <td>FreshAirControl</td>
       <td>O</td>
       <td></td>
+    </tr>
+    <tr>
+      <td>0x000D</td>
+      <td>AirConditioner（空调）</td>
+      <td>Temperature</td>
+      <td>O</td>
+      <td>室外温度使用 <code>OutdoorTemperature</code>；室内温度复用 HeaterCooler 的 <code>CurrentTemperature</code>。</td>
     </tr>
     <tr>
       <td>0x0062</td>
@@ -2650,6 +2683,48 @@ Device Type 用于描述 Endpoint 的设备类型，一个 Device 可以由一�
       <td>用于监测容器或管路中的液位高度与液位风险。</td>
     </tr>
     <tr>
+      <td>0x0084</td>
+      <td>WaterMeter（水表）</td>
+      <td>Flow</td>
+      <td>M</td>
+      <td>用于测量并上报用水流量及累计用水量。</td>
+    </tr>
+    <tr>
+      <td>0x0084</td>
+      <td>WaterMeter（水表）</td>
+      <td>Temperature</td>
+      <td>O</td>
+      <td>适用于支持水温测量的水表。</td>
+    </tr>
+    <tr>
+      <td>0x0084</td>
+      <td>WaterMeter（水表）</td>
+      <td>ValveControl</td>
+      <td>O</td>
+      <td>适用于集成关断阀的水表。</td>
+    </tr>
+    <tr>
+      <td>0x0085</td>
+      <td>GasMeter（燃气表）</td>
+      <td>Flow</td>
+      <td>M</td>
+      <td>用于测量并上报燃气流量及累计用气量。</td>
+    </tr>
+    <tr>
+      <td>0x0085</td>
+      <td>GasMeter（燃气表）</td>
+      <td>ValveControl</td>
+      <td>O</td>
+      <td>适用于集成关断阀的燃气表。</td>
+    </tr>
+    <tr>
+      <td>0x0085</td>
+      <td>GasMeter（燃气表）</td>
+      <td>GasMetering</td>
+      <td>O</td>
+      <td>提供燃气热值和燃气体积换算系数等燃气计量参数。</td>
+    </tr>
+    <tr>
       <td>0x003C</td>
       <td>AttitudeDetector（姿态检测）</td>
       <td>AttitudeDetection</td>
@@ -3065,6 +3140,13 @@ Device Type 用于描述 Endpoint 的设备类型，一个 Device 可以由一�
       <td></td>
     </tr>
     <tr>
+      <td>0x0056</td>
+      <td>ElectricVehicleSupplyEquipment（电动车充电桩）</td>
+      <td>EnergyStorage</td>
+      <td>O</td>
+      <td>仅在设备可提供车辆电池侧数据时实现；不得与 EVSE 自身备用电池混淆。</td>
+    </tr>
+    <tr>
       <td>0x0057</td>
       <td>SolarPower（太阳能）</td>
       <td>PowerSource</td>
@@ -3076,14 +3158,21 @@ Device Type 用于描述 Endpoint 的设备类型，一个 Device 可以由一�
       <td>SolarPower（太阳能）</td>
       <td>EnergyManagement</td>
       <td>M</td>
-      <td></td>
+      <td>SolarPower 实现必须提供 <code>CumulativeGeneratedActiveEnergy</code> 和 <code>GeneratedActivePower</code>，其计量边界为逆变器交流输出侧。</td>
+    </tr>
+    <tr>
+      <td>0x0057</td>
+      <td>SolarPower（太阳能）</td>
+      <td>PowerGeneration</td>
+      <td>O</td>
+      <td>额定发电功率及累计售电量按设备能力实现；并网状态由 EnergyManagement 提供。</td>
     </tr>
     <tr>
       <td>0x0058</td>
       <td>BatteryStorage（电池储存）</td>
       <td>PowerSource</td>
       <td>M</td>
-      <td>A Battery Storage Device is a system designed to store electrical energy for later use</td>
+      <td>PowerSource 描述设备供电来源；其中 <code>BatPercentRemaining</code> 不替代储能 SOC。</td>
     </tr>
     <tr>
       <td>0x0058</td>
@@ -3091,6 +3180,69 @@ Device Type 用于描述 Endpoint 的设备类型，一个 Device 可以由一�
       <td>EnergyManagement</td>
       <td>M</td>
       <td></td>
+    </tr>
+    <tr>
+      <td>0x0058</td>
+      <td>BatteryStorage（电池储存）</td>
+      <td>EnergyStorage</td>
+      <td>M</td>
+      <td>提供储能系统 SOC、容量、充放电和健康状态等电池侧数据。</td>
+    </tr>
+    <tr>
+      <td>0x0086</td>
+      <td>ElectricityMeter（电能表）</td>
+      <td>EnergyManagement</td>
+      <td>M</td>
+      <td>提供通用电气参数及进口/出口累计有功电能。</td>
+    </tr>
+    <tr>
+      <td>0x0086</td>
+      <td>ElectricityMeter（电能表）</td>
+      <td>ElectricityMetering</td>
+      <td>M</td>
+      <td>并网点电表的 <code>MeteringPointType</code> 必须为 <code>GridConnectionPoint</code>；需量和分时电量按设备能力可选实现。</td>
+    </tr>
+    <tr>
+      <td>0x0087</td>
+      <td>FuelCell（燃料电池）</td>
+      <td>EnergyManagement</td>
+      <td>M</td>
+      <td>提供累计发电量、瞬时发电功率及家庭侧电气测量数据（按设备能力）。</td>
+    </tr>
+    <tr>
+      <td>0x0087</td>
+      <td>FuelCell（燃料电池）</td>
+      <td>PowerGeneration</td>
+      <td>M</td>
+      <td>提供额定发电功率和发电状态；燃气及热水数据按设备能力实现。</td>
+    </tr>
+    <tr>
+      <td>0x0088</td>
+      <td>EngineCogeneration（燃气发动机热电联产）</td>
+      <td>EnergyManagement</td>
+      <td>M</td>
+      <td>提供累计发电量、瞬时发电功率及家庭侧电气测量数据（按设备能力）。</td>
+    </tr>
+    <tr>
+      <td>0x0088</td>
+      <td>EngineCogeneration（燃气发动机热电联产）</td>
+      <td>PowerGeneration</td>
+      <td>M</td>
+      <td>提供发电状态；燃气消耗数据按设备能力实现。</td>
+    </tr>
+    <tr>
+      <td>0x0089</td>
+      <td>PowerDistributionBoard（配电盘）</td>
+      <td>EnergyManagement</td>
+      <td>M</td>
+      <td>提供总进口/出口累计电能和通用电气测量数据。</td>
+    </tr>
+    <tr>
+      <td>0x0089</td>
+      <td>PowerDistributionBoard（配电盘）</td>
+      <td>ElectricityMetering</td>
+      <td>M</td>
+      <td>并网点总功率映射到 <code>GridActivePower</code>；分路数据映射到 <code>BranchCircuitMeasurements</code>。</td>
     </tr>
   </tbody>
 </table>
@@ -3243,6 +3395,13 @@ Device Type 用于描述 Endpoint 的设备类型，一个 Device 可以由一�
       <td>BasicInformation</td>
       <td></td>
       <td></td>
+    </tr>
+    <tr>
+      <td>0x0083</td>
+      <td>VoiceAssistant（语音助手）</td>
+      <td>VoiceAssistant</td>
+      <td>M</td>
+      <td>语音助手设备类型。</td>
     </tr>
   </tbody>
 </table>
@@ -3986,6 +4145,48 @@ Device Type 用于描述 Endpoint 的设备类型，一个 Device 可以由一�
       <td>LiquidLevelSensor</td>
       <td>液位传感器</td>
       <td>Environment</td>
+    </tr>
+    <tr>
+      <td>[[devtype_0083]]0x0083</td>
+      <td>VoiceAssistant</td>
+      <td>语音助手</td>
+      <td>Other</td>
+    </tr>
+    <tr>
+      <td>[[devtype_0084]]0x0084</td>
+      <td>WaterMeter</td>
+      <td>水表</td>
+      <td>Environment</td>
+    </tr>
+    <tr>
+      <td>[[devtype_0085]]0x0085</td>
+      <td>GasMeter</td>
+      <td>燃气表</td>
+      <td>Environment</td>
+    </tr>
+    <tr>
+      <td>[[devtype_0086]]0x0086</td>
+      <td>ElectricityMeter</td>
+      <td>电能表</td>
+      <td>Other</td>
+    </tr>
+    <tr>
+      <td>[[devtype_0087]]0x0087</td>
+      <td>FuelCell</td>
+      <td>燃料电池</td>
+      <td>Other</td>
+    </tr>
+    <tr>
+      <td>[[devtype_0088]]0x0088</td>
+      <td>EngineCogeneration</td>
+      <td>燃气发动机热电联产</td>
+      <td>Other</td>
+    </tr>
+    <tr>
+      <td>[[devtype_0089]]0x0089</td>
+      <td>PowerDistributionBoard</td>
+      <td>配电盘</td>
+      <td>Other</td>
     </tr>
   </tbody>
 </table>
@@ -13526,7 +13727,7 @@ ColorXY表示CIE xyY颜色空间中的x和y值，包含ColorX和ColorY元素，�
 
 #### ColorRGB Trait {#ref_ColorRGB}
 
-ColorRGB表示RGB颜色空间中的RGB颜色值。
+ColorRGB表示RGB颜色空间中的24位颜色值，按 `0xRRGGBB` 打包，不包含 Alpha 通道。
 
 <table>
   <thead>
@@ -13656,7 +13857,7 @@ ColorRGB表示RGB颜色空间中的RGB颜色值。
       <td>Maximum Value</td>
       <td>uint32</td>
       <td></td>
-      <td>370</td>
+      <td>500</td>
       <td>R</td>
       <td>O</td>
     </tr>
@@ -27919,7 +28120,231 @@ success（uint32）：状态码，0 表示成功，1 表示失败（或其他非
 
 ### 简介
 
-管理设备电量与能耗信息，包括电量百分比、功耗统计及低电告警等。
+能量管理（EnergyManagement）用于描述设备的能量测量与管理能力，包括电压、电流、功率、电能及并网状态等数据。
+
+### 缩写与单位
+
+本节及相关能源 Function 使用以下缩写和单位。首次阅读能源数据定义时，可先参考本表。
+
+<table>
+  <thead>
+    <tr>
+      <th>缩写/单位</th>
+      <th>英文全称</th>
+      <th>中文说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PCC</td>
+      <td>Point of Common Coupling</td>
+      <td>并网点；用户能源系统与公用电网连接的计量边界。</td>
+    </tr>
+    <tr>
+      <td>PCS</td>
+      <td>Power Conversion System</td>
+      <td>储能变流器；在电池直流侧与交流系统之间进行电能变换的设备。</td>
+    </tr>
+    <tr>
+      <td>BMS</td>
+      <td>Battery Management System</td>
+      <td>电池管理系统；监测和管理电池状态与运行边界。</td>
+    </tr>
+    <tr>
+      <td>SOC</td>
+      <td>State of Charge</td>
+      <td>荷电状态；电池当前可用荷电量的百分比。</td>
+    </tr>
+    <tr>
+      <td>SOH</td>
+      <td>State of Health</td>
+      <td>健康状态；描述电池相对于初始状态的性能/容量健康程度。</td>
+    </tr>
+    <tr>
+      <td>AC</td>
+      <td>Alternating Current</td>
+      <td>交流电。</td>
+    </tr>
+    <tr>
+      <td>DC</td>
+      <td>Direct Current</td>
+      <td>直流电。</td>
+    </tr>
+    <tr>
+      <td>W</td>
+      <td>watt</td>
+      <td>瓦，功率单位。</td>
+    </tr>
+    <tr>
+      <td>kW</td>
+      <td>kilowatt</td>
+      <td>千瓦，功率单位；1 kW = 1000 W。</td>
+    </tr>
+    <tr>
+      <td>W&middot;h</td>
+      <td>watt-hour</td>
+      <td>瓦时，电能单位。</td>
+    </tr>
+    <tr>
+      <td>kWh</td>
+      <td>kilowatt-hour</td>
+      <td>千瓦时，电能单位；1 kWh = 1000 W&middot;h。</td>
+    </tr>
+    <tr>
+      <td>UTC</td>
+      <td>Coordinated Universal Time</td>
+      <td>协调世界时；本规范时间戳以 UTC Unix epoch 毫秒表示。</td>
+    </tr>
+    <tr>
+      <td>Unix epoch</td>
+      <td>Unix epoch time</td>
+      <td>Unix 时间纪元；自 1970-01-01T00:00:00Z 起累计的时间。</td>
+    </tr>
+  </tbody>
+</table>
+
+### 能源数据模型使用指南
+
+本节说明能源数据中常见概念及其边界，帮助实现者根据设备实际计量位置选择 Function 和 Trait。能源数据是否可比较，首先取决于测量边界、方向约定和统计周期是否一致；仅有相同单位并不意味着数据具有相同含义。
+
+#### 基本概念
+
+<table>
+  <thead>
+    <tr>
+      <th>概念</th>
+      <th>含义</th>
+      <th>常见单位</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>功率（Power）</td>
+      <td>某一时刻能源传输或消耗的速率</td>
+      <td>W、kW</td>
+      <td>瞬时测量值；功率随时间积分后得到电能。</td>
+    </tr>
+    <tr>
+      <td>电能（Energy）</td>
+      <td>一段时间内传输或消耗的能量</td>
+      <td>W&middot;h、kWh</td>
+      <td>累计电能通常是非负计数器，进口和出口应分别累计，不应互相抵消。</td>
+    </tr>
+    <tr>
+      <td>进口/购电（Import）</td>
+      <td>电能从电网流向用户侧</td>
+      <td>W、W&middot;h</td>
+      <td>并网点的进口功率/电量，用于表示从电网购入的电力。</td>
+    </tr>
+    <tr>
+      <td>出口/送电（Export）</td>
+      <td>电能从用户侧流向电网</td>
+      <td>W、W&middot;h</td>
+      <td>并网点的出口功率/电量，用于表示向电网反送的电力。</td>
+    </tr>
+    <tr>
+      <td>发电（Generation）</td>
+      <td>发电设备输出的电能</td>
+      <td>W、W&middot;h</td>
+      <td>光伏总发电量包含现场自用和并网输出，不等于并网反送电量。</td>
+    </tr>
+    <tr>
+      <td>充电/放电（Charge/Discharge）</td>
+      <td>电能分别流入/流出储能电池</td>
+      <td>W、W&middot;h</td>
+      <td>应按电池侧边界分别计量；充电和放电使用独立的非负值。</td>
+    </tr>
+    <tr>
+      <td>SOC</td>
+      <td>电池当前可用荷电状态的百分比</td>
+      <td>%</td>
+      <td>由电池管理系统估算或测量；不等同于备用电池的剩余电量属性。</td>
+    </tr>
+    <tr>
+      <td>需量（Demand）</td>
+      <td>指定积分周期内的平均功率</td>
+      <td>W、kW</td>
+      <td>最大需量是计费周期内各需量区间平均功率的最大值，不是瞬时功率峰值。</td>
+    </tr>
+  </tbody>
+</table>
+
+#### 储能当前可用电量估算
+
+`EnergyStorage/StoredEnergy` 优先使用设备直接报告的有效值。消费者仅在同一电池的 `EnergyStorage/StateOfCharge` 为可信、有效且时效足够的值，并且 `EnergyStorage/UsableEnergyCapacity` 为当前有效值时，才可估算当前可用电量：
+
+`当前可用电量 = UsableEnergyCapacity &times; StateOfCharge / 100`
+
+此处 SOC 的 0% 和 100% 分别对应 BMS 配置的可用放电下限和充电上限，因此不应再次按可选的 SOC 下限/上限参数对 SOC 进行归一化。额定容量、SOH、功率限值或缺失的参数均不能替代可信 SOC 或可用容量；任一输入缺失、无效、过期或语义不明时，不得计算或将结果伪报为 0。`RatedEnergyCapacity`、`UsableEnergyCapacity`、SOC 允许范围、最大充放电功率和 SOH 默认均为可选信息。
+
+#### 测量边界与方向
+
+在 PCC 上，进口表示电能从电网进入用户侧，出口表示电能从用户侧送往电网。`CurrentForwardTotalActiveEnergy` 和 `CurrentReverseTotalActiveEnergy` 在电表/并网点场景中分别表示进口累计电量和出口累计电量；二者均为非负累计值。
+
+设备侧数据必须使用该设备的物理边界进行解释：
+
+* 光伏发电量表示逆变器交流输出侧的总发电量；并网点出口电量只表示送入电网的部分，不能代替总发电量。
+* 储能充放电量和功率以电池直流端为边界；电表的进口/出口电量以电网交流并网点为边界。两种边界之间存在 PCS 的转换损耗，不能直接当作相等。
+* 对储能设备，`EnergyStorage` 中的充电功率/电量为能量流入电池，放电功率/电量为能量流出电池。分项功率和电量均为非负值。
+* `ElectricityMetering/GridActivePower` 使用带符号值：正值表示从上游电源流向用户侧（PCC 上即购电），负值表示反向流动（PCC 上即送电）。
+
+无符号的进口、出口、发电、充电和放电累计量分别计数，避免净额计算丢失方向信息。对累计值进行跨设备比较或求和前，必须确认测量边界、倍率、单位、计数器复位/回卷处理和统计时间范围一致。
+
+#### 累计量与计数器代际
+
+累计量表示自计量起点以来的非负总量。同一设备端点、Function、Trait、计量边界及计数器字段构成一个计数器身份。实现必须保证逻辑累计值单调不减；设备重启、网络重连或软件升级不得导致读数回退。能保证逻辑累计值连续的实现可以不提供计数器代际。
+
+当实现无法保证逻辑累计值连续，且要求消费者精确计算差值时，必须在对应累计量 Trait 上提供 `Counter Generation` Parameter（Parameter ID `0x0010`，Uint32）；该 Parameter 与 `Present Value`、`Minimum Value`、`Maximum Value` 等 Trait Parameter 同级，默认不要求实现。初始代际为 0；计数器清零、无法连续补偿的回卷或更换底层计量器导致累计读数重新起算时，设备必须先递增代际，再发布新读数。代际必须持久保存、不得回退；达到 `4294967295` 前必须建立新的设备端点/计数器身份，不能回绕。读数与代际必须来自同一一致性快照。若设备能够在底层计量器更换或计数器回卷后无损维持逻辑累计值，则可继续使用同一代际或不提供代际。
+
+`Maximum Value` 表示 Trait 数值范围上限，不自动表示硬件回卷模数。设备应优先补偿可识别的硬件回卷以维持逻辑累计值；不能无损补偿且要求精确差值时，递增代际并按下述规则重新建立基线。
+
+消费者仅在计数器身份相同、且新读数不小于旧读数时计算差值：`delta = newValue - oldValue`。若提供代际，还必须确认新旧代际相同；代际改变时，该采样间隔的差值未知，消费者应以新读数建立基线，不得把它当作该间隔的消耗量。代际未变但读数下降属于无效/不一致数据，不得按回零或回卷静默修正。未提供代际且读数下降时，消费者无法判定是重置、回卷还是异常，应标记差值不可用并以新读数建立基线。首次读数只建立基线，除非另有可靠的计量起点。
+
+当累计量是结构体列表中的成员时，每个独立计数器可在对应数据项中携带 `CounterGeneration`；计数器身份还包括稳定的列表键（例如回路号、费率寄存器号）及累计方向。只有当实现无法保证逻辑累计值连续且要求精确差值时，该字段才是必需的。来源协议未提供代际时，适配器只有在能可靠识别重置/换表事件时才能生成代际；仅凭读数下降无法区分重置、回卷和异常值。无法识别时必须标记差值不可用并重新建立基线，不得伪造精确增量。
+
+#### Function 选择指南
+
+<table>
+  <thead>
+    <tr>
+      <th>设备/用途</th>
+      <th>推荐 Function</th>
+      <th>主要数据</th>
+      <th>不应混淆的概念</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>通用电气参数或用电设备</td>
+      <td><code>EnergyManagement</code></td>
+      <td>电压、电流、功率、累计耗电量</td>
+      <td>该 Function 中的 <code>CumulativeEnergyConsumption</code> 表示耗电，不代表发电。</td>
+    </tr>
+    <tr>
+      <td>光伏逆变器/发电设备</td>
+      <td><code>EnergyManagement</code></td>
+      <td><code>GeneratedActivePower</code>、<code>CumulativeGeneratedActiveEnergy</code></td>
+      <td>总发电量不同于并网点出口电量；自用电量不会计入出口寄存器。</td>
+    </tr>
+    <tr>
+      <td>电池储能系统</td>
+      <td><code>EnergyManagement</code> + <code>EnergyStorage</code></td>
+      <td>并网/设备电气参数，以及 SOC、容量、充放电、SOH</td>
+      <td><code>PowerSource/BatPercentRemaining</code> 是设备供电电池剩余量，不是储能系统 SOC。</td>
+    </tr>
+    <tr>
+      <td>电能表/并网点计量设备</td>
+      <td><code>EnergyManagement</code> + <code>ElectricityMetering</code></td>
+      <td>进口/出口电量、带方向的并网功率、需量、分时寄存器</td>
+      <td>电表测量位置和时间/费率配置决定数据含义；不等同于光伏发电计量。</td>
+    </tr>
+  </tbody>
+</table>
+
+#### 常见能源流示例
+
+在住宅光伏储能系统中，并网点电表报告从电网购入的进口电量和向电网送出的出口电量；光伏逆变器报告光伏总发电量；电池管理系统报告电池侧 SOC、累计充电量和累计放电量。用户侧负载耗电量可由专用负载电表报告，或在测量边界、时间同步和转换损耗均明确时由其他计量值推算。不同设备的数据不能仅凭数值相减/相加来推导未测量的量。
 
 ### Function 标识
 
@@ -28051,6 +28476,21 @@ success（uint32）：状态码，0 表示成功，1 表示失败（或其他非
       <td><a href="#ref_PowerFactor">PowerFactor</a></td>
       <td>O</td>
     </tr>
+    <tr>
+      <td>0x51F7</td>
+      <td><a href="#ref_CumulativeGeneratedActiveEnergy">CumulativeGeneratedActiveEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51F8</td>
+      <td><a href="#ref_GeneratedActivePower">GeneratedActivePower</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5232</td>
+      <td><a href="#ref_SystemInterconnectionStatus">SystemInterconnectionStatus</a></td>
+      <td>O</td>
+    </tr>
   </tbody>
 </table>
 
@@ -28097,6 +28537,27 @@ success（uint32）：状态码，0 表示成功，1 表示失败（或其他非
       <td>0x04</td>
       <td>ACSource</td>
       <td>交流电源</td>
+    </tr>
+  </tbody>
+</table>
+
+##### SystemInterconnectionStatusEnum8 Type {#ref_SystemInterconnectionStatusEnum8}
+
+该枚举表示能源设备与电网的连系状态。目前定义自立运行取值；其他取值应在语义和互操作规则明确后追加。
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x00</td>
+      <td>Independent</td>
+      <td>自立运行</td>
     </tr>
   </tbody>
 </table>
@@ -28212,12 +28673,27 @@ success（uint32）：状态码，0 表示成功，1 表示失败（或其他非
       <td><a href="#ref_PowerFactor">PowerFactor</a></td>
       <td>O</td>
     </tr>
+    <tr>
+      <td>0x51F7</td>
+      <td><a href="#ref_CumulativeGeneratedActiveEnergy">CumulativeGeneratedActiveEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51F8</td>
+      <td><a href="#ref_GeneratedActivePower">GeneratedActivePower</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5232</td>
+      <td><a href="#ref_SystemInterconnectionStatus">SystemInterconnectionStatus</a></td>
+      <td>O</td>
+    </tr>
   </tbody>
 </table>
 
 #### PowerMode Trait {#ref_PowerMode}
 
-指示设备的供电模式。0：未知，1：市电，2：电池，3：直流电源。
+指示设备的供电模式。
 
 <table>
   <thead>
@@ -28706,6 +29182,15 @@ success（uint32）：状态码，0 表示成功，1 表示失败（或其他非
       <td>O</td>
     </tr>
     <tr>
+      <td>0x0010</td>
+      <td>Counter Generation</td>
+      <td>uint32</td>
+      <td>0-4294967295</td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
       <td>0x0002</td>
       <td>Maximum Value</td>
       <td>float</td>
@@ -28720,6 +29205,161 @@ success（uint32）：状态码，0 表示成功，1 表示失败（或其他非
       <td>float</td>
       <td></td>
       <td>0.0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### CumulativeGeneratedActiveEnergy Trait {#ref_CumulativeGeneratedActiveEnergy}
+
+累计发电量表示当前计数器代际内发电设备输出的累计有功电能。对于光伏设备，计量边界为逆变器交流输出侧，包含现场自用、储能充电和并网输出的发电量；它不是并网点出口电量。该值为非负累计计数器，单位 W&middot;h。设备重启不得清零读数或代际；计数器复位、无法补偿的回卷或计量器更换导致计数重新起算时，须递增 `Counter Generation`。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51F7</td>
+      <td>CumulativeGeneratedActiveEnergy</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000000 W&middot;h</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0010</td>
+      <td>Counter Generation</td>
+      <td>uint32</td>
+      <td>0-4294967295</td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### GeneratedActivePower Trait {#ref_GeneratedActivePower}
+
+发电功率表示发电设备当前输出的有功功率。对于光伏设备，计量边界为逆变器交流输出侧；该值不包含并网点净功率方向，单位 W。无发电或设备待机时报告 0。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51F8</td>
+      <td>GeneratedActivePower</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-5000000 W</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>5000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
       <td>R</td>
       <td>O</td>
     </tr>
@@ -28985,6 +29625,8 @@ success（uint32）：状态码，0 表示成功，1 表示失败（或其他非
 
 表示设备从电网正向获取的累计有功电能，常用于统计实际用电量、能耗分析和计费结算。单位：W&middot;h。
 
+在并网点电表场景中，正向规定为从电网流向用户侧（进口/购电），该值为非负累计值。其他测量边界必须在对应设备/Function 的定义中明确正向含义，不得仅凭 `Forward` 名称推断为发电或储能充电。
+
 <table>
   <thead>
     <tr>
@@ -29022,6 +29664,15 @@ success（uint32）：状态码，0 表示成功，1 表示失败（或其他非
       <td></td>
       <td>0</td>
       <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0010</td>
+      <td>Counter Generation</td>
+      <td>uint32</td>
+      <td>0-4294967295</td>
+      <td>0</td>
+      <td>R</td>
       <td>O</td>
     </tr>
     <tr>
@@ -29067,6 +29718,8 @@ success（uint32）：状态码，0 表示成功，1 表示失败（或其他非
 
 表示设备向电网反送的累计有功电能，常用于分析回馈电能、并网运行和能量回收情况。单位：W&middot;h。
 
+在并网点电表场景中，反向规定为从用户侧流向电网（出口/送电），该值为非负累计值。该值不等于发电设备的总发电量；其他测量边界必须在对应设备/Function 的定义中明确反向含义。
+
 <table>
   <thead>
     <tr>
@@ -29104,6 +29757,15 @@ success（uint32）：状态码，0 表示成功，1 表示失败（或其他非
       <td></td>
       <td>0</td>
       <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0010</td>
+      <td>Counter Generation</td>
+      <td>uint32</td>
+      <td>0-4294967295</td>
+      <td>0</td>
+      <td>R</td>
       <td>O</td>
     </tr>
     <tr>
@@ -29796,6 +30458,52 @@ success（uint32）：状态码，0 表示成功，1 表示失败（或其他非
       <td></td>
       <td>1</td>
       <td>RW</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### SystemInterconnectionStatus Trait {#ref_SystemInterconnectionStatus}
+
+系统连系状态表示能源设备当前的电网连接运行方式；目前定义自立运行状态，其他状态待语义和互操作规则明确后追加。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5232</td>
+      <td>SystemInterconnectionStatus</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td><a href="#ref_SystemInterconnectionStatusEnum8">SystemInterconnectionStatusEnum8</a></td>
+      <td>0</td>
+      <td>无固定默认值</td>
+      <td>RV</td>
       <td>O</td>
     </tr>
   </tbody>
@@ -34373,6 +35081,11 @@ WindSetting 定义了风的类型.
       <td><a href="#ref_OutletTemperature">OutletTemperature</a></td>
       <td>O</td>
     </tr>
+    <tr>
+      <td>0x523D</td>
+      <td><a href="#ref_OutdoorTemperature">OutdoorTemperature</a></td>
+      <td>O</td>
+    </tr>
   </tbody>
 </table>
 
@@ -34448,6 +35161,11 @@ WindSetting 定义了风的类型.
     <tr>
       <td>0x51C0</td>
       <td><a href="#ref_OutletTemperature">OutletTemperature</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x523D</td>
+      <td><a href="#ref_OutdoorTemperature">OutdoorTemperature</a></td>
       <td>O</td>
     </tr>
   </tbody>
@@ -34813,6 +35531,79 @@ WindSetting 定义了风的类型.
       <td></td>
       <td>25</td>
       <td>RW</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### OutdoorTemperature Trait {#ref_OutdoorTemperature}
+
+室外温度表示设备测量到的室外环境温度，单位 deg C；它与空调室内的 `CurrentTemperature` 分别报告。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x523D</td>
+      <td>OutdoorTemperature</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>-50-100 deg C</td>
+      <td>无固定默认值；报告当前值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>100</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>-50</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
       <td>O</td>
     </tr>
   </tbody>
@@ -36791,7 +37582,7 @@ MediaPlaybackCommand表示媒体播放命令，适用于多种类型的媒体（
 
 ### 简介
 
-描述设备扬声器输出能力，包括音量控制及静音等音频输出属性。
+描述设备扬声器输出能力，包括文本转语音播报、音量控制及静音等音频输出功能。
 
 ### Function 标识
 
@@ -36843,11 +37634,49 @@ MediaPlaybackCommand表示媒体播放命令，适用于多种类型的媒体（
 
 ### Command
 
-本 Function 不包含 Command。
+<table>
+  <thead>
+    <tr>
+      <th>Command ID</th>
+      <th>Code</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x9DB5</td>
+      <td><a href="#ref_PlayTTS">PlayTTS</a></td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
 
 ### 数据类型
 
-本 Function 无自定义数据类型。
+##### PlayTTS Command Structure Type {#ref_PlayTTSCommandStructure}
+
+PlayTTS Command 的参数结构体。
+
+<table>
+  <thead>
+    <tr>
+      <th>结构体成员序号</th>
+      <th>字段名</th>
+      <th>类型</th>
+      <th>必须</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>Text</td>
+      <td>string</td>
+      <td>M</td>
+      <td>需要转换为语音并播放的文本内容，最长 200 字节。</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Trait 定义
 
@@ -37099,7 +37928,30 @@ MediaPlaybackCommand表示媒体播放命令，适用于多种类型的媒体（
 
 ### Command 定义
 
-本 Function 不包含 Command。
+<table>
+  <thead>
+    <tr>
+      <th>Command ID</th>
+      <th>Name</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x9DB5</td>
+      <td><a href="#ref_PlayTTS">PlayTTS</a></td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### PlayTTS Command {#ref_PlayTTS}
+
+控制设备将指定文本转换为语音并通过扬声器播放。`Text` 为必填字符串，内容最长为 200 字节。
+
+##### 参数
+
+[PlayTTS Command Structure](#ref_PlayTTSCommandStructure)
 
 ## PowerSource（电源） {#ref_Aqara_Spec_PowerSource}
 
@@ -82989,7 +83841,7 @@ CurrentFlow表示当前流量值，单位为 m^3/h。
 
 #### CumulativeFlow Trait {#ref_CumulativeFlow}
 
-表示流量计记录的累计通过量，用于统计介质总输送量和历史用量变化。单位：m^3。
+表示当前计数器代际内流量计记录的累计通过量，用于统计介质总输送量和历史用量变化。单位：m^3。设备重启不得清零读数或代际；复位、无法补偿的回卷或流量计更换须递增 `Counter Generation`。
 
 <table>
   <thead>
@@ -83028,6 +83880,15 @@ CurrentFlow表示当前流量值，单位为 m^3/h。
       <td></td>
       <td>0</td>
       <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0010</td>
+      <td>Counter Generation</td>
+      <td>uint32</td>
+      <td>0-4294967295</td>
+      <td>0</td>
+      <td>R</td>
       <td>O</td>
     </tr>
     <tr>
@@ -83997,6 +84858,8 @@ RefrigeratorAlarm 指当前冰箱报警状态。
 
 提供电动汽车供电设备（EVSE）控制能力，包括充电启停、电流限制及充电状态。
 
+车载电池数据表示当前连接车辆的电池，不是充电桩自身的备用电池。车辆连接状态复用 `EvseState`，车辆标识复用 `VehicleID`；车辆电池容量和读写设定使用本 Function 下的专用 Trait。
+
 ### Function 标识
 
 <table>
@@ -84076,6 +84939,116 @@ RefrigeratorAlarm 指当前冰箱报警状态。
       <td>0x80CD</td>
       <td><a href="#ref_BatPercentRemaining">BatPercentRemaining</a></td>
       <td>M</td>
+    </tr>
+    <tr>
+      <td>0x5219</td>
+      <td><a href="#ref_VehicleDischargeableCapacity">VehicleDischargeableCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x521A</td>
+      <td><a href="#ref_VehicleDischargeableCapacityPercent">VehicleDischargeableCapacityPercent</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x521B</td>
+      <td><a href="#ref_VehicleDischargeableRemainingCapacity">VehicleDischargeableRemainingCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x521C</td>
+      <td><a href="#ref_VehicleDischargeableRemainingCapacityPercent">VehicleDischargeableRemainingCapacityPercent</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x521D</td>
+      <td><a href="#ref_VehicleUsedCapacity">VehicleUsedCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x521E</td>
+      <td><a href="#ref_VehicleUsedCapacityPercent">VehicleUsedCapacityPercent</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x521F</td>
+      <td><a href="#ref_EVSERatedChargingCapability">EVSERatedChargingCapability</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5220</td>
+      <td><a href="#ref_EVSERatedDischargingCapability">EVSERatedDischargingCapability</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5221</td>
+      <td><a href="#ref_MinDischargeCurrent">MinDischargeCurrent</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5222</td>
+      <td><a href="#ref_MaxDischargeCurrent">MaxDischargeCurrent</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5223</td>
+      <td><a href="#ref_EVSEChargeDischargePower">EVSEChargeDischargePower</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5224</td>
+      <td><a href="#ref_EVSEChargeDischargeCurrent">EVSEChargeDischargeCurrent</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5225</td>
+      <td><a href="#ref_EVSEChargeDischargeVoltage">EVSEChargeDischargeVoltage</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5226</td>
+      <td><a href="#ref_EVSERatedVoltage">EVSERatedVoltage</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5227</td>
+      <td><a href="#ref_VehicleChargingAmountSetting">VehicleChargingAmountSetting</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5228</td>
+      <td><a href="#ref_VehicleChargingAmountPercentSetting">VehicleChargingAmountPercentSetting</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5229</td>
+      <td><a href="#ref_VehicleChargingPowerSetting">VehicleChargingPowerSetting</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x522A</td>
+      <td><a href="#ref_VehicleDischargingPowerSetting">VehicleDischargingPowerSetting</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x522B</td>
+      <td><a href="#ref_VehicleChargingCurrentSetting">VehicleChargingCurrentSetting</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x522C</td>
+      <td><a href="#ref_VehicleDischargingCurrentSetting">VehicleDischargingCurrentSetting</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x522D</td>
+      <td><a href="#ref_EVSEIndependentRatedVoltage">EVSEIndependentRatedVoltage</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5240</td>
+      <td><a href="#ref_ChargerDischargerType">ChargerDischargerType</a></td>
+      <td>O</td>
     </tr>
   </tbody>
 </table>
@@ -84395,6 +85368,116 @@ EnableChargingUntil Command 的参数结构体。
       <td><a href="#ref_BatPercentRemaining">BatPercentRemaining</a></td>
       <td>M</td>
     </tr>
+    <tr>
+      <td>0x5219</td>
+      <td><a href="#ref_VehicleDischargeableCapacity">VehicleDischargeableCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x521A</td>
+      <td><a href="#ref_VehicleDischargeableCapacityPercent">VehicleDischargeableCapacityPercent</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x521B</td>
+      <td><a href="#ref_VehicleDischargeableRemainingCapacity">VehicleDischargeableRemainingCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x521C</td>
+      <td><a href="#ref_VehicleDischargeableRemainingCapacityPercent">VehicleDischargeableRemainingCapacityPercent</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x521D</td>
+      <td><a href="#ref_VehicleUsedCapacity">VehicleUsedCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x521E</td>
+      <td><a href="#ref_VehicleUsedCapacityPercent">VehicleUsedCapacityPercent</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x521F</td>
+      <td><a href="#ref_EVSERatedChargingCapability">EVSERatedChargingCapability</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5220</td>
+      <td><a href="#ref_EVSERatedDischargingCapability">EVSERatedDischargingCapability</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5221</td>
+      <td><a href="#ref_MinDischargeCurrent">MinDischargeCurrent</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5222</td>
+      <td><a href="#ref_MaxDischargeCurrent">MaxDischargeCurrent</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5223</td>
+      <td><a href="#ref_EVSEChargeDischargePower">EVSEChargeDischargePower</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5224</td>
+      <td><a href="#ref_EVSEChargeDischargeCurrent">EVSEChargeDischargeCurrent</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5225</td>
+      <td><a href="#ref_EVSEChargeDischargeVoltage">EVSEChargeDischargeVoltage</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5226</td>
+      <td><a href="#ref_EVSERatedVoltage">EVSERatedVoltage</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5227</td>
+      <td><a href="#ref_VehicleChargingAmountSetting">VehicleChargingAmountSetting</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5228</td>
+      <td><a href="#ref_VehicleChargingAmountPercentSetting">VehicleChargingAmountPercentSetting</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5229</td>
+      <td><a href="#ref_VehicleChargingPowerSetting">VehicleChargingPowerSetting</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x522A</td>
+      <td><a href="#ref_VehicleDischargingPowerSetting">VehicleDischargingPowerSetting</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x522B</td>
+      <td><a href="#ref_VehicleChargingCurrentSetting">VehicleChargingCurrentSetting</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x522C</td>
+      <td><a href="#ref_VehicleDischargingCurrentSetting">VehicleDischargingCurrentSetting</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x522D</td>
+      <td><a href="#ref_EVSEIndependentRatedVoltage">EVSEIndependentRatedVoltage</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5240</td>
+      <td><a href="#ref_ChargerDischargerType">ChargerDischargerType</a></td>
+      <td>O</td>
+    </tr>
   </tbody>
 </table>
 
@@ -84638,7 +85721,7 @@ VehicleID 为每辆电动汽车（EV）分配的唯一标识符。
 
 #### BatteryCapacity Trait {#ref_BatteryCapacity}
 
-BatteryCapacity是指电池可以存储的电能总量，通常以千瓦时（
+BatteryCapacity 表示与 EVSE 关联的车辆电池标称容量，单位 W&middot;h。该值描述连接车辆的电池，不表示 EVSE 自身备用电池容量；若设备提供当前可放电容量，应使用 `VehicleDischargeableCapacity`。
 
 <table>
   <thead>
@@ -85105,6 +86188,1585 @@ EvseFaultState 表示电动汽车供电设备（EVSE）的当前故障状态。
       <td>O</td>
       <td>50</td>
       <td>RW</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### VehicleDischargeableCapacity Trait {#ref_VehicleDischargeableCapacity}
+
+车载电池可放电容量表示当前连接车辆可用于放电的能量容量，单位 W&middot;h。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5219</td>
+      <td>VehicleDischargeableCapacity</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000 W&middot;h</td>
+      <td>无固定默认值；报告当前车辆值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### VehicleDischargeableCapacityPercent Trait {#ref_VehicleDischargeableCapacityPercent}
+
+车载电池可放电容量百分比表示可用于放电的容量占其百分比基准的比例，单位 %。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x521A</td>
+      <td>VehicleDischargeableCapacityPercent</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-100 %</td>
+      <td>无固定默认值；报告当前车辆值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>100</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### VehicleDischargeableRemainingCapacity Trait {#ref_VehicleDischargeableRemainingCapacity}
+
+车载电池可放电剩余容量表示当前仍可从车辆电池放出的能量，单位 W&middot;h。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x521B</td>
+      <td>VehicleDischargeableRemainingCapacity</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000 W&middot;h</td>
+      <td>无固定默认值；报告当前车辆值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### VehicleDischargeableRemainingCapacityPercent Trait {#ref_VehicleDischargeableRemainingCapacityPercent}
+
+车载电池可放电剩余容量百分比表示可放电剩余能量相对于其百分比基准的比例，单位 %。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x521C</td>
+      <td>VehicleDischargeableRemainingCapacityPercent</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-100 %</td>
+      <td>无固定默认值；报告当前车辆值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>100</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### VehicleUsedCapacity Trait {#ref_VehicleUsedCapacity}
+
+车载电池已用容量表示车辆电池中已消耗的能量容量，单位 W&middot;h。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x521D</td>
+      <td>VehicleUsedCapacity</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000 W&middot;h</td>
+      <td>无固定默认值；报告当前车辆值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### VehicleUsedCapacityPercent Trait {#ref_VehicleUsedCapacityPercent}
+
+车载电池已用容量百分比表示已消耗能量相对于其百分比基准的比例，单位 %。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x521E</td>
+      <td>VehicleUsedCapacityPercent</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-100 %</td>
+      <td>无固定默认值；报告当前车辆值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>100</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### EVSERatedChargingCapability Trait {#ref_EVSERatedChargingCapability}
+
+充电机额定充电能力表示设备的标称最大充电功率，单位 W。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x521F</td>
+      <td>EVSERatedChargingCapability</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-5000000 W</td>
+      <td>无固定默认值；由产品规格确定</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>5000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### EVSERatedDischargingCapability Trait {#ref_EVSERatedDischargingCapability}
+
+放电机额定放电能力表示设备的标称最大放电功率，单位 W。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5220</td>
+      <td>EVSERatedDischargingCapability</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-5000000 W</td>
+      <td>无固定默认值；由产品规格确定</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>5000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### MinDischargeCurrent Trait {#ref_MinDischargeCurrent}
+
+MinDischargeCurrent 表示车辆允许放电的最小电流，单位 A。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5221</td>
+      <td>MinDischargeCurrent</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-10000 A</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>10000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.001</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### MaxDischargeCurrent Trait {#ref_MaxDischargeCurrent}
+
+MaxDischargeCurrent 表示车辆允许放电的最大电流，单位 A。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5222</td>
+      <td>MaxDischargeCurrent</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-10000 A</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>10000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.001</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### EVSEChargeDischargePower Trait {#ref_EVSEChargeDischargePower}
+
+充放电机瞬时充放电功率采用带符号值表示，单位 W；正值表示充电，负值表示放电。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5223</td>
+      <td>EVSEChargeDischargePower</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>-5000000-5000000 W</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>5000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>-5000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### EVSEChargeDischargeCurrent Trait {#ref_EVSEChargeDischargeCurrent}
+
+充放电机瞬时充放电电流采用带符号值表示，单位 A；正值表示充电，负值表示放电。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5224</td>
+      <td>EVSEChargeDischargeCurrent</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>-10000-10000 A</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>10000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>-10000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.001</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### EVSEChargeDischargeVoltage Trait {#ref_EVSEChargeDischargeVoltage}
+
+充放电机瞬时充放电电压表示设备报告的当前电压，单位 V。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5225</td>
+      <td>EVSEChargeDischargeVoltage</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000 V</td>
+      <td>无固定默认值；报告当前值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### EVSERatedVoltage Trait {#ref_EVSERatedVoltage}
+
+充放电机额定电压表示设备的标称工作电压，单位 V。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5226</td>
+      <td>EVSERatedVoltage</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000 V</td>
+      <td>无固定默认值；由产品规格确定</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### VehicleChargingAmountSetting Trait {#ref_VehicleChargingAmountSetting}
+
+车辆充电量设定表示目标充电电量，单位 W&middot;h。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5227</td>
+      <td>VehicleChargingAmountSetting</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint32</td>
+      <td>0-1000000000 W&middot;h</td>
+      <td>无固定默认值；报告当前设定</td>
+      <td>RVW</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>1000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### VehicleChargingAmountPercentSetting Trait {#ref_VehicleChargingAmountPercentSetting}
+
+车辆充电量百分比设定表示目标充电量占容量基准的比例，单位 %。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5228</td>
+      <td>VehicleChargingAmountPercentSetting</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-100 %</td>
+      <td>无固定默认值；报告当前设定</td>
+      <td>RVW</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>100</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### VehicleChargingPowerSetting Trait {#ref_VehicleChargingPowerSetting}
+
+车辆充电功率设定表示目标充电功率，单位 W。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5229</td>
+      <td>VehicleChargingPowerSetting</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint32</td>
+      <td>0-5000000 W</td>
+      <td>无固定默认值；报告当前设定</td>
+      <td>RVW</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>5000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### VehicleDischargingPowerSetting Trait {#ref_VehicleDischargingPowerSetting}
+
+车辆放电功率设定表示目标放电功率，单位 W。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x522A</td>
+      <td>VehicleDischargingPowerSetting</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint32</td>
+      <td>0-5000000 W</td>
+      <td>无固定默认值；报告当前设定</td>
+      <td>RVW</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>5000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### VehicleChargingCurrentSetting Trait {#ref_VehicleChargingCurrentSetting}
+
+车辆充电电流设定表示目标充电电流，单位 A。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x522B</td>
+      <td>VehicleChargingCurrentSetting</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-10000 A</td>
+      <td>无固定默认值；报告当前设定</td>
+      <td>RVW</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>10000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.001</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### VehicleDischargingCurrentSetting Trait {#ref_VehicleDischargingCurrentSetting}
+
+车辆放电电流设定表示目标放电电流，单位 A。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x522C</td>
+      <td>VehicleDischargingCurrentSetting</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-10000 A</td>
+      <td>无固定默认值；报告当前设定</td>
+      <td>RVW</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>10000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.001</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### EVSEIndependentRatedVoltage Trait {#ref_EVSEIndependentRatedVoltage}
+
+自立运行额定电压表示 EVSE 自立运行时的标称输出电压，单位 V。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x522D</td>
+      <td>EVSEIndependentRatedVoltage</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000 V</td>
+      <td>无固定默认值；由产品规格确定</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ChargerDischargerType Trait {#ref_ChargerDischargerType}
+
+充放电机类型表示设备对外显示的充电/放电设备类别名称。该 Trait 保留设备提供的类型文本，不作为运行状态使用。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5240</td>
+      <td>ChargerDischargerType</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>characterString</td>
+      <td>设备定义的类别名称</td>
+      <td>无固定默认值</td>
+      <td>RV</td>
       <td>O</td>
     </tr>
   </tbody>
@@ -119747,6 +122409,21 @@ WashDryCombinationCommand Command 的参数结构体。
       <td><a href="#ref_SupportedActionTypes">SupportedActionTypes</a></td>
       <td>O</td>
     </tr>
+    <tr>
+      <td>0x523A</td>
+      <td><a href="#ref_LightMode">LightMode</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x523B</td>
+      <td><a href="#ref_ColorTemperaturePreset">ColorTemperaturePreset</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x523C</td>
+      <td><a href="#ref_ColorTemperatureLevel">ColorTemperatureLevel</a></td>
+      <td>O</td>
+    </tr>
   </tbody>
 </table>
 
@@ -120623,6 +123300,103 @@ RemoveUserDefinedEffects Command 的参数结构体。
       <td>0x4FAB</td>
       <td><a href="#ref_SupportedActionTypes">SupportedActionTypes</a></td>
       <td>O</td>
+    </tr>
+    <tr>
+      <td>0x523A</td>
+      <td><a href="#ref_LightMode">LightMode</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x523B</td>
+      <td><a href="#ref_ColorTemperaturePreset">ColorTemperaturePreset</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x523C</td>
+      <td><a href="#ref_ColorTemperatureLevel">ColorTemperatureLevel</a></td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+##### LightModeEnum8 Type {#ref_LightModeEnum8}
+
+该枚举定义普通照明的工作模式。
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x00</td>
+      <td>Auto</td>
+      <td>自动</td>
+    </tr>
+    <tr>
+      <td>0x01</td>
+      <td>Normal</td>
+      <td>普通</td>
+    </tr>
+    <tr>
+      <td>0x02</td>
+      <td>Night</td>
+      <td>夜灯</td>
+    </tr>
+    <tr>
+      <td>0x03</td>
+      <td>Color</td>
+      <td>彩光</td>
+    </tr>
+    <tr>
+      <td>0x04</td>
+      <td>ColorTemperature</td>
+      <td>色温</td>
+    </tr>
+  </tbody>
+</table>
+
+##### ColorTemperaturePresetEnum8 Type {#ref_ColorTemperaturePresetEnum8}
+
+该枚举定义照明设备提供的离散色温类别；它不代表 Kelvin 色温数值。
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x00</td>
+      <td>Incandescent</td>
+      <td>白炽灯</td>
+    </tr>
+    <tr>
+      <td>0x01</td>
+      <td>White</td>
+      <td>白色</td>
+    </tr>
+    <tr>
+      <td>0x02</td>
+      <td>DaylightWhite</td>
+      <td>日光白</td>
+    </tr>
+    <tr>
+      <td>0x03</td>
+      <td>Daylight</td>
+      <td>日光色</td>
+    </tr>
+    <tr>
+      <td>0x04</td>
+      <td>Other</td>
+      <td>其他</td>
     </tr>
   </tbody>
 </table>
@@ -121896,6 +124670,171 @@ EffectData 的二进制封装、CBOR 负载格式、字段定义、ActionType �
       <td></td>
       <td></td>
       <td>RV</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### LightMode Trait {#ref_LightMode}
+
+照明模式表示灯具当前选择的工作模式，用于区分自动、普通、夜灯、彩光及色温模式。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x523A</td>
+      <td>LightMode</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td><a href="#ref_LightModeEnum8">LightModeEnum8</a></td>
+      <td>0-4</td>
+      <td>无固定默认值</td>
+      <td>RVW</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ColorTemperaturePreset Trait {#ref_ColorTemperaturePreset}
+
+离散色温类别表示设备提供的白光颜色预设，与以 mired 或 Kelvin 表示的连续色温值分开建模。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x523B</td>
+      <td>ColorTemperaturePreset</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td><a href="#ref_ColorTemperaturePresetEnum8">ColorTemperaturePresetEnum8</a></td>
+      <td>0-4</td>
+      <td>无固定默认值</td>
+      <td>RVW</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ColorTemperatureLevel Trait {#ref_ColorTemperatureLevel}
+
+色温等级表示设备定义的离散色温调节级别，范围 0-20；其数值不代表 Kelvin 或 mired。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x523C</td>
+      <td>ColorTemperatureLevel</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint8</td>
+      <td>0-20</td>
+      <td>无固定默认值；由设备报告</td>
+      <td>RVW</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>uint8</td>
+      <td></td>
+      <td>20</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>uint8</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>uint8</td>
+      <td></td>
+      <td>1</td>
+      <td>R</td>
       <td>O</td>
     </tr>
   </tbody>
@@ -129529,7 +132468,7 @@ NAS 视频存储的当前状态。
 
 ### 简介
 
-管理设备语音交互能力，包括唤醒词、语音控制开关、近场唤醒及空间区域配置。
+管理设备语音交互能力，包括唤醒词、语音控制开关、语音音色、连续对话、语音控制语言、近场唤醒及空间区域配置。
 
 ### Function 标识
 
@@ -129599,6 +132538,21 @@ NAS 视频存储的当前状态。
     <tr>
       <td>0x5105</td>
       <td><a href="#ref_AiRecommendEnabled">AiRecommendEnabled</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51F2</td>
+      <td><a href="#ref_VoiceTimbre">VoiceTimbre</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51F3</td>
+      <td><a href="#ref_ContinuousChatEnable">ContinuousChatEnable</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51F4</td>
+      <td><a href="#ref_VoiceControlLanguage">VoiceControlLanguage</a></td>
       <td>O</td>
     </tr>
   </tbody>
@@ -129708,6 +132662,58 @@ NAS 视频存储的当前状态。
   </tbody>
 </table>
 
+##### VoiceTimbreEnum8 Type {#ref_VoiceTimbreEnum8}
+
+该枚举定义 VoiceTimbre Trait 的 Present Value 有效取值。
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x00</td>
+      <td>Male</td>
+      <td>男声</td>
+    </tr>
+    <tr>
+      <td>0x01</td>
+      <td>Female</td>
+      <td>女声</td>
+    </tr>
+  </tbody>
+</table>
+
+##### VoiceControlLanguageEnum8 Type {#ref_VoiceControlLanguageEnum8}
+
+该枚举定义 VoiceControlLanguage Trait 的 Present Value 有效取值。
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x01</td>
+      <td>Chinese</td>
+      <td>中文</td>
+    </tr>
+    <tr>
+      <td>0x02</td>
+      <td>English</td>
+      <td>英文</td>
+    </tr>
+  </tbody>
+</table>
+
 ##### TriggerVoiceAssistantWake Command Structure Type {#ref_TriggerVoiceAssistantWakeCommandStructure}
 
 TriggerVoiceAssistantWake Command 的参数结构体。
@@ -129782,6 +132788,21 @@ TriggerVoiceAssistantWake Command 的参数结构体。
     <tr>
       <td>0x5105</td>
       <td><a href="#ref_AiRecommendEnabled">AiRecommendEnabled</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51F2</td>
+      <td><a href="#ref_VoiceTimbre">VoiceTimbre</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51F3</td>
+      <td><a href="#ref_ContinuousChatEnable">ContinuousChatEnable</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51F4</td>
+      <td><a href="#ref_VoiceControlLanguage">VoiceControlLanguage</a></td>
       <td>O</td>
     </tr>
   </tbody>
@@ -130237,6 +133258,189 @@ TriggerVoiceAssistantWake Command 的参数结构体。
       <td>0x0007</td>
       <td>Default Value</td>
       <td>boolean</td>
+      <td></td>
+      <td>1</td>
+      <td>RW</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### VoiceTimbre Trait {#ref_VoiceTimbre}
+
+表示语音助手使用的语音音色。`0` 表示男声，`1` 表示女声。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51F2</td>
+      <td>VoiceTimbre</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td><a href="#ref_VoiceTimbreEnum8">VoiceTimbreEnum8</a></td>
+      <td></td>
+      <td>0</td>
+      <td>RVW</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0006</td>
+      <td>Supported Value</td>
+      <td>list[<a href="#ref_VoiceTimbreEnum8">VoiceTimbreEnum8</a>]</td>
+      <td></td>
+      <td></td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0007</td>
+      <td>Default Value</td>
+      <td>uint8</td>
+      <td></td>
+      <td>0</td>
+      <td>RW</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ContinuousChatEnable Trait {#ref_ContinuousChatEnable}
+
+用于开启或关闭语音助手的连续对话功能。开启后，用户可连续对话，无需频繁唤醒语音助手；用户说"再见"可快速结束当次连续对话。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51F3</td>
+      <td>ContinuousChatEnable</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>boolean</td>
+      <td></td>
+      <td>0</td>
+      <td>RVW</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0007</td>
+      <td>Default Value</td>
+      <td>boolean</td>
+      <td></td>
+      <td>0</td>
+      <td>RW</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### VoiceControlLanguage Trait {#ref_VoiceControlLanguage}
+
+表示语音控制所支持识别的语言类型。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51F4</td>
+      <td>VoiceControlLanguage</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td><a href="#ref_VoiceControlLanguageEnum8">VoiceControlLanguageEnum8</a></td>
+      <td></td>
+      <td>1</td>
+      <td>RVW</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0006</td>
+      <td>Supported Value</td>
+      <td>list[<a href="#ref_VoiceControlLanguageEnum8">VoiceControlLanguageEnum8</a>]</td>
+      <td></td>
+      <td></td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0007</td>
+      <td>Default Value</td>
+      <td>uint8</td>
       <td></td>
       <td>1</td>
       <td>RW</td>
@@ -150353,3 +153557,4244 @@ PlayBuzzer Command 的参数结构体。
 ##### 参数
 
 [PlayBuzzer Command Structure](#ref_PlayBuzzerCommandStructure)
+
+## GasMetering（燃气计量） {#ref_Aqara_Spec_GasMetering}
+
+### 简介
+
+燃气计量（GasMetering）用于提供燃气计量相关能力，包括燃气热值及工况体积到标准体积的换算系数，以支持燃气用量的能量折算和标准化换算。
+
+### Function 标识
+
+<table>
+  <thead>
+    <tr>
+      <th>Function ID</th>
+      <th>Code</th>
+      <th>名称</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x013B</td>
+      <td>GasMetering</td>
+      <td>燃气计量</td>
+    </tr>
+  </tbody>
+</table>
+
+### Trait
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51F5</td>
+      <td><a href="#ref_GasCalorificValue">GasCalorificValue</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51F6</td>
+      <td><a href="#ref_GasVolumeFactor">GasVolumeFactor</a></td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+### Command
+
+本 Function 不包含 Command。
+
+### 数据类型
+
+##### GasCalorificValueTraitPresentValueStructure Type {#ref_GasCalorificValueTraitPresentValueStructure}
+
+该结构体定义 GasCalorificValue Trait 的 Present Value 字段布局。
+
+<table>
+  <thead>
+    <tr>
+      <th>成员序号</th>
+      <th>字段名</th>
+      <th>类型</th>
+      <th>必须</th>
+      <th>最小值</th>
+      <th>最大值</th>
+      <th>步长</th>
+      <th>默认值</th>
+      <th>说明（单位）</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>CalorificValue</td>
+      <td>float</td>
+      <td>M</td>
+      <td>0</td>
+      <td>100</td>
+      <td>0.01</td>
+      <td>38.5</td>
+      <td>标准体积燃气的热值，由气源/服务器端配置。单位：MJ/m^3（兆焦每标准立方米）。</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>ReferenceTemperature</td>
+      <td>float</td>
+      <td>O</td>
+      <td>-50</td>
+      <td>50</td>
+      <td>0.1</td>
+      <td>15.0</td>
+      <td>热值所对应的燃烧参比温度。单位：deg C。</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>ReferencePressure</td>
+      <td>float</td>
+      <td>O</td>
+      <td>50</td>
+      <td>150</td>
+      <td>0.001</td>
+      <td>101.325</td>
+      <td>热值所对应的参比压力。单位：kPa。</td>
+    </tr>
+  </tbody>
+</table>
+
+### Trait 定义
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Name</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51F5</td>
+      <td><a href="#ref_GasCalorificValue">GasCalorificValue</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51F6</td>
+      <td><a href="#ref_GasVolumeFactor">GasVolumeFactor</a></td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### GasCalorificValue Trait {#ref_GasCalorificValue}
+
+燃气热值表示单位体积燃气所含的热量（能量），用于将燃气的体积消耗量换算为能量消耗量。通常以高位热值形式提供，即在标准参比条件下，单位标准体积燃气完全燃烧后所释放的热量。该值为燃气气质参数，受气源组分及参比温度、压力影响，通常由燃气公司或云端配置，燃气表据此完成体积到能量的转换。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51F5</td>
+      <td>GasCalorificValue</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td><a href="#ref_GasCalorificValueTraitPresentValueStructure">GasCalorificValueTraitPresentValueStructure</a></td>
+      <td></td>
+      <td><code>&#123;&amp;quot;0&amp;quot;: 38.5, &amp;quot;1&amp;quot;: 15.0, &amp;quot;2&amp;quot;: 101.325&#125;</code></td>
+      <td>RV</td>
+      <td>M</td>
+    </tr>
+  </tbody>
+</table>
+
+#### GasVolumeFactor Trait {#ref_GasVolumeFactor}
+
+燃气体积换算系数表示将燃气表在工况条件（实际温度、压力）下测得的燃气体积，换算为标准参比条件下体积的系数（Volume Conversion Factor，VCF）。其定义为标准参比条件下的体积除以工况条件下的体积。该系数综合了温度、压力、压缩因子等因素的修正，通常由体积修正仪或云端计算后下发，燃气表据此完成体积标准化换算。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51F6</td>
+      <td>GasVolumeFactor</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1.0</td>
+      <td>RV</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>2</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.5</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.00001</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+### Command 定义
+
+本 Function 不包含 Command。
+
+## EnergyStorage（储能） {#ref_Aqara_Spec_EnergyStorage}
+
+### 简介
+
+储能（EnergyStorage）用于描述电池储能系统的专属状态和能量计量能力，包括电池侧荷电状态、容量、充放电功率、累计充放电量和电池健康状态。SOC（State of Charge，荷电状态）由 BMS（Battery Management System，电池管理系统）测量或估算。设备自身用于维持控制器运行的备用电池不属于此 Function，应使用 `PowerSource`。
+
+本 Function 中的充放电功率和电量以电池直流端为计量边界。PCS（Power Conversion System，储能变流器）交流侧功率/电量及电网并网点进口/出口数据属于 `EnergyManagement` 或 `ElectricityMetering`，受功率变换损耗影响，不应与电池侧计量值直接等同。
+
+额定容量、可用容量、SOC 允许范围、最大充放电功率和 SOH 均为可选能力，不要求每个储能设备都提供。只有同时存在可信、有效且时效足够的 `StateOfCharge` 和当前 `UsableEnergyCapacity` 时，消费者才可估算当前可用电量；`RatedEnergyCapacity`、SOH 或功率限值不能替代其中任何一项。计算规则见 `EnergyManagement`。
+
+### Function 标识
+
+<table>
+  <thead>
+    <tr>
+      <th>Function ID</th>
+      <th>Code</th>
+      <th>名称</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x013C</td>
+      <td>EnergyStorage</td>
+      <td>储能</td>
+    </tr>
+  </tbody>
+</table>
+
+### Trait
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51F9</td>
+      <td><a href="#ref_StateOfCharge">StateOfCharge</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x51FA</td>
+      <td><a href="#ref_RatedEnergyCapacity">RatedEnergyCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51FB</td>
+      <td><a href="#ref_UsableEnergyCapacity">UsableEnergyCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51FC</td>
+      <td><a href="#ref_CumulativeChargeEnergy">CumulativeChargeEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51FD</td>
+      <td><a href="#ref_CumulativeDischargeEnergy">CumulativeDischargeEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51FE</td>
+      <td><a href="#ref_ChargePower">ChargePower</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51FF</td>
+      <td><a href="#ref_DischargePower">DischargePower</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5200</td>
+      <td><a href="#ref_StateOfHealth">StateOfHealth</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x520A</td>
+      <td><a href="#ref_StoredEnergy">StoredEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x520B</td>
+      <td><a href="#ref_ACChargeCapacity">ACChargeCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x520C</td>
+      <td><a href="#ref_ACDischargeCapacity">ACDischargeCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x520D</td>
+      <td><a href="#ref_ACChargeableCapacity">ACChargeableCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x520E</td>
+      <td><a href="#ref_ACDischargeableCapacity">ACDischargeableCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x520F</td>
+      <td><a href="#ref_ACChargeableEnergy">ACChargeableEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5210</td>
+      <td><a href="#ref_ACDischargeableEnergy">ACDischargeableEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5211</td>
+      <td><a href="#ref_ACCumulativeChargeEnergy">ACCumulativeChargeEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5212</td>
+      <td><a href="#ref_ACCumulativeDischargeEnergy">ACCumulativeDischargeEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5213</td>
+      <td><a href="#ref_ACRatedEnergy">ACRatedEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5214</td>
+      <td><a href="#ref_StorageRatedVoltage">StorageRatedVoltage</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5215</td>
+      <td><a href="#ref_StorageChargeDischargePower">StorageChargeDischargePower</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5216</td>
+      <td><a href="#ref_ACChargingAmountSetting">ACChargingAmountSetting</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5217</td>
+      <td><a href="#ref_ACDischargingAmountSetting">ACDischargingAmountSetting</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5218</td>
+      <td><a href="#ref_BatteryType">BatteryType</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x522E</td>
+      <td><a href="#ref_StorageOperationMode">StorageOperationMode</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x522F</td>
+      <td><a href="#ref_WorkingStorageOperationMode">WorkingStorageOperationMode</a></td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+### Command
+
+本 Function 不包含 Command。
+
+### Trait 定义
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Name</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51F9</td>
+      <td><a href="#ref_StateOfCharge">StateOfCharge</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x51FA</td>
+      <td><a href="#ref_RatedEnergyCapacity">RatedEnergyCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51FB</td>
+      <td><a href="#ref_UsableEnergyCapacity">UsableEnergyCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51FC</td>
+      <td><a href="#ref_CumulativeChargeEnergy">CumulativeChargeEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51FD</td>
+      <td><a href="#ref_CumulativeDischargeEnergy">CumulativeDischargeEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51FE</td>
+      <td><a href="#ref_ChargePower">ChargePower</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x51FF</td>
+      <td><a href="#ref_DischargePower">DischargePower</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5200</td>
+      <td><a href="#ref_StateOfHealth">StateOfHealth</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x520A</td>
+      <td><a href="#ref_StoredEnergy">StoredEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x520B</td>
+      <td><a href="#ref_ACChargeCapacity">ACChargeCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x520C</td>
+      <td><a href="#ref_ACDischargeCapacity">ACDischargeCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x520D</td>
+      <td><a href="#ref_ACChargeableCapacity">ACChargeableCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x520E</td>
+      <td><a href="#ref_ACDischargeableCapacity">ACDischargeableCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x520F</td>
+      <td><a href="#ref_ACChargeableEnergy">ACChargeableEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5210</td>
+      <td><a href="#ref_ACDischargeableEnergy">ACDischargeableEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5211</td>
+      <td><a href="#ref_ACCumulativeChargeEnergy">ACCumulativeChargeEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5212</td>
+      <td><a href="#ref_ACCumulativeDischargeEnergy">ACCumulativeDischargeEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5213</td>
+      <td><a href="#ref_ACRatedEnergy">ACRatedEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5214</td>
+      <td><a href="#ref_StorageRatedVoltage">StorageRatedVoltage</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5215</td>
+      <td><a href="#ref_StorageChargeDischargePower">StorageChargeDischargePower</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5216</td>
+      <td><a href="#ref_ACChargingAmountSetting">ACChargingAmountSetting</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5217</td>
+      <td><a href="#ref_ACDischargingAmountSetting">ACDischargingAmountSetting</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5218</td>
+      <td><a href="#ref_BatteryType">BatteryType</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x522E</td>
+      <td><a href="#ref_StorageOperationMode">StorageOperationMode</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x522F</td>
+      <td><a href="#ref_WorkingStorageOperationMode">WorkingStorageOperationMode</a></td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+##### StorageOperationModeEnum8 Type {#ref_StorageOperationModeEnum8}
+
+该枚举定义储能设备的运行模式。
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x00</td>
+      <td>RapidCharging</td>
+      <td>快速充电</td>
+    </tr>
+    <tr>
+      <td>0x01</td>
+      <td>Charging</td>
+      <td>充电</td>
+    </tr>
+    <tr>
+      <td>0x02</td>
+      <td>Discharging</td>
+      <td>放电</td>
+    </tr>
+    <tr>
+      <td>0x03</td>
+      <td>Standby</td>
+      <td>待机</td>
+    </tr>
+    <tr>
+      <td>0x04</td>
+      <td>Test</td>
+      <td>测试</td>
+    </tr>
+    <tr>
+      <td>0x05</td>
+      <td>Automatic</td>
+      <td>自动</td>
+    </tr>
+    <tr>
+      <td>0x06</td>
+      <td>Restart</td>
+      <td>重启</td>
+    </tr>
+    <tr>
+      <td>0x07</td>
+      <td>EffectiveCapacityRecalculation</td>
+      <td>有效容量重新计算</td>
+    </tr>
+    <tr>
+      <td>0x08</td>
+      <td>Other</td>
+      <td>其他</td>
+    </tr>
+  </tbody>
+</table>
+
+#### StateOfCharge Trait {#ref_StateOfCharge}
+
+荷电状态（SOC）表示储能电池当前可用电量相对于当前可用满充电量的百分比估算，由 BMS 测量或估算。SOC 为 0% 表示达到 BMS 配置的放电下限，100% 表示达到 BMS 配置的充电上限；它不表示电芯的绝对化学空/满状态，也不直接代表剩余可供负载使用的 kWh。设备报告的 SOC 必须符合此定义；无法确认其含义、有效性或时效时，不得将其作为可信 SOC 用于推算。单位 %，精度 0.1%。用于能源管理界面展示、充放电策略和低电量判断。设备暂时无法确定 SOC 时应将值标记为不可用，而不是伪报为 0%。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51F9</td>
+      <td>StateOfCharge</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-100 %</td>
+      <td>无固定默认值；报告当前 BMS 值</td>
+      <td>RV</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>无固定默认值；可选报告设备允许的 SOC 上限</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>无固定默认值；可选报告设备允许的 SOC 下限</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### StoredEnergy Trait {#ref_StoredEnergy}
+
+剩余储能量表示电池当前储存的能量，单位 kWh；它是绝对能量值，不是荷电百分比或可用容量。设备直接报告时应使用设备的有效测量值。消费者只有在 `StateOfCharge` 可信且 `UsableEnergyCapacity` 为当前有效值时，才可按 `UsableEnergyCapacity &times; StateOfCharge / 100` 估算；不得用额定容量代替可用容量，也不得将缺失或无效输入当作 0。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x520A</td>
+      <td>StoredEnergy</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000 kWh</td>
+      <td>无固定默认值；报告当前值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.001</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ACChargeCapacity Trait {#ref_ACChargeCapacity}
+
+交流充电有效容量表示按设备定义的交流侧计量边界可用于充电的有效能量容量，单位 W&middot;h；不得与电池直流侧额定容量或可用容量混用。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x520B</td>
+      <td>ACChargeCapacity</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000000 W&middot;h</td>
+      <td>无固定默认值；报告设备值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ACDischargeCapacity Trait {#ref_ACDischargeCapacity}
+
+交流放电有效容量表示按设备定义的交流侧计量边界可用于放电的有效能量容量，单位 W&middot;h；不等同于电池侧可用容量。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x520C</td>
+      <td>ACDischargeCapacity</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000000 W&middot;h</td>
+      <td>无固定默认值；报告设备值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ACChargeableCapacity Trait {#ref_ACChargeableCapacity}
+
+交流可充电容量表示当前交流侧计量边界下仍可充入的能量容量，单位 W&middot;h。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x520D</td>
+      <td>ACChargeableCapacity</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000000 W&middot;h</td>
+      <td>无固定默认值；报告设备值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ACDischargeableCapacity Trait {#ref_ACDischargeableCapacity}
+
+交流可放电容量表示当前交流侧计量边界下仍可放出的能量容量，单位 W&middot;h。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x520E</td>
+      <td>ACDischargeableCapacity</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000000 W&middot;h</td>
+      <td>无固定默认值；报告设备值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ACChargeableEnergy Trait {#ref_ACChargeableEnergy}
+
+交流可充入电量表示当前条件下设备允许新增的充电能量，单位 W&middot;h。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x520F</td>
+      <td>ACChargeableEnergy</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000000 W&middot;h</td>
+      <td>无固定默认值；报告设备值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ACDischargeableEnergy Trait {#ref_ACDischargeableEnergy}
+
+交流可放出电量表示当前条件下设备允许新增的放电能量，单位 W&middot;h。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5210</td>
+      <td>ACDischargeableEnergy</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000000 W&middot;h</td>
+      <td>无固定默认值；报告设备值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ACCumulativeChargeEnergy Trait {#ref_ACCumulativeChargeEnergy}
+
+交流侧累计充电量表示当前计数器代际内的非负累计值，单位 W&middot;h；该量的计量边界由储能设备定义，不得与电池直流侧的 `CumulativeChargeEnergy` 混用。计数器代际规则见 `EnergyManagement`。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5211</td>
+      <td>ACCumulativeChargeEnergy</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000000 W&middot;h</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0010</td>
+      <td>Counter Generation</td>
+      <td>uint32</td>
+      <td>0-4294967295</td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ACCumulativeDischargeEnergy Trait {#ref_ACCumulativeDischargeEnergy}
+
+交流侧累计放电量表示当前计数器代际内的非负累计值，单位 W&middot;h；该量的计量边界由储能设备定义，不得与电池直流侧的 `CumulativeDischargeEnergy` 混用。计数器代际规则见 `EnergyManagement`。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5212</td>
+      <td>ACCumulativeDischargeEnergy</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000000 W&middot;h</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0010</td>
+      <td>Counter Generation</td>
+      <td>uint32</td>
+      <td>0-4294967295</td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ACRatedEnergy Trait {#ref_ACRatedEnergy}
+
+交流额定电能表示设备交流侧标称能量容量，单位 W&middot;h；其与电池直流侧额定容量的换算关系由设备规格确定。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5213</td>
+      <td>ACRatedEnergy</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000000 W&middot;h</td>
+      <td>无固定默认值；由产品规格确定</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### StorageRatedVoltage Trait {#ref_StorageRatedVoltage}
+
+储能额定电压表示储能设备标称工作电压，单位 V。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5214</td>
+      <td>StorageRatedVoltage</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000 V</td>
+      <td>无固定默认值；由产品规格确定</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### StorageChargeDischargePower Trait {#ref_StorageChargeDischargePower}
+
+瞬时充放电功率以单一带符号值表示，单位 W；正值表示充电，负值表示放电，零表示无功率流。与分别报告的电池侧 `ChargePower` 和 `DischargePower` 不应在同一边界上重复计量。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5215</td>
+      <td>StorageChargeDischargePower</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>-5000000-5000000 W</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>5000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>-5000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ACChargingAmountSetting Trait {#ref_ACChargingAmountSetting}
+
+交流充电量设定表示设备允许的交流侧目标充电电量，单位 W&middot;h。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5216</td>
+      <td>ACChargingAmountSetting</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint32</td>
+      <td>0-999999999 W&middot;h</td>
+      <td>无固定默认值；报告当前设定</td>
+      <td>RVW</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>999999999</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ACDischargingAmountSetting Trait {#ref_ACDischargingAmountSetting}
+
+交流放电量设定表示设备允许的交流侧目标放电电量，单位 W&middot;h。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5217</td>
+      <td>ACDischargingAmountSetting</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint32</td>
+      <td>0-999999999 W&middot;h</td>
+      <td>无固定默认值；报告当前设定</td>
+      <td>RVW</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>999999999</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### BatteryType Trait {#ref_BatteryType}
+
+电池类型表示设备上报的电池种类标识，采用文本值保留设备给出的类别名称；不用于表示电池状态。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5218</td>
+      <td>BatteryType</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>characterString</td>
+      <td>设备定义的类别名称</td>
+      <td>无固定默认值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### StorageOperationMode Trait {#ref_StorageOperationMode}
+
+储能运行模式表示设备设定的运行模式，可读写。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x522E</td>
+      <td>StorageOperationMode</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td><a href="#ref_StorageOperationModeEnum8">StorageOperationModeEnum8</a></td>
+      <td>0-8</td>
+      <td>无固定默认值</td>
+      <td>RVW</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0006</td>
+      <td>Supported Value</td>
+      <td>list[<a href="#ref_StorageOperationModeEnum8">StorageOperationModeEnum8</a>]</td>
+      <td></td>
+      <td></td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### WorkingStorageOperationMode Trait {#ref_WorkingStorageOperationMode}
+
+实际储能运行模式表示设备当前正在执行的运行模式；其枚举值与设定模式使用相同定义。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x522F</td>
+      <td>WorkingStorageOperationMode</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td><a href="#ref_StorageOperationModeEnum8">StorageOperationModeEnum8</a></td>
+      <td>0-8</td>
+      <td>无固定默认值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### RatedEnergyCapacity Trait {#ref_RatedEnergyCapacity}
+
+额定容量表示制造商标称的电池能量容量，单位 kWh。该值是产品规格参数，通常在电池额定测试条件下给出；它不是当前 SOC 对应的剩余能量，也不等于扣除 BMS 保护范围后当前可用的容量。用于设备规格展示和系统容量规划。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51FA</td>
+      <td>RatedEnergyCapacity</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0.001-1000000 kWh</td>
+      <td>无固定默认值；由产品规格确定</td>
+      <td>RV</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.001</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.001</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### UsableEnergyCapacity Trait {#ref_UsableEnergyCapacity}
+
+可用容量表示按当前 BMS 运行边界可供充放电使用的能量容量，单位 kWh。该值可能随温度、SOH、保护策略或运行条件变化；实现应采用设备可用容量的当前估算值，并不得将其与制造商标称的 `RatedEnergyCapacity` 混用。用于计划充放电和估算可调度能量。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51FB</td>
+      <td>UsableEnergyCapacity</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000 kWh</td>
+      <td>无固定默认值；报告当前 BMS 值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.001</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### CumulativeChargeEnergy Trait {#ref_CumulativeChargeEnergy}
+
+累计充电量表示当前计数器代际内流入电池的累计电能，计量边界为电池直流端。该值为非负累计值，单位 W&middot;h，不与放电量抵消。用于分析电池充电过程和循环能量吞吐；如需计算往返效率，应确保充电量、放电量覆盖相同的电池侧边界和统计周期。设备重启不得清零读数或代际；复位、无法补偿的回卷及计量器更换须递增 `Counter Generation`。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51FC</td>
+      <td>CumulativeChargeEnergy</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000000 W&middot;h</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0010</td>
+      <td>Counter Generation</td>
+      <td>uint32</td>
+      <td>0-4294967295</td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### CumulativeDischargeEnergy Trait {#ref_CumulativeDischargeEnergy}
+
+累计放电量表示当前计数器代际内从电池流出的累计电能，计量边界为电池直流端。该值为非负累计值，单位 W&middot;h，独立于累计充电量。用于分析电池放电过程、能量利用和循环统计；设备重启不得清零读数或代际；复位、无法补偿的回卷及计量器更换须递增 `Counter Generation`。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51FD</td>
+      <td>CumulativeDischargeEnergy</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000000 W&middot;h</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0010</td>
+      <td>Counter Generation</td>
+      <td>uint32</td>
+      <td>0-4294967295</td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ChargePower Trait {#ref_ChargePower}
+
+充电功率表示当前流入电池的有功功率，计量边界为电池直流端，单位 W。该值始终为非负值；无充电时报告 0。与 `DischargePower` 分开报告，避免通过单个带符号值导致充电和放电含义因厂商而异。用于实时监控和充电功率调度。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51FE</td>
+      <td>ChargePower</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-5000000 W</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>无固定默认值；可选报告设备支持的最大充电功率</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>无固定默认值；可选报告设备支持的最小充电功率</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### DischargePower Trait {#ref_DischargePower}
+
+放电功率表示当前从电池流出的有功功率，计量边界为电池直流端，单位 W。该值始终为非负值；无放电时报告 0。与 `ChargePower` 分开报告。用于实时监控和可调度放电功率计算。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51FF</td>
+      <td>DischargePower</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-5000000 W</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>无固定默认值；可选报告设备支持的最大放电功率</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>无固定默认值；可选报告设备支持的最小放电功率</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### StateOfHealth Trait {#ref_StateOfHealth}
+
+电池健康度（SOH）表示电池健康状态，范围 0-100%。为提高互操作性，定义为当前可用能量容量相对于制造商定义的初始可用能量容量的百分比；100% 表示与该基准相同，数值降低表示可用容量衰减。若设备按其他算法计算，必须在产品文档中说明，不能将不同算法的 SOH 直接比较。用于评估电池衰减和维护状态。单位 %，精度 0.1%。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5200</td>
+      <td>StateOfHealth</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-100 %</td>
+      <td>无固定默认值；报告当前 BMS 值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>100</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+### Command 定义
+
+本 Function 不包含 Command。
+
+## ElectricityMetering（电能计量） {#ref_Aqara_Spec_ElectricityMetering}
+
+### 简介
+
+电能计量（ElectricityMetering）用于描述电能表和并网点（Point of Common Coupling，PCC）的计量能力，包括测量点、带方向的实时有功功率、需量和分时累计电量。该 Function 补充 `EnergyManagement` 的通用电气测量能力；用于电网结算或家庭能源管理的电表应同时实现 `EnergyManagement`，以报告进口/出口累计有功电能等通用电气数据。
+
+本 Function 面向电网连接点（PCC）计量。PCC 的进口方向为电网到用户侧，出口方向为用户侧到电网。功率可用正负号表示方向，进口和出口电量及分时电量则分别以非负计数器累计。分时寄存器的费率编号由电表/费率计划定义，`Peak`、`OffPeak` 等类别仅作通用分类，不能替代具体费率计划。
+
+### Function 标识
+
+<table>
+  <thead>
+    <tr>
+      <th>Function ID</th>
+      <th>Code</th>
+      <th>名称</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x013D</td>
+      <td>ElectricityMetering</td>
+      <td>电能计量</td>
+    </tr>
+  </tbody>
+</table>
+
+### Trait
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51B3</td>
+      <td><a href="#ref_CurrentForwardTotalActiveEnergy">CurrentForwardTotalActiveEnergy</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x51B4</td>
+      <td><a href="#ref_CurrentReverseTotalActiveEnergy">CurrentReverseTotalActiveEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5201</td>
+      <td><a href="#ref_GridActivePower">GridActivePower</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x5202</td>
+      <td><a href="#ref_MeteringPointType">MeteringPointType</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x5203</td>
+      <td><a href="#ref_DemandIntervalDuration">DemandIntervalDuration</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5204</td>
+      <td><a href="#ref_CurrentDemand">CurrentDemand</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5205</td>
+      <td><a href="#ref_MaximumDemand">MaximumDemand</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5206</td>
+      <td><a href="#ref_MaximumDemandTimestamp">MaximumDemandTimestamp</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5207</td>
+      <td><a href="#ref_DemandPeriodStartTimestamp">DemandPeriodStartTimestamp</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5208</td>
+      <td><a href="#ref_TariffEnergyRegisters">TariffEnergyRegisters</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5209</td>
+      <td><a href="#ref_DemandCalculationMethod">DemandCalculationMethod</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x523F</td>
+      <td><a href="#ref_BranchCircuitMeasurements">BranchCircuitMeasurements</a></td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+若 `CurrentDemand` 或 `MaximumDemand` 存在，`DemandIntervalDuration` 和 `DemandCalculationMethod` 也必须存在；若 `MaximumDemand` 存在，`MaximumDemandTimestamp` 和 `DemandPeriodStartTimestamp` 必须存在。这样消费者可以确定需量平均窗口、计算方法及最大值所属计费周期。
+
+### Command
+
+本 Function 不包含 Command。最大需量计费周期由电表或其费率配置确定；本 Function 提供周期起始时间和最大需量区间结束时间，不定义远程复位需量计数器的命令。
+
+### 数据类型
+
+##### MeteringPointTypeEnum8 Type {#ref_MeteringPointTypeEnum8}
+
+该枚举标识电能表的计量位置。当前定义 PCC，以便区分用户侧进口/出口和发电侧计量。
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x00</td>
+      <td>Unknown</td>
+      <td>未知或未配置</td>
+    </tr>
+    <tr>
+      <td>0x01</td>
+      <td>GridConnectionPoint</td>
+      <td>电网与用户能源系统之间的并网点（PCC）</td>
+    </tr>
+  </tbody>
+</table>
+
+##### TariffCategoryEnum8 Type {#ref_TariffCategoryEnum8}
+
+该枚举为分时寄存器提供通用费率时段分类。实际费率编号及其适用时间由电表/费率计划决定；枚举类别仅用于展示和粗粒度聚合。
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x00</td>
+      <td>Unspecified</td>
+      <td>未指定类别</td>
+    </tr>
+    <tr>
+      <td>0x01</td>
+      <td>OffPeak</td>
+      <td>谷时段或低费率时段</td>
+    </tr>
+    <tr>
+      <td>0x02</td>
+      <td>Shoulder</td>
+      <td>平时段或中间费率时段</td>
+    </tr>
+    <tr>
+      <td>0x03</td>
+      <td>Peak</td>
+      <td>峰时段或高费率时段</td>
+    </tr>
+    <tr>
+      <td>0x04</td>
+      <td>CriticalPeak</td>
+      <td>尖峰或特殊高费率时段</td>
+    </tr>
+  </tbody>
+</table>
+
+##### DemandCalculationMethodEnum8 Type {#ref_DemandCalculationMethodEnum8}
+
+该枚举标识需量积分区间的计算方式。设备必须在上报需量时提供此项，且不得将 `Unknown` 与有效的需量结果同时上报，避免消费者将固定区间和滑动区间结果混为一谈。
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x00</td>
+      <td>Unknown</td>
+      <td>未知或未配置</td>
+    </tr>
+    <tr>
+      <td>0x01</td>
+      <td>FixedBlock</td>
+      <td>固定区间；按连续且不重叠的区间计算平均功率</td>
+    </tr>
+    <tr>
+      <td>0x02</td>
+      <td>RollingWindow</td>
+      <td>滑动区间；按持续移动的时间窗口计算平均功率</td>
+    </tr>
+  </tbody>
+</table>
+
+##### TariffEnergyRegisterStructure Type {#ref_TariffEnergyRegisterStructure}
+
+该结构体描述一个费率寄存器的身份和进口/出口累计有功电能。未被设备测量的方向可省略；同一费率寄存器 ID 在一个电表端点内必须唯一且保持稳定。
+
+<table>
+  <thead>
+    <tr>
+      <th>成员序号</th>
+      <th>字段名</th>
+      <th>类型</th>
+      <th>必须</th>
+      <th>最小值</th>
+      <th>最大值</th>
+      <th>步长</th>
+      <th>单位</th>
+      <th>默认值</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>TariffRegisterId</td>
+      <td>uint8</td>
+      <td>M</td>
+      <td>1</td>
+      <td>16</td>
+      <td>1</td>
+      <td>无</td>
+      <td>无</td>
+      <td>费率寄存器标识，在本电表端点内唯一。具体时段含义由电表的费率计划确定。</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>TariffCategory</td>
+      <td><a href="#ref_TariffCategoryEnum8">TariffCategoryEnum8</a></td>
+      <td>O</td>
+      <td>0</td>
+      <td>4</td>
+      <td>1</td>
+      <td>无</td>
+      <td>0</td>
+      <td>通用费率类别。没有可对应的通用类别时使用 <code>Unspecified</code>。</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>ImportedActiveEnergy</td>
+      <td>float</td>
+      <td>O</td>
+      <td>0</td>
+      <td>1000000000000</td>
+      <td>0.1</td>
+      <td>W&middot;h</td>
+      <td>无</td>
+      <td>该费率寄存器下从电网进口的累计有功电能，非负累计值；若实现无法保证逻辑累计值连续且要求精确差值，须与 <code>ImportedCounterGeneration</code> 一同提供。</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>ExportedActiveEnergy</td>
+      <td>float</td>
+      <td>O</td>
+      <td>0</td>
+      <td>1000000000000</td>
+      <td>0.1</td>
+      <td>W&middot;h</td>
+      <td>无</td>
+      <td>该费率寄存器下向电网出口的累计有功电能，非负累计值；若实现无法保证逻辑累计值连续且要求精确差值，须与 <code>ExportedCounterGeneration</code> 一同提供。</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>ImportedCounterGeneration</td>
+      <td>uint32</td>
+      <td>O</td>
+      <td>0</td>
+      <td>4294967295</td>
+      <td>1</td>
+      <td>无</td>
+      <td>0</td>
+      <td>在实现无法保证逻辑累计值连续且要求精确差值时，若存在 <code>ImportedActiveEnergy</code> 则必须提供；计数器代际规则见 <code>EnergyManagement</code>。</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>ExportedCounterGeneration</td>
+      <td>uint32</td>
+      <td>O</td>
+      <td>0</td>
+      <td>4294967295</td>
+      <td>1</td>
+      <td>无</td>
+      <td>0</td>
+      <td>在实现无法保证逻辑累计值连续且要求精确差值时，若存在 <code>ExportedActiveEnergy</code> 则必须提供；计数器代际规则见 <code>EnergyManagement</code>。</td>
+    </tr>
+  </tbody>
+</table>
+
+每个结构体至少包含 `ImportedActiveEnergy` 或 `ExportedActiveEnergy` 之一。数据类型为最多包含 16 个 `TariffEnergyRegisterStructure` 的列表；空列表表示设备当前没有提供分时寄存器数据。
+
+### Trait 定义
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Name</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x51B3</td>
+      <td><a href="#ref_CurrentForwardTotalActiveEnergy">CurrentForwardTotalActiveEnergy</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x51B4</td>
+      <td><a href="#ref_CurrentReverseTotalActiveEnergy">CurrentReverseTotalActiveEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5201</td>
+      <td><a href="#ref_GridActivePower">GridActivePower</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x5202</td>
+      <td><a href="#ref_MeteringPointType">MeteringPointType</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x5203</td>
+      <td><a href="#ref_DemandIntervalDuration">DemandIntervalDuration</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5204</td>
+      <td><a href="#ref_CurrentDemand">CurrentDemand</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5205</td>
+      <td><a href="#ref_MaximumDemand">MaximumDemand</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5206</td>
+      <td><a href="#ref_MaximumDemandTimestamp">MaximumDemandTimestamp</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5207</td>
+      <td><a href="#ref_DemandPeriodStartTimestamp">DemandPeriodStartTimestamp</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5208</td>
+      <td><a href="#ref_TariffEnergyRegisters">TariffEnergyRegisters</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5209</td>
+      <td><a href="#ref_DemandCalculationMethod">DemandCalculationMethod</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x523F</td>
+      <td><a href="#ref_BranchCircuitMeasurements">BranchCircuitMeasurements</a></td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### GridActivePower Trait {#ref_GridActivePower}
+
+并网有功功率表示 PCC 处当前净有功功率，单位 W，采用带符号值：正值表示从电网进口（购电），负值表示向电网出口（送电），零表示当前净功率接近零。该值是进口功率与出口功率的净值，不表示两个方向各自的瞬时功率；方向累计量应使用 `EnergyManagement` 中的 `CurrentForwardTotalActiveEnergy` 和 `CurrentReverseTotalActiveEnergy`。用于能源流向展示、光伏自用/上网状态判断及能源管理策略。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5201</td>
+      <td>GridActivePower</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>-5000000-5000000 W</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>5000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>-5000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### MeteringPointType Trait {#ref_MeteringPointType}
+
+计量点类型表示电能表的测量边界。设置为 `GridConnectionPoint` 时，本 Function 的进口/出口和有功功率符号按 PCC 方向定义。计量位置未知时报告 `Unknown`，不得根据设备型号推断边界。用于阻止将并网点电量与发电机或电池侧电量错误比较。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5202</td>
+      <td>MeteringPointType</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td><a href="#ref_MeteringPointTypeEnum8">MeteringPointTypeEnum8</a></td>
+      <td>0-1</td>
+      <td>1</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### DemandIntervalDuration Trait {#ref_DemandIntervalDuration}
+
+需量周期表示用于计算当前需量和最大需量的积分区间长度，单位秒。需量是该区间内进口有功功率的平均值；本字段描述平均窗口长度，不是上报间隔。15 分钟（900 秒）是常见默认积分周期，电表仍可按当地计费规则配置其他周期。用于解释需量数据并进行跨设备比较。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5203</td>
+      <td>DemandIntervalDuration</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint32</td>
+      <td>60-3600 s</td>
+      <td>900</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>3600</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>60</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>uint32</td>
+      <td></td>
+      <td>1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### CurrentDemand Trait {#ref_CurrentDemand}
+
+当前需量表示当前需量积分区间的进口有功功率平均值，单位 W，非负。区间未完成时，设备可上报截至当前时刻的区间平均值，但必须以一致的方式计算；消费者应通过 `DemandIntervalDuration` 理解其时间窗口。出口功率不计入进口需量。用于实时观察计费需量增长趋势，不等同于 `GridActivePower` 瞬时净功率。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5204</td>
+      <td>CurrentDemand</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-5000000 W</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>5000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### MaximumDemand Trait {#ref_MaximumDemand}
+
+最大需量表示当前计费周期内，所有需量积分区间进口有功功率平均值的最大值，单位 W，非负。它不是瞬时功率峰值，也不包含出口需量。计费周期由电表/费率计划决定，其起始时刻通过 `DemandPeriodStartTimestamp` 报告；新计费周期开始时最大值重新累计。达到最大值的区间结束时间通过 `MaximumDemandTimestamp` 报告。用于需量电费评估和计费周期内峰值负荷分析。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5205</td>
+      <td>MaximumDemand</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-5000000 W</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>5000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### MaximumDemandTimestamp Trait {#ref_MaximumDemandTimestamp}
+
+最大需量时刻表示 `MaximumDemand` 当前记录的最大需量区间结束时刻，采用 UTC（Coordinated Universal Time，协调世界时）Unix epoch（自 1970-01-01T00:00:00Z 起算）毫秒时间戳。值为 0 表示设备尚未记录有效最大需量时间。该时刻与 `DemandIntervalDuration` 共同标识产生最大需量的完整积分区间，用于账单核验和负荷事件分析。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5206</td>
+      <td>MaximumDemandTimestamp</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint64</td>
+      <td>0-253402300799999 ms</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>uint64</td>
+      <td></td>
+      <td>253402300799999</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>uint64</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>uint64</td>
+      <td></td>
+      <td>1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### DemandPeriodStartTimestamp Trait {#ref_DemandPeriodStartTimestamp}
+
+计费周期起始时刻表示当前 `MaximumDemand` 所属计费周期的起始时刻，采用 UTC（Coordinated Universal Time，协调世界时）Unix epoch（自 1970-01-01T00:00:00Z 起算）毫秒时间戳。计费周期边界由电表的计费日历或费率计划确定；周期开始时最大需量应重新统计。值为 0 表示设备未提供周期起始时间。用于判断最大需量的统计范围，避免将不同账期的值直接比较。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5207</td>
+      <td>DemandPeriodStartTimestamp</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint64</td>
+      <td>0-253402300799999 ms</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>uint64</td>
+      <td></td>
+      <td>253402300799999</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>uint64</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>uint64</td>
+      <td></td>
+      <td>1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### TariffEnergyRegisters Trait {#ref_TariffEnergyRegisters}
+
+分时电量寄存器表示电表按费率寄存器分别累计的进口和/或出口有功电能。每个寄存器具有稳定且唯一的 `TariffRegisterId`；寄存器的具体费率时间表、季节和节假日规则由电表或外部费率计划配置，本 Trait 不传输费率日历。类别枚举只提供粗粒度标签，不可用于替代费率 ID 或据此计算费用。每个电量值均为非负累计值，单位 W&middot;h；设备重启不得导致逻辑累计值回退。当实现无法保证逻辑累计值连续且要求精确差值时，须为每个方向提供对应的代际字段。计数器代际规则见 `EnergyManagement`。用于尖峰平谷统计、分时账单和需求侧能源分析。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5208</td>
+      <td>TariffEnergyRegisters</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>list[<a href="#ref_TariffEnergyRegisterStructure">TariffEnergyRegisterStructure</a>]</td>
+      <td>最多 16 个寄存器</td>
+      <td><code>[]</code></td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### DemandCalculationMethod Trait {#ref_DemandCalculationMethod}
+
+需量计算方式表示电表计算需量所采用的窗口方式。`FixedBlock` 将连续时间划分为互不重叠的固定区间；`RollingWindow` 使用持续滑动的窗口。该方法必须与 `DemandIntervalDuration` 一起解释 `CurrentDemand` 和 `MaximumDemand`，单位不适用。用于确保不同电表的需量计算口径明确。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5209</td>
+      <td>DemandCalculationMethod</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td><a href="#ref_DemandCalculationMethodEnum8">DemandCalculationMethodEnum8</a></td>
+      <td>0-2</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+##### BranchCircuitMeasurementStructure Type {#ref_BranchCircuitMeasurementStructure}
+
+该结构体表示一个配电回路的计量数据。通道标识在设备内唯一且稳定；设备未提供的计量方向或瞬时功率字段可省略。
+
+<table>
+  <thead>
+    <tr>
+      <th>结构体成员序号</th>
+      <th>字段名</th>
+      <th>类型</th>
+      <th>必须</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>ChannelId</td>
+      <td>uint16</td>
+      <td>M</td>
+      <td>配电回路通道号，在同一设备内唯一且稳定。</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>ImportedActiveEnergy</td>
+      <td>float</td>
+      <td>O</td>
+      <td>回路正向累计电能，非负值，单位 W&middot;h；需要代际时与字段 <code>ImportedCounterGeneration</code> 一同提供。</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>ExportedActiveEnergy</td>
+      <td>float</td>
+      <td>O</td>
+      <td>回路反向累计电能，非负值，单位 W&middot;h；需要代际时与字段 <code>ExportedCounterGeneration</code> 一同提供。</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>ActivePower</td>
+      <td>float</td>
+      <td>O</td>
+      <td>回路瞬时有功功率，单位 W；正值表示进口/耗电，负值表示出口/反向潮流。</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>ImportedCounterGeneration</td>
+      <td>uint32</td>
+      <td>O</td>
+      <td>当无法保证逻辑累计值连续且要求精确差值时，若提供 <code>ImportedActiveEnergy</code> 则必须提供。规则见 <code>EnergyManagement</code>。</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>ExportedCounterGeneration</td>
+      <td>uint32</td>
+      <td>O</td>
+      <td>当无法保证逻辑累计值连续且要求精确差值时，若提供 <code>ExportedActiveEnergy</code> 则必须提供。规则见 <code>EnergyManagement</code>。</td>
+    </tr>
+  </tbody>
+</table>
+
+#### BranchCircuitMeasurements Trait {#ref_BranchCircuitMeasurements}
+
+分路计量数据表示配电盘各回路的累计进口/出口电能及瞬时有功功率。Present Value 为 `BranchCircuitMeasurementStructure` 列表；通道号必须在设备内唯一且稳定，每个列表项至少包含一项计量值。若 ECHONET Lite 以设备累计电能单位提供原始计数，转换时应先按设备单位换算为 W&middot;h，再写入对应结构字段。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x523F</td>
+      <td>BranchCircuitMeasurements</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>list[<a href="#ref_BranchCircuitMeasurementStructure">BranchCircuitMeasurementStructure</a>]</td>
+      <td>按设备支持的回路数</td>
+      <td><code>[]</code></td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+### Command 定义
+
+本 Function 不包含 Command。
+
+## PowerGeneration（发电） {#ref_Aqara_Spec_PowerGeneration}
+
+### 简介
+
+发电（PowerGeneration）用于表示发电设备的额定输出能力和发电运行状态，并为燃料电池和燃气热电联产设备提供燃气消耗、负载侧用电及热回收数据。并网状态由 `EnergyManagement/SystemInterconnectionStatus` 表示。瞬时发电功率和累计发电量复用 `EnergyManagement/GeneratedActivePower` 与 `EnergyManagement/CumulativeGeneratedActiveEnergy`；本 Function 不改变其计量边界约定。
+
+### Function 标识
+
+<table>
+  <thead>
+    <tr>
+      <th>Function ID</th>
+      <th>Code</th>
+      <th>名称</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x013E</td>
+      <td>PowerGeneration</td>
+      <td>发电</td>
+    </tr>
+  </tbody>
+</table>
+
+### Trait
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5230</td>
+      <td><a href="#ref_RatedGenerationPower">RatedGenerationPower</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5231</td>
+      <td><a href="#ref_PowerGenerationStatus">PowerGenerationStatus</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5233</td>
+      <td><a href="#ref_CumulativeGasConsumption">CumulativeGasConsumption</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5236</td>
+      <td><a href="#ref_RecoveredWaterTemperature">RecoveredWaterTemperature</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5237</td>
+      <td><a href="#ref_RemainingHotWaterAmount">RemainingHotWaterAmount</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5238</td>
+      <td><a href="#ref_HotWaterTankCapacity">HotWaterTankCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5239</td>
+      <td><a href="#ref_CumulativeSoldEnergy">CumulativeSoldEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x523E</td>
+      <td><a href="#ref_PowerGenerationRequestTimestamp">PowerGenerationRequestTimestamp</a></td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+### Command
+
+本 Function 不包含 Command。发电设定及预定发电状态的取值语义明确前，不定义对应的控制接口。
+
+### 数据类型
+
+##### PowerGenerationStatusEnum8 Type {#ref_PowerGenerationStatusEnum8}
+
+该枚举定义发电设备的当前运行状态。
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x00</td>
+      <td>Stopped</td>
+      <td>停止</td>
+    </tr>
+    <tr>
+      <td>0x01</td>
+      <td>Starting</td>
+      <td>启动中</td>
+    </tr>
+    <tr>
+      <td>0x02</td>
+      <td>Generating</td>
+      <td>发电中</td>
+    </tr>
+    <tr>
+      <td>0x03</td>
+      <td>Stopping</td>
+      <td>停止中</td>
+    </tr>
+    <tr>
+      <td>0x04</td>
+      <td>Idling</td>
+      <td>待机</td>
+    </tr>
+  </tbody>
+</table>
+
+### Trait 定义
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Name</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5230</td>
+      <td><a href="#ref_RatedGenerationPower">RatedGenerationPower</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5231</td>
+      <td><a href="#ref_PowerGenerationStatus">PowerGenerationStatus</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5233</td>
+      <td><a href="#ref_CumulativeGasConsumption">CumulativeGasConsumption</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5236</td>
+      <td><a href="#ref_RecoveredWaterTemperature">RecoveredWaterTemperature</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5237</td>
+      <td><a href="#ref_RemainingHotWaterAmount">RemainingHotWaterAmount</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5238</td>
+      <td><a href="#ref_HotWaterTankCapacity">HotWaterTankCapacity</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5239</td>
+      <td><a href="#ref_CumulativeSoldEnergy">CumulativeSoldEnergy</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x523E</td>
+      <td><a href="#ref_PowerGenerationRequestTimestamp">PowerGenerationRequestTimestamp</a></td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### RatedGenerationPower Trait {#ref_RatedGenerationPower}
+
+额定发电功率表示发电设备的标称最大输出功率，单位 W。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5230</td>
+      <td>RatedGenerationPower</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-5000000 W</td>
+      <td>无固定默认值；由产品规格确定</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>5000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### PowerGenerationStatus Trait {#ref_PowerGenerationStatus}
+
+发电状态表示发电设备当前所处的运行阶段。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5231</td>
+      <td>PowerGenerationStatus</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td><a href="#ref_PowerGenerationStatusEnum8">PowerGenerationStatusEnum8</a></td>
+      <td>0-4</td>
+      <td>无固定默认值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### CumulativeGasConsumption Trait {#ref_CumulativeGasConsumption}
+
+累计燃气消耗量表示当前计数器代际内消耗的燃气体积，单位 m^3；设备重启不得清零读数或代际，计数器复位、无法补偿的回卷或计量器更换须递增 `Counter Generation`。计数器代际规则见 `EnergyManagement`。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5233</td>
+      <td>CumulativeGasConsumption</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000000 m^3</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0010</td>
+      <td>Counter Generation</td>
+      <td>uint32</td>
+      <td>0-4294967295</td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.001</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### RecoveredWaterTemperature Trait {#ref_RecoveredWaterTemperature}
+
+热回收水温表示发电设备热回收系统中的水温，单位 deg C。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5236</td>
+      <td>RecoveredWaterTemperature</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>-50-150 deg C</td>
+      <td>无固定默认值；报告当前值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>150</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>-50</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### RemainingHotWaterAmount Trait {#ref_RemainingHotWaterAmount}
+
+剩余热水量表示热水储存设备当前可用的热水体积，单位 L。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5237</td>
+      <td>RemainingHotWaterAmount</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000 L</td>
+      <td>无固定默认值；报告当前值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### HotWaterTankCapacity Trait {#ref_HotWaterTankCapacity}
+
+储热水箱容量表示水箱的标称储水体积，单位 L。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5238</td>
+      <td>HotWaterTankCapacity</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000 L</td>
+      <td>无固定默认值；由产品规格确定</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### PowerGenerationRequestTimestamp Trait {#ref_PowerGenerationRequestTimestamp}
+
+发电请求时间表示发电设备记录的发电请求时刻，采用 UTC Unix epoch 毫秒时间戳；0 表示设备未提供有效时刻。将外部时间表示转换为该格式时，应依据其时区语义；无法确定时间或时区时不得猜测。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x523E</td>
+      <td>PowerGenerationRequestTimestamp</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint64</td>
+      <td>0-253402300799999 ms</td>
+      <td>无固定默认值；报告设备记录值</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>uint64</td>
+      <td></td>
+      <td>253402300799999</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>uint64</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>uint64</td>
+      <td></td>
+      <td>1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
+#### CumulativeSoldEnergy Trait {#ref_CumulativeSoldEnergy}
+
+累计卖电量表示发电设备向外部售出的累计有功电能，单位 W&middot;h。其计量边界由发电设备的售电计量点决定，不等同于设备总发电量；当实现无法保证逻辑累计值连续且要求精确差值时，应同时上报 `Counter Generation`，代际变化规则见 `EnergyManagement`。
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x5239</td>
+      <td>CumulativeSoldEnergy</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 参数
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>float</td>
+      <td>0-1000000000000 W&middot;h</td>
+      <td>0</td>
+      <td>RV</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0010</td>
+      <td>Counter Generation</td>
+      <td>uint32</td>
+      <td>0-4294967295</td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0002</td>
+      <td>Maximum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>1000000000000</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0003</td>
+      <td>Minimum Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x0005</td>
+      <td>Step Value</td>
+      <td>float</td>
+      <td></td>
+      <td>0.1</td>
+      <td>R</td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
