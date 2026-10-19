@@ -26,7 +26,7 @@ Client 负责实现 IoT 无线协议的接入与赋能，承担网络管理、�
 - 数据类型、数据帧编码与应用交互格式（参见 [第三章](#第三章-数据类型与交互格式)）
 - 上电初始化流程，包括 Link Establishment、Profile Discovery、Server 数据同步与 Wake Signaling（参见 [第四章](#第四章-初始化)）
 - Profile 体系、应答与重传等实现规则（参见 [第五章](#第五章-profile-体系与实现规则)）
-- Foundation Profile 与产品 Profile 的属性、命令定义（参见 [第六章](#第六章-foundation-profileprofile-id--0x0000) 和 [第七章](#第七章-thermostat-profileprofile-id--0x1000)）
+- Foundation Profile 与产品 Profile 的属性、命令定义（参见 [第六章](#第六章-foundation-profileprofile-id--0x0000)、[第七章](#第七章-thermostat-profileprofile-id--0x1000)、[第八章](#第八章-clothes-rack-profileprofile-id--0x1001)、[第九章](#第九章-toilet-profileprofile-id--0x1001)）
 - 固件在线升级（OTA）子协议（参见 [第六章](#第六章-foundation-profileprofile-id--0x0000)）
 - 串口消息编解码示例（参见 [附录 A](#附录-a串口消息示例)）
 
@@ -73,7 +73,7 @@ AECP 在逻辑上可分为四层，自底向上各层职责独立、依次封装
 | 物理层 | UART 电气与时序、Wake Pin 与 Wake Signaling | [第二章](#第二章-硬件接口)、[第四章](#第四章-初始化) |
 | 帧层 | 帧结构、字段编码、字节序、HCS 与 CRC 校验 | [第三章](#第三章-数据类型与交互格式) |
 | 事务层 | 操作码语义、请求与应答配对、Seq 关联、超时与重传 | [第三章](#第三章-数据类型与交互格式)、[第五章](#第五章-profile-体系与实现规则) |
-| 应用层 | 属性、命令、Profile 与 OTA 子协议 | [第五章](#第五章-profile-体系与实现规则)、[第六章](#第六章-foundation-profileprofile-id--0x0000)、[第七章](#第七章-thermostat-profileprofile-id--0x1000) |
+| 应用层 | 属性、命令、Profile 与 OTA 子协议 | [第五章](#第五章-profile-体系与实现规则)、[第六章](#第六章-foundation-profileprofile-id--0x0000)、[第七章](#第七章-thermostat-profileprofile-id--0x1000)、[第八章](#第八章-clothes-rack-profileprofile-id--0x1001)、[第九章](#第九章-toilet-profileprofile-id--0x1001) |
 
 #### 核心概念与交互模型
 
@@ -1319,6 +1319,8 @@ Profile 是协议的应用层组织单元，每个 Profile 由一组相关的**�
 |:---:|:---|:---|
 | `0x0000` | Foundation Profile | 所有设备必须支持。属性：`0x0000~0x0FFF`（Client 属性）、`0x1000~0x1FFF`（Server 属性）；命令由 Foundation Profile 命令表统一定义。 |
 | `0x1000` | Thermostat Profile | 恒温器设备专有属性与命令。Server 属性 SHALL 使用 `0x1000 ~ 0x1FFF` 分段。一个 Server 若声明 Thermostat Profile，则其 `ProductProfileID` 为 `0x1000`。 |
+| `0x1001` | Clothes Rack Profile | 晾衣机设备专有属性与命令。Server 属性 SHALL 使用 `0x1000 ~ 0x1FFF` 分段。一个 Server 若声明 Clothes Rack Profile，则其 `ProductProfileID` 为 `0x1001`。 |
+| `0x1002` | Toilet Profile | 马桶设备专有属性与命令。Server 属性 SHALL 使用 `0x1000 ~ 0x1FFF` 分段。一个 Server 若声明 Toilet Profile，则其 `ProductProfileID` 为 `0x1002`。 |
 
 ### 属性与命令寻址规则
 
@@ -1434,6 +1436,8 @@ Client 后续 READ、WRITE 或 COMMAND SHALL 以 `ProductProfileID` 对应的产
 
 - [Foundation Profile（0x0000）](#第六章-foundation-profileprofile-id--0x0000)
 - [Thermostat Profile（0x1000）](#第七章-thermostat-profileprofile-id--0x1000)
+- [Clothes Rack Profile（0x1001）](#第八章-clothes-rack-profileprofile-id--0x1001)
+- [Toilet Profile（0x1002）](#第九章-toilet-profileprofile-id--0x1002)
 
 ## 第六章 Foundation Profile（Profile ID = 0x0000） 
 
@@ -2364,6 +2368,1254 @@ Client SHALL 在 Profile Discovery 期间 READ 该属性。该属性仅用于能
 | 1        | Success | bool  | true / false   | —      |
 
 `Success` 表示命令的业务执行结果：`true` 表示操作成功，`false` 表示操作失败。
+
+## 第八章 Clothes Rack Profile（Profile ID = 0x1001）
+
+Clothes Rack Profile 定义晾衣机设备的专有属性与命令，适用于帧头 Profile ID = `0x1001` 的通信帧。
+
+所有实现本 Profile 的设备同时 SHALL 实现 [Foundation Profile（0x0000）](#第六章-foundation-profileprofile-id--0x0000) 中定义的全部必选属性与命令。
+
+### 表格约定
+
+本章所有属性表、命令表和参数表的列含义遵循 [第 1 章字段记号约定](#字段记号约定)。
+
+### 数据类型
+
+#### CalibrationStatusCodeEnum8 类型
+
+`CalibrationStatusCodeEnum8` 定义行程校准命令的处理结果。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Success | 操作成功。 |
+| 0x01 | Failure | 操作失败。 |
+| 0x02 | NotInManualCalibrationMode | 当前不在校准模式。 |
+| 0x03 | MissingCalibrationRecord | 缺少必需的校准点记录。 |
+
+#### EnhanceModeMap8 类型
+
+`EnhanceModeMap8` 定义当前行程校准模式与校准点配置状态。该位图的底层类型为 map8。
+
+| 位 | 名称 | 说明 |
+| --- | --- | --- |
+| 0 | ManualCalibration | 当前处于手动校准模式。 |
+| 1 | OpenRecordConfigured | 上限校准点已配置。 |
+| 2 | CloseRecordConfigured | 下限校准点已配置。 |
+| 3~7 | Reserved | 保留，必须为 0。 |
+
+#### ManualCalibrationOperationEnum8 类型
+
+`ManualCalibrationOperationEnum8` 定义校准模式中的运动操作。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Open / Up | 向上运行。 |
+| 0x01 | Close / Down | 向下运行。 |
+| 0x02 | Stop | 停止运行。 |
+
+#### ManualCalibrationRecordTypeEnum8 类型
+
+`ManualCalibrationRecordTypeEnum8` 定义需要记录的校准点。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Open / Up | 记录当前点为上限校准点。 |
+| 0x01 | Close / Down | 记录当前点为下限校准点。 |
+
+#### StepModeEnum8 类型
+
+`StepModeEnum8` 定义 `Step` 命令的相对运动方向。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | UpOrOpen | 沿上升或打开方向运动。 |
+| 0x01 | DownOrClose | 沿下降或关闭方向运动。 |
+
+#### StowStateEnum8 类型
+
+`StowStateEnum8` 定义产品定义的收纳/隐藏位置状态。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | NotStowed | 尚未到达产品定义的收纳/隐藏位置。 |
+| 0x01 | Stowed | 已到达产品定义的收纳/隐藏位置。 |
+
+#### MovementFaultBitmap8 类型
+
+`MovementFaultBitmap8` 定义当前活动的运动相关故障。该位图的底层类型为 map8。
+
+| 位 | 名称 | 说明 |
+| --- | --- | --- |
+| 0 | Obstacle | 设备运动过程中检测到障碍物。 |
+| 1 | Overload | 设备负载或运行作用力超出允许范围。 |
+| 2 | MotorFault | 电机故障。 |
+| 3~7 | Reserved | 保留，必须为 0。 |
+
+### 属性
+
+| ID | 名称 | 类型 | 约束 | 默认值 | 访问权限 | 归属方 | 必选性 | 简述 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0x1000 | CurrentPositionPercent | uint8 | 0 ~ 100，% | — | R/RP | S | M | 当前位置百分比 |
+| 0x1001 | EnhanceMode | [EnhanceModeMap8](#enhancemodemap8-类型) | 见位图 | 0x00 | R/RP | S | O | 行程校准状态 |
+| 0x1002 | StowState | [StowStateEnum8](#stowstateenum8-类型) | 见枚举 | 0x00 | R/RP | S | O | 产品定义的收纳/隐藏位置状态 |
+| 0x1003 | OnOff | bool | true / false | false | R/RP | S | O | 灯具开关状态 |
+| 0x1004 | LightLevel | uint8 |  | — | R/RP | S | O | 灯具当前亮度 |
+| 0x1005 | ColorTemperature | uint16 | ColorTempMin ~ ColorTempMax，K | — | R/RP | S | O | 灯具当前色温 |
+| 0x1006 | LightLevelMin | uint8 |  | 0x01 | R | S | O | 灯具最小亮度 |
+| 0x1007 | LightLevelMax | uint8 |  | 0xFE | R | S | O | 灯具最大亮度 |
+| 0x1008 | ColorTempMin | uint16 | K | 2700 | R | S | O | 灯具最低色温 |
+| 0x1009 | ColorTempMax | uint16 | K | 6500 | R | S | O | 灯具最高色温 |
+| 0x100A | MovementFaultStatus | [MovementFaultBitmap8](#movementfaultbitmap8-类型) | 见位图 | 0x00 | R/RP | S | O | 运动相关故障状态 |
+| 0xFFFB | ServerAttributeList | list[uint16] | 无额外约束 | — | R | S | M | Server 属性列表 |
+
+#### CurrentPositionPercent 属性
+
+`CurrentPositionPercent` 表示晾杆当前位置。`0` 表示最上，`100` 表示最下。
+
+Server SHALL 在到达目标、到达边界或停止后 REPORT 本属性。
+
+#### EnhanceMode 属性
+
+`EnhanceMode` 表示当前行程校准模式及上下限校准点的配置状态。Server SHALL 在位图值变化后 REPORT 本属性。
+
+bit0 为 `1` 表示设备处于手动行程校准模式；bit0 为 `0` 表示未处于手动行程校准模式。仅在校准模式有效的命令 SHALL 在 bit0 为 `0` 时执行失败。
+
+bit1 为 `1` 表示上限校准点已配置，bit2 为 `1` 表示下限校准点已配置。对应校准点未配置时，相应 bit SHALL 为 `0`。bit3~7 为保留位且 SHALL 为 `0`。
+
+#### StowState 属性
+
+`StowState` 表示设备的运动组件是否已到达产品定义的收纳/隐藏位置。
+
+`Stowed` 表示已到达产品定义的收纳/隐藏位置；`NotStowed` 表示其他物理位置或运动状态。
+
+Client SHALL 使用 `SetStowState` 请求状态变化。Server SHALL 在物理状态变化后更新并 REPORT 本属性。
+
+#### OnOff 属性
+
+`OnOff` 表示灯具当前开关状态。Client SHALL 使用 `Off` 或 `On` 控制开关，不得 WRITE 本属性。
+
+Server SHALL 在状态变化后 REPORT 本属性。
+
+#### LightLevel 属性
+
+`LightLevel` 表示灯具当前亮度。Client SHALL 使用 `MoveToLevel` 控制亮度，不得 WRITE 本属性。
+
+Server SHALL 在亮度变化后 REPORT 本属性。
+
+#### ColorTemperature 属性
+
+`ColorTemperature` 表示灯具当前色温，单位为开尔文（K）。
+mired单位转换参考 `ColorTemperatureMireds = round(1000000 / ColorTemperature)` 
+
+Client SHALL 使用 `MoveToColorTemperature` 控制色温，不得 WRITE 本属性。Server SHALL 在色温变化后 REPORT。
+
+#### LightLevelMin 属性
+
+`LightLevelMin` 表示灯具可达到的最小亮度。
+
+#### LightLevelMax 属性
+
+`LightLevelMax` 表示灯具可达到的最大亮度。
+
+#### ColorTempMin 属性
+
+`ColorTempMin` 表示灯具支持的最低开尔文色温，即暖色端能力，默认值为 `2700 K`。
+
+#### ColorTempMax 属性
+
+`ColorTempMax` 表示灯具支持的最高开尔文色温，即冷色端能力，默认值为 `6500 K`。
+
+#### MovementFaultStatus 属性
+
+`MovementFaultStatus` 表示设备当前活动的运动相关故障。
+
+bit0 为 `1` 表示运动过程中检测到障碍物，设备 SHALL 停止相应运动；bit0 为 `0` 表示当前无遇阻故障。
+
+bit1 为 `1` 表示设备负载或运行作用力超出允许范围，设备 SHALL 停止相应运动；bit1 为 `0` 表示当前无过载故障。
+
+bit2 为 `1` 表示存在电机故障，设备 SHALL 停止电机运动；bit2 为 `0` 表示当前无电机故障。
+
+bit0、bit1 和 bit2 相互独立，多个故障位 MAY 同时置位。Server SHALL 在检测到故障时置位，并仅在对应故障条件解除后清除该位。
+
+bit3~7 为保留位且 SHALL 为 `0`。`0x00` 表示当前无已定义的运动相关故障。
+
+Server SHALL 在故障产生或解除后更新并 REPORT 本属性。
+
+#### ServerAttributeList 属性
+
+`ServerAttributeList` 声明本 Profile 下 Server 实际支持的 Attribute ID 列表。元素 SHALL 按 Attribute ID 升序排列，并包含 `0xFFFB`。
+
+Client SHALL 在 Profile Discovery 期间 READ 该属性。该属性仅用于能力发现，不存在运行期变化上报场景，Server SHALL NOT REPORT。若支持的属性集合发生变化，Server SHALL 发送 ProfileDiscoveryRequest，由 Client 重新 READ
+
+### Clothes Rack 命令
+
+| ID | 名称 | 方向 | 应答 | 必选性 | 简述 |
+| --- | --- | --- | --- | --- | --- |
+| 0x1000 | UpOpen | Client → Server | ACKNOWLEDGE | M | 控制设备上升。 |
+| 0x1001 | DownClose | Client → Server | ACKNOWLEDGE | M | 控制设备下降。 |
+| 0x1002 | Stop | Client → Server | ACKNOWLEDGE | M | 停止设备运动。 |
+| 0x1003 | GoToPercentage | Client → Server | ACKNOWLEDGE | O | 控制设备运行到目标百分比位置。 |
+| 0x1004 | Toggle | Client → Server | ACKNOWLEDGE | O | 执行产品定义的翻转或切换运动。 |
+| 0x1005 | Step | Client → Server | ACKNOWLEDGE | O | 按指定方向和百分比执行相对运动。 |
+| 0x1006 | EnterManualCalibrationReq | Client → Server | EnterManualCalibrationRsp | O | 进入行程校准模式。 |
+| 0x1007 | EnterManualCalibrationRsp | Server → Client | N | O | 返回进入校准模式结果。 |
+| 0x1008 | ManualCalibrationOperationReq | Client → Server | ManualCalibrationOperationRsp | O | 控制校准过程中的运动。 |
+| 0x1009 | ManualCalibrationOperationRsp | Server → Client | N | O | 返回校准运动控制结果。 |
+| 0x100A | RecordManualCalibrationReq | Client → Server | RecordManualCalibrationRsp | O | 记录当前校准点。 |
+| 0x100B | RecordManualCalibrationRsp | Server → Client | N | O | 返回记录校准点结果。 |
+| 0x100C | ClearManualCalibrationReq | Client → Server | ClearManualCalibrationRsp | O | 清除行程校准记录。 |
+| 0x100D | ClearManualCalibrationRsp | Server → Client | N | O | 返回清除校准记录结果。 |
+| 0x100E | CommitManualCalibrationReq | Client → Server | CommitManualCalibrationRsp | O | 提交行程校准记录。 |
+| 0x100F | CommitManualCalibrationRsp | Server → Client | N | O | 返回提交校准记录结果。 |
+| 0x1010 | SetStowState | Client → Server | ACKNOWLEDGE | O | 请求进入或离开产品定义的收纳/隐藏位置。 |
+| 0x1011 | Off | Client → Server | ACKNOWLEDGE | O | 关闭灯具。 |
+| 0x1012 | On | Client → Server | ACKNOWLEDGE | O | 打开灯具。 |
+| 0x1013 | MoveToLevel | Client → Server | ACKNOWLEDGE | O | 设置灯具目标亮度。 |
+| 0x1014 | MoveToColorTemperature | Client → Server | ACKNOWLEDGE | O | 设置灯具目标色温。 |
+
+有参命令的参数按参数顺序编码；Data Segment 编码见 [COMMAND（OPC = 0x9）](#commandopc--0x9)。
+
+#### UpOpen 命令
+
+该命令请求设备向上运行，无参数。动作停止或到达上边界后，Server SHALL REPORT `CurrentPositionPercent`。
+
+#### DownClose 命令
+
+该命令请求设备向下运行，无参数。动作停止或到达下边界后，Server SHALL REPORT `CurrentPositionPercent`。
+
+#### Stop 命令
+
+该命令请求停止设备运动，无参数。停止后 Server SHALL REPORT `CurrentPositionPercent`。
+
+#### GoToPercentage 命令
+
+该命令请求设备运行到目标百分比位置。
+
+##### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | PositionPercent | uint8 | 0 ~ 100 | — |
+
+动作完成后，Server SHALL REPORT `CurrentPositionPercent`。
+
+#### Toggle 命令
+
+该命令请求设备执行产品定义的翻转或切换运动，无参数。
+
+具体切换行为 SHALL 由产品定义。对于晾衣机，设备 MAY 在上端和下端目标状态之间切换，也可执行其他产品定义的运动序列。
+
+运动完成或停止后，Server SHALL REPORT `CurrentPositionPercent`。
+
+#### Step 命令
+
+该命令请求设备按照指定方向和指定百分比执行相对位置调整。
+
+##### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | StepMode | [StepModeEnum8](#stepmodeenum8-类型) | 见枚举 | — |
+| 2 | Percent100ths | uint16 | 1 ~ 10000 | — |
+
+`UpOrOpen` 表示沿上升或打开方向运动，位置百分比向 `0%` 减小；`DownOrClose` 表示沿下降或关闭方向运动，位置百分比向 `100%` 增大。
+
+`Percent100ths` 表示相对运动步长，单位为 0.01%。`1` 表示 0.01%，`100` 表示 1.00%，`10000` 表示 100.00%。
+
+Server SHALL 将计算得到的目标位置限制在有效位置范围内。运动完成或停止后，Server SHALL REPORT `CurrentPositionPercent`。
+
+#### EnterManualCalibrationReq 命令
+
+该命令请求进入行程校准模式。
+
+命令执行成功后，Server SHALL 将 `EnhanceMode.bit0` 设置为 `1`，并使用 `CalibrationTimeout` 启动无操作超时计时器。
+
+进入校准模式 SHALL NOT 清除或修改已保存的上下限校准点，也 SHALL NOT 修改 `EnhanceMode.bit1` 和 bit2。新的校准会话开始时，Server SHALL 丢弃上一次会话遗留的临时校准记录。
+
+##### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | CalibrationTimeout | uint16 | 60 ~ 600 秒 | — |
+
+`CalibrationTimeout` 表示校准活动超时时间，单位为秒。若超时时间内未成功处理 `ManualCalibrationOperationReq` 或 `RecordManualCalibrationReq`，Server SHALL 退出校准模式、清除 `EnhanceMode.bit0` 并丢弃临时记录，不得保存临时校准点。
+
+每次成功处理校准运动或记录命令后，Server SHALL 重新启动无操作超时计时器。
+
+#### EnterManualCalibrationRsp 命令
+
+该命令返回 `EnterManualCalibrationReq` 的处理结果。
+
+##### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [CalibrationStatusCodeEnum8](#calibrationstatuscodeenum8-类型) | 见枚举 | — |
+
+`Success` 表示已进入校准模式并启动超时计时器；`Failure` 表示当前状态不允许进入校准模式。
+
+#### ManualCalibrationOperationReq 命令
+
+该命令请求校准模式中的运动操作。Server SHALL 仅在 `EnhanceMode.bit0` 为 `1` 时执行本命令，成功执行后 SHALL 重启无操作超时计时器。
+
+##### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Operation | [ManualCalibrationOperationEnum8](#manualcalibrationoperationenum8-类型) | 见枚举 | — |
+
+`Open | Up` 控制设备向上运行，`Close | Down` 控制设备向下运行，`Stop` 停止当前运动。
+
+#### ManualCalibrationOperationRsp 命令
+
+该命令返回 `ManualCalibrationOperationReq` 的处理结果。
+
+##### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [CalibrationStatusCodeEnum8](#calibrationstatuscodeenum8-类型) | 见枚举 | — |
+
+不在校准模式时 SHALL 返回 `NotInManualCalibrationMode`；无法执行请求的运动时 SHALL 返回 `Failure`。
+
+#### RecordManualCalibrationReq 命令
+
+该命令请求临时记录当前校准点。Server SHALL 仅在 `EnhanceMode.bit0` 为 `1` 时执行本命令。
+
+记录成功后，Server SHALL 保存临时记录但不得立即持久化，也不得修改 `EnhanceMode.bit1` 或 bit2，并 SHALL 重启无操作超时计时器。
+
+##### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | RecordType | [ManualCalibrationRecordTypeEnum8](#manualcalibrationrecordtypeenum8-类型) | 见枚举 | — |
+
+`Open | Up` 将当前位置临时记录为上限校准点，`Close | Down` 将当前位置临时记录为下限校准点。
+
+#### RecordManualCalibrationRsp 命令
+
+该命令返回 `RecordManualCalibrationReq` 的处理结果。
+
+##### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [CalibrationStatusCodeEnum8](#calibrationstatuscodeenum8-类型) | 见枚举 | — |
+
+不在校准模式时 SHALL 返回 `NotInManualCalibrationMode`；无法记录当前位置时 SHALL 返回 `Failure`。
+
+#### ClearManualCalibrationReq 命令
+
+该命令请求清除临时或已保存的校准记录，无参数。
+
+若设备处于校准模式，成功执行 SHALL 清除本次会话的临时记录、重启超时计时器并保持在校准模式，不得清除已保存记录或修改 `EnhanceMode.bit1`、bit2。
+
+若设备不在校准模式，成功执行 SHALL 清除已保存的上下限校准点，并清除 `EnhanceMode.bit1` 和 bit2。
+
+#### ClearManualCalibrationRsp 命令
+
+该命令返回 `ClearManualCalibrationReq` 的处理结果。
+
+##### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [CalibrationStatusCodeEnum8](#calibrationstatuscodeenum8-类型) | 见枚举 | — |
+
+`Success` 表示适用的临时或已保存记录已清除；无法在当前状态清除时 SHALL 返回 `Failure`。
+
+#### CommitManualCalibrationReq 命令
+
+该命令请求保存临时上下限记录并退出校准模式，无参数。Server SHALL 仅在 `EnhanceMode.bit0` 为 `1` 时执行本命令。
+
+成功执行后，Server SHALL 持久化临时上限和下限记录，清除 `EnhanceMode.bit0`，设置 bit1 和 bit2，并清除全部临时记录。
+
+若临时记录未同时包含上限和下限，Server SHALL 返回 `MissingCalibrationRecord`，不得保存任何临时记录，并 SHALL 退出校准模式。
+
+
+#### CommitManualCalibrationRsp 命令
+
+该命令返回 `CommitManualCalibrationReq` 的处理结果。
+
+##### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [CalibrationStatusCodeEnum8](#calibrationstatuscodeenum8-类型) | 见枚举 | — |
+
+不在校准模式时 SHALL 返回 `NotInManualCalibrationMode`；缺少必需记录时 SHALL 返回 `MissingCalibrationRecord`。
+
+#### SetStowState 命令
+
+该命令请求设备的运动组件进入或离开产品定义的收纳/隐藏位置。
+
+##### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | StowState | [StowStateEnum8](#stowstateenum8-类型) | 见枚举 | — |
+
+`Stowed` 请求运动到产品定义的收纳/隐藏位置；`NotStowed` 请求按照产品定义的行为离开收纳/隐藏位置。
+
+`ACKNOWLEDGE(Status=0x00)` 仅表示请求已接受，完成状态 SHALL 通过 `StowState` REPORT。
+
+#### Off 命令
+
+该命令请求关闭灯具，无参数。最终状态 SHALL 通过 `OnOff` REPORT。
+
+#### On 命令
+
+该命令请求打开灯具，无参数。最终状态 SHALL 通过 `OnOff` REPORT。
+
+#### MoveToLevel 命令
+
+该命令请求设置灯具目标亮度。
+
+##### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Level | uint8 | 0x01 ~ 0xFE | — |
+
+设置结果 SHALL 通过 `LightLevel` REPORT。
+
+#### MoveToColorTemperature 命令
+
+该命令请求设置灯具目标色温。
+
+##### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | ColorTemperature | uint16 | ColorTempMin ~ ColorTempMax，K | — |
+
+`ColorTemperature` 的单位为开尔文。最终设置结果 SHALL 通过 `ColorTemperature` REPORT。
+
+## 第九章 Toilet Profile（Profile ID = 0x1001）
+
+Toilet Profile 定义智能马桶设备的专有属性、命令及设备事件的 AECP 上报映射，适用于帧头 Profile ID = `0x1001` 的通信帧。
+
+所有实现 Toilet Profile 的设备同时 SHALL 实现 [Foundation Profile（0x0000）](#第六章-foundation-profileprofile-id--0x0000) 中定义的全部必选属性与命令。
+
+### 表格约定
+
+本章所有属性表、命令表和参数表的列含义统一遵循 [第 1 章字段记号约定](#字段记号约定)。
+
+### 数据类型
+
+#### StatusCodeEnum8 类型
+
+`StatusCodeEnum8` 定义配对响应命令的 `Status` 参数所携带的处理结果。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Success | 请求已接受或配置已应用。 |
+| 0x01 | Failure | 发生通用失败。 |
+| 0x02 | InvalidParameter | 参数值不受支持或不符合约束。 |
+| 0x03 | InvalidInState | 请求在当前设备状态下无效。 |
+| 0x04 | Busy | Server 正在处理冲突操作。 |
+| 0x05 | UnsafeCondition | 不满足安全执行条件。 |
+| 0x06 | NotOccupied | 请求要求有人着座，但当前无人着座。 |
+| 0x07 | Occupied | 请求要求无人着座，但当前有人着座。 |
+| 0x08 | Timeout | 请求未在允许时间内完成处理。 |
+| 0x09 | Unsupported | Server 不支持所请求的功能。 |
+
+`Success` 表示 Server 已接受请求。对于具有独立执行结果属性的操作，`Success` 不表示物理动作已经完成。
+
+#### ToggleActionEnum8 类型
+
+`ToggleActionEnum8` 定义座盖或座圈控制动作。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Close | 移动到关闭位置。 |
+| 0x01 | Open | 移动到打开位置。 |
+| 0x02 | Toggle | 切换到与当前稳定状态相反的状态。 |
+
+#### FlushTypeEnum8 类型
+
+`FlushTypeEnum8` 定义冲水类型。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | LargeFlush | 大冲水。 |
+| 0x01 | SmallFlush | 小冲水。 |
+
+#### WashingModeEnum8 类型
+
+`WashingModeEnum8` 定义人体清洗模式。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Rinse | 臀洗。 |
+| 0x01 | RinseMoving | 移动臀洗。 |
+| 0x02 | FeminineWash | 妇洗。 |
+| 0x03 | FeminineWashMoving | 移动妇洗。 |
+
+#### MassageModeEnum8 类型
+
+`MassageModeEnum8` 定义按摩清洗模式。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Off | 关闭按摩清洗。 |
+| 0x01 | PressureMassage | 水压强弱交替。 |
+| 0x02 | TemperatureMassage | 水温冷热交替。 |
+
+#### WaterPressureLevelEnum8 类型
+
+`WaterPressureLevelEnum8` 定义清洗水压等级。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Gentle | 轻柔。 |
+| 0x01 | Standard | 标准。 |
+| 0x02 | Strong | 强劲。 |
+
+#### NozzlePositionEnum8 类型
+
+`NozzlePositionEnum8` 定义智能马桶清洗喷嘴的位置。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Rear | 后。 |
+| 0x01 | Rearward | 较后。 |
+| 0x02 | Middle | 中。 |
+| 0x03 | Forward | 较前。 |
+| 0x04 | Front | 前。 |
+
+#### WashDryActionEnum8 类型
+
+`WashDryActionEnum8` 定义清洗和烘干组合控制动作。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Stop | 停止正在进行的清洗或烘干。 |
+| 0x01 | DryOnly | 启动暖风烘干。 |
+| 0x02 | WashOnly | 启动清洗，不自动衔接烘干。 |
+| 0x03 | WashAndDry | 启动清洗，清洗完成后衔接烘干。 |
+
+#### DryingTempLevelEnum8 类型
+
+`DryingTempLevelEnum8` 定义暖风烘干温度等级。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | RoomTemp | 常温风。 |
+| 0x01 | LowTemp | 低温。 |
+| 0x02 | MediumLowTemp | 中低温。 |
+| 0x03 | MediumTemp | 中温。 |
+| 0x04 | MediumHighTemp | 中高温。 |
+| 0x05 | HighTemp | 高温。 |
+
+#### FanSpeedLevelEnum8 类型
+
+`FanSpeedLevelEnum8` 定义烘干风速。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | LowSpeed | 低速。 |
+| 0x01 | MediumSpeed | 中速。 |
+| 0x02 | HighSpeed | 高速。 |
+
+#### NozzleCleanActionEnum8 类型
+
+`NozzleCleanActionEnum8` 定义喷嘴清洁和人工维护动作。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Off | 停止清洁并收回喷嘴。 |
+| 0x01 | AutoClean | 执行自动喷嘴清洁。 |
+| 0x02 | ManualMaintenance | 伸出喷嘴供人工维护。 |
+
+#### FoamShieldActionEnum8 类型
+
+`FoamShieldActionEnum8` 定义泡沫盾释放控制动作。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Start | 开始释放泡沫。 |
+| 0x01 | Stop | 停止释放泡沫。 |
+
+#### CleanFoamSystemActionEnum8 类型
+
+`CleanFoamSystemActionEnum8` 定义发泡装置动作。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | ReleaseAntiSplashFoam | 向便池内释放防溅泡沫。 |
+| 0x01 | CleanFoamSystem | 执行一次发泡装置水路清洗。 |
+
+#### NightLightModeEnum8 类型
+
+`NightLightModeEnum8` 定义夜灯模式。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Off | 常关。 |
+| 0x01 | On | 常开。 |
+| 0x02 | Auto | 自动感应。 |
+
+#### FlushStartCloseModeEnum8 类型
+
+`FlushStartCloseModeEnum8` 定义从冲水开始时触发的座盖和座圈自动闭合策略。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Disable | 不执行自动闭合。 |
+| 0x01 | CloseLidAndSeat | 自动合盖并合圈。 |
+| 0x02 | CloseSeatOnly | 仅自动合圈。 |
+
+#### SittingReminderAlertEnum8 类型
+
+`SittingReminderAlertEnum8` 定义久坐提醒 Event 状态。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Normal | 正常状态。 |
+| 0x01 | SittingReminder | 已触发久坐提醒。 |
+
+#### TemperatureSensorFaultEnum8 类型
+
+`TemperatureSensorFaultEnum8` 定义温度传感器状态。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Normal | 正常。 |
+| 0x01 | Overheat | 超温。 |
+| 0x02 | Fault | 传感器异常。 |
+
+#### BinaryFaultEnum8 类型
+
+`BinaryFaultEnum8` 定义正常或异常两种状态。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Normal | 正常。 |
+| 0x01 | Fault | 异常。 |
+
+#### FlowSensorFaultEnum8 类型
+
+`FlowSensorFaultEnum8` 定义水流状态。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Normal | 正常。 |
+| 0x01 | Insufficient | 流量不足。 |
+| 0x02 | Excessive | 流量超出允许范围。 |
+
+#### FlushExecutionResultEnum8 类型
+
+`FlushExecutionResultEnum8` 定义一次冲水操作的最终结果。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | LargeFlushCompleted | 大冲水执行完成。 |
+| 0x01 | SmallFlushCompleted | 小冲水执行完成。 |
+| 0x02 | LargeFlushFailed | 大冲水执行失败。 |
+| 0x03 | SmallFlushFailed | 小冲水执行失败。 |
+
+#### OperationResultEnum8 类型
+
+`OperationResultEnum8` 定义一次操作的最终结果。该枚举的底层类型为 enum8。
+
+| 值 | 名称 | 说明 |
+| --- | --- | --- |
+| 0x00 | Completed | 执行完成。 |
+| 0x01 | Failed | 执行失败。 |
+
+### 属性
+
+| ID | 名称 | 类型 | 约束 | 默认值 | 访问权限 | 归属方 | 必选性 | 简述 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0x1000 | SeatOccupancy | bool | true / false | false | R/RP | S | O | 当前着座状态。 |
+| 0x1001 | LidState | bool | true / false | — | R/RP | S | O | 座盖稳定状态。 |
+| 0x1002 | SeatState | bool | true / false | — | R/RP | S | O | 座圈稳定状态。 |
+| 0x1003 | EnableSeatHeating | bool | true / false | false | R/W/RP | S | O | 座圈加热使能状态。 |
+| 0x1004 | SeatHeatingLevel | uint16 | Min ~ Max，0.1℃ | 340 | R/W/RP | S | O | 座圈加热目标温度。 |
+| 0x1005 | MinSeatHeatingLevel | uint16 | 0.1℃ | 260 | R/RP | S | O | 支持的最小座圈加热温度。 |
+| 0x1006 | MaxSeatHeatingLevel | uint16 | 0.1℃ | 400 | R/RP | S | O | 支持的最大座圈加热温度。 |
+| 0x1007 | SeatHeatingLevelStep | uint8 | 0.1℃ | 10 | R/RP | S | O | 支持的座圈温度调节步进。 |
+| 0x1008 | ToiletWashingMode | [WashingModeEnum8](#washingmodeenum8-类型) | 见枚举 | — | R/W/RP | S | O | 人体清洗模式。 |
+| 0x1009 | ToiletMassageMode | [MassageModeEnum8](#massagemodeenum8-类型) | 见枚举 | 0x00（Off） | R/W/RP | S | O | 按摩清洗模式。 |
+| 0x100A | EnableToiletWaterHeating | bool | true / false | false | R/W/RP | S | O | 清洗水加热使能状态。 |
+| 0x100B | ToiletWaterTemperature | uint16 | Min ~ Max，0.1℃ | 340 | R/W/RP | S | O | 清洗水目标温度。 |
+| 0x100C | MinToiletWaterTemperature | uint16 | 0.1℃ | 260 | R/RP | S | O | 支持的最小清洗水温。 |
+| 0x100D | MaxToiletWaterTemperature | uint16 | 0.1℃ | 400 | R/RP | S | O | 支持的最大清洗水温。 |
+| 0x100E | ToiletWaterTemperatureStep | uint8 | 0.1℃ | 10 | R/RP | S | O | 支持的清洗水温调节步进。 |
+| 0x100F | ToiletWaterPressureLevel | [WaterPressureLevelEnum8](#waterpressurelevelenum8-类型) | 见枚举 | 0x01（Standard） | R/W/RP | S | O | 清洗水压等级。 |
+| 0x1010 | NozzlePosition | [NozzlePositionEnum8](#nozzlepositionenum8-类型) | 见枚举 | 0x02（Middle） | R/W/RP | S | O | 清洗喷嘴位置。 |
+| 0x1011 | EnableDrying | bool | true / false | false | R/W/RP | S | O | 暖风烘干运行状态。 |
+| 0x1012 | DryingTemperatureLevel | [DryingTempLevelEnum8](#dryingtemplevelenum8-类型) | 见枚举 | 0x00（RoomTemp） | R/W/RP | S | O | 烘干风温挡位。 |
+| 0x1013 | FanSpeedLevel | [FanSpeedLevelEnum8](#fanspeedlevelenum8-类型) | 见枚举 | 0x01（MediumSpeed） | R/W/RP | S | O | 烘干风速。 |
+| 0x1014 | RinseDuration | uint16 | 60 ~ 300 s | 180 | R/W/RP | S | O | 臀洗持续时间。 |
+| 0x1015 | MinRinseDuration | uint16 | s | 60 | R/RP | S | O | 支持的最小臀洗持续时间。 |
+| 0x1016 | MaxRinseDuration | uint16 | s | 300 | R/RP | S | O | 支持的最大臀洗持续时间。 |
+| 0x1017 | FeminineWashDuration | uint16 | 60 ~ 300 s | 180 | R/W/RP | S | O | 妇洗持续时间。 |
+| 0x1018 | MinFeminineWashDuration | uint16 | s | 60 | R/RP | S | O | 支持的最小妇洗持续时间。 |
+| 0x1019 | MaxFeminineWashDuration | uint16 | s | 300 | R/RP | S | O | 支持的最大妇洗持续时间。 |
+| 0x101A | DryingDuration | uint16 | 60 ~ 600 s | 180 | R/W/RP | S | O | 暖风烘干持续时间。 |
+| 0x101B | MinDryingDuration | uint16 | s | 60 | R/RP | S | O | 支持的最小暖风烘干持续时间。 |
+| 0x101C | MaxDryingDuration | uint16 | s | 600 | R/RP | S | O | 支持的最大暖风烘干持续时间。 |
+| 0x101D | PlasmaSterilizeStatus | bool | true / false | false | R/W/RP | S | O | 等离子杀菌运行状态。 |
+| 0x101E | NightLightMode | [NightLightModeEnum8](#nightlightmodeenum8-类型) | 见枚举 | — | R/W/RP | S | O | 夜灯模式。 |
+| 0x101F | EnableEnergySaving | bool | true / false | — | R/W/RP | S | O | 节能模式开关。 |
+| 0x1020 | EnableBeep | bool | true / false | — | R/W/RP | S | O | 常规操作提示音开关。 |
+| 0x1021 | EnableAutoFoam | bool | true / false | — | R/W/RP | S | O | 自动泡沫盾总开关。 |
+| 0x1022 | EnableAutoFoamOnSit | bool | true / false | — | R/W/RP | S | O | 着座后自动释放泡沫盾。 |
+| 0x1023 | EnableAutoFoamAfterFlush | bool | true / false | — | R/W/RP | S | O | 离座冲水后自动补充泡沫盾。 |
+| 0x1024 | EnableAutoFoamOnFootFlip | bool | true / false | — | R/W/RP | S | O | 脚感翻圈后自动释放泡沫盾。 |
+| 0x1025 | AutoFoamDuration | uint16 | 10 ~ 20 s | 18 | R/W/RP | S | O | 自动泡沫释放持续时间。 |
+| 0x1026 | MinAutoFoamDuration | uint16 | s | 10 | R/RP | S | O | 支持的最小自动泡沫释放持续时间。 |
+| 0x1027 | MaxAutoFoamDuration | uint16 | s | 20 | R/RP | S | O | 支持的最大自动泡沫释放持续时间。 |
+| 0x1028 | SittingReminderThreshold | uint16 | 600 ~ 3600 s | 1200 | R/W/RP | S | O | 久坐提醒阈值。 |
+| 0x1029 | MinSittingReminderThreshold | uint16 | s | 600 | R/RP | S | O | 支持的最小久坐提醒阈值。 |
+| 0x102A | MaxSittingReminderThreshold | uint16 | s | 3600 | R/RP | S | O | 支持的最大久坐提醒阈值。 |
+| 0x102B | EnableAutoLid | bool | true / false | — | R/W/RP | S | O | 人体靠近自动开盖开关。 |
+| 0x102C | EnableAutoFlush | bool | true / false | — | R/W/RP | S | O | 离座自动冲水开关。 |
+| 0x102D | FlushStartCloseMode | [FlushStartCloseModeEnum8](#flushstartclosemodeenum8-类型) | 见枚举 | — | R/W/RP | S | O | 从冲水开始触发的自动闭合策略。 |
+| 0x102E | FlushStartCloseDelay | uint16 | 0 ~ 30 s | 3 | R/W/RP | S | O | 从冲水开始到自动闭合的延迟。 |
+| 0x102F | MinFlushStartCloseDelay | uint16 | s | 0 | R/RP | S | O | 支持的最小冲水开始闭合延迟。 |
+| 0x1030 | MaxFlushStartCloseDelay | uint16 | s | 30 | R/RP | S | O | 支持的最大冲水开始闭合延迟。 |
+| 0x1031 | EnableFootSensor | bool | true / false | — | R/W/RP | S | O | 脚部感应功能开关。 |
+| 0x1032 | EnablePreWetting | bool | true / false | — | R/W/RP | S | O | 着座预润壁开关。 |
+| 0x1033 | EnableAutoDeodorizer | bool | true / false | — | R/W/RP | S | O | 着座自动除臭开关。 |
+| 0x1034 | SeatTempSensorFault | [TemperatureSensorFaultEnum8](#temperaturesensorfaultenum8-类型) | 见枚举 | 0x00（Normal） | R/RP | S | O | 当前座圈温度传感器故障状态。 |
+| 0x1035 | PressureValveFault | [BinaryFaultEnum8](#binaryfaultenum8-类型) | 见枚举 | 0x00（Normal） | R/RP | S | O | 当前稳压阀故障状态。 |
+| 0x1036 | WaterHeaterVoltageFault | [BinaryFaultEnum8](#binaryfaultenum8-类型) | 见枚举 | 0x00（Normal） | R/RP | S | O | 当前水加热电路故障状态。 |
+| 0x1037 | FlowSensorFault | [FlowSensorFaultEnum8](#flowsensorfaultenum8-类型) | 见枚举 | 0x00（Normal） | R/RP | S | O | 当前水流故障状态。 |
+| 0x1038 | OutletWaterTempSensorFault | [TemperatureSensorFaultEnum8](#temperaturesensorfaultenum8-类型) | 见枚举 | 0x00（Normal） | R/RP | S | O | 当前出水温度传感器故障状态。 |
+| 0x1039 | InletWaterTempSensorFault | [TemperatureSensorFaultEnum8](#temperaturesensorfaultenum8-类型) | 见枚举 | 0x00（Normal） | R/RP | S | O | 当前进水温度传感器故障状态。 |
+| 0x103A | DryerFanFault | [BinaryFaultEnum8](#binaryfaultenum8-类型) | 见枚举 | 0x00（Normal） | R/RP | S | O | 当前烘干风机故障状态。 |
+| 0x103B | SittingReminder | [SittingReminderAlertEnum8](#sittingreminderalertenum8-类型) | 见枚举 | — | RP | S | O | 久坐提醒事件指示。 |
+| 0x103C | FlushExecutionResult | [FlushExecutionResultEnum8](#flushexecutionresultenum8-类型) | 见枚举 | — | RP | S | O | 冲水执行结果事件指示。 |
+| 0x103D | WashExecutionResult | [OperationResultEnum8](#operationresultenum8-类型) | 见枚举 | — | RP | S | O | 人体清洗结果事件指示。 |
+| 0x103E | NozzleCleanExecutionResult | [OperationResultEnum8](#operationresultenum8-类型) | 见枚举 | — | RP | S | O | 喷嘴清洁结果事件指示。 |
+| 0x103F | FoamShieldExecutionResult | [OperationResultEnum8](#operationresultenum8-类型) | 见枚举 | — | RP | S | O | 泡沫盾执行结果事件指示。 |
+| 0xFFFB | ServerAttributeList | list[uint16] | 无额外约束 | — | R/RP | S | M | Server 支持的属性列表。 |
+
+#### SeatOccupancy 属性
+
+`SeatOccupancy` 表示当前着座状态。`false` 表示未检测到用户着座，`true` 表示检测到用户着座。Server SHALL 在状态变化后 REPORT 该属性。
+
+#### LidState 属性
+
+`LidState` 表示座盖最近一次确认的稳定状态，`false` 表示关闭，`true` 表示打开。Client MAY READ 该属性，并 SHALL 使用 `LidControlReq` 请求座盖动作；Server 只有在座盖到达目标位置后才 SHALL 更新并 REPORT 新值。
+
+座盖运动期间，该属性 SHOULD 保持最近一次确认的稳定状态。请求因机械阻挡、着座状态或安全条件无法执行时，Server SHALL NOT 改变该属性。
+
+#### SeatState 属性
+
+`SeatState` 表示座圈最近一次确认的稳定状态，`false` 表示关闭，`true` 表示打开。Client MAY READ 该属性，并 SHALL 使用 `SeatControlReq` 请求座圈动作；Server SHALL 遵守座盖与座圈之间的机械互锁关系，并在到达目标位置后 REPORT 新值。
+
+#### EnableSeatHeating 属性
+
+`EnableSeatHeating` 表示座圈加热是否启用。`false` 表示停止主动加热但保留 `SeatHeatingLevel`，`true` 表示在温度限制和过温保护条件下按照目标温度进行调节。
+
+#### SeatHeatingLevel 属性
+
+`SeatHeatingLevel` 表示配置的座圈加热目标温度，单位为 0.1℃，例如 `340` 表示 34.0℃。其值 SHALL 位于 `MinSeatHeatingLevel` 与 `MaxSeatHeatingLevel` 之间，并且与 `MinSeatHeatingLevel` 的差值 SHALL 为 `SeatHeatingLevelStep` 的整数倍。写入本属性 SHALL NOT 改变 `EnableSeatHeating`。
+
+#### MinSeatHeatingLevel 属性
+
+`MinSeatHeatingLevel` 表示支持的最小座圈加热温度，单位为 0.1℃，并 SHALL 小于或等于 `MaxSeatHeatingLevel`。
+
+#### MaxSeatHeatingLevel 属性
+
+`MaxSeatHeatingLevel` 表示支持的最大座圈加热温度，单位为 0.1℃，并 SHALL 大于或等于 `MinSeatHeatingLevel`。
+
+#### SeatHeatingLevelStep 属性
+
+`SeatHeatingLevelStep` 表示支持的座圈温度调节步进，单位为 0.1℃，例如 `10` 表示 1.0℃。其值 SHALL 大于零。
+
+#### ToiletWashingMode 属性
+
+`ToiletWashingMode` 表示配置的人体清洗模式。有效值见 [WashingModeEnum8](#washingmodeenum8-类型)。Client WRITE 新值 SHALL NOT 自动启动清洗。
+
+#### ToiletMassageMode 属性
+
+`ToiletMassageMode` 表示配置的按摩清洗模式。`Off` 表示关闭按摩，`PressureMassage` 表示水压强弱交替，`TemperatureMassage` 表示水温冷热交替。
+
+#### EnableToiletWaterHeating 属性
+
+`EnableToiletWaterHeating` 表示是否启用清洗水主动加热。`false` 表示停止主动加热但保留 `ToiletWaterTemperature`，`true` 表示在供水条件、温度限制和过温保护条件下按照目标温度进行调节。
+
+#### ToiletWaterTemperature 属性
+
+`ToiletWaterTemperature` 表示配置的清洗水目标温度，单位为 0.1℃，例如 `340` 表示 34.0℃。其值 SHALL 位于 `MinToiletWaterTemperature` 与 `MaxToiletWaterTemperature` 之间，并且与 `MinToiletWaterTemperature` 的差值 SHALL 为 `ToiletWaterTemperatureStep` 的整数倍。写入本属性 SHALL NOT 改变 `EnableToiletWaterHeating`。
+
+#### MinToiletWaterTemperature 属性
+
+`MinToiletWaterTemperature` 表示支持的最小清洗水温，单位为 0.1℃，并 SHALL 小于或等于 `MaxToiletWaterTemperature`。
+
+#### MaxToiletWaterTemperature 属性
+
+`MaxToiletWaterTemperature` 表示支持的最大清洗水温，单位为 0.1℃，并 SHALL 大于或等于 `MinToiletWaterTemperature`。
+
+#### ToiletWaterTemperatureStep 属性
+
+`ToiletWaterTemperatureStep` 表示支持的清洗水温调节步进，单位为 0.1℃，例如 `10` 表示 1.0℃。其值 SHALL 大于零。
+
+#### ToiletWaterPressureLevel 属性
+
+`ToiletWaterPressureLevel` 表示配置的清洗水压等级。Server MAY 根据当前清洗模式采用不同的实际水压标定，但相同枚举值的相对强弱关系 SHALL 保持一致。
+
+#### NozzlePosition 属性
+
+`NozzlePosition` 表示配置的喷嘴位置。`Rear` 表示最后位置，`Front` 表示最前位置。Client WRITE 新值 SHALL NOT 单独启动清洗或喷嘴维护动作。
+
+#### EnableDrying 属性
+
+`EnableDrying` 表示暖风烘干是否运行。Client 写入 `true` 时请求按照当前 `DryingTemperatureLevel`、`FanSpeedLevel` 和 `DryingDuration` 启动烘干，写入 `false` 时请求停止烘干。烘干完成、失败、停止或因安全条件中断时，Server SHALL 将本属性更新为 `false` 并 REPORT。
+
+#### DryingTemperatureLevel 属性
+
+`DryingTemperatureLevel` 表示配置的暖风温度挡位，有效值见 [DryingTempLevelEnum8](#dryingtemplevelenum8-类型)。写入本属性 SHALL NOT 单独启动烘干。
+
+#### FanSpeedLevel 属性
+
+`FanSpeedLevel` 表示配置的烘干风速。Client WRITE 新值 SHALL NOT 单独启动烘干。Server MAY 在安全限制生效时降低实际风速。
+
+#### RinseDuration 属性
+
+`RinseDuration` 表示臀洗持续时间，单位为秒。其值 SHALL 位于 `MinRinseDuration` 与 `MaxRinseDuration` 之间，步长为 30 秒。Server SHALL 拒绝超出支持范围或不符合步长的值。
+
+#### MinRinseDuration 属性
+
+`MinRinseDuration` 表示 Server 支持的最小臀洗持续时间，单位为秒，其值 SHALL 小于或等于 `MaxRinseDuration`。
+
+#### MaxRinseDuration 属性
+
+`MaxRinseDuration` 表示 Server 支持的最大臀洗持续时间，单位为秒，其值 SHALL 大于或等于 `MinRinseDuration`。
+
+#### FeminineWashDuration 属性
+
+`FeminineWashDuration` 表示妇洗持续时间，单位为秒。其值 SHALL 位于 `MinFeminineWashDuration` 与 `MaxFeminineWashDuration` 之间，步长为 30 秒。Server SHALL 拒绝超出支持范围或不符合步长的值。
+
+#### MinFeminineWashDuration 属性
+
+`MinFeminineWashDuration` 表示 Server 支持的最小妇洗持续时间，单位为秒，其值 SHALL 小于或等于 `MaxFeminineWashDuration`。
+
+#### MaxFeminineWashDuration 属性
+
+`MaxFeminineWashDuration` 表示 Server 支持的最大妇洗持续时间，单位为秒，其值 SHALL 大于或等于 `MinFeminineWashDuration`。
+
+#### DryingDuration 属性
+
+`DryingDuration` 表示暖风烘干持续时间，单位为秒。其值 SHALL 位于 `MinDryingDuration` 与 `MaxDryingDuration` 之间，步长为 60 秒。Server SHALL 拒绝超出支持范围或不符合步长的值。
+
+#### MinDryingDuration 属性
+
+`MinDryingDuration` 表示 Server 支持的最小暖风烘干持续时间，单位为秒，其值 SHALL 小于或等于 `MaxDryingDuration`。
+
+#### MaxDryingDuration 属性
+
+`MaxDryingDuration` 表示 Server 支持的最大暖风烘干持续时间，单位为秒，其值 SHALL 大于或等于 `MinDryingDuration`。
+
+#### PlasmaSterilizeStatus 属性
+
+`PlasmaSterilizeStatus` 表示等离子杀菌运行状态。Client WRITE `true` 请求启动杀菌，WRITE `false` 请求停止杀菌。Server 仅在请求被接受后 MAY 改变本属性。
+
+#### NightLightMode 属性
+
+`NightLightMode` 表示夜灯模式。`Off` 表示常关，`On` 表示常开，`Auto` 表示由设备根据环境条件自动控制。
+
+#### EnableEnergySaving 属性
+
+`EnableEnergySaving` 表示节能模式是否启用。
+
+#### EnableBeep 属性
+
+`EnableBeep` 表示设备操作反馈提示音是否启用。`false` 表示关闭设备操作反馈提示音，`true` 表示启用设备操作反馈提示音。
+
+#### EnableAutoFoam 属性
+
+`EnableAutoFoam` 表示自动泡沫盾功能总开关。值为 `false` 时，自动泡沫触发条件 SHALL NOT 启动泡沫释放，但各触发条件属性的配置值 SHALL 保留。
+
+#### EnableAutoFoamOnSit 属性
+
+`EnableAutoFoamOnSit` 表示检测到用户着座后是否自动释放泡沫盾。该属性仅在 `EnableAutoFoam = true` 时生效。
+
+#### EnableAutoFoamAfterFlush 属性
+
+`EnableAutoFoamAfterFlush` 表示离座冲水成功完成后是否自动补充泡沫盾。该属性仅在 `EnableAutoFoam = true` 时生效。
+
+#### EnableAutoFoamOnFootFlip 属性
+
+`EnableAutoFoamOnFootFlip` 表示脚感触发座圈翻起后是否自动释放泡沫盾。该属性仅在 `EnableAutoFoam = true` 且 `EnableFootSensor = true` 时生效。
+
+#### AutoFoamDuration 属性
+
+`AutoFoamDuration` 表示自动泡沫释放持续时间，单位为秒。其值 SHALL 位于 `MinAutoFoamDuration` 与 `MaxAutoFoamDuration` 之间，步长为 1 秒。Server SHALL 拒绝超出支持范围的值。
+
+#### MinAutoFoamDuration 属性
+
+`MinAutoFoamDuration` 表示 Server 支持的最小自动泡沫释放持续时间，单位为秒，其值 SHALL 小于或等于 `MaxAutoFoamDuration`。
+
+#### MaxAutoFoamDuration 属性
+
+`MaxAutoFoamDuration` 表示 Server 支持的最大自动泡沫释放持续时间，单位为秒，其值 SHALL 大于或等于 `MinAutoFoamDuration`。
+
+#### SittingReminderThreshold 属性
+
+`SittingReminderThreshold` 表示触发久坐提醒所需的连续着座时间，单位为秒。其值 SHALL 位于 `MinSittingReminderThreshold` 与 `MaxSittingReminderThreshold` 之间，步长为 60 秒。
+
+#### MinSittingReminderThreshold 属性
+
+`MinSittingReminderThreshold` 表示 Server 支持的最小久坐提醒阈值，单位为秒，其值 SHALL 小于或等于 `MaxSittingReminderThreshold`。
+
+#### MaxSittingReminderThreshold 属性
+
+`MaxSittingReminderThreshold` 表示 Server 支持的最大久坐提醒阈值，单位为秒，其值 SHALL 大于或等于 `MinSittingReminderThreshold`。
+
+#### EnableAutoLid 属性
+
+`EnableAutoLid` 表示人体靠近时自动打开座盖的功能是否启用。自动动作 SHALL 满足机械互锁和安全条件。
+
+#### EnableAutoFlush 属性
+
+`EnableAutoFlush` 表示离座自动冲水功能是否启用。启用后，Server MAY 根据本地策略选择大冲水或小冲水，最终结果 SHALL 通过 `FlushExecutionResult` 事件映射属性 REPORT。
+
+#### FlushStartCloseMode 属性
+
+`FlushStartCloseMode` 表示从冲水开始时触发的座盖和座圈自动闭合策略。`CloseLidAndSeat` 表示安排合圈并合盖，`CloseSeatOnly` 表示仅安排合圈。
+
+#### FlushStartCloseDelay 属性
+
+`FlushStartCloseDelay` 表示从冲水开始到执行自动合盖或合圈动作的延迟，单位为秒。其值 SHALL 位于 `MinFlushStartCloseDelay` 与 `MaxFlushStartCloseDelay` 之间，步长为 3 秒。延迟期间检测到不安全条件时，Server SHALL 取消待执行的自动闭合动作。
+
+#### MinFlushStartCloseDelay 属性
+
+`MinFlushStartCloseDelay` 表示 Server 支持的最小冲水开始自动闭合延迟，单位为秒，其值 SHALL 小于或等于 `MaxFlushStartCloseDelay`。
+
+#### MaxFlushStartCloseDelay 属性
+
+`MaxFlushStartCloseDelay` 表示 Server 支持的最大冲水开始自动闭合延迟，单位为秒，其值 SHALL 大于或等于 `MinFlushStartCloseDelay`。
+
+#### EnableFootSensor 属性
+
+`EnableFootSensor` 表示脚部感应功能是否启用。值为 `false` 时，Server SHALL NOT 响应脚感翻盖、翻圈或冲水动作，也 SHALL NOT 触发脚感自动泡沫释放。
+
+#### EnablePreWetting 属性
+
+`EnablePreWetting` 表示着座时是否自动预润湿内壁。启用后，Server MAY 在 `SeatOccupancy` 从 `false` 变为 `true` 时执行预润湿，且 SHALL 满足供水和安全条件。
+
+#### EnableAutoDeodorizer 属性
+
+`EnableAutoDeodorizer` 表示着座自动除臭功能是否启用。启用后，Server MAY 在检测到用户着座时启动除臭，并在离座后按产品定义的延迟停止。
+
+#### SeatTempSensorFault 属性
+
+`SeatTempSensorFault` 表示当前座圈温度传感器故障状态。Client MAY 随时 READ 本属性。状态发生变化时 Server SHALL REPORT，包括恢复为 `Normal`；在 `Overheat` 或 `Fault` 状态下，Server SHALL 执行适用的加热保护。
+
+#### PressureValveFault 属性
+
+`PressureValveFault` 表示当前稳压阀故障状态。Client MAY 随时 READ 本属性。状态发生变化时 Server SHALL REPORT，包括恢复为 `Normal`。
+
+#### WaterHeaterVoltageFault 属性
+
+`WaterHeaterVoltageFault` 表示当前水加热电路故障状态。Client MAY 随时 READ 本属性。状态发生变化时 Server SHALL REPORT，包括恢复为 `Normal`；存在 `Fault` 时 Server SHALL 停止不安全的水加热操作。
+
+#### FlowSensorFault 属性
+
+`FlowSensorFault` 表示当前检测到的水流状态。Client MAY 随时 READ 本属性。状态发生变化时 Server SHALL REPORT，包括恢复为 `Normal`，并 SHALL 根据当前操作执行适用的供水保护。
+
+#### OutletWaterTempSensorFault 属性
+
+`OutletWaterTempSensorFault` 表示当前出水温度传感器故障状态。Client MAY 随时 READ 本属性。状态发生变化时 Server SHALL REPORT，包括恢复为 `Normal`；异常期间 Server SHALL 停止不安全的清洗水加热操作。
+
+#### InletWaterTempSensorFault 属性
+
+`InletWaterTempSensorFault` 表示当前进水温度传感器故障状态。Client MAY 随时 READ 本属性。状态发生变化时 Server SHALL REPORT，包括恢复为 `Normal`，并 SHALL 在异常期间执行适用的供水和加热保护。
+
+#### DryerFanFault 属性
+
+`DryerFanFault` 表示当前烘干风机故障状态。Client MAY 随时 READ 本属性。状态发生变化时 Server SHALL REPORT，包括恢复为 `Normal`；存在 `Fault` 时 Server SHALL 停止暖风烘干。
+
+#### SittingReminder 属性
+
+`SittingReminder` 用于通过 AECP 承载对应久坐提醒 Event 的 `AlertState` 字段。连续着座时间达到 `SittingReminderThreshold` 时，Server SHALL 使用 `SittingReminder` 值发送一次 REPORT。同一次连续着座期间最多发送一次该 REPORT；检测到离座后重新允许下一次上报。本属性仅用于事件上报，不表示持久告警状态，Client 不对其发起 QUERY。
+    
+#### FlushExecutionResult 属性
+
+`FlushExecutionResult` 用于通过 AECP 承载对应冲水执行结果事件的 `Result` 字段。每次大冲水或小冲水完成或失败时，Server SHALL 发送一次 REPORT；即使数值与上一次相同，每次冲水也 SHALL 产生独立 REPORT。本属性仅用于事件上报，不表示可查询的最近结果状态。
+
+#### WashExecutionResult 属性
+
+`WashExecutionResult` 用于通过 AECP 承载对应人体清洗结果事件的 `Result` 字段。每次人体清洗完成或失败时，Server SHALL 发送一次 REPORT。对于 `WashAndDry`，该值仅表示清洗阶段结果。本属性仅用于事件上报，Client 不对其发起 QUERY。
+
+#### NozzleCleanExecutionResult 属性
+
+`NozzleCleanExecutionResult` 用于通过 AECP 承载对应喷嘴清洁结果事件的 `Result` 字段。每次自动喷嘴清洁完成或失败时，Server SHALL 发送一次 REPORT；人工维护模式的伸出或收回 SHALL NOT 产生该 REPORT。本属性仅用于事件上报，Client 不对其发起 QUERY。
+
+#### FoamShieldExecutionResult 属性
+
+`FoamShieldExecutionResult` 用于通过 AECP 承载对应泡沫盾执行结果事件的 `Result` 字段。每次泡沫盾释放完成或失败时，Server SHALL 发送一次 REPORT；每次释放操作均 SHALL 产生独立 REPORT。本属性仅用于事件上报，Client 不对其发起 QUERY。
+
+#### ServerAttributeList 属性
+
+`ServerAttributeList` 声明 Toilet Profile 下 Server 实际支持的 Attribute ID 列表。
+
+该属性类型为 `list[uint16]`。列表元素 SHALL 按 Attribute ID 从小到大排列，并包含 `ServerAttributeList` 自身的 Attribute ID `0xFFFB`。
+
+实际支持的 `0x103B` 至 `0x103F` Event REPORT 映射属性 SHALL 包含在 `ServerAttributeList` 中。由于这些属性的 `Access = RP` 且不具备读权限，Client SHALL NOT 在 Profile Discovery 或正常运行期间 READ 这些属性。`0x1034` 至 `0x103A` 故障状态属性的 `Access = R/RP`，Client MAY 在 Profile Discovery 期间读取，以便接入后立即获得当前故障状态。
+
+### Event REPORT 映射
+
+AECP 不定义 Event 操作码。因此，每个 `Aqara Toilet Cluster` Event SHALL 通过下表对应的 Server 属性，使用 `REPORT（OPC = 0x5）` 传输。
+
+| Cluster Event ID | Event 名称 | AECP Attribute ID | Attribute 类型 |
+| --- | --- | --- | --- |
+| 0x00 | SittingReminder | 0x103B | [SittingReminderAlertEnum8](#sittingreminderalertenum8-类型) |
+| 0x01 | FlushExecutionResult | 0x103C | [FlushExecutionResultEnum8](#flushexecutionresultenum8-类型) |
+| 0x02 | WashExecutionResult | 0x103D | [OperationResultEnum8](#operationresultenum8-类型) |
+| 0x03 | NozzleCleanExecutionResult | 0x103E | [OperationResultEnum8](#operationresultenum8-类型) |
+| 0x04 | FoamShieldExecutionResult | 0x103F | [OperationResultEnum8](#operationresultenum8-类型) |
+
+REPORT 帧 SHALL 使用 `Profile ID = 0x1001`。Data Segment SHALL 按照 [第 3 章 Data Segment 编码规则](#data-segment-编码规则)，由一个或多个连续排列的 Attribute Block 组成：
+
+....
++--------+-----------+------+     +--------+-----------+------+
+| AttrID | Data Type | Data | ... | AttrID | Data Type | Data |
+| (2 B)  |   (1 B)   |(N B) |     | (2 B)  |   (1 B)   |(N B) |
++--------+-----------+------+     +--------+-----------+------+
+....
+
+每个 Attribute Block 表示一次 Event 发生，SHALL 携带 Attribute ID、本 Profile 声明的 Data Type 以及 Event Payload 数值。REPORT 的 Attribute Block SHALL NOT 携带属性级 Status。Client 接受 REPORT 后 SHALL 使用相同 Seq 返回 `ACKNOWLEDGE（OPC = 0x6）`；ACKNOWLEDGE 中的 Status 作用于整个 REPORT 帧。
+
+当协商的 UART 单帧长度允许时，同时产生的不同 Event 类型 MAY 通过同一个 REPORT 中的多个 Attribute Block 传输。同一 Event 类型重复发生时 SHALL 使用不同的 REPORT 事务。重传 SHALL 沿用原 Seq，Client SHALL NOT 将相同 Seq 的重传解释为新的 Event。
+
+Event 上报 SHALL 遵循 Profile Discovery 规则。在 `ProfileDiscoveryComplete` 获得 `ACKNOWLEDGE(Status = 0x00)` 之前，Server SHALL NOT 发送这些 REPORT。
+
+### 命令
+
+| ID | 名称 | 方向 | 应答 | 必选性 | 简述 |
+| --- | --- | --- | --- | --- | --- |
+| 0x0001 | LidControlReq | Client → Server | LidControlRsp | O | 请求座盖关闭、打开或切换状态。 |
+| 0x0002 | LidControlRsp | Server → Client | N | O | 返回座盖控制处理结果。 |
+| 0x0003 | SeatControlReq | Client → Server | SeatControlRsp | O | 请求座圈关闭、打开或切换状态。 |
+| 0x0004 | SeatControlRsp | Server → Client | N | O | 返回座圈控制处理结果。 |
+| 0x0005 | FlushControlReq | Client → Server | FlushControlRsp | O | 请求执行大冲水或小冲水。 |
+| 0x0006 | FlushControlRsp | Server → Client | N | O | 返回冲水请求处理结果。 |
+| 0x0007 | WashDryCombinationControlReq | Client → Server | WashDryCombinationControlRsp | O | 请求控制清洗和烘干流程。 |
+| 0x0008 | WashDryCombinationControlRsp | Server → Client | N | O | 返回清洗/烘干处理结果。 |
+| 0x0009 | NozzleCleanReq | Client → Server | NozzleCleanRsp | O | 请求喷嘴清洁或人工维护。 |
+| 0x000A | NozzleCleanRsp | Server → Client | N | O | 返回喷嘴清洁处理结果。 |
+| 0x000B | FoamShieldControlReq | Client → Server | FoamShieldControlRsp | O | 请求控制泡沫盾释放。 |
+| 0x000C | FoamShieldControlRsp | Server → Client | N | O | 返回泡沫盾控制处理结果。 |
+| 0x000D | CleanFoamSystemControlReq | Client → Server | CleanFoamSystemControlRsp | O | 请求释放防溅泡沫或执行发泡装置水路清洗。 |
+| 0x000E | CleanFoamSystemControlRsp | Server → Client | N | O | 返回所请求发泡装置动作的处理结果。 |
+
+对于已进入业务处理的请求，Server SHALL 返回本表声明的配对响应命令。响应命令携带类型为 [StatusCodeEnum8](#statuscodeenum8-类型) 的 `Status` 参数，并声明 `Response = N`。
+
+#### LidControlReq 命令
+
+该命令请求 Server 关闭、打开或切换座盖状态。
+
+##### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Action | [ToggleActionEnum8](#toggleactionenum8-类型) | 见枚举 | — |
+
+##### 字段说明
+
+`Close` 请求关闭座盖，`Open` 请求打开座盖，`Toggle` 请求切换到与当前稳定状态相反的状态。座盖不处于可确定的稳定状态时，Server SHOULD 在 `LidControlRsp` 中返回 `InvalidInState` 或 `Busy`。
+
+最终稳定状态由 `LidState` 表示。
+
+### LidControlRsp 命令
+
+该命令 SHALL 作为 [LidControlReq](#lidcontrolreq-命令) 的响应发送。
+
+#### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [StatusCodeEnum8](#statuscodeenum8-类型) | 见枚举 | — |
+
+#### 字段说明
+
+`Status` 表示座盖控制处理结果。`Success` 表示请求已接受；最终座盖状态由 `LidState` 表示。
+
+### SeatControlReq 命令
+
+该命令请求 Server 关闭、打开或切换座圈状态。Server SHALL 遵守座盖与座圈之间的机械互锁和着座安全条件。
+
+#### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Action | [ToggleActionEnum8](#toggleactionenum8-类型) | 见枚举 | — |
+
+#### 字段说明
+
+`Close` 请求关闭座圈，`Open` 请求打开座圈，`Toggle` 请求切换到与当前稳定状态相反的状态。最终稳定状态由 `SeatState` 表示。
+
+### SeatControlRsp 命令
+
+该命令 SHALL 作为 [SeatControlReq](#seatcontrolreq-命令) 的响应发送。
+
+#### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [StatusCodeEnum8](#statuscodeenum8-类型) | 见枚举 | — |
+
+#### 字段说明
+
+`Status` 表示座圈控制处理结果。`Success` 表示请求已接受；最终座圈状态由 `SeatState` 表示。
+
+### FlushControlReq 命令
+
+该命令请求 Server 执行指定类型的冲水。Server SHALL 根据当前状态和安全条件决定是否接受请求，并 MAY 停止与冲水冲突的清洗或烘干操作。
+
+#### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | FlushType | [FlushTypeEnum8](#flushtypeenum8-类型) | 见枚举 | — |
+
+#### 字段说明
+
+`LargeFlush` 请求大冲水，`SmallFlush` 请求小冲水。每次冲水的最终结果 SHALL 通过 `FlushExecutionResult` 事件映射属性 REPORT。
+
+### FlushControlRsp 命令
+
+该命令 SHALL 作为 [FlushControlReq](#flushcontrolreq-命令) 的响应发送。
+
+#### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [StatusCodeEnum8](#statuscodeenum8-类型) | 见枚举 | — |
+
+#### 字段说明
+
+`Status` 表示冲水请求处理结果。`Success` 表示请求已接受，不表示冲水已经完成。冲水完成或失败由 `FlushExecutionResult` REPORT 表示。
+
+### WashDryCombinationControlReq 命令
+
+该命令请求 Server 启动或停止清洗和烘干流程。Server SHALL 使用当前配置的清洗模式、水温、水压、喷嘴位置、`DryingTemperatureLevel`、`FanSpeedLevel` 和持续时间属性处理请求。
+
+要求人体清洗或暖风烘干的请求仅在检测到用户着座且满足安全条件时 MAY 执行。已接受的请求启动或停止暖风烘干时，Server SHALL 同步更新并 REPORT `EnableDrying`。
+
+#### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Action | [WashDryActionEnum8](#washdryactionenum8-类型) | 见枚举 | — |
+
+#### 字段说明
+
+- `Stop`：停止当前清洗或烘干。
+- `DryOnly`：启动暖风烘干。
+- `WashOnly`：启动已配置的人体清洗，不自动衔接烘干。
+- `WashAndDry`：启动已配置的人体清洗，并在清洗成功后衔接烘干。
+
+人体清洗完成或失败 SHALL 通过 `WashExecutionResult` 事件映射属性 REPORT。
+
+### WashDryCombinationControlRsp 命令
+
+该命令 SHALL 作为 [WashDryCombinationControlReq](#washdrycombinationcontrolreq-命令) 的响应发送。
+
+#### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [StatusCodeEnum8](#statuscodeenum8-类型) | 见枚举 | — |
+
+#### 字段说明
+
+`Status` 表示清洗/烘干请求处理结果。`Success` 表示请求已接受。人体清洗完成或失败由 `WashExecutionResult` REPORT 表示。
+
+### NozzleCleanReq 命令
+
+该命令请求 Server 控制喷嘴清洁或人工维护位置。自动清洁和人工维护伸出 SHOULD 仅在无人着座且不存在冲突操作时执行。检测到用户着座时，Server SHALL 停止维护动作，并在安全条件允许时收回喷嘴。
+
+#### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Action | [NozzleCleanActionEnum8](#nozzlecleanactionenum8-类型) | 见枚举 | — |
+
+#### 字段说明
+
+- `Off`：停止清洁并收回喷嘴。
+- `AutoClean`：执行自动喷嘴清洁。
+- `ManualMaintenance`：伸出喷嘴供人工维护，不启动人体清洗。
+
+自动喷嘴清洁完成或失败 SHALL 通过 `NozzleCleanExecutionResult` 事件映射属性 REPORT。
+
+### NozzleCleanRsp 命令
+
+该命令 SHALL 作为 [NozzleCleanReq](#nozzlecleanreq-命令) 的响应发送。
+
+#### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [StatusCodeEnum8](#statuscodeenum8-类型) | 见枚举 | — |
+
+#### 字段说明
+
+`Status` 表示喷嘴清洁或维护请求处理结果。`Success` 表示请求已接受。自动喷嘴清洁完成或失败由 `NozzleCleanExecutionResult` REPORT 表示。
+
+### FoamShieldControlReq 命令
+
+该命令请求 Server 开始或停止手动泡沫盾释放。Server SHALL 对连续释放时间应用产品定义的安全上限。
+
+#### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Action | [FoamShieldActionEnum8](#foamshieldactionenum8-类型) | 见枚举 | — |
+
+#### 字段说明
+
+`Start` 请求开始释放泡沫，`Stop` 请求停止释放泡沫。每次泡沫释放完成或失败 SHALL 通过 `FoamShieldExecutionResult` 事件映射属性 REPORT。
+
+### FoamShieldControlRsp 命令
+
+该命令 SHALL 作为 [FoamShieldControlReq](#foamshieldcontrolreq-命令) 的响应发送。
+
+#### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [StatusCodeEnum8](#statuscodeenum8-类型) | 见枚举 | — |
+
+#### 字段说明
+
+`Status` 表示泡沫盾控制处理结果。`Success` 表示请求已接受。泡沫释放完成或失败由 `FoamShieldExecutionResult` REPORT 表示。
+
+### CleanFoamSystemControlReq 命令
+
+该命令请求 Server 释放防溅泡沫或执行一次发泡装置水路清洗。Server 仅在所需物料或供水可用且不存在冲突或不安全操作时 MAY 接受该命令。
+
+#### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Action | [CleanFoamSystemActionEnum8](#cleanfoamsystemactionenum8-类型) | 见枚举 | — |
+
+#### 字段说明
+
+`ReleaseAntiSplashFoam` 请求向便池内释放防溅泡沫；`CleanFoamSystem` 请求执行一次发泡装置水路清洗。对于不支持的值，Server SHALL 在 `CleanFoamSystemControlRsp` 中返回 `InvalidParameter`。
+
+### CleanFoamSystemControlRsp 命令
+
+该命令 SHALL 作为 [CleanFoamSystemControlReq](#cleanfoamsystemcontrolreq-命令) 的响应发送。
+
+#### 参数
+
+| 参数顺序 | 名称 | 类型 | 约束 | 默认值 |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [StatusCodeEnum8](#statuscodeenum8-类型) | 见枚举 | — |
+
+#### 字段说明
+
+`Status` 表示所请求发泡装置动作的处理结果。`Success` 表示请求已接受。
 
 ## 附录 A：串口消息示例
 
