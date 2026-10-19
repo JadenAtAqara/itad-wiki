@@ -2351,6 +2351,1253 @@ This command is the paired response to `ClearOpenWindowAlarmReq`. The Client SHA
 
 `Success` indicates the result of the command: `true` means success and `false` means failure.
 
+## Chapter 8 Clothes Rack Profile (Profile ID = 0x1001)
+
+The Clothes Rack Profile defines product-specific Attributes and Commands for clothes rack devices. It applies to communication frames whose header Profile ID is `0x1001`.
+
+All devices implementing this Profile SHALL also implement all Mandatory Attributes and Commands defined in [Foundation Profile (0x0000)](#chapter-6-foundation-profile-profile-id--0x0000).
+
+### Table Conventions
+
+The columns in all Attribute, Command, and parameter tables in this chapter follow [Field Notation Convention](#field-notation-convention).
+
+### Data Types
+
+#### CalibrationStatusCodeEnum8 Type
+
+`CalibrationStatusCodeEnum8` defines the processing result of a travel calibration Command. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Success | The operation succeeded. |
+| 0x01 | Failure | The operation failed. |
+| 0x02 | NotInManualCalibrationMode | The device is not currently in calibration mode. |
+| 0x03 | MissingCalibrationRecord | A required calibration point record is missing. |
+
+#### EnhanceModeMap8 Type
+
+`EnhanceModeMap8` defines the current travel calibration mode and calibration point configuration status. The underlying type of this bitmap is map8.
+
+| Bit | Name | Description |
+| --- | --- | --- |
+| 0 | ManualCalibration | The device is currently in manual calibration mode. |
+| 1 | OpenRecordConfigured | The upper-limit calibration point has been configured. |
+| 2 | CloseRecordConfigured | The lower-limit calibration point has been configured. |
+| 3-7 | Reserved | Reserved and SHALL be 0. |
+
+#### ManualCalibrationOperationEnum8 Type
+
+`ManualCalibrationOperationEnum8` defines movement operations in calibration mode. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Open / Up | Move upward. |
+| 0x01 | Close / Down | Move downward. |
+| 0x02 | Stop | Stop movement. |
+
+#### ManualCalibrationRecordTypeEnum8 Type
+
+`ManualCalibrationRecordTypeEnum8` defines the calibration point to be recorded. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Open / Up | Record the current position as the upper-limit calibration point. |
+| 0x01 | Close / Down | Record the current position as the lower-limit calibration point. |
+
+#### StepModeEnum8 Type
+
+`StepModeEnum8` defines the relative movement direction for the `Step` Command. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | UpOrOpen | Move in the up or open direction. |
+| 0x01 | DownOrClose | Move in the down or close direction. |
+
+#### StowStateEnum8 Type
+
+`StowStateEnum8` defines the state of the product-defined stowed/concealed position. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | NotStowed | The product-defined stowed/concealed position has not been reached. |
+| 0x01 | Stowed | The product-defined stowed/concealed position has been reached. |
+
+#### MovementFaultBitmap8 Type
+
+`MovementFaultBitmap8` defines the currently active movement-related faults. The underlying type of this bitmap is map8.
+
+| Bit | Name | Description |
+| --- | --- | --- |
+| 0 | Obstacle | An obstacle was detected while the device was moving. |
+| 1 | Overload | The device load or operating force exceeds the permitted range. |
+| 2 | MotorFault | A motor fault is active. |
+| 3-7 | Reserved | Reserved and SHALL be 0. |
+
+### Attributes
+
+| ID | Name | Type | Constraint | Default | Access | Side | Conformance | Description |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0x1000 | CurrentPositionPercent | uint8 | 0 to 100, % | - | R/RP | S | M | current position percentage |
+| 0x1001 | EnhanceMode | [EnhanceModeMap8](#enhancemodemap8-type) | See bitmap | 0x00 | R/RP | S | O | travel calibration status |
+| 0x1002 | StowState | [StowStateEnum8](#stowstateenum8-type) | See enum | 0x00 | R/RP | S | O | product-defined stowed/concealed position state |
+| 0x1003 | OnOff | bool | true / false | false | R/RP | S | O | light on/off state |
+| 0x1004 | LightLevel | uint8 |  | - | R/RP | S | O | current light level |
+| 0x1005 | ColorTemperature | uint16 | ColorTempMin to ColorTempMax, K | - | R/RP | S | O | current light color temperature |
+| 0x1006 | LightLevelMin | uint8 |  | 0x01 | R | S | O | minimum light level |
+| 0x1007 | LightLevelMax | uint8 |  | 0xFE | R | S | O | maximum light level |
+| 0x1008 | ColorTempMin | uint16 | K | 2700 | R | S | O | minimum supported color temperature |
+| 0x1009 | ColorTempMax | uint16 | K | 6500 | R | S | O | maximum supported color temperature |
+| 0x100A | MovementFaultStatus | [MovementFaultBitmap8](#movementfaultbitmap8-type) | See bitmap | 0x00 | R/RP | S | O | movement-related fault status |
+| 0xFFFB | ServerAttributeList | list[uint16] | No additional constraints | - | R | S | M | Server Attribute list |
+
+#### CurrentPositionPercent Attribute
+
+`CurrentPositionPercent` indicates the current rack position. `0` indicates the uppermost position, and `100` indicates the lowermost position.
+
+The Server SHALL REPORT this Attribute after reaching a target, reaching a boundary, or stopping.
+
+#### EnhanceMode Attribute
+
+`EnhanceMode` indicates the current travel calibration mode and the configuration status of the upper-limit and lower-limit calibration points. The Server SHALL REPORT this Attribute after the bitmap value changes.
+
+Bit 0 set to `1` indicates that the device is in manual travel calibration mode. Bit 0 set to `0` indicates that the device is not in manual travel calibration mode. Commands that are valid only in calibration mode SHALL fail when bit 0 is `0`.
+
+Bit 1 set to `1` indicates that the upper-limit calibration point has been configured. Bit 2 set to `1` indicates that the lower-limit calibration point has been configured. The corresponding bit SHALL be `0` when its calibration point has not been configured. Bits 3-7 are reserved and SHALL be `0`.
+
+#### StowState Attribute
+
+`StowState` indicates whether the device's moving assembly has reached the product-defined stowed/concealed position.
+
+`Stowed` indicates that the product-defined stowed/concealed position has been reached. `NotStowed` indicates any other physical position or movement state.
+
+The Client SHALL use `SetStowState` to request a state change. The Server SHALL update and REPORT this Attribute after the physical state changes.
+
+#### OnOff Attribute
+
+`OnOff` indicates the current light on/off state. The Client SHALL use `Off` or `On` to control the light and SHALL NOT WRITE this Attribute.
+
+The Server SHALL REPORT this Attribute after the state changes.
+
+#### LightLevel Attribute
+
+`LightLevel` indicates the current light level. The Client SHALL use `MoveToLevel` to control the light level and SHALL NOT WRITE this Attribute.
+
+The Server SHALL REPORT this Attribute after the light level changes.
+
+#### ColorTemperature Attribute
+
+`ColorTemperature` indicates the current light color temperature in kelvins (K).
+For conversion to mireds, use `ColorTemperatureMireds = round(1000000 / ColorTemperature)`.
+
+The Client SHALL use `MoveToColorTemperature` to control the color temperature and SHALL NOT WRITE this Attribute. The Server SHALL REPORT this Attribute after the color temperature changes.
+
+#### LightLevelMin Attribute
+
+`LightLevelMin` indicates the minimum light level that the light can achieve.
+
+#### LightLevelMax Attribute
+
+`LightLevelMax` indicates the maximum light level that the light can achieve.
+
+#### ColorTempMin Attribute
+
+`ColorTempMin` indicates the lowest supported color temperature in kelvins, corresponding to the warm-color end. The default value is `2700 K`.
+
+#### ColorTempMax Attribute
+
+`ColorTempMax` indicates the highest supported color temperature in kelvins, corresponding to the cool-color end. The default value is `6500 K`.
+
+#### MovementFaultStatus Attribute
+
+`MovementFaultStatus` indicates the currently active movement-related faults.
+
+Bit 0 set to `1` indicates that an obstacle has been detected during movement. The device SHALL stop the applicable movement. Bit 0 set to `0` indicates that no obstacle fault is active.
+
+Bit 1 set to `1` indicates that the device load or operating force exceeds the permitted range. The device SHALL stop the applicable movement. Bit 1 set to `0` indicates that no overload fault is active.
+
+Bit 2 set to `1` indicates that a motor fault is active. The device SHALL stop motor movement. Bit 2 set to `0` indicates that no motor fault is active.
+
+Bits 0, 1, and 2 are independent, and multiple fault bits MAY be set simultaneously. The Server SHALL set a fault bit when the corresponding fault is detected and SHALL clear the bit only after the corresponding fault condition is no longer active.
+
+Bits 3-7 are reserved and SHALL be `0`. A value of `0x00` indicates that no defined movement-related fault is active.
+
+The Server SHALL update and REPORT this Attribute when a fault occurs or clears.
+
+#### ServerAttributeList Attribute
+
+`ServerAttributeList` declares the list of Attribute IDs actually supported by the Server under this Profile. The elements SHALL be sorted in ascending Attribute ID order and SHALL include `0xFFFB`.
+
+The Client SHALL READ this Attribute during Profile Discovery. This Attribute is used only for capability discovery and has no runtime change reporting scenario. The Server SHALL NOT REPORT it. If the supported Attribute set changes, the Server SHALL send `ProfileDiscoveryRequest`, after which the Client SHALL READ this Attribute again.
+
+### Clothes Rack Commands
+
+| ID | Name | Direction | Response | Conformance | Description |
+| --- | --- | --- | --- | --- | --- |
+| 0x1000 | UpOpen | Client → Server | ACKNOWLEDGE | M | Move the device upward. |
+| 0x1001 | DownClose | Client → Server | ACKNOWLEDGE | M | Move the device downward. |
+| 0x1002 | Stop | Client → Server | ACKNOWLEDGE | M | Stop device movement. |
+| 0x1003 | GoToPercentage | Client → Server | ACKNOWLEDGE | O | Move the device to a target percentage position. |
+| 0x1004 | Toggle | Client → Server | ACKNOWLEDGE | O | Perform the product-defined toggle movement. |
+| 0x1005 | Step | Client → Server | ACKNOWLEDGE | O | Move by the specified percentage in the requested direction. |
+| 0x1006 | EnterManualCalibrationReq | Client → Server | EnterManualCalibrationRsp | O | Enter travel calibration mode. |
+| 0x1007 | EnterManualCalibrationRsp | Server → Client | N | O | Return the result of entering calibration mode. |
+| 0x1008 | ManualCalibrationOperationReq | Client → Server | ManualCalibrationOperationRsp | O | Control movement during calibration. |
+| 0x1009 | ManualCalibrationOperationRsp | Server → Client | N | O | Return the calibration movement result. |
+| 0x100A | RecordManualCalibrationReq | Client → Server | RecordManualCalibrationRsp | O | Record the current calibration point. |
+| 0x100B | RecordManualCalibrationRsp | Server → Client | N | O | Return the calibration point recording result. |
+| 0x100C | ClearManualCalibrationReq | Client → Server | ClearManualCalibrationRsp | O | Clear travel calibration records. |
+| 0x100D | ClearManualCalibrationRsp | Server → Client | N | O | Return the calibration record clearing result. |
+| 0x100E | CommitManualCalibrationReq | Client → Server | CommitManualCalibrationRsp | O | Commit travel calibration records. |
+| 0x100F | CommitManualCalibrationRsp | Server → Client | N | O | Return the calibration record commit result. |
+| 0x1010 | SetStowState | Client → Server | ACKNOWLEDGE | O | Request entry to or exit from the product-defined stowed/concealed position. |
+| 0x1011 | Off | Client → Server | ACKNOWLEDGE | O | Turn off the light. |
+| 0x1012 | On | Client → Server | ACKNOWLEDGE | O | Turn on the light. |
+| 0x1013 | MoveToLevel | Client → Server | ACKNOWLEDGE | O | Set the target light level. |
+| 0x1014 | MoveToColorTemperature | Client → Server | ACKNOWLEDGE | O | Set the target light color temperature. |
+
+The parameters of a Command with parameters are encoded in parameter order. Data Segment encoding is defined in [COMMAND (OPC = 0x9)](#command-opc--0x9).
+
+#### UpOpen Command
+
+This Command requests that the device move upward. It has no parameters. After movement stops or the upper boundary is reached, the Server SHALL REPORT `CurrentPositionPercent`.
+
+#### DownClose Command
+
+This Command requests that the device move downward. It has no parameters. After movement stops or the lower boundary is reached, the Server SHALL REPORT `CurrentPositionPercent`.
+
+#### Stop Command
+
+This Command requests that the device stop moving. It has no parameters. After stopping, the Server SHALL REPORT `CurrentPositionPercent`.
+
+#### GoToPercentage Command
+
+This Command requests that the device move to a target percentage position.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | PositionPercent | uint8 | 0 to 100 | - |
+
+After the movement completes, the Server SHALL REPORT `CurrentPositionPercent`.
+
+#### Toggle Command
+
+This Command requests that the device perform the product-defined toggle movement. It has no parameters.
+
+The exact toggle behavior SHALL be defined by the product implementation. For a clothes rack, the device MAY toggle between the upper and lower target states or apply another product-defined movement sequence.
+
+After the movement completes or stops, the Server SHALL REPORT `CurrentPositionPercent`.
+
+#### Step Command
+
+This Command requests that the device perform a relative position change in the specified direction and by the specified percentage.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | StepMode | [StepModeEnum8](#stepmodeenum8-type) | See enum | - |
+| 2 | Percent100ths | uint16 | 1 to 10000 | - |
+
+`UpOrOpen` indicates movement in the up or open direction, decreasing the position percentage toward `0%`. `DownOrClose` indicates movement in the down or close direction, increasing the position percentage toward `100%`.
+
+`Percent100ths` specifies the relative step size in units of 0.01%. A value of `1` means 0.01%, `100` means 1.00%, and `10000` means 100.00%.
+
+The Server SHALL clamp the calculated target position to the valid position range. After the movement completes or stops, the Server SHALL REPORT `CurrentPositionPercent`.
+
+#### EnterManualCalibrationReq Command
+
+This Command requests entry into travel calibration mode.
+
+After the Command is successfully executed, the Server SHALL set `EnhanceMode.bit0` to `1` and start an inactivity timeout timer using `CalibrationTimeout`.
+
+Entering calibration mode SHALL NOT clear or modify the saved upper-limit or lower-limit calibration points and SHALL NOT modify `EnhanceMode.bit1` or bit 2. At the beginning of a new calibration session, the Server SHALL discard temporary calibration records left by the previous session.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | CalibrationTimeout | uint16 | 60 to 600 seconds | - |
+
+`CalibrationTimeout` specifies the calibration inactivity timeout in seconds. If neither `ManualCalibrationOperationReq` nor `RecordManualCalibrationReq` is successfully processed within this period, the Server SHALL exit calibration mode, clear `EnhanceMode.bit0`, discard all temporary records, and SHALL NOT save any temporary calibration point.
+
+After each calibration movement or record Command is successfully processed, the Server SHALL restart the inactivity timeout timer.
+
+#### EnterManualCalibrationRsp Command
+
+This Command returns the processing result of `EnterManualCalibrationReq`.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [CalibrationStatusCodeEnum8](#calibrationstatuscodeenum8-type) | See enum | - |
+
+`Success` indicates that the device has entered calibration mode and started the timeout timer. `Failure` indicates that the current state does not permit entry into calibration mode.
+
+#### ManualCalibrationOperationReq Command
+
+This Command requests a movement operation in calibration mode. The Server SHALL execute this Command only when `EnhanceMode.bit0` is `1` and SHALL restart the inactivity timeout timer after successful execution.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Operation | [ManualCalibrationOperationEnum8](#manualcalibrationoperationenum8-type) | See enum | - |
+
+`Open / Up` moves the device upward, `Close / Down` moves the device downward, and `Stop` stops the current movement.
+
+#### ManualCalibrationOperationRsp Command
+
+This Command returns the processing result of `ManualCalibrationOperationReq`.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [CalibrationStatusCodeEnum8](#calibrationstatuscodeenum8-type) | See enum | - |
+
+The Server SHALL return `NotInManualCalibrationMode` when it is not in calibration mode and SHALL return `Failure` when it cannot execute the requested movement.
+
+#### RecordManualCalibrationReq Command
+
+This Command requests that the current calibration point be recorded temporarily. The Server SHALL execute this Command only when `EnhanceMode.bit0` is `1`.
+
+After successful recording, the Server SHALL store a temporary record but SHALL NOT immediately persist it or modify `EnhanceMode.bit1` or bit 2. The Server SHALL restart the inactivity timeout timer.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | RecordType | [ManualCalibrationRecordTypeEnum8](#manualcalibrationrecordtypeenum8-type) | See enum | - |
+
+`Open / Up` temporarily records the current position as the upper-limit calibration point. `Close / Down` temporarily records the current position as the lower-limit calibration point.
+
+#### RecordManualCalibrationRsp Command
+
+This Command returns the processing result of `RecordManualCalibrationReq`.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [CalibrationStatusCodeEnum8](#calibrationstatuscodeenum8-type) | See enum | - |
+
+The Server SHALL return `NotInManualCalibrationMode` when it is not in calibration mode and SHALL return `Failure` when it cannot record the current position.
+
+#### ClearManualCalibrationReq Command
+
+This Command requests that temporary or saved calibration records be cleared. It has no parameters.
+
+If the device is in calibration mode, successful execution SHALL clear the temporary records for the current session, restart the timeout timer, and keep the device in calibration mode. It SHALL NOT clear saved records or modify `EnhanceMode.bit1` or bit 2.
+
+If the device is not in calibration mode, successful execution SHALL clear the saved upper-limit and lower-limit calibration points and clear `EnhanceMode.bit1` and bit 2.
+
+#### ClearManualCalibrationRsp Command
+
+This Command returns the processing result of `ClearManualCalibrationReq`.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [CalibrationStatusCodeEnum8](#calibrationstatuscodeenum8-type) | See enum | - |
+
+`Success` indicates that the applicable temporary or saved records have been cleared. The Server SHALL return `Failure` when the records cannot be cleared in the current state.
+
+#### CommitManualCalibrationReq Command
+
+This Command requests that the temporary upper-limit and lower-limit records be saved and that calibration mode be exited. It has no parameters. The Server SHALL execute this Command only when `EnhanceMode.bit0` is `1`.
+
+After successful execution, the Server SHALL persist the temporary upper-limit and lower-limit records, clear `EnhanceMode.bit0`, set bit 1 and bit 2, and clear all temporary records.
+
+If the temporary records do not contain both an upper-limit record and a lower-limit record, the Server SHALL return `MissingCalibrationRecord`, SHALL NOT save any temporary record, and SHALL exit calibration mode.
+
+#### CommitManualCalibrationRsp Command
+
+This Command returns the processing result of `CommitManualCalibrationReq`.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [CalibrationStatusCodeEnum8](#calibrationstatuscodeenum8-type) | See enum | - |
+
+The Server SHALL return `NotInManualCalibrationMode` when it is not in calibration mode and SHALL return `MissingCalibrationRecord` when a required record is missing.
+
+#### SetStowState Command
+
+This Command requests that the device's moving assembly enter or leave the product-defined stowed/concealed position.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | StowState | [StowStateEnum8](#stowstateenum8-type) | See enum | - |
+
+`Stowed` requests movement to the product-defined stowed/concealed position. `NotStowed` requests movement away from the stowed/concealed position using product-defined behavior.
+
+`ACKNOWLEDGE(Status=0x00)` indicates only that the request has been accepted. Completion SHALL be determined from the reported `StowState`.
+
+#### Off Command
+
+This Command requests that the light be turned off. It has no parameters. The final state SHALL be reported through `OnOff`.
+
+#### On Command
+
+This Command requests that the light be turned on. It has no parameters. The final state SHALL be reported through `OnOff`.
+
+#### MoveToLevel Command
+
+This Command requests that the target light level be set.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Level | uint8 | 0x01 to 0xFE | - |
+
+The result SHALL be reported through `LightLevel`.
+
+#### MoveToColorTemperature Command
+
+This Command requests that the target light color temperature be set.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | ColorTemperature | uint16 | ColorTempMin to ColorTempMax, K | - |
+
+`ColorTemperature` is expressed in kelvins. The final setting SHALL be reported through `ColorTemperature`.
+
+## Chapter 9 Toilet Profile (Profile ID = 0x1001)
+
+Toilet Profile defines Toilet-specific Attributes, Commands, and AECP report mappings for device events, and applies to communication frames whose Profile ID in the frame header is `0x1001`.
+
+All devices that implement Toilet Profile SHALL also implement all Mandatory Attributes and Commands defined in [Foundation Profile (0x0000)](#chapter-6-foundation-profile-profile-id--0x0000).
+
+### Table Conventions
+
+The columns in all Attribute, Command, and parameter tables in this chapter follow [the field notation conventions in Chapter 1](#field-notation-convention).
+
+### Data Types
+
+#### StatusCodeEnum8 Type
+
+`StatusCodeEnum8` defines the processing result carried by the `Status` parameter of a paired response Command. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Success | The request was accepted or the configuration was applied. |
+| 0x01 | Failure | A generic failure occurred. |
+| 0x02 | InvalidParameter | A parameter value is unsupported or violates its constraint. |
+| 0x03 | InvalidInState | The request is invalid in the current device state. |
+| 0x04 | Busy | Server is processing a conflicting operation. |
+| 0x05 | UnsafeCondition | A safety prerequisite is not satisfied. |
+| 0x06 | NotOccupied | The request requires occupancy, but the device is unoccupied. |
+| 0x07 | Occupied | The request requires no occupancy, but the device is occupied. |
+| 0x08 | Timeout | The request was not processed within the permitted time. |
+| 0x09 | Unsupported | Server does not support the requested function. |
+
+`Success` indicates that Server accepted the request. For an operation that has a separate execution-result Attribute, `Success` does not indicate that the physical operation has completed.
+
+#### ToggleActionEnum8 Type
+
+`ToggleActionEnum8` defines lid or seat control actions. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Close | Move to the closed position. |
+| 0x01 | Open | Move to the open position. |
+| 0x02 | Toggle | Move to the state opposite the current stable state. |
+
+#### FlushTypeEnum8 Type
+
+`FlushTypeEnum8` defines the flush type. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | LargeFlush | Perform a large flush. |
+| 0x01 | SmallFlush | Perform a small flush. |
+
+#### WashingModeEnum8 Type
+
+`WashingModeEnum8` defines personal washing modes. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Rinse | Rear wash. |
+| 0x01 | RinseMoving | Moving rear wash. |
+| 0x02 | FeminineWash | Feminine wash. |
+| 0x03 | FeminineWashMoving | Moving feminine wash. |
+
+#### MassageModeEnum8 Type
+
+`MassageModeEnum8` defines massage washing modes. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Off | Disable massage washing. |
+| 0x01 | PressureMassage | Alternate the water pressure. |
+| 0x02 | TemperatureMassage | Alternate the water temperature. |
+
+#### WaterPressureLevelEnum8 Type
+
+`WaterPressureLevelEnum8` defines washing water pressure levels. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Gentle | Gentle. |
+| 0x01 | Standard | Standard. |
+| 0x02 | Strong | Strong. |
+
+#### NozzlePositionEnum8 Type
+
+`NozzlePositionEnum8` defines the position of the toilet cleaning nozzle. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Rear | Rear position. |
+| 0x01 | Rearward | Rearward position. |
+| 0x02 | Middle | Middle position. |
+| 0x03 | Forward | Forward position. |
+| 0x04 | Front | Front position. |
+
+#### WashDryActionEnum8 Type
+
+`WashDryActionEnum8` defines combined washing and drying control actions. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Stop | Stop the current washing or drying operation. |
+| 0x01 | DryOnly | Start warm-air drying. |
+| 0x02 | WashOnly | Start washing without automatically starting drying. |
+| 0x03 | WashAndDry | Start washing and then start drying after washing completes. |
+
+#### DryingTempLevelEnum8 Type
+
+`DryingTempLevelEnum8` defines warm-air drying temperature levels. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | RoomTemp | Room-temperature air. |
+| 0x01 | LowTemp | Low temperature. |
+| 0x02 | MediumLowTemp | Medium-low temperature. |
+| 0x03 | MediumTemp | Medium temperature. |
+| 0x04 | MediumHighTemp | Medium-high temperature. |
+| 0x05 | HighTemp | High temperature. |
+
+#### FanSpeedLevelEnum8 Type
+
+`FanSpeedLevelEnum8` defines drying fan speed levels. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | LowSpeed | Low speed. |
+| 0x01 | MediumSpeed | Medium speed. |
+| 0x02 | HighSpeed | High speed. |
+
+#### NozzleCleanActionEnum8 Type
+
+`NozzleCleanActionEnum8` defines nozzle cleaning and manual maintenance actions. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Off | Stop cleaning and retract the nozzle. |
+| 0x01 | AutoClean | Perform automatic nozzle cleaning. |
+| 0x02 | ManualMaintenance | Extend the nozzle for manual maintenance. |
+
+#### FoamShieldActionEnum8 Type
+
+`FoamShieldActionEnum8` defines foam-shield dispensing control actions. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Start | Start dispensing foam. |
+| 0x01 | Stop | Stop dispensing foam. |
+
+#### CleanFoamSystemActionEnum8 Type
+
+`CleanFoamSystemActionEnum8` defines foam-system actions. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | ReleaseAntiSplashFoam | Release anti-splash foam into the toilet bowl. |
+| 0x01 | CleanFoamSystem | Perform one foam-system water-path cleaning cycle. |
+
+#### NightLightModeEnum8 Type
+
+`NightLightModeEnum8` defines night-light modes. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Off | Always off. |
+| 0x01 | On | Always on. |
+| 0x02 | Auto | Automatically controlled by the device. |
+
+#### FlushStartCloseModeEnum8 Type
+
+`FlushStartCloseModeEnum8` defines the automatic lid and seat closing policy initiated when flushing starts. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Disable | Do not perform automatic closing. |
+| 0x01 | CloseLidAndSeat | Automatically close both the lid and seat. |
+| 0x02 | CloseSeatOnly | Automatically close the seat only. |
+
+#### SittingReminderAlertEnum8 Type
+
+`SittingReminderAlertEnum8` defines the prolonged-sitting reminder event state. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Normal | Normal state. |
+| 0x01 | SittingReminder | A prolonged-sitting reminder has been triggered. |
+
+#### TemperatureSensorFaultEnum8 Type
+
+`TemperatureSensorFaultEnum8` defines a temperature sensor state. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Normal | Normal. |
+| 0x01 | Overheat | Overtemperature condition. |
+| 0x02 | Fault | Sensor fault. |
+
+#### BinaryFaultEnum8 Type
+
+`BinaryFaultEnum8` defines normal and fault states. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Normal | Normal. |
+| 0x01 | Fault | Fault. |
+
+#### FlowSensorFaultEnum8 Type
+
+`FlowSensorFaultEnum8` defines the detected water-flow state. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Normal | Normal. |
+| 0x01 | Insufficient | Flow is below the permitted range. |
+| 0x02 | Excessive | Flow is above the permitted range. |
+
+#### FlushExecutionResultEnum8 Type
+
+`FlushExecutionResultEnum8` defines the final result of a flush operation. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | LargeFlushCompleted | Large flush completed. |
+| 0x01 | SmallFlushCompleted | Small flush completed. |
+| 0x02 | LargeFlushFailed | Large flush failed. |
+| 0x03 | SmallFlushFailed | Small flush failed. |
+
+#### OperationResultEnum8 Type
+
+`OperationResultEnum8` defines the final result of an operation. The underlying type of this enumeration is enum8.
+
+| Value | Name | Description |
+| --- | --- | --- |
+| 0x00 | Completed | The operation completed. |
+| 0x01 | Failed | The operation failed. |
+
+### Attributes
+
+| ID | Name | Type | Constraint | Default | Access | Side | Conformance | Description |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 0x1000 | SeatOccupancy | bool | true / false | false | R/RP | S | O | Current occupancy state. |
+| 0x1001 | LidState | bool | true / false | - | R/RP | S | O | Stable lid state. |
+| 0x1002 | SeatState | bool | true / false | - | R/RP | S | O | Stable seat state. |
+| 0x1003 | EnableSeatHeating | bool | true / false | false | R/W/RP | S | O | Seat-heating enable state. |
+| 0x1004 | SeatHeatingLevel | uint16 | Min ~ Max, 0.1 °C | 340 | R/W/RP | S | O | Target seat-heating temperature. |
+| 0x1005 | MinSeatHeatingLevel | uint16 | 0.1 °C | 260 | R/RP | S | O | Minimum supported seat-heating temperature. |
+| 0x1006 | MaxSeatHeatingLevel | uint16 | 0.1 °C | 400 | R/RP | S | O | Maximum supported seat-heating temperature. |
+| 0x1007 | SeatHeatingLevelStep | uint8 | 0.1 °C | 10 | R/RP | S | O | Supported seat-temperature increment. |
+| 0x1008 | ToiletWashingMode | [WashingModeEnum8](#washingmodeenum8-type) | See enum | - | R/W/RP | S | O | Personal washing mode. |
+| 0x1009 | ToiletMassageMode | [MassageModeEnum8](#massagemodeenum8-type) | See enum | 0x00 (Off) | R/W/RP | S | O | Massage washing mode. |
+| 0x100A | EnableToiletWaterHeating | bool | true / false | false | R/W/RP | S | O | Wash-water-heating enable state. |
+| 0x100B | ToiletWaterTemperature | uint16 | Min ~ Max, 0.1 °C | 340 | R/W/RP | S | O | Target wash-water temperature. |
+| 0x100C | MinToiletWaterTemperature | uint16 | 0.1 °C | 260 | R/RP | S | O | Minimum supported wash-water temperature. |
+| 0x100D | MaxToiletWaterTemperature | uint16 | 0.1 °C | 400 | R/RP | S | O | Maximum supported wash-water temperature. |
+| 0x100E | ToiletWaterTemperatureStep | uint8 | 0.1 °C | 10 | R/RP | S | O | Supported wash-water-temperature increment. |
+| 0x100F | ToiletWaterPressureLevel | [WaterPressureLevelEnum8](#waterpressurelevelenum8-type) | See enum | 0x01 (Standard) | R/W/RP | S | O | Wash-water pressure level. |
+| 0x1010 | NozzlePosition | [NozzlePositionEnum8](#nozzlepositionenum8-type) | See enum | 0x02 (Middle) | R/W/RP | S | O | Cleaning-nozzle position. |
+| 0x1011 | EnableDrying | bool | true / false | false | R/W/RP | S | O | Warm-air drying operating state. |
+| 0x1012 | DryingTemperatureLevel | [DryingTempLevelEnum8](#dryingtemplevelenum8-type) | See enum | 0x00 (RoomTemp) | R/W/RP | S | O | Drying-air temperature level. |
+| 0x1013 | FanSpeedLevel | [FanSpeedLevelEnum8](#fanspeedlevelenum8-type) | See enum | 0x01 (MediumSpeed) | R/W/RP | S | O | Drying-fan speed. |
+| 0x1014 | RinseDuration | uint16 | 60 ~ 300 s | 180 | R/W/RP | S | O | Rear-wash duration. |
+| 0x1015 | MinRinseDuration | uint16 | s | 60 | R/RP | S | O | Minimum supported rear-wash duration. |
+| 0x1016 | MaxRinseDuration | uint16 | s | 300 | R/RP | S | O | Maximum supported rear-wash duration. |
+| 0x1017 | FeminineWashDuration | uint16 | 60 ~ 300 s | 180 | R/W/RP | S | O | Feminine-wash duration. |
+| 0x1018 | MinFeminineWashDuration | uint16 | s | 60 | R/RP | S | O | Minimum supported feminine-wash duration. |
+| 0x1019 | MaxFeminineWashDuration | uint16 | s | 300 | R/RP | S | O | Maximum supported feminine-wash duration. |
+| 0x101A | DryingDuration | uint16 | 60 ~ 600 s | 180 | R/W/RP | S | O | Warm-air drying duration. |
+| 0x101B | MinDryingDuration | uint16 | s | 60 | R/RP | S | O | Minimum supported warm-air drying duration. |
+| 0x101C | MaxDryingDuration | uint16 | s | 600 | R/RP | S | O | Maximum supported warm-air drying duration. |
+| 0x101D | PlasmaSterilizeStatus | bool | true / false | false | R/W/RP | S | O | Plasma sterilization operating state. |
+| 0x101E | NightLightMode | [NightLightModeEnum8](#nightlightmodeenum8-type) | See enum | - | R/W/RP | S | O | Night-light mode. |
+| 0x101F | EnableEnergySaving | bool | true / false | - | R/W/RP | S | O | Energy-saving-mode enable state. |
+| 0x1020 | EnableBeep | bool | true / false | - | R/W/RP | S | O | Normal-operation beep enable state. |
+| 0x1021 | EnableAutoFoam | bool | true / false | - | R/W/RP | S | O | Global automatic foam-shield enable state. |
+| 0x1022 | EnableAutoFoamOnSit | bool | true / false | - | R/W/RP | S | O | Automatic foam dispensing after occupancy detection. |
+| 0x1023 | EnableAutoFoamAfterFlush | bool | true / false | - | R/W/RP | S | O | Automatic foam replenishment after an off-seat flush. |
+| 0x1024 | EnableAutoFoamOnFootFlip | bool | true / false | - | R/W/RP | S | O | Automatic foam dispensing after a foot-sensor seat lift. |
+| 0x1025 | AutoFoamDuration | uint16 | 10 ~ 20 s | 18 | R/W/RP | S | O | Automatic foam-dispensing duration. |
+| 0x1026 | MinAutoFoamDuration | uint16 | s | 10 | R/RP | S | O | Minimum supported automatic foam-dispensing duration. |
+| 0x1027 | MaxAutoFoamDuration | uint16 | s | 20 | R/RP | S | O | Maximum supported automatic foam-dispensing duration. |
+| 0x1028 | SittingReminderThreshold | uint16 | 600 ~ 3600 s | 1200 | R/W/RP | S | O | Prolonged-sitting reminder threshold. |
+| 0x1029 | MinSittingReminderThreshold | uint16 | s | 600 | R/RP | S | O | Minimum supported prolonged-sitting reminder threshold. |
+| 0x102A | MaxSittingReminderThreshold | uint16 | s | 3600 | R/RP | S | O | Maximum supported prolonged-sitting reminder threshold. |
+| 0x102B | EnableAutoLid | bool | true / false | - | R/W/RP | S | O | Automatic lid opening on approach. |
+| 0x102C | EnableAutoFlush | bool | true / false | - | R/W/RP | S | O | Automatic flushing after departure. |
+| 0x102D | FlushStartCloseMode | [FlushStartCloseModeEnum8](#flushstartclosemodeenum8-type) | See enum | - | R/W/RP | S | O | Automatic closing policy initiated when flushing starts. |
+| 0x102E | FlushStartCloseDelay | uint16 | 0 ~ 30 s | 3 | R/W/RP | S | O | Delay from flush start to automatic closing. |
+| 0x102F | MinFlushStartCloseDelay | uint16 | s | 0 | R/RP | S | O | Minimum supported flush-start closing delay. |
+| 0x1030 | MaxFlushStartCloseDelay | uint16 | s | 30 | R/RP | S | O | Maximum supported flush-start closing delay. |
+| 0x1031 | EnableFootSensor | bool | true / false | - | R/W/RP | S | O | Foot-sensor-function enable state. |
+| 0x1032 | EnablePreWetting | bool | true / false | - | R/W/RP | S | O | Bowl pre-wetting on occupancy. |
+| 0x1033 | EnableAutoDeodorizer | bool | true / false | - | R/W/RP | S | O | Automatic deodorization on occupancy. |
+| 0x1034 | SeatTempSensorFault | [TemperatureSensorFaultEnum8](#temperaturesensorfaultenum8-type) | See enum | 0x00 (Normal) | R/RP | S | O | Current seat-temperature-sensor fault state. |
+| 0x1035 | PressureValveFault | [BinaryFaultEnum8](#binaryfaultenum8-type) | See enum | 0x00 (Normal) | R/RP | S | O | Current pressure-valve fault state. |
+| 0x1036 | WaterHeaterVoltageFault | [BinaryFaultEnum8](#binaryfaultenum8-type) | See enum | 0x00 (Normal) | R/RP | S | O | Current water-heating-circuit fault state. |
+| 0x1037 | FlowSensorFault | [FlowSensorFaultEnum8](#flowsensorfaultenum8-type) | See enum | 0x00 (Normal) | R/RP | S | O | Current water-flow fault state. |
+| 0x1038 | OutletWaterTempSensorFault | [TemperatureSensorFaultEnum8](#temperaturesensorfaultenum8-type) | See enum | 0x00 (Normal) | R/RP | S | O | Current outlet-water-temperature-sensor fault state. |
+| 0x1039 | InletWaterTempSensorFault | [TemperatureSensorFaultEnum8](#temperaturesensorfaultenum8-type) | See enum | 0x00 (Normal) | R/RP | S | O | Current inlet-water-temperature-sensor fault state. |
+| 0x103A | DryerFanFault | [BinaryFaultEnum8](#binaryfaultenum8-type) | See enum | 0x00 (Normal) | R/RP | S | O | Current drying-fan fault state. |
+| 0x103B | SittingReminder | [SittingReminderAlertEnum8](#sittingreminderalertenum8-type) | See enum | - | RP | S | O | Prolonged-sitting reminder event indication. |
+| 0x103C | FlushExecutionResult | [FlushExecutionResultEnum8](#flushexecutionresultenum8-type) | See enum | - | RP | S | O | Flush-execution-result event indication. |
+| 0x103D | WashExecutionResult | [OperationResultEnum8](#operationresultenum8-type) | See enum | - | RP | S | O | Personal-wash-result event indication. |
+| 0x103E | NozzleCleanExecutionResult | [OperationResultEnum8](#operationresultenum8-type) | See enum | - | RP | S | O | Nozzle-cleaning-result event indication. |
+| 0x103F | FoamShieldExecutionResult | [OperationResultEnum8](#operationresultenum8-type) | See enum | - | RP | S | O | Foam-shield-result event indication. |
+| 0xFFFB | ServerAttributeList | list[uint16] | No additional constraints | - | R/RP | S | M | List of Attributes supported by Server. |
+
+#### SeatOccupancy Attribute
+
+`SeatOccupancy` indicates the current occupancy state. `false` indicates that no seated user is detected; `true` indicates that a seated user is detected. Server SHALL REPORT this Attribute after the state changes.
+
+#### LidState Attribute
+
+`LidState` indicates the most recently confirmed stable lid state. `false` indicates closed, and `true` indicates open. Client MAY READ this Attribute and SHALL use `LidControlReq` to request lid movement. Server SHALL update and REPORT the value only after the lid reaches the target position.
+
+While the lid is moving, this Attribute SHOULD retain the most recently confirmed stable state. If the request cannot be executed because of mechanical obstruction, occupancy, or another safety condition, Server SHALL NOT change this Attribute.
+
+#### SeatState Attribute
+
+`SeatState` indicates the most recently confirmed stable seat state. `false` indicates closed, and `true` indicates open. Client MAY READ this Attribute and SHALL use `SeatControlReq` to request seat movement. Server SHALL comply with the mechanical interlock between the lid and seat and REPORT the new value after reaching the target position.
+
+#### EnableSeatHeating Attribute
+
+`EnableSeatHeating` indicates whether seat heating is enabled. `false` disables active heating while retaining `SeatHeatingLevel`; `true` enables regulation toward the configured target, subject to temperature limits and overtemperature protection.
+
+#### SeatHeatingLevel Attribute
+
+`SeatHeatingLevel` indicates the configured seat-heating target temperature in units of 0.1 °C. For example, `340` represents 34.0 °C. Its value SHALL be between `MinSeatHeatingLevel` and `MaxSeatHeatingLevel`, and its difference from `MinSeatHeatingLevel` SHALL be an integer multiple of `SeatHeatingLevelStep`. Writing this Attribute SHALL NOT change `EnableSeatHeating`.
+
+#### MinSeatHeatingLevel Attribute
+
+`MinSeatHeatingLevel` indicates the minimum supported seat-heating temperature in units of 0.1 °C and SHALL be less than or equal to `MaxSeatHeatingLevel`.
+
+#### MaxSeatHeatingLevel Attribute
+
+`MaxSeatHeatingLevel` indicates the maximum supported seat-heating temperature in units of 0.1 °C and SHALL be greater than or equal to `MinSeatHeatingLevel`.
+
+#### SeatHeatingLevelStep Attribute
+
+`SeatHeatingLevelStep` indicates the supported seat-temperature increment in units of 0.1 °C. For example, `10` represents 1.0 °C. Its value SHALL be greater than zero.
+
+#### ToiletWashingMode Attribute
+
+`ToiletWashingMode` indicates the configured personal washing mode. Valid values are defined in [WashingModeEnum8](#washingmodeenum8-type). Writing a new value SHALL NOT start washing automatically.
+
+#### ToiletMassageMode Attribute
+
+`ToiletMassageMode` indicates the configured massage washing mode. `Off` disables massage, `PressureMassage` alternates water pressure, and `TemperatureMassage` alternates water temperature.
+
+#### EnableToiletWaterHeating Attribute
+
+`EnableToiletWaterHeating` indicates whether active wash-water heating is enabled. `false` disables active heating while retaining `ToiletWaterTemperature`; `true` enables regulation toward the configured target, subject to water-supply conditions, temperature limits, and overtemperature protection.
+
+#### ToiletWaterTemperature Attribute
+
+`ToiletWaterTemperature` indicates the configured wash-water target temperature in units of 0.1 °C. For example, `340` represents 34.0 °C. Its value SHALL be between `MinToiletWaterTemperature` and `MaxToiletWaterTemperature`, and its difference from `MinToiletWaterTemperature` SHALL be an integer multiple of `ToiletWaterTemperatureStep`. Writing this Attribute SHALL NOT change `EnableToiletWaterHeating`.
+
+#### MinToiletWaterTemperature Attribute
+
+`MinToiletWaterTemperature` indicates the minimum supported wash-water temperature in units of 0.1 °C and SHALL be less than or equal to `MaxToiletWaterTemperature`.
+
+#### MaxToiletWaterTemperature Attribute
+
+`MaxToiletWaterTemperature` indicates the maximum supported wash-water temperature in units of 0.1 °C and SHALL be greater than or equal to `MinToiletWaterTemperature`.
+
+#### ToiletWaterTemperatureStep Attribute
+
+`ToiletWaterTemperatureStep` indicates the supported wash-water-temperature increment in units of 0.1 °C. For example, `10` represents 1.0 °C. Its value SHALL be greater than zero.
+
+#### ToiletWaterPressureLevel Attribute
+
+`ToiletWaterPressureLevel` indicates the configured washing water pressure level. Server MAY use different physical pressure calibrations for different washing modes, but the relative strength ordering of the enumeration values SHALL remain consistent.
+
+#### NozzlePosition Attribute
+
+`NozzlePosition` indicates the configured nozzle position. `Rear` is the rearmost position, and `Front` is the foremost position. Writing a new value SHALL NOT independently start washing or nozzle maintenance.
+
+#### EnableDrying Attribute
+
+`EnableDrying` indicates whether warm-air drying is active. Client writes `true` to request drying start using the configured `DryingTemperatureLevel`, `FanSpeedLevel`, and `DryingDuration`, and writes `false` to request drying stop. Server SHALL set this Attribute to `false` and REPORT it when drying completes, fails, is stopped, or is interrupted by a safety condition.
+
+#### DryingTemperatureLevel Attribute
+
+`DryingTemperatureLevel` indicates the configured warm-air temperature level. Valid values are defined in [DryingTempLevelEnum8](#dryingtemplevelenum8-type). Writing this Attribute SHALL NOT independently start drying.
+
+#### FanSpeedLevel Attribute
+
+`FanSpeedLevel` indicates the configured drying fan speed. Writing a new value SHALL NOT independently start drying. Server MAY reduce the actual fan speed when required by a safety limit.
+
+#### RinseDuration Attribute
+
+`RinseDuration` indicates the rear-wash duration in seconds. Its value SHALL be between `MinRinseDuration` and `MaxRinseDuration` and SHALL use increments of 30 seconds. Server SHALL reject values outside the supported range or not complying with the step.
+
+#### MinRinseDuration Attribute
+
+`MinRinseDuration` indicates the minimum rear-wash duration supported by Server, in seconds, and SHALL be less than or equal to `MaxRinseDuration`.
+
+#### MaxRinseDuration Attribute
+
+`MaxRinseDuration` indicates the maximum rear-wash duration supported by Server, in seconds, and SHALL be greater than or equal to `MinRinseDuration`.
+
+#### FeminineWashDuration Attribute
+
+`FeminineWashDuration` indicates the feminine-wash duration in seconds. Its value SHALL be between `MinFeminineWashDuration` and `MaxFeminineWashDuration` and SHALL use increments of 30 seconds. Server SHALL reject values outside the supported range or not complying with the step.
+
+#### MinFeminineWashDuration Attribute
+
+`MinFeminineWashDuration` indicates the minimum feminine-wash duration supported by Server, in seconds, and SHALL be less than or equal to `MaxFeminineWashDuration`.
+
+#### MaxFeminineWashDuration Attribute
+
+`MaxFeminineWashDuration` indicates the maximum feminine-wash duration supported by Server, in seconds, and SHALL be greater than or equal to `MinFeminineWashDuration`.
+
+#### DryingDuration Attribute
+
+`DryingDuration` indicates the warm-air drying duration in seconds. Its value SHALL be between `MinDryingDuration` and `MaxDryingDuration` and SHALL use increments of 60 seconds. Server SHALL reject values outside the supported range or not complying with the step.
+
+#### MinDryingDuration Attribute
+
+`MinDryingDuration` indicates the minimum warm-air drying duration supported by Server, in seconds, and SHALL be less than or equal to `MaxDryingDuration`.
+
+#### MaxDryingDuration Attribute
+
+`MaxDryingDuration` indicates the maximum warm-air drying duration supported by Server, in seconds, and SHALL be greater than or equal to `MinDryingDuration`.
+
+#### PlasmaSterilizeStatus Attribute
+
+`PlasmaSterilizeStatus` indicates the plasma sterilization operating state. Client writes `true` to request sterilization start and writes `false` to request sterilization stop. Server MAY change this Attribute only after the request is accepted.
+
+#### NightLightMode Attribute
+
+`NightLightMode` indicates the night-light mode. `Off` means always off, `On` means always on, and `Auto` means automatically controlled by the device according to environmental conditions.
+
+#### EnableEnergySaving Attribute
+
+`EnableEnergySaving` indicates whether energy-saving mode is enabled.
+
+#### EnableBeep Attribute
+
+`EnableBeep` indicates whether the feedback prompt sound for device operation is enabled. `false` disables the feedback prompt sound for device operation, and `true` enables it.
+
+#### EnableAutoFoam Attribute
+
+`EnableAutoFoam` is the global enable for automatic foam-shield operation. When it is `false`, automatic foam triggers SHALL NOT start dispensing, but the configured values of the trigger Attributes SHALL be retained.
+
+#### EnableAutoFoamOnSit Attribute
+
+`EnableAutoFoamOnSit` indicates whether foam is dispensed automatically after occupancy is detected. This Attribute is effective only when `EnableAutoFoam = true`.
+
+#### EnableAutoFoamAfterFlush Attribute
+
+`EnableAutoFoamAfterFlush` indicates whether foam is replenished automatically after a successful off-seat flush. This Attribute is effective only when `EnableAutoFoam = true`.
+
+#### EnableAutoFoamOnFootFlip Attribute
+
+`EnableAutoFoamOnFootFlip` indicates whether foam is dispensed automatically after the foot sensor causes the seat to lift. This Attribute is effective only when `EnableAutoFoam = true` and `EnableFootSensor = true`.
+
+#### AutoFoamDuration Attribute
+
+`AutoFoamDuration` indicates the automatic foam dispensing duration in seconds. Its value SHALL be between `MinAutoFoamDuration` and `MaxAutoFoamDuration` and SHALL use increments of one second. Server SHALL reject values outside the supported range.
+
+#### MinAutoFoamDuration Attribute
+
+`MinAutoFoamDuration` indicates the minimum automatic foam-dispensing duration supported by Server, in seconds, and SHALL be less than or equal to `MaxAutoFoamDuration`.
+
+#### MaxAutoFoamDuration Attribute
+
+`MaxAutoFoamDuration` indicates the maximum automatic foam-dispensing duration supported by Server, in seconds, and SHALL be greater than or equal to `MinAutoFoamDuration`.
+
+#### SittingReminderThreshold Attribute
+
+`SittingReminderThreshold` indicates the continuous occupancy duration required to trigger the prolonged-sitting reminder, in seconds. Its value SHALL be between `MinSittingReminderThreshold` and `MaxSittingReminderThreshold` and SHALL use increments of 60 seconds.
+
+#### MinSittingReminderThreshold Attribute
+
+`MinSittingReminderThreshold` indicates the minimum prolonged-sitting reminder threshold supported by Server, in seconds, and SHALL be less than or equal to `MaxSittingReminderThreshold`.
+
+#### MaxSittingReminderThreshold Attribute
+
+`MaxSittingReminderThreshold` indicates the maximum prolonged-sitting reminder threshold supported by Server, in seconds, and SHALL be greater than or equal to `MinSittingReminderThreshold`.
+
+#### EnableAutoLid Attribute
+
+`EnableAutoLid` indicates whether the lid opens automatically when a person approaches. Automatic operation SHALL satisfy all applicable mechanical interlock and safety conditions.
+
+#### EnableAutoFlush Attribute
+
+`EnableAutoFlush` indicates whether the toilet flushes automatically after the user leaves. When enabled, Server MAY select a large or small flush according to local policy. The final result SHALL be REPORTed through the `FlushExecutionResult` event-mapping Attribute.
+
+#### FlushStartCloseMode Attribute
+
+`FlushStartCloseMode` indicates the automatic lid and seat closing policy initiated when flushing starts. `CloseLidAndSeat` schedules both the seat and lid to close, while `CloseSeatOnly` schedules only the seat to close.
+
+#### FlushStartCloseDelay Attribute
+
+`FlushStartCloseDelay` indicates the delay from the start of flushing until the automatic lid or seat closing action is executed, in seconds. Its value SHALL be between `MinFlushStartCloseDelay` and `MaxFlushStartCloseDelay` and SHALL use increments of 3 seconds. If an unsafe condition is detected during the delay, Server SHALL cancel the pending automatic closing operation.
+
+#### MinFlushStartCloseDelay Attribute
+
+`MinFlushStartCloseDelay` indicates the minimum flush-start automatic-closing delay supported by Server, in seconds, and SHALL be less than or equal to `MaxFlushStartCloseDelay`.
+
+#### MaxFlushStartCloseDelay Attribute
+
+`MaxFlushStartCloseDelay` indicates the maximum flush-start automatic-closing delay supported by Server, in seconds, and SHALL be greater than or equal to `MinFlushStartCloseDelay`.
+
+#### EnableFootSensor Attribute
+
+`EnableFootSensor` indicates whether the foot-sensor function is enabled. When it is `false`, Server SHALL NOT respond to foot-sensor lid, seat, or flush actions and SHALL NOT trigger automatic foam dispensing from a foot-sensor seat lift.
+
+#### EnablePreWetting Attribute
+
+`EnablePreWetting` indicates whether the bowl is pre-wetted automatically when occupancy is detected. When enabled, Server MAY perform pre-wetting when `SeatOccupancy` changes from `false` to `true`, subject to water-supply and safety conditions.
+
+#### EnableAutoDeodorizer Attribute
+
+`EnableAutoDeodorizer` indicates whether deodorization starts automatically on occupancy. When enabled, Server MAY start deodorization after detecting occupancy and stop it after the user leaves, using a product-defined delay.
+
+#### SeatTempSensorFault Attribute
+
+`SeatTempSensorFault` indicates the current seat-temperature-sensor fault state. Client MAY READ this Attribute at any time. Server SHALL REPORT the Attribute whenever it changes, including a transition to `Normal`. Server SHALL apply the applicable heating protection in `Overheat` or `Fault` state.
+
+#### PressureValveFault Attribute
+
+`PressureValveFault` indicates the current pressure-valve fault state. Client MAY READ this Attribute at any time. Server SHALL REPORT the Attribute whenever it changes, including a transition to `Normal`.
+
+#### WaterHeaterVoltageFault Attribute
+
+`WaterHeaterVoltageFault` indicates the current water-heating-circuit fault state. Client MAY READ this Attribute at any time. Server SHALL REPORT the Attribute whenever it changes, including a transition to `Normal`, and SHALL stop unsafe water heating while `Fault` is present.
+
+#### FlowSensorFault Attribute
+
+`FlowSensorFault` indicates the current detected water-flow state. Client MAY READ this Attribute at any time. Server SHALL REPORT the Attribute whenever it changes, including a transition to `Normal`, and SHALL apply the applicable water-supply protection for the current operation.
+
+#### OutletWaterTempSensorFault Attribute
+
+`OutletWaterTempSensorFault` indicates the current outlet-water-temperature-sensor fault state. Client MAY READ this Attribute at any time. Server SHALL REPORT the Attribute whenever it changes, including a transition to `Normal`, and SHALL stop unsafe wash-water heating while the state is abnormal.
+
+#### InletWaterTempSensorFault Attribute
+
+`InletWaterTempSensorFault` indicates the current inlet-water-temperature-sensor fault state. Client MAY READ this Attribute at any time. Server SHALL REPORT the Attribute whenever it changes, including a transition to `Normal`, and SHALL apply the applicable water-supply and heating protection while the state is abnormal.
+
+#### DryerFanFault Attribute
+
+`DryerFanFault` indicates the current drying-fan fault state. Client MAY READ this Attribute at any time. Server SHALL REPORT the Attribute whenever it changes, including a transition to `Normal`, and SHALL stop warm-air drying while `Fault` is present.
+
+#### SittingReminder Attribute
+
+`SittingReminder` carries the `AlertState` field of the corresponding prolonged-sitting reminder event over AECP. When continuous occupancy reaches `SittingReminderThreshold`, Server SHALL issue one REPORT with the value `SittingReminder`. Server SHALL issue at most one such REPORT during one continuous occupancy period and SHALL re-arm the event after occupancy changes to unoccupied. This report-only Attribute is not a persistent alarm state and is not queried by Client.
+
+#### FlushExecutionResult Attribute
+
+`FlushExecutionResult` carries the `Result` field of the corresponding flush-execution-result event over AECP. Server SHALL issue one REPORT whenever a large or small flush completes or fails. Each flush operation SHALL produce a distinct REPORT, including when its value equals the preceding report. This report-only Attribute is not a queryable latest-result state.
+
+#### WashExecutionResult Attribute
+
+`WashExecutionResult` carries the `Result` field of the corresponding personal-wash-result event over AECP. Server SHALL issue one REPORT whenever a personal-wash operation completes or fails. For `WashAndDry`, the value represents only the wash phase. This report-only Attribute is not queried by Client.
+
+#### NozzleCleanExecutionResult Attribute
+
+`NozzleCleanExecutionResult` carries the `Result` field of the corresponding nozzle-cleaning-result event over AECP. Server SHALL issue one REPORT whenever automatic nozzle cleaning completes or fails. Manual-maintenance extension or retraction SHALL NOT produce this REPORT. This report-only Attribute is not queried by Client.
+
+#### FoamShieldExecutionResult Attribute
+
+`FoamShieldExecutionResult` carries the `Result` field of the corresponding foam-shield-result event over AECP. Server SHALL issue one REPORT whenever foam-shield dispensing completes or fails. Each dispensing operation SHALL produce a distinct REPORT. This report-only Attribute is not queried by Client.
+
+#### ServerAttributeList Attribute
+
+`ServerAttributeList` declares the list of Attribute IDs actually supported by Server under Toilet Profile.
+
+The type of this Attribute is `list[uint16]`. Elements SHALL be ordered by Attribute ID in ascending order and SHALL include the Attribute ID of `ServerAttributeList` itself, `0xFFFB`.
+
+Every supported Event REPORT mapping Attribute from `0x103B` through `0x103F` SHALL be included in `ServerAttributeList`. Because these Attributes have `Access = RP` and no read access, Client SHALL NOT READ them during Profile Discovery or normal operation. The fault-state Attributes from `0x1034` through `0x103A` have `Access = R/RP` and MAY be read during Profile Discovery so that Client can obtain the current fault state immediately.
+
+### Event REPORT Mapping
+
+AECP defines no Event opcode. Each `Aqara Toilet Cluster` Event SHALL therefore be conveyed by the corresponding Server Attribute in the table below using `REPORT (OPC = 0x5)`.
+
+| Cluster Event ID | Event Name | AECP Attribute ID | Attribute Type |
+| --- | --- | --- | --- |
+| 0x00 | SittingReminder | 0x103B | [SittingReminderAlertEnum8](#sittingreminderalertenum8-type) |
+| 0x01 | FlushExecutionResult | 0x103C | [FlushExecutionResultEnum8](#flushexecutionresultenum8-type) |
+| 0x02 | WashExecutionResult | 0x103D | [OperationResultEnum8](#operationresultenum8-type) |
+| 0x03 | NozzleCleanExecutionResult | 0x103E | [OperationResultEnum8](#operationresultenum8-type) |
+| 0x04 | FoamShieldExecutionResult | 0x103F | [OperationResultEnum8](#operationresultenum8-type) |
+
+The REPORT frame SHALL use `Profile ID = 0x1001`. Its Data Segment SHALL contain one or more contiguous Attribute Blocks in the format defined by [Chapter 3 Data Segment Encoding Rules](#data-segment-encoding-rules):
+
+....
++--------+-----------+------+     +--------+-----------+------+
+| AttrID | Data Type | Data | ... | AttrID | Data Type | Data |
+| (2 B)  |   (1 B)   |(N B) |     | (2 B)  |   (1 B)   |(N B) |
++--------+-----------+------+     +--------+-----------+------+
+....
+
+Each Attribute Block represents one Event occurrence and SHALL carry the Attribute ID, the Data Type declared in this Profile, and the Event payload value. A REPORT Attribute Block SHALL NOT carry a per-Attribute Status. After accepting the REPORT, Client SHALL return `ACKNOWLEDGE (OPC = 0x6)` with the same Seq; the ACKNOWLEDGE Status applies to the complete REPORT frame.
+
+Different Event types generated together MAY be carried as multiple Attribute Blocks in one REPORT when the negotiated UART frame-size limit is satisfied. Repeated occurrences of the same Event type SHALL use distinct REPORT transactions. A retransmission uses the original Seq and SHALL NOT be interpreted by Client as a new Event occurrence.
+
+Event delivery SHALL follow Profile Discovery rules. Server SHALL NOT issue these REPORT transactions before `ProfileDiscoveryComplete` has been accepted with `ACKNOWLEDGE(Status = 0x00)`.
+
+### Commands
+
+| ID | Name | Direction | Response | Conformance | Description |
+| --- | --- | --- | --- | --- | --- |
+| 0x0001 | LidControlReq | Client → Server | LidControlRsp | O | Requests lid closing, opening, or state toggling. |
+| 0x0002 | LidControlRsp | Server → Client | N | O | Returns the lid-control processing result. |
+| 0x0003 | SeatControlReq | Client → Server | SeatControlRsp | O | Requests seat closing, opening, or state toggling. |
+| 0x0004 | SeatControlRsp | Server → Client | N | O | Returns the seat-control processing result. |
+| 0x0005 | FlushControlReq | Client → Server | FlushControlRsp | O | Requests a large or small flush. |
+| 0x0006 | FlushControlRsp | Server → Client | N | O | Returns the flush-request processing result. |
+| 0x0007 | WashDryCombinationControlReq | Client → Server | WashDryCombinationControlRsp | O | Requests washing and drying flow control. |
+| 0x0008 | WashDryCombinationControlRsp | Server → Client | N | O | Returns the washing/drying processing result. |
+| 0x0009 | NozzleCleanReq | Client → Server | NozzleCleanRsp | O | Requests nozzle cleaning or manual maintenance. |
+| 0x000A | NozzleCleanRsp | Server → Client | N | O | Returns the nozzle-cleaning processing result. |
+| 0x000B | FoamShieldControlReq | Client → Server | FoamShieldControlRsp | O | Requests foam-shield dispensing control. |
+| 0x000C | FoamShieldControlRsp | Server → Client | N | O | Returns the foam-shield processing result. |
+| 0x000D | CleanFoamSystemControlReq | Client → Server | CleanFoamSystemControlRsp | O | Requests anti-splash foam dispensing or foam-system cleaning. |
+| 0x000E | CleanFoamSystemControlRsp | Server → Client | N | O | Returns the requested foam-system action result. |
+
+For a request accepted for business processing, Server SHALL return the paired response Command declared in this table. The response Command carries a `Status` parameter of type [StatusCodeEnum8](#statuscodeenum8-type) and declares `Response = N`.
+
+#### LidControlReq Command
+
+This Command requests Server to close, open, or toggle the lid.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Action | [ToggleActionEnum8](#toggleactionenum8-type) | See enum | - |
+
+###### Field Descriptions
+
+`Close` requests lid closing, `Open` requests lid opening, and `Toggle` requests the state opposite the current stable state. If the stable lid state cannot be determined, Server SHOULD return `InvalidInState` or `Busy` in `LidControlRsp`.
+
+The final stable state is indicated by `LidState`.
+
+#### LidControlRsp Command
+
+This Command SHALL be sent in response to [LidControlReq](#lidcontrolreq-command).
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [StatusCodeEnum8](#statuscodeenum8-type) | See enum | - |
+
+###### Field Descriptions
+
+`Status` indicates the lid-control processing result. `Success` means that the request was accepted; the final lid state is indicated by `LidState`.
+
+#### SeatControlReq Command
+
+This Command requests Server to close, open, or toggle the seat. Server SHALL comply with the mechanical interlock between the lid and seat and all applicable occupancy safety conditions.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Action | [ToggleActionEnum8](#toggleactionenum8-type) | See enum | - |
+
+###### Field Descriptions
+
+`Close` requests seat closing, `Open` requests seat opening, and `Toggle` requests the state opposite the current stable state. The final stable state is indicated by `SeatState`.
+
+#### SeatControlRsp Command
+
+This Command SHALL be sent in response to [SeatControlReq](#seatcontrolreq-command).
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [StatusCodeEnum8](#statuscodeenum8-type) | See enum | - |
+
+###### Field Descriptions
+
+`Status` indicates the seat-control processing result. `Success` means that the request was accepted; the final seat state is indicated by `SeatState`.
+
+#### FlushControlReq Command
+
+This Command requests Server to perform the specified flush type. Server SHALL determine whether to accept the request according to the current device state and safety conditions and MAY stop a washing or drying operation that conflicts with flushing.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | FlushType | [FlushTypeEnum8](#flushtypeenum8-type) | See enum | - |
+
+###### Field Descriptions
+
+`LargeFlush` requests a large flush, and `SmallFlush` requests a small flush. The final result of each flush SHALL be REPORTed through the `FlushExecutionResult` event-mapping Attribute.
+
+#### FlushControlRsp Command
+
+This Command SHALL be sent in response to [FlushControlReq](#flushcontrolreq-command).
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [StatusCodeEnum8](#statuscodeenum8-type) | See enum | - |
+
+###### Field Descriptions
+
+`Status` indicates the flush-request processing result. `Success` means that the request was accepted; it does not mean that flushing has completed. Completion or failure is indicated by a `FlushExecutionResult` REPORT.
+
+#### WashDryCombinationControlReq Command
+
+This Command requests Server to start or stop the washing and drying flow. Server SHALL process the request using the currently configured washing mode, water temperature, water pressure, nozzle position, `DryingTemperatureLevel`, `FanSpeedLevel`, and duration Attributes.
+
+A request requiring personal washing or warm-air drying MAY be executed only when occupancy is detected and all applicable safety conditions are satisfied. Server SHALL update and REPORT `EnableDrying` when the accepted request starts or stops warm-air drying.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Action | [WashDryActionEnum8](#washdryactionenum8-type) | See enum | - |
+
+###### Field Descriptions
+
+- `Stop`: Stop the current washing or drying operation.
+- `DryOnly`: Start warm-air drying only.
+- `WashOnly`: Start the configured personal wash without automatically starting drying.
+- `WashAndDry`: Start the configured personal wash and then start drying after washing completes successfully.
+
+The final washing result SHALL be REPORTed through the `WashExecutionResult` event-mapping Attribute.
+
+#### WashDryCombinationControlRsp Command
+
+This Command SHALL be sent in response to [WashDryCombinationControlReq](#washdrycombinationcontrolreq-command).
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [StatusCodeEnum8](#statuscodeenum8-type) | See enum | - |
+
+###### Field Descriptions
+
+`Status` indicates the washing/drying request processing result. `Success` means that the request was accepted. Personal-wash completion or failure is indicated by a `WashExecutionResult` REPORT.
+
+#### NozzleCleanReq Command
+
+This Command requests Server to control nozzle cleaning or the manual maintenance position. Automatic cleaning and extension for manual maintenance SHOULD be performed only while unoccupied and when no conflicting operation is active. If occupancy is detected, Server SHALL stop the maintenance operation and retract the nozzle when safe to do so.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Action | [NozzleCleanActionEnum8](#nozzlecleanactionenum8-type) | See enum | - |
+
+###### Field Descriptions
+
+- `Off`: Stop cleaning and retract the nozzle.
+- `AutoClean`: Perform automatic nozzle cleaning.
+- `ManualMaintenance`: Extend the nozzle for manual maintenance without starting personal washing.
+
+The final automatic cleaning result SHALL be REPORTed through the `NozzleCleanExecutionResult` event-mapping Attribute.
+
+#### NozzleCleanRsp Command
+
+This Command SHALL be sent in response to [NozzleCleanReq](#nozzlecleanreq-command).
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [StatusCodeEnum8](#statuscodeenum8-type) | See enum | - |
+
+###### Field Descriptions
+
+`Status` indicates the nozzle-cleaning or maintenance request processing result. `Success` means that the request was accepted. Automatic nozzle-cleaning completion or failure is indicated by a `NozzleCleanExecutionResult` REPORT.
+
+#### FoamShieldControlReq Command
+
+This Command requests Server to start or stop manual foam-shield dispensing. Server SHALL apply a product-defined safety limit to continuous dispensing time.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Action | [FoamShieldActionEnum8](#foamshieldactionenum8-type) | See enum | - |
+
+###### Field Descriptions
+
+`Start` requests foam dispensing to start, and `Stop` requests foam dispensing to stop. The final result of each dispensing operation SHALL be REPORTed through the `FoamShieldExecutionResult` event-mapping Attribute.
+
+#### FoamShieldControlRsp Command
+
+This Command SHALL be sent in response to [FoamShieldControlReq](#foamshieldcontrolreq-command).
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [StatusCodeEnum8](#statuscodeenum8-type) | See enum | - |
+
+###### Field Descriptions
+
+`Status` indicates the foam-shield control processing result. `Success` means that the request was accepted. Foam-dispensing completion or failure is indicated by a `FoamShieldExecutionResult` REPORT.
+
+#### CleanFoamSystemControlReq Command
+
+This Command requests Server to dispense anti-splash foam or perform one foam-system water-path cleaning cycle. Server MAY accept this Command only when the required material or water supply is available and no conflicting or unsafe operation is active.
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Action | [CleanFoamSystemActionEnum8](#cleanfoamsystemactionenum8-type) | See enum | - |
+
+###### Field Descriptions
+
+`ReleaseAntiSplashFoam` requests the release of anti-splash foam into the toilet bowl. `CleanFoamSystem` requests one foam-system water-path cleaning cycle. Server SHALL return `InvalidParameter` in `CleanFoamSystemControlRsp` for an unsupported value.
+
+#### CleanFoamSystemControlRsp Command
+
+This Command SHALL be sent in response to [CleanFoamSystemControlReq](#cleanfoamsystemcontrolreq-command).
+
+##### Parameters
+
+| Parameter Order | Name | Type | Constraint | Default |
+| --- | --- | --- | --- | --- |
+| 1 | Status | [StatusCodeEnum8](#statuscodeenum8-type) | See enum | - |
+
+###### Field Descriptions
+
+`Status` indicates the requested foam-system action processing result. `Success` means that the request was accepted.
+
 ## Appendix A: UART Message Examples
 
 This appendix provides complete UART message examples for typical interaction scenarios, including byte-by-byte annotations, to help implementers verify frame construction and parsing logic.
