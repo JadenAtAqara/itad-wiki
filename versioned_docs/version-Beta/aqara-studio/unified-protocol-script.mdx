@@ -120,8 +120,8 @@ Every definition, **including Spec points**, requires integer `access`: read=`1`
 | `pointId` | Nonblank, stable and unique within the device |
 | `pointName` | Optional; defaults to pointId |
 | `dataType` | Prefer `bool`, `number`, `text`, `enum` for generic points; existing normalization also accepts aliases such as `numerical` |
-| `devType` / `functionCode` / `traitCode` | A valid combination from the deployed Spec catalog; see [data model core concepts](../aqara-developer/aqara-data-model-specification/core-concepts.mdx) |
-| `commandCode` | Spec Command; mutually exclusive with traitCode; Commands use `access: 2`; see [data model core concepts](../aqara-developer/aqara-data-model-specification/core-concepts.mdx) |
+| `devType` / `functionCode` / `traitCode` | A valid combination from the deployed Spec catalog; see [data model core concepts](../aqara-developer/aqara-data-model-specification/aqara-data-model-specification.mdx#核心概念) |
+| `commandCode` | Spec Command; mutually exclusive with traitCode; Commands use `access: 2`; see [data model core concepts](../aqara-developer/aqara-data-model-specification/aqara-data-model-specification.mdx#核心概念) |
 | `customSchema` | Object containing device-specific Command constraints, not a `customSchemeJson` string |
 | `enumRange` | Nonempty static array of `{value: integer, label: nonblank string}` |
 | `dynamicEnumRange` | Boolean flag, described below |
