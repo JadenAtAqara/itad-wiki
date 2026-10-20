@@ -101,5 +101,5 @@ Resolve site-relative links against this index's origin. Copy llms.txt on the pa
 - Control Devices by Traits: /docs/aqara-developer/aiot-api/execute-device-trait
 - Query Trait Values: /docs/aqara-developer/aiot-api/get-trait-values
 - Control Devices by Commands: /docs/aqara-developer/aiot-api/execute-device-command
-- Aqara Spec 物模型标签: /docs/aqara-developer/aqara-data-model-specification/aqara-data-model-specification
+- Aqara Spec 物模型标签: /docs/aqara-developer/aqara-data-model-specification/aqara-data-model-tags
 

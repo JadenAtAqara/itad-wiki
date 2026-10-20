@@ -120,8 +120,8 @@ TCP/UDP 上报 ACK 输入还包括 requestId/deviceId 和当时可用的 pointId
 | `pointId` | 非空、设备内稳定且唯一 |
 | `pointName` | 可选，默认 pointId |
 | `dataType` | 通用类型推荐 `bool`、`number`、`text`、`enum`；`numerical` 等别名由现有规范化器处理 |
-| `devType` / `functionCode` / `traitCode` | 使用实例实际 Spec 目录中的合法组合；概念见[物模型核心概念](../aqara-developer/aqara-data-model-specification/aqara-data-model-specification.mdx#核心概念) |
-| `commandCode` | Spec Command；不能同时声明 `traitCode`，Command 使用 `access: 2`；概念见[物模型核心概念](../aqara-developer/aqara-data-model-specification/aqara-data-model-specification.mdx#核心概念) |
+| `devType` / `functionCode` / `traitCode` | 使用实例实际 Spec 目录中的合法组合；概念见[物模型核心概念](../aqara-developer/aqara-data-model-specification/aqara-data-model-tags.mdx#核心概念) |
+| `commandCode` | Spec Command；不能同时声明 `traitCode`，Command 使用 `access: 2`；概念见[物模型核心概念](../aqara-developer/aqara-data-model-specification/aqara-data-model-tags.mdx#核心概念) |
 | `customSchema` | 对象，用于该设备 Command 的定制参数约束；不是字符串 `customSchemeJson` |
 | `enumRange` | 静态枚举的非空 `{value: 整数, label: 非空字符串}` 数组 |
 | `dynamicEnumRange` | 动态枚举布尔标记，见下文 |

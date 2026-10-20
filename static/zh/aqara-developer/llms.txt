@@ -101,5 +101,5 @@
 - 通过 Trait 控制设备: /zh/docs/aqara-developer/aiot-api/execute-device-trait
 - 查询 Trait 值: /zh/docs/aqara-developer/aiot-api/get-trait-values
 - 通过 Command 控制设备: /zh/docs/aqara-developer/aiot-api/execute-device-command
-- Aqara Spec 物模型标签: /zh/docs/aqara-developer/aqara-data-model-specification/aqara-data-model-specification
+- Aqara Spec 物模型标签: /zh/docs/aqara-developer/aqara-data-model-specification/aqara-data-model-tags
 
