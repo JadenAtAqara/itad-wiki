@@ -3201,48 +3201,6 @@ Device Type 用于描述 Endpoint 的设备类型，一个 Device 可以由一�
       <td>M</td>
       <td>并网点电表的 <code>MeteringPointType</code> 必须为 <code>GridConnectionPoint</code>；需量和分时电量按设备能力可选实现。</td>
     </tr>
-    <tr>
-      <td>0x0087</td>
-      <td>FuelCell（燃料电池）</td>
-      <td>EnergyManagement</td>
-      <td>M</td>
-      <td>提供累计发电量、瞬时发电功率及家庭侧电气测量数据（按设备能力）。</td>
-    </tr>
-    <tr>
-      <td>0x0087</td>
-      <td>FuelCell（燃料电池）</td>
-      <td>PowerGeneration</td>
-      <td>M</td>
-      <td>提供额定发电功率和发电状态；燃气及热水数据按设备能力实现。</td>
-    </tr>
-    <tr>
-      <td>0x0088</td>
-      <td>EngineCogeneration（燃气发动机热电联产）</td>
-      <td>EnergyManagement</td>
-      <td>M</td>
-      <td>提供累计发电量、瞬时发电功率及家庭侧电气测量数据（按设备能力）。</td>
-    </tr>
-    <tr>
-      <td>0x0088</td>
-      <td>EngineCogeneration（燃气发动机热电联产）</td>
-      <td>PowerGeneration</td>
-      <td>M</td>
-      <td>提供发电状态；燃气消耗数据按设备能力实现。</td>
-    </tr>
-    <tr>
-      <td>0x0089</td>
-      <td>PowerDistributionBoard（配电盘）</td>
-      <td>EnergyManagement</td>
-      <td>M</td>
-      <td>提供总进口/出口累计电能和通用电气测量数据。</td>
-    </tr>
-    <tr>
-      <td>0x0089</td>
-      <td>PowerDistributionBoard（配电盘）</td>
-      <td>ElectricityMetering</td>
-      <td>M</td>
-      <td>并网点总功率映射到 <code>GridActivePower</code>；分路数据映射到 <code>BranchCircuitMeasurements</code>。</td>
-    </tr>
   </tbody>
 </table>
 
@@ -4167,24 +4125,6 @@ Device Type 用于描述 Endpoint 的设备类型，一个 Device 可以由一�
       <td>[[devtype_0086]]0x0086</td>
       <td>ElectricityMeter</td>
       <td>电能表</td>
-      <td>Other</td>
-    </tr>
-    <tr>
-      <td>[[devtype_0087]]0x0087</td>
-      <td>FuelCell</td>
-      <td>燃料电池</td>
-      <td>Other</td>
-    </tr>
-    <tr>
-      <td>[[devtype_0088]]0x0088</td>
-      <td>EngineCogeneration</td>
-      <td>燃气发动机热电联产</td>
-      <td>Other</td>
-    </tr>
-    <tr>
-      <td>[[devtype_0089]]0x0089</td>
-      <td>PowerDistributionBoard</td>
-      <td>配电盘</td>
       <td>Other</td>
     </tr>
   </tbody>
@@ -38945,7 +38885,9 @@ PlayTTS Command 的参数结构体。
 
 #### BatReplacementDescription Trait {#ref_BatReplacementDescription}
 
-该特征应提供面向用户的电池描述。
+该特征必须提供面向用户的电池描述，用于说明更换电池时使用的电池规格。
+
+本 Trait 在 PowerSource Function 中为可选；实现本 Trait 时，必须提供 Present Value 参数，支持读取和上报，不支持写入。Present Value 为最长 32 的字符串，默认值为 `null`，表示尚未提供电池描述；`Unspecified` 是有效的字符串值，与 `null` 不同。
 
 <table>
   <thead>
@@ -38981,22 +38923,71 @@ PlayTTS Command 的参数结构体。
       <td>0x0001</td>
       <td>Present Value</td>
       <td>string32</td>
-      <td></td>
-      <td></td>
+      <td>最长 32；允许 null</td>
+      <td>null</td>
       <td>RV</td>
-      <td>O</td>
+      <td>M</td>
     </tr>
     <tr>
       <td>0x0006</td>
       <td>Supported Value</td>
-      <td>list[characterString]</td>
-      <td></td>
+      <td>list[string32]</td>
+      <td>元素为支持的电池描述字符串，每个字符串最长 32</td>
       <td></td>
       <td>R</td>
       <td>O</td>
     </tr>
   </tbody>
 </table>
+
+##### 支持的字符串值
+
+本 Trait 至少支持以下字符串值。字符串的拼写和大小写必须与下表一致；允许扩展其他电池描述字符串，不将取值限定为封闭枚举。
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Unspecified</td>
+      <td>未指定电池规格</td>
+    </tr>
+    <tr>
+      <td>AA</td>
+      <td>AA 电池</td>
+    </tr>
+    <tr>
+      <td>AAA</td>
+      <td>AAA 电池</td>
+    </tr>
+    <tr>
+      <td>CR2450</td>
+      <td>CR2450 电池</td>
+    </tr>
+    <tr>
+      <td>CR1632</td>
+      <td>CR1632 电池</td>
+    </tr>
+    <tr>
+      <td>CR2032</td>
+      <td>CR2032 电池</td>
+    </tr>
+    <tr>
+      <td>CR123A</td>
+      <td>CR123A 电池</td>
+    </tr>
+    <tr>
+      <td>CR17450</td>
+      <td>CR17450 电池</td>
+    </tr>
+  </tbody>
+</table>
+
+Supported Value 参数提供设备支持的电池描述字符串列表；实现该参数时，列表中包含上述字符串值。
 
 #### BatReplaceability Trait {#ref_BatReplaceability}
 
