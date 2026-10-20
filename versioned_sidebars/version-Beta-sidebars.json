@@ -834,7 +834,7 @@
       "type": "category",
       "label": "Aqara Data Model Specification",
       "items": [
-        "aqara-developer/aqara-data-model-specification/aqara-data-model-specification"
+        "aqara-developer/aqara-data-model-specification/aqara-data-model-tags"
       ]
     }
   ],
