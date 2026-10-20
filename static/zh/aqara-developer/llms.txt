@@ -7,7 +7,6 @@
 - 概览: /zh/docs/aqara-developer/introduction
 - AIOT API 简介: /zh/docs/aqara-developer/aiot-api/introduction
 - 简介: /zh/docs/aqara-developer/data-export-api/introduction
-- 核心概念: /zh/docs/aqara-developer/aqara-data-model-specification/core-concepts
 
 ## 侧边栏收录的全部文档
 - 概览: /zh/docs/aqara-developer/introduction
@@ -102,11 +101,5 @@
 - 通过 Trait 控制设备: /zh/docs/aqara-developer/aiot-api/execute-device-trait
 - 查询 Trait 值: /zh/docs/aqara-developer/aiot-api/get-trait-values
 - 通过 Command 控制设备: /zh/docs/aqara-developer/aiot-api/execute-device-command
-- 核心概念: /zh/docs/aqara-developer/aqara-data-model-specification/core-concepts
-- 设备类型: /zh/docs/aqara-developer/aqara-data-model-specification/device-types
-- 功能代码: /zh/docs/aqara-developer/aqara-data-model-specification/function-codes
-- 功能点代码: /zh/docs/aqara-developer/aqara-data-model-specification/trait-codes
-- 命令代码: /zh/docs/aqara-developer/aqara-data-model-specification/command-codes
-- 数据类型: /zh/docs/aqara-developer/aqara-data-model-specification/data-types
 - Aqara Spec 物模型标签: /zh/docs/aqara-developer/aqara-data-model-specification/aqara-data-model-specification
 

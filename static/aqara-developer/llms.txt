@@ -7,7 +7,6 @@ Resolve site-relative links against this index's origin. Copy llms.txt on the pa
 - Overview: /docs/aqara-developer/introduction
 - Introduction: /docs/aqara-developer/aiot-api/introduction
 - Introduction: /docs/aqara-developer/data-export-api/introduction
-- Core Concepts: /docs/aqara-developer/aqara-data-model-specification/core-concepts
 
 ## All sidebar-listed docs
 - Overview: /docs/aqara-developer/introduction
@@ -102,11 +101,5 @@ Resolve site-relative links against this index's origin. Copy llms.txt on the pa
 - Control Devices by Traits: /docs/aqara-developer/aiot-api/execute-device-trait
 - Query Trait Values: /docs/aqara-developer/aiot-api/get-trait-values
 - Control Devices by Commands: /docs/aqara-developer/aiot-api/execute-device-command
-- Core Concepts: /docs/aqara-developer/aqara-data-model-specification/core-concepts
-- Device Types: /docs/aqara-developer/aqara-data-model-specification/device-types
-- Function Codes: /docs/aqara-developer/aqara-data-model-specification/function-codes
-- Trait Codes: /docs/aqara-developer/aqara-data-model-specification/trait-codes
-- Command Codes: /docs/aqara-developer/aqara-data-model-specification/command-codes
-- Data Types: /docs/aqara-developer/aqara-data-model-specification/data-types
 - Aqara Spec 物模型标签: /docs/aqara-developer/aqara-data-model-specification/aqara-data-model-specification
 
