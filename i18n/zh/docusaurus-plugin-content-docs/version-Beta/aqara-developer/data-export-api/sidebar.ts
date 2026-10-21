@@ -53,7 +53,13 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/get-device-types",
-          label: "查询设备类型列表",
+          label: "查询设备类型（DeviceType）列表",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-device-filter-options",
+          label: "获取设备筛选选项",
           className: "api-method get",
         },
         {
@@ -65,7 +71,7 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/get-device-definitions",
-          label: "查询设备模型定义",
+          label: "查询设备定义（设备详细信息）",
           className: "api-method get",
         },
         {
@@ -267,7 +273,7 @@ const sidebar: SidebarsConfig = {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/update-automation",
           label: "编辑自动化",
-          className: "api-method patch",
+          className: "api-method post",
         },
         {
           type: "doc",
@@ -285,18 +291,6 @@ const sidebar: SidebarsConfig = {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/delete-automations",
           label: "删除自动化",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/query-automation-manual-trigger-list",
-          label: "获取手动触发器列表",
-          className: "api-method get",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/execute-automation-manual-trigger",
-          label: "执行手动触发器",
           className: "api-method post",
         },
       ],
@@ -419,6 +413,23 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
+      label: "Event",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-developer/data-export-api/event",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/report-external-event",
+          label: "上报外部系统事件",
+          className: "api-method post",
+        },
+      ],
+    },
+    {
+      type: "category",
       label: "Alarm",
       link: {
         type: "doc",
@@ -460,6 +471,59 @@ const sidebar: SidebarsConfig = {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/get-alarm-rules",
           label: "查询告警规则列表",
+          className: "api-method get",
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "Scene",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-developer/data-export-api/scene",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/create-scene",
+          label: "创建场景",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/query-scene-list",
+          label: "查询场景列表",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/update-scene",
+          label: "更新场景",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/update-scene-space",
+          label: "关联场景空间",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/execute-scene",
+          label: "执行场景",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/delete-scenes",
+          label: "删除场景",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/query-scene-details",
+          label: "查询场景详情",
           className: "api-method get",
         },
       ],

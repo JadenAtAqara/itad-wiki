@@ -1,0 +1,71 @@
+---
+id: execute-scene
+title: "执行场景"
+description: "执行独立场景。成功表示请求受理，不代表所有动作已完成；超时后不要直接重试有副作用的场景。"
+sidebar_label: "执行场景"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "post api-method"
+info_path: i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-developer/data-export-api/data-export-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"执行场景"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/scenes/execute"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+执行独立场景。成功表示请求受理，不代表所有动作已完成；超时后不要直接重试有副作用的场景。
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["sceneId"],"additionalProperties":false,"properties":{"sceneId":{"type":"string","description":"场景 ID。","pattern":"^auto_[A-Za-z0-9-]+$"}},"title":"ExecuteSceneRequest"}}}}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"成功","content":{"application/json":{"schema":{"allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"type":"string","example":""}}}],"title":"ExecuteSceneResponse"}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"},"example":{"version":"","msgId":"","code":401,"message":"Authentication failed: Token is empty"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"},"example":{"version":"","msgId":"","code":403,"message":"无权访问该资源"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}},"429":{"description":"请求频率过高","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      

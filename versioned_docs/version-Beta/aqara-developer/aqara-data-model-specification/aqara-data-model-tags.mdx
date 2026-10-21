@@ -1,10 +1,10 @@
 ---
-title: "Aqara Spec 物模型标签"
-description: "由 Aqara Data Model Specification 附录 B 自动生成的独立文档。"
-keywords: ["Aqara 文档", "Aqara Developer", "Aqara 数据模型规范", "Aqara Spec", "附录 B"]
+title: "Aqara Data Model Tags"
+description: "Aqara Data Model Tags文档，包含 Function、Trait、Command 及数据类型定义。"
+keywords: ["Aqara Data Model Tags", "Aqara 物模型", "Aqara 数据模型", "物模型标签", "Aqara Developer", "Aqara 文档"]
 ---
 
-# Aqara Spec 物模型标签
+# Aqara Data Model Tags
 
 本附录定义 Aqara Spec 物模型标签体系中的 Function、Trait、Command。这些定义作为业务语义层，其中 Function 和 Trait 与 Aqara 物模型的 Object / Property 形成映射，Command 与 Aqara物模型业务交互协议的 Service 形成映射。
 
@@ -72747,9 +72747,9 @@ Reboot Command 的参数结构体。
     <tr>
       <td>0x0001</td>
       <td>Present Value</td>
-      <td><a href="#ref_ActiveHardwareFaultsEnum32">ActiveHardwareFaultsEnum32</a></td>
+      <td>list[<a href="#ref_ActiveHardwareFaultsEnum32">ActiveHardwareFaultsEnum32</a>]</td>
       <td></td>
-      <td>255</td>
+      <td></td>
       <td>RV</td>
       <td>O</td>
     </tr>
@@ -72760,15 +72760,6 @@ Reboot Command 的参数结构体。
       <td></td>
       <td></td>
       <td>R</td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>0x0007</td>
-      <td>Default Value</td>
-      <td>uint32</td>
-      <td></td>
-      <td>255</td>
-      <td>RW</td>
       <td>O</td>
     </tr>
   </tbody>
@@ -73975,6 +73966,64 @@ UpTime 特征应尽可能准确地指示自节点上次重启以来经过的时�
   </tbody>
 </table>
 
+#### PTZPresetScenarioEnum8 Type {#ref_PTZPresetScenarioEnum8}
+
+该枚举定义 PTZ 预置位的位置语义（PresetScenario）。位置语义用于在不同设备和语言之间识别标准位置，不是预置位 ID，也不表示预置位来源或控制用途。
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x00</td>
+      <td>Unspecified</td>
+      <td>未指定标准位置语义。用于兼容无法确定语义的既有预置位；新创建的用户预置位应使用 Custom。</td>
+    </tr>
+    <tr>
+      <td>0x01</td>
+      <td>Rightmost</td>
+      <td>云台朝向其有效水平行程中最右侧的标准位置。</td>
+    </tr>
+    <tr>
+      <td>0x02</td>
+      <td>Leftmost</td>
+      <td>云台朝向其有效水平行程中最左侧的标准位置。</td>
+    </tr>
+    <tr>
+      <td>0x03</td>
+      <td>Topmost</td>
+      <td>云台朝向其有效垂直行程中最上侧的标准位置。</td>
+    </tr>
+    <tr>
+      <td>0x04</td>
+      <td>Bottommost</td>
+      <td>云台朝向其有效垂直行程中最下侧的标准位置。</td>
+    </tr>
+    <tr>
+      <td>0x05</td>
+      <td>Center</td>
+      <td>Pan 和 Tilt 均处于校准后有效行程中点的标准位置。</td>
+    </tr>
+    <tr>
+      <td>0x06</td>
+      <td>Custom</td>
+      <td>不具有本枚举所定义标准位置语义的预置位。可有多个。</td>
+    </tr>
+    <tr>
+      <td>0x07-0xFF</td>
+      <td>Reserved</td>
+      <td>保留供后续标准扩展。实现不得自行赋予其他含义。</td>
+    </tr>
+  </tbody>
+</table>
+
+Rightmost、Leftmost、Topmost 和 Bottommost 表示摄像机朝向的方向，以设备校准后的正常安装姿态和未镜像、未翻转的视频坐标为参考；不得根据客户端显示镜像改变语义。方向对应的电机正负方向由设备校准结果确定，不得假定所有设备的 Pan/Tilt 正向相同。
+
 #### CurrentPTZPositionStructure Type {#ref_CurrentPTZPositionStructure}
 
 该结构体定义 CurrentPTZPosition Trait 的 Present Value 字段布局。
@@ -74223,6 +74272,20 @@ UpTime 特征应尽可能准确地指示自节点上次重启以来经过的时�
       <td>O</td>
       <td>排序值。</td>
     </tr>
+    <tr>
+      <td>8</td>
+      <td>PresetScenario</td>
+      <td><a href="#ref_PTZPresetScenarioEnum8">PTZPresetScenarioEnum8</a></td>
+      <td>O</td>
+      <td>预置位的位置语义。符合本定义的新实现应提供；字段缺失表示语义未知，不得由 PresetId、Name 或列表顺序推断。</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>BuiltIn</td>
+      <td>boolean</td>
+      <td>O</td>
+      <td>是否为设备提供的内置预置位。符合本定义的新实现应提供；字段缺失表示来源未知，不得按 false 处理。</td>
+    </tr>
   </tbody>
 </table>
 
@@ -74463,6 +74526,13 @@ PTZSavePreset Command 的参数结构体。
       <td>uint32</td>
       <td>O</td>
       <td>排序。</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>PresetScenario</td>
+      <td><a href="#ref_PTZPresetScenarioEnum8">PTZPresetScenarioEnum8</a></td>
+      <td>O</td>
+      <td>新建用户预置位时省略表示 Custom；不允许用本命令创建或修改五个标准位置场景。</td>
     </tr>
   </tbody>
 </table>
@@ -74952,7 +75022,7 @@ PTZRemovePreset Command 的参数结构体。
 
 #### PTZPresets Trait（云台预置位列表） {#ref_PTZPresets}
 
-表示设备已保存的云台预置位列表。每个预置位包含唯一 ID、名称、PTZ 位置及扩展字段（图标、加密密钥、坐标数据、类型、排序）。
+表示设备当前可调用的云台预置位列表，包括设备内置预置位和用户保存的预置位。每项包含唯一 ID、名称、PTZ 位置及可选扩展字段。PresetId 用于标识和调用条目；PresetScenario 表示标准位置语义；BuiltIn 表示条目是否由设备提供。Name 仅供展示，不得用于判断位置语义或预置位来源。
 
 <table>
   <thead>
@@ -74995,6 +75065,29 @@ PTZRemovePreset Command 的参数结构体。
     </tr>
   </tbody>
 </table>
+
+##### 预置位列表实现要求
+
+* 同一 Endpoint 当前列表中的 `PresetId` 必须唯一。ID 在条目存续期间必须稳定；设备重启不得改变仍存在条目的 ID。设备应避免在配置生命周期内重用已删除条目的 ID，以免延迟请求作用于不同预置位。恢复出厂设置或重新配置可能改变列表时，客户端必须重新读取本 Trait。
+* 对采用本定义的新实现，每个列表项必须提供 `PresetScenario` 和 `BuiltIn`。由于这两个结构体字段在编码层面为可选，旧实现或旧数据缺少字段时，消费者必须将其视为未知；不得将缺失的 `BuiltIn` 当作 `false`，也不得依据 ID、Name、数组索引或其他未标准化信息推断方向或来源。
+* 对新实现，五个标准场景 `Rightmost`、`Leftmost`、`Topmost`、`Bottommost` 和 `Center` 在一个 Endpoint 的列表中各至多出现一次。设备只应报告其实际支持、位置可确定且能够执行移动的标准预置位；不支持的标准位置应省略，不得用占位值或不可达位置伪造条目。`Custom` 可用于多个条目；`Unspecified` 仅用于兼容无法确定语义的旧条目，新创建的条目不得使用 `Unspecified`。
+* `PresetScenario` 与 `PresetType` 表示不同信息：前者描述位置语义，后者描述 `Normal`、`Home` 或 `Patrol` 等用途。不得将方向编码到 `PresetType`；也不得仅因某条目的场景为 `Center` 就推断其 `PresetType` 为 `Home`。
+* 标准位置预置位的 `Name` 必须使用规范英文名称：`Rightmost`、`Leftmost`、`Topmost`、`Bottommost` 或 `Center`，与其 `PresetScenario` 一致。客户端应根据 `PresetScenario` 本地化标准位置名称，而不是解析 `Name`。自定义预置位的 `Name` 由用户或设备提供并用于展示；不得将其作为机器可读语义。
+* 对五个标准位置，`Position` 必须包含可调用的完整 Pan/Tilt 位置。水平端点场景的另一轴 Tilt 使用有效垂直行程中点；垂直端点场景的另一轴 Pan 使用有效水平行程中点；`Center` 的 Pan 和 Tilt 均使用对应有效行程中点。行程边界应来自设备校准后的实际可用行程；若 `PTZRange` 未实现，设备仍必须能够可靠确定这些边界，否则不得报告相应标准场景。
+* 对中点计算，设备按 `(minimum + maximum) / 2` 计算；当结果不是可表示的整数角度时，向数值较小的整数角度取整，并确保目标位于有效行程内。方向端点按设备校准后与正常安装姿态下未镜像、未翻转画面方向的对应关系确定，不得假定 Pan/Tilt 的数值正负统一表示左/右或上/下。
+* 对标准位置场景，设备支持 Zoom 且 `1.0` 位于其有效范围内时，应使用 `Zoom=1.0`；否则使用设备支持的最小有效光学变焦倍率。设备不支持光学变焦时可省略 Zoom。客户端镜像、翻转或数字裁剪不得改变标准位置语义。
+* 内置条目必须报告 `BuiltIn=true`；用户创建的条目必须报告 `BuiltIn=false`。无法确定既有条目来源时，旧数据可省略该字段，消费者应将其视为未知并避免提供可能破坏预置位的编辑或删除操作。
+* 内置条目的 `PresetId`、`PresetScenario` 和标准位置语义必须保持稳定。设备校准或可用行程改变导致实际坐标变化时，设备应更新 `Position` 并上报列表；若该场景已无法实现，应移除该条目。客户端不得长期缓存列表并假定条目永远存在。
+* 客户端写入列表时，设备必须校验整个新列表。若存在重复 ID、重复标准场景、无效字段，或对内置条目的创建、删除、伪造、来源变更或语义变更，设备必须拒绝整个写入且不得部分应用。更新内置条目的 `Position` 仅允许设备因校准或硬件状态变化而执行，不允许客户端通过直接写列表修改。
+* 上述新增字段和规则不改变既有 `PTZPresets` Trait 的可选性。只实现旧格式的设备属于既有兼容实现；新实现应提供新增字段。消费者遇到缺失字段或未知枚举值时，应保留可读取的原始数据并使用 `Name` 展示，不得猜测语义。
+
+##### 客户端处理要求
+
+* 客户端应读取设备当前 `PTZPresets` 列表，并按 `PresetId` 标识条目；不得假设某个 ID、数组下标或 `SortOrder` 对应某个标准位置。
+* 当 `PresetScenario` 为五个标准位置之一时，客户端应根据该枚举值显示本地化名称和相应的标准位置图标。`Name` 保留用于辅助展示，不作为判断依据。对于 `Custom`、`Unspecified`、缺失字段或客户端尚不认识的枚举值，客户端应显示设备提供的 `Name`，并避免显示推断出的方向语义。
+* 客户端发起移动、保存或删除时，应使用从当前列表读取的 `PresetId`。不得把 `PresetScenario` 数值当作 `PresetId`，也不得仅凭场景枚举构造列表中不存在的目标。
+* `BuiltIn=true` 条目应显示为设备内置预置位，不提供编辑或删除操作。`BuiltIn` 缺失或不可识别时，客户端应隐藏或禁用编辑和删除操作，直至从设备获取可确认的来源信息。
+* 列表上报或命令成功后，客户端应刷新本地列表及场景索引。若列表违反 ID 唯一性或标准场景唯一性，客户端应将数据视为无效并向用户或诊断系统报告，不得静默选取其中一项。
 
 #### CurrentPTZPosition Trait（当前云台位置） {#ref_CurrentPTZPosition}
 
@@ -75344,29 +75437,58 @@ Zoom：目标光学变焦倍率。1.0 为最宽视野。
 
 #### PTZMoveToPreset Command {#ref_PTZMoveToPreset}
 
-将摄像头 PTZ 机构移动到指定预置位存储的位置。预置 ID 必须已存在于 PTZPresets 列表中。
-PresetID：Uint32，目标预置位的唯一标识符。
+将摄像头 PTZ 机构移动到指定预置位存储的位置。`PresetId` 必须对应设备当前 `PTZPresets` 列表中的条目；该字段是预置位 ID，不是 `PresetScenario` 枚举值。
 
 ##### 参数
 
 [PTZMoveToPreset Command Structure](#ref_PTZMoveToPresetCommandStructure)
 
+##### 接收后行为（Effect on Receipt）
+
+设备接收命令后，应查找当前列表中与 `PresetId` 完全匹配的条目，并移动至该条目的完整 `Position`。
+
+* 若 `PresetId` 不存在，设备应返回"预置位不存在"语义错误，不得移动到其他位置。
+* 若目标位置当前不可达、设备未校准或执行条件不满足，设备应返回相应失败状态，不得报告移动成功。
+* 设备成功接受移动请求不表示已到达目标位置；实际位置仍应通过 `CurrentPTZPosition` 等状态反馈确认。
+
 #### PTZSavePreset Command {#ref_PTZSavePreset}
 
-创建新预设或更新已有预设。若省略 PresetID，则自动分配新 ID；若提供且已存在，则更新该预设；若提供但不存在且未达最大数量，则创建新预设。预设的 Pan/Tilt/Zoom 值优先取自可选 position 字段；否则使用当前 PTZ 位置（CurrentPTZPosition）。同时允许更新名称及扩展字段（图标、加密密钥、坐标数据、类型、排序）。
+创建新的用户预置位或更新已有用户预置位。若省略 `PresetId`，设备自动分配唯一 ID；若提供且存在，则更新对应用户预置位；若提供但不存在，则在未达到设备容量限制时创建该 ID 的用户预置位。新建或更新条目的 `BuiltIn` 必须为 `false`。
+
+新建预置位时，`Position` 优先使用命令提供的值；若省略，则使用设备当前有效的 PTZ 位置。若两者均不可用，设备应拒绝命令，不得以零坐标代替。新建时省略 `Name`，设备应生成非空且可读的名称。更新时，省略的字段保持原值；省略 `PresetScenario` 不得将已有场景重置。新建时省略 `PresetScenario` 表示 `Custom`；若显式提供，该字段必须为 `Custom`。
+
+本命令仅用于创建和更新用户预置位。调用者不得创建 `Rightmost`、`Leftmost`、`Topmost`、`Bottommost` 或 `Center` 标准位置预置位，也不得将用户预置位标记为内置预置位。五个标准位置（如设备支持）由设备按 PTZPresets Trait 定义提供和维护。
 
 ##### 参数
 
 [PTZSavePreset Command Structure](#ref_PTZSavePresetCommandStructure)
 
+##### 接收后行为（Effect on Receipt）
+
+设备应先校验命令及其对预置位列表的影响；校验成功后再一次性更新列表，并上报新的 `PTZPresets` 值。
+
+* 若指定的 `PresetId` 已对应 `BuiltIn=true` 条目，设备应返回"内置预置位不可修改"语义错误，且不得改变该条目或列表中的其他条目。
+* 若 `PresetScenario` 为五个标准位置之一，设备应返回"标准位置由设备维护"语义错误；不得通过本命令添加第二个相同场景或修改标准位置。
+* 若 `PresetScenario` 为未知或保留值、`PresetId` 与其他条目冲突、位置超出有效行程、名称或字段格式非法、或设备容量已满，设备应拒绝整个命令且不得部分应用。
+* 对已有用户预置位的更新，字段省略表示保留原值。设备必须保持 `PresetId` 不变；不得将 `BuiltIn=false` 改为 `true`。
+* 对新建用户预置位，设备应设置 `BuiltIn=false`。若命令省略 `PresetScenario`，设备应设置 `Custom`；若显式提供该字段，设备已按命令校验规则确认其值为 `Custom`。
+* 成功后，设备应返回成功状态并更新、上报列表；失败时应返回失败状态且列表保持不变。具体错误编码使用 Aqara 业务交互协议定义的等价错误，不在本 Function 中另行分配错误码。
+
 #### PTZRemovePreset Command {#ref_PTZRemovePreset}
 
-从 PTZPresets 列表中移除指定预置位。删除后，该预置 ID 不再可用，列表长度减一。
-PresetID：Uint32，目标预置位的唯一标识符。
+从 `PTZPresets` 列表中移除指定用户预置位。`PresetId` 必须对应设备当前列表中的条目。
 
 ##### 参数
 
 [PTZRemovePreset Command Structure](#ref_PTZRemovePresetCommandStructure)
+
+##### 接收后行为（Effect on Receipt）
+
+* 若 `PresetId` 不存在，设备应返回"预置位不存在"语义错误，列表保持不变。
+* 若目标条目的 `BuiltIn=true`，设备应返回"内置预置位不可删除"语义错误，列表保持不变。
+* 若目标条目的来源未知（例如旧列表缺少 `BuiltIn`），设备不得将其当作用户预置位删除；应返回来源未知或不允许删除的失败状态。
+* 若目标为用户预置位，设备应删除该条目并上报更新后的列表。删除成功后，该 ID 不再能用于移动、更新或删除命令；设备应避免在配置生命周期内将该 ID 分配给其他预置位。
+* 设备不得在失败时部分修改列表。具体错误编码使用 Aqara 业务交互协议定义的等价错误，不在本 Function 中另行分配错误码。
 
 ## BridgedConfiguration（桥接配置信息） {#ref_Aqara_Spec_BridgedConfiguration}
 
