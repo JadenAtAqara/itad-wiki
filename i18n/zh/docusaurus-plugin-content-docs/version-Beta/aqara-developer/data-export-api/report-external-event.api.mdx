@@ -1,0 +1,71 @@
+---
+id: report-external-event
+title: "上报外部系统事件"
+description: "接收 Claude/Codex hook、CI 或监控告警等外部事件，并派发给自动化 `event.service_call` 触发块。"
+sidebar_label: "上报外部系统事件"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "post api-method"
+info_path: i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-developer/data-export-api/data-export-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"上报外部系统事件"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/events"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+接收 Claude/Codex hook、CI 或监控告警等外部事件，并派发给自动化 `event.service_call` 触发块。
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["event"],"properties":{"event":{"type":"string","minLength":1,"description":"事件名称，用于匹配自动化触发块"},"source":{"type":"string","nullable":true,"description":"事件来源标识"},"payload":{"nullable":true,"description":"任意 JSON 类型的事件载荷"}},"title":"ExternalEventRequest"},"example":{"event":"ci.build.completed","source":"github-actions","payload":{"repository":"aqara/example","status":"success"}}}}}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"事件已接收并派发","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["version","msgId","code","message"],"properties":{"version":{"type":"string","example":"v1"},"msgId":{"type":"string"},"code":{"type":"integer","example":0},"message":{"type":"string","example":"success"}},"title":"ApiResponseEnvelope"},{"type":"object","required":["data"],"properties":{"data":{"type":"object","required":["accepted","event","seq"],"properties":{"accepted":{"type":"boolean","example":true},"event":{"type":"string","example":"ci.build.completed"},"seq":{"type":"integer","format":"int64","description":"服务端分配的事件序列号"}}}}}],"title":"ExternalEventResponse"}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"},"example":{"version":"","msgId":"","code":401,"message":"Authentication failed: Token is empty"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"},"example":{"version":"","msgId":"","code":403,"message":"无权访问该资源"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      

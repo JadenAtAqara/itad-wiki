@@ -877,218 +877,6 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
 
-  # 按能力筛选查询设备
-  /devices/capabilities/find:
-    get:
-      tags: [Device]
-      summary: 按能力筛选查询设备
-      description: |
-        按空间、设备类型、functionCode、traitCode 等条件筛选设备；查询参数支持逗号分隔或重复传参。
-        不传 pageNum/pageSize 时返回第 1 页最多 100 条；显式分页时 pageSize 默认 50、最大 200。
-        响应 hasMore=true 表示仍有后续数据，调用方应递增 pageNum 继续查询。
-      operationId: findDevicesByCapabilityByQuery
-      x-skill-intent: device.capability.find
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: none
-      parameters:
-      - name: spaceIds
-        in: query
-        required: false
-        description: 空间 ID 列表。
-        schema:
-          type: array
-          items:
-            type: string
-        style: form
-        explode: true
-      - name: needChildren
-        in: query
-        required: false
-        description: 是否查询 `spaceIds` 的子空间内的设备。
-        schema:
-          type: boolean
-          default: false
-      - name: spaceAssociated
-        in: query
-        required: false
-        description: 是否查询 `spaceIds` 指定空间下的设备。
-        schema:
-          type: boolean
-      - name: deviceTypesList
-        in: query
-        required: false
-        description: 设备类型列表。
-        schema:
-          type: array
-          items:
-            type: string
-        style: form
-        explode: true
-      - name: deviceType
-        in: query
-        required: false
-        description: 设备类型。
-        schema:
-          type: string
-      - name: functionCodes
-        in: query
-        required: false
-        description: functionCode （功能代码）列表。
-        schema:
-          type: array
-          items:
-            type: string
-        style: form
-        explode: true
-      - name: functionCode
-        in: query
-        required: false
-        description: functionCode（功能代码）。
-        schema:
-          type: string
-      - name: traitCodes
-        in: query
-        required: false
-        description: traitCode（功能点代码）列表。
-        schema:
-          type: array
-          items:
-            type: string
-        style: form
-        explode: true
-      - name: traitCode
-        in: query
-        required: false
-        description: traitCode（功能点代码）。
-        schema:
-          type: string
-      - name: includeAllSpec
-        in: query
-        required: false
-        description: 是否查询出设备全部的 spec 功能。
-        schema:
-          type: boolean
-          default: false
-      - name: pageNum
-        in: query
-        required: false
-        description: 页码，从 1 开始；与 pageSize 均不传时使用兼容模式返回前 100 条。
-        schema:
-          type: integer
-          minimum: 1
-      - name: pageSize
-        in: query
-        required: false
-        description: 每页数量；显式分页时默认 50，最大 200。
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 200
-      - name: displayTags
-        in: query
-        required: false
-        description: 设备标签列表。
-        schema:
-          type: array
-          items:
-            type: string
-        style: form
-        explode: true
-      - name: displayTagsMatchMode
-        in: query
-        required: false
-        description: "`displayTags` 内多个标签的匹配方式；`or` 表示命中任意一个标签，`and` 表示必须同时命中全部标签"
-        schema:
-          type: string
-          enum:
-          - or
-          - and
-          default: or
-      - name: capabilities
-        in: query
-        required: false
-        schema:
-          type: array
-          items:
-            type: string
-          nullable: true
-          description: 设备级扩展能力代码，例如 sequence、lightbox；多个值使用 AND 语义。
-        style: form
-        explode: true
-      - name: includeCapabilities
-        in: query
-        required: false
-        schema:
-          type: boolean
-          default: false
-          description: 是否在设备定义中返回设备级 capabilities 代码。
-      responses:
-        '200':
-          description: 成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FindDevicesByCapabilityResponse'
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-    post:
-      tags: [Device]
-      summary: 按能力筛选查询设备
-      description: |
-        使用 JSON 请求体按空间、设备类型、functionCode、traitCode 等条件筛选设备。
-        不传 pageNum/pageSize 时返回第 1 页最多 100 条；显式分页时 pageSize 默认 50、最大 200。
-        响应 hasMore=true 表示仍有后续数据。
-      operationId: findDevicesByCapability
-      x-skill-intent: device.capability.find
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: none
-      parameters:
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FindDevicesByCapabilityRequest'
-            example:
-              spaceIds: ["space-livingroom-001"]
-              needChildren: true
-              deviceTypesList: ["light"]
-              functionCodes: ["Output"]
-              traitCodes: ["OnOff"]
-              pageNum: 1
-              pageSize: 50
-      responses:
-        '200':
-          description: 成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FindDevicesByCapabilityResponse'
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
   # ────────────────────────────────────────────────────────────────
   # 控制设备 / 设备更换房间 / 设备改名和更换房间
   # ────────────────────────────────────────────────────────────────
@@ -1986,11 +1774,9 @@ paths:
         description: parentId 只适用于声明了该筛选条件的层级资源。
         schema:
           type: string
-        description: 运行节点 ID 作为子树根；包含全部后代，不是仅直接孩子的 parent 筛选，也不是业务 deviceId。仅用于声明支持的类型。
       - name: protocolId
         in: query
         required: false
-        description: protocolId 只适用于协议资源。
         schema:
           type: string
         description: 协议类型标识，例如 modbus；不是目录 Resource 句柄 protocol:modbus，也不是具体设备 ID。
@@ -3382,8 +3168,9 @@ paths:
             type: boolean
         - name: protocols
           in: query
-          description: 协议类型列表。URL 示例：`protocols=zigbee,matter` 或 `protocols=zigbee&protocols=matter`。
-         required: false
+          description: |
+            协议类型列表。URL 示例：`protocols=zigbee,matter` 或 `protocols=zigbee&protocols=matter`。
+          required: false
           schema:
             type: array
             items:
@@ -3728,106 +3515,104 @@ paths:
             示例：definitionTypes=SCRIPT_JSON,LEGACY_FLOW 或 definitionTypes=SCRIPT_JSON&definitionTypes=LEGACY_FLOW。    
             不传或空值时查询全部类型。
             config 更新资格不按该分类限制。
-        schema:
-          type: array
-          items:
-            type: string
-            enum:
-            - SCRIPT_JSON
-            - SCRIPT_TEXT
-            - WHEN_IF_THEN
-            - LEGACY_FLOW
-            - LEGACY_LINKAGE
-            - OTHER
-        style: form
-        explode: true
-      - in: query
-        name: automationName
-        required: false
-        description: 自动化名称模糊匹配关键字；不传或空值时不做名称过滤。
-        schema:
-          type: string
-        example: 回家亮灯
-      - in: query
-        name: spaceIds
-        required: false
-          description: 是否查询指定空间 ID 列表下的自动化。示例：spaceIds=xx1,xx2 或 spaceIds=xx1&spaceIds=xx2。为空时不按指定空间过滤。
-        schema:
-          type: array
-          items:
-            type: string
-        style: form
-        explode: true
-      - in: query
-        name: needChildren
-        required: false
-          description: 是否查询 spaceIds 指定空间的子空间内的自动化。仅当 spaceIds 参数有值时此参数才生效。
-        schema:
-          type: boolean
-          default: false
-      - in: query
-        name: spaceAssociated
-        required: false
-          description: |
-            是否根据自动化与空间的关联关系进行过滤。
-            - 不传（默认）：不根据空间关联过滤，返回所有自动化。
-            - true：仅返回已关联空间的自动化。
-            - false：仅返回未关联空间的自动化；此时 spaceIds 和 needChildren 参数不生效。
-        schema:
-          type: boolean
-          nullable: true
-      - in: query
-        name: orderBy
-        required: false
-          description: |
-            排序方式。支持如下值：
-            - createTime asc：按创建时间升序；
-            - createTime desc：按创建时间降序。
           schema:
-          type: string
-          default: createTime asc
-          enum:
-          - createTime asc
-          - createTime desc
-        example: createTime asc
-      - in: query
-        name: pageNum
-        description: 页码
-        required: false
-        schema:
-          type: integer
-          default: 1
-      - in: query
-        name: pageSize
-        description: 每页条数
-        required: false
-        schema:
-          type: integer
-          default: 200
-      - in: query
-        name: includeMetadata
-        required: false
-        schema:
-          type: boolean
-          default: false
-        description: 是否回显对象用户 metadata。
-      - in: query
-        name: definitionType
-        required: false
-        description: 同 definitionTypes；支持逗号分隔或重复传参，与 definitionTypes 合并过滤。
-        schema:
-          type: array
-          items:
+            type: array
+            items:
+              type: string
+              enum:
+              - SCRIPT_JSON
+              - SCRIPT_TEXT
+              - WHEN_IF_THEN
+              - LEGACY_FLOW
+              - LEGACY_LINKAGE
+              - OTHER
+        - in: query
+          name: automationName
+          required: false
+          description: 自动化名称模糊匹配关键字；不传或空值时不做名称过滤。
+          schema:
             type: string
+          example: 回家亮灯
+        - in: query
+          name: spaceIds
+          required: false
+          description: 是否查询指定空间 ID 列表下的自动化。示例：spaceIds=xx1,xx2 或 spaceIds=xx1&spaceIds=xx2。为空时不按指定空间过滤。
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - in: query
+          name: needChildren
+          required: false
+          description: 是否查询 spaceIds 指定空间的子空间内的自动化。仅当 spaceIds 参数有值时此参数才生效。
+          schema:
+            type: boolean
+            default: false
+        - in: query
+          name: spaceAssociated
+          required: false
+          description: |
+              是否根据自动化与空间的关联关系进行过滤。
+              - 不传（默认）：不根据空间关联过滤，返回所有自动化。
+              - true：仅返回已关联空间的自动化。
+              - false：仅返回未关联空间的自动化；此时 spaceIds 和 needChildren 参数不生效。
+          schema:
+            type: boolean
+            nullable: true
+        - in: query
+          name: orderBy
+          required: false
+          description: |
+              排序方式。支持如下值：
+              - createTime asc：按创建时间升序；
+              - createTime desc：按创建时间降序。
+          schema:
+            type: string
+            default: createTime asc
             enum:
-            - SCRIPT_JSON
-            - SCRIPT_TEXT
-            - WHEN_IF_THEN
-            - LEGACY_FLOW
-            - LEGACY_LINKAGE
-            - OTHER
-        style: form
-        explode: true
+            - createTime asc
+            - createTime desc
+          example: createTime asc
+        - in: query
+          name: pageNum
+          description: 页码
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: pageSize
+          description: 每页条数
+          required: false
+          schema:
+            type: integer
+            default: 200
+        - in: query
+          name: includeMetadata
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: 是否回显对象用户 metadata。
+        - in: query
+          name: definitionType
+          required: false
+          description: 同 definitionTypes；支持逗号分隔或重复传参，与 definitionTypes 合并过滤。
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+              - SCRIPT_JSON
+              - SCRIPT_TEXT
+              - WHEN_IF_THEN
+              - LEGACY_FLOW
+              - LEGACY_LINKAGE
+              - OTHER
+          style: form
+          explode: true
       responses:
         '200':
           description: 请求发起成功
@@ -4774,22 +4559,22 @@ paths:
             页码。
             分页请求时，必须保证其他参数与首次请求一致。
           required: false
-        schema:
-          type: integer
-        example: 1
-      - name: pageSize
-        in: query
-        description: 每页数量。默认为 200。
-        required: false
-        schema:
-          type: integer
-        example: 200
-      - name: alarmClass
-        in: query
-        required: false
-        schema:
-          type: string
-          description: 可选告警分类名称；空白不参与过滤。
+          schema:
+            type: integer
+          example: 1
+        - name: pageSize
+          in: query
+          description: 每页数量。默认为 200。
+          required: false
+          schema:
+            type: integer
+          example: 200
+        - name: alarmClass
+          in: query
+          required: false
+          schema:
+            type: string
+            description: 可选告警分类名称；空白不参与过滤。
       responses:
         '200':
           description: 成功
@@ -5135,6 +4920,328 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
 
+
+  /scenes:
+    post:
+      tags: [Scene]
+      summary: 创建场景
+      operationId: createScene
+      x-skill-intent: scene.create
+      x-idempotent: false
+      x-retryable: conditional
+      x-side-effects: scene_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSceneRequest'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSceneResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+      description: 场景为 actions 与可选 metadata，没有 starters、条件或 enabled。更新目标 ID 在 body 中；执行成功表示受理。批量操作检查每项结果。
+    get:
+      tags: [Scene]
+      summary: 查询场景列表
+      operationId: querySceneList
+      x-skill-intent: scene.list
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+      - in: query
+        name: sceneName
+        required: false
+        description: 场景名称模糊过滤。
+        schema:
+          type: string
+        example: 回家亮灯
+      - in: query
+        name: spaceIds
+        required: false
+        description: 空间 ID 列表。URL 示例：spaceIds=xx1,xx2 或 spaceIds=xx1&spaceIds=xx2。为空时不按指定空间过滤
+        schema:
+          type: array
+          items:
+            type: string
+        style: form
+        explode: true
+      - in: query
+        name: needChildren
+        required: false
+        description: 是否需要查询子孙空间的场景，只有传入 spaceIds 条件时才生效
+        schema:
+          type: boolean
+          default: false
+      - in: query
+        name: spaceAssociated
+        required: false
+        description: 缺省时不做空间关联过滤。true 查询已关联空间的场景，false 查询未关联空间的场景；当 spaceAssociated=false 时，spaceIds 和 needChildren 参数不生效
+        schema:
+          type: boolean
+          nullable: true
+      - in: query
+        name: orderBy
+        required: false
+        description: 排序方式
+        schema:
+          type: string
+          default: createTime asc
+          enum:
+          - createTime asc
+          - createTime desc
+        example: createTime asc
+      - in: query
+        name: pageNum
+        required: false
+        description: 页码。
+        schema:
+          type: integer
+          default: 1
+      - in: query
+        name: pageSize
+        required: false
+        description: 每页数量。
+        schema:
+          type: integer
+          default: 200
+      - in: query
+        name: includeMetadata
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: 是否回显对象用户 metadata。
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SceneListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+      description: 场景为 actions 与可选 metadata，没有 starters、条件或 enabled。更新目标 ID 在 body 中；执行成功表示受理。批量操作检查每项结果。
+
+  /scenes/update:
+    post:
+      tags: [Scene]
+      summary: 更新场景
+      operationId: updateScene
+      x-skill-intent: scene.update
+      x-idempotent: false
+      x-retryable: conditional
+      x-side-effects: scene_update
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSceneRequest'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateSceneResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+      description: 场景为 actions 与可选 metadata，没有 starters、条件或 enabled。更新目标 ID 在 body 中；执行成功表示受理。批量操作检查每项结果。
+
+  /scenes/space:
+    post:
+      tags: [Scene]
+      summary: 关联场景空间
+      operationId: updateSceneSpace
+      x-skill-intent: scene.space.update
+      x-idempotent: false
+      x-retryable: conditional
+      x-side-effects: scene_space_update
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSceneSpaceRequest'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateSceneSpaceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+      description: 场景为 actions 与可选 metadata，没有 starters、条件或 enabled。更新目标 ID 在 body 中；执行成功表示受理。批量操作检查每项结果。
+
+  /scenes/execute:
+    post:
+      tags: [Scene]
+      summary: 执行场景
+      operationId: executeScene
+      x-skill-intent: scene.execute
+      x-idempotent: false
+      x-retryable: false
+      x-side-effects: scene_execute
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExecuteSceneRequest'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecuteSceneResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+      description: 执行独立场景。成功表示请求受理，不代表所有动作已完成；超时后不要直接重试有副作用的场景。
+
+  /scenes/delete:
+    post:
+      tags: [Scene]
+      summary: 删除场景
+      operationId: deleteScenes
+      x-skill-intent: scene.delete
+      x-idempotent: false
+      x-retryable: conditional
+      x-side-effects: scene_delete
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteScenesRequest'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteSceneResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+      description: 场景为 actions 与可选 metadata，没有 starters、条件或 enabled。更新目标 ID 在 body 中；执行成功表示受理。批量操作检查每项结果。
+
+  /scenes/{sceneId}:
+    get:
+      tags: [Scene]
+      summary: 查询场景详情
+      operationId: querySceneDetails
+      x-skill-intent: scene.get
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters:
+      - in: query
+        name: includeMetadata
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: 是否回显对象用户 metadata。
+      - in: path
+        name: sceneId
+        required: true
+        description: 场景 ID。
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SceneDetailsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+      description: 场景为 actions 与可选 metadata，没有 starters、条件或 enabled。更新目标 ID 在 body 中；执行成功表示受理。批量操作检查每项结果。
+
 # ══════════════════════════════════════════════════════════════════
 # Components
 # ══════════════════════════════════════════════════════════════════
@@ -5147,36 +5254,28 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-            example:
-              type: ErrorMessage
-              version: v1
-              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000001"
-              code: 400
-              message: "参数 xxx 不能为空"
     UnauthorizedResponse:
       description: 未认证或认证失效
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-            example:
-              type: ErrorMessage
-              version: v1
-              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000002"
-              code: 401
-              message: "token 已过期，请重新生成 token"
+          example:
+            version: ''
+            msgId: ''
+            code: 401
+            message: 'Authentication failed: Token is empty'
     ForbiddenResponse:
       description: 无权限访问
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-            example: 
-              type: ErrorMessage
-              version: v1
-              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000003"
-              code: 403
-              message: "无权限访问该资源"
+          example:
+            version: ''
+            msgId: ''
+            code: 403
+            message: 无权访问该资源
     ConflictResponse:
       description: 当前资源状态与请求冲突
       content:
@@ -5195,60 +5294,30 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-            example:
-              type: ErrorMessage
-              version: v1
-              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000004"
-              code: 404
-              message: "资源不存在"
     TooManyRequestsResponse:
       description: 请求频率过高
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-            example:
-              type: ErrorMessage
-              version: v1
-              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000005"
-              code: 429
-              message: "请求频率过高"
-    InternalServerErrorResponse:
-      description: 服务内部错误
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-            example:
-              type: ErrorMessage
-              version: v1
-              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000006"
-              code: 500
-              message: "服务内部异常"
-    BadGatewayResponse:
-      description: Edge 或 Cloud 命令调用失败
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-            example:
-              type: ErrorMessage
-              version: v1
-              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000007"
-              code: 502
-              message: "Edge or Cloud command call failed"
     ServiceUnavailableResponse:
       description: 服务不可用；通常表示当前为 Edge 端，或 Cloud 端 cloudlinkcloud 服务未加载
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-            example:
-              type: ErrorMessage
-              version: v1
-              msgId: "a1b2c3d4-e5f6-7890-abcd-err000000007"
-              code: 503
-              message: "服务暂时不可用"
+    BadGatewayResponse:
+      description: Edge 或 Cloud 命令调用失败
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerErrorResponse:
+      description: 服务内部错误
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
 
   securitySchemes:
     BearerAuth:
@@ -5269,15 +5338,63 @@ components:
       name: id
       in: path
       required: true
-      description: 全局唯一资源 ID；普通资源和协议资源均使用接口返回的 id 原样传入
+      description: 接口返回的完整 Resource 操作句柄；协议实例通常使用运行节点 ID，目录、服务及备份各有独立句柄。不得直接填业务 deviceId，不自行拼接或解析前缀。
       schema:
         type: string
+
+  examples:
+    LoginSuccess:
+      summary: 登录成功返回示例
+      value:
+        type: LoginResponse
+        version: v1
+        msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecf6"
+        code: 0
+        message: success
+        data:
+          user:
+            userId: "u1001"
+            nickName: demo-user
+            email: demo@example.com
+          accessToken: "eyJhbGciOi..."
+          refreshToken: "eyJhbGciOi..."
+          expiresIn: 86400
+          clientId: "client-push-id-001"
+          hostId: "studio-a1b2c3d4e5f6"
+    LoginInvalidCredentials:
+      summary: 账号未注册或密码错误
+      value:
+        type: LoginResponse
+        version: v1
+        msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecf7"
+        code: 810
+        message: Account or password is incorrect
+        data: null
+    LoginInvalidTicket:
+      summary: 登录凭证无效或已过期
+      value:
+        type: LoginResponse
+        version: v1
+        msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecf8"
+        code: 811
+        message: Invalid or expired ticket
+        data: null
+    LoginUserNotAllowed:
+      summary: 用户已禁用、锁定或过期
+      value:
+        type: LoginResponse
+        version: v1
+        msgId: "2df2f431-a58d-4fdb-b39c-4f0d29e7ecf9"
+        code: 812
+        message: The user is disabled, locked, or expired.
+        data: null
 
   schemas:
 
     # ── 基础请求 / 响应 ──────────────────────────────────────────
     BaseResponse:
       type: object
+      x-business-success-condition: code == 0
       required: [type, version, msgId, code]
       properties:
         type:
@@ -5292,15 +5409,10 @@ components:
           description: 消息 ID
         code:
           type: integer
-          description: "业务状态码，0 表示成功"
+          description: "业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"
         message:
           type: string
           description: 提示信息
-
-    ErrorResponse:
-      description: 错误响应，错误信息通过 code 与 message 提供
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
 
     # ── 通用 ANode 资源 ──────────────────────────────────────────
     ResourceUpdateRequest:
@@ -5311,8 +5423,8 @@ components:
           type: object
           minProperties: 1
           additionalProperties: true
-          description: 待修改的白名单字段，使用普通 JSON 标量
-
+          description: 待修改的白名单字段，使用普通 JSON 值；sequence 的 data 为对象，deviceIds 为数组。仅写运行时 schema 中 writable=true 的字段。
+      additionalProperties: false
     ResourceActionRequest:
       type: object
       required: [id]
@@ -5321,22 +5433,22 @@ components:
         id:
           type: string
           minLength: 1
-          description: 服务端返回的不透明资源 ID
+          description: 目标 Resource 的完整句柄；create/discover 使用相应目录或服务 ID，其他命令按 commandTargets 使用具体资源或任务 ID。不是设备 API 的业务 deviceId。
         input:
           type: object
           additionalProperties: true
           default: {}
-          description: 命令输入参数；具体字段以资源类型定义返回的命令 Schema 为准
+          description: "命令输入参数；具体字段以资源类型定义返回的命令 Schema 为准；import 的 ownerId 必须匹配服务端任务上下文，旧任务缺少上下文时重新发现。"
 
     ResourceOpenApiResponse:
       allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              nullable: true
-              description: 命令的同步结果或后台任务信息，结构以资源类型定义中的命令输出 Schema 为准
-
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          data:
+            nullable: true
+            description: 命令同步结果或 job 资源。create 的资源 ID 为 data.id；discover/backup create/restore 返回 job 的 data.id；发现导入逐项返回
+              data.results[].created.instanceId，不是 data.items[].id。
     ResourceHealth:
       type: object
       required: [status]
@@ -5352,28 +5464,25 @@ components:
 
     ResourceItem:
       type: object
-      description: |
-        sequence 资源在列表和详情中将可解析的历史效果转换为 properties.data.type=commands。
-        无法解析时保留 ID、名称、revision、绑定及原始 format，返回
-        properties.data={"type":"unavailable","reason":"Effect data cannot be represented as commands"}，
-        不返回步骤 commands 或原始协议字节，不修改存储。unavailable 资源禁止属性更新、assign 和 retry。
-        用户配置仍可解绑，无绑定时可删除；仅绑定为 SYNCED 且 syncedRevision=revision 时可启动。
-        资源顶层 commands 是允许的操作名称，与 properties.data.commands 效果步骤不同。
-        create/preview 只接受 commands 数据，不接受 unavailable。
-        sequence 的 assign 输入仅接受 deviceId，始终分配最新版本；传入 revision（包括 null）会被拒绝。
+      description: "通用资源条目。协议目录/实例返回顶层 protocolId；设备和点按业务可见性及授权返回 deviceId；点按当前设备定义返回完整 controlReference 或明确 unavailable。身份字段只读，不属于 properties。\n\nsequence 资源在列表和详情中将可解析的历史效果转换为 properties.data.type=commands。\n无法解析时保留 ID、名称、revision、绑定及原始 format，返回\nproperties.data={\"type\":\"unavailable\",\"reason\":\"Effect data cannot be represented as commands\"}，\n不返回步骤 commands 或原始协议字节，不修改存储。unavailable 资源禁止属性更新、assign 和 retry。\n用户配置仍可解绑，无绑定时可删除；仅绑定为 SYNCED 且 syncedRevision=revision 时可启动。\n资源顶层 commands 是允许的操作名称，与 properties.data.commands 效果步骤不同。\ncreate/preview 只接受 commands 数据，不接受 unavailable。\nsequence 的 create 输入需包含 deviceId，与 name、data 一并提交；icon 可选。\nsequence 的 assign 输入仅接受 deviceId，始终分配最新版本；传入 revision（包括 null）会被拒绝。\nproperties.actionType 为只读整数，对应 LightingEffect ActionType：0 静态、1 动态、2 序列、3 分段静态、4 分段动态。\nproperties.labelTypeName 为只读字符串。内置情景（source=SYSTEM_PRESET）返回按请求头 Lang 本地化后的分类文案\n（如中文「日常」、英文 Daily）；词典未命中时回退为 InnerScene.labelType.* 键。用户自定义情景该字段为空字符串。\n带 deviceId 查询时，已属于当前设备的条目含 properties.assignment；待分配条目无该字段。"
       required: [id, type, properties]
       properties:
         id:
           type: string
+          description: 当前 Resource 的完整操作句柄；protocol.network/device/point 使用运行节点身份，不等于业务 deviceId。
         type:
           type: string
-        protocolId:
-          type: string
-          description: 协议资源返回；普通 ANode 资源不返回
         properties:
           type: object
           additionalProperties: true
-          description: 对外属性值集合；值使用普通 JSON 标量或业务对象，不返回 Studio 内部 path/type/value 包装，也不包含动态 Schema 标记为 writeOnly 的敏感配置
+          description: |
+            对外属性值集合；值使用普通 JSON 标量或业务对象，不返回 Studio 内部 path/type/value 包装，也不包含动态 Schema 标记为 writeOnly 的敏感配置。
+            sequence 常见字段：name、format、actionType、data、icon、labelTypeName、source、revision、assignment。
+        commands:
+          type: array
+          items:
+            type: string
+          description: "当前实例可执行的命令名称；执行前回读，服务端仍会重新校验。 sequence 条目可能包含 assign、unassign、start、retry、delete；以当前实例返回值为准。"
         schema:
           type: object
           additionalProperties: true
@@ -5381,6 +5490,71 @@ components:
         health:
           $ref: '#/components/schemas/ResourceHealth'
 
+        unavailableCommands:
+          type: array
+          description: 协议实例当前不可用命令及原因。
+          items:
+            type: object
+            required:
+            - name
+            - reason
+            properties:
+              name:
+                type: string
+              reason:
+                type: string
+                enum:
+                - NOT_ACCESSIBLE
+                - NO_PARENT
+                - NOT_DYNAMIC
+                - DETACHED
+                - NOT_PERMITTED
+                - STATE_REJECTED
+        protocolId:
+          type: string
+          readOnly: true
+          description: 协议归属，protocol / protocol.network / protocol.device / protocol.point 列表、读取、创建、更新均返回；发现任务与候选也返回。不是目录句柄或业务设备
+            ID。
+          example: modbus
+        deviceId:
+          type: string
+          readOnly: true
+          description: 关联的业务设备 ID，仅对已关联、可见且通过设备授权的协议设备/点返回。与运行 id 分开，不用于 parentId/ownerId。
+        controlReferenceStatus:
+          type: string
+          readOnly: true
+          enum:
+          - available
+          - unavailable
+          description: 协议点的业务控制引用是否可用。unavailable 时省略 controlReference，不返回半套引用。
+        controlReference:
+          $ref: '#/components/schemas/ResourceControlReference'
+        projectionStatus:
+          type: string
+          enum:
+          - unavailable
+          readOnly: true
+          description: 创建已成功，但详情回读失败；code=0 且保留 id/protocolId。回读原 id，不能重复创建。
+        jobId:
+          type: string
+          readOnly: true
+          description: 发现候选所属任务 ID；不是 owner 或运行实例 ID。
+        ownerId:
+          type: string
+          readOnly: true
+          description: "发现任务的网络/设备运行 owner ID；新 Resource 发现任务在同一任务生命周期内保留。旧任务可能缺失。 缺少完整上下文时不可导入，需重新发现。"
+        ownerKind:
+          type: string
+          readOnly: true
+          enum:
+          - network
+          - device
+        targetKind:
+          type: string
+          readOnly: true
+          enum:
+          - device
+          - point
     ResourceTypeSummary:
       type: object
       required: [type, operations, commands]
@@ -5457,6 +5631,13 @@ components:
                 hasMore:
                   type: boolean
                   description: 是否还有下一页。
+                deviceId:
+                  type: string
+                  description: sequence 带 deviceId 查询时回显目标设备 ID
+                spec:
+                  type: object
+                  additionalProperties: true
+                  description: sequence 带 deviceId 查询时返回该设备能力 spec，调用方据此生成 data.commands
 
     ResourceResponse:
       allOf:
@@ -5466,6 +5647,99 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/ResourceItem'
+
+    ApiResponseEnvelope:
+      type: object
+      required: [version, msgId, code, message]
+      properties:
+        version: { type: string, example: v1 }
+        msgId: { type: string }
+        code: { type: integer, example: 0 }
+        message: { type: string, example: success }
+
+    ExternalEventRequest:
+      type: object
+      required: [event]
+      properties:
+        event: { type: string, minLength: 1, description: 事件名称，用于匹配自动化触发块 }
+        source: { type: string, nullable: true, description: 事件来源标识 }
+        payload: { nullable: true, description: 任意 JSON 类型的事件载荷 }
+
+    ExternalEventResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiResponseEnvelope'
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: object
+              required: [accepted, event, seq]
+              properties:
+                accepted: { type: boolean, example: true }
+                event: { type: string, example: ci.build.completed }
+                seq: { type: integer, format: int64, description: 服务端分配的事件序列号 }
+
+    ErrorResponse:
+      description: 错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。
+      allOf:
+      - $ref: '#/components/schemas/ResponseEnvelope'
+      example:
+        type: ErrorMessage
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-err000000001"
+        code: 400
+        message: "参数 deviceId 不能为空"
+
+    # ── Auth ─────────────────────────────────────────────────────
+
+    StudioStatisticsDimension:
+      type: string
+      description: Studio 统计维度
+      enum: [deviceCount, linkageCount, spaceCount, sceneCount]
+
+    StudioStatisticsData:
+      type: object
+      description: Studio 统计信息；仅返回 dimensions 请求的统计字段
+      properties:
+        deviceCount:
+          type: integer
+          description: 设备数量
+          example: 128
+        linkageCount:
+          type: integer
+          description: 旧口径自动化节点数量，包含独立场景；不等于 /automations 列表数量。
+          example: 24
+        spaceCount:
+          type: integer
+          description: 空间数量
+          example: 16
+        sceneCount:
+          type: integer
+          description: 旧统计口径，不能替代独立场景 /scenes 列表的 totalCount。
+          example: 12
+
+    StudioStatisticsResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/StudioStatisticsData'
+            type:
+              type: string
+              enum:
+              - StudioStatisticsResponse
+      example:
+        type: StudioStatisticsResponse
+        version: v1
+        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000021"
+        code: 0
+        message: success
+        data:
+          deviceCount: 128
+          linkageCount: 24
+          spaceCount: 16
+          sceneCount: 12
 
     # ── Space ────────────────────────────────────────────────────
     SpaceNode:
@@ -5478,7 +5752,7 @@ components:
         parentSpaceId:
           type: string
           nullable: true
-          description: 父空间 ID。
+          description: 父空间 ID；没有父空间时省略此字段。
         name:
           type: string
           description: 空间名称。
@@ -5500,14 +5774,19 @@ components:
         parentSpaceId:
           type: string
           nullable: true
-          description: 父空间 ID。为空时创建顶级空间。
+          description: 父空间 ID；为空时创建顶级空间。
         name:
           type: string
           minLength: 1
-          description: 空间名称，不能为空字符串。
+          description: 空间名称，不能为空字符串
+        spatialMarking:
+          type: string
+          nullable: true
+          description: 空间语义标记；省略时由现有空间服务处理。
       example:
         parentSpaceId: "space-home-001"
         name: "客厅"
+        spatialMarking: room
 
     CreateSpaceResponse:
       allOf:
@@ -5517,6 +5796,10 @@ components:
             data:
               type: string
               description: 新创建的空间 ID。
+            type:
+              type: string
+              enum:
+              - CreateSpaceResponse
       example:
         type: CreateSpaceResponse
         version: v1
@@ -5547,6 +5830,10 @@ components:
             data:
               type: string
               description: 固定为空字符串。
+            type:
+              type: string
+              enum:
+              - UpdateSpaceNameResponse
       example:
         type: UpdateSpaceNameResponse
         version: v1
@@ -5572,21 +5859,24 @@ components:
 
     DeleteSpaceResponse:
       allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              type: string
-              description: 删除成功后返回空字符串。
-              example: ""
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          data:
+            type: string
+            description: 删除成功后返回空字符串。
+            example: ''
+          type:
+            type: string
+            enum:
+            - DeleteSpaceResponse
       example:
         type: DeleteSpaceResponse
         version: v1
-        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000027"
+        msgId: a1b2c3d4-e5f6-7890-abcd-000000000027
         code: 0
         message: success
-        data: ""
-
+        data: ''
     SpacesResponse:
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
@@ -5596,23 +5886,26 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/SpaceNode'
+            type:
+              type: string
+              enum:
+              - GetSpacesResponse
       example:
         type: GetSpacesResponse
         version: v1
-        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000005"
+        msgId: a1b2c3d4-e5f6-7890-abcd-000000000005
         code: 0
         message: success
         data:
-          - spaceId: "space-home-001"
-            parentSpaceId: null
-            name: "我的家"
-            spatialMarking: "home"
-            children:
-              - spaceId: "space-floor1-001"
-                parentSpaceId: "space-home-001"
-                name: "一楼"
-                spatialMarking: "floor"
-                children: []
+        - spaceId: space-home-001
+          name: 我的家
+          spatialMarking: home
+          children:
+          - spaceId: space-floor1-001
+            parentSpaceId: space-home-001
+            name: 一楼
+            spatialMarking: floor
+            children: []
 
     # ── Device ───────────────────────────────────────────────────
     DeviceType:
@@ -5630,13 +5923,22 @@ components:
       type: object
       required: [deviceId, deviceName, deviceTypesList, createTime, state]
       properties:
+        protocolId:
+          type: string
+          description: 所属协议实例 ID，与 /devices/filter-options 的 protocols[].id 对应；未挂载实例时省略。用于关联实例，不是协议类型代码。
+        networkProtocolMask:
+          type: integer
+          format: int64
+          minimum: 1
+          maximum: 4294967295
+          description: 所属协议实例类型的完整配置分类掩码，与筛选选项及查询参数沿用相同位定义，不是设备实时 NetworkProtocolSupport Trait 值。无所属实例、未配置掩码或仅补充响应时配置无效，均省略该字段；不以 0 表示未知，也不裁剪为查询命中的位。
         deviceId:
           type: string
-          description: 设备 ID
+          description: 业务设备 DID / 唯一标识，来自设备 API 的 deviceId；不是协议 Resource 的 id、parentId 或点工具的 instanceId。
         gatewayId:
           type: string
           nullable: true
-          description: 所属网关 ID
+          description: 所属网关 ID。
         deviceName:
           type: string
           description: 设备名称
@@ -5657,25 +5959,32 @@ components:
 
     DeviceSpace:
       type: object
-      required: [parentSpaceId, spaceId, name]
+      required:
+      - spaceId
+      - name
       properties:
         parentSpaceId:
           type: string
-          description: 父空间 ID
+          nullable: true
+          description: 父空间 ID；没有父空间时省略此字段。
         spaceId:
           type: string
-          description: 空间 ID
+          description: 空间 ID。
         name:
           type: string
-          description: 空间名称
+          description: 空间名称。
 
     DeviceDefinition:
       type: object
-      required: [deviceId, name, deviceTypesList, endpoints]
+      required:
+      - deviceId
+      - name
+      - deviceTypesList
+      - endpoints
       properties:
         deviceId:
           type: string
-          description: 设备 ID
+          description: 业务设备 DID / 唯一标识，来自设备 API 的 deviceId；不是协议 Resource 的 id、parentId 或点工具的 instanceId。
         gatewayId:
           type: string
           nullable: true
@@ -5693,10 +6002,20 @@ components:
           description: 设备类型列表
         endpoints:
           type: array
-          description: 端点列表
+          description: 设备端点列表。
           items:
             $ref: '#/components/schemas/Endpoint'
-
+        capabilities:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: 仅 includeCapabilities=true 时返回。
+        metadata:
+          type: object
+          nullable: true
+          additionalProperties: true
+          description: 仅 includeMetadata=true 时返回的用户 metadata。
     DeviceDefinitionsResponse:
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
@@ -5706,6 +6025,10 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/DeviceDefinition'
+            type:
+              type: string
+              enum:
+              - GetDevicesResponse
       example:
         type: GetDevicesResponse
         version: v1
@@ -5802,6 +6125,10 @@ components:
             data:
               $ref: '#/components/schemas/DeviceDefinition'
               nullable: true
+            type:
+              type: string
+              enum:
+              - GetMatchedDeviceCapabilitiesResponse
       example:
         type: GetMatchedDeviceCapabilitiesResponse
         version: v1
@@ -5870,6 +6197,10 @@ components:
               type: string
               description: 删除成功后返回空字符串。
               example: ""
+            type:
+              type: string
+              enum:
+              - DeleteDeviceObjectResponse
       example:
         type: DeleteDeviceObjectResponse
         version: v1
@@ -5947,6 +6278,10 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/QueryDevicePointInfoResult'
+            type:
+              type: string
+              enum:
+              - QueryDevicePointInfoResponse
       example:
         type: QueryDevicePointInfoResponse
         version: v1
@@ -5991,6 +6326,10 @@ components:
               type: string
               description: 修改成功后返回空字符串
               example: ""
+            type:
+              type: string
+              enum:
+              - UpdateDeviceNameResponse
       example:
         type: UpdateDeviceNameResponse
         version: v1
@@ -6034,21 +6373,24 @@ components:
 
     UpdateDevicePointNameResponse:
       allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              type: string
-              description: 修改成功后返回空字符串
-              example: ""
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          data:
+            type: string
+            description: 修改成功后返回空字符串
+            example: ''
+          type:
+            type: string
+            enum:
+            - UpdateDevicePointNameResponse
       example:
         type: UpdateDevicePointNameResponse
         version: v1
-        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000002b"
+        msgId: a1b2c3d4-e5f6-7890-abcd-00000000002b
         code: 0
         message: success
-        data:
-
+        data: ''
     VirtualDeviceAddRequest:
       type: object
       required: [name, virtualDeviceType]
@@ -6076,6 +6418,10 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/VirtualDeviceAddData'
+            type:
+              type: string
+              enum:
+              - VirtualDeviceAddResponse
       example:
         type: VirtualDeviceAddResponse
         version: v1
@@ -6083,7 +6429,7 @@ components:
         code: 0
         message: success
         data:
-          deviceId: "virtual.device-001"
+          deviceId: "virtual-device-001"
 
     VirtualDeviceSourcePoint:
       type: object
@@ -6095,7 +6441,7 @@ components:
         endpointId:
           type: integer
           format: int32
-          description: 端点 ID，必须大于等于 0。
+          description: 端点 ID，必须大于等于0。
         functionCode:
           type: string
           description: 功能编码。
@@ -6115,7 +6461,7 @@ components:
       properties:
         deviceId:
           type: string
-          description: 虚拟自定义设备ID。
+          description: 虚拟自定义设备 ID。
         sourcePoints:
           type: array
           minItems: 1
@@ -6139,6 +6485,10 @@ components:
               type: string
               description: 绑定成功后返回空字符串
               example: ""
+            type:
+              type: string
+              enum:
+              - VirtualDeviceBindPointsResponse
       example:
         type: VirtualDeviceBindPointsResponse
         version: v1
@@ -6156,6 +6506,10 @@ components:
               type: string
               description: 解绑成功后返回空字符串
               example: ""
+            type:
+              type: string
+              enum:
+              - VirtualDeviceUnbindPointsResponse
       example:
         type: VirtualDeviceUnbindPointsResponse
         version: v1
@@ -6174,6 +6528,10 @@ components:
               nullable: true
               description: 解绑成功后返回 null 或空字符串
               example: ""
+            type:
+              type: string
+              enum:
+              - DeviceUnbindResponse
       example:
         type: DeviceUnbindResponse
         version: v1
@@ -6188,8 +6546,7 @@ components:
       properties:
         deviceId:
           type: string
-          description: 解绑目标的设备 ID。
-
+          description: 业务设备 DID / 唯一标识，来自设备 API 的 deviceId；不是协议 Resource 的 id、parentId 或点工具的 instanceId。
     Endpoint:
       type: object
       required: [endpointId, endpointName, deviceType, functions]
@@ -6205,7 +6562,7 @@ components:
           description: 设备类型
         functions:
           type: array
-          description: 功能列表
+          description: 功能列表。
           items:
             $ref: '#/components/schemas/DeviceFunction'
 
@@ -6229,36 +6586,40 @@ components:
 
     FlexibleValue:
       oneOf:
-        - type: boolean
-        - type: integer
-        - type: number
-          format: double
-        - type: string
-      description: |
-        动态值，具体类型取决于 trait/command 定义。
+      - type: boolean
+      - type: number
+        format: double
+      - type: string
+      description: '动态值，具体类型取决于 trait/command 定义。
+
         推荐值类型来源规则：
+
         1) trait 场景优先读取同级 parameter.type；
+
         2) command 场景优先读取对应 field 的 parameter.type；
+
         3) 当 parameter.type=Enum 时，值类型是string；
+
         4) 若缺少 parameter 或类型未识别，按 string 兜底并保留原始值。
 
+        '
     Trait:
       type: object
       required: [traitCode, parameter]
       properties:
         traitCode:
           type: string
-          description: 功能点代码（如 CurrentLevel, ColorTemperature, OnOff）
+          description: 功能点编码（如 CurrentLevel, ColorTemperature, OnOff）
         parameter:
           $ref: '#/components/schemas/TraitParameter'
-          description: 功能点属性
+          description: 功能点参数。
         value:
           $ref: '#/components/schemas/FlexibleValue'
-          description: 当前值。类型与 parameter.type 的值保持一致。
+          description: 当前值（推荐按 parameter.type 解析）。
         time:
           type: integer
           format: int64
-          description: 值更新时间（毫秒级 UTC 时间戳）
+          description: 值更新时间（毫秒级 UTC 时间戳）。
 
     Command:
       type: object
@@ -6378,15 +6739,15 @@ components:
           properties:
             readable:
               type: boolean
-              description: 是否可读
+              description: 是否可读。
               default: true
             writable:
               type: boolean
-              description: 是否可写
+              description: 是否可写。
               default: true
             subscribable:
               type: boolean
-              description: 是否可订阅
+              description: 是否可订阅。
               default: true
 
     CommandFieldParameter:
@@ -6401,17 +6762,17 @@ components:
 
     KeyValue:
       type: object
-      description: 键值对
+      description: 键值对。
       required:
         - key
         - value
       properties:
         key:
           type: string
-          description: 键
+          description: 键。
         value:
           type: string
-          description: 值
+          description: 值。
 
     # ── Trait Execute ────────────────────────────────────────────
     TraitExecuteRequest:
@@ -6429,10 +6790,10 @@ components:
       properties:
         deviceId:
           type: string
-          description: 设备 ID
+          description: 业务设备 DID / 唯一标识，来自设备 API 的 deviceId；不是协议 Resource 的 id、parentId 或点工具的 instanceId。
         endpointId:
           type: integer
-          description: 端点 ID
+          description: 端点 ID。
         functionCode:
           type: string
           description: |
@@ -6442,7 +6803,7 @@ components:
         traitCode:
           type: string
           description: |
-            功能点代码，如：
+            功能点编码，如：
             - OnOff（开关）
             - EndpointRoom（设备所在房间）
             - EndpointName（设备名称）
@@ -6475,29 +6836,26 @@ components:
 
     TraitExecuteResponse:
       allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              type: array
-              description: data 集合元素为执行失败的 trait 数据
-              items:
-                $ref: '#/components/schemas/TraitExecuteResult'
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          data:
+            type: array
+            description: data 集合元素为执行失败的 trait 数据
+            items:
+              $ref: '#/components/schemas/TraitExecuteResult'
       example:
         type: ExecuteTraitResponse
         version: v1
-        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000009"
+        msgId: a1b2c3d4-e5f6-7890-abcd-000000000009
         code: 0
-        message: success
         data:
-          - deviceId: "device-001"
-            endpointId: 1
-            functionCode: "Output"
-            traitCode: "OnOff"
-            code: 1103
-            message: "device offline"
-
-    # ── Trait Value Query ────────────────────────────────────────
+        - deviceId: device-001
+          endpointId: 1
+          functionCode: Output
+          traitCode: OnOff
+          code: 1103
+          message: device offline
     TraitReadRequest:
       type: object
       properties:
@@ -6506,13 +6864,16 @@ components:
           items:
             $ref: '#/components/schemas/TraitValueQuery'
 
+          minItems: 1
+      required:
+      - data
     TraitValueQuery:
       type: object
       required: [deviceId, endpointId, functionCode, traitCodes]
       properties:
         deviceId:
           type: string
-          description: 设备 ID
+          description: 业务设备 DID / 唯一标识，来自设备 API 的 deviceId；不是协议 Resource 的 id、parentId 或点工具的 instanceId。
         endpointId:
           type: integer
           description: 端点 ID
@@ -6521,13 +6882,18 @@ components:
           description: 功能编码
         traitCodes:
           type: array
-          description: 待查询的功能点代码列表
           items:
             type: string
+          description: 要查询的功能点编码列表
 
     TraitValueResult:
       type: object
-      required: [deviceId, endpointId, functionCode, traitCode, value, time]
+      required:
+      - deviceId
+      - endpointId
+      - functionCode
+      - traitCode
+      - time
       properties:
         deviceId:
           type: string
@@ -6543,7 +6909,8 @@ components:
           description: 功能点代码
         value:
           $ref: '#/components/schemas/FlexibleValue'
-          description: 当前值。类型与 trait 的 parameter.type 的值保持一致。
+          description: 属性值，按对应 trait 的 parameter.type 解析。内部值为 null 时省略 value；字段缺失表示此条没有当前值，不是 false、0 或空字符串，也不表示条目未返回。按 deviceId/endpointId/functionCode/traitCode
+            识别返回条目。
         time:
           type: integer
           format: int64
@@ -6561,16 +6928,21 @@ components:
       example:
         type: GetTraitValueResponse
         version: v1
-        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000000d"
+        msgId: a1b2c3d4-e5f6-7890-abcd-00000000000d
         code: 0
         message: success
         data:
-          - deviceId: "device-001"
-            endpointId: 1
-            functionCode: "Output"
-            traitCode: "OnOff"
-            value: true
-            time: 1710001234567
+        - deviceId: device-001
+          endpointId: 1
+          functionCode: Output
+          traitCode: OnOff
+          value: true
+          time: 1710001234567
+        - deviceId: device-001
+          endpointId: 1
+          functionCode: LevelControl
+          traitCode: CurrentLevel
+          time: 1710001234567
 
     # ── Command Execute ──────────────────────────────────────────
     CommandExecuteRequest:
@@ -6588,16 +6960,20 @@ components:
       properties:
         deviceId:
           type: string
-          description: 设备 ID
+          description: 业务设备 DID / 唯一标识，来自设备 API 的 deviceId；不是协议 Resource 的 id、parentId 或点工具的 instanceId。
         endpointId:
           type: integer
           description: 端点 ID
         functionCode:
           type: string
-          description: 功能编码，如：NetworkCommissioning
+          description: |
+            功能编码，如：
+            - NetworkCommissioning
         commandCode:
           type: string
-          description: 命令编码，如：TriggerZigbeeNetworkInfoUpload
+          description: |
+            命令编码，如：
+            - TriggerZigbeeNetworkInfoUpload
         args:
           type: array
           items:
@@ -6611,10 +6987,10 @@ components:
       properties:
         fieldCode:
           type: string
-          description: 字段编码
+          description: commandCode Field 的 filedCode
         value:
           $ref: '#/components/schemas/FlexibleValue'
-          description: 字段值。类型与对应 field 的 parameter.type 保持一致。
+          description: 参数值（推荐按对应 field 的 parameter.type 选择值类型）
 
     CommandExecuteResult:
       type: object
@@ -6641,20 +7017,19 @@ components:
 
     CommandExecuteResponse:
       allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              type: array
-              description: data 集合元素为执行失败的 command 数据
-              items:
-                $ref: '#/components/schemas/CommandExecuteResult'
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          data:
+            type: array
+            description: data 集合元素为执行失败的 command 数据
+            items:
+              $ref: '#/components/schemas/CommandExecuteResult'
       example:
         type: ExecuteCommandResponse
         version: v1
-        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000019"
+        msgId: a1b2c3d4-e5f6-7890-abcd-000000000019
         code: 0
-        message: success
         data: []
 
     CommandExecuteAwaitRequest:
@@ -6704,29 +7079,28 @@ components:
 
     CommandExecuteAwaitResponse:
       allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              type: array
-              items:
-                $ref: '#/components/schemas/CommandExecuteAwaitResult'
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/CommandExecuteAwaitResult'
       example:
         type: ExecuteCommandAwaitResponse
         version: v1
-        msgId: "a1b2c3d4-e5f6-7890-abcd-00000000001a"
+        msgId: a1b2c3d4-e5f6-7890-abcd-00000000001a
         code: 0
-        message: success
         data:
-          - deviceId: "gateway001"
-            endpointId: 1
-            functionCode: NetworkCommissioning
-            commandCode: TriggerZigbeeNetworkInfoUpload
-            code: 0
-            message: success
-            responded: true
-            commandReportValue: "{\"result\":\"ok\"}"
-            responseTime: 1710001234567
+        - deviceId: gateway001
+          endpointId: 1
+          functionCode: NetworkCommissioning
+          commandCode: TriggerZigbeeNetworkInfoUpload
+          code: 0
+          message: success
+          responded: true
+          commandReportValue: '{"result":"ok"}'
+          responseTime: 1710001234567
 
     # ── Gateway ──────────────────────────────────────────────────
     GatewayInfo:
@@ -6745,8 +7119,7 @@ components:
         supportedMatterRoles:
           type: integer
           description: |
-            支持的 Matter 角色，缺少或 null 为不支持。
-            该字段为位掩码，使用 `supportedMatterRoles & 角色值 != 0` 判断是否支持对应角色：
+            支持的 Matter 角色，缺少或 null 为不支持。该字段为位掩码，使用 supportedMatterRoles & 角色值 != 0 判断是否支持对应角色：
             - 1：Matter controller
             - 2：Matter commissioner
             - 4：Thread border router
@@ -6767,6 +7140,10 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/GatewayInfo'
+            type:
+              type: string
+              enum:
+              - GetGatewaysResponse
       example:
         type: GetGatewaysResponse
         version: v1
@@ -6830,9 +7207,9 @@ components:
           type: array
           nullable: true
           description: |
-            子设备 ID 列表。
-            - 为空或不传：查询指定网关下的全部子设备
-            - 非空：查询指定网关下的指定子设备
+            子设备 ID 列表。允许为空或不传：
+            - 为空或不传：查询指定网关下的全部子设备（仅按 gatewayId 过滤）
+            - 非空：查询指定网关下的指定子设备（按 gatewayId + subDeviceIds 过滤）
           items:
             type: string
 
@@ -6849,10 +7226,14 @@ components:
             enum: [zigbee, matter]
         gatewaySubdeviceFilters:
           type: array
-          description: 过滤条件（网关 ID 与子设备 ID）
-          required: true
+          description: gatewayId 与子设备 ID 组合的过滤条件（必填）
           items:
             $ref: '#/components/schemas/GatewaySubdeviceDidFilter'
+        bindTime:
+          type: integer
+          format: int64
+          nullable: true
+          description: 入网结果查询的绑定时间，单位毫秒。
 
     DeviceBindResultItem:
       type: object
@@ -6889,7 +7270,7 @@ components:
         bindTime:
           type: integer
           format: int64
-          description: 入网时间戳（毫秒级 UTC 时间戳）。
+          description: 绑定/入网时间戳（毫秒级 UTC 时间戳）。
 
     DeviceBindResultResponse:
       allOf:
@@ -6900,6 +7281,10 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/DeviceBindResultItem'
+            type:
+              type: string
+              enum:
+              - DeviceBindResultResponse
       example:
         type: DeviceBindResultResponse
         version: v1
@@ -6924,6 +7309,10 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/DeviceType'
+            type:
+              type: string
+              enum:
+              - GetDeviceTypeInfosResponse
       example:
         type: GetDeviceTypeInfosResponse
         version: v1
@@ -6936,6 +7325,54 @@ components:
           - deviceType: "switch"
             name: "开关"
 
+    DeviceProtocolOption:
+      type: object
+      required:
+        - id
+        - name
+        - type
+        - networkProtocolMask
+      properties:
+        id:
+          type: string
+          description: 稳定的协议实例 ID，可直接传给 /devices 的 protocolIds；实例重命名不改变 ID。
+        name:
+          type: string
+          description: 用户设置的实例显示名称，保持原样，不自动翻译；可传给 protocolNames 完整匹配。
+        type:
+          type: string
+          nullable: true
+          description: 稳定的公开类型代码，使用小写，不做多语言翻译；未配置映射时显式为 null。可传给 protocolTypes 查询同类型的所有实例。
+          example: homeassistant
+        networkProtocolMask:
+          type: integer
+          format: int64
+          nullable: true
+          minimum: 1
+          maximum: 4294967295
+          description: 可选的协议分类关联，未配置时显式为 null。沿用 NetworkProtocolSupport（20870）位定义；默认 Matter→Thread(2)、Zigbee→8、Aqara RS485→32。不是设备实时 Trait 值。可直接传给
+            /devices 的 networkProtocolMask，多个分类按位 OR 合并。
+          example: 2
+    DeviceFilterOptionsResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          required:
+            - data
+          properties:
+            type:
+              type: string
+              enum:
+                - DeviceFilterOptionsResponse
+            data:
+              type: object
+              description: 仅包含请求的选项类别；当前仅支持 protocols。
+              properties:
+                protocols:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/DeviceProtocolOption'
+
     DevicesResponse:
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
@@ -6943,6 +7380,10 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/DeviceListData'
+            type:
+              type: string
+              enum:
+              - GetDeviceInfoResponse
       example:
         type: GetDeviceInfoResponse
         version: v1
@@ -6956,6 +7397,8 @@ components:
           data:
             - deviceId: "device-001"
               gatewayId: "gateway-001"
+              protocolId: "1004"
+              networkProtocolMask: 8
               deviceName: "客厅灯"
               deviceTypesList: ["light"]
               createTime: 1710001234567
@@ -7043,11 +7486,15 @@ components:
           properties:
             data:
               type: object
-              description: 升级请求结果
+              description: 升级请求结果。
               additionalProperties: false
             code:
               type: integer
               description: 请求结果码，0 表示升级请求已受理。
+            type:
+              type: string
+              enum:
+              - UpgradeFirmwareResponse
       example:
         type: UpgradeFirmwareResponse
         version: v1
@@ -7061,14 +7508,7 @@ components:
       properties:
         deviceIds:
           type: array
-          description: |
-            设备 ID 列表，最多支持 200 个。
-
-            <ul>
-              <li>如果未传递 <code>deviceIds</code> 或为 <code>[]</code>，将查询当前请求上下文下可访问的所有设备。</li>
-              <li><code>deviceIds</code> 如包含已被删除的设备，仍可获取对应设备的历史数据。</li>
-            </ul>
-       
+          description: 设备 ID 列表，最多 200 个；省略或空数组时查询当前请求上下文可访问的全部当前设备。
           maxItems: 200
           default: []
           items:
@@ -7285,6 +7725,10 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/SearchFirmwareUpgradeStatusResponseData'
+            type:
+              type: string
+              enum:
+              - SearchFirmwareUpgradeStatusResponse
       example:
         type: SearchFirmwareUpgradeStatusResponse
         version: v1
@@ -7377,6 +7821,10 @@ components:
                   description: 设备可升级固件结果
                   items:
                     $ref: '#/components/schemas/UpgradableDeviceFirmwareItem'
+            type:
+              type: string
+              enum:
+              - SearchUpgradableFirmwareByDeviceIdsResponse
       example:
         type: SearchUpgradableFirmwareByDeviceIdsResponse
         version: v1
@@ -7488,17 +7936,38 @@ components:
           description: 设备可升级固件列表
           items:
             $ref: '#/components/schemas/UpgradableFirmwareInfo'
+    UpgradableFirmwareSearchData:
+      type: object
+      description: 响应规则：`hasMore=true` 时必须返回 `nextCursor`，`hasMore=false` 时 `nextCursor` 为空或不返回。
+      required: [hasMore, data]
+      properties:
+        hasMore:
+          type: boolean
+          description: 是否还有下一页数据
+        nextCursor:
+          type: string
+          nullable: true
+          description: 下一页游标。hasMore=true 时必须返回；hasMore=false 时为空或不返回
+        data:
+          type: array
+          description: 当前页设备可升级固件结果
+          items:
+            $ref: '#/components/schemas/UpgradableDeviceFirmwareItem'
 
-            
     # ── Automation ────────────────────────────────────────────────
     AutomationDefinitionType:
       type: string
       enum: [SCRIPT_JSON]
-      description: 自动化定义类型，当前仅支持 SCRIPT_JSON
+      description: 创建与能力查询的自动化定义类型，当前仅支持 SCRIPT_JSON；更新不传此字段，列表分类见 AutomationSummary。
 
     AutomationSummary:
       type: object
-      required: [automationId, name, enabled, definitionType, createTime]
+      required:
+      - automationId
+      - name
+      - enabled
+      - definitionType
+      - createTime
       properties:
         automationId:
           type: string
@@ -7524,168 +7993,59 @@ components:
           type: integer
           format: int64
           description: 创建时间（毫秒级 UTC 时间戳）
-        manualTriggers:
-          type: array
-          nullable: true
-          description: 仅包含可手动执行的触发器快捷信息，不代表完整触发器列表；完整规则以详情中的 config 为准。
-          items:
-            $ref: '#/components/schemas/AutomationManualTriggerBrief'
         space:
-          allOf:
-            - $ref: '#/components/schemas/SpaceNode'
+          anyOf:
+          - $ref: '#/components/schemas/SpaceNode'
+          - type: object
+            nullable: true
+            enum:
+            - null
+          description: 当前关联空间；未关联时为 null。
+        metadata:
+          type: object
           nullable: true
-          description: 自动化当前关联的空间。若自动化未关联空间时，此值为 null。
-
-    AutomationManualTriggerBrief:
-      type: object
-      required: [triggerNodeId, triggerName]
-      properties:
-        triggerNodeId:
-          type: string
-          description: 手动触发器 ID
-        triggerName:
-          type: string
-          description: 手动触发器名称
-
-    AutomationManualTriggerInfo:
-      type: object
-      required: [automationId, automationName, triggerNodeId, triggerName, enabled, definitionType, createTime]
-      properties:
-        automationId:
-          type: string
-          description: 自动化ID。
-        automationName:
-          type: string
-          description: 自动化名称。
-        triggerNodeId:
-          type: string
-          description: 手动触发节点ID。
-        triggerName:
-          type: string
-          description: 手动触发名称。
-        enabled:
-          type: boolean
-          description: |
-            所属自动化是否启用。<br />
-            true：启用；<br />
-            false：禁用。
-        definitionType:
-          type: string
-          enum: [SCRIPT_JSON, SCRIPT_TEXT, WHEN_IF_THEN, LEGACY_FLOW, LEGACY_LINKAGE, OTHER]
-          description: 自动化类型。
-        createTime:
-          type: integer
-          format: int64
-          description: 创建时间（毫秒时间戳）。
-        space:
-          allOf:
-            - $ref: '#/components/schemas/SpaceNode'
-          nullable: true
-          description: 自动化当前关联的空间；仅 includeSpace 为 true 时返回，未关联空间时为 null。
+          additionalProperties: true
+          description: includeMetadata=true 时返回的对象用户 metadata；与 config.metadata 不同。
 
     AutomationDetails:
       allOf:
-        - $ref: '#/components/schemas/AutomationSummary'
-        - type: object
-          properties:
-            configFormat:
-              type: string
+      - $ref: '#/components/schemas/AutomationSummary'
+      - type: object
+        properties:
+          configFormat:
+            type: string
+            nullable: true
+            enum:
+            - JSON_AUTOMATION
+            - FLOW_CANONICAL
+            - null
+            description: configText 能无损导出公共 DSL 时为 JSON_AUTOMATION，否则完整回退 FLOW_CANONICAL；读取不改写持久图。
+          config:
+            nullable: true
+            description: 详情定义。按 configFormat 解析；FLOW_CANONICAL 不作为公共 JSON 更新输入。
+            anyOf:
+            - $ref: '#/components/schemas/JsonAutomationConfig'
+            - $ref: '#/components/schemas/FlowCanonicalConfig'
+            - type: object
               nullable: true
-              enum: [JSON_AUTOMATION, FLOW_CANONICAL]
-              description: >-
-                config 的实际持久化格式。SCRIPT_JSON 通常返回 JSON_AUTOMATION，SCRIPT_TEXT 通常返回
-                FLOW_CANONICAL；其他自动化类型或无持久化定义时可以不返回该字段。
-            config:
-              nullable: true
-              description: >-
-                完整的实际持久化定义，必须结合 configFormat 解读；无持久化定义时可以不返回该字段。
-                节点内部 config 等协议扩展字段保持原样返回，因此调用方应允许未知字段。
-              anyOf:
-                - $ref: '#/components/schemas/JsonAutomationConfig'
-                - $ref: '#/components/schemas/FlowCanonicalConfig'
+              enum:
+              - null
 
     JsonAutomationConfig:
+      description: 公共自动化 DSL；事件或定时触发。多条规则合并为同一个自动化对象；回读按执行语义规范化，不保证原分组或画布布局。
       type: object
-      required: [automations]
-      description: OpenAPI 创建的 JSON 自动化定义。
+      required:
+      - automations
       properties:
         metadata:
-          $ref: '#/components/schemas/JsonAutomationMetadata'
+          $ref: '#/components/schemas/AutomationDslMetadata'
         automations:
           type: array
-          description: 自动化规则列表
+          description: 一个 Open 自动化包含一条或多条规则，共用配置变量，各自保留触发与执行关系
+          minItems: 1
           items:
-            $ref: '#/components/schemas/JsonAutomationRule'
-
-    JsonAutomationMetadata:
-      type: object
-      properties:
-        name:
-          type: string
-          nullable: true
-          description: 配置内的自动化名称
-        description:
-          type: string
-          nullable: true
-          description: 配置说明
-        scope:
-          type: array
-          description: 可被 data.ref 引用的设备属性定义
-          items:
-            $ref: '#/components/schemas/JsonAutomationDevicePropertyDefinition'
-
-    JsonAutomationDevicePropertyDefinition:
-      type: object
-      required: [type, name, deviceId, endpointId, functionCode, traitCode]
-      properties:
-        type:
-          type: string
-          enum: [device.property]
-        name:
-          type: string
-        deviceId:
-          type: string
-        endpointId:
-          type: integer
-        functionCode:
-          type: string
-        traitCode:
-          type: string
-
-    JsonAutomationRule:
-      type: object
-      required: [starters, actions]
-      properties:
-        name:
-          type: string
-          nullable: true
-        starters:
-          type: array
-          description: 触发器列表；每项的 type 决定其余字段
-          items:
-            $ref: '#/components/schemas/JsonAutomationTypedItem'
-        condition:
-          allOf:
-            - $ref: '#/components/schemas/JsonAutomationTypedItem'
-          nullable: true
-          description: >-
-            动作执行前的可选条件，字段名为单数 condition。and/or 类型的组合条件在该对象内部使用 conditions 数组。
-        actions:
-          type: array
-          description: 按顺序执行的动作列表；每项的 type 决定其余字段
-          items:
-            $ref: '#/components/schemas/JsonAutomationTypedItem'
-
-    JsonAutomationTypedItem:
-      type: object
-      required: [type]
-      description: >-
-        JSON_AUTOMATION 的多态触发器、条件或动作。除 type 外的字段由具体类型决定，服务端会原样返回持久化内容。
-      properties:
-        type:
-          type: string
-          description: 例如 property.event、time.schedule、manual、property.state、and、or、not、time.between、device.trait.write、device.command.call、delay
-      additionalProperties: true
+            $ref: '#/components/schemas/AutomationDslAutomation'
+      additionalProperties: false
 
     FlowCanonicalConfig:
       type: object
@@ -7857,25 +8217,31 @@ components:
 
     CreateAutomationRequest:
       type: object
-      required: [definitionType, config]
+      required:
+      - config
       properties:
         name:
           type: string
-          description: 自动化名称
+          nullable: true
+          description: 非空 name 优先；省略、null 或空白时回退到非空 config.metadata.name。
         autoSuffixOnDuplicate:
           type: boolean
           default: true
           description: 名称重名处理策略。未传或为 true 时自动添加 (1)、(2) 等后缀；为 false 时返回名称重复错误
         definitionType:
-          $ref: '#/components/schemas/AutomationDefinitionType'
+          type: string
+          enum:
+          - SCRIPT_JSON
+          default: SCRIPT_JSON
+          description: 旧输入兼容字段，新调用方可省略。
         config:
-          type: object
-          description: JSON 自动化脚本，详情请参考 [JSON 自动化脚本定义](https://docs.aqara.com/zh/docs/aqara-developer/data-export-api/reference/json-automation-script)。
-          additionalProperties: true
+          $ref: '#/components/schemas/JsonAutomationConfig'
 
     UpdateAutomationRequest:
       type: object
-      required: [updateMask]
+      required:
+      - automationId
+      - updateMask
       properties:
         name:
           type: string
@@ -7884,24 +8250,33 @@ components:
         autoSuffixOnDuplicate:
           type: boolean
           default: true
-          description: 名称重名处理策略。未传或为 true 时自动添加 (1)、(2) 等后缀；为 false 时返回名称重复错误。该字段不需要加入 updateMask。
+          description: 名称重名处理策略。未传或为 true 时自动添加 (1)、(2) 等后缀；为 false 时返回名称重复错误。该字段不需要加入 updateMask
         enabled:
           type: boolean
-          description: 新启用状态。true：启用；false：禁用。
           nullable: true
         config:
-          type: object
-          description: 新配置。仅适用于 definitionType 为 SCRIPT_JSON 的自动化，其他类型自动化的配置不可编辑。
-          nullable: true
-          additionalProperties: true
+          anyOf:
+          - $ref: '#/components/schemas/JsonAutomationConfig'
+          - type: object
+            nullable: true
+            enum:
+            - null
+          description: 完整替换公共配置；允许替换可导出或回退原图的 CfgFlowLogic，不以 SCRIPT_JSON 分类作为更新资格。
         updateMask:
           type: array
-          description: |
-            需更新的参数名称列表，仅支持 name、enabled、config。   
-            **注意**：name 和 enabled 适用于所有自动化。config 只适用于 definitionType 为 SCRIPT_JSON 的自动化。 
+          description: 非空数组，支持 name、enabled、config；被选字段必须有效，未选字段不发送非 null 值。
           items:
             type: string
-            enum: [name, enabled, config]
+            enum:
+            - name
+            - enabled
+            - config
+          minItems: 1
+          uniqueItems: true
+        automationId:
+          type: string
+          minLength: 1
+          description: 目标 automationId，放在请求体中。
 
     UpdateAutomationStatusRequest:
       type: object
@@ -7915,7 +8290,7 @@ components:
             type: string
         enabled:
           type: boolean
-          description: 新启用状态。true：启用；false：禁用。
+          description: 是否启用。true：启用；false：禁用。
 
     UpdateAutomationSpaceRequest:
       type: object
@@ -7924,11 +8299,11 @@ components:
         spaceId:
           type: string
           minLength: 1
-          description: 目标空间ID。
+          description: 目标空间 ID。自动化已有空间关联时会替换为该空间。
         automationIds:
           type: array
           minItems: 1
-          description: 待更新空间关联的自动化 ID 列表。
+          description: 要更新空间关联的自动化 ID 列表。
           items:
             type: string
       example:
@@ -7952,13 +8327,13 @@ components:
       properties:
         automationId:
           type: string
-          description: 自动化 ID。
+          description: 处理失败的自动化 ID。
         code:
           type: integer
-          description: 错误码。
+          description: 失败项错误码。
         message:
           type: string
-          description: 错误信息。
+          description: 失败项错误信息。
 
     AutomationBatchResultData:
       type: object
@@ -7966,12 +8341,12 @@ components:
       properties:
         successIds:
           type: array
-          description: 成功的自动化 ID 列表。
+          description: 批量处理成功的自动化 ID 列表。
           items:
             type: string
         failedItems:
           type: array
-          description: 失败的自动化对象列表。
+          description: 批量处理失败项列表。
           items:
             $ref: '#/components/schemas/AutomationBatchFailure'
 
@@ -7982,8 +8357,12 @@ components:
           properties:
             data:
               type: string
-              description: 自动化 ID。
+              description: 创建成功后的自动化 ID。
 
+            type:
+              type: string
+              enum:
+              - CreateAutomationResponse
     UpdateAutomationResponse:
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
@@ -8001,32 +8380,10 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/AutomationBatchResultData'
-
-    QueryAutomationManualTriggerListResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              type: array
-              description: 手动触发对象列表
-              items:
-                $ref: '#/components/schemas/AutomationManualTriggerInfo'
-
-    ExecuteAutomationManualTriggerRequest:
-      type: object
-      required: [automationId, triggerNodeId]
-      properties:
-        automationId:
-          type: string
-          description: 自动化 ID。
-        triggerNodeId:
-          type: string
-          description: 要执行的手动触发器 ID。
-
-    ExecuteAutomationManualTriggerResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
+            type:
+              type: string
+              enum:
+              - DeleteAutomationResponse
 
     UpdateAutomationStatusResponse:
       allOf:
@@ -8035,6 +8392,10 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/AutomationBatchResultData'
+            type:
+              type: string
+              enum:
+              - UpdateAutomationStatusResponse
 
     UpdateAutomationSpaceResponse:
       allOf:
@@ -8043,6 +8404,10 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/AutomationBatchResultData'
+            type:
+              type: string
+              enum:
+              - UpdateAutomationSpaceResponse
       example:
         type: UpdateAutomationSpaceResponse
         version: v1
@@ -8061,7 +8426,10 @@ components:
             data:
               $ref: '#/components/schemas/AutomationDetails'
               nullable: true
-
+            type:
+              type: string
+              enum:
+              - GetAutomationDetailsResponse
     AutomationListResponse:
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
@@ -8069,6 +8437,10 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/AutomationListData'
+            type:
+              type: string
+              enum:
+              - GetAutomationListResponse
 
     AutomationCapabilitiesResponse:
       allOf:
@@ -8077,6 +8449,10 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/AutomationCapabilitiesData'
+            type:
+              type: string
+              enum:
+              - QueryAutomationCapabilitiesResponse
       example:
         type: QueryAutomationCapabilitiesResponse
         version: v1
@@ -8112,6 +8488,8 @@ components:
           description: 可用于自动化编排的设备能力列表
           items:
             $ref: '#/components/schemas/AutomationCapabilityDevice'
+      description: 设备能力按当前权限实时发现；公共 DSL 结构见 JsonAutomationConfig。客户端允许额外发现字段。
+      additionalProperties: true
 
     AutomationCapabilityDevice:
       type: object
@@ -8222,12 +8600,12 @@ components:
         startTime:
           type: integer
           format: int64
-          description: 起始时间（UTC 毫秒时间戳）。
+          description: 查询起始时间（UTC 毫秒时间戳）。
           example: 1704067200000
         endTime:
           type: integer
           format: int64
-          description: 结束时间（UTC 毫秒时间戳）。
+          description: 查询结束时间（UTC 毫秒时间戳）。
           example: 1704153600000
         deviceId:
           type: string
@@ -8246,16 +8624,16 @@ components:
         startTime:
           type: integer
           format: int64
-          description: 起始时间（UTC 毫秒时间戳）。
+          description: 查询起始时间（UTC 毫秒时间戳）。
           example: 1704067200000
         endTime:
           type: integer
           format: int64
-          description: 结束时间（UTC 毫秒时间戳）。
+          description: 查询结束时间（UTC 毫秒时间戳）。
           example: 1706745600000
         spaceId:
           type: string
-          description: 空间ID（自动识别家庭或房间）。
+          description: 空间 ID。
           example: "room_001"
         dimension:
           type: string
@@ -8270,12 +8648,12 @@ components:
         startTime:
           type: integer
           format: int64
-          description: 起始时间（UTC 毫秒时间戳）。
+          description: 查询起始时间（UTC 毫秒时间戳）。
           example: 1704067200000
         endTime:
           type: integer
           format: int64
-          description: 结束时间（UTC 毫秒时间戳）。
+          description: 查询结束时间（UTC 毫秒时间戳）。
           example: 1704153600000
         deviceId:
           type: string
@@ -8289,16 +8667,16 @@ components:
         startTime:
           type: integer
           format: int64
-          description: 起始时间（UTC 毫秒时间戳）。
+          description: 查询起始时间（UTC 毫秒时间戳）。
           example: 1704067200000
         endTime:
           type: integer
           format: int64
-          description: 结束时间（UTC 毫秒时间戳）。
+          description: 查询结束时间（UTC 毫秒时间戳）。
           example: 1706745600000
         spaceId:
           type: string
-          description: 空间 ID（自动识别家庭或房间）。
+          description: 空间 ID。
           example: "home_001"
 
     EmsTrendPoint:
@@ -8308,7 +8686,7 @@ components:
         startTime:
           type: string
           description: |
-            起始时间，格式取决于查询维度：
+            时间范围的起始时间，格式取决于查询维度：
             - 1h: yyyyMMddHH
             - 1d: yyyyMMdd
             - month: yyyyMM
@@ -8326,7 +8704,7 @@ components:
         totalValue:
           type: number
           format: double
-          description: 时间范围内的能耗总量（kWh）。
+          description: 该时间范围内的能耗总量（kWh）
           example: 45.6
 
     EmsDeviceTrendResponse:
@@ -8338,6 +8716,10 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/EmsTrendPoint'
+            type:
+              type: string
+              enum:
+              - EmsDeviceTrendResponse
       example:
         type: EmsDeviceTrendResponse
         version: v1
@@ -8359,6 +8741,10 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/EmsTrendPoint'
+            type:
+              type: string
+              enum:
+              - EmsSpaceTrendResponse
       example:
         type: EmsSpaceTrendResponse
         version: v1
@@ -8378,6 +8764,10 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/EmsTotalData'
+            type:
+              type: string
+              enum:
+              - EmsDeviceTotalResponse
       example:
         type: EmsDeviceTotalResponse
         version: v1
@@ -8394,6 +8784,10 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/EmsTotalData'
+            type:
+              type: string
+              enum:
+              - EmsSpaceTotalResponse
       example:
         type: EmsSpaceTotalResponse
         version: v1
@@ -8418,7 +8812,7 @@ components:
       properties:
         did:
           type: string
-          description: 设备 ID
+          description: 设备 ID。
           example: "device_001"
         endpointId:
           type: array
@@ -8475,6 +8869,10 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/EmsSummaryData'
+            type:
+              type: string
+              enum:
+              - EmsSpaceSummaryResponse
       example:
         type: EmsSpaceSummaryResponse
         version: v1
@@ -8495,6 +8893,10 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/EmsSummaryData'
+            type:
+              type: string
+              enum:
+              - EmsDevicesSummaryResponse
       example:
         type: EmsDevicesSummaryResponse
         version: v1
@@ -8507,51 +8909,6 @@ components:
           week: 5.222
           month: 9.221
           year: 230.229
-    
-    StudioStatisticsDimension:
-      type: string
-      description: Studio 统计维度
-      enum: [deviceCount, linkageCount, spaceCount, sceneCount]
-
-    StudioStatisticsData:
-      type: object
-      description: Studio 统计信息；仅返回 dimensions 请求的统计字段
-      properties:
-        deviceCount:
-          type: integer
-          description: 设备数量
-          example: 128
-        linkageCount:
-          type: integer
-          description: 自动化数量
-          example: 24
-        spaceCount:
-          type: integer
-          description: 空间数量
-          example: 16
-        sceneCount:
-          type: integer
-          description: 场景数量
-          example: 12
-
-    StudioStatisticsResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              $ref: '#/components/schemas/StudioStatisticsData'
-      example:
-        type: StudioStatisticsResponse
-        version: v1
-        msgId: "a1b2c3d4-e5f6-7890-abcd-000000000021"
-        code: 0
-        message: success
-        data:
-          deviceCount: 128
-          linkageCount: 24
-          spaceCount: 16
-          sceneCount: 12
 
     # ── Alarm ─────────────────────────────────────────────────────
     AlarmClass:
@@ -8645,6 +9002,10 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/AlarmListData'
+            type:
+              type: string
+              enum:
+              - GetAlarmListResponse
       example:
         type: GetAlarmListResponse
         version: v1
@@ -8697,6 +9058,10 @@ components:
               type: boolean
               description: 删除是否成功
               example: true
+            type:
+              type: string
+              enum:
+              - DeleteAlarmResponse
       example:
         type: DeleteAlarmResponse
         version: v1
@@ -8734,6 +9099,10 @@ components:
               type: boolean
               description: 确认是否成功。
               example: true
+            type:
+              type: string
+              enum:
+              - AckAlarmsResponse
       example:
         type: AckAlarmsResponse
         version: v1
@@ -8768,6 +9137,10 @@ components:
               type: boolean
               description: 确认是否成功。
               example: true
+            type:
+              type: string
+              enum:
+              - AckAlarmsByPointIdResponse
       example:
         type: AckAlarmsByPointIdResponse
         version: v1
@@ -8779,35 +9152,40 @@ components:
     AlarmRuleInfo:
       type: object
       required:
-        - ruleId
-        - ruleName
-        - alarmClass
-        - alarmText
-        - alarmTarget
-        - delayToAlarmMs
-        - delayToNormalMs
-        - enabled
-        - updatedBy
-        - updatedTime
+      - ruleId
+      - ruleName
+      - alarmClass
+      - toOffNormalText
+      - toNormalText
+      - alarmTraitName
+      - delayToAlarmMs
+      - delayToNormalMs
+      - enabled
+      - updatedBy
+      - updatedTime
       properties:
         ruleId:
           type: string
           description: 告警规则 ID。
-          example: "rule-001"
+          example: rule-001
         ruleName:
           type: string
           description: 告警规则名称。
-          example: "温度过高告警"
+          example: 温度过高告警
         alarmClass:
           $ref: '#/components/schemas/AlarmClass'
-        alarmText:
+        toOffNormalText:
           type: string
-          description: 告警文案。
-          example: "温度超过阈值"
-        alarmTarget:
+          description: 进入告警状态时的文案。
+          example: 温度超过阈值
+        toNormalText:
           type: string
-          description: 告警目标（测点/能力显示名）。
-          example: "温度"
+          description: 恢复正常状态时的文案。
+          example: 温度恢复正常
+        alarmTraitName:
+          type: string
+          description: 告警 Trait 的显示名称。
+          example: 温度
         delayToAlarmMs:
           type: integer
           format: int64
@@ -8825,7 +9203,7 @@ components:
         updatedBy:
           type: string
           description: 最近更新人。
-          example: "admin"
+          example: admin
         updatedTime:
           type: integer
           format: int64
@@ -8850,7 +9228,7 @@ components:
           example: 200
         data:
           type: array
-          description: 当前页告警规则列表。 
+          description: 当前页告警规则列表。
           items:
             $ref: '#/components/schemas/AlarmRuleInfo'
 
@@ -8861,10 +9239,14 @@ components:
           properties:
             data:
               $ref: '#/components/schemas/AlarmRuleListData'
+            type:
+              type: string
+              enum:
+              - GetAlarmRuleListResponse
       example:
         type: GetAlarmRuleListResponse
         version: v1
-        msgId: "1751609244333"
+        msgId: '1751609244333'
         code: 0
         message: success
         data:
@@ -8872,26 +9254,28 @@ components:
           pageNum: 1
           pageSize: 200
           data:
-            - ruleId: "rule-001"
-              ruleName: "温度过高告警"
-              alarmClass: Warning
-              alarmText: "温度超过阈值"
-              alarmTarget: "温度"
-              delayToAlarmMs: 5000
-              delayToNormalMs: 10000
-              enabled: true
-              updatedBy: "admin"
-              updatedTime: 1704100000000
-            - ruleId: "rule-002"
-              ruleName: "烟雾告警"
-              alarmClass: Critical
-              alarmText: "检测到烟雾"
-              alarmTarget: "烟雾浓度"
-              delayToAlarmMs: 0
-              delayToNormalMs: 0
-              enabled: true
-              updatedBy: "admin"
-              updatedTime: 1704110000000
+          - ruleId: rule-001
+            ruleName: 温度过高告警
+            alarmClass: Warning
+            delayToAlarmMs: 5000
+            delayToNormalMs: 10000
+            enabled: true
+            updatedBy: admin
+            updatedTime: 1704100000000
+            toOffNormalText: 温度超过阈值
+            toNormalText: 温度恢复正常
+            alarmTraitName: 温度
+          - ruleId: rule-002
+            ruleName: 烟雾告警
+            alarmClass: Critical
+            delayToAlarmMs: 0
+            delayToNormalMs: 0
+            enabled: true
+            updatedBy: admin
+            updatedTime: 1704110000000
+            toOffNormalText: 检测到烟雾
+            toNormalText: 烟雾恢复正常
+            alarmTraitName: 烟雾浓度
 
     ClearAlarmsResponse:
       allOf:
@@ -8902,6 +9286,10 @@ components:
               type: boolean
               description: 全量删除是否成功。
               example: true
+            type:
+              type: string
+              enum:
+              - ClearAlarmsResponse
       example:
         type: ClearAlarmsResponse
         version: v1
@@ -8909,3 +9297,2319 @@ components:
         code: 0
         message: success
         data: true
+
+    AutomationDslMetadata:
+      type: object
+      description: 元数据结构，用于定义自动化的基本信息和变量。
+      properties:
+        name:
+          type: string
+          description: 配置展示名；自动化创建可从此值回退。场景名必须由请求顶层 name 提供。
+        description:
+          type: string
+          description: 自动化的描述。
+        scope:
+          type: array
+          description: 定义设备的属性值变量，可在整个脚本中引用。
+          items:
+            $ref: '#/components/schemas/AutomationDslScopeDeviceProperty'
+        variables:
+          type: array
+          description: 定义 Flow 局部变量，可被 variable.flow 引用。每项的 value 是创建时的初值字面量，不是当前运行值，也不会在每次触发时重置。
+          items:
+            $ref: '#/components/schemas/AutomationDslFlowVariable'
+      additionalProperties: false
+
+    AutomationDslScopeDeviceProperty:
+      type: object
+      description: 在 scope 中定义的设备属性变量。
+      required:
+      - type
+      - name
+      - deviceId
+      - endpointId
+      - functionCode
+      - traitCode
+      properties:
+        type:
+          type: string
+          description: 固定值 device.property。
+          enum:
+          - device.property
+        name:
+          type: string
+          description: 变量名称，在 scope 中定义时必须添加。
+        deviceId:
+          type: string
+          description: 设备 ID。
+        endpointId:
+          type: integer
+          description: 端点 ID。
+        functionCode:
+          type: string
+          description: 功能代码（如 OnOff、LevelControl）。
+        traitCode:
+          type: string
+          description: 特性代码（如 OnOff、CurrentLevel）。
+      additionalProperties: false
+
+    AutomationDslFlowVariable:
+      type: object
+      description: Flow 局部变量声明。这里的 value 是创建时的初值字面量，不是当前运行值，也不会在每次触发时重置。动作和比较里同名的 value 可以是值表达式，两者含义不同。省略时不显式配置初值。
+      required:
+      - name
+      - type
+      properties:
+        name:
+          type: string
+          minLength: 1
+        type:
+          type: string
+          enum:
+          - boolean
+          - number
+          - string
+          - enum
+        value:
+          description: 创建时的初值字面量，不是当前运行值，也不会在每次触发时重置。必须匹配 type：boolean 使用布尔值，number 使用数字，string/enum 使用字符串。不接受 null、数组、对象或引用表达式。与动作、比较中可作为值表达式的
+            value 含义不同。建议显式填写。
+          anyOf:
+          - type: boolean
+          - type: number
+          - type: string
+      additionalProperties: false
+      oneOf:
+      - properties:
+          type:
+            enum:
+            - boolean
+          value:
+            type: boolean
+      - properties:
+          type:
+            enum:
+            - number
+          value:
+            type: number
+      - properties:
+          type:
+            enum:
+            - string
+            - enum
+          value:
+            type: string
+
+    AutomationDslDeviceProperty:
+      type: object
+      description: 直接引用设备的特定属性。
+      required:
+      - type
+      - deviceId
+      - endpointId
+      - functionCode
+      - traitCode
+      properties:
+        type:
+          type: string
+          description: 固定值 device.property。
+          enum:
+          - device.property
+        name:
+          type: string
+          description: 变量名称（可选）。
+        deviceId:
+          type: string
+          description: 设备 ID。
+        endpointId:
+          type: integer
+          description: 端点 ID。
+        functionCode:
+          type: string
+          description: 功能代码（如 OnOff、LevelControl）。
+        traitCode:
+          type: string
+          description: 特性代码（如 OnOff、CurrentLevel）。
+      additionalProperties: false
+
+    AutomationDslDataRef:
+      type: object
+      description: 引用在 metadata.scope 中定义的变量。
+      required:
+      - type
+      - select
+      properties:
+        type:
+          type: string
+          description: 固定值 data.ref。
+          enum:
+          - data.ref
+        from:
+          type: string
+          description: 目标路径，固定值 /metadata/scope，默认可不加。
+          enum:
+          - /metadata/scope
+        select:
+          $ref: '#/components/schemas/AutomationDslSelectExpression'
+      additionalProperties: false
+
+    AutomationDslSelectExpression:
+      type: object
+      description: 选择表达式，用于指定要引用的变量。
+      required:
+      - by
+      - value
+      properties:
+        by:
+          type: string
+          description: 选择方式，固定值 name。
+          enum:
+          - name
+        value:
+          type: string
+          description: 要引用的变量名。不是 metadata.variables[].value 那种创建初值，也不是动作、比较里的值表达式。
+      additionalProperties: false
+
+    AutomationDslDatasource:
+      description: 数据源，用于引用设备属性或变量
+      oneOf:
+      - $ref: '#/components/schemas/AutomationDslDeviceProperty'
+      - $ref: '#/components/schemas/AutomationDslDataRef'
+
+    AutomationDslComparisonValue:
+      description: 比较用的值，可以是字面量或值表达式。与 metadata.variables[].value 的创建初值字面量不是同一含义。
+      oneOf:
+      - type: boolean
+        description: 布尔字面量。
+      - type: number
+        description: 数值字面量。
+      - type: string
+        description: 字符串字面量。
+      - $ref: '#/components/schemas/AutomationDslDataRef'
+      - $ref: '#/components/schemas/AutomationDslDeviceProperty'
+      - $ref: '#/components/schemas/AutomationDslFlowVariableRef'
+      - $ref: '#/components/schemas/AutomationDslGlobalVariableRef'
+      - $ref: '#/components/schemas/AutomationDslContextRef'
+      - $ref: '#/components/schemas/AutomationDslNodeOutputRef'
+
+    AutomationDslDuration:
+      type: string
+      description: 时间长度，至少含一个单位，如 30sec、5min、1hour、1hour10min20sec、250ms。空字符串无效。
+      pattern: ^(\d+hour)?(\d+min)?(\d+sec)?(\d+ms)?$
+      minLength: 1
+
+    AutomationDslTime:
+      type: string
+      description: 时间点，支持24小时格式(HH:mm)、AM/PM格式(h:mm am/pm)、太阳时间(sunrise/sunset±偏移)。
+
+    AutomationDslCron:
+      type: string
+      description: Cron表达式，格式：秒 分 时 日 月 周 年。
+
+    AutomationDslAutomation:
+      type: object
+      description: 单个自动化定义。
+      required:
+      - starters
+      - actions
+      properties:
+        starters:
+          type: array
+          description: 触发器列表（至少一个）。
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/AutomationDslStarter'
+        condition:
+          $ref: '#/components/schemas/AutomationDslCondition'
+        actions:
+          type: array
+          description: 动作列表（至少一个）
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/AutomationDslAction'
+        conditions:
+          type: array
+          description: 多棵条件根。与 condition 互斥；每一项用 linkFrom 写明入边。
+          minItems: 2
+          items:
+            $ref: '#/components/schemas/AutomationDslCondition'
+      additionalProperties: false
+      allOf:
+      - not:
+          required:
+          - condition
+          - conditions
+
+    AutomationDslLinkFrom:
+      type: object
+      required:
+      - node
+      - port
+      description: 从源节点输出端口连到当前节点。省略 toPort 时目标端口为 in。
+      properties:
+        node:
+          type: string
+          minLength: 1
+        port:
+          type: string
+          enum:
+          - out
+          - 'true'
+          - 'false'
+          - error
+        toPort:
+          type: string
+          minLength: 1
+      additionalProperties: false
+
+    AutomationDslStarter:
+      description: 触发器，定义触发自动化的条件。
+      oneOf:
+      - $ref: '#/components/schemas/AutomationDslPropertyEvent'
+      - $ref: '#/components/schemas/AutomationDslTimeSchedule'
+      - $ref: '#/components/schemas/AutomationDslAlarmEvent'
+      - $ref: '#/components/schemas/AutomationDslServiceEvent'
+      - $ref: '#/components/schemas/AutomationDslTimeFixed'
+      - $ref: '#/components/schemas/AutomationDslTimeInterval'
+      - $ref: '#/components/schemas/AutomationDslVariableChange'
+      - $ref: '#/components/schemas/AutomationDslSustain'
+
+    AutomationDslPropertyEvent:
+      type: object
+      description: 设备属性变化时触发。不写比较符表示任意变化都触发。for 是比较成立后持续满该时长才触发一次，失效后重新计时。suppressFor 是触发之后不再触发的时间。rising 和 falling 表示穿过比较值，不能与 for 或其他比较符同时出现。
+      required:
+      - type
+      - source
+      properties:
+        type:
+          type: string
+          description: 固定值 property.event
+          enum:
+          - property.event
+        source:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslDatasource'
+          description: 监听的设备属性数据源。
+        is:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslComparisonValue'
+          description: 变成该值时触发。与其他比较符互斥。
+        isNot:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslComparisonValue'
+          description: 变成不是该值时触发。与其他比较符互斥。
+        greaterThan:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslComparisonValue'
+          description: 变成大于该值时触发。与其他比较符互斥。
+        greaterThanOrEqualTo:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslComparisonValue'
+          description: 变成大于等于该值时触发。与其他比较符互斥。
+        lessThan:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslComparisonValue'
+          description: 变成小于该值时触发。与其他比较符互斥。
+        lessThanOrEqualTo:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslComparisonValue'
+          description: 变成小于等于该值时触发。与其他比较符互斥。
+        for:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslDuration'
+          description: 属性变成比较结果后，保持该结果满这段时间才触发一次。这是触发前的稳住时间。判断当前值是否已经持续，用 property.state 的 for。启动时不读当前值，用 sustain。
+        suppressFor:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslDuration'
+          description: 一次触发之后，在该时长内不再触发。
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配
+        linkFrom:
+          type: array
+          maxItems: 0
+          description: 触发器不能有入边。省略，或给空数组。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+        rising:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslComparisonValue'
+          description: 数值向上穿过该值时触发。不能与 for 或其他比较符同时使用。
+        falling:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslComparisonValue'
+          description: 数值向下穿过该值时触发。不能与 for 或其他比较符同时使用。
+      additionalProperties: false
+      not:
+        anyOf:
+        - required:
+          - is
+          - isNot
+        - required:
+          - is
+          - greaterThan
+        - required:
+          - is
+          - greaterThanOrEqualTo
+        - required:
+          - is
+          - lessThan
+        - required:
+          - is
+          - lessThanOrEqualTo
+        - required:
+          - is
+          - rising
+        - required:
+          - is
+          - falling
+        - required:
+          - isNot
+          - greaterThan
+        - required:
+          - isNot
+          - greaterThanOrEqualTo
+        - required:
+          - isNot
+          - lessThan
+        - required:
+          - isNot
+          - lessThanOrEqualTo
+        - required:
+          - isNot
+          - rising
+        - required:
+          - isNot
+          - falling
+        - required:
+          - greaterThan
+          - greaterThanOrEqualTo
+        - required:
+          - greaterThan
+          - lessThan
+        - required:
+          - greaterThan
+          - lessThanOrEqualTo
+        - required:
+          - greaterThan
+          - rising
+        - required:
+          - greaterThan
+          - falling
+        - required:
+          - greaterThanOrEqualTo
+          - lessThan
+        - required:
+          - greaterThanOrEqualTo
+          - lessThanOrEqualTo
+        - required:
+          - greaterThanOrEqualTo
+          - rising
+        - required:
+          - greaterThanOrEqualTo
+          - falling
+        - required:
+          - lessThan
+          - lessThanOrEqualTo
+        - required:
+          - lessThan
+          - rising
+        - required:
+          - lessThan
+          - falling
+        - required:
+          - lessThanOrEqualTo
+          - rising
+        - required:
+          - lessThanOrEqualTo
+          - falling
+        - required:
+          - rising
+          - falling
+        - required:
+          - rising
+          - for
+        - required:
+          - falling
+          - for
+
+    AutomationDslTimeSchedule:
+      type: object
+      description: 定时触发。cron 与 at 只能有一个，均使用站点时区，不接受 timezone 参数。repeatDays 和 location 只用于 at，location 只参与 sunrise 和 sunset。
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          description: 固定值 time.schedule。
+          enum:
+          - time.schedule
+        cron:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslCron'
+          description: Cron 表达式，格式为秒 分 时 日 月 周 年。使用站点时区，与 at 互斥。
+        at:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslTime'
+          description: 一天中的时间点，使用站点时区，与 cron 互斥。
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配。
+        linkFrom:
+          type: array
+          maxItems: 0
+          description: 触发器不能有入边。省略，或给空数组。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+        repeatDays:
+          type: array
+          items:
+            type: integer
+            minimum: 1
+            maximum: 7
+          minItems: 1
+          uniqueItems: true
+          description: 1 表示周一，7 表示周日。只用于 at，省略表示每天。不能与 cron 同时出现。
+        location:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslGeoLocation'
+          description: 日出日落计算用的经纬度。只用于 at 里的 sunrise 或 sunset。
+      additionalProperties: false
+      oneOf:
+      - required:
+        - cron
+      - required:
+        - at
+      allOf:
+      - allOf:
+        - anyOf:
+          - not:
+              required:
+              - cron
+          - not:
+              anyOf:
+              - required:
+                - repeatDays
+              - required:
+                - location
+
+    AutomationDslAlarmEvent:
+      type: object
+      description: 告警进入指定状态时触发。alarmId 使用已有告警规则引用，不要用自动化 id 猜测。保存时不核对该引用是否存在；启动时找不到目标，这条触发不会发生。
+      required:
+      - type
+      - alarmId
+      - alarmState
+      properties:
+        type:
+          type: string
+          enum:
+          - event.alarm
+        alarmId:
+          type: string
+          minLength: 1
+          description: 已有告警规则引用。
+        alarmState:
+          type: string
+          enum:
+          - active_unacked
+          - active_acked
+          - normal_unacked
+          - normal_acked
+          description: 进入该状态时触发。active_unacked 触发未确认，active_acked 触发已确认，normal_unacked 恢复未确认，normal_acked 恢复已确认。
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配。
+        linkFrom:
+          type: array
+          maxItems: 0
+          description: 触发器不能有入边。省略，或给空数组。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslServiceEvent:
+      type: object
+      description: 外部事件或服务节点事件。serviceId 省略或为 externalEventService 时监听外部事件；其他值按内部服务节点解析，eventName 是该节点的事件属性名。保存时不核对该引用是否存在；启动时找不到目标，这条触发不会发生。
+      required:
+      - type
+      - eventName
+      properties:
+        type:
+          type: string
+          enum:
+          - event.service_call
+        serviceId:
+          type: string
+          description: 省略或 externalEventService 表示外部事件。其他值是内部服务节点引用。
+        eventName:
+          type: string
+          minLength: 1
+          description: 事件名。内部服务节点上它是事件属性名。
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配。
+        linkFrom:
+          type: array
+          maxItems: 0
+          description: 触发器不能有入边。省略，或给空数组。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslCondition:
+      description: 条件，定义执行动作前需要满足的条件。
+      oneOf:
+      - $ref: '#/components/schemas/AutomationDslAndCondition'
+      - $ref: '#/components/schemas/AutomationDslOrCondition'
+      - $ref: '#/components/schemas/AutomationDslNotCondition'
+      - $ref: '#/components/schemas/AutomationDslPropertyState'
+      - $ref: '#/components/schemas/AutomationDslTimeBetween'
+      - $ref: '#/components/schemas/AutomationDslXorCondition'
+      - $ref: '#/components/schemas/AutomationDslTimeRangeFixed'
+      - $ref: '#/components/schemas/AutomationDslFlowState'
+      - $ref: '#/components/schemas/AutomationDslCompare'
+
+    AutomationDslAndCondition:
+      type: object
+      description: 全部子条件都成立。至少两个子条件。
+      required:
+      - type
+      - conditions
+      properties:
+        type:
+          type: string
+          description: 固定值 and。
+          enum:
+          - and
+        conditions:
+          type: array
+          description: 子条件列表（至少两个）。
+          minItems: 2
+          items:
+            $ref: '#/components/schemas/AutomationDslCondition'
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配。
+        linkFrom:
+          type: array
+          description: 入边。省略时按所在数组的位置接线。空数组表示不接上游。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslOrCondition:
+      type: object
+      description: 任一子条件成立。至少两个子条件。
+      required:
+      - type
+      - conditions
+      properties:
+        type:
+          type: string
+          description: 固定值 or
+          enum:
+          - or
+        conditions:
+          type: array
+          description: 子条件列表（至少两个）
+          minItems: 2
+          items:
+            $ref: '#/components/schemas/AutomationDslCondition'
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配。
+        linkFrom:
+          type: array
+          description: 入边。省略时按所在数组的位置接线。空数组表示不接上游。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslNotCondition:
+      type: object
+      description: 子条件不成立。
+      required:
+      - type
+      - condition
+      properties:
+        type:
+          type: string
+          description: 固定值 not
+          enum:
+          - not
+        condition:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslCondition'
+          description: 要取反的条件。
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配。
+        linkFrom:
+          type: array
+          description: 入边。省略时按所在数组的位置接线。空数组表示不接上游。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslPropertyState:
+      type: object
+      description: 检查属性当前值。必须且只能写一个比较符。for 表示该比较已经持续的时长。rising 和 falling 表示穿过比较值，不能与 for 同时使用。
+      required:
+      - type
+      - source
+      properties:
+        type:
+          type: string
+          description: 固定值 property.state。
+          enum:
+          - property.state
+        source:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslDatasource'
+          description: 要检查的设备属性数据源。
+        is:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslComparisonValue'
+          description: 当前值等于该值。
+        isNot:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslComparisonValue'
+          description: 当前值不等于该值。
+        greaterThan:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslComparisonValue'
+          description: 当前值大于该值。
+        greaterThanOrEqualTo:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslComparisonValue'
+          description: 当前值大于等于该值。
+        lessThan:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslComparisonValue'
+          description: 当前值小于该值。
+        lessThanOrEqualTo:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslComparisonValue'
+          description: 当前值小于等于该值。
+        for:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslDuration'
+          description: 检查时，这个比较必须已经持续满这段时间。它不发起触发。等一次变化稳住，用 property.event 的 for。启动时不读当前值，用 sustain。
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配。
+        linkFrom:
+          type: array
+          description: 入边。省略表示按位置接线；空数组表示该节点游离。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+        rising:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslComparisonValue'
+          description: 数值向上穿过该值。不能与 for 或其他比较符同时使用。
+        falling:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslComparisonValue'
+          description: 数值向下穿过该值。不能与 for 或其他比较符同时使用。
+      additionalProperties: false
+      allOf:
+      - oneOf:
+        - required:
+          - is
+        - required:
+          - isNot
+        - required:
+          - greaterThan
+        - required:
+          - greaterThanOrEqualTo
+        - required:
+          - lessThan
+        - required:
+          - lessThanOrEqualTo
+        - required:
+          - rising
+        - required:
+          - falling
+      - not:
+          anyOf:
+          - required:
+            - rising
+            - for
+          - required:
+            - falling
+            - for
+
+    AutomationDslTimeBetween:
+      type: object
+      description: 当前时间是否在 after 与 before 之间。after 晚于 before 时表示跨午夜。repeatDays 省略表示每天。location 只用于 sunrise 和 sunset。
+      required:
+      - type
+      - after
+      - before
+      properties:
+        type:
+          type: string
+          description: 固定值 time.between
+          enum:
+          - time.between
+        after:
+          type: string
+          description: 窗口开始时间。
+        before:
+          type: string
+          description: 窗口结束时间。早于 after 时窗口跨午夜。
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配
+        linkFrom:
+          type: array
+          description: 入边。省略表示按位置接线；空数组表示该节点游离
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+        repeatDays:
+          type: array
+          items:
+            type: integer
+            minimum: 1
+            maximum: 7
+          minItems: 1
+          uniqueItems: true
+          description: 1 表示周一，7 表示周日。省略表示每天。
+        location:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslGeoLocation'
+          description: 日出日落计算用的经纬度。
+      additionalProperties: false
+
+    AutomationDslAction:
+      description: 动作，定义自动化触发后要执行的操作
+      oneOf:
+      - $ref: '#/components/schemas/AutomationDslTraitWrite'
+      - $ref: '#/components/schemas/AutomationDslCommandCall'
+      - $ref: '#/components/schemas/AutomationDslDelay'
+      - $ref: '#/components/schemas/AutomationDslSceneExecute'
+      - $ref: '#/components/schemas/AutomationDslVariableSet'
+      - $ref: '#/components/schemas/AutomationDslScriptRun'
+      - $ref: '#/components/schemas/AutomationDslFlowManage'
+      - $ref: '#/components/schemas/AutomationDslLoopManage'
+      - $ref: '#/components/schemas/AutomationDslMathAction'
+      - $ref: '#/components/schemas/AutomationDslStringConcatAction'
+      - $ref: '#/components/schemas/AutomationDslStringSubstringAction'
+      - $ref: '#/components/schemas/AutomationDslStringAssignAction'
+      - $ref: '#/components/schemas/AutomationDslStringCaseAction'
+      - $ref: '#/components/schemas/AutomationDslAggregateAction'
+      - $ref: '#/components/schemas/AutomationDslVariableToggle'
+      - $ref: '#/components/schemas/AutomationDslMessagePush'
+      - $ref: '#/components/schemas/AutomationDslDeviceBatch'
+    AutomationDslTraitWrite:
+      type: object
+      description: 写入设备属性。value 只能是布尔、数字或字符串。字符串 toggle 只对布尔属性取反，写到其他类型时按普通字符串处理。
+      required:
+      - type
+      - functionCode
+      - traitCode
+      - targets
+      - value
+      properties:
+        type:
+          type: string
+          description: 固定值 device.trait.write。
+          enum:
+          - device.trait.write
+        functionCode:
+          type: string
+          description: 功能码。
+        traitCode:
+          type: string
+          description: 属性代码。
+        targets:
+          type: array
+          description: 要写入的设备和端点。
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/AutomationDslEndpointInfo'
+        value:
+          description: 本次要写入设备的标量。只接受布尔、数字或字符串，不接受值表达式。布尔属性上的字符串 toggle 表示对当前值取反。与变量声明里的创建初值不是同一含义。
+          oneOf:
+          - type: boolean
+          - type: number
+          - type: string
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配。
+        linkFrom:
+          type: array
+          description: 入边。省略时按动作数组顺序接线。空数组表示不接上游。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslEndpointInfo:
+      type: object
+      description: 端点信息。
+      required:
+      - deviceId
+      - endpointIds
+      properties:
+        deviceId:
+          type: string
+          description: 设备 ID。
+        endpointIds:
+          type: array
+          description: 设备功能点 ID 列表。
+          minItems: 1
+          items:
+            type: integer
+      additionalProperties: false
+
+    AutomationDslCommandCall:
+      type: object
+      description: 调用设备命令。参数值只能是布尔、数字或字符串。
+      required:
+      - type
+      - functionCode
+      - commandCode
+      - targets
+      properties:
+        type:
+          type: string
+          description: 固定值 device.command.call。
+          enum:
+          - device.command.call
+        functionCode:
+          type: string
+          description: 功能码。
+        commandCode:
+          type: string
+          description: 命令代码。
+        targets:
+          type: array
+          description: 要执行命令的设备和端点。
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/AutomationDslEndpointInfo'
+        args:
+          type: array
+          description: 命令参数。每一项的 value 是标量。
+          items:
+            $ref: '#/components/schemas/AutomationDslCommandArg'
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配。
+        linkFrom:
+          type: array
+          description: 入边。省略时按动作数组顺序接线。空数组表示不接上游。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslCommandArg:
+      type: object
+      description: 命令参数。
+      required:
+      - fieldCode
+      - value
+      properties:
+        fieldCode:
+          type: string
+          description: 参数 ID。
+        value:
+          description: 命令参数标量。只接受布尔、数字或字符串，不接受值表达式。与变量声明里的创建初值不是同一含义。
+          oneOf:
+          - type: boolean
+          - type: number
+          - type: string
+      additionalProperties: false
+
+    AutomationDslDelay:
+      type: object
+      description: 等待 for 之后再执行后续动作。时长为 0 时立即继续。
+      required:
+      - type
+      - for
+      properties:
+        type:
+          type: string
+          description: 固定值 delay。
+          enum:
+          - delay
+        for:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslDuration'
+          description: 等待时长。0sec 表示立即继续。
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配。
+        linkFrom:
+          type: array
+          description: 入边。省略时按动作数组顺序接线。空数组表示不接上游。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslSceneExecute:
+      type: object
+      description: 执行 sceneId 指定的场景，然后继续下一步。不等待整个场景结束。不接受 params。
+      required:
+      - type
+      - sceneId
+      properties:
+        type:
+          type: string
+          description: 固定值 action.scene_execute。
+          enum:
+          - action.scene_execute
+        sceneId:
+          type: string
+          pattern: ^auto_[A-Za-z0-9-]+$
+          description: 原样复制 list_scenes 或 get_scene_details 返回的 sceneId。
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配。
+        linkFrom:
+          type: array
+          description: 入边。省略时按动作数组顺序接线。空数组表示不接上游。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslAssignmentTarget:
+      type: object
+      required:
+      - type
+      - scope
+      properties:
+        type:
+          type: string
+          enum:
+          - variable
+        scope:
+          type: string
+          enum:
+          - device
+          - flow
+          - global
+          description: device 写设备属性，flow 写本流程变量，global 写全局变量。
+        deviceId:
+          type: string
+          minLength: 1
+          description: scope 为 device 时的设备 id。
+        resourceId:
+          type: string
+          minLength: 1
+          pattern: ^\d+\.[^.]+\.[^.]+$
+          description: scope 为 device 时的端点.功能.特性。
+        id:
+          type: string
+          minLength: 1
+          description: scope 为 flow 或 global 时的变量 id。flow 使用 metadata.variables 里的 name。global 使用已有全局变量引用。
+      additionalProperties: false
+      oneOf:
+      - properties:
+          scope:
+            enum:
+            - device
+        required:
+        - deviceId
+        - resourceId
+        not:
+          required:
+          - id
+      - properties:
+          scope:
+            enum:
+            - flow
+            - global
+        required:
+        - id
+        not:
+          anyOf:
+          - required:
+            - deviceId
+          - required:
+            - resourceId
+      description: 赋值目标。scope 为 device 时填写 deviceId 和 resourceId，resourceId 格式是端点.功能.特性。scope 为 flow 或 global 时只填写 id。
+
+    AutomationDslVariableSet:
+      type: object
+      required:
+      - type
+      - target
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - action.variable_set
+        target:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslAssignmentTarget'
+          description: 写入位置。
+        value:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslValueExpression'
+          description: 本次要写入的值，可以是字面量或值表达式。不是 metadata.variables[].value 那种创建初值。
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配。
+        linkFrom:
+          type: array
+          description: 入边。省略时按动作数组顺序接线。空数组表示不接上游。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+      description: 把 value 写入 target。设备范围授权不能写 scope 为 global 的目标。
+
+    AutomationDslScriptRun:
+      type: object
+      required:
+      - type
+      - script
+      properties:
+        type:
+          type: string
+          enum:
+          - action.script_run
+        script:
+          type: string
+          maxLength: 65536
+          description: 要执行的 JavaScript。空白脚本不执行并继续下一步。
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配。
+        linkFrom:
+          type: array
+          description: 入边。省略时按动作数组顺序接线。空数组表示不接上游。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+      description: 执行 JavaScript。空脚本直接继续。脚本里可用 ctx.readVar、ctx.writeVar、log.info 和 log.warn。设备范围授权不能使用。
+
+    AutomationDslFlowManage:
+      type: object
+      required:
+      - type
+      - automationId
+      - enabled
+      properties:
+        type:
+          type: string
+          enum:
+          - action.flow_manage
+        enabled:
+          type: boolean
+          description: true 启用目标，false 停用目标。
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配。
+        linkFrom:
+          type: array
+          description: 入边。省略时按动作数组顺序接线。空数组表示不接上游。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+        automationId:
+          type: string
+          minLength: 1
+          pattern: ^auto_[A-Za-z0-9-]+$
+          description: 原样复制 list_automations 返回的 automationId，不自行构造。
+      additionalProperties: false
+      description: 持久修改目标自动化的启用状态。automationId 原样复制 list_automations 返回值。场景不支持启用状态。目标无效时停止，后续动作不执行。设备范围授权不能使用。
+
+    AutomationDslLoopManage:
+      type: object
+      required:
+      - type
+      - loopId
+      - enabled
+      properties:
+        type:
+          type: string
+          enum:
+          - action.loop_manage
+        loopId:
+          type: string
+          minLength: 1
+          description: 目标 time.interval 的内部引用。
+        enabled:
+          type: boolean
+          description: true 启动循环，false 停止循环。
+        id:
+          type: string
+          minLength: 1
+          description: 节点 id，整份脚本内唯一；省略时由导入分配。
+        linkFrom:
+          type: array
+          description: 入边。省略时按动作数组顺序接线。空数组表示不接上游。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+      description: 打开或关闭一个 time.interval 的运行开关，不修改配置。loopId 是该循环节点的内部引用。目标无效时停止，后续动作不执行。设备范围授权不能使用。
+
+    AutomationDslFlowVariableRef:
+      type: object
+      required:
+      - type
+      - id
+      properties:
+        type:
+          type: string
+          enum:
+          - variable.flow
+        id:
+          type: string
+          minLength: 1
+          description: 流程变量名。
+      additionalProperties: false
+      description: 读取本流程变量。id 是 metadata.variables 里的 name。
+
+    AutomationDslGlobalVariableRef:
+      type: object
+      required:
+      - type
+      - id
+      properties:
+        type:
+          type: string
+          enum:
+          - variable.global
+        id:
+          type: string
+          minLength: 1
+          description: 已有全局变量引用。
+      additionalProperties: false
+      description: 读取已有全局变量。设备范围授权不能使用。
+
+    AutomationDslContextRef:
+      type: object
+      required:
+      - type
+      - path
+      properties:
+        type:
+          type: string
+          enum:
+          - context
+        path:
+          type: string
+          minLength: 1
+          description: 固定为 trigger.timestamp，表示本次触发的毫秒时间戳。
+          enum:
+          - trigger.timestamp
+      additionalProperties: false
+      description: 读取本次触发的上下文。
+
+    AutomationDslValueExpression:
+      description: 动作和比较里使用的值，可以是字面量，也可以是变量引用、设备属性或节点输出。与 metadata.variables[].value 的创建初值字面量不是同一含义。
+      oneOf:
+      - anyOf:
+        - type: boolean
+        - type: number
+        - type: string
+        nullable: true
+      - $ref: '#/components/schemas/AutomationDslDeviceProperty'
+      - $ref: '#/components/schemas/AutomationDslDataRef'
+      - $ref: '#/components/schemas/AutomationDslFlowVariableRef'
+      - $ref: '#/components/schemas/AutomationDslGlobalVariableRef'
+      - $ref: '#/components/schemas/AutomationDslContextRef'
+      - $ref: '#/components/schemas/AutomationDslNodeOutputRef'
+
+    AutomationDslGeoLocation:
+      type: object
+      required:
+      - latitude
+      - longitude
+      properties:
+        latitude:
+          type: number
+          minimum: -90
+          maximum: 90
+          description: 纬度，单位是度，范围 -90 到 90。
+        longitude:
+          type: number
+          minimum: -180
+          maximum: 180
+          description: 经度，单位是度，范围 -180 到 180。
+      additionalProperties: false
+
+    AutomationDslNodeOutputRef:
+      type: object
+      required:
+      - type
+      - nodeId
+      - port
+      properties:
+        type:
+          type: string
+          enum:
+          - node.output
+        nodeId:
+          type: string
+          minLength: 1
+          description: 产出该值的节点 id。
+        port:
+          type: string
+          minLength: 1
+          description: 固定值 result，表示该节点算出的值。
+          enum:
+          - result
+      additionalProperties: false
+      description: 读取另一个节点算出的值。
+
+    AutomationDslTimeFixed:
+      type: object
+      description: 在指定日期的时间点触发一次。date 必须是真实的 yyyy-MM-dd，否则整份配置被拒绝。location 只用于 sunrise 和 sunset。
+      required:
+      - type
+      - date
+      - time
+      properties:
+        type:
+          type: string
+          enum:
+          - time.fixed
+        date:
+          type: string
+          description: 日期，格式 yyyy-MM-dd。
+          pattern: ^\d{4}-\d{2}-\d{2}$
+        time:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslTime'
+          description: 当天的时间点。
+        location:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslGeoLocation'
+          description: 日出日落计算用的经纬度。
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          maxItems: 0
+          description: 触发器不能有入边。省略，或给空数组。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslTimeInterval:
+      type: object
+      description: 按固定间隔触发。for 是两次触发的间隔，不是条件需要持续的时长。loopCount 省略或为 0 时一直循环。enabled 省略时为开启。
+      required:
+      - type
+      - for
+      properties:
+        type:
+          type: string
+          enum:
+          - time.interval
+        for:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslDuration'
+          description: 两次触发之间的间隔。不是属性需要保持的时长，也不是 sustain 的持续时长。
+        name:
+          type: string
+          description: 这个循环触发器的名称。
+        enabled:
+          type: boolean
+          description: 省略时为 true。false 表示创建后不启动，可由 action.loop_manage 打开。
+        loopCount:
+          type: integer
+          minimum: 0
+          description: 最多触发次数。省略或 0 表示不限制次数。
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          maxItems: 0
+          description: 触发器不能有入边。省略，或给空数组。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslVariableChange:
+      type: object
+      description: 变量值变化时触发。variable 必须是会变化的变量引用，字面量不会触发。
+      required:
+      - type
+      - variable
+      properties:
+        type:
+          type: string
+          enum:
+          - variable.change
+        variable:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslValueExpression'
+          description: 要监听的变量。使用 variable.flow、variable.global 或 device.property。
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          maxItems: 0
+          description: 触发器不能有入边。省略，或给空数组。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslXorCondition:
+      type: object
+      description: 成立的子条件个数为奇数。至少两个子条件。
+      required:
+      - type
+      - conditions
+      properties:
+        type:
+          type: string
+          enum:
+          - xor
+        conditions:
+          type: array
+          minItems: 2
+          items:
+            $ref: '#/components/schemas/AutomationDslCondition'
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+          description: 入边。省略时按所在数组的位置接线。空数组表示不接上游。
+      additionalProperties: false
+
+    AutomationDslTimeRangeFixed:
+      type: object
+      description: 当前时间是否在两个日期时间之间。日期必须是真实的 yyyy-MM-dd，否则整份配置被拒绝。afterTime 和 beforeTime 支持 sunrise/sunset 及偏移；使用太阳时间时 location
+        提供经纬度。
+      required:
+      - type
+      - afterDate
+      - afterTime
+      - beforeDate
+      - beforeTime
+      properties:
+        type:
+          type: string
+          enum:
+          - time.range.fixed
+        afterDate:
+          type: string
+          description: 日期，格式 yyyy-MM-dd。
+          pattern: ^\d{4}-\d{2}-\d{2}$
+        afterTime:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslTime'
+          description: 开始日期的时间点，支持固定时刻或 sunrise/sunset 及偏移。
+        beforeDate:
+          type: string
+          description: 日期，格式 yyyy-MM-dd。
+          pattern: ^\d{4}-\d{2}-\d{2}$
+        beforeTime:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslTime'
+          description: 结束日期的时间点，支持固定时刻或 sunrise/sunset 及偏移。
+        location:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslGeoLocation'
+          description: 日出日落计算用的经纬度。
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslFlowState:
+      type: object
+      description: 目标自动化当前启用状态是否等于 enabled。automationId 原样复制 list_automations 返回值。场景不支持启用状态。
+      required:
+      - type
+      - automationId
+      - enabled
+      properties:
+        type:
+          type: string
+          enum:
+          - flow.state
+        enabled:
+          type: boolean
+          description: true 表示目标必须启用。false 表示目标必须停用。
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+        automationId:
+          type: string
+          minLength: 1
+          pattern: ^auto_[A-Za-z0-9-]+$
+          description: 原样复制 list_automations 返回的 automationId，不自行构造。
+      additionalProperties: false
+
+    AutomationDslSustain:
+      type: object
+      description: 本块自己监听 source，比较成立并持续 for 之后触发一次。启动时不读当前值，下一次变化才开始计时。触发后必须先不满足，再重新持续满 for 才会再触发。op 省略时为 eq。不支持 rising 和 falling。属性变化后稳住用
+        property.event 的 for；检查当前是否已持续用 property.state 的 for。
+      required:
+      - type
+      - source
+      - for
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - sustain
+        source:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslValueExpression'
+          description: 被监听的值。
+        for:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslDuration'
+          description: 比较成立后需要持续的时长。启动时不读当前值。触发一次后，要先不满足再重新持续满这段时间。
+        op:
+          type: string
+          description: 比较符。省略时为 eq。不能使用 rising 或 falling。
+          enum:
+          - eq
+          - neq
+          - gt
+          - gte
+          - lt
+          - lte
+        value:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslValueExpression'
+          description: 比较右值，可以是字面量或值表达式。不是 metadata.variables[].value 那种创建初值。
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          maxItems: 0
+          description: 触发器不能有入边。省略，或给空数组。
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslCompare:
+      type: object
+      description: 比较左右两个值。eq、neq、gt、gte、lt、lte 比较当前值。rising 和 falling 表示左值穿过右值。
+      required:
+      - type
+      - left
+      - op
+      - right
+      properties:
+        type:
+          type: string
+          enum:
+          - compare
+        left:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslValueExpression'
+          description: 左值。
+        op:
+          type: string
+          enum:
+          - eq
+          - neq
+          - gt
+          - gte
+          - lt
+          - lte
+          - rising
+          - falling
+          description: eq 到 lte 比较当前值。rising 表示左值向上穿过右值，falling 表示向下穿过。
+        right:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslValueExpression'
+          description: 右值。
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslMathAction:
+      type: object
+      description: 数值运算。abs、sqrt、floor、ceil、round、ln、log10、exp 只使用 left。除数为 0 时走错误出口。assignTo 省略时结果留在本节点。
+      required:
+      - type
+      - op
+      properties:
+        type:
+          type: string
+          enum:
+          - data.math
+        op:
+          type: string
+          description: 运算符。
+          enum:
+          - add
+          - sub
+          - mul
+          - div
+          - modulus
+          - pow
+          - bitAnd
+          - bitOr
+          - bitXor
+          - min
+          - max
+          - abs
+          - sqrt
+          - floor
+          - ceil
+          - round
+          - ln
+          - log10
+          - exp
+          - shiftLeft
+          - shiftRight
+        left:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslValueExpression'
+          description: 左操作数。一元运算使用它。
+        right:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslValueExpression'
+          description: 右操作数。一元运算忽略它。
+        assignTo:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslWritableTarget'
+          description: 结果写入的变量或设备属性。省略时结果留在本节点。
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslStringConcatAction:
+      type: object
+      description: 把 left 和 right 连成一个字符串。省略的一侧按空字符串处理。
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - data.string.concat
+        left:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslValueExpression'
+          description: 前半段。省略时为空字符串。
+        right:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslValueExpression'
+          description: 后半段。省略时为空字符串。
+        assignTo:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslWritableTarget'
+          description: 结果写入的变量或设备属性。省略时结果留在本节点。
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslStringSubstringAction:
+      type: object
+      description: 从 start 起截取 length 个字符。start 为负数时从末尾倒数。length 小于等于 0 时结果为空字符串。
+      required:
+      - type
+      properties:
+        type:
+          type: string
+          enum:
+          - data.string.substring
+        source:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslValueExpression'
+          description: 要截取的字符串。省略时按空字符串处理。
+        start:
+          type: integer
+          description: 起始位置，从 0 开始。负数从末尾倒数。省略时为 0。
+        length:
+          type: integer
+          description: 截取长度。小于等于 0 时结果为空字符串。省略时为 0。
+        assignTo:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslWritableTarget'
+          description: 结果写入的变量或设备属性。省略时结果留在本节点。
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslStringAssignAction:
+      type: object
+      description: 把同一个字符串写入多个变量或设备属性。
+      required:
+      - type
+      - targets
+      properties:
+        type:
+          type: string
+          enum:
+          - data.string.assign
+        source:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslValueExpression'
+          description: 要写入的字符串。省略时按空字符串处理。
+        targets:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslWritableTarget'
+          description: 写入目标。每一项是 device.property、variable.flow 或 variable.global。
+          minItems: 1
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslStringCaseAction:
+      type: object
+      description: 转换目标字符串的大小写。mode 省略时转为大写。
+      required:
+      - type
+      - targets
+      properties:
+        type:
+          type: string
+          enum:
+          - data.string.case
+        targets:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslWritableTarget'
+          description: 要转换并写回的变量或设备属性。
+          minItems: 1
+        mode:
+          type: string
+          enum:
+          - upper
+          - lower
+          description: upper 转为大写，lower 转为小写。省略时为 upper。
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslAggregateAction:
+      type: object
+      description: 对 values 做数值聚合。values 至少一项。没有可聚合的数或计算失败时走错误出口，结果不是 0。assignTo 省略时结果留在本节点。
+      required:
+      - type
+      - op
+      - values
+      properties:
+        type:
+          type: string
+          enum:
+          - data.aggregate
+        op:
+          type: string
+          enum:
+          - avg
+          - max
+          - min
+          - sum
+          description: avg 平均值，max 最大值，min 最小值，sum 求和。
+        values:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/AutomationDslValueExpression'
+          description: 参与聚合的数值，至少一项。
+        assignTo:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslWritableTarget'
+          description: 结果写入的变量或设备属性。省略时结果留在本节点。
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslVariableToggle:
+      type: object
+      description: 对布尔值取反后写回。target 可以是流程变量、全局变量或设备布尔属性。
+      required:
+      - type
+      - target
+      properties:
+        type:
+          type: string
+          enum:
+          - variable.toggle
+        target:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslAssignmentTarget'
+          description: 要取反的布尔变量或设备属性。
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslMessagePush:
+      type: object
+      description: 向钉钉或企业微信群机器人发送文本。钉钉在 secret 非空时按加签规则签名。企业微信不使用 secret。设备范围授权不能使用。
+      required:
+      - type
+      - channel
+      - webhookUrl
+      - content
+      properties:
+        type:
+          type: string
+          enum:
+          - message.push
+        channel:
+          type: string
+          enum:
+          - dingtalk
+          - wechat
+          description: dingtalk 为钉钉自定义机器人，wechat 为企业微信群机器人。
+        webhookUrl:
+          type: string
+          description: 机器人 webhook 地址。
+        secret:
+          type: string
+          description: 钉钉加签密钥。为空时钉钉不加签。企业微信忽略该字段。
+        content:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslValueExpression'
+          description: 文本内容。发送为 {"msgtype":"text","text":{"content":...}}。
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslDeviceBatchItem:
+      type: object
+      required:
+      - deviceId
+      - endpointId
+      - functionCode
+      - traitCode
+      properties:
+        deviceId:
+          type: string
+          description: 设备 id。
+        endpointId:
+          type: integer
+          description: 端点 id。
+        functionCode:
+          type: string
+          description: 功能代码。
+        traitCode:
+          type: string
+          description: 属性代码。command 为 true 时这里填写命令代码。
+        value:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslValueExpression'
+          description: 本次要写入的值，可以是字面量或值表达式。command 不为 true 时必填。不是变量声明里的创建初值。
+        command:
+          type: boolean
+          description: true 表示调用命令。false 或省略表示写入属性。同一 device.batch 里每一项必须相同。
+        args:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslCommandArg'
+          description: 命令参数。只在 command 为 true 时填写。
+      additionalProperties: false
+      description: 批量中的一项。command 为 true 时 traitCode 是命令代码；否则 traitCode 是属性代码。
+      allOf:
+      - allOf:
+        - anyOf:
+          - not:
+              properties:
+                command:
+                  enum:
+                  - true
+              required:
+              - command
+          - not:
+              required:
+              - value
+        - anyOf:
+          - properties:
+              command:
+                enum:
+                - true
+            required:
+            - command
+          - required:
+            - value
+            not:
+              required:
+              - args
+
+    AutomationDslDeviceBatch:
+      type: object
+      description: 一次执行多项写入或多项命令。每一项使用自己的值和参数。同一块里不能同时包含属性写入和命令。
+      required:
+      - type
+      - items
+      properties:
+        type:
+          type: string
+          enum:
+          - device.batch
+        items:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/AutomationDslDeviceBatchItem'
+          description: 要执行的项。每一项写到自己的设备点。
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: false
+
+    AutomationDslWritableTarget:
+      description: 结果写入位置。省略 assignTo 时结果留在本节点，用 node.output 读取。
+      oneOf:
+      - $ref: '#/components/schemas/AutomationDslDeviceProperty'
+      - $ref: '#/components/schemas/AutomationDslFlowVariableRef'
+      - $ref: '#/components/schemas/AutomationDslGlobalVariableRef'
+
+    AutomationDslScene:
+      type: object
+      description: 场景动作配置，自带唯一执行入口，不接受 starters 或条件。
+      required:
+      - actions
+      properties:
+        metadata:
+          $ref: '#/components/schemas/AutomationDslMetadata'
+        actions:
+          type: array
+          description: 动作列表（至少一个）。
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/AutomationDslAction'
+      additionalProperties: false
+
+    JsonSceneConfig:
+      type: object
+      description: 场景动作配置，自带唯一执行入口，不接受 starters 或条件。
+      required:
+      - actions
+      properties:
+        metadata:
+          $ref: '#/components/schemas/AutomationDslMetadata'
+        actions:
+          type: array
+          description: 动作列表（至少一个）。
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/AutomationDslAction'
+      additionalProperties: false
+
+    SceneSummary:
+      type: object
+      required:
+      - sceneId
+      - name
+      - createTime
+      properties:
+        name:
+          type: string
+          description: 自动化名称。
+        createTime:
+          type: integer
+          format: int64
+          description: 创建时间（毫秒时间戳）。
+        space:
+          anyOf:
+          - $ref: '#/components/schemas/SpaceNode'
+          - type: object
+            nullable: true
+            enum:
+            - null
+          description: 当前关联空间；未关联时为 null。
+        metadata:
+          type: object
+          nullable: true
+          additionalProperties: true
+          description: includeMetadata=true 时返回的对象用户 metadata；与 config.metadata 不同。
+        sceneId:
+          type: string
+          description: 独立场景 ID，值使用创建或查询返回的 auto_... 标识。
+
+    SceneDetails:
+      allOf:
+      - $ref: '#/components/schemas/SceneSummary'
+      - type: object
+        properties:
+          configFormat:
+            type: string
+            enum:
+            - JSON_SCENE
+            - FLOW_CANONICAL
+            - null
+            nullable: true
+          config:
+            anyOf:
+            - $ref: '#/components/schemas/JsonSceneConfig'
+            - $ref: '#/components/schemas/FlowCanonicalConfig'
+            - type: object
+              nullable: true
+              enum:
+              - null
+            description: 能无损导出时返回动作配置，否则返回完整图。
+            nullable: true
+
+    CreateSceneRequest:
+      type: object
+      required:
+      - name
+      - config
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: 必须显式提供非空白展示名称；不从 config.metadata.name 回退。
+        autoSuffixOnDuplicate:
+          type: boolean
+          default: true
+          description: 名称重名处理策略。未传或为 true 时自动添加 (1)、(2) 等后缀；为 false 时返回名称重复错误。
+        config:
+          $ref: '#/components/schemas/JsonSceneConfig'
+
+    UpdateSceneRequest:
+      type: object
+      required:
+      - sceneId
+      - updateMask
+      properties:
+        name:
+          type: string
+          nullable: true
+        autoSuffixOnDuplicate:
+          type: boolean
+          default: true
+          description: 名称重名处理策略。未传或为 true 时自动添加 (1)、(2) 等后缀；为 false 时返回名称重复错误。该字段不需要加入 updateMask。
+        config:
+          anyOf:
+          - $ref: '#/components/schemas/JsonSceneConfig'
+          - type: object
+            nullable: true
+            enum:
+            - null
+          description: 选中 config 时必须提供完整非 null 配置。
+        updateMask:
+          type: array
+          description: 仅支持 name、config；场景没有 enabled。config.metadata.name 不隐式改名。
+          items:
+            type: string
+            enum:
+            - name
+            - config
+          minItems: 1
+          uniqueItems: true
+        sceneId:
+          type: string
+          minLength: 1
+
+    UpdateSceneSpaceRequest:
+      type: object
+      required:
+      - spaceId
+      - sceneIds
+      properties:
+        spaceId:
+          type: string
+          minLength: 1
+          description: 目标空间ID。自动化已有空间关联时会替换为该空间。
+        sceneIds:
+          type: array
+          minItems: 1
+          description: 要更新空间关联的自动化 ID 列表。
+          items:
+            type: string
+      example:
+        spaceId: space-livingroom-001
+        sceneIds:
+        - auto_01HXYZABCDEF1234567890
+
+    DeleteScenesRequest:
+      type: object
+      required:
+      - sceneIds
+      properties:
+        sceneIds:
+          type: array
+          minItems: 1
+          items:
+            type: string
+
+    SceneBatchFailure:
+      type: object
+      required:
+      - sceneId
+      - code
+      - message
+      properties:
+        sceneId:
+          type: string
+          description: 处理失败的 sceneId。
+        code:
+          type: integer
+          description: 失败项错误码。
+        message:
+          type: string
+          description: 失败项错误信息。
+
+    SceneBatchResultData:
+      type: object
+      required:
+      - successIds
+      - failedItems
+      properties:
+        successIds:
+          type: array
+          description: 批量处理成功的 sceneId 列表。
+          items:
+            type: string
+        failedItems:
+          type: array
+          description: 批量处理失败项列表。
+          items:
+            $ref: '#/components/schemas/SceneBatchFailure'
+
+    SceneListData:
+      type: object
+      required:
+      - totalCount
+      - pageNum
+      - pageSize
+      - data
+      properties:
+        totalCount:
+          type: integer
+          description: 总条数。
+        pageNum:
+          type: integer
+          description: 当前页码。
+        pageSize:
+          type: integer
+          description: 每页条数。
+        data:
+          type: array
+          description: 场景列表。
+          items:
+            $ref: '#/components/schemas/SceneSummary'
+
+    ExecuteSceneRequest:
+      type: object
+      required:
+      - sceneId
+      additionalProperties: false
+      properties:
+        sceneId:
+          type: string
+          description: 场景 ID。
+          pattern: ^auto_[A-Za-z0-9-]+$
+
+    CreateSceneResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          data:
+            type: string
+          type:
+            type: string
+            enum:
+            - CreateSceneResponse
+
+    UpdateSceneResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          data:
+            type: string
+            example: ''
+          type:
+            type: string
+            enum:
+            - UpdateSceneResponse
+
+    ExecuteSceneResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          data:
+            type: string
+            example: ''
+
+    UpdateSceneSpaceResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/SceneBatchResultData'
+          type:
+            type: string
+            enum:
+            - UpdateSceneSpaceResponse
+
+    DeleteSceneResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/SceneBatchResultData'
+          type:
+            type: string
+            enum:
+            - DeleteSceneResponse
+
+    SceneDetailsResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/SceneDetails'
+          type:
+            type: string
+            enum:
+            - GetSceneDetailsResponse
+
+    SceneListResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        properties:
+          data:
+            $ref: '#/components/schemas/SceneListData'
+          type:
+            type: string
+            enum:
+            - GetSceneListResponse
+
+    ResourceControlReference:
+      type: object
+      description: 完整业务控制引用；仅在映射、可见性及当前设备 API 选择器均确认时返回，整组复制，不猜字段。endpointId=0 有效。
+      required:
+      - deviceId
+      - endpointId
+      - functionCode
+      additionalProperties: false
+      properties:
+        deviceId:
+          type: string
+          description: 设备 ID。
+          minLength: 1
+        endpointId:
+          type: integer
+          minimum: 0
+          description: 端点 ID。
+        functionCode:
+          type: string
+          minLength: 1
+          description: 功能代码。
+        traitCode:
+          type: string
+          minLength: 1
+          description: 功能点代码。
+        commandCode:
+          type: string
+          minLength: 1
+          description: 命令代码。
+      oneOf:
+      - required:
+        - traitCode
+      - required:
+        - commandCode
+
+    ResponseEnvelope:
+      type: object
+      x-business-success-condition: code == 0
+      required:
+      - version
+      - msgId
+      - code
+      properties:
+        type:
+          type: string
+          description: 可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。
+        version:
+          type: string
+          description: 接口版本
+          example: v1
+        msgId:
+          type: string
+          description: 消息ID
+        code:
+          type: integer
+          description: 业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败
+        message:
+          type: string
+          description: 提示信息
+      description: 不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。

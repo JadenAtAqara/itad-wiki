@@ -1,0 +1,71 @@
+---
+id: query-scene-list
+title: "查询场景列表"
+description: "场景为 actions 与可选 metadata，没有 starters、条件或 enabled。更新目标 ID 在 body 中；执行成功表示受理。批量操作检查每项结果。"
+sidebar_label: "查询场景列表"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "get api-method"
+info_path: i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-developer/data-export-api/data-export-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"查询场景列表"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"get"}
+  path={"/scenes"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+场景为 actions 与可选 metadata，没有 starters、条件或 enabled。更新目标 ID 在 body 中；执行成功表示受理。批量操作检查每项结果。
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[{"in":"query","name":"sceneName","required":false,"description":"场景名称模糊过滤。","schema":{"type":"string"},"example":"回家亮灯"},{"in":"query","name":"spaceIds","required":false,"description":"空间 ID 列表。URL 示例：spaceIds=xx1,xx2 或 spaceIds=xx1&spaceIds=xx2。为空时不按指定空间过滤","schema":{"type":"array","items":{"type":"string"}},"style":"form","explode":true},{"in":"query","name":"needChildren","required":false,"description":"是否需要查询子孙空间的场景，只有传入 spaceIds 条件时才生效","schema":{"type":"boolean","default":false}},{"in":"query","name":"spaceAssociated","required":false,"description":"缺省时不做空间关联过滤。true 查询已关联空间的场景，false 查询未关联空间的场景；当 spaceAssociated=false 时，spaceIds 和 needChildren 参数不生效","schema":{"type":"boolean","nullable":true}},{"in":"query","name":"orderBy","required":false,"description":"排序方式","schema":{"type":"string","default":"createTime asc","enum":["createTime asc","createTime desc"]},"example":"createTime asc"},{"in":"query","name":"pageNum","required":false,"description":"页码。","schema":{"type":"integer","default":1}},{"in":"query","name":"pageSize","required":false,"description":"每页数量。","schema":{"type":"integer","default":200}},{"in":"query","name":"includeMetadata","required":false,"schema":{"type":"boolean","default":false},"description":"是否回显对象用户 metadata。"}]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={undefined}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"成功","content":{"application/json":{"schema":{"allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"type":"object","required":["totalCount","pageNum","pageSize","data"],"properties":{"totalCount":{"type":"integer","description":"总条数。"},"pageNum":{"type":"integer","description":"当前页码。"},"pageSize":{"type":"integer","description":"每页条数。"},"data":{"type":"array","description":"场景列表。","items":{"type":"object","required":["sceneId","name","createTime"],"properties":{"name":{"type":"string","description":"自动化名称。"},"createTime":{"type":"integer","format":"int64","description":"创建时间（毫秒时间戳）。"},"space":{"anyOf":[{"type":"object","required":["spaceId","name"],"properties":{"spaceId":{"type":"string","description":"空间 ID。"},"parentSpaceId":{"type":"string","nullable":true,"description":"父空间 ID；没有父空间时省略此字段。"},"name":{"type":"string","description":"空间名称。"},"spatialMarking":{"type":"string","nullable":true,"description":"空间标记。"},"children":{"type":"array","nullable":true,"items":"circular(SpaceNode)","description":"子空间列表（递归结构）。"}},"title":"SpaceNode"},{"type":"object","nullable":true,"enum":[null]}],"description":"当前关联空间；未关联时为 null。"},"metadata":{"type":"object","nullable":true,"additionalProperties":true,"description":"includeMetadata=true 时返回的对象用户 metadata；与 config.metadata 不同。"},"sceneId":{"type":"string","description":"独立场景 ID，值使用创建或查询返回的 auto_... 标识。"}},"title":"SceneSummary"}}},"title":"SceneListData"},"type":{"type":"string","enum":["GetSceneListResponse"]}}}],"title":"SceneListResponse"}}}},"400":{"description":"请求参数错误","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"},"example":{"version":"","msgId":"","code":401,"message":"Authentication failed: Token is empty"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"},"example":{"version":"","msgId":"","code":403,"message":"无权访问该资源"}}}},"404":{"description":"资源不存在","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}},"429":{"description":"请求频率过高","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}},"500":{"description":"服务内部错误","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      

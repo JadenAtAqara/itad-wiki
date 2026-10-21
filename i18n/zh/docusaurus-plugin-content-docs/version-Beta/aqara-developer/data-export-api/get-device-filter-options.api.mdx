@@ -1,0 +1,75 @@
+---
+id: get-device-filter-options
+title: "获取设备筛选选项"
+description: "返回当前已创建且调用方可见的协议实例，可用于 /devices 的筛选条件。"
+sidebar_label: "获取设备筛选选项"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "get api-method"
+info_path: i18n/zh/docusaurus-plugin-content-docs/version-Beta/aqara-developer/data-export-api/data-export-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"获取设备筛选选项"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"get"}
+  path={"/devices/filter-options"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+返回当前已创建且调用方可见的协议实例，可用于 /devices 的筛选条件。
+默认返回全部已支持选项类别；当前仅支持 protocols。可通过 fields 指定需要的类别，未请求类别不返回；没有可选实例时返回空数组。
+本地调用可返回离线或没有设备的实例；启用设备授权的云端调用仅返回可访问设备所属的实例。搜索黑名单网络和云端转出网络不作为筛选选项返回。
+未配置公开类型或位掩码的实例仍返回 id、name，对应的 type、networkProtocolMask 显式为 null；不会返回内部框架类型。
+本接口支持本地和云端 HTTP。仅返回选项，不统计设备数量，不随其他设备筛选条件联动；不提供 WebSocket/MCP 选项查询入口。
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[{"name":"fields","required":false,"style":"form","explode":true,"description":"缺省返回全部已支持类别，当前仅 protocols。支持重复参数或逗号分隔，去除首尾空白并去重。显式空值、空片段或未知类别返回 400；例如 fields=protocols, 或 fields=deviceTypes 均无效。","schema":{"type":"array","minItems":1,"items":{"type":"string","enum":["protocols"]}},"example":["protocols"],"in":"query"}]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={undefined}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"成功；无可用实例时 data.protocols 为 []。","content":{"application/json":{"schema":{"allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"消息类型"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息 ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"title":"BaseResponse"},{"type":"object","required":["data"],"properties":{"type":{"type":"string","enum":["DeviceFilterOptionsResponse"]},"data":{"type":"object","description":"仅包含请求的选项类别；当前仅支持 protocols。","properties":{"protocols":{"type":"array","items":{"type":"object","required":["id","name","type","networkProtocolMask"],"properties":{"id":{"type":"string","description":"稳定的协议实例 ID，可直接传给 /devices 的 protocolIds；实例重命名不改变 ID。"},"name":{"type":"string","description":"用户设置的实例显示名称，保持原样，不自动翻译；可传给 protocolNames 完整匹配。"},"type":{"type":"string","nullable":true,"description":"稳定的公开类型代码，使用小写，不做多语言翻译；未配置映射时显式为 null。可传给 protocolTypes 查询同类型的所有实例。","example":"homeassistant"},"networkProtocolMask":{"type":"integer","format":"int64","nullable":true,"minimum":1,"maximum":4294967295,"description":"可选的协议分类关联，未配置时显式为 null。沿用 NetworkProtocolSupport（20870）位定义；默认 Matter→Thread(2)、Zigbee→8、Aqara RS485→32。不是设备实时 Trait 值。可直接传给 /devices 的 networkProtocolMask，多个分类按位 OR 合并。","example":2}},"title":"DeviceProtocolOption"}}}}}}],"title":"DeviceFilterOptionsResponse"},"example":{"type":"DeviceFilterOptionsResponse","version":"v1","msgId":"device-filter-options-001","code":0,"message":"success","data":{"protocols":[{"id":"1001","name":"Home Assistant","type":"homeassistant","networkProtocolMask":null},{"id":"1002","name":"Home Assistant(1)","type":"homeassistant","networkProtocolMask":null},{"id":"1003","name":"Matter","type":"matter","networkProtocolMask":2},{"id":"1004","name":"Zigbee","type":"zigbee","networkProtocolMask":8},{"id":"1005","name":"Aqara RS485","type":"aqarars485","networkProtocolMask":32},{"id":"1006","name":"Custom protocol","type":null,"networkProtocolMask":null}]}}}}},"400":{"description":"fields 为空、含空片段或包含未知类别。","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}},"401":{"description":"未认证或认证失效","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"},"example":{"version":"","msgId":"","code":401,"message":"Authentication failed: Token is empty"}}}},"403":{"description":"无权限访问","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"},"example":{"version":"","msgId":"","code":403,"message":"无权访问该资源"}}}},"429":{"description":"请求频率过高","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}},"500":{"description":"协议类型映射配置无效或发生内部错误。","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"可省略的消息类型；不能仅凭此字段判断成功，仍须检查 HTTP 状态和 code。"},"version":{"type":"string","description":"接口版本","example":"v1"},"msgId":{"type":"string","description":"消息ID"},"code":{"type":"integer","description":"业务状态码；仅 0 表示业务成功，HTTP 200 下的非 0 值仍表示业务失败"},"message":{"type":"string","description":"提示信息"}},"description":"不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      
