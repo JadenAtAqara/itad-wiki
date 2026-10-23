@@ -1,0 +1,71 @@
+---
+id: execute-scene
+title: "Execute A Scene"
+description: "You can execute a scene by this API. Success means the request was accepted, not that all actions have completed; do not blindly retry scenes with side effects after a timeout."
+sidebar_label: "Execute A Scene"
+hide_title: true
+hide_table_of_contents: true
+api: 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
+sidebar_class_name: "post api-method"
+info_path: versioned_docs/version-Beta/aqara-developer/data-export-api/data-export-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Execute A Scene"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"post"}
+  path={"/scenes/execute"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+You can execute a scene by this API. Success means the request was accepted, not that all actions have completed; do not blindly retry scenes with side effects after a timeout.
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={{"required":true,"content":{"application/json":{"schema":{"type":"object","required":["sceneId"],"additionalProperties":false,"properties":{"sceneId":{"type":"string","description":"Scene ID.","pattern":"^auto_[A-Za-z0-9-]+$"}},"title":"ExecuteSceneRequest"}}}}}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"Success","content":{"application/json":{"schema":{"allOf":[{"type":"object","required":["type","version","msgId","code"],"properties":{"type":{"type":"string","description":"Message type"},"version":{"type":"string","description":"API version","example":"v1"},"msgId":{"type":"string","description":"Message ID"},"code":{"type":"integer","description":"Status code; only 0 indicates success. Non-zero values under HTTP 200 still indicate failure"},"message":{"type":"string","description":"Message"}},"title":"BaseResponse"},{"type":"object","properties":{"data":{"type":"string","example":""}}}],"title":"ExecuteSceneResponse"}}}},"400":{"description":"Request parameter error","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"Optional message type. Don't determine success by this alone—check HTTP status and code."},"version":{"type":"string","description":"API version","example":"v1"},"msgId":{"type":"string","description":"Message ID"},"code":{"type":"integer","description":"Business status code. Only 0 means success; non-zero under HTTP 200 means failure."},"message":{"type":"string","description":"Message"}},"description":"Unforced response envelope with optional type, used for error responses and direct JSON response from REST init/MCP config; normal business responses still use BaseResponse with required type.","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}},"401":{"description":"Unauthorized or authentication expired","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"Optional message type. Don't determine success by this alone—check HTTP status and code."},"version":{"type":"string","description":"API version","example":"v1"},"msgId":{"type":"string","description":"Message ID"},"code":{"type":"integer","description":"Business status code. Only 0 means success; non-zero under HTTP 200 means failure."},"message":{"type":"string","description":"Message"}},"description":"Unforced response envelope with optional type, used for error responses and direct JSON response from REST init/MCP config; normal business responses still use BaseResponse with required type.","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"},"example":{"version":"","msgId":"","code":401,"message":"Authentication failed: Token is empty"}}}},"403":{"description":"No permission to access","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"Optional message type. Don't determine success by this alone—check HTTP status and code."},"version":{"type":"string","description":"API version","example":"v1"},"msgId":{"type":"string","description":"Message ID"},"code":{"type":"integer","description":"Business status code. Only 0 means success; non-zero under HTTP 200 means failure."},"message":{"type":"string","description":"Message"}},"description":"Unforced response envelope with optional type, used for error responses and direct JSON response from REST init/MCP config; normal business responses still use BaseResponse with required type.","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"},"example":{"version":"","msgId":"","code":403,"message":"No permission to access this resource"}}}},"404":{"description":"Resource not found","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"Optional message type. Don't determine success by this alone—check HTTP status and code."},"version":{"type":"string","description":"API version","example":"v1"},"msgId":{"type":"string","description":"Message ID"},"code":{"type":"integer","description":"Business status code. Only 0 means success; non-zero under HTTP 200 means failure."},"message":{"type":"string","description":"Message"}},"description":"Unforced response envelope with optional type, used for error responses and direct JSON response from REST init/MCP config; normal business responses still use BaseResponse with required type.","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}},"429":{"description":"Request frequency too high","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"Optional message type. Don't determine success by this alone—check HTTP status and code."},"version":{"type":"string","description":"API version","example":"v1"},"msgId":{"type":"string","description":"Message ID"},"code":{"type":"integer","description":"Business status code. Only 0 means success; non-zero under HTTP 200 means failure."},"message":{"type":"string","description":"Message"}},"description":"Unforced response envelope with optional type, used for error responses and direct JSON response from REST init/MCP config; normal business responses still use BaseResponse with required type.","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}},"500":{"description":"Internal server error","content":{"application/json":{"schema":{"description":"错误信息通过 code 与 message 提供；鉴权等直接错误响应可省略 type。","allOf":[{"type":"object","x-business-success-condition":"code == 0","required":["version","msgId","code"],"properties":{"type":{"type":"string","description":"Optional message type. Don't determine success by this alone—check HTTP status and code."},"version":{"type":"string","description":"API version","example":"v1"},"msgId":{"type":"string","description":"Message ID"},"code":{"type":"integer","description":"Business status code. Only 0 means success; non-zero under HTTP 200 means failure."},"message":{"type":"string","description":"Message"}},"description":"Unforced response envelope with optional type, used for error responses and direct JSON response from REST init/MCP config; normal business responses still use BaseResponse with required type.","title":"ResponseEnvelope"}],"example":{"type":"ErrorMessage","version":"v1","msgId":"a1b2c3d4-e5f6-7890-abcd-err000000001","code":400,"message":"参数 deviceId 不能为空"},"title":"ErrorResponse"}}}}}}
+>
+  
+</StatusCodes>
+
+
+      

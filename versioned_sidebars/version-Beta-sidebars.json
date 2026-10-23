@@ -397,6 +397,11 @@
                     },
                     {
                       "type": "doc",
+                      "id": "aqara-developer/data-export-api/get-device-filter-options",
+                      "className": "api-method get"
+                    },                    
+                    {
+                      "type": "doc",
                       "id": "aqara-developer/data-export-api/get-matched-device-capabilities",
                       "className": "api-method get"
                     },
@@ -551,19 +556,25 @@
                       "type": "doc",
                       "id": "aqara-developer/data-export-api/delete-automations",
                       "className": "api-method post"
-                    },
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/data-export-api/query-automation-manual-trigger-list",
-                      "className": "api-method get"
-                    },
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/data-export-api/execute-automation-manual-trigger",
-                      "className": "api-method post"
-                    } 
+                    }
                   ]
                 },
+                {
+                  "type": "category",
+                  "label": "Event",
+                  "link": {
+                    "type": "doc",
+                    "id": "aqara-developer/data-export-api/event"
+                  },
+                  "collapsed": false,
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/report-external-event",
+                      "className": "api-method post"
+                    }
+                  ]
+                }, 
                 {
                   "type": "category",
                   "label": "Firmware",
@@ -627,6 +638,52 @@
                     }
                   ]
                 },
+                {
+                  "type": "category",
+                  "label": "Scene",
+                  "link": {
+                    "type": "doc",
+                    "id": "aqara-developer/data-export-api/scene"
+                  },
+                  "collapsed": false,
+                  "items": [
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/create-scene",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/execute-scene",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/update-scene",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/update-scene-space",
+                      "className": "api-method post"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/query-scene-details",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/query-scene-list",
+                      "className": "api-method get"
+                    },
+                    {
+                      "type": "doc",
+                      "id": "aqara-developer/data-export-api/delete-scenes",
+                      "className": "api-method post"
+                    }
+                  ]
+                },                
                 {
                   "type": "category",
                   "label": "EMS",

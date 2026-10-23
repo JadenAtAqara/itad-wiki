@@ -27,7 +27,8 @@ Resolve site-relative links against this index's origin. Copy llms.txt on the pa
 - Device: /docs/aqara-developer/data-export-api/device
 - List Device Types: /docs/aqara-developer/data-export-api/get-device-types
 - List Devices: /docs/aqara-developer/data-export-api/get-devices
-- Query Device Model Definition: /docs/aqara-developer/data-export-api/get-device-definitions
+- Query Device Definitions (Device Details): /docs/aqara-developer/data-export-api/get-device-definitions
+- Get Device Filter Options: /docs/aqara-developer/data-export-api/get-device-filter-options
 - Query Device Matching Capabilities: /docs/aqara-developer/data-export-api/get-matched-device-capabilities
 - Control Devices by Traits: /docs/aqara-developer/data-export-api/execute-device-trait
 - Query Trait Values: /docs/aqara-developer/data-export-api/get-trait-values
@@ -57,8 +58,8 @@ Resolve site-relative links against this index's origin. Copy llms.txt on the pa
 - Batch Update Automation Statuses: /docs/aqara-developer/data-export-api/update-automation-status
 - Update Space Association for Automations: /docs/aqara-developer/data-export-api/update-automation-space
 - Delete Automations: /docs/aqara-developer/data-export-api/delete-automations
-- Get Manual Trigger List: /docs/aqara-developer/data-export-api/query-automation-manual-trigger-list
-- Execute A Manual Trigger: /docs/aqara-developer/data-export-api/execute-automation-manual-trigger
+- Event: /docs/aqara-developer/data-export-api/event
+- Report External System Event: /docs/aqara-developer/data-export-api/report-external-event
 - Firmware: /docs/aqara-developer/data-export-api/firmware
 - Query Upgradable Device Firmware by Device IDs: /docs/aqara-developer/data-export-api/search-upgradable-devices-firmware-by-device-ids
 - Initiate Firmware Upgrade: /docs/aqara-developer/data-export-api/upgrade-firmware
@@ -68,6 +69,14 @@ Resolve site-relative links against this index's origin. Copy llms.txt on the pa
 - Query Device Trait Value Change History: /docs/aqara-developer/data-export-api/query-device-point-history
 - Studio: /docs/aqara-developer/data-export-api/studio
 - Get Studio Statistics: /docs/aqara-developer/data-export-api/get-studio-statistics
+- Scene: /docs/aqara-developer/data-export-api/scene
+- Create A Scene: /docs/aqara-developer/data-export-api/create-scene
+- Execute A Scene: /docs/aqara-developer/data-export-api/execute-scene
+- Update A Scene: /docs/aqara-developer/data-export-api/update-scene
+- Associate Scene with Space: /docs/aqara-developer/data-export-api/update-scene-space
+- Query Scene Details: /docs/aqara-developer/data-export-api/query-scene-details
+- List Scenes: /docs/aqara-developer/data-export-api/query-scene-list
+- Delete Scenes: /docs/aqara-developer/data-export-api/delete-scenes
 - EMS: /docs/aqara-developer/data-export-api/ems
 - Get Energy Consumption Trend of a Device: /docs/aqara-developer/data-export-api/get-ems-trend-device
 - Get Energy Consumption Trend of a Space: /docs/aqara-developer/data-export-api/get-ems-trend-space
@@ -101,5 +110,5 @@ Resolve site-relative links against this index's origin. Copy llms.txt on the pa
 - Control Devices by Traits: /docs/aqara-developer/aiot-api/execute-device-trait
 - Query Trait Values: /docs/aqara-developer/aiot-api/get-trait-values
 - Control Devices by Commands: /docs/aqara-developer/aiot-api/execute-device-command
-- Aqara Spec 物模型标签: /docs/aqara-developer/aqara-data-model-specification/aqara-data-model-tags
+- Aqara Data Model Tags: /docs/aqara-developer/aqara-data-model-specification/aqara-data-model-tags
 

@@ -58,6 +58,12 @@ const sidebar: SidebarsConfig = {
         },
         {
           type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/get-device-filter-options",
+          label: "Get Device Filter Options",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/get-devices",
           label: "List Devices",
           className: "api-method get",
@@ -65,7 +71,7 @@ const sidebar: SidebarsConfig = {
         {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/get-device-definitions",
-          label: "Query Device Model Definition",
+          label: "Query Device Definitions (Device Details)",
           className: "api-method get",
         },
         {
@@ -267,7 +273,7 @@ const sidebar: SidebarsConfig = {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/update-automation",
           label: "Edit An Automation",
-          className: "api-method patch",
+          className: "api-method post",
         },
         {
           type: "doc",
@@ -285,18 +291,6 @@ const sidebar: SidebarsConfig = {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/delete-automations",
           label: "Delete Automations",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/query-automation-manual-trigger-list",
-          label: "Get Manual Trigger List",
-          className: "api-method get",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/execute-automation-manual-trigger",
-          label: "Execute A Manual Trigger",
           className: "api-method post",
         },
       ],
@@ -419,6 +413,23 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
+      label: "Event",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-developer/data-export-api/event",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/report-external-event",
+          label: "Report External System Event",
+          className: "api-method post",
+        },
+      ],
+    },
+    {
+      type: "category",
       label: "Alarm",
       link: {
         type: "doc",
@@ -460,6 +471,59 @@ const sidebar: SidebarsConfig = {
           type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/get-alarm-rules",
           label: "List Alarm Rules",
+          className: "api-method get",
+        },
+      ],
+    },
+    {
+      type: "category",
+      label: "Scene",
+      link: {
+        type: "doc",
+        id: "version-Beta/aqara-developer/data-export-api/scene",
+      },
+      collapsed: false,
+      items: [
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/create-scene",
+          label: "Create A Scene",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/query-scene-list",
+          label: "List Scenes",
+          className: "api-method get",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/update-scene",
+          label: "Update A Scene",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/update-scene-space",
+          label: "Associate Scene with Space",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/execute-scene",
+          label: "Execute A Scene",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/delete-scenes",
+          label: "Delete Scenes",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/query-scene-details",
+          label: "Query Scene Details",
           className: "api-method get",
         },
       ],
