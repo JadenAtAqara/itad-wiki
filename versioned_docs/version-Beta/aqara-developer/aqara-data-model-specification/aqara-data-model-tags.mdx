@@ -1,4 +1,7 @@
 ---
+hide_title: true
+hide_table_of_contents: true
+draft: true 
 title: "Aqara Data Model Tags"
 description: "Aqara Data Model Tags documentation, covering Function, Trait, Command and data type definitions."
 keywords: ["Aqara Data Model Tags", "Aqara Data Model", "Aqara Data Model", "Data Model Tags", "Aqara Developer", "Aqara Documentation"]
@@ -170,6 +173,8 @@ Aqara Spec defines three types of Endpoint:
 
 A Device Type describes the device type of an Endpoint. Each Device Type is identified by a unique Device Type ID (Uint16). Each Device Type defines the set of Functions that devices of this type must (M) or may (O) implement. Duplicate Functions are not allowed under one Endpoint.
 
+The new allocation range for business Aqara standard Device Type IDs is `1` ~ `10000`. The Root Device Type ID `0` is a special reserved value and is not part of the new allocation range for business Device Types.
+
 In addition to business Device Types, Aqara Spec defines two Device Types corresponding to special Endpoints:
 
 * *Root* (ID: 0x0000): used only for the Root Endpoint, must implement Basic Information and Descriptor.
@@ -183,19 +188,19 @@ For the complete Device Type ID encoding and Function requirements, see [Device 
 
 A Function describes a complete functional unit of a device, consisting of several Traits and Commands. Each Function is identified by a unique Function ID (Uint16).
 
-Standard Function ID range: `0x0000` ~ `0x4E1F`. Vendor private Function ID range: `0x4E20` ~ `0xFFFF`.
+The new allocation range for Aqara standard Function IDs is `0` ~ `19999`; the private Function ID range reserved for user customization is `64001` ~ `65534`.
 
 ### Trait
 
 A Trait describes an attribute or state in a Function, supporting operations such as Read, Write, and Report. Each Trait is identified by a unique Trait ID (Uint16).
 
-Standard Trait ID range: `0x0001` ~ `0x4E20`. Vendor private Trait ID range: `0x4E21` ~ `0x7530`.
+The new allocation range for Aqara standard Trait IDs is `1` ~ `30000`; the private Trait ID range reserved for user customization is `60000` ~ `64000`.
 
 ### Command
 
 A Command describes an executable operation in a Function, sent from the client to the device. Each Command is identified by a unique Command ID (Uint16).
 
-Standard Command ID range: `0x9C41` ~ `0xC350`. Vendor private Command ID range: `0xC351` ~ `0xEA60`.
+The new allocation range for Aqara standard Command IDs is `40001` ~ `50000`; the private Command ID range reserved for user customization is `64001` ~ `65534`.
 
 ### Parameter
 
@@ -217,26 +222,26 @@ A Parameter is a data field inside a Trait, identified by a Parameter ID (Uint16
   <tbody>
     <tr>
       <td>Device Type ID</td>
-      <td><code>0x0000</code> ~ <code>0xFFFF</code></td>
-      <td>-</td>
+      <td><code>1</code> ~ <code>10000</code> (business types; <code>0</code> is the Root special reserved value)</td>
+      <td><code>64001</code> ~ <code>65534</code></td>
       <td>Uint16</td>
     </tr>
     <tr>
       <td>Function ID</td>
-      <td><code>0x0000</code> ~ <code>0x4E1F</code></td>
-      <td><code>0x4E20</code> ~ <code>0xFFFF</code></td>
+      <td><code>0</code> ~ <code>19999</code></td>
+      <td><code>64001</code> ~ <code>65534</code></td>
       <td>Uint16</td>
     </tr>
     <tr>
       <td>Trait ID</td>
-      <td><code>0x0001</code> ~ <code>0x4E20</code></td>
-      <td><code>0x4E21</code> ~ <code>0x7530</code></td>
+      <td><code>1</code> ~ <code>30000</code></td>
+      <td><code>60000</code> ~ <code>64000</code></td>
       <td>Uint16</td>
     </tr>
     <tr>
       <td>Command ID</td>
-      <td><code>0x9C41</code> ~ <code>0xC350</code></td>
-      <td><code>0xC351</code> ~ <code>0xEA60</code></td>
+      <td><code>40001</code> ~ <code>50000</code></td>
+      <td><code>64001</code> ~ <code>65534</code></td>
       <td>Uint16</td>
     </tr>
     <tr>
@@ -247,6 +252,8 @@ A Parameter is a data field inside a Trait, identified by a Parameter ID (Uint16
     </tr>
   </tbody>
 </table>
+
+The standard and private ranges above constrain new ID allocation so that user-defined IDs do not collide with Aqara standard ID ranges. Values outside these ranges are not part of the corresponding category's standard or private new-allocation ranges. Updating the rules does not change IDs that are already defined or already in use: existing IDs SHOULD be kept as-is, and MUST NOT be renumbered or revalidated solely to fit the new ranges even if they fall outside the current new-allocation ranges. Except for the Root special reserved Device Type ID value `0`, newly allocated Device Type IDs SHOULD use the business standard range or the private range above.
 
 ## Trait Parameter Field Description
 
@@ -274,13 +281,13 @@ Parameter ID uses a 16-bit integer identifier, with a valid range of `0x0001` ~ 
       <td>0x0002</td>
       <td>Maximum Value</td>
       <td>PROP_MAX_PRES_VALUE</td>
-      <td>Maximum value</td>
+      <td>Maximum allowed/representable value of Present Value; together with Minimum Value describes the numeric range, not an alarm threshold.</td>
     </tr>
     <tr>
       <td>0x0003</td>
       <td>Minimum Value</td>
       <td>PROP_MIN_PRES_VALUE</td>
-      <td>Minimum value</td>
+      <td>Minimum allowed/representable value of Present Value; together with Maximum Value describes the numeric range, not an alarm threshold.</td>
     </tr>
     <tr>
       <td>0x0004</td>
@@ -310,13 +317,13 @@ Parameter ID uses a 16-bit integer identifier, with a valid range of `0x0001` ~ 
       <td>0x0008</td>
       <td>High Limit</td>
       <td>PROP_HIGH_LIMIT</td>
-      <td>Upper limit (Float)</td>
+      <td>High-side monitoring threshold (Float); may be used to judge whether Present Value exceeds the high-side threshold; does not define the Present Value span.</td>
     </tr>
     <tr>
       <td>0x0009</td>
       <td>Low Limit</td>
       <td>PROP_LOW_LIMIT</td>
-      <td>Lower limit (Float)</td>
+      <td>Low-side monitoring threshold (Float); may be used to judge whether Present Value is below the low-side threshold; does not define the Present Value span.</td>
     </tr>
     <tr>
       <td>0x000A</td>
@@ -328,13 +335,13 @@ Parameter ID uses a 16-bit integer identifier, with a valid range of `0x0001` ~ 
       <td>0x000B</td>
       <td>Maximum Actual Value</td>
       <td>PROP_MAX_ACTUAL_VALUE</td>
-      <td>Actual maximum value (Float)</td>
+      <td>Upper endpoint calibration value of the actual quantity corresponding to Present Value (Float); the mapping with Minimum Actual Value is defined by the object.</td>
     </tr>
     <tr>
       <td>0x000C</td>
       <td>Minimum Actual Value</td>
       <td>PROP_MIN_ACTUAL_VALUE</td>
-      <td>Actual minimum value (Float)</td>
+      <td>Lower endpoint calibration value of the actual quantity corresponding to Present Value (Float); the mapping with Maximum Actual Value is defined by the object.</td>
     </tr>
     <tr>
       <td>0x000D</td>
@@ -362,6 +369,44 @@ Parameter ID uses a 16-bit integer identifier, with a valid range of `0x0001` ~ 
     </tr>
   </tbody>
 </table>
+
+### Numeric Boundary Parameters
+
+#### Minimum Value and Maximum Value
+
+`Minimum Value` (`PROP_MIN_PRES_VALUE`) and `Maximum Value` (`PROP_MAX_PRES_VALUE`) describe the lower and upper bounds of the numeric range of `Present Value`. Reading these two parameters reveals the valid numeric range declared by the Trait. When writing `Present Value`, clients SHOULD constrain the target value to this range while also obeying the Trait's own type, step value, enumeration values, and other constraints. Devices SHOULD also handle out-of-range inputs according to their Trait definitions, and MUST NOT treat these two boundaries as alarm thresholds.
+
+For example, if a temperature Trait has `Minimum Value` of `-50`, `Maximum Value` of `100`, and `Unit` of degrees Celsius, it declares a numeric range of `-50°C` to `100°C`. Clients may use this range to validate user input or to display the adjustable range. If the value is a read-only sensor reading, these boundaries describe the Trait's range and do not imply that clients can write the value.
+
+These two parameters describe the protocol-level numeric range of `Present Value`; they are not necessarily identical to the sensor's physical measurement capability, the device's alarm range, or the controller's safety range. Whether they exist, whether they are readable, and their concrete constraints are defined by the corresponding Trait parameter table; do not assume every Trait defines both parameters.
+
+### Monitoring Threshold Parameters
+
+#### Low Limit and High Limit
+
+`Low Limit` (`PROP_LOW_LIMIT`) and `High Limit` (`PROP_HIGH_LIMIT`) represent the low-side and high-side monitoring thresholds, for scenarios where the object defines corresponding monitoring or alarm semantics. They answer "at what operating value should a low-side or high-side anomaly be considered", not "what numeric values this Trait can represent". Thresholds are often configurable for site operating requirements, but whether they can actually be configured depends on the parameter's access permissions and the corresponding Trait definition.
+
+For example, chilled-water temperature monitoring may set `Low Limit` to `5°C` and `High Limit` to `35°C`: when the current value is below the low limit it may be judged as a low-side limit violation, and when above the high limit as a high-side limit violation. Exact comparison rules (for example, whether equality to the threshold counts as a violation) SHOULD be defined by the corresponding object or alarm mechanism.
+
+Merely defining or reading `Low Limit` / `High Limit` does not automatically mean the device will generate alarms, events, or proactive reports. To implement complete alarm behavior, the object must also support related mechanisms and handle enable conditions, duration/delay, deadband, event state, and notification methods according to its definition. Clients MUST NOT infer that alarms are enabled or that alarm notifications will be sent solely because threshold parameters exist. Thresholds SHOULD also use units and semantics compatible with the monitored `Present Value`; they may sit outside the edges of the normal value range, but MUST NOT be used as a substitute for `Minimum Value` or `Maximum Value`.
+
+### Actual Quantity Calibration Parameters
+
+#### Minimum Actual Value and Maximum Actual Value
+
+`Minimum Actual Value` (`PROP_MIN_ACTUAL_VALUE`) and `Maximum Actual Value` (`PROP_MAX_ACTUAL_VALUE`) describe the actual-quantity endpoints corresponding to the two ends of the `Present Value` range, and may be used to interpret or convert between device numeric values and actual physical quantities. Together with `Unit`, they help clients understand the meaning of the actual quantity; for example, the actual quantity's unit may be lumens, volts, or another engineering unit. Which actual quantity is represented, which `Present Value` the endpoints correspond to, whether the mapping is linear, and whether it is used for output mapping MUST be stated by the corresponding Trait or object definition and MUST NOT be inferred from parameter names alone.
+
+For example, a dimming object's `Present Value` may represent a dimming control interval of `0%` to `100%`, while the brightness the device can actually reach is `20%` to `80%` of rated brightness; the object defines a linear mapping between these interval endpoints. In that case `Minimum Actual Value` is `20%` brightness and `Maximum Actual Value` is `80%` brightness: control value `0%` maps to actual brightness `20%`, control value `100%` maps to actual brightness `80%`, and control value `50%` maps to `20% + (80% - 20%) × 50% = 50%` brightness. Here the two Actual Value percentages are actual output relative to rated brightness, while the control-value percentage is the position of Present Value in the control interval; they have different meanings. For a general linear endpoint mapping, use proportional interpolation between the Present Value endpoints defined by the object; if the object specifies a nonlinear mapping, or Present Value is not a percentage, follow that object's mapping rules and do not apply this example directly.
+
+This parameter pair explains the correspondence between numeric endpoints and actual quantities. It is not the protocol-allowed range of `Present Value` (described by `Minimum Value` / `Maximum Value`), nor the operating alarm thresholds (described by `Low Limit` / `High Limit`). For example, a dimmable luminaire's `Present Value` control range may be `0%` to `100%`, while the corresponding actual brightness range is `20%` to `80%` of rated brightness.
+
+### Distinguishing the Three Parameter Groups
+
+* *Minimum Value / Maximum Value*: validate or understand the protocol-level numeric bounds of `Present Value`—"how far is this value allowed/representable?"
+* *Low Limit / High Limit*: judge whether an operating value has reached a monitoring threshold—"at what operating level is a low-side/high-side limit violation?"
+* *Minimum Actual Value / Maximum Actual Value*: where the object definition supports it, explain the correspondence between `Present Value` and actual physical-quantity endpoints—"how much actual quantity does this numeric endpoint correspond to?"
+
+The three groups are not interchangeable, and a Trait is not guaranteed to define all of them. Implementations and clients SHOULD first consult the specific Trait's parameter table, types, units, access permissions, and constraints, then interpret and use them according to that Trait definition; linear interpolation for actual-quantity conversion is appropriate only when the object explicitly defines a linear mapping.
 
 ## Permission Flags
 
@@ -1862,38 +1907,73 @@ Special types: Root, Public. They correspond to the Root Endpoint and Public End
   <tbody>
     <tr>
       <td>0x000D</td>
-      <td>AirConditioner (Air Conditioner)</td>
+      <td>AirConditioner (Air Conditioner, dual setpoint)</td>
       <td>Output</td>
       <td>M</td>
-      <td></td>
+      <td>Supports automatic cool/heat switching and maintains separate cooling and heating target temperatures.</td>
     </tr>
     <tr>
       <td>0x000D</td>
-      <td>AirConditioner (Air Conditioner)</td>
+      <td>AirConditioner (Air Conditioner, dual setpoint)</td>
       <td>HeaterCooler</td>
       <td>M</td>
-      <td></td>
+      <td>Must implement <code>CoolingTemperature</code>, <code>HeatingTemperature</code>, and <code>MinHeatCoolDeadBand</code>; <code>HeaterCoolerMode</code> must support <code>Auto</code> and report <code>Supported Value</code>. See below for dual-setpoint and Auto mode requirements.</td>
     </tr>
     <tr>
       <td>0x000D</td>
-      <td>AirConditioner (Air Conditioner)</td>
+      <td>AirConditioner (Air Conditioner, dual setpoint)</td>
       <td>FanControl</td>
       <td>O</td>
       <td></td>
     </tr>
     <tr>
       <td>0x000D</td>
-      <td>AirConditioner (Air Conditioner)</td>
+      <td>AirConditioner (Air Conditioner, dual setpoint)</td>
       <td>FreshAirControl</td>
       <td>O</td>
       <td></td>
     </tr>
     <tr>
       <td>0x000D</td>
-      <td>AirConditioner (Air Conditioner)</td>
+      <td>AirConditioner (Air Conditioner, dual setpoint)</td>
       <td>Temperature</td>
       <td>O</td>
-      <td>Outdoor temperature uses <code>OutdoorTemperature</code>; indoor temperature reuses <code>CurrentTemperature</code> of HeaterCooler.</td>
+      <td>Outdoor temperature uses <code>OutdoorTemperature</code>; indoor temperature reuses HeaterCooler's <code>CurrentTemperature</code>.</td>
+    </tr>
+    <tr>
+      <td>0x0087</td>
+      <td>SingleSetpointAC (Single-setpoint Air Conditioner)</td>
+      <td>Output</td>
+      <td>M</td>
+      <td>The user first selects cool or heat mode, then sets the single target temperature for that mode.</td>
+    </tr>
+    <tr>
+      <td>0x0087</td>
+      <td>SingleSetpointAC (Single-setpoint Air Conditioner)</td>
+      <td>HeaterCooler</td>
+      <td>M</td>
+      <td>Must implement <code>SetTemperature</code>; <code>HeaterCoolerMode</code> must report <code>Supported Value</code> and support at least one of <code>Cool</code> or <code>Heat</code>. See below for single-setpoint control requirements.</td>
+    </tr>
+    <tr>
+      <td>0x0087</td>
+      <td>SingleSetpointAC (Single-setpoint Air Conditioner)</td>
+      <td>FanControl</td>
+      <td>O</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>0x0087</td>
+      <td>SingleSetpointAC (Single-setpoint Air Conditioner)</td>
+      <td>FreshAirControl</td>
+      <td>O</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>0x0087</td>
+      <td>SingleSetpointAC (Single-setpoint Air Conditioner)</td>
+      <td>Temperature</td>
+      <td>O</td>
+      <td>Outdoor temperature uses <code>OutdoorTemperature</code>; indoor temperature reuses HeaterCooler's <code>CurrentTemperature</code>.</td>
     </tr>
     <tr>
       <td>0x0062</td>
@@ -2037,6 +2117,13 @@ Special types: Root, Public. They correspond to the Root Endpoint and Public End
     </tr>
   </tbody>
 </table>
+
+AirConditioner and SingleSetpointAC both implement `Output` and `HeaterCooler`; they differ in target-temperature and mode-control models:
+
+* `AirConditioner` (Device Type ID `0x000D`, decimal 13) is a dual-setpoint air conditioner for devices that can maintain cooling and heating targets at the same time and automatically switch between cooling and heating based on room temperature. Its `CoolingTemperature` and `HeatingTemperature` are two independent targets that are both effective concurrently; `SetTemperature` MUST NOT be used as an alias or substitute for these two targets. The difference between the two targets MUST be no less than the Present Value of `MinHeatCoolDeadBand`. The device MUST support and report `Auto` in `HeaterCoolerMode/Supported Value`. In Auto mode, cool when room temperature is above the cooling target, and heat when below the heating target; while in the deadband between the two targets, do not simultaneously request both cooling and heating because of this automatic temperature-control logic. In Auto mode, clients SHOULD display and allow independent adjustment of both targets; when switching to Cool or Heat, use the corresponding cooling or heating target, while the other target remains independently effective. The device SHOULD validate the relationship whenever either target or the minimum deadband is updated; writes that violate the minimum deadband MUST be rejected, and MUST NOT be applied partially.
+* `SingleSetpointAC` (Device Type ID `0x0087`, decimal 135) is a single-setpoint air conditioner for devices where the user first selects cool or heat mode and then sets one target temperature, including cool-only or heat-only devices. Its `SetTemperature` is the only effective air-conditioner target temperature in the current mode; the device MUST NOT use `CoolingTemperature` and `HeatingTemperature` together to represent the current air-conditioner control target. For this Device Type, `HeaterCoolerMode/Supported Value` MUST list the modes the device actually supports and MUST include at least one of `Cool` or `Heat`; after the user switches Cool/Heat mode, `SetTemperature` still means the single target for the current mode and does not represent separately stored cooling and heating targets.
+* `HeaterCoolerMode/Supported Value` is the basis for modes available to the client; clients MUST NOT present modes the device has not declared support for based only on the global enumeration definition. Auto mode on `AirConditioner` works from the two targets and the deadband; the client flow for `SingleSetpointAC` SHOULD first present the Cool/Heat modes the device supports (only that one mode if only one is supported), then edit `SetTemperature`.
+* `MinHeatCoolDeadBand` constrains dual-setpoint automatic control and represents the minimum temperature difference that MUST be kept between the cooling and heating targets; it does not apply to SingleSetpointAC controlled with `SetTemperature`. When a current-temperature Trait is used for status display, implement it according to its own Conformance; the device may use an internal sensor for Auto control and need not fabricate an external temperature measurement solely because of that internal sensor.
 
 #### Audio/Video Types
 
@@ -3428,7 +3515,7 @@ The following table lists all Device Types in ascending ID order for easy lookup
     <tr>
       <td>[[devtype_000d]]0x000D</td>
       <td>AirConditioner</td>
-      <td>Air conditioner</td>
+      <td>Dual-setpoint Air Conditioner</td>
       <td>HeaterCooler</td>
     </tr>
     <tr>
@@ -4126,6 +4213,12 @@ The following table lists all Device Types in ascending ID order for easy lookup
       <td>ElectricityMeter</td>
       <td>Energy meter</td>
       <td>Other</td>
+    </tr>
+    <tr>
+      <td>[[devtype_0087]]0x0087</td>
+      <td>SingleSetpointAC</td>
+      <td>Single-setpoint Air Conditioner</td>
+      <td>HeaterCooler</td>
     </tr>
   </tbody>
 </table>
@@ -10031,7 +10124,7 @@ This enumeration defines the valid values of the Present Value of the OutputNode
 
 #### OnOff Trait {#ref_OnOff}
 
-When written, turns the camera device on or off. Reading indicates the current power state. Values: false = Off, true = On.
+When written, turns the device on or off, i.e. controls the device switch state. Reading indicates the current switch state. Values: false = Off, true = On.
 
 <table>
   <thead>
@@ -40606,13 +40699,6 @@ This structure defines the Present Value field layout of the AqaraUserError Trai
   </thead>
   <tbody>
     <tr>
-      <td>0</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Source ID; semantics are as defined in the AddAqaraCredential command.</td>
-    </tr>
-    <tr>
       <td>1</td>
       <td>UserId</td>
       <td>uint16</td>
@@ -43476,13 +43562,6 @@ Parameter structure of the ExitAddAqaraCredential Command.
   </thead>
   <tbody>
     <tr>
-      <td>0</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Source ID.</td>
-    </tr>
-    <tr>
       <td>1</td>
       <td>UserId</td>
       <td>uint16</td>
@@ -43522,13 +43601,6 @@ Parameter structure of the GetAqaraCredential Command.
   </thead>
   <tbody>
     <tr>
-      <td>0</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Source ID.</td>
-    </tr>
-    <tr>
       <td>1</td>
       <td>UserId</td>
       <td>uint16</td>
@@ -43561,13 +43633,6 @@ Parameter structure of the DeleteAqaraCredential Command.
   </thead>
   <tbody>
     <tr>
-      <td>0</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Source ID.</td>
-    </tr>
-    <tr>
       <td>1</td>
       <td>CredentialId</td>
       <td>uint16</td>
@@ -43592,13 +43657,6 @@ Parameter structure of the ModifyAqaraCredential Command.
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>0</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Source ID.</td>
-    </tr>
     <tr>
       <td>1</td>
       <td>CredentialId</td>
@@ -43660,13 +43718,6 @@ Parameter structure of the AddAqaraCredential Command.
   </thead>
   <tbody>
     <tr>
-      <td>0</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Source ID.</td>
-    </tr>
-    <tr>
       <td>1</td>
       <td>UserId</td>
       <td>uint16</td>
@@ -43727,13 +43778,6 @@ Parameter structure of the DeleteAqaraUser Command.
   </thead>
   <tbody>
     <tr>
-      <td>0</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Source ID.</td>
-    </tr>
-    <tr>
       <td>1</td>
       <td>UserId</td>
       <td>uint16</td>
@@ -43758,13 +43802,6 @@ Parameter structure of the ModifyAqaraUser Command.
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>0</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Source ID.</td>
-    </tr>
     <tr>
       <td>1</td>
       <td>UserId</td>
@@ -43805,13 +43842,6 @@ Parameter structure of the AddAqaraUser Command.
   </thead>
   <tbody>
     <tr>
-      <td>0</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Source ID.</td>
-    </tr>
-    <tr>
       <td>1</td>
       <td>UserType</td>
       <td>enum8</td>
@@ -43843,13 +43873,6 @@ Parameter structure of the GetAqaraUser Command.
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>0</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Source ID.</td>
-    </tr>
     <tr>
       <td>1</td>
       <td>UserId</td>
@@ -50929,13 +50952,6 @@ This command is used to respond to `AddAqaraUser`, reporting the user creation r
       <td>User creation result.</td>
     </tr>
     <tr>
-      <td>1</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Echo of the source link identifier in the request.</td>
-    </tr>
-    <tr>
       <td>2</td>
       <td>UserId</td>
       <td>uint16</td>
@@ -50966,13 +50982,6 @@ This command is used to respond to `ModifyAqaraUser`, reporting the user modific
       <td>enum8</td>
       <td>M</td>
       <td>User modification result.</td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Echo of the source link identifier in the request.</td>
     </tr>
     <tr>
       <td>2</td>
@@ -51007,13 +51016,6 @@ This command is used to respond to `DeleteAqaraUser`, reporting the user deletio
       <td>User deletion result.</td>
     </tr>
     <tr>
-      <td>1</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Echo of the source link identifier in the request.</td>
-    </tr>
-    <tr>
       <td>2</td>
       <td>UserId</td>
       <td>uint16</td>
@@ -51025,7 +51027,7 @@ This command is used to respond to `DeleteAqaraUser`, reporting the user deletio
 
 #### GetAqaraUserResponse Response Data Format {#ref_GetAqaraUserResponseResponseFormat}
 
-The device returns user records and a pagination cursor in this response. The table below only lists the fields used by the Aqara Spec user data model; the Trait only stores `Users`, not including `ErrorCode` or `SourceId`. Field IDs follow the Extension definitions.
+The device returns user records and a pagination cursor in this response. The table below only lists the fields used by the Aqara Spec user data model; the Trait only stores `Users`, not including `ErrorCode`. Field IDs follow the Extension definitions.
 
 <table>
   <thead>
@@ -51078,13 +51080,6 @@ This command is used to respond to `AddAqaraCredential`, reporting the credentia
       <td>Credential addition result.</td>
     </tr>
     <tr>
-      <td>1</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Echo of the source link identifier in the request.</td>
-    </tr>
-    <tr>
       <td>2</td>
       <td>UserId</td>
       <td>uint16</td>
@@ -51124,13 +51119,6 @@ This command is used to respond to `ModifyAqaraCredential`, reporting the creden
       <td>Credential modification result.</td>
     </tr>
     <tr>
-      <td>1</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Echo of the source link identifier in the request.</td>
-    </tr>
-    <tr>
       <td>2</td>
       <td>CredentialId</td>
       <td>uint16</td>
@@ -51163,13 +51151,6 @@ This command is used to respond to `DeleteAqaraCredential`, reporting the creden
       <td>Credential deletion result.</td>
     </tr>
     <tr>
-      <td>1</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Echo of the source link identifier in the request.</td>
-    </tr>
-    <tr>
       <td>2</td>
       <td>CredentialId</td>
       <td>uint16</td>
@@ -51200,13 +51181,6 @@ This command is used to respond to `GetAqaraCredential`, returning the credentia
       <td>enum8</td>
       <td>M</td>
       <td>Credential query result.</td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Echo of the source link identifier in the request.</td>
     </tr>
     <tr>
       <td>2</td>
@@ -51246,13 +51220,6 @@ This command is used to respond to `ExitAddAqaraCredential`, reporting the resul
       <td>enum8</td>
       <td>M</td>
       <td>Exit session result.</td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>SourceId</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Echo of the source link identifier in the request.</td>
     </tr>
     <tr>
       <td>2</td>
@@ -51569,7 +51536,7 @@ This command should request the door lock to return a segment of log entries. Th
 
 #### ExitAddAqaraCredential Command {#ref_ExitAddAqaraCredential}
 
-This command should exit the add-credential session for the specified credential type and attribute. The client sends this command to cancel or complete the credential enrollment flow without submitting a new credential. The SourceId field identifies the source link that issued this command (see AddAqaraCredential for field semantics). The UserId field identifies the user whose credential enrollment session is being exited.
+This command should exit the add-credential session for the specified credential type and attribute. The client sends this command to cancel or complete the credential enrollment flow without submitting a new credential. The UserId field identifies the user whose credential enrollment session is being exited.
 
 ##### Parameters
 
@@ -51577,7 +51544,7 @@ This command should exit the add-credential session for the specified credential
 
 #### GetAqaraCredential Command {#ref_GetAqaraCredential}
 
-This command should request the door lock to return the complete credential record for the specified credential. The device should respond with the GetAqaraCredentialResponse command. The SourceId field identifies the source link that issued this command (see AddAqaraCredential for field semantics).
+This command should request the door lock to return the complete credential record for the specified credential. The device should respond with the GetAqaraCredentialResponse command.
 
 ##### Parameters
 
@@ -51585,7 +51552,7 @@ This command should request the door lock to return the complete credential reco
 
 #### DeleteAqaraCredential Command {#ref_DeleteAqaraCredential}
 
-This command should delete the credential identified by CredentialId from the door lock credential database. The SourceId field identifies the source link that issued this command (see AddAqaraCredential for field semantics).
+This command should delete the credential identified by CredentialId from the door lock credential database.
 
 ##### Parameters
 
@@ -51594,7 +51561,7 @@ This command should delete the credential identified by CredentialId from the do
 #### ModifyAqaraCredential Command {#ref_ModifyAqaraCredential}
 
 This command should update one or more attributes of the credential identified by CredentialId.
-The SourceId field identifies the source link that issued this command (see AddAqaraCredential for field semantics). Each updatable field can be omitted independently: when a field is omitted, the existing value of the credential on the device should remain unchanged. At least one of CredentialAttribute, CredentialType, CredentialContent, Validity or CredentialName should be provided; if all five are omitted, the device should respond with InvalidParameter (0x07) of the DoorLockErrorCodeEnum type and must not modify any credential data.
+Each updatable field can be omitted independently: when a field is omitted, the existing value of the credential on the device should remain unchanged. At least one of CredentialAttribute, CredentialType, CredentialContent, Validity or CredentialName should be provided; if all five are omitted, the device should respond with InvalidParameter (0x07) of the DoorLockErrorCodeEnum type and must not modify any credential data.
 
 ##### Parameters
 
@@ -51602,7 +51569,7 @@ The SourceId field identifies the source link that issued this command (see AddA
 
 #### AddAqaraCredential Command {#ref_AddAqaraCredential}
 
-This command should add a new credential and associate it with the existing user identified by UserId. The SourceId field identifies the source link that issued this command (such as a session, controller or transport channel), allowing the device and upper layers to associate the request with its source. The CredentialContent field carries the type-specific credential payload as a structured value; CredentialName is a variable-length string with an implicit length prefix. The optional Validity field, when present, encodes the credential's periodic validity schedule using the CredentialValidityStruct type; when absent, the credential has no time boundary restrictions other than device default limits.
+This command should add a new credential and associate it with the existing user identified by UserId. The CredentialContent field carries the type-specific credential payload as a structured value; CredentialName is a variable-length string with an implicit length prefix. The optional Validity field, when present, encodes the credential's periodic validity schedule using the CredentialValidityStruct type; when absent, the credential has no time boundary restrictions other than device default limits.
 
 ##### Parameters
 
@@ -51610,7 +51577,7 @@ This command should add a new credential and associate it with the existing user
 
 #### GetAqaraUser Command {#ref_GetAqaraUser}
 
-This command should request the door lock to return one or more user records (each carrying user attributes and associated credentials). The device should respond with GetAqaraUserResponse, returning at most Number records starting from UserId. The SourceId field identifies the source link that issued this command. This command is also the basic operation for traversing the complete user database--the client traverses the database by making chained consecutive calls and consuming the NextUserId field of each response until it is null.
+This command should request the door lock to return one or more user records (each carrying user attributes and associated credentials). The device should respond with GetAqaraUserResponse, returning at most Number records starting from UserId. This command is also the basic operation for traversing the complete user database--the client traverses the database by making chained consecutive calls and consuming the NextUserId field of each response until it is null.
 
 ##### Parameters
 
@@ -74732,7 +74699,7 @@ Used to set or query the PTZ power-off memory function. When enabled, the device
       <td>Present Value</td>
       <td><a href="#ref_PTZPowerOffMemoryEnum8">PTZPowerOffMemoryEnum8</a></td>
       <td></td>
-      <td>0</td>
+      <td>1</td>
       <td>RVW</td>
       <td>O</td>
     </tr>
@@ -75006,7 +74973,7 @@ Defines the PTZ auto home return target configuration. Mode=0 returns to the pre
       <td>Present Value</td>
       <td><a href="#ref_PTZHomePositionStructure">PTZHomePositionStructure</a></td>
       <td></td>
-      <td></td>
+      <td><code>&#123;&amp;quot;0&amp;quot;:0,&amp;quot;1&amp;quot;:999,&amp;quot;2&amp;quot;:999&#125;</code></td>
       <td>RVW</td>
       <td>O</td>
     </tr>
@@ -130196,7 +130163,7 @@ Defines one or more polygon areas for the virtual fence. It contains three field
       <td>Present Value</td>
       <td><a href="#ref_FenceAreaSettingTraitPresentValueStructure">FenceAreaSettingTraitPresentValueStructure</a></td>
       <td></td>
-      <td></td>
+      <td><code>&#123;&amp;quot;0&amp;quot;:&amp;quot;1&amp;quot;,&amp;quot;1&amp;quot;:&amp;quot;1&amp;quot;,&amp;quot;2&amp;quot;:[&#123;&amp;quot;0&amp;quot;:&amp;quot;1&amp;quot;,&amp;quot;1&amp;quot;:&amp;quot;6&amp;quot;,&amp;quot;2&amp;quot;:[&#123;&amp;quot;0&amp;quot;:&amp;quot;0.50000000&amp;quot;,&amp;quot;1&amp;quot;:&amp;quot;0.01694915&amp;quot;&#125;,&#123;&amp;quot;0&amp;quot;:&amp;quot;0.73528814&amp;quot;,&amp;quot;1&amp;quot;:&amp;quot;0.25847459&amp;quot;&#125;,&#123;&amp;quot;0&amp;quot;:&amp;quot;0.73528814&amp;quot;,&amp;quot;1&amp;quot;:&amp;quot;0.74152541&amp;quot;&#125;,&#123;&amp;quot;0&amp;quot;:&amp;quot;0.50000000&amp;quot;,&amp;quot;1&amp;quot;:&amp;quot;0.98305082&amp;quot;&#125;,&#123;&amp;quot;0&amp;quot;:&amp;quot;0.26471186&amp;quot;,&amp;quot;1&amp;quot;:&amp;quot;0.74152541&amp;quot;&#125;,&#123;&amp;quot;0&amp;quot;:&amp;quot;0.26471186&amp;quot;,&amp;quot;1&amp;quot;:&amp;quot;0.25847459&amp;quot;&#125;]&#125;]</code></td>
       <td>RVW</td>
       <td>O</td>
     </tr>
@@ -148152,7 +148119,7 @@ Only applies to active sessions with `StreamUsage=LocalPlayback`. After receivin
 
 :::
 
-#### Additional Protocol {#ref_WebRTC_附加协议}
+#### Additional Protocol {#ref_WebRTC_Additional_Protocol}
 
 This section defines the additional protocol carried on the WebRTC **DataChannel** media plane, not transmitted through Aqara Spec Commands / Reports. When `MetadataEnabled=true`, the App and the device send binary messages **streamingly** over the established WebRTC connection. It is currently used to push **recording tags** in the `StreamUsage=LocalPlayback` scenario.
 
