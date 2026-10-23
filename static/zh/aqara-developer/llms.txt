@@ -25,9 +25,10 @@
 - 关闭网关子设备添加模式: /zh/docs/aqara-developer/data-export-api/stop-subdevice-join
 - 查询子设备入网结果: /zh/docs/aqara-developer/data-export-api/get-device-bind-result
 - Device: /zh/docs/aqara-developer/data-export-api/device
-- 查询设备类型列表: /zh/docs/aqara-developer/data-export-api/get-device-types
+- 查询设备类型（DeviceType）列表: /zh/docs/aqara-developer/data-export-api/get-device-types
 - 查询设备信息列表: /zh/docs/aqara-developer/data-export-api/get-devices
-- 查询设备模型定义: /zh/docs/aqara-developer/data-export-api/get-device-definitions
+- 查询设备定义（设备详细信息）: /zh/docs/aqara-developer/data-export-api/get-device-definitions
+- 获取设备筛选选项: /zh/docs/aqara-developer/data-export-api/get-device-filter-options
 - 查询设备匹配能力: /zh/docs/aqara-developer/data-export-api/get-matched-device-capabilities
 - 通过 Trait 控制设备: /zh/docs/aqara-developer/data-export-api/execute-device-trait
 - 查询 Trait 值: /zh/docs/aqara-developer/data-export-api/get-trait-values
@@ -57,8 +58,8 @@
 - 批量更新自动化状态: /zh/docs/aqara-developer/data-export-api/update-automation-status
 - 批量更新自动化关联空间: /zh/docs/aqara-developer/data-export-api/update-automation-space
 - 删除自动化: /zh/docs/aqara-developer/data-export-api/delete-automations
-- 获取手动触发器列表: /zh/docs/aqara-developer/data-export-api/query-automation-manual-trigger-list
-- 执行手动触发器: /zh/docs/aqara-developer/data-export-api/execute-automation-manual-trigger
+- Event: /zh/docs/aqara-developer/data-export-api/event
+- 上报外部系统事件: /zh/docs/aqara-developer/data-export-api/report-external-event
 - Firmware: /zh/docs/aqara-developer/data-export-api/firmware
 - 按设备 ID 查询可升级设备固件: /zh/docs/aqara-developer/data-export-api/search-upgradable-devices-firmware-by-device-ids
 - 发起固件升级: /zh/docs/aqara-developer/data-export-api/upgrade-firmware
@@ -68,6 +69,14 @@
 - 查询设备 Trait 值变化历史: /zh/docs/aqara-developer/data-export-api/query-device-point-history
 - Studio: /zh/docs/aqara-developer/data-export-api/studio
 - 获取 Studio 统计信息: /zh/docs/aqara-developer/data-export-api/get-studio-statistics
+- Scene: /zh/docs/aqara-developer/data-export-api/scene
+- 创建场景: /zh/docs/aqara-developer/data-export-api/create-scene
+- 执行场景: /zh/docs/aqara-developer/data-export-api/execute-scene
+- 更新场景: /zh/docs/aqara-developer/data-export-api/update-scene
+- 关联场景空间: /zh/docs/aqara-developer/data-export-api/update-scene-space
+- 查询场景详情: /zh/docs/aqara-developer/data-export-api/query-scene-details
+- 查询场景列表: /zh/docs/aqara-developer/data-export-api/query-scene-list
+- 删除场景: /zh/docs/aqara-developer/data-export-api/delete-scenes
 - EMS: /zh/docs/aqara-developer/data-export-api/ems
 - 查询单设备能耗趋势: /zh/docs/aqara-developer/data-export-api/get-ems-trend-device
 - 查询单空间能耗趋势: /zh/docs/aqara-developer/data-export-api/get-ems-trend-space
@@ -101,5 +110,5 @@
 - 通过 Trait 控制设备: /zh/docs/aqara-developer/aiot-api/execute-device-trait
 - 查询 Trait 值: /zh/docs/aqara-developer/aiot-api/get-trait-values
 - 通过 Command 控制设备: /zh/docs/aqara-developer/aiot-api/execute-device-command
-- Aqara Spec 物模型标签: /zh/docs/aqara-developer/aqara-data-model-specification/aqara-data-model-tags
+- Aqara 物模型标签: /zh/docs/aqara-developer/aqara-data-model-specification/aqara-data-model-tags
 
