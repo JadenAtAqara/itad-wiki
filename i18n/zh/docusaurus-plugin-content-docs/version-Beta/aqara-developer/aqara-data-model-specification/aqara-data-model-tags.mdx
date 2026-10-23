@@ -170,6 +170,8 @@ Aqara Spec 定义了三类 Endpoint：
 
 Device Type 用于描述 Endpoint 的设备类型。每个 Device Type 由唯一的 Device Type ID（Uint16）标识。每个 Device Type 定义了该类型设备必须（M）或可选（O）实现的 Function 集合。一个 Endpoint 下不允许添加重复的 Function。
 
+业务 Aqara 标准 Device Type ID 的新分配范围为 `1` ~ `10000`。Root Device Type ID `0` 是特殊保留值，不属于业务 Device Type 的新分配范围。
+
 除业务 Device Type 外，Aqara Spec 定义了两个与特殊 Endpoint 对应的 Device Type：
 
 * *Root*（ID: 0x0000）：仅用于 Root Endpoint，必须实现 Basic Information 和 Descriptor。
@@ -183,19 +185,19 @@ Device Type 用于描述 Endpoint 的设备类型。每个 Device Type 由唯一
 
 Function 描述设备的一个完整功能单元，由若干 Traits 和 Commands 组成。每个 Function 由唯一的 Function ID（Uint16）标识。
 
-标准 Function ID 范围：`0x0000` ~ `0x4E1F`。厂商私有 Function ID 范围：`0x4E20` ~ `0xFFFF`。
+Aqara 标准 Function ID 的新分配范围为 `0` ~ `19999`；供用户自定义的私有 Function ID 范围为 `64001` ~ `65534`。
 
 ### Trait（特征）
 
 Trait 描述 Function 中的一个属性或状态，支持 Read、Write、Report 等操作。每个 Trait 由唯一的 Trait ID（Uint16）标识。
 
-标准 Trait ID 范围：`0x0001` ~ `0x4E20`。厂商私有 Trait ID 范围：`0x4E21` ~ `0x7530`。
+Aqara 标准 Trait ID 的新分配范围为 `1` ~ `30000`；供用户自定义的私有 Trait ID 范围为 `60000` ~ `64000`。
 
 ### Command（命令）
 
 Command 描述 Function 中可执行的操作，由客户端向设备发送。每个 Command 由唯一的 Command ID（Uint16）标识。
 
-标准 Command ID 范围：`0x9C41` ~ `0xC350`。厂商私有 Command ID 范围：`0xC351` ~ `0xEA60`。
+Aqara 标准 Command ID 的新分配范围为 `40001` ~ `50000`；供用户自定义的私有 Command ID 范围为 `64001` ~ `65534`。
 
 ### Parameter（参数）
 
@@ -217,26 +219,26 @@ Parameter 是 Trait 内部的数据字段，由 Parameter ID（Uint16）标识�
   <tbody>
     <tr>
       <td>Device Type ID</td>
-      <td><code>0x0000</code> ~ <code>0xFFFF</code></td>
-      <td>-</td>
+      <td><code>1</code> ~ <code>10000</code>（业务类型；<code>0</code> 为 Root 特殊保留值）</td>
+      <td><code>64001</code> ~ <code>65534</code></td>
       <td>Uint16</td>
     </tr>
     <tr>
       <td>Function ID</td>
-      <td><code>0x0000</code> ~ <code>0x4E1F</code></td>
-      <td><code>0x4E20</code> ~ <code>0xFFFF</code></td>
+      <td><code>0</code> ~ <code>19999</code></td>
+      <td><code>64001</code> ~ <code>65534</code></td>
       <td>Uint16</td>
     </tr>
     <tr>
       <td>Trait ID</td>
-      <td><code>0x0001</code> ~ <code>0x4E20</code></td>
-      <td><code>0x4E21</code> ~ <code>0x7530</code></td>
+      <td><code>1</code> ~ <code>30000</code></td>
+      <td><code>60000</code> ~ <code>64000</code></td>
       <td>Uint16</td>
     </tr>
     <tr>
       <td>Command ID</td>
-      <td><code>0x9C41</code> ~ <code>0xC350</code></td>
-      <td><code>0xC351</code> ~ <code>0xEA60</code></td>
+      <td><code>40001</code> ~ <code>50000</code></td>
+      <td><code>64001</code> ~ <code>65534</code></td>
       <td>Uint16</td>
     </tr>
     <tr>
@@ -247,6 +249,8 @@ Parameter 是 Trait 内部的数据字段，由 Parameter ID（Uint16）标识�
     </tr>
   </tbody>
 </table>
+
+以上标准范围和私有范围用于约束新 ID 的分配，确保用户自定义 ID 不与 Aqara 标准 ID 范围冲突。范围之外的值不属于相应类别的标准或私有新分配范围。规则更新不改变已经定义或已投入使用的 ID：现有 ID 应原值保留，即使超出当前新分配范围，也无需仅为满足新范围而重新编号或做有效范围校验。除 Device Type 的 Root 特殊保留值 `0` 外，新分配的 Device Type ID 应使用上述业务标准范围或私有范围。
 
 ## Trait 参数字段说明
 
@@ -274,13 +278,13 @@ Parameter ID 采用 16 位整数标识，有效范围为 `0x0001` ~ `0xFFFE`（1
       <td>0x0002</td>
       <td>Maximum Value</td>
       <td>PROP_MAX_PRES_VALUE</td>
-      <td>最大值</td>
+      <td>Present Value 的最大允许/可表示值；与 Minimum Value 共同描述数值范围，不是报警阈值。</td>
     </tr>
     <tr>
       <td>0x0003</td>
       <td>Minimum Value</td>
       <td>PROP_MIN_PRES_VALUE</td>
-      <td>最小值</td>
+      <td>Present Value 的最小允许/可表示值；与 Maximum Value 共同描述数值范围，不是报警阈值。</td>
     </tr>
     <tr>
       <td>0x0004</td>
@@ -310,13 +314,13 @@ Parameter ID 采用 16 位整数标识，有效范围为 `0x0001` ~ `0xFFFE`（1
       <td>0x0008</td>
       <td>High Limit</td>
       <td>PROP_HIGH_LIMIT</td>
-      <td>上限（Float）</td>
+      <td>高限监控阈值（Float）；可用于判断 Present Value 是否超过高侧阈值，不定义 Present Value 的量程。</td>
     </tr>
     <tr>
       <td>0x0009</td>
       <td>Low Limit</td>
       <td>PROP_LOW_LIMIT</td>
-      <td>下限（Float）</td>
+      <td>低限监控阈值（Float）；可用于判断 Present Value 是否低于低侧阈值，不定义 Present Value 的量程。</td>
     </tr>
     <tr>
       <td>0x000A</td>
@@ -328,13 +332,13 @@ Parameter ID 采用 16 位整数标识，有效范围为 `0x0001` ~ `0xFFFE`（1
       <td>0x000B</td>
       <td>Maximum Actual Value</td>
       <td>PROP_MAX_ACTUAL_VALUE</td>
-      <td>实际最大值（Float）</td>
+      <td>Present Value 对应的实际量上端标定值（Float）；与 Minimum Actual Value 的映射关系由对象定义。</td>
     </tr>
     <tr>
       <td>0x000C</td>
       <td>Minimum Actual Value</td>
       <td>PROP_MIN_ACTUAL_VALUE</td>
-      <td>实际最小值（Float）</td>
+      <td>Present Value 对应的实际量下端标定值（Float）；与 Maximum Actual Value 的映射关系由对象定义。</td>
     </tr>
     <tr>
       <td>0x000D</td>
@@ -362,6 +366,44 @@ Parameter ID 采用 16 位整数标识，有效范围为 `0x0001` ~ `0xFFFE`（1
     </tr>
   </tbody>
 </table>
+
+### 数值边界参数
+
+#### Minimum Value 与 Maximum Value
+
+`Minimum Value`（`PROP_MIN_PRES_VALUE`）和 `Maximum Value`（`PROP_MAX_PRES_VALUE`）描述 `Present Value` 的数值范围下界和上界。读取这两个参数，可以了解该 Trait 声明的有效数值范围；客户端在写入 `Present Value` 时，应将目标值限制在该范围内，并同时遵守 Trait 自身定义的类型、步进值、枚举取值及其他约束。设备也应依据自己的 Trait 定义处理范围外的输入，不能把这两个边界当作报警阈值使用。
+
+例如，若温度 Trait 的 `Minimum Value` 为 `-50`、`Maximum Value` 为 `100`，且 `Unit` 为摄氏度，则它声明的数值范围为 `-50°C` 至 `100°C`。客户端可用该范围校验用户输入或展示可调范围。若数值是只读传感器值，这些边界说明该 Trait 的范围，并不意味着客户端可以写入该值。
+
+这两个参数描述的是协议中 `Present Value` 的数值范围，不一定等同于传感器的物理测量能力、设备的报警范围或控制器的安全范围。它们是否存在、是否可读及其具体约束，以对应 Trait 参数表为准；不要假定每个 Trait 都同时定义这两个参数。
+
+### 监控阈值参数
+
+#### Low Limit 与 High Limit
+
+`Low Limit`（`PROP_LOW_LIMIT`）和 `High Limit`（`PROP_HIGH_LIMIT`）分别表示低侧和高侧的监控阈值，适用于对象定义了相应监控或报警语义的场景。它们回答的是"运行值到什么程度应视为低侧或高侧异常"，而不是"该 Trait 能表示到什么数值"。阈值通常可按现场运行要求配置，但实际能否配置取决于该参数的访问权限及对应 Trait 定义。
+
+例如，冷却水温度监控可以将 `Low Limit` 配为 `5°C`、`High Limit` 配为 `35°C`：当前值低于低限时可判定为低侧越限，高于高限时可判定为高侧越限。边界比较的具体规则（例如恰好等于阈值时是否算越限），应由对应对象或报警机制定义。
+
+仅定义或读取 `Low Limit`、`High Limit` 并不自动意味着设备会产生报警、事件或主动上报。要实现完整的告警行为，对象还需要支持相关机制，并按其定义处理使能条件、持续时间/延时、死区、事件状态和通知方式等因素。客户端不应只根据阈值参数存在，就推断报警已启用或告警通知一定会发送。阈值也应处于与被监控 `Present Value` 相容的单位和语义下；它们可以位于正常值范围边缘之外，但不能因此用来替代 `Minimum Value` 或 `Maximum Value`。
+
+### 实际量标定参数
+
+#### Minimum Actual Value 与 Maximum Actual Value
+
+`Minimum Actual Value`（`PROP_MIN_ACTUAL_VALUE`）和 `Maximum Actual Value`（`PROP_MAX_ACTUAL_VALUE`）描述 `Present Value` 范围两端所对应的实际量端点，可用于解释或换算设备数值与实际物理量之间的关系。它们与 `Unit` 一起帮助客户端理解实际量的含义；例如实际量的单位可能是流明、伏特或其他工程单位。具体表示的实际量、端点所对应的 `Present Value`、是否线性以及是否用于输出映射，必须由对应 Trait 或对象定义明确，不能只凭参数名称推断。
+
+例如，某调光对象的 `Present Value` 表示调光控制区间 `0%` 至 `100%`，而设备实际可达到的亮度范围是额定亮度的 `20%` 至 `80%`；对象定义这两个区间端点之间为线性映射。此时 `Minimum Actual Value` 为 `20%` 亮度，`Maximum Actual Value` 为 `80%` 亮度：控制值 `0%` 对应实际亮度 `20%`，控制值 `100%` 对应实际亮度 `80%`，控制值 `50%` 对应 `20% + (80% - 20%) × 50% = 50%` 亮度。这里两个 Actual Value 的百分比是相对于额定亮度的实际输出，而控制值百分比是 Present Value 在控制区间中的位置；它们含义不同。对于一般的线性端点映射，可按对象定义的 Present Value 两端点进行比例插值；如果对象规定非线性映射，或 Present Value 并非百分比，则应遵循该对象的映射规则，不能直接套用此例。
+
+这组参数用于说明数值端点与实际量之间的对应关系，不是 `Present Value` 的协议允许范围（由 `Minimum Value` / `Maximum Value` 描述），也不是运行报警阈值（由 `Low Limit` / `High Limit` 描述）。例如，调光灯具的 `Present Value` 控制范围可以是 `0%` 至 `100%`，而对应的实际亮度范围是额定亮度的 `20%` 至 `80%`。
+
+### 三组参数的使用区分
+
+* *Minimum Value / Maximum Value*：校验或理解 `Present Value` 在协议层面的数值边界--"这个值允许/可表示到哪里？"
+* *Low Limit / High Limit*：判断运行值是否达到监控阈值--"运行到什么程度算低侧/高侧越限？"
+* *Minimum Actual Value / Maximum Actual Value*：在对象定义支持的前提下，说明 `Present Value` 与实际物理量端点的对应关系--"这个数值端点对应多少实际量？"
+
+三组参数不能互相替代，也不保证在同一个 Trait 中全部出现。实现和客户端应先查看具体 Trait 的参数表、类型、单位、访问权限和约束，再按该 Trait 定义解释和使用；只有对象明确约定线性映射时，才可使用线性插值换算实际量。
 
 ## 权限标记
 
@@ -10079,7 +10121,7 @@ Identify Command 的参数结构体。
 
 #### OnOff Trait（开关状态） {#ref_OnOff}
 
-写入时开启或关闭摄像机设备。读取表示当前电源状态。取值：false = 关闭，true = 开启。
+写入时开启或关闭设备，即控制设备的开关状态。读取表示当前开关状态。取值：false = 关闭，true = 开启。
 
 <table>
   <thead>
