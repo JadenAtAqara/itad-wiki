@@ -15,12 +15,18 @@ This feature is suitable for the following scenarios:
 
 Aqara Studio's HTTP Push follows a "Studio proactively delivers, third-party service acknowledges" model:
 
-1. In Aqara Studio, [configure the receiving address and select the event types to subscribe to; optional header fields and signature settings can also be added if needed](#configuring-push-in-aqara-studio).
+1. In Aqara Studio, [configure the receiving address, set the response validation rule, and select the event types to subscribe to; optional header fields and signature settings can also be added if needed](#configuring-push-in-aqara-studio).
+    - By default, the response validation rule uses "Studio standard acknowledgment."
+    - If you only need to verify that the HTTP status code is 200, select "HTTP Status Code 200 Only."
 2. After saving the above configuration, Aqara Studio will immediately send a `WebhookVerification` message (HTTP POST) to your configured address to verify its availability.
-3. You must return a response containing a `code` of 0 and a `challenge` field set to the `data.challenge` in the `WebhookVerification` message. This indicates a successful receipt, and the address passes verification. Only then will Aqara Studio enable HTTP Push.
+3. If the response validation rule is **Studio standard acknowledgment**, you must return a response containing a `code` of 0 and a `challenge` field set to the `data.challenge` in the `WebhookVerification` message. This indicates a successful receipt, and the address passes verification. Only then will Aqara Studio enable HTTP Push.
+  
+    For **other response validation modes**, refer to the [returning WebhookVerification response](#returning-webhookverification-response) section for instructions on how to write the response message.
+
+    Only after the above verification succeeds, Aqara Studio enables HTTP Push and begins event delivery. If verification fails, the existing configuration is retained.
 4. When a subscribed event occurs, Aqara Studio will send an HTTP `POST` request to your configured endpoint as per your settings.
 
-  Each request body contains only a single message, in JSON format.
+    Each request body contains only a single message, in JSON format.
 5. After receiving a message, you should respond with a message containing a `code` of 0, indicating success.
 
 :::tip
@@ -31,30 +37,31 @@ HTTP Push is a real-time, best-effort delivery mechanism. It does not provide pe
 
 Before implementing HTTP Push, please ensure your receiver meets the following requirements:
 
-| Item | Requirement |
-| --- | --- |
-| Protocol | Support for HTTP or HTTPS |
-| HTTP Version | HTTP/1.1 |
-| Receiving Address | A globally unique endpoint configured in Studio |
-| HTTPS | Must correctly validate certificates |
-| Redirect | Do not follow redirects |
-| URL Limitations | Address must not contain query, fragment, or userinfo |
-| Path Handling | Preserve consecutive slashes and existing percent encoding in the path |
-
-Additionally, the receiver must support `WebhookVerification` validation requests. When saving your configuration, Studio will automatically verify the current settings; HTTP Push will only be enabled after successful verification. If re-enabled later, verification will be performed again.
+- The URL must be an absolute `http` or `https` URL that includes a host, must not exceed 4,096 bytes when UTF-8 encoded, and must not contain whitespace. User information, query strings, and fragments are not allowed, and an explicit port must be between 1 and 65,535. Studio preserves consecutive slashes and existing percent-encoded sequences in the path and does not follow redirects.
+- For HTTPS, the certificate chain, validity period, and hostname are validated. The certificate must be trusted by the JVM running Studio, and certificate validation cannot be disabled.
+- Requests use `Content-Type: application/json; charset=utf-8` and `Accept-Encoding: identity`. Response validation modes that inspect the body do not support compressed responses such as `gzip` or `br`. The "HTTP Status Code 200 Only" mode does not read or validate the response body or its encoding.
+- Fixed header names are case-insensitive, and the `X-Studio-*` prefix is not added automatically. The following header names are not allowed: `X-Studio-*`, `Proxy-*`, `Host`, `Content-Length`, `Transfer-Encoding`, `Content-Encoding`, `Content-Type`, `Accept-Encoding`, `Connection`, `Expect`, `TE`, `Trailer`, and `Upgrade`.
 
 ## Supported Message Types
 
 Aqara Studio will send the following message types to your receiver:
 
-| Message Type | Description |
+| Message | Sending Condition |
 | --- | --- |
-| `TraitValueUpdate` | Device functional point value change notification |
-| `objectEvent` | Object event, such as device addition, deletion, space changes, automation changes, etc. |
-| `AlarmEvent` | Alarm notification |
-| `WebhookVerification` | Webhook verification message, used to confirm receiver availability |
+| `TraitValueUpdate` | Sent when a device point value changes and the "Device Data and Structure Events" group is enabled. This group is enabled by default. |
+| `objectEvent` -> `DEVICE_ADDED`, `DEVICE_REMOVED` | Sent by default after HTTP Push is enabled, regardless of other subscription settings. |
+| `objectEvent` -> `DEVICE_ENDPOINT_ADDED`, `DEVICE_ENDPOINT_REMOVED`, `DEVICE_TRAIT_PARAMETER_UPDATE` | Shares the "Device Data and Structure Events" group with device point value changes. These events cannot currently be selected individually. |
+| `objectEvent` -> configurable object events | Controlled by individual subscriptions or Full Subscription. See the event list below. |
+| `AlarmEvent` | Raw alarms; disabled by default. |
+| `WebhookVerification` | Used for endpoint verification and circuit-breaker recovery probes. |
 
-Business message bodies reuse the [WebSocket `v1` message schema](./../aqara-developer/data-export-api/websocket-api/index.mdx). Except for the verification message (`WebhookVerification`), business messages usually contain the following common fields:
+Specific `objectEvent` events are identified by `data.eventType`. The currently configurable object events are:
+
+- `DEVICE_SPACE_UPDATED`
+- `SPACE_ADDED`, `SPACE_REMOVED`, `SPACE_UPDATED`
+- `AUTOMATION_ADDED`, `AUTOMATION_REMOVED`, `AUTOMATION_UPDATED`, `AUTOMATION_SPACE_UPDATED`
+
+All messages except `WebhookVerification` contain application data. Business message bodies reuse the [WebSocket `v1` message schema](./../aqara-developer/data-export-api/websocket-api/index.mdx), and the common fields are:
 
 | Field | Description |
 | --- | --- |
@@ -93,13 +100,26 @@ Business message bodies reuse the [WebSocket `v1` message schema](./../aqara-dev
           </td>
         </tr>
         <tr>
+          <td>Response Validation</td>
+          <td>Yes</td>
+          <td>
+            You can select one of the following response validation rules:
+            <ul>
+              <li><strong>Studio Standard Acknowledgment</strong>: The default option. Verification requires HTTP 2xx, numeric code=0 and the exact challenge. Business messages require HTTP 2xx and code=0.</li>
+              <li><strong>HTTP Status Code 200 Only (Ignore Body)</strong>: HTTP Status Code 200 is treated as success without reading or validating the body. Business errors returned with 200 are also treated as success and will not be retried.</li>
+              <li><strong>HTTP Status Code 200 + exact text</strong>: The full response must match exactly, including spaces and line breaks. No type conversion. Maximum 4096 UTF-8 bytes; leave blank to require an empty response.</li>
+              <li><strong>HTTP Status Code 200 + JSON Match</strong>: Enter valid JSON: objects match expected fields recursively and allow extra fields. Strings, numbers, booleans and null are supported; types are distinct. No arrays. Maximum 4096 UTF-8 bytes, 16 levels and 256 values.</li>
+            </ul>
+          </td>  
+        </tr>
+        <tr>
           <td>Subscription Mode</td>
           <td>✓</td>
           <td>
             Choose a subscription mode:
             <ul>
-              <li>Select events: select specific event types to subscribe to.</li>
-              <li>Subscribe to all: subscribe to all event types.</li>
+                <li>Select events: Select the event types you want to subscribe to. If new object events are added after an Aqara Studio update, you must select them manually to subscribe.<br/></li>
+                <li>Subscribe to all: Subscribe to all event types. If new object events are added after an Aqara Studio update, you will be subscribed to them automatically.<br /><strong>Note</strong>: The receiver must allow unknown `data.eventType` values and remain compatible with new `data` structures. You may log and ignore events that are not yet supported, but you should not reject the entire request because of an unknown event.<br/></li>
             </ul>
             For more details, see
             <a href="#subscription-and-default-push-rules">Subscription and Default Push Rules</a>
@@ -166,7 +186,16 @@ Sample verification message:
 
 ### Returning a WebhookVerification Response
 
-Upon receiving a `WebhookVerification` message, you must return a response with `code` as 0 and a `challenge` field matching the `data.challenge` in the received message. Only after this verification will Aqara Studio enable HTTP Push.
+收到 WebhookVerification 消息后，请按照 Aqara Studio 中配置的响应校验模式返回相应响应。响应通过校验后，即表示消息接收成功且该地址验证通过，说明如下：
+
+| 模式 | 成功条件 | 响应示例 |
+| --- | --- | --- |
+| **Studio 标准确认（默认）** | HTTP 2xx，合法 JSON 对象，顶层整数形式的 `code=0`；验证消息还需原样返回 `challenge`。 | 业务 `{"code":0}`；验证 `{"code":0,"challenge":"请求中的值"}` |
+| **仅 HTTP 状态码 200** | HTTP 状态码必须为 **200**；忽略正文，可为空或任意内容。 | 空正文 |
+| **HTTP 状态码 200 + 文本匹配** | HTTP 状态码 200，完整 UTF-8 正文与期望文本完全一致，包括空格、换行；不做 trim 或类型转换。 | 期望 `ok` 时返回 `ok` |
+| **HTTP 状态码 200 + JSON 匹配** | HTTP 状态码 200，合法 UTF-8 JSON 满足期望值。对象按字段递归匹配，允许响应有额外字段。 | 期望 `{"result":{"code":0}}`，允许返回 `{"result":{"code":0,"message":"ok"}}` |
+
+若您的响应校验规则为 **Studio 标准确认**，当您收到 `WebhookVerification` 消息后，您需要返回一条包含 `code` 为 0（不接受 `"0"`、`0.0`、`0e0`） 且 `challenge` 为 `WebhookVerification` 消息中 `data.challenge` 的响应消息，表示您顺利接收该消息，此地址通过验证。如此，Aqara Studio 才会正式启用 HTTP Push。
 
 ```json
 {
@@ -175,8 +204,13 @@ Upon receiving a `WebhookVerification` message, you must return a response with 
 }
 ```
 
+后三种模式仍须支持 `WebhookVerification`，但无需返回 `code` 或 `challenge`，只需满足所选规则。
+- **仅 HTTP 状态码 200**：无法区分成功和以 HTTP 状态码 200 返回的业务错误，此类响应会被视为成功、不再重试。它也不验证接收端是否识别了验证消息；应另行确认地址及接收逻辑正确。
+- **JSON 匹配模式**：支持对象、字符串、数字、布尔值和 `null`，区分类型，但数字按数值比较（`0` 与 `0.0` 相同）；缺失字段不等于 `null`。不支持数组作为期望规则、正则或脚本；额外响应字段可以包含数组。JSON 字段顺序和格式化空白不影响匹配。JSON 期望最多 16 层、256 个值，禁止重复字段。
+- **文本匹配模式**： 文本期望 `0` 不匹配 `0.0` 或 `"0"`；JSON 字符串期望值则必须带双引号，例如 `"ok"`。期望正文最多 4096 UTF-8 字节。文本模式留空表示要求空响应。
+
 :::note
-Verification messages are not retried. If verification fails, the current configuration will not take effect.
+`WebhookVerification` messages are not retried. If verification fails, the current configuration will not take effect.
 :::
 
 ## Request Format
@@ -242,21 +276,10 @@ Each line refers to:
 On retry, the request body and `X-Studio-Delivery-Id` remain the same, but `Time`, `Nonce`, and `Sign` are regenerated.
 :::
 
-## Response Requirements
 
-Aqara Studio considers a delivery successful only if the receiver returns a response that meets the following:
+## Response Format
 
-- HTTP status code is `2xx`
-- Response body is uncompressed UTF-8 JSON
-- JSON root `code` field is an integer literal `0`
-
-The following values do **not** count as success:
-- `0.0`
-- `0e0`
-- `"0"`
-- `null`
-
-### Response Body Format
+### Response Content
 
 The response body should contain at least:
 
@@ -266,14 +289,6 @@ The response body should contain at least:
 }
 ```
 
-For verification requests (`WebhookVerification`), the response **must** include the original `challenge`:
-
-```json
-{
-  "code": 0,
-  "challenge": "00112233445566778899aabbccddeeff"
-}
-```
 
 If processing fails, you can return a non-zero `code`:
 
@@ -283,70 +298,56 @@ If processing fails, you can return a non-zero `code`:
 }
 ```
 
-### Response Body Limitations
+### Response Body Limits
 
-| Item | Limit |
-| --- | --- |
-| Default response body size limit | 4096 bytes |
-| Maximum response body size | 65536 bytes |
-| Maximum JSON nesting depth | 128 (including root object) |
+The maximum event request body size is determined by the Studio deployment configuration and cannot exceed 64 MiB. Messages that exceed the limit are not delivered. The receiver should set its inbound body limit according to its own capacity and the limits agreed upon for the actual deployment.
 
-We recommend keeping responses as simple as possible and avoiding complex JSON structures and excessive response headers.
+Additional requirements are listed below:
+| Limit | Requirement |
+|---------------------|--------------------------------------------------------------------------------------------|
+| Response compression | When the response body is validated, the response **must be uncompressed** |
+| Maximum response body size | 65,536 bytes (the actual limit of a deployed Studio may be lower) |
+| Maximum number of response headers | 16 headers in all modes |
+| Maximum header line length | 4,096 bytes |
+| Maximum JSON nesting depth in standard mode | 128 levels |
+| Maximum nesting depth in JSON Match mode | 16 levels |
+| Maximum parsed values in JSON Match mode | 1,024 |
+| Maximum numeric text length | 128 characters |
+| Duplicate fields | Prohibited |
+
+The receiver should return only the minimal content required for acknowledgment. If the response validation rule is **HTTP Status Code 200 Only**, the response body is not read and is therefore not subject to the response body size limit, but connection, response header, and timeout limits still apply.
+
+## Retry and Circuit Breaker
+
+Each event message is sent at most twice. Connection or read failures, HTTP 408, HTTP 429, HTTP 5xx, and invalid acknowledgments with an HTTP 2xx status are retryable. The standard retry delay is 1 second. For HTTP 429, `Retry-After` accepts only integer values from 0 to 30 seconds; other values use a 1-second delay. Other HTTP 4xx and HTTP 3xx responses are not retried.
+
+Aqara Studio considers a request failed if it cannot establish a connection within 2 seconds. Each HTTP call has a 5-second cancellation timeout. The 45-second logical delivery window starts when the message enters the sending phase and does not include prior queueing time; no new retry is started after this window expires. These time limits do not guarantee end-to-end delivery or immediate release of underlying resources. If low-level operations such as DNS do not respond to cancellation, the request may terminate later.
+
+Each endpoint verification sends only one HTTP request and is not retried immediately. After the circuit breaker is triggered, Studio sends a new `WebhookVerification` when the next backoff interval is reached. Event delivery resumes only after successful verification.
+
+`X-Studio-Delivery-Id` is the UUID for each logical delivery and remains unchanged across retries. The `msgId` in the body is used only for business tracking and cannot replace an idempotency key. When signing is enabled, we recommend using `(X-Studio-App-Key, X-Studio-Delivery-Id)` as a persistent composite unique key. If signing is disabled and the same receiving service connects to multiple Studio instances, add a mutually agreed fixed instance identifier header and use it together with the Delivery ID. Persist the idempotency record and the business result or durable processing task in a single transaction before acknowledging success. A network timeout may occur after the third party has already processed the message.
+
+This is a real-time, best-effort delivery mechanism. It does not guarantee that every message will arrive, does not redeliver historical messages, and does not guarantee delivery or processing order. Messages may be lost if the queue overflows or the endpoint is paused. Third parties that require complete state should periodically reconcile their data using the available query APIs. The protocol does not require an additional compensating acknowledgment handshake.
+
 
 ## Subscription and Default Push Rules
 
-After HTTP Push is enabled, not all events require manual selection to be sent. The current rules are:
+After HTTP Push is enabled, message delivery follows the rules below. You do not need to select every event manually:
 
 | Category | Rule |
 | --- | --- |
-| `DEVICE_ADDED` / `DEVICE_REMOVED` | Always sent, independent of subscription settings |
-| `TraitValueUpdate` | Enabled by default |
-| `DEVICE_ENDPOINT_ADDED` / `DEVICE_ENDPOINT_REMOVED` | Shared with device data/structure event group; enabled by default |
-| `DEVICE_TRAIT_PARAMETER_UPDATE` | Shared with device data/structure event group; enabled by default |
-| Configurable object events | Up to 8 individual object events can be selected (default: all selected) |
-| Alarm events | Disabled by default |
+| `DEVICE_ADDED` / `DEVICE_REMOVED` | Sent by default and cannot be disabled in the configuration. These events are always delivered regardless of other subscription settings. |
+| `TraitValueUpdate` | Device point value changes. This event belongs to the "Device Data and Structure Events" group, which is enabled by default. |
+| `DEVICE_ENDPOINT_ADDED` / `DEVICE_ENDPOINT_REMOVED` | Shares the "Device Data and Structure Events" group with `TraitValueUpdate`. Individual subscriptions are not currently supported, and the group is enabled by default. |
+| `DEVICE_TRAIT_PARAMETER_UPDATE` | Also shares the "Device Data and Structure Events" group, which is enabled by default. |
+| Configurable object events | Eight object events can currently be selected individually. All are selected by default, and all may be deselected. |
+| Alarm event `AlarmEvent` | Disabled by default and can be enabled as needed. |
 
 :::tip
-- You can deselect all options. In this case, `DEVICE_ADDED` and `DEVICE_REMOVED` will continue to be pushed.
-- "Full Subscription" includes all current and future object events.
-- Disabling HTTP Push also stops all default event types.
+- "Subscribe to Alls" includes not only all current object events but also any object events added in the future. The receiver should remain compatible with unknown event types and new data structures by logging and ignoring unsupported events instead of rejecting the entire request.
+- Even if all optional items are deselected, `DEVICE_ADDED` and `DEVICE_REMOVED` will still be delivered.
+- Disabling HTTP Push stops the delivery of all events.
 :::
-
-## Retry, Timeout, and Circuit Breaker
-
-To avoid message backlog due to receiver issues, HTTP Push enforces explicit timeout, retry, and circuit breaker strategies.
-
-### Retry and Idempotency
-
-Business messages are retried at most once. During retries, `X-Studio-Delivery-Id` remains unchanged, and the receiver should use it for idempotent handling.
-
-When the receiver returns 429, it can specify a wait time via `Retry-After`, which only supports integer seconds from 0 to 30; if not provided or invalid, the default wait time is used.
-
-`WebhookVerification` is not retried immediately. Successful verification is required when enabling or recovering push for the first time; if verification fails while modifying the configuration, the original configuration is not replaced, and existing push continues to run with the original configuration.
-
-### Timeout Rules
-
-| Item | Value |
-| --- | --- |
-| Connection timeout | 5 seconds |
-| Single HTTP call deadline | 5 seconds |
-
-### Circuit Breaker Rules
-
-- After 5 consecutive final failures, circuit breaker is triggered.
-- Probe backoff intervals: 1 minute, 5 minutes, 15 minutes, 1 hour, and 6 hours (maximum).
-- No missed messages during the circuit break will be resent after recovery.
-- After 10 consecutive successful business deliveries, the backoff level resets.
-
-## Data Size Limits
-
-| Item | Limit |
-| --- | --- |
-| Maximum total header size | 32 KiB |
-| Default single message size limit | 1 MiB |
-| Maximum single message body size | 64 MiB |
-
-If a message exceeds the size limit, it will not be sent.
 
 ## Receiver Implementation Suggestions
 
@@ -356,7 +357,13 @@ To ensure stable HTTP Push operation, we recommend the following best practices 
 - Use `X-Studio-Delivery-Id` for delivery tracing and implement idempotence per business requirements.
 - Do not rely on global order or expect historical message re-delivery.
 - If signature verification is enabled, always use the raw request body for digest computation—do not use formatted JSON.
-- Handle `WebhookVerification` separately, and ensure the `challenge` is returned exactly as received.
+- Handle `WebhookVerification` separately. If your response validation rule is "Studio Standard Acknowledgment," ensure that the `challenge` is returned unchanged.
+
+## Failure Recovery
+
+After consecutive delivery failures, Aqara Studio pauses event delivery and sends another `WebhookVerification` recovery probe after a progressively longer delay. 
+
+Event delivery resumes after successful verification, but messages generated while delivery was paused are not redelivered. Verification is also performed again after HTTP Push is re-enabled or the Studio service restarts, and no event messages are sent until verification succeeds. The receiver does not need to implement an additional recovery acknowledgment process.
 
 ## Example
 
@@ -380,6 +387,8 @@ X-Studio-Delivery-Id: 0c9c109a-e724-469c-ae96-1f96e824c127
 ```
 
 ### Receiver Response Example
+
+The following is an example of a response for **Studio standard acknowledgment**:
 
 ```http
 HTTP/1.1 200 OK

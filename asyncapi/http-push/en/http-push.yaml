@@ -1,0 +1,180 @@
+asyncapi: 3.0.0
+id: urn:studio:http-push:receiver:v1
+info:
+  title: Studio HTTP Push Receiver API
+  version: v1
+  description: |
+    Third-party receiver perspective. Studio Open sends HTTP/1.1 POST requests to the configured endpoint.
+    Supports HTTP/HTTPS. For HTTPS, certificate verification is required. Redirects are not followed.
+    The URL must not contain query, fragment, or userinfo; continuous slashes and existing percent-encoding in the path are preserved.
+    Business payloads are pushed with version v1 only; the full schema is reused from WebSocket.
+    Real-time best-effort delivery: no persistent message queues, no historical retransmission, and no global ordering guarantee.
+    Default Studio standard acknowledgment: HTTP 2xx with a JSON top-level code field, lexically encoded as integer 0. Responses like 0.0, 0e0, "0", or null are considered failures. For verification, the challenge must also be echoed back exactly.
+    Configurable acknowledgment modes: HTTP status 200 only (body is not read), HTTP 200 + exact text match, or HTTP 200 + JSON match. Challenge echoing is not required in these three modes.
+    JSON match supports recursive object field containment, and type-sensitive comparisons of string, number, boolean, and null. The number 0 equals 0.0, and missing fields are not equivalent to null. Expectation rules do not support arrays, regular expressions, or scripting.
+    The expected body can be at most 4096 UTF-8 bytes; expected JSON may have up to 16 levels, 256 values, number text up to 128 characters, and no duplicated fields. Text could include spaces and newlines. An empty expectation means an empty body.
+    The chosen acknowledgment rule is consistently applied during save, enable, restore, verification, and business delivery.
+    Status 200-only acknowledgment cannot detect business failures in the body, and even 200 error pages are considered success and will not be retried.
+    Each business message may be retried at most once, with a normal wait of 1 second; for HTTP 429, the Retry-After is only accepted as integers in 0..30 seconds.
+    Connection timeout is 2 seconds; the single HTTP call uses a 5-second cancellation deadline. The logical delivery window counts 45 seconds from the beginning of the send phase (not including prior queue wait); after that window, retries will not be started.
+    These timeouts do not guarantee end-to-end delivery or immediate resource release; if low-level operations such as DNS do not respond to cancellations, actual termination could take longer. Verification messages are not retried.
+    After push is enabled, DEVICE_ADDED/DEVICE_REMOVED are sent by default, independent of other subscription items. TraitValueUpdate, DEVICE_ENDPOINT_ADDED, DEVICE_ENDPOINT_REMOVED, and DEVICE_TRAIT_PARAMETER_UPDATE share device data and are enabled by default as a composite.
+    Custom subscription allows selecting from currently 8 configurable object events; full subscription includes all options and future newly added events. The receiver must be compatible with unknown eventType and newly added fields.
+    Each business request body is up to 64 MiB. If verification is needed, acknowledgment response is up to 65536 bytes (lower limits may apply on deployed Studio). Status 200-only doesn't read or limit the response body.
+    The receiver must support WebhookVerification; WebhookResyncRequired will not be sent and extra resync confirmation is not required.
+    When saving, re-enabling, or restoring, Studio will verify the current configuration; only after successful verification will business pushes be delivered.
+    For details see HTTP接入指南.md. This signature is independent of the OpenAPI/WebSocket gateway signature and does not use the Studio-generated AppKey.
+servers:
+  receiver:
+    host: receiver.example
+    protocol: https
+    protocolVersion: '1.1'
+    description: Example address; the actual host, port, and path are configured in Studio, not a Studio server-side interface.
+channels:
+  webhook:
+    address: /hook
+    description: |
+      The HTTP POST request body contains a single message. Requests use application/json UTF-8 and Accept-Encoding: identity.
+      The response is an acknowledgment to the same request, formatted according to the selected rule. If the body needs to be verified, the response must be uncompressed UTF-8; if only HTTP 200 status is checked, the body and its encoding are ignored.
+      Header names and values are sent as-is.
+    messages:
+      TraitValueUpdate:
+        $ref: '#/components/messages/TraitValueUpdate'
+      ObjectEvent:
+        $ref: '#/components/messages/ObjectEvent'
+      AlarmEvent:
+        $ref: '#/components/messages/AlarmEvent'
+      Verification:
+        $ref: '#/components/messages/Verification'
+      Acknowledgement:
+        $ref: '#/components/messages/Acknowledgement'
+      CustomAcknowledgement:
+        $ref: '#/components/messages/CustomAcknowledgement'
+operations:
+  receivePush:
+    action: receive
+    bindings:
+      http:
+        method: POST
+        bindingVersion: '0.3.0'
+    channel:
+      $ref: '#/channels/webhook'
+    messages:
+      - $ref: '#/channels/webhook/messages/TraitValueUpdate'
+      - $ref: '#/channels/webhook/messages/ObjectEvent'
+      - $ref: '#/channels/webhook/messages/AlarmEvent'
+      - $ref: '#/channels/webhook/messages/Verification'
+    reply:
+      channel:
+        $ref: '#/channels/webhook'
+      messages:
+        - $ref: '#/channels/webhook/messages/Acknowledgement'
+        - $ref: '#/channels/webhook/messages/CustomAcknowledgement'
+components:
+  messages:
+    TraitValueUpdate:
+      contentType: application/json
+      headers:
+        $ref: '#/components/schemas/PushHeaders'
+      payload:
+        $ref: './asyncapi-AqaraLife-websocket.yaml#/components/schemas/PushTraitValueUpdateMessageV1'
+    ObjectEvent:
+      contentType: application/json
+      headers:
+        $ref: '#/components/schemas/PushHeaders'
+      payload:
+        $ref: './asyncapi-AqaraLife-websocket.yaml#/components/schemas/PushObjectEventMessageV1'
+    AlarmEvent:
+      contentType: application/json
+      headers:
+        $ref: '#/components/schemas/PushHeaders'
+      payload:
+        $ref: './asyncapi-AqaraLife-websocket.yaml#/components/schemas/PushAlarmEventMessageV1'
+    Verification:
+      contentType: application/json
+      headers:
+        $ref: '#/components/schemas/PushHeaders'
+      payload:
+        $ref: '#/components/schemas/WebhookVerification'
+      examples:
+        - payload:
+            type: WebhookVerification
+            version: v1
+            msgId: verify-39c63800-c8c1-4f4b-b77c-57f24f0de240
+            data: {challenge: '00112233445566778899aabbccddeeff'}
+          headers:
+            Content-Type: application/json; charset=utf-8
+            Accept-Encoding: identity
+            X-Studio-Delivery-Id: 0c9c109a-e724-469c-ae96-1f96e824c127
+    Acknowledgement:
+      contentType: application/json
+      description: Only for the default Studio standard acknowledgment mode. HTTP 2xx, uncompressed UTF-8 JSON.
+        The body may be up to 65536 bytes (lower limits possible on deployed Studio). Response headers: max 16 items, each line up to 4096 bytes. JSON max nesting depth is 128 (including the root object); unknown fields are similarly limited. Avoid complex responses and excessive headers.
+      payload:
+        $ref: '#/components/schemas/Acknowledgement'
+      examples:
+        - payload: {code: 0}
+        - payload: {code: 0, challenge: '00112233445566778899aabbccddeeff'}
+        - payload: {code: 1}
+    CustomAcknowledgement:
+      description: |
+        Custom mode is selected by the endpoint configuration, not at the receiver's own choice. HTTP status must be 200; 201/204 do not count as success.
+        HTTP status 200 only: the body may be any content or empty; completely ignored, not parsed, no challenge required.
+        Text match: the uncompressed UTF-8 response body must exactly match the expected text, including whitespace.
+        JSON match: uncompressed UTF-8 JSON, recursively includes all specified object fields, allows extra fields, or matches scalar values with the same type.
+        JSON may be up to 16 levels, 1024 parsed values, number strings up to 128 chars, no duplicate fields. Extra fields may include arrays, but expectation rules do not support arrays.
+        When reading bodies, limit is 65536 bytes (deployment values could be smaller); all modes: headers are at most 16 items, each line up to 4096 bytes.
+        This message does not declare a unified payload schema or contentType: raw text, JSON, and empty responses cannot be represented by a single JSON Schema.
+  schemas:
+    PushHeaders:
+      type: object
+      required: [Content-Type, Accept-Encoding, X-Studio-Delivery-Id]
+      description: |
+        Header names are case-insensitive. Delivery-Id is always included.
+        Signature fields are included only when signing is enabled: the five signature fields below.
+        Time is Unix milliseconds; Nonce is a 128-bit random lowercase hex string. Sign is HMAC-SHA256 in lowercase hex.
+        UTF-8 signature message is v1, AppKey, Delivery-Id, Time, Nonce, and original body SHA256 in lowercase hex; each on its own line, joined by LF, no trailing LF.
+        HMAC key is the third-party AppSecret in UTF-8 bytes. On retry, same Delivery-Id and body are used, fresh Time/Nonce/Sign are regenerated.
+      properties:
+        Content-Type: {type: string, enum: ['application/json; charset=utf-8']}
+        Accept-Encoding: {type: string, enum: [identity]}
+        X-Studio-Delivery-Id: {type: string, format: uuid}
+        X-Studio-App-Key: {type: string, minLength: 1, maxLength: 128, pattern: '^[!-~]+$'}
+        X-Studio-Time: {type: string, pattern: '^[0-9]{1,16}$'}
+        X-Studio-Nonce: {type: string, pattern: '^[0-9a-f]{32}$'}
+        X-Studio-Sign-Version: {type: string, enum: [v1]}
+        X-Studio-Sign: {type: string, pattern: '^[0-9a-f]{64}$'}
+      allOf:
+        - if:
+            anyOf:
+              - required: [X-Studio-App-Key]
+              - required: [X-Studio-Time]
+              - required: [X-Studio-Nonce]
+              - required: [X-Studio-Sign-Version]
+              - required: [X-Studio-Sign]
+          then:
+            required: [X-Studio-App-Key, X-Studio-Time, X-Studio-Nonce, X-Studio-Sign-Version, X-Studio-Sign]
+    WebhookVerification:
+      type: object
+      required: [type, version, msgId, data]
+      properties:
+        type: {type: string, enum: [WebhookVerification]}
+        version: {type: string, enum: [v1]}
+        msgId: {type: string, minLength: 1, maxLength: 64}
+        data:
+          type: object
+          required: [challenge]
+          properties:
+            challenge: {type: string, pattern: '^[0-9a-f]{32}$'}
+    Acknowledgement:
+      type: object
+      required: [code]
+      properties:
+        code:
+          type: integer
+          description: 0 means success, non-zero means failure.
+            Successful value must be encoded as a lexical integer; JSON Schema's integer cannot express the extra protocol rule of rejecting 0.0/0e0/etc.
+        challenge:
+          type: string
+          description: For verification responses, required; this must exactly echo the challenge value from the request. Not required for business responses.
+     

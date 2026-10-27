@@ -15,9 +15,15 @@ Aqara Studio 支持通过 HTTP Push 将设备数据、对象事件和告警实�
 
 Aqara Studio 的 HTTP Push 采用“Studio 主动推送，第三方服务端确认”的模式：
 
-1. 您在 Aqara Studio 中 [配置接收地址并选择需要订阅的事件类型；必要时还可添加 Header 字段和签名配置](#在-aqara-studio-配置消息推送)。
+1. 您在 Aqara Studio 中 [配置接收地址、设置响应校验规则、选择需要订阅的事件类型；必要时还可添加 Header 字段和签名配置](#在-aqara-studio-配置消息推送)。
+    - 响应校验规则默认使用 **Studio 标准确认**。
+    - 若仅需判断 HTTP 状态码为 200，响应校验规则可选择**仅 HTTP 状态码 200**。
 2. 当您保存上述配置后，Aqara Studio 会立即向您配置的接收地址发送一条 `WebhookVerification` 消息（HTTP POST），用于验证接收地址是否可用。
-3. 您需要返回一条包含 `code` 为 0 且 `challenge` 为 `WebhookVerification` 消息中 `data.challenge` 的响应消息，表示您顺利接收该消息，此地址通过验证。如此，Aqara Studio 才会正式启用 HTTP Push。
+3. 若您选择的响应校验规则为 **Studio 标准确认**，您需要返回一条包含 `code` 为 0 且 `challenge` 为 `WebhookVerification` 消息中 `data.challenge` 的响应消息，表示您顺利接收该消息，此地址通过验证。如此，Aqara Studio 才会正式启用 HTTP Push。
+  
+    若为 **其他响应校验模式**，则参考下文 [返回 WebhookVerification 响应](#返回-webhookverification-响应) 的说明编写响应消息。
+
+    当上述验证成功后，Aqara Studio 才启用并开始业务推送；验证失败则保留原配置。
 4. 当您配置的订阅事件发生时，Aqara Studio 会按上述配置向您配置的接收地址发送 HTTP `POST` 请求。
 
   每个请求正文只包含一条消息，消息格式为 JSON。
@@ -31,30 +37,31 @@ HTTP Push 是实时、best-effort 的推送机制，不提供持久化消息队�
 
 在实现 HTTP Push 之前，请先确认您的接收端满足以下要求：
 
-| 项目 | 要求 |
-| --- | --- |
-| 协议 | 支持 HTTP 或 HTTPS |
-| HTTP 版本 | HTTP/1.1 |
-| 接收地址 | 在 Studio 中配置唯一全局 endpoint |
-| HTTPS | 必须能正确校验证书 |
-| 重定向 | 不跟随重定向 |
-| URL 限制 | 地址中不能包含 query、fragment 和 userinfo |
-| 路径处理 | 保留路径中的连续斜杠和已有百分号转义 |
-
-另外，接收端必须支持 `WebhookVerification` 验证请求。保存配置时，Studio 会自动验证当前配置；只有验证成功后，HTTP Push 才会正式启用。后续如果重新启用推送，也会再次执行验证。
+- URL 必须是包含主机的绝对 `http` 或 `https` 地址，UTF-8 编码最多 4096 字节且不能包含空白，不允许 userinfo、query 和 fragment；显式端口必须在 1～65535 之间。Studio 保留路径中的连续斜杠和已有百分号转义，不跟随重定向。
+- HTTPS 会校验证书链、有效期和主机名；证书必须被 Studio 所在 JVM 信任，不能关闭证书校验。
+- 请求使用 `Content-Type: application/json; charset=utf-8` 与 `Accept-Encoding: identity`。需要校验正文的模式不得使用 `gzip`、`br` 等压缩响应；“仅 HTTP 状态码 200”不读取或校验正文及其编码。
+- 固定 Header 名称不区分大小写，不自动添加 `X-Studio-*` 前缀；不能使用 `X-Studio-*`、`Proxy-*`、`Host`、`Content-Length`、`Transfer-Encoding`、`Content-Encoding`、`Content-Type`、`Accept-Encoding`、`Connection`、`Expect`、`TE`、`Trailer` 或 `Upgrade`。
 
 ## 支持的消息类型
 
 Aqara Studio 会向接收端发送以下几类消息：
 
-| 消息类型 | 说明 |
+| 消息 | 发送条件 |
 | --- | --- |
-| `TraitValueUpdate` | 设备功能点值变化消息 |
-| `objectEvent` | 对象事件，例如设备新增、删除、空间变化、自动化变化等 |
-| `AlarmEvent` | 告警消息 |
-| `WebhookVerification` | Webhook 验证消息，用于校验接收端是否可用 |
+| `TraitValueUpdate` | 设备点位值变化；“设备数据与结构事件”组合项开启时发送，默认开启。 |
+| `objectEvent` -> `DEVICE_ADDED`、`DEVICE_REMOVED` | 推送启用后默认发送，不受其他订阅项影响。 |
+| `objectEvent` -> `DEVICE_ENDPOINT_ADDED`、`DEVICE_ENDPOINT_REMOVED`、`DEVICE_TRAIT_PARAMETER_UPDATE` | 与点位值变化共用“设备数据与结构事件”组合项，暂不支持分别选择。 |
+| `objectEvent` -> 可配置对象事件 | 由自主订阅或全订阅控制，事件列表见下文。 |
+| `AlarmEvent` | 原始告警，默认关闭。 |
+| `WebhookVerification` | endpoint 验证及熔断恢复探测。 |
 
-业务消息正文复用了 [WebSocket `v1` 的消息 schema](./../aqara-developer/data-export-api/websocket-api/index.mdx)。除验证消息（`WebhookVerification`）外，业务消息通常都带有以下通用字段：
+`objectEvent` 根据 `data.eventType` 区分具体事件。当前可配置的对象事件为：
+
+- `DEVICE_SPACE_UPDATED`
+- `SPACE_ADDED`、`SPACE_REMOVED`、`SPACE_UPDATED`
+- `AUTOMATION_ADDED`、`AUTOMATION_REMOVED`、`AUTOMATION_UPDATED`、`AUTOMATION_SPACE_UPDATED`
+
+除了 `WebhookVerification` 之外，其他消息都包含业务数据。业务消息正文复用了 [WebSocket `v1` 的消息 schema](./../aqara-developer/data-export-api/websocket-api/index.mdx)，通用字段如下：
 
 | 字段 | 说明 |
 | --- | --- |
@@ -90,12 +97,27 @@ Aqara Studio 会向接收端发送以下几类消息：
           <td>传入您用于接收推送的地址，请确保该地址满足<a href="#接收端要求">接收端要求</a>。</td>
         </tr>
         <tr>
+          <td>响应校验规则</td>
+          <td>是</td>
+          <td>
+            您可以选择响应校验规则，支持如下：
+            <ul>
+              <li><strong>Studio 标准确认</strong>：默认选项，要求返回一条包含 `code` 为 0 且 `challenge` 为 `WebhookVerification` 消息中 `data.challenge` 的响应消息，表示您顺利接收该消息，此地址通过验证。</li>
+              <li><strong>仅 HTTP 状态码 200（忽略正文）</strong>：仅 HTTP 状态码 200 即视为成功；正文不读取、不校验。接收端若用 200 返回业务错误，也会被视为成功且不重试。</li>
+              <li><strong>HTTP 状态码 200 + 文本匹配</strong>：响应全文须与期望值完全一致，包括空格和换行；不做类型转换。最多 4096 UTF-8 字节，留空表示要求空响应。</li>
+              <li><strong>HTTP 状态码 200 + JSON 匹配</strong>：填写合法 JSON：对象按字段递归匹配，允许额外字段；也支持字符串、数字、布尔值和 null。区分类型，不支持数组。最多 4096 UTF-8 字节、16 层、256 个值。</li>
+            </ul>
+          </td>  
+        </tr>
+        <tr>
           <td>消息订阅模式</td>
           <td>是</td>
           <td>
             您可以选择消息订阅模式，支持如下：<br/>
-            - 自主订阅：选择需要订阅的事件类型。<br/>
-            - 全订阅：订阅所有事件类型。<br/>
+            <ul>
+                <li>自主订阅：选择需要订阅的事件类型。若 Aqara Studio 更新版本后新增了对象事件，您需要手动选择才能订阅新事件。<br/></li>
+                <li>全订阅：订阅所有事件类型。若 Aqara Studio 更新版本后新增了对象事件，您会自动订阅新事件。<br /><strong>注意</strong>：接收端必须允许未知的 `data.eventType` 和兼容新增的 `data` 结构；可记录并忽略尚未支持的事件，不应因未知事件拒绝整个请求。<br/></li>
+            </ul>
             更多说明见 <a href="#订阅与默认推送规则">订阅与默认推送规则</a>
           </td>
         </tr>
@@ -151,7 +173,16 @@ Aqara Studio 会向接收端发送以下几类消息：
 
 ### 返回 WebhookVerification 响应
 
-当您收到 `WebhookVerification` 消息后，您需要返回一条包含 `code` 为 0 且 `challenge` 为 `WebhookVerification` 消息中 `data.challenge` 的响应消息，表示您顺利接收该消息，此地址通过验证。如此，Aqara Studio 才会正式启用 HTTP Push。
+收到 WebhookVerification 消息后，请按照 Aqara Studio 中配置的响应校验模式返回相应响应。响应通过校验后，即表示消息接收成功且该地址验证通过，说明如下：
+
+| 模式 | 成功条件 | 响应示例 |
+| --- | --- | --- |
+| **Studio 标准确认（默认）** | HTTP 2xx，合法 JSON 对象，顶层整数形式的 `code=0`；验证消息还需原样返回 `challenge`。 | 业务 `{"code":0}`；验证 `{"code":0,"challenge":"请求中的值"}` |
+| **仅 HTTP 状态码 200** | HTTP 状态码必须为 **200**；忽略正文，可为空或任意内容。 | 空正文 |
+| **HTTP 状态码 200 + 文本匹配** | HTTP 状态码 200，完整 UTF-8 正文与期望文本完全一致，包括空格、换行；不做 trim 或类型转换。 | 期望 `ok` 时返回 `ok` |
+| **HTTP 状态码 200 + JSON 匹配** | HTTP 状态码 200，合法 UTF-8 JSON 满足期望值。对象按字段递归匹配，允许响应有额外字段。 | 期望 `{"result":{"code":0}}`，允许返回 `{"result":{"code":0,"message":"ok"}}` |
+
+若您的响应校验规则为 **Studio 标准确认**，当您收到 `WebhookVerification` 消息后，您需要返回一条包含 `code` 为 0（不接受 `"0"`、`0.0`、`0e0`） 且 `challenge` 为 `WebhookVerification` 消息中 `data.challenge` 的响应消息，表示您顺利接收该消息，此地址通过验证。如此，Aqara Studio 才会正式启用 HTTP Push。
 
 ```json
 {
@@ -160,8 +191,13 @@ Aqara Studio 会向接收端发送以下几类消息：
 }
 ```
 
+后三种模式仍须支持 `WebhookVerification`，但无需返回 `code` 或 `challenge`，只需满足所选规则。
+- **仅 HTTP 状态码 200**：无法区分成功和以 HTTP 状态码 200 返回的业务错误，此类响应会被视为成功、不再重试。它也不验证接收端是否识别了验证消息；应另行确认地址及接收逻辑正确。
+- **JSON 匹配模式**：支持对象、字符串、数字、布尔值和 `null`，区分类型，但数字按数值比较（`0` 与 `0.0` 相同）；缺失字段不等于 `null`。不支持数组作为期望规则、正则或脚本；额外响应字段可以包含数组。JSON 字段顺序和格式化空白不影响匹配。JSON 期望最多 16 层、256 个值，禁止重复字段。
+- **文本匹配模式**： 文本期望 `0` 不匹配 `0.0` 或 `"0"`；JSON 字符串期望值则必须带双引号，例如 `"ok"`。期望正文最多 4096 UTF-8 字节。文本模式留空表示要求空响应。
+
 :::note
-验证消息不重试。如果验证失败，当前配置不会生效。
+`WebhookVerification` 消息不重试。如果验证失败，当前配置不会生效。
 :::
 
 ## 请求格式
@@ -185,6 +221,7 @@ HTTP Push 请求头至少包含以下字段：
 | `X-Studio-Nonce` | 32 位小写十六进制随机数。若您在 Aqara Studio 上配置了 AppKey 和 AppSecret，请求头才会包含此字段。 |
 | `X-Studio-Sign-Version` | 签名版本。若您在 Aqara Studio 上配置了 AppKey 和 AppSecret，请求头才会包含此字段，固定为 `v1`。 |
 | `X-Studio-Sign` |  签名（HMAC-SHA256 小写十六进制结果）。若您在 Aqara Studio 上配置了 AppKey 和 AppSecret，请求头才会包含此字段， |
+
 ### 验签规则
 
 若您在 Aqara Studio 中配置了 AppKey 和 AppSecret，接收端应使用 AppSecret 校验请求头中的 `X-Studio-Sign`。
@@ -226,36 +263,15 @@ SHA256(raw-body)
 发生重试时，消息正文和 `X-Studio-Delivery-Id` 保持不变，但 `Time`、`Nonce` 和 `Sign` 会重新生成。
 :::
 
-## 响应要求
+## 响应格式
 
-接收端返回的响应必须满足以下条件，Aqara Studio 才会认定投递成功：
-
-- HTTP 状态码为 `2xx`
-- 响应体是未压缩的 UTF-8 JSON
-- JSON 顶层 `code` 字段的词法值必须是整数 `0`
-
-以下值都**不算成功**：
-- `0.0`
-- `0e0`
-- `"0"`
-- `null`
-
-### 响应体格式
+###  响应内容
 
 响应体至少应包含：
 
 ```json
 {
   "code": 0
-}
-```
-
-验证请求（`WebhookVerification`）的响应则必须原样回传 `challenge`：
-
-```json
-{
-  "code": 0,
-  "challenge": "00112233445566778899aabbccddeeff"
 }
 ```
 
@@ -269,68 +285,53 @@ SHA256(raw-body)
 
 ### 响应体限制
 
-| 项目 | 限制 |
-| --- | --- |
-| 默认响应体上限 | 4096 字节 |
-| 响应体硬上限 | 65536 字节 |
-| JSON 最大嵌套深度 | 128（含根对象） |
+业务请求正文上限由 Studio 部署配置，最大不超过 64 MiB；超限消息不会投递。接收端应按自身容量设置入站正文限制，并以实际部署约定为准。
 
-建议接收端尽量返回简洁响应，避免复杂 JSON 结构和大量响应头。
+更多要求如下所示：
+| 限制项                | 具体要求                                                                                     |
+|---------------------|--------------------------------------------------------------------------------------------|
+| 响应是否压缩             | 需要校验正文时，响应**必须未压缩**                                                          |
+| 响应正文大小上限          | 65536 字节（已部署 Studio 实际限制可能更小）                                                |
+| 响应 Header 项数上限      | 所有模式下 Header 最多 16 项                                                               |
+| Header 单行最大长度       | 4096 字节                                                                                  |
+| 标准模式 JSON 嵌套层级上限 | 128 层                                                                                   |
+| JSON 匹配模式嵌套层级上限 | 16 层                                                                                    |
+| JSON 匹配模式解析值上限   | 1024 个                                                                                   |
+| 数字文本最大字符数         | 128 字符                                                                                  |
+| 是否允许重复字段           | 禁止重复字段                                                                              |
+
+接收端应只返回确认所需的少量内容。**仅 HTTP 状态码 200** 不读取正文，不受正文大小限制，但仍受连接、响应头和超时限制。
+
+## 重试与熔断
+
+单条业务消息最多发送两次。连接/读取失败、408、429、5xx、2xx 非法确认可重试；普通等待 1 秒。429 的 `Retry-After` 只接受 0～30 秒整数；其他值按 1 秒。其他 4xx 和 3xx 不重试。
+
+Studio 在 2 秒内无法建立连接会判定该次请求失败；单次 HTTP 调用采用 5 秒的超时取消期限。逻辑投递窗口从进入发送阶段起计算，为 45 秒，不包含此前的排队等待；窗口到期后不再启动重试。这些期限不是端到端送达或底层资源立即释放的保证：DNS 等底层操作不响应取消时，实际结束可能更晚。
+
+每次 endpoint 验证只发送一次 HTTP 请求，不做当场重试。熔断后到达下一个退避时间点时，Studio 会发起一次新的 `WebhookVerification`；验证成功后才恢复业务推送。
+
+`X-Studio-Delivery-Id` 是每次逻辑投递的 UUID，重试保持不变。正文 `msgId` 仅用于业务追踪，不能代替幂等键。开启签名时，建议使用 `(X-Studio-App-Key, X-Studio-Delivery-Id)` 作为持久化联合唯一键。未开启签名且同一接收服务对接多个 Studio 实例时，应增加双方约定的固定实例标识 Header，并与 Delivery-Id 组合使用。幂等记录与业务结果/可靠入库任务应在一个事务内落地，再确认成功。网络超时可能发生在第三方已处理之后。
+
+这是实时 best-effort，不保证全部到达，不补发历史，也不保证到达或处理顺序。队列溢出或 endpoint 暂停期间的消息可能丢失；需要状态完整性的第三方应结合现有查询接口做周期性校准。协议不要求额外的补偿确认握手。
 
 ## 订阅与默认推送规则
 
-HTTP Push 启用后，并不是所有事件都需要手动勾选才会发送。当前规则如下：
+启用 HTTP Push 后，消息的推送行为遵循如下规则，无需全部事件手动勾选：
 
-| 类别 | 规则 |
+| 类别 | 规则说明 |
 | --- | --- |
-| `DEVICE_ADDED` / `DEVICE_REMOVED` | 默认发送，不受其他订阅项影响 |
-| `TraitValueUpdate` | 默认开启 |
-| `DEVICE_ENDPOINT_ADDED` / `DEVICE_ENDPOINT_REMOVED` | 与设备数据/结构事件组合项共用，默认开启 |
-| `DEVICE_TRAIT_PARAMETER_UPDATE` | 与设备数据/结构事件组合项共用，默认开启 |
-| 可配置对象事件 | 当前可逐项选择 8 个对象事件，默认全部选中 |
-| 告警事件 | 默认关闭 |
+| `DEVICE_ADDED` / `DEVICE_REMOVED` | 默认发送，始终推送，配置无法关闭，不受其他订阅项限制 |
+| `TraitValueUpdate` | 设备点位数值变化；归属于“设备数据与结构事件”组合选项，默认开启 |
+| `DEVICE_ENDPOINT_ADDED` / `DEVICE_ENDPOINT_REMOVED` | 与 `TraitValueUpdate` 共用“设备数据与结构事件”组合项，暂不支持独立订阅，默认开启 |
+| `DEVICE_TRAIT_PARAMETER_UPDATE` | 亦与“设备数据与结构事件”组合项共用，默认开启 |
+| 可配置对象事件 | 当前支持逐项勾选的 8 个对象事件，默认全选，可全部取消 |
+| 告警事件 `AlarmEvent` | 默认关闭，可选启用 |
 
 :::tip
-- 允许取消全部可选项。此时仍会继续推送 `DEVICE_ADDED` 和 `DEVICE_REMOVED`。
-- “全订阅”不仅包含当前所有可选对象事件，也包含后续新增的对象事件。
-- 如果关闭 HTTP Push，则默认事件也会一并停止推送。
+- “全订阅”模式不仅覆盖当前全部对象事件，也会自动包含未来新增的对象事件；接收端应做好对未知事件类型和新数据结构的兼容（记录并忽略未支持事件，而非因未知事件拒绝整个请求）。
+- 即使取消所有可选项，`DEVICE_ADDED` 和 `DEVICE_REMOVED` 仍会推送。
+- 若关闭 HTTP Push，所有事件推送均会停止。
 :::
-
-## 重试、超时与熔断
-
-为避免接收端故障导致大量积压，HTTP Push 采用了明确的超时、重试和熔断策略。
-
-### 重试与幂等
-
-业务消息最多额外重试一次。重试时 X-Studio-Delivery-Id 保持不变，接收端应据此幂等处理。
-
-接收端返回 429 时，可通过 Retry-After 指定等待时间，仅支持 0～30 的整数秒；未提供或无效时使用默认等待时间。
-
-WebhookVerification 不做当场重试。首次启用或恢复推送需要验证成功；修改配置时，验证失败不会替换原配置，原有推送继续按原配置运行。
-
-### 超时规则
-
-| 项目 | 值 |
-| --- | --- |
-| 连接超时 | 5 秒 |
-| 单次 HTTP 调用取消期限 | 5 秒 |
-
-### 熔断规则
-
-- 连续 5 条消息最终失败后，触发熔断。
-- 探测退避时间依次为：1 分钟、5 分钟、15 分钟、1 小时、6 小时，之后封顶。
-- 熔断恢复后，不会补发熔断期间错过的历史消息。
-- 连续 10 条业务消息投递成功后，退避档位会被重置。
-
-## 数据大小限制
-
-| 项目 | 限制 |
-| --- | --- |
-| 固定 Header 总容量 | 32 KiB |
-| 单条业务请求体默认上限 | 1 MiB |
-| 单条业务请求体硬上限 | 64 MiB |
-
-如果消息体超过上限，该消息不会被发送。
 
 ## 接收端实现建议
 
@@ -340,7 +341,13 @@ WebhookVerification 不做当场重试。首次启用或恢复推送需要验证
 - 以 `X-Studio-Delivery-Id` 作为投递链路追踪字段，并结合业务状态做幂等处理。
 - 不要依赖全局顺序，也不要假设一定能收到历史补发。
 - 开启签名时，务必使用原始请求体参与摘要计算，不要使用格式化后的 JSON。
-- 对 `WebhookVerification` 单独处理，确保 `challenge` 原样返回。
+- 对 `WebhookVerification` 单独处理。若您的响应校验规则为 **Studio 标准确认**，确保 `challenge` 原样返回。
+
+## 故障恢复
+
+连续投递失败时，Studio 会暂停业务推送，并在逐步延长的等待后再次发送 `WebhookVerification` 探测恢复。
+
+验证成功后恢复业务推送，但不补发停止期间的消息。重新启用或 Studio 服务重启后也会重新验证；验证成功前不会发送业务消息。接收端不需要实现额外的恢复确认流程。
 
 ## 示例
 
@@ -364,6 +371,8 @@ X-Studio-Delivery-Id: 0c9c109a-e724-469c-ae96-1f96e824c127
 ```
 
 ### 接收端返回确认
+
+以下为 **Studio 标准确认** 的响应示例：
 
 ```http
 HTTP/1.1 200 OK

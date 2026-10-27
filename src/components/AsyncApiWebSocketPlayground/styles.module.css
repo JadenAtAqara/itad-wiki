@@ -105,11 +105,13 @@
 .stepsColumn {
   display: grid;
   gap: 1.25rem;
+  min-width: 0;
 }
 
 .logsRail {
   position: sticky;
   top: 5.75rem;
+  min-width: 0;
 }
 
 .logsCard {
@@ -143,6 +145,7 @@
 }
 
 .referenceCard {
+  min-width: 0;
   padding: 1rem;
   border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: 18px;
@@ -150,10 +153,24 @@
 }
 
 .openapiSchemaWrap {
+  max-width: 100%;
   margin-top: 0.75rem;
+  overflow-x: auto;
+}
+
+.openapiSchemaWrap :global(.tabs) {
+  flex-wrap: wrap;
+  overflow-x: visible;
+}
+
+.openapiSchemaWrap :global(.tabs__item) {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .card {
+  min-width: 0;
   padding: 1.2rem;
   border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: 20px;
