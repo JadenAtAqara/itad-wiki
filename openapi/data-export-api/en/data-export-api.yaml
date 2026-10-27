@@ -4090,6 +4090,12 @@ paths:
       summary: Query Device Trait Value Change History
       description: |
         This API is used to query the change history of multiple traits for multiple devices within a given time range. It supports continuous retrieval of historical records through the pagination cursor `cursor`.
+        
+        To query the latest changes, omit `cursor` to start a new query. Do not reuse a pagination cursor for polling.
+
+        You may adjust `pageSize` when querying the next page with the most recently returned `nextCursor`. Only an identical retry of the latest continuation request is supported; `cursor`, `pageSize`, and all other query parameters must remain unchanged. After advancing, reading from an earlier `cursor` is not supported.
+
+        Invalid parameters or an invalid `cursor` result in a `400` response. If the cursor expires or becomes invalid, omit `cursor` and start a new query; the query does not automatically resume from the beginning. A `503` response indicates that the query service is temporarily busy and may be retried.
       operationId: queryDevicePointHistory
       x-skill-intent: history.device_point_values.query
       x-idempotent: true
@@ -4138,7 +4144,11 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
         '503':
-          $ref: '#/components/responses/ServiceUnavailableResponse'
+          description: Query service unavailable or query temporarily busy; retryable when temporarily busy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
   # Get Studio Statistics
@@ -7593,12 +7603,12 @@ components:
           minimum: 1
           maximum: 200
           default: 50
-          description: Maximum number of records per page, range [1, 200].
+          description: Maximum number of records per page, range [1, 200]. Adjust when querying the next page; must maintain the same size when retrying the latest continuation request.
         cursor:
           type: string
           nullable: true
           description: |
-            Pagination cursor.<ul><li>Not required for the first request; to get the next page, pass the nextCursor from the previous response.</li><li>For paginated requests, <code>deviceIds</code>, <code>traitCodes</code>, <code>startTime</code>, <code>endTime</code>, and <code>descending</code> must be consistent with the first request.</li></ul>
+            The `nextCursor` returned by the previous page.<ul><li>Omit this field for the initial request. To retrieve the next page, pass the `nextCursor` from the previous response.</li><li>For paginated requests, the <code>deviceIds</code>, <code>traitCodes</code>, <code>startTime</code>, <code>endTime</code>, and <code>descending</code> parameters must remain the same as in the initial request.</li><li>Omit this field for an initial query, when polling for the latest changes, or when starting a new query after the cursor becomes invalid.</li></ul>
     
     DevicePointHistoryItem:
       type: object
