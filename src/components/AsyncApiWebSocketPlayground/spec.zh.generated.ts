@@ -1325,7 +1325,7 @@ const aqaraLifeWebSocketSpecZh = {
       "name": "objectEvent",
       "title": "对象事件推送",
       "summary": "设备增删默认推送；空间、自动化和空间关联变化按精确对象订阅投递。",
-      "description": "DEVICE_ADDED、DEVICE_REMOVED 在认证连接建立后默认推送。\nSPACE_*、AUTOMATION_*、DEVICE_SPACE_UPDATED 仅投递给命中 eventType、objectId 和当前权限的 SubscribeObjectEventRequest 会话。\nDEVICE_ENDPOINT_*、DEVICE_TRAIT_PARAMETER_UPDATE 继续跟随现有设备数据订阅。\n场景是自动化内部的 manualTriggers，不提供独立场景事件；数量变化不提供独立事件。\n协议不提供全局唯一的事件 ID；推送 msgId 只用于链路追踪，调用端应按对象状态幂等处理，不应仅按 objectId、eventType、time 去重。\n",
+      "description": "DEVICE_ADDED、DEVICE_REMOVED 在认证连接建立后默认推送。\n\nSPACE_*、AUTOMATION_*、DEVICE_SPACE_UPDATED 仅投递给命中 eventType、objectId 和当前权限的 SubscribeObjectEventRequest 会话。\n\nDEVICE_ENDPOINT_*、DEVICE_TRAIT_PARAMETER_UPDATE 继续跟随现有设备数据订阅。\n\n独立场景通过 /scenes 管理，变化通知沿用 AUTOMATION_* 事件族；对象分类以 /automations 和 /scenes 查询结果为准。数量变化不提供独立事件。\n\n场景是自动化内部的 manualTriggers，不提供独立场景事件；数量变化不提供独立事件。\n\n协议不提供全局唯一的事件 ID；推送 msgId 只用于链路追踪，调用端应按对象状态幂等处理，不应仅按 objectId、eventType、time 去重。\n",
       "examples": [
         {
           "name": "deviceAdded",
@@ -1395,13 +1395,7 @@ const aqaraLifeWebSocketSpecZh = {
                 "definitionType": "WHEN_IF_THEN",
                 "name": "回家模式",
                 "enabled": true,
-                "createTime": 1789000000000,
-                "manualTriggers": [
-                  {
-                    "triggerNodeId": "manual-trigger-1",
-                    "triggerName": "回家"
-                  }
-                ]
+                "createTime": 1789000000000
               }
             },
             "code": 0,
@@ -1459,82 +1453,694 @@ const aqaraLifeWebSocketSpecZh = {
             "maxLength": 64
           },
           "data": {
-            "if": {
-              "properties": {
-                "eventType": {
-                  "enum": [
-                    "AUTOMATION_SPACE_UPDATED"
-                  ]
-                }
-              }
-            },
-            "then": {
-              "required": [
-                "data"
-              ],
-              "properties": {
-                "data": {
-                  "type": "object",
-                  "required": [
-                    "automationId",
-                    "oldSpaceId",
-                    "space"
-                  ],
-                  "properties": {
-                    "automationId": {
-                      "type": "string",
-                      "description": "自动化 ID。"
-                    },
-                    "oldSpaceId": {
-                      "type": [
-                        "string",
-                        "null"
-                      ],
-                      "description": "变化前空间 ID；首次关联时为 null。"
-                    },
-                    "space": {
-                      "anyOf": [
-                        {
-                          "type": "object",
-                          "description": "空间最新摘要。客户端应按 spaceId 维护统一空间缓存，避免在设备或自动化关系数据中重复保存可能过期的名称、标记和父级；parentSpaceId 表示该摘要所属父空间，根空间为 null。",
-                          "required": [
-                            "spaceId",
-                            "name",
-                            "parentSpaceId"
-                          ],
-                          "properties": {
-                            "spaceId": {
-                              "type": "string",
-                              "description": "空间 ID。"
-                            },
-                            "name": {
-                              "type": "string",
-                              "description": "空间名称。"
-                            },
-                            "spatialMarking": {
-                              "type": [
-                                "string",
-                                "null"
-                              ],
-                              "description": "空间标记；没有标记时为 null。"
-                            },
-                            "parentSpaceId": {
-                              "type": [
-                                "string",
-                                "null"
-                              ],
-                              "description": "空间所属父空间 ID；根空间为 null。SPACE_ADDED 和 SPACE_UPDATED 为事件后的父空间，SPACE_REMOVED 为删除前的父空间。"
-                            }
-                          }
-                        },
-                        {
-                          "type": "null"
+            "type": "object",
+            "description": "objectEvent 的通用数据。eventType 下方列出当前已知值，推送接收端应将其按可扩展字符串处理。\n选择 HTTP ALL_SUPPORTED 时，Studio 升级后可能发送未在旧版文档中列出的事件及 data 结构。\n",
+            "required": [
+              "eventType",
+              "objectId",
+              "time"
+            ],
+            "properties": {
+              "eventType": {
+                "type": "string",
+                "minLength": 1,
+                "description": "可扩展的对象事件类型；当前已知值见 KnownPushObjectEventType。"
+              },
+              "objectId": {
+                "type": "string",
+                "description": "对象 ID；按事件类型分别为设备、空间或自动化 ID。"
+              },
+              "time": {
+                "type": "integer",
+                "format": "int64",
+                "description": "事件发生时间戳，单位毫秒。"
+              },
+              "data": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "根据 eventType 判断具体结构。当前结构分别见 PushObjectEventDeviceData、PushObjectEventTraitParameterData、\nDeviceSpaceUpdateEventData、SpaceEventData、AutomationPushSnapshot 和 AutomationSpaceUpdateEventData。\n推送侧允许后续新增结构；订阅请求中的 PreciseObjectEventType 仍是当前版本的严格枚举。\n",
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "deviceId",
+                      "name",
+                      "deviceTypesList",
+                      "endpointIds",
+                      "time"
+                    ],
+                    "properties": {
+                      "deviceId": {
+                        "type": "string",
+                        "description": "设备 ID。"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "设备名称。"
+                      },
+                      "deviceTypesList": {
+                        "type": "array",
+                        "description": "设备类型列表。",
+                        "items": {
+                          "type": "string"
                         }
-                      ],
-                      "description": "关系变化时的空间摘要；解除关联时为 null。空间 ID 读取 space.spaceId，后续名称、标记或父级变化由 SPACE_UPDATED 更新统一空间缓存；该关系同时适用于自动化内部场景。"
-                    }
+                      },
+                      "endpointIds": {
+                        "type": "array",
+                        "description": "端点 ID 列表。",
+                        "items": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      },
+                      "time": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "事件发生时间戳，单位毫秒。"
+                      }
+                    },
+                    "title": "DEVICE_ADDED"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "deviceId",
+                      "name",
+                      "deviceTypesList",
+                      "endpointIds",
+                      "time"
+                    ],
+                    "properties": {
+                      "deviceId": {
+                        "type": "string",
+                        "description": "设备 ID。"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "设备名称。"
+                      },
+                      "deviceTypesList": {
+                        "type": "array",
+                        "description": "设备类型列表。",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "endpointIds": {
+                        "type": "array",
+                        "description": "端点 ID 列表。",
+                        "items": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      },
+                      "time": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "事件发生时间戳，单位毫秒。"
+                      }
+                    },
+                    "title": "DEVICE_REMOVED"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "deviceId",
+                      "name",
+                      "deviceTypesList",
+                      "endpointIds",
+                      "time"
+                    ],
+                    "properties": {
+                      "deviceId": {
+                        "type": "string",
+                        "description": "设备 ID。"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "设备名称。"
+                      },
+                      "deviceTypesList": {
+                        "type": "array",
+                        "description": "设备类型列表。",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "endpointIds": {
+                        "type": "array",
+                        "description": "端点 ID 列表。",
+                        "items": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      },
+                      "time": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "事件发生时间戳，单位毫秒。"
+                      }
+                    },
+                    "title": "DEVICE_ENDPOINT_ADDED"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "deviceId",
+                      "name",
+                      "deviceTypesList",
+                      "endpointIds",
+                      "time"
+                    ],
+                    "properties": {
+                      "deviceId": {
+                        "type": "string",
+                        "description": "设备 ID。"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "设备名称。"
+                      },
+                      "deviceTypesList": {
+                        "type": "array",
+                        "description": "设备类型列表。",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "endpointIds": {
+                        "type": "array",
+                        "description": "端点 ID 列表。",
+                        "items": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      },
+                      "time": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "事件发生时间戳，单位毫秒。"
+                      }
+                    },
+                    "title": "DEVICE_ENDPOINT_REMOVED"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "deviceId"
+                    ],
+                    "properties": {
+                      "deviceId": {
+                        "type": "string",
+                        "description": "设备 ID。"
+                      },
+                      "endpointId": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "format": "int32",
+                        "description": "端点 ID。"
+                      },
+                      "functionCode": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "功能代码。"
+                      },
+                      "traitCode": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "Trait 功能点代码。"
+                      },
+                      "newValue": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "endpointId": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ],
+                                "format": "int32",
+                                "description": "端点 ID。"
+                              },
+                              "functionCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "功能代码。"
+                              },
+                              "traitCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "Trait 功能点代码。"
+                              },
+                              "min": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
+                                "description": "最小值。"
+                              },
+                              "max": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
+                                "description": "最大值。"
+                              },
+                              "unit": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "单位。"
+                              },
+                              "step": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
+                                "description": "步长。"
+                              }
+                            }
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "更新后的 Trait 参数值；为空时序列化可能省略该字段。"
+                      },
+                      "oldValue": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "endpointId": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ],
+                                "format": "int32",
+                                "description": "端点 ID。"
+                              },
+                              "functionCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "功能代码。"
+                              },
+                              "traitCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "Trait 功能点代码。"
+                              },
+                              "min": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
+                                "description": "最小值。"
+                              },
+                              "max": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
+                                "description": "最大值。"
+                              },
+                              "unit": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "单位。"
+                              },
+                              "step": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
+                                "description": "步长。"
+                              }
+                            }
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "更新前的 Trait 参数值；为空时序列化可能省略该字段。"
+                      }
+                    },
+                    "title": "DEVICE_TRAIT_PARAMETER_UPDATE"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "deviceId",
+                      "oldSpaceId",
+                      "space"
+                    ],
+                    "properties": {
+                      "deviceId": {
+                        "type": "string",
+                        "description": "设备 ID。"
+                      },
+                      "oldSpaceId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "变化前空间 ID；首次关联时为 null。"
+                      },
+                      "space": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "description": "空间最新摘要。客户端应按 spaceId 维护统一空间缓存，避免在设备或自动化关系数据中重复保存可能过期的名称、标记和父级；parentSpaceId 表示该摘要所属父空间，根空间为 null。",
+                            "required": [
+                              "spaceId",
+                              "name",
+                              "parentSpaceId"
+                            ],
+                            "properties": {
+                              "spaceId": {
+                                "type": "string",
+                                "description": "空间 ID。"
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "空间名称。"
+                              },
+                              "spatialMarking": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "空间标记；没有标记时为 null。"
+                              },
+                              "parentSpaceId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "空间所属父空间 ID；根空间为 null。SPACE_ADDED 和 SPACE_UPDATED 为事件后的父空间，SPACE_REMOVED 为删除前的父空间。"
+                              }
+                            }
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "关系变化时的空间摘要；解除关联时为 null。空间 ID 读取 space.spaceId，后续名称、标记或父级变化由 SPACE_UPDATED 更新统一空间缓存。"
+                      }
+                    },
+                    "title": "DEVICE_SPACE_UPDATED"
+                  },
+                  {
+                    "type": "object",
+                    "description": "空间最新摘要。客户端应按 spaceId 维护统一空间缓存，避免在设备或自动化关系数据中重复保存可能过期的名称、标记和父级；parentSpaceId 表示该摘要所属父空间，根空间为 null。",
+                    "required": [
+                      "spaceId",
+                      "name",
+                      "parentSpaceId"
+                    ],
+                    "properties": {
+                      "spaceId": {
+                        "type": "string",
+                        "description": "空间 ID。"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "空间名称。"
+                      },
+                      "spatialMarking": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "空间标记；没有标记时为 null。"
+                      },
+                      "parentSpaceId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "空间所属父空间 ID；根空间为 null。SPACE_ADDED 和 SPACE_UPDATED 为事件后的父空间，SPACE_REMOVED 为删除前的父空间。"
+                      }
+                    },
+                    "title": "SPACE_ADDED"
+                  },
+                  {
+                    "type": "object",
+                    "description": "空间最新摘要。客户端应按 spaceId 维护统一空间缓存，避免在设备或自动化关系数据中重复保存可能过期的名称、标记和父级；parentSpaceId 表示该摘要所属父空间，根空间为 null。",
+                    "required": [
+                      "spaceId",
+                      "name",
+                      "parentSpaceId"
+                    ],
+                    "properties": {
+                      "spaceId": {
+                        "type": "string",
+                        "description": "空间 ID。"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "空间名称。"
+                      },
+                      "spatialMarking": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "空间标记；没有标记时为 null。"
+                      },
+                      "parentSpaceId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "空间所属父空间 ID；根空间为 null。SPACE_ADDED 和 SPACE_UPDATED 为事件后的父空间，SPACE_REMOVED 为删除前的父空间。"
+                      }
+                    },
+                    "title": "SPACE_REMOVED"
+                  },
+                  {
+                    "type": "object",
+                    "description": "空间最新摘要。客户端应按 spaceId 维护统一空间缓存，避免在设备或自动化关系数据中重复保存可能过期的名称、标记和父级；parentSpaceId 表示该摘要所属父空间，根空间为 null。",
+                    "required": [
+                      "spaceId",
+                      "name",
+                      "parentSpaceId"
+                    ],
+                    "properties": {
+                      "spaceId": {
+                        "type": "string",
+                        "description": "空间 ID。"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "空间名称。"
+                      },
+                      "spatialMarking": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "空间标记；没有标记时为 null。"
+                      },
+                      "parentSpaceId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "空间所属父空间 ID；根空间为 null。SPACE_ADDED 和 SPACE_UPDATED 为事件后的父空间，SPACE_REMOVED 为删除前的父空间。"
+                      }
+                    },
+                    "title": "SPACE_UPDATED"
+                  },
+                  {
+                    "type": "object",
+                    "description": "自动化和独立场景变化通知沿用的轻量快照，不包含完整 config。事件字段 automationId 对于已知场景是 sceneId；按查询列表识别分类，分别通过 GET /automations/{automationI 或 GET /scenes/{sceneId} 查询详情。场景列表不使用快照中的 enabled 和 definitionType。",
+                    "required": [
+                      "automationId",
+                      "definitionType",
+                      "name",
+                      "enabled",
+                      "createTime"
+                    ],
+                    "properties": {
+                      "automationId": {
+                        "type": "string",
+                        "description": "自动化 ID。"
+                      },
+                      "definitionType": {
+                        "type": "string",
+                        "description": "自动化定义类型。"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "自动化名称。"
+                      },
+                      "enabled": {
+                        "type": "boolean",
+                        "description": "是否启用。"
+                      },
+                      "createTime": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "创建时间戳，单位毫秒。"
+                      }
+                    },
+                    "title": "AUTOMATION_ADDED"
+                  },
+                  {
+                    "type": "object",
+                    "description": "自动化和独立场景变化通知沿用的轻量快照，不包含完整 config。事件字段 automationId 对于已知场景是 sceneId；按查询列表识别分类，分别通过 GET /automations/{automationI 或 GET /scenes/{sceneId} 查询详情。场景列表不使用快照中的 enabled 和 definitionType。",
+                    "required": [
+                      "automationId",
+                      "definitionType",
+                      "name",
+                      "enabled",
+                      "createTime"
+                    ],
+                    "properties": {
+                      "automationId": {
+                        "type": "string",
+                        "description": "自动化 ID。"
+                      },
+                      "definitionType": {
+                        "type": "string",
+                        "description": "自动化定义类型。"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "自动化名称。"
+                      },
+                      "enabled": {
+                        "type": "boolean",
+                        "description": "是否启用。"
+                      },
+                      "createTime": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "创建时间戳，单位毫秒。"
+                      }
+                    },
+                    "title": "AUTOMATION_REMOVED"
+                  },
+                  {
+                    "type": "object",
+                    "description": "自动化和独立场景变化通知沿用的轻量快照，不包含完整 config。事件字段 automationId 对于已知场景是 sceneId；按查询列表识别分类，分别通过 GET /automations/{automationI 或 GET /scenes/{sceneId} 查询详情。场景列表不使用快照中的 enabled 和 definitionType。",
+                    "required": [
+                      "automationId",
+                      "definitionType",
+                      "name",
+                      "enabled",
+                      "createTime"
+                    ],
+                    "properties": {
+                      "automationId": {
+                        "type": "string",
+                        "description": "自动化 ID。"
+                      },
+                      "definitionType": {
+                        "type": "string",
+                        "description": "自动化定义类型。"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "自动化名称。"
+                      },
+                      "enabled": {
+                        "type": "boolean",
+                        "description": "是否启用。"
+                      },
+                      "createTime": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "创建时间戳，单位毫秒。"
+                      }
+                    },
+                    "title": "AUTOMATION_UPDATED"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "automationId",
+                      "oldSpaceId",
+                      "space"
+                    ],
+                    "properties": {
+                      "automationId": {
+                        "type": "string",
+                        "description": "自动化 ID。"
+                      },
+                      "oldSpaceId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "变化前空间 ID；首次关联时为 null。"
+                      },
+                      "space": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "description": "空间最新摘要。客户端应按 spaceId 维护统一空间缓存，避免在设备或自动化关系数据中重复保存可能过期的名称、标记和父级；parentSpaceId 表示该摘要所属父空间，根空间为 null。",
+                            "required": [
+                              "spaceId",
+                              "name",
+                              "parentSpaceId"
+                            ],
+                            "properties": {
+                              "spaceId": {
+                                "type": "string",
+                                "description": "空间 ID。"
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "空间名称。"
+                              },
+                              "spatialMarking": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "空间标记；没有标记时为 null。"
+                              },
+                              "parentSpaceId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "空间所属父空间 ID；根空间为 null。SPACE_ADDED 和 SPACE_UPDATED 为事件后的父空间，SPACE_REMOVED 为删除前的父空间。"
+                              }
+                            }
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "关系变化时的空间摘要；解除关联时为 null。空间 ID 读取 space.spaceId，后续名称、标记或父级变化由 SPACE_UPDATED 更新统一空间缓存；该关系也适用于独立场景。"
+                      }
+                    },
+                    "title": "AUTOMATION_SPACE_UPDATED"
                   }
-                }
+                ]
               }
             }
           },

@@ -1,5 +1,6 @@
 export type JsonSchema = {
   type?: string | string[];
+  title?: string;
   description?: string;
   summary?: string;
   enum?: Array<string | number | null>;
@@ -16,6 +17,7 @@ export type JsonSchema = {
   items?: JsonSchema;
   additionalProperties?: boolean | JsonSchema;
   anyOf?: JsonSchema[];
+  oneOf?: JsonSchema[];
   allOf?: JsonSchema[];
   if?: JsonSchema;
   then?: JsonSchema;

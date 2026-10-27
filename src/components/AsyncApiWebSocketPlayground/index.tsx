@@ -481,6 +481,10 @@ function toOpenApiSchema(schema?: JsonSchema): Record<string, unknown> {
 
   const converted: Record<string, unknown> = {};
 
+  if (schema.title) {
+    converted.title = schema.title;
+  }
+
   if (normalizedType) {
     converted.type = normalizedType;
   }
@@ -532,6 +536,14 @@ function toOpenApiSchema(schema?: JsonSchema): Record<string, unknown> {
 
   if (schema.additionalProperties !== undefined) {
     converted.additionalProperties = schema.additionalProperties;
+  }
+
+  if (schema.oneOf) {
+    converted.oneOf = schema.oneOf.map(toOpenApiSchema);
+  }
+
+  if (schema.anyOf) {
+    converted.anyOf = schema.anyOf.map(toOpenApiSchema);
   }
 
   return converted;

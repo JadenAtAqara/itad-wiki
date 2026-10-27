@@ -413,9 +413,15 @@ components:
       summary: Device add/remove events are pushed by default; changes to spaces, automations, and space relationships are delivered according to precise object subscriptions.
       description: |
         DEVICE_ADDED and DEVICE_REMOVED are pushed by default after an authenticated connection is established.
+
         SPACE_*, AUTOMATION_*, and DEVICE_SPACE_UPDATED are delivered only to SubscribeObjectEventRequest sessions that match the eventType, objectId, and current permissions.
+
         DEVICE_ENDPOINT_* and DEVICE_TRAIT_PARAMETER_UPDATE continue to follow the existing device-data subscriptions.
+
+        Standalone scenes are managed via /scenes, and change notifications continue to use the AUTOMATION_* event family; object classification should follow the query results of /automations and /scenes. No standalone events are provided for changes in count.
+
         Scenes are represented by the `manualTriggers` inside an automation; no standalone scene event is provided, and changes in count do not produce separate events.
+        
         The protocol does not provide a globally unique event ID; the push `msgId` is only for link tracing. Callers should process events idempotently according to object state rather than deduplicating only by `objectId`, `eventType`, and `time`.
       payload:
         $ref: '#/components/schemas/PushObjectEventMessageV1'
@@ -475,9 +481,6 @@ components:
                 name: Home Mode
                 enabled: true
                 createTime: 1789000000000
-                manualTriggers:
-                  - triggerNodeId: manual-trigger-1
-                    triggerName: Home
             code: 0
             message: success
         - name: automationSpaceUnassigned
@@ -1158,28 +1161,15 @@ components:
             - string
             - 'null'
           description: Parent space ID of the space; null for a root space. For SPACE_ADDED and SPACE_UPDATED this is the parent space after the event; for SPACE_REMOVED it is the parent space before deletion.
-    AutomationManualTriggerBrief:
-      type: object
-      required:
-        - triggerNodeId
-        - triggerName
-      properties:
-        triggerNodeId:
-          type: string
-          description: Manual trigger block node ID inside the automation.
-        triggerName:
-          type: string
-          description: Scene name.
     AutomationPushSnapshot:
       type: object
-      description: A lightweight snapshot used in automation change notifications; it does not include the full config. When the caller needs the complete configuration, it should query the details through GET /automations/{automationId}.
+      description: Lightweight snapshot used for automation and standalone scene change notifications; does not include the full config. For known scenes, the `automationId` event field is the sceneId; distinguish the type according to the query list, and query details via GET /automations/{automationId} or GET /scenes/{sceneId} respectively. The scene list does not use `enabled` or `definitionType` in the snapshot.
       required:
         - automationId
         - definitionType
         - name
         - enabled
         - createTime
-        - manualTriggers
       properties:
         automationId:
           type: string
@@ -1197,30 +1187,25 @@ components:
           type: integer
           format: int64
           description: Creation timestamp in milliseconds.
-        manualTriggers:
-          type: array
-          description: Latest snapshot of the scenes inside the automation.
-          items:
-            $ref: '#/components/schemas/AutomationManualTriggerBrief'
     AutomationSpaceUpdateEventData:
       type: object
       required:
-        - automationId
-        - oldSpaceId
-        - space
+      - automationId
+      - oldSpaceId
+      - space
       properties:
         automationId:
           type: string
           description: Automation ID.
         oldSpaceId:
           type:
-            - string
-            - 'null'
+          - string
+          - 'null'
           description: Space ID before the change; null when associated for the first time.
         space:
           anyOf:
-            - $ref: '#/components/schemas/SpaceEventData'
-            - type: 'null'
+          - $ref: '#/components/schemas/SpaceEventData'
+          - type: 'null'
           description: Space summary at the time the relationship changes; null when the relationship is removed. Read the space ID from `space.spaceId`; subsequent name, marking, or parent changes should update a unified space cache via SPACE_UPDATED. This relationship also applies to scenes inside the automation.
     KnownPushObjectEventType:
       type: string

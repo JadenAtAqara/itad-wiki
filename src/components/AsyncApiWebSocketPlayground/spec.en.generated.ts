@@ -1325,7 +1325,7 @@ const aqaraLifeWebSocketSpecEn = {
       "name": "objectEvent",
       "title": "Object event push",
       "summary": "Device add/remove events are pushed by default; changes to spaces, automations, and space relationships are delivered according to precise object subscriptions.",
-      "description": "DEVICE_ADDED and DEVICE_REMOVED are pushed by default after an authenticated connection is established.\nSPACE_*, AUTOMATION_*, and DEVICE_SPACE_UPDATED are delivered only to SubscribeObjectEventRequest sessions that match the eventType, objectId, and current permissions.\nDEVICE_ENDPOINT_* and DEVICE_TRAIT_PARAMETER_UPDATE continue to follow the existing device-data subscriptions.\nScenes are represented by the `manualTriggers` inside an automation; no standalone scene event is provided, and changes in count do not produce separate events.\nThe protocol does not provide a globally unique event ID; the push `msgId` is only for link tracing. Callers should process events idempotently according to object state rather than deduplicating only by `objectId`, `eventType`, and `time`.\n",
+      "description": "DEVICE_ADDED and DEVICE_REMOVED are pushed by default after an authenticated connection is established.\n\nSPACE_*, AUTOMATION_*, and DEVICE_SPACE_UPDATED are delivered only to SubscribeObjectEventRequest sessions that match the eventType, objectId, and current permissions.\n\nDEVICE_ENDPOINT_* and DEVICE_TRAIT_PARAMETER_UPDATE continue to follow the existing device-data subscriptions.\n\nStandalone scenes are managed via /scenes, and change notifications continue to use the AUTOMATION_* event family; object classification should follow the query results of /automations and /scenes. No standalone events are provided for changes in count.\n\nScenes are represented by the `manualTriggers` inside an automation; no standalone scene event is provided, and changes in count do not produce separate events.\nThe protocol does not provide a globally unique event ID; the push `msgId` is only for link tracing. Callers should process events idempotently according to object state rather than deduplicating only by `objectId`, `eventType`, and `time`.\n",
       "examples": [
         {
           "name": "deviceAdded",
@@ -1395,13 +1395,7 @@ const aqaraLifeWebSocketSpecEn = {
                 "definitionType": "WHEN_IF_THEN",
                 "name": "Home Mode",
                 "enabled": true,
-                "createTime": 1789000000000,
-                "manualTriggers": [
-                  {
-                    "triggerNodeId": "manual-trigger-1",
-                    "triggerName": "Home"
-                  }
-                ]
+                "createTime": 1789000000000
               }
             },
             "code": 0,
@@ -1459,82 +1453,694 @@ const aqaraLifeWebSocketSpecEn = {
             "maxLength": 64
           },
           "data": {
-            "if": {
-              "properties": {
-                "eventType": {
-                  "enum": [
-                    "AUTOMATION_SPACE_UPDATED"
-                  ]
-                }
-              }
-            },
-            "then": {
-              "required": [
-                "data"
-              ],
-              "properties": {
-                "data": {
-                  "type": "object",
-                  "required": [
-                    "automationId",
-                    "oldSpaceId",
-                    "space"
-                  ],
-                  "properties": {
-                    "automationId": {
-                      "type": "string",
-                      "description": "Automation ID."
-                    },
-                    "oldSpaceId": {
-                      "type": [
-                        "string",
-                        "null"
-                      ],
-                      "description": "Space ID before the change; null when associated for the first time."
-                    },
-                    "space": {
-                      "anyOf": [
-                        {
-                          "type": "object",
-                          "description": "Latest space summary. The client should maintain a unified space cache by `spaceId` to avoid repeatedly storing potentially stale names, markings, and parent relationships in device or automation relationship data; `parentSpaceId` indicates the parent space of the summary, and is null for a root space.",
-                          "required": [
-                            "spaceId",
-                            "name",
-                            "parentSpaceId"
-                          ],
-                          "properties": {
-                            "spaceId": {
-                              "type": "string",
-                              "description": "Space ID."
-                            },
-                            "name": {
-                              "type": "string",
-                              "description": "Space name."
-                            },
-                            "spatialMarking": {
-                              "type": [
-                                "string",
-                                "null"
-                              ],
-                              "description": "Space marking; null when no marking exists."
-                            },
-                            "parentSpaceId": {
-                              "type": [
-                                "string",
-                                "null"
-                              ],
-                              "description": "Parent space ID of the space; null for a root space. For SPACE_ADDED and SPACE_UPDATED this is the parent space after the event; for SPACE_REMOVED it is the parent space before deletion."
-                            }
-                          }
-                        },
-                        {
-                          "type": "null"
+            "type": "object",
+            "description": "Generic data for objectEvent. The currently known values are listed under eventType, but the receiving side should treat it as an extensible string.\nWhen HTTP ALL_SUPPORTED is selected, Studio may, after an upgrade, send events and data structures that are not listed in older versions of the documentation.\n",
+            "required": [
+              "eventType",
+              "objectId",
+              "time"
+            ],
+            "properties": {
+              "eventType": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Extensible object event type; see KnownPushObjectEventType for currently known values."
+              },
+              "objectId": {
+                "type": "string",
+                "description": "Object ID; depending on the event type, this is a device, space, or automation ID."
+              },
+              "time": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Event timestamp in milliseconds."
+              },
+              "data": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "The concrete structure is determined by `eventType`. The current structures are described by PushObjectEventDeviceData, PushObjectEventTraitParameterData, DeviceSpaceUpdateEventData, SpaceEventData, AutomationPushSnapshot, and AutomationSpaceUpdateEventData.\nFuture new structures may be added on the push side; PreciseObjectEventType in subscription requests remains a strict enum in the current version.\n",
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "deviceId",
+                      "name",
+                      "deviceTypesList",
+                      "endpointIds",
+                      "time"
+                    ],
+                    "properties": {
+                      "deviceId": {
+                        "type": "string",
+                        "description": "Device ID."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Device name."
+                      },
+                      "deviceTypesList": {
+                        "type": "array",
+                        "description": "List of device types.",
+                        "items": {
+                          "type": "string"
                         }
-                      ],
-                      "description": "Space summary at the time the relationship changes; null when the relationship is removed. Read the space ID from `space.spaceId`; subsequent name, marking, or parent changes should update a unified space cache via SPACE_UPDATED. This relationship also applies to scenes inside the automation."
-                    }
+                      },
+                      "endpointIds": {
+                        "type": "array",
+                        "description": "List of endpoint IDs.",
+                        "items": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      },
+                      "time": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Event timestamp in milliseconds."
+                      }
+                    },
+                    "title": "DEVICE_ADDED"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "deviceId",
+                      "name",
+                      "deviceTypesList",
+                      "endpointIds",
+                      "time"
+                    ],
+                    "properties": {
+                      "deviceId": {
+                        "type": "string",
+                        "description": "Device ID."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Device name."
+                      },
+                      "deviceTypesList": {
+                        "type": "array",
+                        "description": "List of device types.",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "endpointIds": {
+                        "type": "array",
+                        "description": "List of endpoint IDs.",
+                        "items": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      },
+                      "time": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Event timestamp in milliseconds."
+                      }
+                    },
+                    "title": "DEVICE_REMOVED"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "deviceId",
+                      "name",
+                      "deviceTypesList",
+                      "endpointIds",
+                      "time"
+                    ],
+                    "properties": {
+                      "deviceId": {
+                        "type": "string",
+                        "description": "Device ID."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Device name."
+                      },
+                      "deviceTypesList": {
+                        "type": "array",
+                        "description": "List of device types.",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "endpointIds": {
+                        "type": "array",
+                        "description": "List of endpoint IDs.",
+                        "items": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      },
+                      "time": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Event timestamp in milliseconds."
+                      }
+                    },
+                    "title": "DEVICE_ENDPOINT_ADDED"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "deviceId",
+                      "name",
+                      "deviceTypesList",
+                      "endpointIds",
+                      "time"
+                    ],
+                    "properties": {
+                      "deviceId": {
+                        "type": "string",
+                        "description": "Device ID."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Device name."
+                      },
+                      "deviceTypesList": {
+                        "type": "array",
+                        "description": "List of device types.",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "endpointIds": {
+                        "type": "array",
+                        "description": "List of endpoint IDs.",
+                        "items": {
+                          "type": "integer",
+                          "format": "int32"
+                        }
+                      },
+                      "time": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Event timestamp in milliseconds."
+                      }
+                    },
+                    "title": "DEVICE_ENDPOINT_REMOVED"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "deviceId"
+                    ],
+                    "properties": {
+                      "deviceId": {
+                        "type": "string",
+                        "description": "Device ID."
+                      },
+                      "endpointId": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "format": "int32",
+                        "description": "Endpoint ID."
+                      },
+                      "functionCode": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "Function code."
+                      },
+                      "traitCode": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "Trait feature point code."
+                      },
+                      "newValue": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "endpointId": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ],
+                                "format": "int32",
+                                "description": "Endpoint ID."
+                              },
+                              "functionCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "Function code."
+                              },
+                              "traitCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "Trait feature point code."
+                              },
+                              "min": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
+                                "description": "Minimum value."
+                              },
+                              "max": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
+                                "description": "Maximum value."
+                              },
+                              "unit": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "Unit."
+                              },
+                              "step": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
+                                "description": "Step size."
+                              }
+                            }
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Updated Trait parameter value; when empty, this field may be omitted during serialization."
+                      },
+                      "oldValue": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "endpointId": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ],
+                                "format": "int32",
+                                "description": "Endpoint ID."
+                              },
+                              "functionCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "Function code."
+                              },
+                              "traitCode": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "Trait feature point code."
+                              },
+                              "min": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
+                                "description": "Minimum value."
+                              },
+                              "max": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
+                                "description": "Maximum value."
+                              },
+                              "unit": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "Unit."
+                              },
+                              "step": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
+                                "description": "Step size."
+                              }
+                            }
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Previous Trait parameter value; when empty, this field may be omitted during serialization."
+                      }
+                    },
+                    "title": "DEVICE_TRAIT_PARAMETER_UPDATE"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "deviceId",
+                      "oldSpaceId",
+                      "space"
+                    ],
+                    "properties": {
+                      "deviceId": {
+                        "type": "string",
+                        "description": "Device ID."
+                      },
+                      "oldSpaceId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "Space ID before the change; null when associated for the first time."
+                      },
+                      "space": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "description": "Latest space summary. The client should maintain a unified space cache by `spaceId` to avoid repeatedly storing potentially stale names, markings, and parent relationships in device or automation relationship data; `parentSpaceId` indicates the parent space of the summary, and is null for a root space.",
+                            "required": [
+                              "spaceId",
+                              "name",
+                              "parentSpaceId"
+                            ],
+                            "properties": {
+                              "spaceId": {
+                                "type": "string",
+                                "description": "Space ID."
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "Space name."
+                              },
+                              "spatialMarking": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "Space marking; null when no marking exists."
+                              },
+                              "parentSpaceId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "Parent space ID of the space; null for a root space. For SPACE_ADDED and SPACE_UPDATED this is the parent space after the event; for SPACE_REMOVED it is the parent space before deletion."
+                              }
+                            }
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Space summary at the time the relationship changes; null when the relationship is removed. Read the space ID from `space.spaceId`; subsequent name, marking, or parent changes should update a unified space cache via SPACE_UPDATED."
+                      }
+                    },
+                    "title": "DEVICE_SPACE_UPDATED"
+                  },
+                  {
+                    "type": "object",
+                    "description": "Latest space summary. The client should maintain a unified space cache by `spaceId` to avoid repeatedly storing potentially stale names, markings, and parent relationships in device or automation relationship data; `parentSpaceId` indicates the parent space of the summary, and is null for a root space.",
+                    "required": [
+                      "spaceId",
+                      "name",
+                      "parentSpaceId"
+                    ],
+                    "properties": {
+                      "spaceId": {
+                        "type": "string",
+                        "description": "Space ID."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Space name."
+                      },
+                      "spatialMarking": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "Space marking; null when no marking exists."
+                      },
+                      "parentSpaceId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "Parent space ID of the space; null for a root space. For SPACE_ADDED and SPACE_UPDATED this is the parent space after the event; for SPACE_REMOVED it is the parent space before deletion."
+                      }
+                    },
+                    "title": "SPACE_ADDED"
+                  },
+                  {
+                    "type": "object",
+                    "description": "Latest space summary. The client should maintain a unified space cache by `spaceId` to avoid repeatedly storing potentially stale names, markings, and parent relationships in device or automation relationship data; `parentSpaceId` indicates the parent space of the summary, and is null for a root space.",
+                    "required": [
+                      "spaceId",
+                      "name",
+                      "parentSpaceId"
+                    ],
+                    "properties": {
+                      "spaceId": {
+                        "type": "string",
+                        "description": "Space ID."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Space name."
+                      },
+                      "spatialMarking": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "Space marking; null when no marking exists."
+                      },
+                      "parentSpaceId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "Parent space ID of the space; null for a root space. For SPACE_ADDED and SPACE_UPDATED this is the parent space after the event; for SPACE_REMOVED it is the parent space before deletion."
+                      }
+                    },
+                    "title": "SPACE_REMOVED"
+                  },
+                  {
+                    "type": "object",
+                    "description": "Latest space summary. The client should maintain a unified space cache by `spaceId` to avoid repeatedly storing potentially stale names, markings, and parent relationships in device or automation relationship data; `parentSpaceId` indicates the parent space of the summary, and is null for a root space.",
+                    "required": [
+                      "spaceId",
+                      "name",
+                      "parentSpaceId"
+                    ],
+                    "properties": {
+                      "spaceId": {
+                        "type": "string",
+                        "description": "Space ID."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Space name."
+                      },
+                      "spatialMarking": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "Space marking; null when no marking exists."
+                      },
+                      "parentSpaceId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "Parent space ID of the space; null for a root space. For SPACE_ADDED and SPACE_UPDATED this is the parent space after the event; for SPACE_REMOVED it is the parent space before deletion."
+                      }
+                    },
+                    "title": "SPACE_UPDATED"
+                  },
+                  {
+                    "type": "object",
+                    "description": "Lightweight snapshot used for automation and standalone scene change notifications; does not include the full config. For known scenes, the `automationId` event field is the sceneId; distinguish the type according to the query list, and query details via GET /automations/{automationId} or GET /scenes/{sceneId} respectively. The scene list does not use `enabled` or `definitionType` in the snapshot.",
+                    "required": [
+                      "automationId",
+                      "definitionType",
+                      "name",
+                      "enabled",
+                      "createTime"
+                    ],
+                    "properties": {
+                      "automationId": {
+                        "type": "string",
+                        "description": "Automation ID."
+                      },
+                      "definitionType": {
+                        "type": "string",
+                        "description": "Automation definition type."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Automation name."
+                      },
+                      "enabled": {
+                        "type": "boolean",
+                        "description": "Whether it is enabled."
+                      },
+                      "createTime": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Creation timestamp in milliseconds."
+                      }
+                    },
+                    "title": "AUTOMATION_ADDED"
+                  },
+                  {
+                    "type": "object",
+                    "description": "Lightweight snapshot used for automation and standalone scene change notifications; does not include the full config. For known scenes, the `automationId` event field is the sceneId; distinguish the type according to the query list, and query details via GET /automations/{automationId} or GET /scenes/{sceneId} respectively. The scene list does not use `enabled` or `definitionType` in the snapshot.",
+                    "required": [
+                      "automationId",
+                      "definitionType",
+                      "name",
+                      "enabled",
+                      "createTime"
+                    ],
+                    "properties": {
+                      "automationId": {
+                        "type": "string",
+                        "description": "Automation ID."
+                      },
+                      "definitionType": {
+                        "type": "string",
+                        "description": "Automation definition type."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Automation name."
+                      },
+                      "enabled": {
+                        "type": "boolean",
+                        "description": "Whether it is enabled."
+                      },
+                      "createTime": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Creation timestamp in milliseconds."
+                      }
+                    },
+                    "title": "AUTOMATION_REMOVED"
+                  },
+                  {
+                    "type": "object",
+                    "description": "Lightweight snapshot used for automation and standalone scene change notifications; does not include the full config. For known scenes, the `automationId` event field is the sceneId; distinguish the type according to the query list, and query details via GET /automations/{automationId} or GET /scenes/{sceneId} respectively. The scene list does not use `enabled` or `definitionType` in the snapshot.",
+                    "required": [
+                      "automationId",
+                      "definitionType",
+                      "name",
+                      "enabled",
+                      "createTime"
+                    ],
+                    "properties": {
+                      "automationId": {
+                        "type": "string",
+                        "description": "Automation ID."
+                      },
+                      "definitionType": {
+                        "type": "string",
+                        "description": "Automation definition type."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Automation name."
+                      },
+                      "enabled": {
+                        "type": "boolean",
+                        "description": "Whether it is enabled."
+                      },
+                      "createTime": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "Creation timestamp in milliseconds."
+                      }
+                    },
+                    "title": "AUTOMATION_UPDATED"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "automationId",
+                      "oldSpaceId",
+                      "space"
+                    ],
+                    "properties": {
+                      "automationId": {
+                        "type": "string",
+                        "description": "Automation ID."
+                      },
+                      "oldSpaceId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "description": "Space ID before the change; null when associated for the first time."
+                      },
+                      "space": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "description": "Latest space summary. The client should maintain a unified space cache by `spaceId` to avoid repeatedly storing potentially stale names, markings, and parent relationships in device or automation relationship data; `parentSpaceId` indicates the parent space of the summary, and is null for a root space.",
+                            "required": [
+                              "spaceId",
+                              "name",
+                              "parentSpaceId"
+                            ],
+                            "properties": {
+                              "spaceId": {
+                                "type": "string",
+                                "description": "Space ID."
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "Space name."
+                              },
+                              "spatialMarking": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "Space marking; null when no marking exists."
+                              },
+                              "parentSpaceId": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "description": "Parent space ID of the space; null for a root space. For SPACE_ADDED and SPACE_UPDATED this is the parent space after the event; for SPACE_REMOVED it is the parent space before deletion."
+                              }
+                            }
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Space summary at the time the relationship changes; null when the relationship is removed. Read the space ID from `space.spaceId`; subsequent name, marking, or parent changes should update a unified space cache via SPACE_UPDATED. This relationship also applies to scenes inside the automation."
+                      }
+                    },
+                    "title": "AUTOMATION_SPACE_UPDATED"
                   }
-                }
+                ]
               }
             }
           },

@@ -4,22 +4,23 @@ info:
   title: Studio HTTP Push Receiver API
   version: v1
   description: |
-    第三方接收端视角。Studio Open 向在 Studio 中配置的唯一全局 endpoint 发送 HTTP/1.1 POST。
+    第三方接收端视角。Studio Open 向配置的 endpoint 发送 HTTP/1.1 POST。
     支持 HTTP/HTTPS，HTTPS 必须验证证书；不跟随重定向。地址禁止 query、fragment 和 userinfo，保留路径中的连续斜杠和已有百分号转义。
-    固定 Header 总容量最多 32 KiB，按每项名称字节数、值字节数及额外 4 字节分隔和换行开销累加计算。
     业务正文只推送 v1，完整 Schema 复用 WebSocket。实时 best-effort，无持久化消息队列、历史补发或全局顺序保证。
-    必须同时 HTTP 2xx 和 JSON 顶层 code 的词法整数值为 0 才算成功。0.0、0e0、"0"、null 均失败。
+    默认 Studio 标准确认：HTTP 2xx 且 JSON 顶层 code 的词法整数值为 0。0.0、0e0、"0"、null 均失败；验证另须原样回传 challenge。
+    可配置为仅 HTTP 状态码 200（不读正文）、HTTP 状态码 200 + 文本全文精确匹配，或 HTTP 状态码 200 + JSON 匹配；这三种模式无需回传 challenge。
+    JSON 匹配支持对象递归字段包含及字符串、数字、布尔值、null，区分类型，数字 0 与 0.0 等值，缺失字段不等于 null；期望规则不支持数组、正则或脚本。
+    期望正文最多 4096 UTF-8 字节，JSON 期望最多 16 层、256 个值，数字最多 128 字符，禁止重复字段。文本包含空格和换行，空期望表示空正文。
+    保存、启用、恢复验证及业务投递共用所选规则。仅 HTTP 状态码 200 无法识别正文中的业务失败，200 错误页也视为成功且不重试。
     单条业务消息最多重试一次，普通等待 1 秒；429 的 Retry-After 仅接受 0..30 秒整数。
-    连接超时 5 秒，单次 HTTP 调用采用 5 秒的超时取消期限。逻辑投递窗口从进入发送阶段起计算，为 45 秒，不含此前的排队等待，窗口到期后不再启动重试。
+    连接超时 2 秒，单次 HTTP 调用采用 5 秒的超时取消期限。逻辑投递窗口从进入发送阶段起计算，为 45 秒，不含此前的排队等待，窗口到期后不再启动重试。
     这些期限不是端到端送达或底层资源立即释放的保证；DNS 等底层操作不响应取消时，实际结束可能更晚。验证消息不重试。
-    连续 5 条最终失败熔断，探测退避 1 分钟、5 分钟、15 分钟、1 小时、6 小时封顶；恢复后不补发，连续 10 条业务投递成功后重置退避档位。
     推送启用后默认发送 DEVICE_ADDED/DEVICE_REMOVED，不受其他订阅项影响。TraitValueUpdate、DEVICE_ENDPOINT_ADDED、DEVICE_ENDPOINT_REMOVED 和 DEVICE_TRAIT_PARAMETER_UPDATE 共用设备数据与结构事件组合项，默认开启。
-    自主订阅可逐项选择当前 8 个可配置对象事件，默认全部选中；告警默认关闭。允许取消全部可选项，此时仅推送设备新增、移除。全订阅包含全部可选项及后续新增对象事件；关闭推送后默认事件也停止。
-    单条业务请求正文默认上限 1 MiB，可由 Studio 管理员调整，硬上限 64 MiB；超限消息不会发送。
+    自主订阅可逐项选择当前 8 个可配置对象事件；全订阅包含全部可选项及后续新增对象事件。接收端必须兼容未知 eventType 和新增字段。
+    单条业务请求正文最大 64 MiB；需要校验正文时，确认响应最大 65536 字节，已部署 Studio 的实际限制可能更小。仅 HTTP 状态码 200 不读取或限制正文。
     接收端必须支持 WebhookVerification；不发送 WebhookResyncRequired，不要求额外 resync 确认。
-    保存配置时自动验证当前配置，成功后才启用并开始业务推送；独立验证地址仅用于可选调试，每次重新启用都会重新验证。
+    保存、重新启用或恢复时，Studio 会验证当前配置；验证成功后才发送业务推送。
     详见 HTTP推送接入指南.md。此签名与 OpenAPI/WebSocket 网关签名独立，不使用 Studio 生成的 AppKey。
-defaultContentType: application/json
 servers:
   receiver:
     host: receiver.example
@@ -29,7 +30,9 @@ servers:
 channels:
   webhook:
     address: /hook
-    description: HTTP POST 请求正文为一条消息；响应为同一请求的 JSON 确认。固定 Header 名称和值原样发送。
+    description: |
+      HTTP POST 请求正文为一条消息；请求使用 application/json UTF-8 和 Accept-Encoding: identity。
+      响应为同一请求按所选规则返回的确认。需要校验正文时要求未压缩 UTF-8；仅 HTTP 状态码 200 忽略正文及其编码。固定 Header 名称和值原样发送。
     messages:
       TraitValueUpdate:
         $ref: '#/components/messages/TraitValueUpdate'
@@ -41,6 +44,8 @@ channels:
         $ref: '#/components/messages/Verification'
       Acknowledgement:
         $ref: '#/components/messages/Acknowledgement'
+      CustomAcknowledgement:
+        $ref: '#/components/messages/CustomAcknowledgement'
 operations:
   receivePush:
     action: receive
@@ -60,24 +65,29 @@ operations:
         $ref: '#/channels/webhook'
       messages:
         - $ref: '#/channels/webhook/messages/Acknowledgement'
+        - $ref: '#/channels/webhook/messages/CustomAcknowledgement'
 components:
   messages:
     TraitValueUpdate:
+      contentType: application/json
       headers:
         $ref: '#/components/schemas/PushHeaders'
       payload:
         $ref: './asyncapi-AqaraLife-websocket.yaml#/components/schemas/PushTraitValueUpdateMessageV1'
     ObjectEvent:
+      contentType: application/json
       headers:
         $ref: '#/components/schemas/PushHeaders'
       payload:
         $ref: './asyncapi-AqaraLife-websocket.yaml#/components/schemas/PushObjectEventMessageV1'
     AlarmEvent:
+      contentType: application/json
       headers:
         $ref: '#/components/schemas/PushHeaders'
       payload:
         $ref: './asyncapi-AqaraLife-websocket.yaml#/components/schemas/PushAlarmEventMessageV1'
     Verification:
+      contentType: application/json
       headers:
         $ref: '#/components/schemas/PushHeaders'
       payload:
@@ -89,25 +99,39 @@ components:
             msgId: verify-39c63800-c8c1-4f4b-b77c-57f24f0de240
             data: {challenge: '00112233445566778899aabbccddeeff'}
           headers:
+            Content-Type: application/json; charset=utf-8
+            Accept-Encoding: identity
             X-Studio-Delivery-Id: 0c9c109a-e724-469c-ae96-1f96e824c127
     Acknowledgement:
-      description: HTTP 2xx，未压缩的 UTF-8 JSON。默认响应正文上限 4096 字节，由 Studio 全局配置，硬上限 65536 字节。JSON 最大嵌套深度 128（含根对象）；未知字段同样受限。避免复杂响应和大量 Header。
+      contentType: application/json
+      description: 仅用于默认 Studio 标准确认模式。HTTP 2xx，未压缩的 UTF-8 JSON。正文最大 65536 字节，已部署 Studio 的实际限制可能更小；响应 Header 最多 16 项，单行最多 4096 字节。JSON 最大嵌套深度 128（含根对象）；未知字段同样受限。避免复杂响应和大量 Header。
       payload:
         $ref: '#/components/schemas/Acknowledgement'
       examples:
         - payload: {code: 0}
         - payload: {code: 0, challenge: '00112233445566778899aabbccddeeff'}
         - payload: {code: 1}
+    CustomAcknowledgement:
+      description: |
+        自定义模式由 endpoint 配置选择，不由接收端任选。HTTP 状态必须为 200，201/204 等不算成功。
+        仅 HTTP 状态码 200：正文任意或空，完全忽略，不解析、不要求 challenge。
+        文本匹配：未压缩 UTF-8 全文精确匹配期望文本，不忽略空白。
+        JSON 匹配：未压缩 UTF-8 JSON，按期望对象字段递归包含，允许额外字段，或匹配同类型标量。
+        JSON 最多 16 层、1024 个解析值、数字文本 128 字符，禁止重复字段。额外字段可含数组，期望规则不支持数组。
+        读取正文时最大 65536 字节（部署值可能更小）；所有模式 Header 最多 16 项，单行最多 4096 字节。
+        此消息不声明统一 payload schema 或 contentType：原始文本、JSON 和空响应不能用单一 JSON Schema 表达。
   schemas:
     PushHeaders:
       type: object
-      required: [X-Studio-Delivery-Id]
+      required: [Content-Type, Accept-Encoding, X-Studio-Delivery-Id]
       description: |
         Header 名称不区分大小写。始终包含 Delivery-Id；仅开启签名时同时包含以下五个签名字段。
         Time 为 Unix 毫秒；Nonce 为 128 bit 随机数的小写 hex。Sign 为 HMAC-SHA256 小写 hex。
         UTF-8 签名原文为 v1、AppKey、Delivery-Id、Time、Nonce、原始正文 SHA256 小写 hex 六行，以 LF 连接，末尾无 LF。
         HMAC 密钥为第三方提供的 AppSecret UTF-8 字节。重试保持 Delivery-Id 和正文，重新生成 Time/Nonce/Sign。
       properties:
+        Content-Type: {type: string, enum: ['application/json; charset=utf-8']}
+        Accept-Encoding: {type: string, enum: [identity]}
         X-Studio-Delivery-Id: {type: string, format: uuid}
         X-Studio-App-Key: {type: string, minLength: 1, maxLength: 128, pattern: '^[!-~]+$'}
         X-Studio-Time: {type: string, pattern: '^[0-9]{1,16}$'}

@@ -84,6 +84,47 @@ function createResolver(document) {
       .reduce((current, key) => current[key], document);
   }
 
+  function getConditionalPropertyVariants(parts) {
+    const variantsByProperty = new Map();
+    const conditionalParts = new Set();
+
+    for (const part of parts) {
+      const conditionProperties = part?.if?.properties;
+      const thenProperties = part?.then?.properties;
+
+      if (!conditionProperties || !thenProperties) {
+        continue;
+      }
+
+      const selectors = Object.values(conditionProperties).filter(
+        (property) => Array.isArray(property?.enum) && property.enum.length > 0
+      );
+
+      if (selectors.length !== 1) {
+        continue;
+      }
+
+      conditionalParts.add(part);
+
+      for (const [propertyName, propertySchema] of Object.entries(
+        thenProperties
+      )) {
+        const variants = variantsByProperty.get(propertyName) ?? [];
+
+        for (const selectorValue of selectors[0].enum) {
+          variants.push({
+            title: String(selectorValue),
+            schema: propertySchema,
+          });
+        }
+
+        variantsByProperty.set(propertyName, variants);
+      }
+    }
+
+    return { conditionalParts, variantsByProperty };
+  }
+
   function resolve(schema, seen = new Set()) {
     if (!schema || typeof schema !== "object") {
       return schema;
@@ -98,11 +139,32 @@ function createResolver(document) {
     }
 
     if (schema.allOf) {
-      const parts = schema.allOf.map((part) => resolve(part, new Set(seen)));
+      const { conditionalParts, variantsByProperty } =
+        getConditionalPropertyVariants(schema.allOf);
+      const schemaWithoutAllOf = clone(schema);
+      delete schemaWithoutAllOf.allOf;
+      const parts = [
+        resolve(schemaWithoutAllOf, new Set(seen)),
+        ...schema.allOf
+          .filter((part) => !conditionalParts.has(part))
+          .map((part) => resolve(part, new Set(seen))),
+      ];
       const merged = {};
       for (const part of parts) {
         mergeInto(merged, part);
       }
+
+      for (const [propertyName, variants] of variantsByProperty) {
+        merged.properties = { ...(merged.properties ?? {}) };
+        merged.properties[propertyName] = {
+          ...(merged.properties[propertyName] ?? {}),
+          oneOf: variants.map(({ title, schema: variantSchema }) => ({
+            ...resolve(variantSchema, new Set(seen)),
+            title,
+          })),
+        };
+      }
+
       return merged;
     }
 

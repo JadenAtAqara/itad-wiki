@@ -413,9 +413,15 @@ components:
       summary: 设备增删默认推送；空间、自动化和空间关联变化按精确对象订阅投递。
       description: |
         DEVICE_ADDED、DEVICE_REMOVED 在认证连接建立后默认推送。
+        
         SPACE_*、AUTOMATION_*、DEVICE_SPACE_UPDATED 仅投递给命中 eventType、objectId 和当前权限的 SubscribeObjectEventRequest 会话。
+        
         DEVICE_ENDPOINT_*、DEVICE_TRAIT_PARAMETER_UPDATE 继续跟随现有设备数据订阅。
+
+        独立场景通过 /scenes 管理，变化通知沿用 AUTOMATION_* 事件族；对象分类以 /automations 和 /scenes 查询结果为准。数量变化不提供独立事件。
+
         场景是自动化内部的 manualTriggers，不提供独立场景事件；数量变化不提供独立事件。
+
         协议不提供全局唯一的事件 ID；推送 msgId 只用于链路追踪，调用端应按对象状态幂等处理，不应仅按 objectId、eventType、time 去重。
       payload:
         $ref: '#/components/schemas/PushObjectEventMessageV1'
@@ -475,9 +481,6 @@ components:
                 name: 回家模式
                 enabled: true
                 createTime: 1789000000000
-                manualTriggers:
-                  - triggerNodeId: manual-trigger-1
-                    triggerName: 回家
             code: 0
             message: success
         - name: automationSpaceUnassigned
@@ -1158,28 +1161,15 @@ components:
             - string
             - 'null'
           description: 空间所属父空间 ID；根空间为 null。SPACE_ADDED 和 SPACE_UPDATED 为事件后的父空间，SPACE_REMOVED 为删除前的父空间。
-    AutomationManualTriggerBrief:
-      type: object
-      required:
-        - triggerNodeId
-        - triggerName
-      properties:
-        triggerNodeId:
-          type: string
-          description: 自动化内部手动触发块节点 ID。
-        triggerName:
-          type: string
-          description: 场景名称。
     AutomationPushSnapshot:
       type: object
-      description: 自动化变化通知使用的轻量快照，不包含完整 config；调用端需要完整配置时应通过 GET /automations/{automationId} 查询详情。
+      description: 自动化和独立场景变化通知沿用的轻量快照，不包含完整 config。事件字段 automationId 对于已知场景是 sceneId；按查询列表识别分类，分别通过 GET /automations/{automationI 或 GET /scenes/{sceneId} 查询详情。场景列表不使用快照中的 enabled 和 definitionType。
       required:
         - automationId
         - definitionType
         - name
         - enabled
         - createTime
-        - manualTriggers
       properties:
         automationId:
           type: string
@@ -1197,31 +1187,26 @@ components:
           type: integer
           format: int64
           description: 创建时间戳，单位毫秒。
-        manualTriggers:
-          type: array
-          description: 自动化内部场景的最新快照。
-          items:
-            $ref: '#/components/schemas/AutomationManualTriggerBrief'
     AutomationSpaceUpdateEventData:
       type: object
       required:
-        - automationId
-        - oldSpaceId
-        - space
+      - automationId
+      - oldSpaceId
+      - space
       properties:
         automationId:
           type: string
           description: 自动化 ID。
         oldSpaceId:
           type:
-            - string
-            - 'null'
+          - string
+          - 'null'
           description: 变化前空间 ID；首次关联时为 null。
         space:
           anyOf:
-            - $ref: '#/components/schemas/SpaceEventData'
-            - type: 'null'
-          description: 关系变化时的空间摘要；解除关联时为 null。空间 ID 读取 space.spaceId，后续名称、标记或父级变化由 SPACE_UPDATED 更新统一空间缓存；该关系同时适用于自动化内部场景。
+          - $ref: '#/components/schemas/SpaceEventData'
+          - type: 'null'
+          description: 关系变化时的空间摘要；解除关联时为 null。空间 ID 读取 space.spaceId，后续名称、标记或父级变化由 SPACE_UPDATED 更新统一空间缓存；该关系也适用于独立场景。
     KnownPushObjectEventType:
       type: string
       description: 当前版本已知的推送对象事件；用于校验已知事件的 data，不将推送侧 eventType 封闭为枚举。
