@@ -4044,6 +4044,12 @@ paths:
       summary: 查询设备 Trait 值变化历史
       description: |
         本接口适用于查询多个设备的多个 Trait 在一定时间内的变化历史。支持通过分页游标 `cursor` 连续获取历史记录。
+        
+        查询最新变化时应省略 `cursor` 发起新查询，不要沿用翻页游标轮询。
+
+        使用最新返回的 `nextCursor` 查询下一页时可以调整 `pageSize`。仅支持最近一次续页请求的原样重试，`cursor`、`pageSize` 及其他查询参数必须一致；继续前进后不支持回读更早的 `cursor`。
+
+        参数或 `cursor` 无效时返回 `400`；游标过期或失效后应省略 `cursor` 重新查询，不会自动从头续接。查询暂时繁忙返回 `503` 时可重试。
       operationId: queryDevicePointHistory
       x-skill-intent: history.device_point_values.query
       x-idempotent: true
@@ -4091,7 +4097,11 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
         '503':
-          $ref: '#/components/responses/ServiceUnavailableResponse'
+          description: 查询服务不可用或查询暂时繁忙；暂时繁忙时可重试。
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
   # 获取 Studio 统计信息
@@ -7551,12 +7561,12 @@ components:
           minimum: 1
           maximum: 200
           default: 50
-          description: 每页最大记录数，取值范围 [1, 200]。
+          description: 每页最大记录数，取值范围 [1, 200]。查询下一页时可调整；原样重试最近一次续页请求时必须保持相同大小。
         cursor:
           type: string
           nullable: true
           description: |
-            分页游标。<ul><li>首次请求无需传递；如需获取下一页数据，请传递上一次响应中的 nextCursor。</li><li>分页请求时，必须保证 <code>deviceIds</code>、<code>traitCodes</code>、<code>startTime</code>、<code>endTime</code> 和 <code>descending</code> 参数与首次请求一致。</li></ul>
+            上一页返回的 nextCursor。<ul><li>首次请求无需传递；如需获取下一页数据，请传递上一次响应中的 nextCursor。</li><li>分页请求时，必须保证 <code>deviceIds</code>、<code>traitCodes</code>、<code>startTime</code>、<code>endTime</code> 和 <code>descending</code> 参数与首次请求一致。</li><li>首次查询、轮询最新变化或游标失效后重新查询时，可省略此字段。</li></ul>
 
     DevicePointHistoryItem:
       type: object
