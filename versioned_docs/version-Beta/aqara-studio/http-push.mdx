@@ -21,7 +21,7 @@ Aqara Studio's HTTP Push follows a "Studio proactively delivers, third-party ser
 2. After saving the above configuration, Aqara Studio will immediately send a `WebhookVerification` message (HTTP POST) to your configured address to verify its availability.
 3. If the response validation rule is **Studio standard acknowledgment**, you must return a response containing a `code` of 0 and a `challenge` field set to the `data.challenge` in the `WebhookVerification` message. This indicates a successful receipt, and the address passes verification. Only then will Aqara Studio enable HTTP Push.
   
-    For **other response validation modes**, refer to the [returning WebhookVerification response](#returning-webhookverification-response) section for instructions on how to write the response message.
+    For **other response validation modes**, refer to the [returning WebhookVerification response](#returning-a webhookVerification-response) section for instructions on how to write the response message.
 
     Only after the above verification succeeds, Aqara Studio enables HTTP Push and begins event delivery. If verification fails, the existing configuration is retained.
 4. When a subscribed event occurs, Aqara Studio will send an HTTP `POST` request to your configured endpoint as per your settings.

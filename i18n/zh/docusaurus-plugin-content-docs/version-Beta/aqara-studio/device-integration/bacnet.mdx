@@ -7,6 +7,27 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "BACnet 设备接入"
 
 本文说明如何将 BACnet 设备接入 Aqara Studio。
 
+## 支持的 BACnet 点位对象类型
+
+在将您的 BACnet 设备接入 Aqara Studio 时，请确保其点位对象类型在 Aqara Studio 支持的范围内（如下表所列）：
+
+| 范围 | 对象类型 |
+|----|----|
+| 模拟量三类 | <ul><li>Analog Input</li><li>Analog Output</li><li>Analog Value</li></ul> |
+| 二值三类 | <ul><li>Binary Input</li><li>Binary Output</li><li>Binary Value</li></ul> |
+| 多状态三类 | <ul><li>Multi-state Input</li><li>Multi-state Output</li><li>Multi-state Value</li></ul> |
+| 扩展映射 | <ul><li>Integer Value</li><li>Binary Lighting Output</li><li>Channel</li><li>Color Temperature</li><li>Lighting Output</li><li>Color</li><li>Accumulator</li></ul> |
+
+## 经测试的 BACnet 设备
+
+以下列出经 Aqara 测试可正常接入 Aqara Studio 的 BACnet 设备：
+
+| 品牌 | 型号 |
+|----|----|
+| Honeywell | HT9610P0100 |
+| 上海迅饶自动化 | HMI2004-ARM |
+| 浙江正泰电器 | CHNT DDSU6665 |
+
 ## 前提条件
 
 在开始之前，根据您的设备情况，确保以下网络条件满足：

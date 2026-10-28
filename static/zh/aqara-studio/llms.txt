@@ -22,7 +22,7 @@
 - Aqara Hub 接入: /zh/docs/aqara-studio/device-integration/aqara
 - Aqara RS-485 设备接入: /zh/docs/aqara-studio/device-integration/aqara-rs-485
 - Aqara Zigbee 设备接入: /zh/docs/aqara-studio/device-integration/zigbee
-- Matter 设备接入: /zh/docs/aqara-studio/device-integration/matter
+- AqaraMatter 设备接入: /zh/docs/aqara-studio/device-integration/matter
 - Home Assistant 生态集成: /zh/docs/aqara-studio/device-integration/home-assistant
 - Modbus TCP 设备接入: /zh/docs/aqara-studio/device-integration/modbus-tcp
 - BACnet 设备接入: /zh/docs/aqara-studio/device-integration/bacnet
