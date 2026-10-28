@@ -7,6 +7,27 @@ keywords: ["Aqara Docs", "Aqara Studio", "Device Integration", "BACnet"]
 
 This document explains how to connect BACnet devices to Aqara Studio.
 
+## Supported BACnet Object Types
+
+When integrating a BACnet device with Aqara Studio, ensure that its point object types are supported by Aqara Studio, as listed below:
+
+| Category | Object Types |
+|----|----|
+| Analog Objects | <ul><li>Analog Input</li><li>Analog Output</li><li>Analog Value</li></ul> |
+| Binary Objects | <ul><li>Binary Input</li><li>Binary Output</li><li>Binary Value</li></ul> |
+| Multi-state Objects | <ul><li>Multi-state Input</li><li>Multi-state Output</li><li>Multi-state Value</li></ul> |
+| Additional Object Types | <ul><li>Integer Value</li><li>Binary Lighting Output</li><li>Channel</li><li>Color Temperature</li><li>Lighting Output</li><li>Color</li><li>Accumulator</li></ul> |
+
+## Tested BACnet Devices
+
+The following BACnet devices have been tested by Aqara and can be integrated with Aqara Studio:
+
+| Brand | Model |
+|----|----|
+| Honeywell | HT9610P0100 |
+| Shanghai Sunfull Automation | HMI2004-ARM |
+| CHINT | DDSU6665 |
+
 ## Prerequisites
 
 Before you start, please make sure your network meets these conditions based on your device type:

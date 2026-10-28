@@ -7,6 +7,33 @@ keywords: ["Aqara 文档", "Aqara Studio", "设备接入", "Modbus TCP 设备接
 
 本文说明如何将 Modbus TCP 设备接入 Aqara Studio。
 
+## 支持的 Modbus TCP 点位数据类型
+
+在将您的 Modbus TCP 设备接入 Aqara Studio 时，请确保其点类型在 Aqara Studio 支持的范围内（如下表所列）：
+
+| 类型 | 范围 | 寄存器数 |
+|----|----|----|
+| UInt16 | 0～65,535 | 1 |
+| Int16 | −32,768～32,767 | 1 |
+| Int32 | −2,147,483,648～2,147,483,647 | 2 |
+| UInt32 | 0～4,294,967,295 | 2 |
+| Float32 | IEEE 754 单精度 | 2 |
+| Boolean | 线圈、离散输入 | 1 bit |
+| RegisterBit | 单寄存器的 bit0～15 | 单寄存器内 |
+| NumericBits / EnumBits | 单寄存器内的无符号位段 | 单寄存器内 |
+| 普通 String | 保持寄存器字节按 UTF-8 解码，当前只读 | 按长度 |
+
+## 经测试的 Modbus TCP 设备
+
+以下列出经 Aqara 测试可正常接入 Aqara Studio 的 Modbus TCP 设备：
+
+| 品牌 | 型号 |
+|----|----|
+| Siemens | LOGO |
+| Siemens | S7-200 SMART CPU SR20 |
+| 浙江正泰电器 | CHNT DDSU6665(80) |
+| 杭州塔石物联 | TAS-LAN-464 |
+| 埃美柯 | LXLY-50 |
 
 ## 前提条件
 

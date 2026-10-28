@@ -22,7 +22,7 @@ Resolve site-relative links against this index's origin. Copy llms.txt on the pa
 - Aqara Hub: /docs/aqara-studio/device-integration/aqara
 - Aqara RS-485: /docs/aqara-studio/device-integration/aqara-rs-485
 - Aqara Zigbee: /docs/aqara-studio/device-integration/zigbee
-- Matter: /docs/aqara-studio/device-integration/matter
+- Aqara Matter: /docs/aqara-studio/device-integration/matter
 - Home Assistant: /docs/aqara-studio/device-integration/home-assistant
 - Modbus TCP: /docs/aqara-studio/device-integration/modbus-tcp
 - BACnet: /docs/aqara-studio/device-integration/bacnet

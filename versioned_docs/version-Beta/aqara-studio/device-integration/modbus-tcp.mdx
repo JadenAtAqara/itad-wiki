@@ -7,6 +7,34 @@ keywords: ["Aqara Docs", "Aqara Studio", "Device Integration", "Modbus TCP"]
 
 This guide explains how to connect Modbus TCP devices to Aqara Studio.
 
+## Supported Modbus TCP Point Data Types
+
+When integrating a Modbus TCP device with Aqara Studio, ensure that its point data types are supported by Aqara Studio, as listed below:
+
+| Type | Range | Register Count |
+|----|----|----|
+| UInt16 | 0–65,535 | 1 |
+| Int16 | −32,768–32,767 | 1 |
+| Int32 | −2,147,483,648–2,147,483,647 | 2 |
+| UInt32 | 0–4,294,967,295 | 2 |
+| Float32 | IEEE 754 single precision | 2 |
+| Boolean | Coil or discrete input | 1 bit |
+| RegisterBit | Bits 0–15 of a single register | Within one register |
+| NumericBits / EnumBits | Unsigned bit field within a single register | Within one register |
+| Standard String | Holding register bytes decoded as UTF-8; currently read-only | Based on length |
+
+## Tested Modbus TCP Devices
+
+The following Modbus TCP devices have been tested by Aqara and can be integrated with Aqara Studio:
+
+| Brand | Model |
+|----|----|
+| Siemens | LOGO |
+| Siemens | S7-200 SMART CPU SR20 |
+| CHINT | DDSU6665(80) |
+| TASKET | TAS-LAN-464 |
+| AMICO | LXLY-50 |
+
 ## Prerequisites
 
 Before you begin, please make sure:
