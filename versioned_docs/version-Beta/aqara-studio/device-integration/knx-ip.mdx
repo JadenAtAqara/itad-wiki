@@ -36,7 +36,7 @@ When integrating a KNX IP device with Aqara Studio, ensure that its DPT types ar
 | 21 | <ul><li>.001</li><li>.002</li><li>.100–.106</li><li>.601</li><li>.1000–.1002</li><li>.1010</li><li>.1200</li><li>.1201</li></ul> | 8-bit bitset and status mask |
 | 22 | .1010 | 16-bit bitset; 16-channel activation status |
 | 28 | .001 | Variable-length UTF-8 string |
-| 29 | .010–.012 | 64-bit signed energy value; subject to the read/write restrictions described below |
+| 29 | .010–.012 | 64-bit signed energy value; the default numeric write path is not available; reading integers greater than 2^53 is not guaranteed to be accurate. |
 | 232 | .600 | RGB, with each component ranging from 0 to 255 |
 | 242 | .600 | xyY color |
 | 243 | .600 | xyY color with transition time |
