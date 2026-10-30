@@ -426,7 +426,7 @@ This specification requires `COV Increment` to be a finite floating-point number
 
 For example, chilled-water temperature monitoring may set `Low Limit` to `5°C` and `High Limit` to `35°C`: when the current value is below the low limit it may be judged as a low-side limit violation, and when above the high limit as a high-side limit violation. Exact comparison rules (for example, whether equality to the threshold counts as a violation) SHOULD be defined by the corresponding object or alarm mechanism.
 
-Merely defining or reading `Low Limit` / `High Limit` does not automatically mean the device will generate alarms, events, or proactive reports. To implement complete alarm behavior, the object must also support related mechanisms and handle enable conditions, duration/delay, deadband, event state, and notification methods according to its definition. Clients MUST NOT infer that alarms are enabled or that alarm notifications will be sent solely because threshold parameters exist. Thresholds SHOULD also use units and semantics compatible with the monitored `Present Value`; they may sit outside the edges of the normal value range, but MUST NOT be used as a substitute for `Minimum Value` or `Maximum Value`.
+Merely defining or reading `Low Limit` and `High Limit` does not automatically mean that the device will generate alarms or events, or proactively report them. To implement complete alarm behavior, the object must also support the relevant mechanisms and handle factors such as enabling conditions, duration/delay, deadband, event state, and notification methods according to their definitions. Clients MUST NOT infer that alarms are enabled or that alarm notifications will necessarily be sent solely from the presence of threshold parameters. Thresholds MUST use the same data type as the monitored `Present Value` and compatible units, and their values MUST satisfy `Minimum Value <= Low Limit < High Limit <= Maximum Value`. Thresholds may lie outside the normal operating range for the application, but MUST NOT exceed the declared numeric range or be used as substitutes for `Minimum Value` or `Maximum Value`.
 
 ### Actual Quantity Calibration Parameters
 
@@ -437,6 +437,8 @@ Merely defining or reading `Low Limit` / `High Limit` does not automatically mea
 For example, a dimming object's `Present Value` may represent a dimming control interval of `0%` to `100%`, while the brightness the device can actually reach is `20%` to `80%` of rated brightness; the object defines a linear mapping between these interval endpoints. In that case `Minimum Actual Value` is `20%` brightness and `Maximum Actual Value` is `80%` brightness: control value `0%` maps to actual brightness `20%`, control value `100%` maps to actual brightness `80%`, and control value `50%` maps to `20% + (80% - 20%) × 50% = 50%` brightness. Here the two Actual Value percentages are actual output relative to rated brightness, while the control-value percentage is the position of Present Value in the control interval; they have different meanings. For a general linear endpoint mapping, use proportional interpolation between the Present Value endpoints defined by the object; if the object specifies a nonlinear mapping, or Present Value is not a percentage, follow that object's mapping rules and do not apply this example directly.
 
 This parameter pair explains the correspondence between numeric endpoints and actual quantities. It is not the protocol-allowed range of `Present Value` (described by `Minimum Value` / `Maximum Value`), nor the operating alarm thresholds (described by `Low Limit` / `High Limit`). For example, a dimmable luminaire's `Present Value` control range may be `0%` to `100%`, while the corresponding actual brightness range is `20%` to `80%` of rated brightness.
+
+Both Actual Value parameters use the float data type; integer data types are not supported, and their data type is not required to match that of `Present Value`. Their values MUST satisfy `Minimum Value <= Minimum Actual Value < Maximum Actual Value <= Maximum Value`. The corresponding Trait MUST still explicitly define the unit and mapping of the actual quantity and ensure that the endpoint values can be represented within the declared range.
 
 ### Distinguishing the Three Parameter Groups
 
@@ -131666,6 +131668,24 @@ Manages local SD card recording, formatting, recording modes, and storage status
       <td>O</td>
     </tr>
     <tr>
+      <td>0x5245</td>
+      <td><a href="#ref_RecordingDurationType">RecordingDurationType</a></td>
+      <td>Recording duration type</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5246</td>
+      <td><a href="#ref_MinRecordingDuration">MinRecordingDuration</a></td>
+      <td>Minimum recording duration</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5247</td>
+      <td><a href="#ref_MaxRecordingDuration">MaxRecordingDuration</a></td>
+      <td>Maximum recording duration</td>
+      <td>O</td>
+    </tr>
+    <tr>
       <td>0x5025</td>
       <td><a href="#ref_SetNASSharedFolder">SetNASSharedFolder</a></td>
       <td>Set shared folder</td>
@@ -132144,6 +132164,24 @@ Parameter structure of the FormatSDCardCommand Command.
     <tr>
       <td>0x4FD2</td>
       <td><a href="#ref_RecordingMode">RecordingMode</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5245</td>
+      <td><a href="#ref_RecordingDurationType">RecordingDurationType</a></td>
+      <td>Recording duration type</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5246</td>
+      <td><a href="#ref_MinRecordingDuration">MinRecordingDuration</a></td>
+      <td>Minimum recording duration</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5247</td>
+      <td><a href="#ref_MaxRecordingDuration">MaxRecordingDuration</a></td>
+      <td>Maximum recording duration</td>
       <td>O</td>
     </tr>
     <tr>
@@ -138120,9 +138158,62 @@ This Command is used to perform the "Camera Sleep Toggle Command" operation.
 
 ## Playback (Playback) {#ref_Aqara_Spec_Playback}
 
+### Interaction Flow
+
+#### Downloading the Local Recording Index File {#ref_LocalRecord_FlowDownloadIndex}
+
+This section describes the flow in which the App downloads the local recording index file over the WebRTC DataChannel.
+The index granularity is *day*: at most one entry per day. A single query can span multiple days, and the response member `LocalRecordIndex` is the list of those days. When the number of days is small, `MaxCount` / `Cursor` are usually not needed.
+
+* Command: [LocalRecordQuery](#ref_LocalRecordQuery) with `QueryLocalRecordType=LocalRecordIndex`; the parameters are in the member `LocalRecordIndex`. It is exchanged via `InvokeCommand` on label `aqara.control`; the request OpCode is `0x008D` and the response OpCode is `0x038D`.
+* Response: the ComplexACK of this Command. Member 0 is `Status`, and the member `LocalRecordIndex` is a list of [LocalRecordIndexEntryStructure](#ref_LocalRecordIndexEntryStructure).
+
+```mermaid
+sequenceDiagram
+    participant App as App
+    participant Dev as Camera
+
+    Note over App,Dev: 1. LocalRecordQuery on aqara.control
+    App->>Dev: InvokeCommand QueryLocalRecordType LocalRecordIndex
+    Dev-->>App: ComplexACK QueryLocalRecordType LocalRecordIndex
+
+    Note over App,Dev: 2. Fetch index files one FileDescriptor at a time
+    loop one FileDescriptor at a time
+        App->>Dev: FileTransfer aqara.download
+    end
+```
+
+To query a time range, pass the whole range; the device puts one entry per day into the response member `LocalRecordIndex`. The file transfer uses the [FileDescriptor](#ref_FileDescriptorStructure) of that entry, written into initRequest. `Date` does not enter the transfer. On label `aqara.download`, only one `FileDescriptor` is transferred at a time; a new `initRequest` SHALL NOT be issued before the previous one finishes. Block interactions are not expanded in this diagram.
+
+#### Downloading Local Recording Files {#ref_LocalRecord_FlowDownloadFile}
+
+This section describes the flow in which the App downloads local recording files over the WebRTC DataChannel.
+The App first downloads the local recording index file, reads the `timestamp` values to fetch from the index file, and then queries the local recording file descriptors.
+
+* Command: the same [LocalRecordQuery](#ref_LocalRecordQuery) with `QueryLocalRecordType=LocalRecordSegment`; the parameters are in the member `LocalRecordSegment`, where `Timestamps` come from the index. It is exchanged via `InvokeCommand` on label `aqara.control`.
+* Response: the ComplexACK of this Command. The member `LocalRecordSegment` has the same length and order as `Timestamps`, and each entry is a [FileDescriptorStructure](#ref_FileDescriptorStructure).
+
+```mermaid
+sequenceDiagram
+    participant App as App
+    participant Dev as Camera
+
+    Note over App,Dev: 0. Index file downloaded
+    Note over App,Dev: 1. LocalRecordQuery on aqara.control
+    App->>Dev: InvokeCommand QueryLocalRecordType LocalRecordSegment
+    Dev-->>App: ComplexACK QueryLocalRecordType LocalRecordSegment
+
+    Note over App,Dev: 2. Fetch recording files one FileDescriptor at a time
+    loop one FileDescriptor at a time
+        App->>Dev: FileTransfer aqara.download
+    end
+```
+
+On label `aqara.download`, only one `FileDescriptor` is transferred at a time; a new `initRequest` SHALL NOT be issued before the previous one finishes. When an entry has a `fileSize` of 0, skip that entry and do not issue an `initRequest` for it. Block interactions are not expanded in this diagram. When the list exceeds a single message, the App splits it into multiple requests. Retransmitting the same query after a timeout is safe; queries do not change device state.
+
 ### Introduction
 
-Manages video playback and history records, including cloud clip type identification and local video download capabilities.
+Manages recording playback and history, including cloud clip type identification, local recording download capability, and the state and playback position of local playback sessions. Playback sessions are established by `WebRTCProvideOffer` (`StreamUsage=LocalPlayback`); pause, resume, seek, and speed are handled by `LocalPlaybackControl`. Local recording index and recording file descriptors are queried by `LocalRecordQuery`.
 
 ### Function Identifier
 
@@ -138366,6 +138457,11 @@ This enumeration defines the valid values of the Present Value for the CloudClip
     <tr>
       <td>0x4FC1</td>
       <td><a href="#ref_SupportLocalVideoDownload">SupportLocalVideoDownload</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5243</td>
+      <td><a href="#ref_LocalPlaybackStatus">LocalPlaybackStatus</a></td>
       <td>O</td>
     </tr>
   </tbody>
