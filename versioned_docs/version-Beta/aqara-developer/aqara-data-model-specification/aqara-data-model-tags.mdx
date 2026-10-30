@@ -264,6 +264,7 @@ Parameter ID uses a 16-bit integer identifier, with a valid range of `0x0001` ~ 
       <th>Parameter ID</th>
       <th>Name</th>
       <th>BACnet Property</th>
+      <th>Default Access</th>
       <th>Description</th>
     </tr>
   </thead>
@@ -272,110 +273,150 @@ Parameter ID uses a 16-bit integer identifier, with a valid range of `0x0001` ~ 
       <td>0x0001</td>
       <td>Present Value</td>
       <td>PROP_PRESENT_VALUE</td>
-      <td>Current value, indicating the real-time state of the Trait</td>
+      <td>-</td>
+      <td>Current value, indicating the real-time state of the Trait; the data type is defined by the Trait, and may be an integer, float, boolean, enumeration, string, or composite data type. For numeric values, `Minimum Value <= Present Value <= Maximum Value` MUST hold, and step and other constraints MUST be satisfied.</td>
     </tr>
     <tr>
       <td>0x0002</td>
       <td>Maximum Value</td>
       <td>PROP_MAX_PRES_VALUE</td>
-      <td>Maximum allowed/representable value of Present Value; together with Minimum Value describes the numeric range, not an alarm threshold.</td>
+      <td>RV</td>
+      <td>Maximum allowed/representable value of `Present Value`; the data type is consistent with the numeric `Present Value`, supporting integers and float, and MUST NOT be less than `Minimum Value`. Together with `Minimum Value` it describes the numeric range, not an alarm threshold.</td>
     </tr>
     <tr>
       <td>0x0003</td>
       <td>Minimum Value</td>
       <td>PROP_MIN_PRES_VALUE</td>
-      <td>Minimum allowed/representable value of Present Value; together with Maximum Value describes the numeric range, not an alarm threshold.</td>
+      <td>RV</td>
+      <td>Minimum allowed/representable value of `Present Value`; the data type is consistent with the numeric `Present Value`, supporting integers and float, and MUST NOT be greater than `Maximum Value`. Together with `Maximum Value` it describes the numeric range, not an alarm threshold.</td>
     </tr>
     <tr>
       <td>0x0004</td>
       <td>Unit</td>
       <td>PROP_UNITS</td>
-      <td>Engineering unit</td>
+      <td>RV</td>
+      <td>Engineering unit; the data type and the valid unit codes are specified by the unit definition of the corresponding Trait. Numeric values and related thresholds SHOULD use compatible units.</td>
     </tr>
     <tr>
       <td>0x0005</td>
       <td>Step Value</td>
       <td>PROP_STEP_VALUE</td>
-      <td>Step value (Uint32); only applicable to Multi-state Input/Output Object</td>
+      <td>RV</td>
+      <td>Numeric step value; the data type is consistent with `Present Value`, supporting integers and float, and MUST be greater than `0`. It describes the step granularity of valid numeric values.</td>
     </tr>
     <tr>
       <td>0x0006</td>
       <td>Supported Value</td>
       <td>PROP_SUPPORTED_VALUES</td>
-      <td>Supported value list (Array); the array element type must be consistent with Present Value</td>
+      <td>RV</td>
+      <td>Supported value list (Array/List); the element data type MUST be consistent with `Present Value`, and each element SHOULD satisfy the valid-value constraints of the Trait.</td>
     </tr>
     <tr>
       <td>0x0007</td>
       <td>Default Value</td>
       <td>PROP_RELINQUISH_DEFAULT</td>
-      <td>Relinquish default value</td>
+      <td>RV</td>
+      <td>Default value (relinquish default); readable and reportable by default, not writable (Access is RV). The data type is consistent with `Present Value`, supporting integers, float, and other data types defined by the Trait; it MUST satisfy the range, step, supported-value list, and other applicable constraints of `Present Value`. The specific timing of adoption is defined by the Trait.</td>
     </tr>
     <tr>
       <td>0x0008</td>
       <td>High Limit</td>
       <td>PROP_HIGH_LIMIT</td>
-      <td>High-side monitoring threshold (Float); may be used to judge whether Present Value exceeds the high-side threshold; does not define the Present Value span.</td>
+      <td>RVW</td>
+      <td>High-side monitoring threshold; the data type is consistent with the numeric `Present Value`, supporting integers and float. `Minimum Value <= High Limit <= Maximum Value` and `High Limit > Low Limit` are required. It does not define the `Present Value` span.</td>
     </tr>
     <tr>
       <td>0x0009</td>
       <td>Low Limit</td>
       <td>PROP_LOW_LIMIT</td>
-      <td>Low-side monitoring threshold (Float); may be used to judge whether Present Value is below the low-side threshold; does not define the Present Value span.</td>
+      <td>RVW</td>
+      <td>Low-side monitoring threshold; the data type is consistent with the numeric `Present Value`, supporting integers and float. `Minimum Value <= Low Limit <= Maximum Value` and `Low Limit < High Limit` are required. It does not define the `Present Value` span.</td>
     </tr>
     <tr>
       <td>0x000A</td>
       <td>COV Increment</td>
       <td>PROP_COV_INCREMENT</td>
-      <td>COV increment (Float)</td>
+      <td>RVW</td>
+      <td>Change-reporting threshold, applicable to Traits whose `Present Value` is float; the data type is float, MUST be greater than `0`, and the unit is consistent with `Present Value`. When the absolute difference between the current value and the baseline value of the last COV notification reaches or exceeds this threshold, a notification is triggered, suppressing frequent reports caused by minor fluctuations.</td>
     </tr>
     <tr>
       <td>0x000B</td>
       <td>Maximum Actual Value</td>
       <td>PROP_MAX_ACTUAL_VALUE</td>
-      <td>Upper endpoint calibration value of the actual quantity corresponding to Present Value (Float); the mapping with Minimum Actual Value is defined by the object.</td>
+      <td>RVW</td>
+      <td>Upper endpoint calibration value of the actual quantity corresponding to `Present Value`; readable, writable, and reportable (Access is RVW); the data type is float, and integer data types are not supported. `Minimum Value <= Maximum Actual Value <= Maximum Value` and `Maximum Actual Value > Minimum Actual Value` are required; the mapping is defined by the Trait.</td>
     </tr>
     <tr>
       <td>0x000C</td>
       <td>Minimum Actual Value</td>
       <td>PROP_MIN_ACTUAL_VALUE</td>
-      <td>Lower endpoint calibration value of the actual quantity corresponding to Present Value (Float); the mapping with Maximum Actual Value is defined by the object.</td>
+      <td>RVW</td>
+      <td>Lower endpoint calibration value of the actual quantity corresponding to `Present Value`; readable, writable, and reportable (Access is RVW); the data type is float, and integer data types are not supported. `Minimum Value <= Minimum Actual Value <= Maximum Value` and `Minimum Actual Value < Maximum Actual Value` are required; the mapping is defined by the Trait.</td>
     </tr>
     <tr>
       <td>0x000D</td>
       <td>Is Null</td>
       <td>PROP_IS_NULL</td>
-      <td>Indicates that Present Value currently has no valid data or is uninitialized (Bool)</td>
+      <td>RV</td>
+      <td>Boolean with values `true`/`false`; `true` indicates that `Present Value` currently has no valid data or is uninitialized, and its current payload SHOULD NOT be used as a valid business value.</td>
     </tr>
     <tr>
       <td>0x000E</td>
       <td>Extended Supported Values</td>
       <td>PROP_EXTENDED_SUPPORTED_VALUES</td>
-      <td>Extended supported value list (List[Struct])</td>
+      <td>RV</td>
+      <td>Extended supported value list (List[Struct]); the structure fields, element constraints, and list length are defined by the corresponding Trait.</td>
     </tr>
     <tr>
       <td>0x000F</td>
       <td>Max Item Num</td>
       <td>-</td>
-      <td>Maximum number of elements allowed when Present Value is Array/List (Uint32)</td>
+      <td>RV</td>
+      <td>Maximum number of elements allowed when `Present Value` is Array/List; the data type is uint32, ranging from `0` to `4294967295`. The number of list elements MUST NOT exceed this value.</td>
     </tr>
     <tr>
       <td>0x0010</td>
       <td>Counter Generation</td>
       <td>-</td>
-      <td>Optional read-only Parameter of Trait (Uint32), used to identify the generation of cumulative counter; must be provided when the implementation cannot guarantee continuous logical cumulative values and requires accurate difference calculation.</td>
+      <td>RV</td>
+      <td>Optional read-only, reportable Parameter of the Trait; the data type is uint32, ranging from `0` to `4294967295`, used to identify the generation of a cumulative counter. MUST be provided when the implementation cannot guarantee continuous logical cumulative values and requires accurate difference calculation.</td>
     </tr>
   </tbody>
 </table>
+
+The default read/write access in this table uses full `Access` flags: `RV` means readable and reportable, and `RVW` means readable, writable, and reportable. All readable Parameters support reporting, so the default access does not use standalone `R` or `RW` flags. Parameters marked only `R` or `RW` in specific Trait parameter tables also follow this reporting-support rule; reportable means the capability to report exists, and does not mean a notification MUST be sent on every read or when the value is unchanged. The specific reporting timing follows the corresponding Trait and interaction protocol definitions.
+
+`Present Value` has no default read/write access; it follows the `Access` definition in the specific Trait parameter table. When it is readable, it is also reportable. Data types, read/write access, and constraints explicitly defined by a specific Trait take precedence over the generic default conventions; this table neither automatically extends the write access of existing Traits nor requires all Traits to implement every Parameter.
+
+Frontends determine the read, write, and reporting capabilities of Parameters based on the access descriptions in this table by default. If the actual access of a device Parameter differs from the default access in this table, the device SHALL report the difference, or clearly record it in a pre-configurable data table accessible to the frontend. The difference information SHALL be able to locate the applicable device and its Function, Trait, and Parameter, and SHALL clearly state the actual `Access` of that Parameter so that the frontend can identify and apply it.
+
+Frontends SHALL prefer explicit difference information applicable to the target device and the target Parameter; when no applicable difference information is provided, the default access in this table applies. `Present Value` access is still determined by the actual definition of the specific Trait and is not derived from the default access in this table. The above access information is used for frontend capability display and interaction control, and does not replace the device-side validation of actual access permissions.
+
+The range constraints in this table use `Minimum Value <= parameter value <= Maximum Value`, including both boundary values. When boundary parameters are not explicitly provided, the valid range and data type boundaries declared by the corresponding Trait apply. The magnitude relationship between a pair of upper and lower limit parameters is validated only when both are implemented together. For writable Parameters, the written value and parameter combinations MUST still satisfy the applicable constraints, and MUST NOT invalidate the upper/lower limit relationship by writing.
 
 ### Numeric Boundary Parameters
 
 #### Minimum Value and Maximum Value
 
-`Minimum Value` (`PROP_MIN_PRES_VALUE`) and `Maximum Value` (`PROP_MAX_PRES_VALUE`) describe the lower and upper bounds of the numeric range of `Present Value`. Reading these two parameters reveals the valid numeric range declared by the Trait. When writing `Present Value`, clients SHOULD constrain the target value to this range while also obeying the Trait's own type, step value, enumeration values, and other constraints. Devices SHOULD also handle out-of-range inputs according to their Trait definitions, and MUST NOT treat these two boundaries as alarm thresholds.
+`Minimum Value` (`PROP_MIN_PRES_VALUE`) and `Maximum Value` (`PROP_MAX_PRES_VALUE`) describe the lower and upper bounds of the numeric range of `Present Value`. Reading these two parameters reveals the valid numeric range declared by the Trait. When writing `Present Value`, clients SHOULD constrain the target value to this range while also obeying the Trait's own data type, step value, enumeration values, and other constraints. Devices SHOULD also handle out-of-range inputs according to their Trait definitions, and MUST NOT treat these two boundaries as alarm thresholds.
 
 For example, if a temperature Trait has `Minimum Value` of `-50`, `Maximum Value` of `100`, and `Unit` of degrees Celsius, it declares a numeric range of `-50°C` to `100°C`. Clients may use this range to validate user input or to display the adjustable range. If the value is a read-only sensor reading, these boundaries describe the Trait's range and do not imply that clients can write the value.
 
 These two parameters describe the protocol-level numeric range of `Present Value`; they are not necessarily identical to the sensor's physical measurement capability, the device's alarm range, or the controller's safety range. Whether they exist, whether they are readable, and their concrete constraints are defined by the corresponding Trait parameter table; do not assume every Trait defines both parameters.
+
+### Step Value and Default Value
+
+`Step Value` uses the same data type as the numeric `Present Value`, supporting both integer steps (for example, `1`) and float steps (for example, `0.1`). The step value MUST be greater than `0`; when the Trait uses `Minimum Value` as the step start, valid values are determined by `Minimum Value + n × Step Value`, where `n` is a non-negative integer, and the result MUST NOT exceed `Maximum Value`. Floating-point comparisons SHOULD consider the representation precision of the data type and MUST NOT rely on a floating-point remainder being exactly zero to judge step validity.
+
+`Default Value` uses the same data type as `Present Value` and obeys the same valid-value constraints. Its data type is not limited to integers, and it does not mean the value can be silently returned when the current value cannot be read. Whether the default value is adopted when restoring default settings, releasing control, or in other circumstances SHOULD be defined by the corresponding Trait.
+
+### COV Increment Parameters
+
+`COV Increment` references the change-notification semantics of BACnet `COV_Increment` and is used for change-reporting filtering of float-type `Present Value`. Let `Vref` be the baseline value at the last notification and `V` the current valid value; when `abs(V - Vref) >= COV Increment`, the COV notification condition for the current value change is satisfied. After a notification is triggered, the baseline is updated to the value of this notification. The comparison baseline is not the previous sample value, so accumulated offsets from multiple small changes may still trigger a notification.
+
+For example, with `COV Increment = 0.5` and a baseline of `20.0`, a current value of `20.2` does not trigger a change notification, while continuing to change to `20.5` or `19.5` satisfies the notification condition. This Parameter is not a sampling period, a periodic reporting interval, or an alarm deadband, and it does not change the read precision or numeric range of `Present Value`.
+
+This specification requires `COV Increment` to be a finite floating-point number greater than `0`. The initial notification on first subscription, subscription validity, other state changes, and periodic notifications are still handled according to the corresponding interaction protocol and Trait definitions and MUST NOT be blocked by this change threshold. Defining this Parameter alone does not mean a subscription is established or a notification will necessarily be sent; this section only borrows the increment semantics of BACnet and does not directly introduce its full subscription mechanism.
 
 ### Monitoring Threshold Parameters
 
@@ -403,7 +444,7 @@ This parameter pair explains the correspondence between numeric endpoints and ac
 * *Low Limit / High Limit*: judge whether an operating value has reached a monitoring threshold—"at what operating level is a low-side/high-side limit violation?"
 * *Minimum Actual Value / Maximum Actual Value*: where the object definition supports it, explain the correspondence between `Present Value` and actual physical-quantity endpoints—"how much actual quantity does this numeric endpoint correspond to?"
 
-The three groups are not interchangeable, and a Trait is not guaranteed to define all of them. Implementations and clients SHOULD first consult the specific Trait's parameter table, types, units, access permissions, and constraints, then interpret and use them according to that Trait definition; linear interpolation for actual-quantity conversion is appropriate only when the object explicitly defines a linear mapping.
+The three groups are not interchangeable, and a Trait is not guaranteed to define all of them. Implementations and clients SHOULD first consult the specific Trait's parameter table, data types, units, access permissions, and constraints, then interpret and use them according to that Trait definition; linear interpolation for actual-quantity conversion is appropriate only when the object explicitly defines a linear mapping.
 
 ## Permission Flags
 
@@ -5048,8 +5089,8 @@ Indicates the list of Function capabilities that this controller endpoint can bi
   </tbody>
 </table>
 
-### Command Definitions
 
+### Command Definitions
 This Function does not contain Commands.
 
 ## CO (Carbon Monoxide) {#ref_Aqara_Spec_CO}
@@ -5424,8 +5465,8 @@ Indicates the carbon monoxide concentration in the air, used to monitor toxic ga
   </tbody>
 </table>
 
-### Command Definitions
 
+### Command Definitions
 <table>
   <thead>
     <tr>
@@ -10885,7 +10926,7 @@ On the Matter side (light-type devices), a level range of 1-254 is commonly used
       <td>float</td>
       <td></td>
       <td></td>
-      <td>R</td>
+      <td>RVW</td>
       <td>O</td>
     </tr>
     <tr>
@@ -10894,7 +10935,7 @@ On the Matter side (light-type devices), a level range of 1-254 is commonly used
       <td>float</td>
       <td></td>
       <td></td>
-      <td>R</td>
+      <td>RVW</td>
       <td>O</td>
     </tr>
   </tbody>
@@ -19231,7 +19272,7 @@ Enables or disables dynamic refresh of the device cover image on the App home pa
 
 #### PeriodicSnapshotUploadEnable Trait {#ref_PeriodicSnapshotUploadEnable}
 
-Enables or disables periodic snapshot upload to the cloud (every 10 minutes).
+Enables or disables periodic snapshot upload to the cloud. When [PeriodicSnapshotInterval](#ref_PeriodicSnapshotInterval) is implemented, the capture interval is configured by that Trait; when it is not implemented, the behavior of uploading one frame every 10 minutes is maintained.
 
 <table>
   <thead>
@@ -40871,7 +40912,7 @@ This structure defines the Present Value field layout of the AqaraUserError Trai
 
 ##### AqaraUserChangeTraitPresentValueStructure Type {#ref_AqaraUserChangeTraitPresentValueStructure}
 
-This structure defines the Present Value field layout of the AqaraUserChange Trait.
+This structure defines the Present Value field layout of the AqaraUserChange Trait. This Trait reports the relevant status only after a successful change to the user or credential database; when a credential changes, Credential may carry the complete AqaraCredentialItemStruct (including the credential type and its content). The CheckNumber in Extension events is for gateway-internal use only, does not belong to the Trait, and MUST NOT be reported to the App or the cloud.
 
 <table>
   <thead>
@@ -40886,38 +40927,45 @@ This structure defines the Present Value field layout of the AqaraUserChange Tra
   <tbody>
     <tr>
       <td>0</td>
+      <td>LockDataType</td>
+      <td><a href="#ref_LockDataTypeEnum8">LockDataTypeEnum8</a></td>
+      <td>M</td>
+      <td>The data category of the change.</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>DataOperationType</td>
+      <td><a href="#ref_DataOperationTypeEnum8">DataOperationTypeEnum8</a></td>
+      <td>M</td>
+      <td>The operation type performed on the data.</td>
+    </tr>
+    <tr>
+      <td>2</td>
       <td>UserId</td>
       <td>uint16</td>
       <td>M</td>
       <td>User ID involved in the change.</td>
     </tr>
     <tr>
-      <td>1</td>
-      <td>ChangeType</td>
-      <td>enum8</td>
-      <td>M</td>
-      <td>Change type (add, modify or delete).</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>UserType</td>
-      <td>uint8</td>
-      <td>O</td>
-      <td>User type; optional when the change type is modify.</td>
-    </tr>
-    <tr>
       <td>3</td>
-      <td>UserName</td>
-      <td>characterString</td>
-      <td>O</td>
-      <td>Username; optional when the change type is modify.</td>
+      <td>UserType</td>
+      <td><a href="#ref_AqaraUserTypeEnum8">AqaraUserTypeEnum8</a></td>
+      <td>M</td>
+      <td>The type and access level of the user after the change.</td>
     </tr>
     <tr>
       <td>4</td>
-      <td>Status</td>
-      <td>enum8</td>
-      <td>M</td>
-      <td>Change result status.</td>
+      <td>UserName</td>
+      <td>characterString</td>
+      <td>O</td>
+      <td>Username after the change, UTF-8 encoded, up to 20 bytes; may be null when not set.</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Credential</td>
+      <td><a href="#ref_AqaraCredentialItemStruct">AqaraCredentialItemStruct</a></td>
+      <td>O</td>
+      <td>Complete credential information involved in the change, including credential attributes, type, ID, index, name, validity period, and credential content corresponding to the type; may be omitted or null when there is no related credential, when a credential is deleted, or when the device does not provide sensitive credential content.</td>
     </tr>
   </tbody>
 </table>
@@ -68727,6 +68775,12 @@ Provides general device configuration items, such as sensitivity, delay, default
       <td>O</td>
     </tr>
     <tr>
+      <td>0x5248</td>
+      <td><a href="#ref_P2PCaptureInterval">P2PCaptureInterval</a></td>
+      <td>Home page card capture interval</td>
+      <td>O</td>
+    </tr>
+    <tr>
       <td>0x4E44</td>
       <td><a href="#ref_P2PCaptureStatus">P2PCaptureStatus</a></td>
       <td>P2P dynamic capture status</td>
@@ -69629,6 +69683,11 @@ This enumeration defines the valid values of the Present Value of the PublicCapO
     <tr>
       <td>0x4E3E</td>
       <td><a href="#ref_P2PCaptureEnabled">P2PCaptureEnabled</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5248</td>
+      <td><a href="#ref_P2PCaptureInterval">P2PCaptureInterval</a></td>
       <td>O</td>
     </tr>
     <tr>
@@ -123706,6 +123765,11 @@ The specific implementation of effects falls within the vendor's custom scope. D
       <td>O</td>
     </tr>
     <tr>
+      <td>0x5242</td>
+      <td><a href="#ref_SupportedLedGridMask">SupportedLedGridMask</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
       <td>0x5034</td>
       <td><a href="#ref_FlowMode">FlowMode</a></td>
       <td>O</td>
@@ -124595,6 +124659,11 @@ Parameter structure of the RemoveUserDefinedEffects Command.
     <tr>
       <td>0x5033</td>
       <td><a href="#ref_LedGridMask">LedGridMask</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5242</td>
+      <td><a href="#ref_SupportedLedGridMask">SupportedLedGridMask</a></td>
       <td>O</td>
     </tr>
     <tr>
@@ -125538,9 +125607,7 @@ Clients can explicitly enable or disable it through this Trait and configure it 
 
 #### LedGridMask Trait {#ref_LedGridMask}
 
-This Trait indicates and allows control of the enable state of each configurable LED grid cell; the writable bit range is constrained by the Supported Value.
-
-A bit value of `1` means the corresponding grid cell is enabled, and a bit value of `0` means the corresponding cell is disabled. If a write exceeds the configurable bit range, the device should reject the write and keep the original value.
+This Trait indicates and allows the client to control the enable state of each configurable LED grid cell on the device through a mask. A bit of `1` means the corresponding grid cell is enabled (participates in effect rendering), and a bit of `0` means the corresponding grid cell is disabled (does not participate in effect rendering). The bits the client can modify are defined by the SupportedLedGridMask Trait; when attempting to modify a bit whose value is `0` in SupportedLedGridMask, the device MUST reject the write and keep the original value of the attribute.
 
 <table>
   <thead>
@@ -139379,6 +139446,11 @@ This enumeration defines the valid values of the Present Value for the ClientKee
       <td>O</td>
     </tr>
     <tr>
+      <td>0x5249</td>
+      <td><a href="#ref_PeriodicSnapshotInterval">PeriodicSnapshotInterval</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
       <td>0x4F91</td>
       <td><a href="#ref_CameraRTSPEnable">CameraRTSPEnable</a></td>
       <td>O</td>
@@ -145803,7 +145875,7 @@ The Camera AV Stream Management Function defines the audio/video stream manageme
   </thead>
   <tbody>
     <tr>
-      <td>TBD</td>
+      <td>0x0126</td>
       <td>CameraAVStreamManagement</td>
       <td>Camera audio/video stream management</td>
     </tr>
@@ -145823,76 +145895,70 @@ The Camera AV Stream Management Function defines the audio/video stream manageme
   </thead>
   <tbody>
     <tr>
-      <td>TBD</td>
+      <td>0x511D</td>
       <td><a href="#ref_CAVSMMaxConcurrentEncoders">CAVSMMaxConcurrentEncoders</a></td>
-      <td>M</td>
       <td></td>
+      <td>M</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x511E</td>
       <td><a href="#ref_CAVSMMaxEncodedPixelRate">CAVSMMaxEncodedPixelRate</a></td>
-      <td>M</td>
       <td></td>
+      <td>M</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x511F</td>
       <td><a href="#ref_CAVSMVideoSensorParams">CAVSMVideoSensorParams</a></td>
-      <td>M</td>
       <td></td>
+      <td>M</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x5120</td>
       <td><a href="#ref_CAVSMRateDistortionTradeOffPoints">CAVSMRateDistortionTradeOffPoints</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x5121</td>
       <td><a href="#ref_CAVSMMicrophoneCapabilities">CAVSMMicrophoneCapabilities</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x5122</td>
       <td><a href="#ref_CAVSMTwoWayTalkSupport">CAVSMTwoWayTalkSupport</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x5123</td>
       <td><a href="#ref_CAVSMMaxNetworkBandwidth">CAVSMMaxNetworkBandwidth</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
-      <td><a href="#ref_CAVSMLocalVideoRecordingEnabled">CAVSMLocalVideoRecordingEnabled</a></td>
-      <td>O</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>TBD</td>
+      <td>0x5125</td>
       <td><a href="#ref_CAVSMSupportedStreamUsages">CAVSMSupportedStreamUsages</a></td>
-      <td>M</td>
       <td></td>
+      <td>M</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x5126</td>
       <td><a href="#ref_CAVSMAllocatedVideoStreams">CAVSMAllocatedVideoStreams</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x5127</td>
       <td><a href="#ref_CAVSMAllocatedAudioStreams">CAVSMAllocatedAudioStreams</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x5128</td>
       <td><a href="#ref_CAVSMStreamUsagePriorities">CAVSMStreamUsagePriorities</a></td>
-      <td>M</td>
       <td></td>
+      <td>M</td>
     </tr>
   </tbody>
 </table>
@@ -145910,34 +145976,34 @@ The Camera AV Stream Management Function defines the audio/video stream manageme
   </thead>
   <tbody>
     <tr>
-      <td>TBD</td>
+      <td>0x9D8A</td>
       <td><a href="#ref_CAVSMVideoStreamAllocate">CAVSMVideoStreamAllocate</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x9D8B</td>
       <td><a href="#ref_CAVSMVideoStreamDeallocate">CAVSMVideoStreamDeallocate</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x9D8C</td>
       <td><a href="#ref_CAVSMAudioStreamAllocate">CAVSMAudioStreamAllocate</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x9D8D</td>
       <td><a href="#ref_CAVSMAudioStreamDeallocate">CAVSMAudioStreamDeallocate</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x9D8E</td>
       <td><a href="#ref_CAVSMSetStreamPriorities">CAVSMSetStreamPriorities</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
     </tr>
   </tbody>
 </table>
@@ -146078,7 +146144,7 @@ This enumeration defines the valid values of the audio/video stream usage.
   </tbody>
 </table>
 
-*Note:* `0x04`-`0xEF` is reserved for future Matter standard extensions. `LocalPlayback` indicates the playback encoding channel usage; the device has only one local recording file, enabled by `CAVSMLocalVideoRecordingEnabled`, and the App does not need to specify the source clip.
+*Note:* `0x04`-`0xEF` is reserved for future Matter standard extensions. `LocalPlayback` indicates the playback encoding channel usage; the device has only one local recording file, and the App does not need to specify the source clip.
 
 ##### StatusCodeEnum8 Type {#ref_StatusCodeEnum8}
 
@@ -146823,62 +146889,57 @@ Response parameter structure of the CAVSMSetStreamPriorities Command.
   </thead>
   <tbody>
     <tr>
-      <td>TBD</td>
+      <td>0x511D</td>
       <td><a href="#ref_CAVSMMaxConcurrentEncoders">CAVSMMaxConcurrentEncoders</a></td>
       <td>M</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x511E</td>
       <td><a href="#ref_CAVSMMaxEncodedPixelRate">CAVSMMaxEncodedPixelRate</a></td>
       <td>M</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x511F</td>
       <td><a href="#ref_CAVSMVideoSensorParams">CAVSMVideoSensorParams</a></td>
       <td>M</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x5120</td>
       <td><a href="#ref_CAVSMRateDistortionTradeOffPoints">CAVSMRateDistortionTradeOffPoints</a></td>
       <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x5121</td>
       <td><a href="#ref_CAVSMMicrophoneCapabilities">CAVSMMicrophoneCapabilities</a></td>
       <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x5122</td>
       <td><a href="#ref_CAVSMTwoWayTalkSupport">CAVSMTwoWayTalkSupport</a></td>
       <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x5123</td>
       <td><a href="#ref_CAVSMMaxNetworkBandwidth">CAVSMMaxNetworkBandwidth</a></td>
       <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
-      <td><a href="#ref_CAVSMLocalVideoRecordingEnabled">CAVSMLocalVideoRecordingEnabled</a></td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>TBD</td>
+      <td>0x5125</td>
       <td><a href="#ref_CAVSMSupportedStreamUsages">CAVSMSupportedStreamUsages</a></td>
       <td>M</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x5126</td>
       <td><a href="#ref_CAVSMAllocatedVideoStreams">CAVSMAllocatedVideoStreams</a></td>
       <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x5127</td>
       <td><a href="#ref_CAVSMAllocatedAudioStreams">CAVSMAllocatedAudioStreams</a></td>
       <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x5128</td>
       <td><a href="#ref_CAVSMStreamUsagePriorities">CAVSMStreamUsagePriorities</a></td>
       <td>M</td>
     </tr>
@@ -147279,54 +147340,6 @@ Maximum total network bandwidth for media streams (bps).
   </tbody>
 </table>
 
-#### CAVSMLocalVideoRecordingEnabled Trait {#ref_CAVSMLocalVideoRecordingEnabled}
-
-Whether local storage recording is enabled; `true` means SD card recording is enabled.
-
-<table>
-  <thead>
-    <tr>
-      <th>Trait ID</th>
-      <th>Code</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>TBD</td>
-      <td>CAVSMLocalVideoRecordingEnabled</td>
-    </tr>
-  </tbody>
-</table>
-
-##### Parameters
-
-<table>
-  <thead>
-    <tr>
-      <th>Parameter ID</th>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Constraint</th>
-      <th>Default</th>
-      <th>Access</th>
-      <th>Conformance</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>0x0001</td>
-      <td>Present Value</td>
-      <td>boolean</td>
-      <td></td>
-      <td></td>
-      <td>RVW</td>
-      <td>O</td>
-    </tr>
-  </tbody>
-</table>
-
-*Note:* Semantically aligned with the Matter `LocalVideoRecordingEnabled` (STOR Feature), indicating whether local storage recording is enabled. Matter cameras are mapped via the gateway CASE; non-STOR devices MAY not implement this Trait. The device maintains only one local recording file; `LocalPlayback` stream allocation and WebRTC playback sessions SHALL be performed when this value is `true` and the file is readable.
-
 #### CAVSMSupportedStreamUsages Trait {#ref_CAVSMSupportedStreamUsages}
 
 The list of Stream Usages supported by the device.
@@ -147583,11 +147596,6 @@ After receiving this Command, SHALL validate the request parameters and process 
       <td>INVALID_IN_STATE</td>
     </tr>
     <tr>
-      <td>StreamUsage</td>
-      <td>For LocalPlayback, <code>CAVSMLocalVideoRecordingEnabled</code> SHALL be <code>true</code> (if the device implements this Trait)</td>
-      <td>INVALID_IN_STATE</td>
-    </tr>
-    <tr>
       <td>VideoCodec</td>
       <td>SHALL be a codec supported by the device</td>
       <td>DYNAMIC_CONSTRAINT_ERROR</td>
@@ -147720,11 +147728,6 @@ After receiving this Command, SHALL validate the request parameters and process 
     <tr>
       <td>StreamUsage</td>
       <td>SHALL be Recording, Analysis, LiveView, or LocalPlayback; SHALL exist in <code>CAVSMStreamUsagePriorities</code> and <code>CAVSMSupportedStreamUsages</code></td>
-      <td>INVALID_IN_STATE</td>
-    </tr>
-    <tr>
-      <td>StreamUsage</td>
-      <td>For LocalPlayback, <code>CAVSMLocalVideoRecordingEnabled</code> SHALL be <code>true</code> (if the device implements this Trait)</td>
       <td>INVALID_IN_STATE</td>
     </tr>
     <tr>
@@ -148198,45 +148201,41 @@ Aqara Spec **does not define** a dedicated "Switch Resolution" Command; in a sin
 
 #### Local SD card recording playback
 
-This section only defines **playback session** establishment and control. The device maintains only one local recording file; when `CAVSMLocalVideoRecordingEnabled=true`, the App initiates a `LocalPlayback` session to play back that file, without carrying a source clip identifier.
+This section only defines **playback session** establishment. The Server maintains only one local recording file; the Client initiates a `LocalPlayback` session to play back that file, without carrying a source clip identifier. Playback control and recording queries are defined in [Playback](#ref_Aqara_Spec_Playback).
 
 ##### Playback session establishment flow
 
 ```mermaid
 sequenceDiagram
-    participant App as App
-    participant Cloud as Cloud
-    participant Dev as Camera/gateway
+    participant Client as Client
+    participant Server as Server
 
-    Note over App,Dev: 0. Prerequisite: local recording enabled
-    App->>Cloud: Read CAVSMLocalVideoRecordingEnabled
+    Note over Client,Server: 1. Allocate playback stream (CAVSM)
+    Client->>Server: CAVSMVideoStreamAllocate(StreamUsage=LocalPlayback)
+    Client->>Server: CAVSMAudioStreamAllocate(StreamUsage=LocalPlayback)
+    Server-->>Client: Report stream ID
 
-    Note over App,Dev: 1. Allocate playback stream (CAVSM)
-    App->>Cloud: CAVSMVideoStreamAllocate(StreamUsage=LocalPlayback)
-    App->>Cloud: CAVSMAudioStreamAllocate(StreamUsage=LocalPlayback)
-    Dev-->>App: Report stream ID
+    Note over Client,Server: 2. Establish WebRTC session
+    Client->>Server: WebRTCProvideOffer(StreamUsage=LocalPlayback, VideoStreams, AudioStreams, MetadataEnabled=true)
+    Server-->>Client: Response SessionId
+    Server-->>Client: Report WebRTCSignalingEvent(Answer)
 
-    Note over App,Dev: 2. Establish WebRTC session
-    App->>Cloud: WebRTCProvideOffer(StreamUsage=LocalPlayback, VideoStreams, AudioStreams, MetadataEnabled=true)
-    Dev-->>App: Response SessionId
-    Dev-->>App: Report WebRTCSignalingEvent(Answer)
+    Note over Client,Server: 3. DataChannel
+    Client->>Server: open aqara.control and aqara.download
 
-    Note over App,Dev: 3. DataChannel metadata
-    Dev-->>App: Recording tag stream (RecordingTags)
+    Note over Client,Server: 4. Playback control
+    Server-->>Client: RTP playback
+    Client->>Server: LocalPlaybackControl
+    Server-->>Client: Status and current position
 
-    Note over App,Dev: 4. Playback and Seek
-    Dev-->>App: RTP playback audio/video
-    App->>Cloud: WebRTCLocalPlaybackSeek(Timestamp)
-    Dev-->>App: Response Status + new key frame
-
-    App->>Cloud: WebRTCEndSession
+    Client->>Server: WebRTCEndSession
 ```
 
-*Note:* When `StreamUsage=LocalPlayback`, SHALL set `MetadataEnabled=true` to establish the DataChannel; recording tags are streamed over the DataChannel (see [Additional Protocol](#ref_WebRTC_Additional_Protocol)), not through Aqara Spec Reports. Seek is sent via `WebRTCLocalPlaybackSeek` with the target `Timestamp`, not through RTCP.
+*Note:* When `StreamUsage=LocalPlayback`, SHALL set `MetadataEnabled=true` to open the DataChannel on this PeerConnection. In-session resolution, playback control and recording queries go through `InvokeCommand` on `aqara.control`; recording file bytes go through the file transfer interaction protocol on `aqara.download`. Playback control, recording index and recording file download are defined in [Playback](#ref_Aqara_Spec_Playback). Transport is via the DataChannel.
 
 ### Introduction
 
-The WebRTC Transport Function defines the WebRTC signaling interface between the Aqara App/cloud and the device, covering live streaming (`LiveView`) and local SD card recording playback (`LocalPlayback`) sessions. Signaling is always **relayed through the cloud**: the App and the cloud form the business layer, and the cloud and the device side (Aqara camera or Matter gateway) communicate via **Aqara Spec** (Command / Report); the media plane is bidirectional WebRTC between the App and the camera (P2P/TURN), and RTP is not forwarded through the cloud. Local playback assumes the device has only one local recording file: when `CAVSMLocalVideoRecordingEnabled=true`, the file can be played back directly without specifying a source clip ID.
+The WebRTC Transport Function defines the WebRTC signaling interface between the Client and the Server, covering live streaming (`LiveView`) and local SD card recording playback (`LocalPlayback`) sessions. The Client submits signaling to the Server via Aqara Spec Command, and the Server returns processing results and signaling events via Response and Report; both parties transmit bidirectional media over WebRTC (P2P/TURN). Local playback assumes the Server has only one local recording file, which can be played back directly without specifying a source clip ID.
 
 ### Function Identifier
 
@@ -148250,7 +148249,7 @@ The WebRTC Transport Function defines the WebRTC signaling interface between the
   </thead>
   <tbody>
     <tr>
-      <td>TBD</td>
+      <td>0x001D</td>
       <td>WebRTC</td>
       <td>WebRTC transport</td>
     </tr>
@@ -148270,22 +148269,28 @@ The WebRTC Transport Function defines the WebRTC signaling interface between the
   </thead>
   <tbody>
     <tr>
-      <td>TBD</td>
+      <td>0x5129</td>
       <td><a href="#ref_WebRTCCurrentSessions">WebRTCCurrentSessions</a></td>
-      <td>M</td>
       <td></td>
+      <td>M</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x512A</td>
       <td><a href="#ref_WebRTCSignalingEvent">WebRTCSignalingEvent</a></td>
-      <td>M</td>
       <td></td>
+      <td>M</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x512B</td>
       <td><a href="#ref_WebRTCSessionStatus">WebRTCSessionStatus</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x5244</td>
+      <td><a href="#ref_WebRTCStreamResolution">WebRTCStreamResolution</a></td>
+      <td></td>
+      <td>O</td>
     </tr>
   </tbody>
 </table>
@@ -148303,40 +148308,52 @@ The WebRTC Transport Function defines the WebRTC signaling interface between the
   </thead>
   <tbody>
     <tr>
-      <td>TBD</td>
+      <td>0x9D8F</td>
       <td><a href="#ref_WebRTCSolicitOffer">WebRTCSolicitOffer</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x9D90</td>
       <td><a href="#ref_WebRTCProvideOffer">WebRTCProvideOffer</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x9D91</td>
       <td><a href="#ref_WebRTCProvideAnswer">WebRTCProvideAnswer</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x9D92</td>
       <td><a href="#ref_WebRTCProvideICECandidates">WebRTCProvideICECandidates</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
+      <td>0x9D93</td>
       <td><a href="#ref_WebRTCEndSession">WebRTCEndSession</a></td>
-      <td>O</td>
       <td></td>
+      <td>O</td>
     </tr>
     <tr>
-      <td>TBD</td>
-      <td><a href="#ref_WebRTCLocalPlaybackSeek">WebRTCLocalPlaybackSeek</a></td>
-      <td>O</td>
+      <td>0x9D94</td>
+      <td>WebRTCLocalPlaybackSeek</td>
       <td></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x9DB9</td>
+      <td><a href="#ref_WebRTCSetResolution">WebRTCSetResolution</a></td>
+      <td></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x9DBA</td>
+      <td><a href="#ref_WebRTCTalk">WebRTCTalk</a></td>
+      <td></td>
+      <td>O</td>
     </tr>
   </tbody>
 </table>
@@ -148345,88 +148362,184 @@ The WebRTC Transport Function defines the WebRTC signaling interface between the
 
 #### WebRTC and CAVSM Dependencies {#ref_WebRTC_CAVSMDependency}
 
-This binding inherits the CAVSM transport stack (ICE / DTLS / SRTP) and adds a file transfer protocol and the local recording binding. The dependency relationship is as follows:
+WebRTC sessions depend on [CameraAVStreamManagement](#ref_Aqara_Spec_CameraAVStreamManagement) to provide allocated audio/video streams. Before initiating `WebRTCProvideOffer` to create a new session or `WebRTCSolicitOffer`, the Client SHALL obtain the `VideoStreamID` and `AudioStreamID` required for this session; WebRTC signaling negotiation does not replace stream allocation.
 
-* CAVSM owns the peer connection, the session lifecycle, the Offer / Answer exchange, the camera data path (ICE / DTLS / SRTP), and the SDP `m=video` description. This binding reuses them as-is; the protocol data (SDP, candidate pairs, DTLS fingerprint) is managed by CAVSM, and this binding does not define a second set.
-* The file transfer protocol defines the transfer of file bytes between the App and the device. This binding defines the SDP extension lines `m=application` and the DataChannel; the file transfer protocol is used for the bytes on label `aqara.download`.
-* This binding inherits the camera data path of CAVSM (the same peer connection, the same DTLS session, and the same ICE pair); the SCTP association runs on the same DTLS session and uses the same fingerprint and certificate as the media.
-* This binding does not define SIP; SIP exists only in the signaling of CAVSM. In [WebRTCProvideOffer](#ref_WebRTC_FlowProvideOffer), SIP INVITE (if any) follows CAVSM semantics.
+1. The Client SHALL query [CAVSMMicrophoneCapabilities](#ref_CAVSMMicrophoneCapabilities), [CAVSMVideoSensorParams](#ref_CAVSMVideoSensorParams), [CAVSMRateDistortionTradeOffPoints](#ref_CAVSMRateDistortionTradeOffPoints), [CAVSMAllocatedAudioStreams](#ref_CAVSMAllocatedAudioStreams) and [CAVSMAllocatedVideoStreams](#ref_CAVSMAllocatedVideoStreams) to obtain the audio/video capabilities and the list of allocated streams.
+1. The Client SHALL determine the audio/video stream parameters based on the above capabilities and the requirements of this session. Audio parameters include `AudioCodec`, `ChannelCount`, `SampleRate`, `BitDepth`, and `BitRate`; the codec, channel count, sample rate, and bit depth SHALL satisfy the microphone capability constraints. Video parameters include `VideoCodec`, frame rate, resolution range, bit rate range, and key frame interval; the resolution and frame rate SHALL satisfy the constraints of `CAVSMVideoSensorParams`, the `VideoCodec` and resolution tier SHALL be selected according to the `Codec` and `Resolution` of `CAVSMRateDistortionTradeOffPoints`, and the bit rate MAY reference the `MinBitRate` of the corresponding tier. For fixed resolution, both `MinResolution` and `MaxResolution` are set to the selected tier; when multi-tier switching is required, they are set to the lower and upper bounds of the required tier range, respectively.
+1. The Client SHALL determine, based on the `StreamUsage` of this session and the determined audio/video parameters, whether the list already contains a reusable audio stream and video stream; if a matching stream already exists, reuse its ID and skip the corresponding Allocate step.
+1. When no matching video stream exists, the Client SHALL call [CAVSMVideoStreamAllocate](#ref_CAVSMVideoStreamAllocate) with the determined video parameters; when no matching audio stream exists, the Client SHALL call [CAVSMAudioStreamAllocate](#ref_CAVSMAudioStreamAllocate) with the determined audio parameters.
+1. The Client SHALL wait for the allocation of all required streams to succeed and obtain the stream IDs from the responses, then initiate the WebRTC session; if any required stream allocation fails, it SHALL NOT continue connection establishment using the result of that failed allocation.
+1. The Client SHALL fill the obtained video stream IDs into `VideoStreams` and the audio stream IDs into `AudioStreams`. The referenced streams SHALL have been allocated on the Server, and their `StreamUsage` SHALL be consistent with this session; when only one medium is used, only the stream IDs of the corresponding type need to be prepared and carried.
+
+The following pre-interactions apply to both `LiveView` and `LocalPlayback`; when only one medium is used, skip the capability query, parameter selection, list query, and matching and allocation steps for the other medium.
+
+```mermaid
+sequenceDiagram
+    participant Client as Client
+    participant Server as Server
+
+    Client->>Server: Read CAVSMMicrophoneCapabilities, CAVSMVideoSensorParams, CAVSMRateDistortionTradeOffPoints, CAVSMAllocatedAudioStreams, CAVSMAllocatedVideoStreams
+    Server-->>Client: Audio/video capabilities, allocated audio stream list, allocated video stream list
+    Client->>Client: Determine audio and video parameters based on capabilities and session requirements
+
+    alt Matching video stream exists
+        Client->>Client: Reuse VideoStreamID
+    else No matching video stream
+        Client->>Server: CAVSMVideoStreamAllocate(StreamUsage, VideoCodec, MinResolution, MaxResolution, other video parameters)
+        Server-->>Client: Allocate Response(SUCCESS, VideoStreamID)
+    end
+
+    alt Matching audio stream exists
+        Client->>Client: Reuse AudioStreamID
+    else No matching audio stream
+        Client->>Server: CAVSMAudioStreamAllocate(StreamUsage, audio parameters)
+        Server-->>Client: Allocate Response(SUCCESS, AudioStreamID)
+    end
+
+    Note over Client,Server: Initiate the WebRTC session only after all required streams are allocated and IDs are obtained
+```
 
 #### WebRTCProvideOffer Flow {#ref_WebRTC_FlowProvideOffer}
 
-App as the offerer:
+The Client first completes the [CameraAVStreamManagement pre-interaction](#ref_WebRTC_CAVSMDependency), then generates and submits the SDP Offer; the Server returns the Answer.
 
 ```mermaid
 sequenceDiagram
-    participant App as App
-    participant Dev as Camera
+    participant Client as Client
+    participant Server as Server
 
-    Note over App,Dev: 1. Fetch candidate pairs and fingerprints, and obtain an authorization ticket
-    App->>Dev: CAVSM obtains tickets and candidate pairs
-    Dev-->>App: Return the ticket and candidate pair information
+    par SDP
+        Client->>Server: Send Cmd WebRTCProvideOffer(offerSdp, VideoStreams, AudioStreams)
+        Server-->>Client: WebRTCProvideOffer Response(sessionId)
+        Server-->>Client: Report WebRTCSignalingEvent(Answer)
+    end
 
-    Note over App,Dev: 2. Create the offer SDP
-    App->>Dev: Offer (m=video, m=application)
+    par ICE
+        Server-->>Client: Report WebRTCSignalingEvent(ICE)
+        Client->>Server: Send Cmd WebRTCProvideICECandidates
+        Server-->>Client: WebRTCProvideICECandidates Response
+    end
 
-    Note over App,Dev: 3. Establish the session
-    Dev-->>App: Answer (m=video, m=application)
-    Note over App,Dev: ICE / DTLS / SRTP / SCTP come up
-    Note over App,Dev: 4. DataChannel opens
-    App->>Dev: DATA_CHANNEL_OPEN
-    Dev-->>App: DATA_CHANNEL_ACK
-    Note over App,Dev: 5. Command channel available
-    App->>Dev: WebRTCProvideOffer Command on aqara.control
-    Dev-->>App: ComplexACK with Status
+    Note over Client,Server: WebRTC media (bidirectional, P2P/TURN)
+
+    par Client-initiated termination
+        Client->>Server: Cmd WebRTCEndSession
+    end
+
+    par Server-initiated termination
+        Server-->>Client: Report WebRTCSignalingEvent(End)
+    end
 ```
-
-App as the offerer initiates the command on label `aqara.control` after the DataChannel is open: request OpCode `0x008D`, response OpCode `0x038D`.
 
 #### WebRTCSolicitOffer Flow {#ref_WebRTC_FlowSolicitOffer}
 
-App as the offer solicitor:
+The Client first completes the [CameraAVStreamManagement pre-interaction](#ref_WebRTC_CAVSMDependency). This flow applies to scenarios such as wake-up from standby; the Server delivers the Offer deferred, and the Client then submits the Answer.
 
 ```mermaid
 sequenceDiagram
-    participant App as App
-    participant Dev as Camera
+    participant Client as Client
+    participant Server as Server
 
-    Note over App,Dev: 1. Fetch candidate pairs and fingerprints, and obtain an authorization ticket
-    App->>Dev: CAVSM obtains tickets and candidate pairs
-    Dev-->>App: Return the ticket and candidate pair information
+    Client->>Server: Send Cmd WebRTCSolicitOffer(VideoStreams, AudioStreams)
+    Note over Server: Wake from standby
+    Server-->>Client: WebRTCSolicitOffer Response(sessionId, deferredOffer)
+    Server-->>Client: Report WebRTCSignalingEvent(Offer)
+    Client->>Client: Generate answerSdp
+    Client->>Server: Send Cmd WebRTCProvideAnswer(answerSdp)
+    Server-->>Client: WebRTCProvideAnswer Response
 
-    Note over App,Dev: 2. Solicit the offer
-    App->>Dev: WebRTCSolicitOffer Command
-    Dev-->>App: ComplexACK with Status
+    par ICE
+        Server-->>Client: Report WebRTCSignalingEvent(ICE)
+        Client->>Server: Send Cmd WebRTCProvideICECandidates
+        Server-->>Client: WebRTCProvideICECandidates Response
+    end
 
-    Note over App,Dev: 3. Device answers
-    App->>Dev: Create the offer SDP
-    Dev-->>App: Answer (m=video, m=application)
-    Note over App,Dev: ICE / DTLS / SRTP / SCTP come up
+    Note over Client,Server: WebRTC media (bidirectional, P2P/TURN)
 
-    Note over App,Dev: 4. DataChannel opens
-    App->>Dev: DATA_CHANNEL_OPEN
-    Dev-->>App: DATA_CHANNEL_ACK
-    Note over App,Dev: 5. Command channel available
-    App->>Dev: WebRTCProvideOffer Command on aqara.control
-    Dev-->>App: ComplexACK with Status
+    par Client-initiated termination
+        Client->>Server: Cmd WebRTCEndSession
+    end
+
+    par Server-initiated termination
+        Server-->>Client: Report WebRTCSignalingEvent(End)
+    end
 ```
 
-When the App is the offer solicitor, the subsequent session establishment is the same as in [WebRTCProvideOffer](#ref_WebRTC_FlowProvideOffer): after ICE / DTLS / SRTP / SCTP come up, the DataChannel opens, and then the WebRTCProvideOffer Command is invoked on label `aqara.control` (request OpCode `0x008D`, response OpCode `0x038D`). After `SUCCESS`, the session enters the established state, media flows, and [WebRTCStreamResolution](#ref_WebRTCStreamResolution) is reported. The session is established in the local playback usage, live view usage, or specified video stream usage requested by the App.
+#### Resolution Switching
+
+The Client SHALL use the `WebRTCSetResolution` Command to switch one `VideoStreamID` bound to this session to the target resolution.
+
+##### Switching Conditions
+
+* `VideoStreamID` SHALL be a `StreamUsage=LiveView` stream bound to this session, and the `MinResolution` of that stream SHALL be less than `MaxResolution`.
+* The target `Resolution` SHALL fall between the `MinResolution` and `MaxResolution` of that stream, and SHALL be one of the tiers in `CAVSMRateDistortionTradeOffPoints`.
+* Playback sessions with `StreamUsage=LocalPlayback` do not support resolution switching.
+
+##### Switching Flow and Result
+
+This flow assumes a WebRTC session has been established with a video stream that supports resolution switching bound, and applies to both connection methods, the [WebRTCProvideOffer Flow](#ref_WebRTC_FlowProvideOffer) and the [WebRTCSolicitOffer Flow](#ref_WebRTC_FlowSolicitOffer).
+
+```mermaid
+sequenceDiagram
+    participant Client as Client
+    participant Server as Server
+
+    Note over Client,Server: Session established, target VideoStreamID bound
+    Client->>Server: WebRTCSetResolution(VideoStreamID, Resolution)
+    Server-->>Client: Response(Status: SUCCESS or failure status)
+    alt Status is SUCCESS
+        Server->>Server: Switch to the specified resolution
+        Server-->>Client: IDR at the specified resolution on the same SSRC (carrying the new SPS)
+        Server-->>Client: aqara.control WebRTCStreamResolution (target stream at the specified resolution)
+    else Status is a failure status
+        Note over Client,Server: Keep the original resolution
+    end
+```
+
+Resolution switching:
+
+1. The Client sends `WebRTCSetResolution`, carrying `VideoStreamID` and the target `Resolution`.
+1. The Server validates the request per the [WebRTCSetResolution](#ref_WebRTCSetResolution) Command definition and returns a success or failure response.
+1. After returning `SUCCESS`, the Server SHALL switch the target stream to the specified resolution, keeping `VideoStreamID` and SSRC unchanged; the new resolution starts from a new IDR, and the IDR carries the new SPS. After the new-tier IDR is sent, the current resolutions being sent for each video stream of this session SHALL be reported via [WebRTCStreamResolution](#ref_WebRTCStreamResolution), and the target stream SHALL be at the specified resolution.
+1. When the request fails, the Server SHALL return the corresponding non-`SUCCESS` status and keep the original resolution; it SHALL NOT return `SUCCESS` and then keep the original tier on the grounds that the target-tier IDR was not observed.
+
+If the target is the current resolution and no switching is in progress, the Server SHALL return `SUCCESS` and immediately report `WebRTCStreamResolution` once.
+
+Each `WebRTCStreamResolution` report SHALL carry the complete video stream resolution list of this session, and the other unaffected streams keep their original values. The Client SHALL confirm the actual resolution based on the reported values.
 
 #### Local SD Card Recording Playback
 
-The previous content is the general part of WebRTC. The following is the binding of local SD card recording playback.
+This section only defines the establishment of **playback sessions**. The Server maintains only one local recording file; the Client initiates a `LocalPlayback` session to play back that file, without carrying a source clip identifier. Playback control and recording queries are in [Playback](#ref_Aqara_Spec_Playback).
 
-Local SD card recording playback is an Aqara WebRTC binding that plays local recording files stored on the camera's SD card through WebRTC, including playback of local recording files and downloads of local recording index / recording files.
+##### Playback Session Establishment Flow
 
-Session usage:
+```mermaid
+sequenceDiagram
+    participant Client as Client
+    participant Server as Server
 
-* Local playback: `WebRTCProvideOffer` with `StreamUsage=LocalPlayback`, only one such session is allowed at a time; establishing another while one is active returns `RESOURCE_EXHAUSTED`. The session is also bound to label `aqara.download`, on which the App obtains the bytes of the local recording index and recording files via the file transfer protocol. At most one playback session in this usage can be active in one peer connection; the second one returns `RESOURCE_EXHAUSTED`.
-* Live view: a session in live view usage does not have the local recording binding; it only provides the media path, and label `aqara.download` is not bound to it. In live view usage, [LocalRecordQuery](#ref_LocalRecordQuery) and [LocalPlaybackControl](#ref_LocalPlaybackControl) are unavailable; the Commands return `INVALID_IN_STATE`.
+    Note over Client,Server: 1. Allocate playback streams (CAVSM)
+    Client->>Server: CAVSMVideoStreamAllocate(StreamUsage=LocalPlayback)
+    Client->>Server: CAVSMAudioStreamAllocate(StreamUsage=LocalPlayback)
+    Server-->>Client: Report stream IDs
 
-Playback control: see [LocalPlaybackControl](#ref_LocalPlaybackControl).
+    Note over Client,Server: 2. Establish the WebRTC session
+    Client->>Server: WebRTCProvideOffer(StreamUsage=LocalPlayback, VideoStreams, AudioStreams, MetadataEnabled=true)
+    Server-->>Client: Response SessionId
+    Server-->>Client: Report WebRTCSignalingEvent(Answer)
 
-Recording queries: see [LocalRecordQuery](#ref_LocalRecordQuery).
+    Note over Client,Server: 3. DataChannel
+    Client->>Server: open aqara.control and aqara.download
+
+    Note over Client,Server: 4. Playback control
+    Server-->>Client: RTP playback
+    Client->>Server: LocalPlaybackControl
+    Server-->>Client: Status and current position
+
+    Client->>Server: WebRTCEndSession
+```
+
+*Note:* With `StreamUsage=LocalPlayback`, `MetadataEnabled=true` SHALL be set so that the DataChannel can be opened on this PeerConnection. Resolution, playback control, and recording queries within the session go through `InvokeCommand` on `aqara.control`; recording file bytes go through the file transfer business interaction protocol on `aqara.download`. Definitions of playback control, recording index, and recording file download are in [Playback](#ref_Aqara_Spec_Playback). Carriage is via DataChannel.
 
 ### Function Identification
 
@@ -149450,70 +149563,6 @@ Request parameter structure of the WebRTCEndSession Command.
   </tbody>
 </table>
 
-##### WebRTCLocalPlaybackSeek Command Structure Type {#ref_WebRTCLocalPlaybackSeekCommandStructure}
-
-Request parameter structure of the WebRTCLocalPlaybackSeek Command.
-
-<table>
-  <thead>
-    <tr>
-      <th>Structure Member Index</th>
-      <th>Field Name</th>
-      <th>Type</th>
-      <th>Required</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>0</td>
-      <td>SessionId</td>
-      <td>uint16</td>
-      <td>M</td>
-      <td>Playback session ID.</td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>Timestamp</td>
-      <td>uint32</td>
-      <td>M</td>
-      <td>Target UTC timestamp (4 bytes), aligned with the recording tag <code>Timestamp</code>.</td>
-    </tr>
-  </tbody>
-</table>
-
-##### WebRTCLocalPlaybackSeekResponse Command Structure Type {#ref_WebRTCLocalPlaybackSeekResponseCommandStructure}
-
-Response parameter structure of the WebRTCLocalPlaybackSeek Command.
-
-<table>
-  <thead>
-    <tr>
-      <th>Structure Member Index</th>
-      <th>Field Name</th>
-      <th>Type</th>
-      <th>Required</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>0</td>
-      <td>Status</td>
-      <td><a href="#ref_StatusCodeEnum8">StatusCodeEnum8</a></td>
-      <td>M</td>
-      <td>Processing status.</td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>SessionId</td>
-      <td>uint16</td>
-      <td>M</td>
-      <td>Playback session ID.</td>
-    </tr>
-  </tbody>
-</table>
-
 ### Trait Definitions
 
 <table>
@@ -149896,49 +149945,6 @@ The gateway SHALL **Report** this Trait at the following moments:
 
 :::
 
-### Command Definitions
-
-<table>
-  <thead>
-    <tr>
-      <th>Command ID</th>
-      <th>Name</th>
-      <th>Conformance</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>TBD</td>
-      <td><a href="#ref_WebRTCSolicitOffer">WebRTCSolicitOffer</a></td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>TBD</td>
-      <td><a href="#ref_WebRTCProvideOffer">WebRTCProvideOffer</a></td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>TBD</td>
-      <td><a href="#ref_WebRTCProvideAnswer">WebRTCProvideAnswer</a></td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>TBD</td>
-      <td><a href="#ref_WebRTCProvideICECandidates">WebRTCProvideICECandidates</a></td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>TBD</td>
-      <td><a href="#ref_WebRTCEndSession">WebRTCEndSession</a></td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>TBD</td>
-      <td><a href="#ref_WebRTCLocalPlaybackSeek">WebRTCLocalPlaybackSeek</a></td>
-      <td>O</td>
-    </tr>
-  </tbody>
-</table>
 
 #### WebRTCStreamResolution Trait {#ref_WebRTCStreamResolution}
 
@@ -149997,6 +150003,58 @@ Path: the Server SHALL send it on the session's `aqara.control` with ProtocolID 
 
 ### Command Definitions
 
+<table>
+  <thead>
+    <tr>
+      <th>Command ID</th>
+      <th>Name</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x9D8F</td>
+      <td><a href="#ref_WebRTCSolicitOffer">WebRTCSolicitOffer</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x9D90</td>
+      <td><a href="#ref_WebRTCProvideOffer">WebRTCProvideOffer</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x9D91</td>
+      <td><a href="#ref_WebRTCProvideAnswer">WebRTCProvideAnswer</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x9D92</td>
+      <td><a href="#ref_WebRTCProvideICECandidates">WebRTCProvideICECandidates</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x9D93</td>
+      <td><a href="#ref_WebRTCEndSession">WebRTCEndSession</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x9D94</td>
+      <td>WebRTCLocalPlaybackSeek</td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x9DB9</td>
+      <td><a href="#ref_WebRTCSetResolution">WebRTCSetResolution</a></td>
+      <td>O</td>
+    </tr>
+    <tr>
+      <td>0x9DBA</td>
+      <td><a href="#ref_WebRTCTalk">WebRTCTalk</a></td>
+      <td>O</td>
+    </tr>
+  </tbody>
+</table>
+
 #### WebRTCSolicitOffer Command {#ref_WebRTCSolicitOffer}
 
 Requests the device to initiate a WebRTC Offer. When `DeferredOffer=true`, the subsequent Offer is delivered via the **Report** `WebRTCSignalingEvent`, and the App then sends `WebRTCProvideAnswer`.
@@ -150027,8 +150085,8 @@ When `StreamUsage=LocalPlayback`:
 
 * SHALL set `MetadataEnabled=true`.
 * `VideoStreams` / `AudioStreams` SHALL be CAVSM allocated stream IDs with `StreamUsage=LocalPlayback`.
-* `CAVSMLocalVideoRecordingEnabled` SHALL be `true`, and the device SHALL have a readable local recording file; otherwise return `INVALID_IN_STATE` or `NOT_FOUND`.
-* The device SHALL play back the single local recording file, starting from the beginning of the file or a resume position defined by the implementation.
+* The Server SHALL have a readable local recording file; otherwise return `INVALID_IN_STATE` or `NOT_FOUND`.
+* The Server SHALL play back the single local recording file, starting from the beginning of the file or a resume position defined by the implementation.
 
 :::
 
@@ -150064,192 +150122,9 @@ Ends a WebRTC session.
 
 [WebRTCEndSession Command Structure](#ref_WebRTCEndSessionCommandStructure)
 
-#### WebRTCLocalPlaybackSeek Command {#ref_WebRTCLocalPlaybackSeek}
-
-Seeks to a specified time point in a local SD card recording playback session.
-
-##### Parameters
-
-[WebRTCLocalPlaybackSeek Command Structure](#ref_WebRTCLocalPlaybackSeekCommandStructure)
-
-##### Response
-
-[WebRTCLocalPlaybackSeekResponse Command Structure](#ref_WebRTCLocalPlaybackSeekResponseCommandStructure)
-
-:::note
-
-Only applies to active sessions with `StreamUsage=LocalPlayback`. After receiving this Command, the device SHALL seek to the position corresponding to `Timestamp` in local storage and send a new key frame RTP.
-
-**Parameter Validation**
-
-<table>
-  <thead>
-    <tr>
-      <th>Parameter</th>
-      <th>Validation Rule</th>
-      <th>Failure Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>SessionId</td>
-      <td>SHALL be an existing session with <code>StreamUsage=LocalPlayback</code></td>
-      <td>NOT_FOUND</td>
-    </tr>
-    <tr>
-      <td>Timestamp</td>
-      <td>SHALL correspond to a locatable time point in the local recording</td>
-      <td>NOT_FOUND</td>
-    </tr>
-  </tbody>
-</table>
-
-* Session does not exist or is not a playback session -> return `NOT_FOUND`.
-* `Timestamp` cannot be mapped to a position in the local recording -> return `NOT_FOUND`.
-* Validation passed -> perform the seek, return `SUCCESS`; the device sends IDR.
-
-:::
-
-#### Additional Protocol {#ref_WebRTC_Additional_Protocol}
-
-This section defines the additional protocol carried on the WebRTC **DataChannel** media plane, not transmitted through Aqara Spec Commands / Reports. When `MetadataEnabled=true`, the App and the device send binary messages **streamingly** over the established WebRTC connection. It is currently used to push **recording tags** in the `StreamUsage=LocalPlayback` scenario.
-
-##### Transmission Conventions
-
-* The byte order of message encoding SHALL be network byte order.
-* Each message consists of a [common header](#ref_PlaybackMetadataHeaderStruct) and a payload; no fragmentation, and the payload is fully carried within a single message.
-* The device MAY send multiple consecutive messages to streamingly update the recording tag list; the App SHALL parse and merge them in the order received.
-* The DataChannel uses the SCTP channel established through WebRTC negotiation, sharing the same ICE connection as the RTP media, and is not forwarded through the cloud.
-
-##### Data Types
-
-###### PlaybackMetadataMessageTypeEnum {#ref_PlaybackMetadataMessageTypeEnum}
-
-**Processing Logic**
-
-<table>
-  <thead>
-    <tr>
-      <th>Value</th>
-      <th>Name</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>0</td>
-      <td>RecordingTags</td>
-      <td>Recording tag list</td>
-    </tr>
-  </tbody>
-</table>
-
-###### RecordingTagTypeEnum {#ref_RecordingTagTypeEnum}
-
-<table>
-  <thead>
-    <tr>
-      <th>Value</th>
-      <th>Name</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>0</td>
-      <td>FullRecording</td>
-      <td>Always-on recording</td>
-    </tr>
-    <tr>
-      <td>1</td>
-      <td>EventTriggered</td>
-      <td>Event triggered</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>AlarmRecord</td>
-      <td>Alarm recording</td>
-    </tr>
-  </tbody>
-</table>
-
-###### RecordingTagStruct {#ref_RecordingTagStruct}
-
-Single recording tag; the payload is an array of `RecordingTagStruct`, with the entry count = `PayloadLength / 8`.
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value/Description</th>
-      <th>Format</th>
-      <th>Required</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Timestamp(0)</td>
-      <td>Recording start UTC timestamp</td>
-      <td>Uint32 (4 bytes)</td>
-      <td>M</td>
-    </tr>
-    <tr>
-      <td>Len(1)</td>
-      <td>Recording duration</td>
-      <td>Uint24 (3 bytes, little-endian)</td>
-      <td>M</td>
-    </tr>
-    <tr>
-      <td>Type(2)</td>
-      <td>Tag type</td>
-      <td><a href="#ref_RecordingTagTypeEnum">RecordingTagTypeEnum</a> (1 byte)</td>
-      <td>M</td>
-    </tr>
-  </tbody>
-</table>
-
-*Note:* Each `RecordingTagStruct` is fixed at **8 bytes**: `Timestamp`(4) + `Len`(3) + `Type`(1). The unit of `Len` is defined by the device implementation and SHALL be agreed with the App in the device documentation.
-
-###### PlaybackMetadataHeaderStruct {#ref_PlaybackMetadataHeaderStruct}
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value/Description</th>
-      <th>Format</th>
-      <th>Required</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Version(0)</td>
-      <td>Protocol version, currently 1</td>
-      <td>Uint8</td>
-      <td>M</td>
-    </tr>
-    <tr>
-      <td>MessageType(1)</td>
-      <td>Message type</td>
-      <td><a href="#ref_PlaybackMetadataMessageTypeEnum">PlaybackMetadataMessageTypeEnum</a></td>
-      <td>M</td>
-    </tr>
-    <tr>
-      <td>PayloadLength(2)</td>
-      <td>Payload byte length</td>
-      <td>Uint32</td>
-      <td>M</td>
-    </tr>
-  </tbody>
-</table>
-
-##### Message Payload
-
-When `MessageType=RecordingTags`, the payload SHALL be a continuous array of `RecordingTagStruct` with a length of `PayloadLength` bytes; `PayloadLength` SHALL be an integer multiple of 8.
-
 #### WebRTCTalk Command {#ref_WebRTCTalk}
 
-Session-level talk switch. The Server allows only one session with talk open at a time. The `InvokeCommand` forwarded by COIP and the `InvokeCommand` on that session's `aqara.control` use the same [WebRTCTalk Command Structure](#ref_WebRTCTalkCommandStructure). The request OpCode is `0x008D` and the response OpCode is `0x038D`.
+Session-level talk switch. The Server allows only one session to have talk open at a time. The `InvokeCommand` forwarded by COIP and the `InvokeCommand` on this session's `aqara.control` use the same [WebRTCTalk Command Structure](#ref_WebRTCTalkCommandStructure). Request OpCode `0x008D`, response OpCode `0x038D`.
 
 ##### Parameters
 
@@ -150257,35 +150132,35 @@ Session-level talk switch. The Server allows only one session with talk open at 
 
 ##### Response
 
-[WebRTCTalk Response Command Structure](#ref_WebRTCTalkResponseCommandStructure), with `Status` values:
+[WebRTCTalk Response Command Structure](#ref_WebRTCTalkResponseCommandStructure), where `Status` takes the following values:
 
 <table>
   <thead>
     <tr>
       <th>Status</th>
-      <th>Meaning</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td><code>SUCCESS</code></td>
-      <td>The <code>SessionId</code> has been opened and occupied, or closed and released. It also succeeds when the session is already in the target state</td>
+      <td>The <code>SessionId</code> has been opened and occupied, or closed and released. It also succeeds when the session is already in the target state.</td>
     </tr>
     <tr>
       <td><code>NOT_FOUND</code></td>
-      <td><code>SessionId</code> is not an active session. When it arrives from the DataChannel and is inconsistent with the session to which that channel belongs, this value is also taken</td>
+      <td><code>SessionId</code> is not an active session. When it arrives from the DataChannel, a mismatch with the session to which that channel belongs also takes this value.</td>
     </tr>
     <tr>
       <td><code>INVALID_IN_STATE</code></td>
-      <td>The Server does not support talk, or the session is not <code>LiveView</code></td>
+      <td>The Server does not support talk, or the session is not <code>LiveView</code>.</td>
     </tr>
     <tr>
       <td><code>INVALID_COMMAND</code></td>
-      <td><code>Enabled</code> is missing. When it arrives from COIP without <code>SessionId</code>, this value is also taken</td>
+      <td><code>Enabled</code> is missing. When it arrives from COIP without <code>SessionId</code>, this value is also taken.</td>
     </tr>
     <tr>
       <td><code>RESOURCE_EXHAUSTED</code></td>
-      <td>Talk is already occupied by another session, and this <code>SessionId</code> cannot be opened</td>
+      <td>Talk is already occupied by another session, and the <code>SessionId</code> cannot be opened.</td>
     </tr>
   </tbody>
 </table>
@@ -150294,15 +150169,15 @@ Session-level talk switch. The Server allows only one session with talk open at 
 
 * When it arrives from `aqara.control` without `SessionId`, the session is the one to which that channel belongs. A carried inconsistent `SessionId` -> return `NOT_FOUND`. When it arrives from COIP, `SessionId` SHALL be carried; omission -> return `INVALID_COMMAND`.
 * `Enabled=true` and not yet occupied -> this session occupies, return `SUCCESS`.
-* Opening again while this session already occupies -> return `SUCCESS`; it does not constitute a second occupation.
-* Opening while another session occupies -> return `RESOURCE_EXHAUSTED`. This session stays closed and does not preempt.
-* The occupier sends `Enabled=false` -> release, return `SUCCESS`.
-* A non-occupier sends `Enabled=false` -> return `SUCCESS`, and the occupier is not released.
-* The occupier's `WebRTCEndSession`, its DataChannel closing, or the PeerConnection ending -> release the occupation.
+* Opening again when this session has already occupied -> return `SUCCESS`; it does not constitute a second occupation.
+* Opening when another session has already occupied -> return `RESOURCE_EXHAUSTED`. This session stays closed and does not preempt.
+* The occupant sends `Enabled=false` -> release, return `SUCCESS`.
+* A non-occupant sends `Enabled=false` -> return `SUCCESS`; the occupant is not released.
+* The occupant's `WebRTCEndSession`, its DataChannel closing, or the PeerConnection ending -> release the occupation.
 
 #### WebRTCSetResolution Command {#ref_WebRTCSetResolution}
 
-Switches a bound `VideoStreamID` of this session to the target resolution. The switch does not change the SSRC; the new resolution starts from the new IDR of that stream, and the IDR carries the new SPS. After returning `SUCCESS`, the switch to the specified resolution SHALL be completed, and the actual resolution is reported by [WebRTCStreamResolution](#ref_WebRTCStreamResolution); on failure, a non-`SUCCESS` status is returned and the original resolution is kept.
+Switches one `VideoStreamID` bound to this session to the target resolution. The switch does not change the SSRC; the new resolution starts from the new IDR of that stream, and the IDR carries the new SPS. After returning `SUCCESS`, the Server SHALL complete the switch to the specified resolution, and the actual resolution is reported by [WebRTCStreamResolution](#ref_WebRTCStreamResolution); on request failure, a non-`SUCCESS` status is returned and the original resolution is kept.
 
 ##### Parameters
 
@@ -150310,35 +150185,35 @@ Switches a bound `VideoStreamID` of this session to the target resolution. The s
 
 ##### Response
 
-[WebRTCSetResolutionResponse Command Structure](#ref_WebRTCSetResolutionResponseCommandStructure), with `Status` values:
+[WebRTCSetResolutionResponse Command Structure](#ref_WebRTCSetResolutionResponseCommandStructure), where `Status` takes the following values:
 
 <table>
   <thead>
     <tr>
       <th>Status</th>
-      <th>Meaning</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td><code>SUCCESS</code></td>
-      <td>The request succeeded; the Server SHALL switch to the specified resolution. When the target is already the current resolution, it keeps it and reports immediately</td>
+      <td>The request succeeds; the Server SHALL switch to the specified resolution. When the target is already the current resolution, keep it and report immediately.</td>
     </tr>
     <tr>
       <td><code>NOT_FOUND</code></td>
-      <td><code>SessionId</code> is not an active session, or the target ID is not in that session. A <code>SessionId</code> inconsistent with the channel carried on the DataChannel also takes this value</td>
+      <td><code>SessionId</code> is not an active session, or the target ID is not in this session. A <code>SessionId</code> carried on the DataChannel that is inconsistent with that channel also takes this value.</td>
     </tr>
     <tr>
       <td><code>INVALID_IN_STATE</code></td>
-      <td>The stream cannot be switched (<code>MinResolution</code> = <code>MaxResolution</code>, non-<code>LiveView</code>, or a playback session)</td>
+      <td>This stream cannot be switched (<code>MinResolution</code> = <code>MaxResolution</code>, non-<code>LiveView</code>, playback session).</td>
     </tr>
     <tr>
       <td><code>INVALID_COMMAND</code></td>
-      <td>The target resolution exceeds the Min/Max of that ID, or is not a tier of the capability set. When it arrives from COIP without <code>SessionId</code>, this value is also taken</td>
+      <td>The target resolution exceeds the Min/Max of that ID, or is not a tier of the capability set. When it arrives from COIP without <code>SessionId</code>, this value is also taken.</td>
     </tr>
     <tr>
       <td><code>RESOURCE_EXHAUSTED</code></td>
-      <td>The command queue is full</td>
+      <td>The command queue is full.</td>
     </tr>
   </tbody>
 </table>
@@ -150357,7 +150232,6 @@ Switches a bound `VideoStreamID` of this session to the target resolution. The s
 
 The transport, channels, messages, and file transfer binding of the in-session DataChannel are described in DataChannel.
 
-<a id="ref_WebRTC_DataChannel"></a>
 ## DataChannel {#ref_WebRTC_附加协议}
 
 ### Overview
