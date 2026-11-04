@@ -94,6 +94,7 @@ Resolve site-relative links against this index's origin. Copy llms.txt on the pa
 - Hub AX200M: /docs/aqara-studio/product-knowledge/gateways/hub-ax200m
 - Hub M3 Pro: /docs/aqara-studio/product-knowledge/gateways/hub-m3-pro
 - Hub M100 Pro: /docs/aqara-studio/product-knowledge/gateways/hub-m100-pro
+- Edge Box GX500M: /docs/aqara-studio/product-knowledge/gateways/edge-box-gx500m
 - Presence Sensor PR330P: /docs/aqara-studio/product-knowledge/sensors/presence-sensor-pr330p
 - Spatial Multi-Sensor FP400: /docs/aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400
 - Spatial Multi-Sensor FP400 Pro: /docs/aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400-pro
