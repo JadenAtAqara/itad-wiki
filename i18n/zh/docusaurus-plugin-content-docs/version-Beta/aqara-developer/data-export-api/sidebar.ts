@@ -76,8 +76,14 @@ const sidebar: SidebarsConfig = {
         },
         {
           type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/batch-device-capabilities",
+          label: "批量查询设备匹配能力及 trait 当前值",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/get-matched-device-capabilities",
-          label: "查询设备匹配能力",
+          label: "查询单个设备匹配能力",
           className: "api-method get",
         },
         {

@@ -76,8 +76,14 @@ const sidebar: SidebarsConfig = {
         },
         {
           type: "doc",
+          id: "version-Beta/aqara-developer/data-export-api/batch-device-capabilities",
+          label: "Batch Query Device Matching Capabilities and Current Trait Values",
+          className: "api-method post",
+        },
+        {
+          type: "doc",
           id: "version-Beta/aqara-developer/data-export-api/get-matched-device-capabilities",
-          label: "Query Device Matching Capabilities",
+          label: "Query Single Device Matching Capabilities",
           className: "api-method get",
         },
         {
