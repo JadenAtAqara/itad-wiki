@@ -29,7 +29,8 @@ Resolve site-relative links against this index's origin. Copy llms.txt on the pa
 - List Devices: /docs/aqara-developer/data-export-api/get-devices
 - Query Device Definitions (Device Details): /docs/aqara-developer/data-export-api/get-device-definitions
 - Get Device Filter Options: /docs/aqara-developer/data-export-api/get-device-filter-options
-- Query Device Matching Capabilities: /docs/aqara-developer/data-export-api/get-matched-device-capabilities
+- Query Single Device Matching Capabilities: /docs/aqara-developer/data-export-api/get-matched-device-capabilities
+- Batch Query Device Matching Capabilities and Current Trait Values: /docs/aqara-developer/data-export-api/batch-device-capabilities
 - Control Devices by Traits: /docs/aqara-developer/data-export-api/execute-device-trait
 - Query Trait Values: /docs/aqara-developer/data-export-api/get-trait-values
 - Control Devices by Commands: /docs/aqara-developer/data-export-api/execute-device-command

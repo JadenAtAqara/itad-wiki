@@ -29,7 +29,8 @@
 - 查询设备信息列表: /zh/docs/aqara-developer/data-export-api/get-devices
 - 查询设备定义（设备详细信息）: /zh/docs/aqara-developer/data-export-api/get-device-definitions
 - 获取设备筛选选项: /zh/docs/aqara-developer/data-export-api/get-device-filter-options
-- 查询设备匹配能力: /zh/docs/aqara-developer/data-export-api/get-matched-device-capabilities
+- 查询单个设备匹配能力: /zh/docs/aqara-developer/data-export-api/get-matched-device-capabilities
+- 批量查询设备匹配能力及 trait 当前值: /zh/docs/aqara-developer/data-export-api/batch-device-capabilities
 - 通过 Trait 控制设备: /zh/docs/aqara-developer/data-export-api/execute-device-trait
 - 查询 Trait 值: /zh/docs/aqara-developer/data-export-api/get-trait-values
 - 通过 Command 控制设备: /zh/docs/aqara-developer/data-export-api/execute-device-command

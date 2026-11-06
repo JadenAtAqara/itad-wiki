@@ -716,9 +716,132 @@ paths:
   # Query Device Matching Capabilities
   # ────────────────────────────────────────────────────────────────
   /devices/capabilities:
+    post:
+      tags:
+      - Device
+      summary: Batch Query Device Matching Capabilities and Current Trait Values
+      description: 'Batch-query matching capabilities for the explicit `deviceIds` list. Always returns a device array, with no pagination. `deviceIds` is required, and the raw array may contain at most 20 items, including duplicates. After trimming, devices are queried in first-occurrence order with duplicates removed.
+
+        Provide at least one non-empty list among `functionCodes`, `traitCodes`, and `commandCodes`. List items must not be blank, and array elements are not split by commas. Unknown fields and `pageNum`/`pageSize` return `400`.
+
+        All devices use the same filter conditions. Matching rules are identical to GET: conditions of different categories are combined with AND, and an `and` match for traits or commands requires all codes to match within the same function.
+
+        If only `functionCodes` is provided, the complete traits and commands under each matched function are returned. If leaf conditions are provided, only matched leaves are retained. Passing both `traitCodes` and `commandCodes` requires a function to satisfy both categories at the same time; this is not a union.
+
+        If a device is accessible but no capabilities match, the device is retained with `endpoints=[]`. Devices that do not exist or are inaccessible are omitted. If all devices are omitted, `data=[]`. Results are ordered by the first occurrence of each requested ID, with no `hasMore` and no silent truncation.
+
+        Current trait values are read from Studio''s current control points. They are not refreshed from physical devices, and a simultaneous snapshot across devices is not guaranteed. When available, `value`/`time` are returned. Null-value fields may be omitted, while `false` and `0` are returned normally. Commands have no current value.
+
+        Definitions reuse the ordinary `DeviceDefinition` and do not include numeric `functionId`/`traitId`/`commandId`/`fieldId`. The request body is a JSON object directly and is not wrapped in `data`. The request text may contain at most 1 Mi characters.
+
+        POST requires separate interface access authorization; GET permission alone does not implicitly grant access. Parameter errors return `400` for the whole batch. Unhandled query exceptions use the unified error response and are not disguised as successful partial results.'
+      operationId: batchDeviceCapabilities
+      x-idempotent: true
+      x-retryable: true
+      x-side-effects: none
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchDeviceCapabilitiesRequest'
+            examples:
+              traits:
+                summary: Query the OnOff trait for two devices (example codes)
+                value:
+                  deviceIds:
+                  - device-a
+                  - device-b
+                  functionCodes:
+                  - OnOff
+                  traitCodes:
+                  - OnOff
+                  traitCodesMatchMode: or
+              functions:
+                summary: Return traits and commands under matched functions
+                value:
+                  deviceIds:
+                  - device-a
+                  - device-b
+                  functionCodes:
+                  - OnOff
+              commands:
+                summary: Query only the specified command (example code)
+                value:
+                  deviceIds:
+                  - device-a
+                  commandCodes:
+                  - MoveToXYColor
+      responses:
+        '200':
+          description: Success. `data` is always an array containing at most 20 devices.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchDeviceCapabilitiesResponse'
+              example:
+                type: BatchDeviceCapabilitiesResponse
+                version: v1
+                msgId: batch-example
+                code: 0
+                message: success
+                data:
+                - deviceId: device-a
+                  name: Example Light A
+                  deviceTypesList:
+                  - light
+                  endpoints:
+                  - endpointId: 2
+                    endpointName: Main Light
+                    deviceType: light
+                    functions:
+                    - functionCode: OnOff
+                      traits:
+                      - traitCode: OnOff
+                        parameter:
+                          type: Bool
+                          readable: true
+                          writable: true
+                          subscribable: true
+                        value: false
+                        displayTags: []
+                      commands: []
+                - deviceId: device-b
+                  name: Example Light B
+                  deviceTypesList:
+                  - light
+                  endpoints:
+                  - endpointId: 2
+                    endpointName: Main Light
+                    deviceType: light
+                    functions:
+                    - functionCode: OnOff
+                      traits:
+                      - traitCode: OnOff
+                        parameter:
+                          type: Bool
+                          readable: true
+                          writable: true
+                          subscribable: true
+                        value: true
+                        displayTags: []
+                      commands: []
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
     get:
       tags: [Device]
-      summary: Query Device Matching Capabilities
+      summary: Query Single Device Matching Capabilities
       description: |
         Query the capabilities of a single device that meet the filter criteria. Only matched definitions and the current value for the corresponding traits will be returned. The full device definition will NOT be returned.
 
@@ -1636,7 +1759,7 @@ paths:
     get:
       tags: [Resource]
       summary: Query Resource Type Definition
-      description: "返回字段 Schema、query.filters / query.parentId / query.sortable 和操作能力。配置字段可能使用带 / 的完整键名。敏感字段标记 sensitive=true、writeOnly=true、readable=false。\n\nsequence 类型的 query.filters 包含 `name`、`deviceId`、`includeAssignable`（默认 false）；`create` 输入需包含 `deviceId`；`assign` 输入仅接受 `deviceId`，始终分配最新版本。"
+      description: "Returns the field schema, `query.filters` / `query.parentId` / `query.sortable`, and available operations. Configuration fields may use full key names that contain `/`. Sensitive fields are marked with `sensitive=true`, `writeOnly=true`, and `readable=false`.\n\nFor the `sequence` type, `query.filters` includes `name`, `deviceId`, and `includeAssignable` (default: `false`). The `create` input must include `deviceId`. The `assign` input accepts only `deviceId` and always assigns the latest version."
       operationId: describeResourceType
       x-idempotent: true
       x-retryable: true
@@ -1660,100 +1783,100 @@ paths:
           $ref: '#/components/responses/InternalServerErrorResponse'
       x-request-examples:
         describeProtocol:
-          summary: 读取 protocol 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
+          summary: Read the protocol type definition
+          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
           method: GET
           path: /resource-types/{type}
           request:
-            headers: 公共请求头
+            headers: Common request headers
             path:
               type: protocol
             query: null
             body: null
         describeProtocolnetwork:
-          summary: 读取 protocol.network 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
+          summary: Read the protocol.network type definition
+          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
           method: GET
           path: /resource-types/{type}
           request:
-            headers: 公共请求头
+            headers: Common request headers
             path:
               type: protocol.network
             query: null
             body: null
         describeProtocoldevice:
-          summary: 读取 protocol.device 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
+          summary: Read the protocol.device type definition
+          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
           method: GET
           path: /resource-types/{type}
           request:
-            headers: 公共请求头
+            headers: Common request headers
             path:
               type: protocol.device
             query: null
             body: null
         describeProtocolpoint:
-          summary: 读取 protocol.point 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
+          summary: Read the protocol.point type definition
+          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
           method: GET
           path: /resource-types/{type}
           request:
-            headers: 公共请求头
+            headers: Common request headers
             path:
               type: protocol.point
             query: null
             body: null
         describeSystem:
-          summary: 读取 system 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
+          summary: Read the system type definition
+          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
           method: GET
           path: /resource-types/{type}
           request:
-            headers: 公共请求头
+            headers: Common request headers
             path:
               type: system
             query: null
             body: null
         describeJob:
-          summary: 读取 job 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
+          summary: Read the job type definition
+          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
           method: GET
           path: /resource-types/{type}
           request:
-            headers: 公共请求头
+            headers: Common request headers
             path:
               type: job
             query: null
             body: null
         describeDiscovery:
-          summary: 读取 discovery 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
+          summary: Read the discovery type definition
+          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
           method: GET
           path: /resource-types/{type}
           request:
-            headers: 公共请求头
+            headers: Common request headers
             path:
               type: discovery
             query: null
             body: null
         describeBackup:
-          summary: 读取 backup 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
+          summary: Read the backup type definition
+          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
           method: GET
           path: /resource-types/{type}
           request:
-            headers: 公共请求头
+            headers: Common request headers
             path:
               type: backup
             query: null
             body: null
         describeSequence:
-          summary: 读取 sequence 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
+          summary: Read the sequence type definition
+          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
           method: GET
           path: /resource-types/{type}
           request:
-            headers: 公共请求头
+            headers: Common request headers
             path:
               type: sequence
             query: null
@@ -1764,32 +1887,14 @@ paths:
       tags: [Resource]
       summary: Paginated Query Resource
       description: |
-        Paginated query for resources of a given type. 
-        
-        Only the filter conditions declared in query.filters of the resource type definition are allowed; passing undeclared query parameters will result in a 400 error.
+        Filter by the `query.filters` defined for the type. `parentId` is the root of a Resource subtree. Use the Open `deviceId` for Device nodes, and the exact node ID for other nodes. `page` defaults to `1`. `pageSize` defaults to `20` and has a maximum of `100`. `sort` uses declared fields with `:asc`/`:desc`. The response does not include `total`; use `hasMore` instead. Network/Device/Point entries return the protocol type in `properties.protocolId`. Device IDs are not duplicated in `properties`. References returned by create or import must be read again for details. Undeclared filter parameters return `400`. `parentId` applies only to types that declare it. `sort` defaults to `id:asc`.
 
-        parentId is only valid for hierarchical resources that declare this filter.
-        
-        protocolId is only applicable to protocol resources.
-        
-        page defaults to 1.
-        
-        pageSize defaults to 20, maximum is 100.
-        
-        sort format must be `field:asc` or `field:desc`. The field must be in query.sortable; defaults to id:asc if not provided.
-
-        Paginated results do not include total. Use hasMore to indicate whether there are more pages. You can use GET /resource-types/{type} to get the current runtime rules.
-
-        protocol.network/device/point list items return a read-only protocolId; protocol devices and points return business deviceId according to visibility and permissions. Points include control reference state and full reference when available. Discovery candidates carry protocolId/jobId. New Resource jobs preserve owner context.
-
-        When querying with `type=sequence`:
-        - If `deviceId` is not passed, returns the user's custom sequence library.
-        - If `deviceId` is provided, only returns scenarios already assigned to this device (user-configured, device presets, built-in); items already belonging to the device include `properties.assignment`.
-        - If `includeAssignable=true`, additionally returns user scenarios that are not yet assigned but abilities match (no `properties.assignment`). If omitted or `false`, will not include assignable scenarios. This parameter is ignored if `deviceId` is not provided.
-        - Built-in scenarios' `properties.name` and `properties.labelTypeName` are localized according to the `Lang` request header.
-        - When passing `deviceId`, the response under data echoes `deviceId` and this device's `spec` (data.deviceId/data.spec).
-
-        You can use [GET /resource-types/{type}](https://docs.aqara.com/docs/aqara-developer/data-export-api/describe-resource-type) to get the definition of the query target resource type.
+        When querying `type=sequence`:
+        - If `deviceId` is omitted, the user-defined sequence library is returned.
+        - If `deviceId` is provided, only scenes already owned by that device are returned by default, including bound user configurations, device presets, and system built-ins. Entries that already belong to the current device include `properties.assignment`.
+        - If `includeAssignable=true`, the response also includes unbound, capability-matched user scenes that are available for selection and do not have `properties.assignment`. If the parameter is omitted or set to `false`, assignable scenes are not returned. If `deviceId` is omitted, this parameter is ignored.
+        - For built-in scenes, `properties.name` and `properties.labelTypeName` return localized text based on the `Lang` request header.
+        - When `deviceId` is provided, the response `data` echoes `deviceId` and the device `spec` as `data.deviceId`/`data.spec`.
       operationId: queryResources
       x-idempotent: true
       x-retryable: true
@@ -1807,7 +1912,7 @@ paths:
         required: false
         schema:
           type: string
-        description: Protocol type identifier, e.g. modbus; not the directory Resource handle protocol:modbus nor a specific device ID.
+        description: Optional Resource subtree root; protocol devices use Open deviceId, other nodes use exact node IDs, including all descendants.
       - name: page
         in: query
         required: false
@@ -1887,7 +1992,7 @@ paths:
       x-request-examples:
         listProtocols:
           summary: Query installed public protocols
-          description: "Store protocol id and properties.capabilities. Currently supported: bacnet, homeAssistantBridge, knxClient, modbus. Installation/availability and support for manual addition/discovery depend on the response. The directory response returns independent protocolId; for creating or discovering, use the returned directory id and save protocolId."
+          description: Save protocol id and properties.capabilities; currently open bacnet, homeAssistantBridge, knxClient, modbus, whether installed and whether to support manual addition or discovery is determined by the response. The directory response returns an independent protocolId; create or discover using the returned directory id and save protocolId.
           method: GET
           path: /resource-types/{type}/resources
           request:
@@ -1901,7 +2006,7 @@ paths:
             body: null
         modbusQueryNetwork:
           summary: Query Modbus network instances
-          description: "parentId specifies the subtree and includes descendants; store items[].id. If hasMore=true, increase page until false. Each item returns protocolId and should store the parent resource ID for this query."
+          description: parentId specifies the subtree and includes descendants; store items[].id. If hasMore=true, increase page until false. Each item returns protocolId and should store the parent resource ID for this query.
           method: GET
           path: /resource-types/{type}/resources
           request:
@@ -1916,7 +2021,7 @@ paths:
             body: null
         modbusQueryDevice:
           summary: Query Modbus device instances
-          description: "parentId specifies the subtree and includes descendants; store items[].id. If hasMore=true, increase page until false. Each item returns protocolId and should store the parent resource ID for this query."
+          description: parentId specifies the subtree and includes descendants; store items[].id. If hasMore=true, increase page until false. Each item returns protocolId and should store the parent resource ID for this query.
           method: GET
           path: /resource-types/{type}/resources
           request:
@@ -1925,14 +2030,14 @@ paths:
               type: protocol.device
             query:
               protocolId: modbus
-              parentId: '{{modbusNetworkResourceId}}'
+              parentId: '{{modbusNetworkId}}'
               page: 1
               pageSize: 20
               sort: id:asc
             body: null
         modbusQueryPoint:
           summary: Query Modbus point instances
-          description: "parentId specifies the subtree and includes descendants; store items[].id. If hasMore=true, increase page until false. Each item returns protocolId and should store the parent resource ID for this query."
+          description: parentId specifies the subtree and includes descendants; store items[].id. If hasMore=true, increase page until false. Each item returns protocolId and should store the parent resource ID for this query.
           method: GET
           path: /resource-types/{type}/resources
           request:
@@ -1941,7 +2046,7 @@ paths:
               type: protocol.point
             query:
               protocolId: modbus
-              parentId: '{{modbusDeviceResourceId}}'
+              parentId: '{{modbusDeviceId}}'
               page: 1
               pageSize: 20
               sort: id:asc
@@ -2042,18 +2147,21 @@ paths:
     get:
       tags: [Resource]
       summary: Read Known Resource
-      description: | 
-        Automatically identifies the resource type based on the globally unique resource ID. Protocol resources return properties, schema, and read-only health. 
-        
-        The properties field does not include sensitive fields such as token, password, secret, credential, privateKey, or apiKey. Protocol directories, networks, devices, and points return protocolId. Both reading and modifying only require id. 
-        
-        The business deviceId and controlReference are only returned as determined by device visibility, authorization, and mapping. For context of discovery tasks, refer to the Resource Scenario Guide.
+      description: |
+        Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools.
+        Network, Point, and Job resources use their respective node IDs.
+
+        Do not pass a protocol address, candidate ID, or a self-constructed device alias.
+
+        Network/Device/Point details include `properties.protocolId` (read-only protocol type), `schema`, `health`, `commands`, and `unavailableCommands`. They do not return a top-level `protocolId`, a duplicated `deviceId`, or `controlReference`. A health snapshot does not mean an active probe succeeded. Sensitive configuration is not returned.
+
+        Business control selectors should be obtained from the device definition or capability APIs.
       operationId: getResource
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
       parameters:
-        - $ref: '#/components/parameters/ResourceId'
+      - $ref: '#/components/parameters/ResourceId'
       responses:
         '200':
           description: Success
@@ -2072,7 +2180,7 @@ paths:
       x-request-examples:
         readProtocol:
           summary: Read Modbus protocol capabilities
-          description: "Checks manualNetworkAdd, manualDeviceAdd, manualPointAdd, deviceDiscovery, pointDiscovery. Point discovery is currently not supported for Modbus. The response returns an independent protocolId, which is used for subsequent queries or tools."
+          description: Check manualNetworkAdd, manualDeviceAdd, manualPointAdd, deviceDiscovery, pointDiscovery; Modbus point discovery is currently not supported. The response returns an independent protocolId, which is used for subsequent queries or tools.
           method: GET
           path: /resources/{id}
           request:
@@ -2100,12 +2208,12 @@ paths:
           request:
             headers: Public request headers
             path:
-              id: '{{modbusPointResourceId}}'
+              id: '{{modbusPointId}}'
             query: null
             body: null
         pollDiscoveryJob:
           summary: Poll device discovery task
-          description: "Read every 1000 ms, with a maximum of 120,000 ms per round. Only when status=succeeded and commands include import can import proceed; failed/cancelled stops, unknown stops and reports. Timeout will keep the original jobId, and when resuming, the same task is read without re-initiating discovery. A new discovery task returns protocolId, ownerKind, ownerId, and targetKind; also keeps the discovery request and deviceJobId. If the old task lacks server context, rediscovery is required before import can continue."
+          description: Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost.
           method: GET
           path: /resources/{id}
           request:
@@ -2122,12 +2230,12 @@ paths:
           request:
             headers: Public request headers
             path:
-              id: '{{bacnetDeviceResourceId}}'
+              id: '{{bacnetDeviceId}}'
             query: null
             body: null
         pollPointJob:
           summary: Poll point discovery task
-          description: "Query candidate points of kind=point after success and commands include import; polling and timeout recovery rules follow the same job. New discovery tasks return protocolId, ownerKind, ownerId, and targetKind. Maintains the discovery request and pointJobId; for old tasks lacking server context, rediscovery is needed and import cannot continue."
+          description: Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost.
           method: GET
           path: /resources/{id}
           request:
@@ -2144,7 +2252,7 @@ paths:
           request:
             headers: Public request headers
             path:
-              id: '{{bacnetPointResourceId}}'
+              id: '{{bacnetPointId}}'
             query: null
             body: null
         haReadNetwork:
@@ -2155,7 +2263,7 @@ paths:
           request:
             headers: Public request headers
             path:
-              id: '{{haNetworkResourceId}}'
+              id: '{{haNetworkId}}'
             query: null
             body: null
         knxReadDevice:
@@ -2166,7 +2274,7 @@ paths:
           request:
             headers: Public request headers
             path:
-              id: '{{knxDeviceResourceId}}'
+              id: '{{knxDeviceId}}'
             query: null
             body: null
         readBackupService:
@@ -2213,10 +2321,32 @@ paths:
               id: '{{sequenceId}}'
             query: null
             body: null
+        modbusReadNetwork:
+          summary: Read Modbus Network configuration
+          description: Create returns a reference only. Read the resource again to obtain `properties`, `schema`, `health`, and the current `commands`.
+          method: GET
+          path: /resources/{id}
+          request:
+            headers: Common request headers
+            query: null
+            body: null
+            path:
+              id: '{{modbusNetworkId}}'
+        modbusReadDevice:
+          summary: Read Modbus Device configuration
+          description: Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias.
+          method: GET
+          path: /resources/{id}
+          request:
+            headers: Common request headers
+            query: null
+            body: null
+            path:
+              id: '{{modbusDeviceId}}'
     post:
       tags: [Resource]
       summary: Modify Known Resource Properties
-      description: Only allows modification of fields declared as writable by both the resource definition and runtime schema. All field checks must pass before writing; if it fails, a rollback will be attempted. Sensitive fields can be written via dynamic schema, but a successful response will not echo either the request value or the historical value.
+      description: The request body uses only a `properties` wrapper. Copy the target ID from the corresponding Resource. Write only fields marked as writable in the detail schema. `properties.protocolId` and Device identity fields are read-only. Update `name` separately from protocol configuration. An explicit `null` is rejected when the schema does not allow it, and is not treated as an omitted field. The response returns the complete instance details. Only fields declared as writable in both the resource definition and the runtime schema may be modified. Writing starts only after all fields pass validation, and the service attempts a rollback on failure. Sensitive fields may be written according to the dynamic schema, but a successful response does not echo the request values or historical values.
       operationId: updateResource
       x-idempotent: true
       x-retryable: conditional
@@ -2285,6 +2415,18 @@ paths:
                     deviceIds:
                     - '{{businessDeviceId}}'
                     syncAllDevices: false
+              modbusUpdateNetwork:
+                summary: Configure Modbus Network byte order
+                description: Only submit writable configuration in the detail schema.
+                value:
+                  properties:
+                    longByteOrder: orderABCD
+              bacnetUpdateDevice:
+                summary: Configure imported BACnet Device
+                description: The device ID uses the imported result resource.id; an explicit null is not treated as an omitted field.
+                value:
+                  properties:
+                    enabled: true
       responses:
         '200':
           description: Success
@@ -2325,7 +2467,7 @@ paths:
           request:
             headers: Public request headers
             path:
-              id: '{{modbusPointResourceId}}'
+              id: '{{modbusPointId}}'
             query: null
             body:
               properties:
@@ -2338,7 +2480,7 @@ paths:
           request:
             headers: Public request headers
             path:
-              id: '{{modbusDeviceResourceId}}'
+              id: '{{modbusDeviceId}}'
             query: null
             body:
               properties:
@@ -2351,7 +2493,7 @@ paths:
           request:
             headers: Public request headers
             path:
-              id: '{{modbusDeviceResourceId}}'
+              id: '{{modbusDeviceId}}'
             query: null
             body:
               properties:
@@ -2364,7 +2506,7 @@ paths:
           request:
             headers: Public request headers
             path:
-              id: '{{bacnetPointResourceId}}'
+              id: '{{bacnetPointId}}'
             query: null
             body:
               properties:
@@ -2377,7 +2519,7 @@ paths:
           request:
             headers: Public request headers
             path:
-              id: '{{haNetworkResourceId}}'
+              id: '{{haNetworkId}}'
             query: null
             body:
               properties:
@@ -2407,37 +2549,58 @@ paths:
                 deviceIds:
                 - '{{businessDeviceId}}'
                 syncAllDevices: false
-           
+        modbusUpdateNetwork:
+          summary: Configure Modbus Network byte order
+          description: Only submit writable configuration in the detail schema.
+          method: POST
+          path: /resources/{id}
+          request:
+            headers: Common request headers
+            query: null
+            body:
+              properties:
+                longByteOrder: orderABCD
+            path:
+              id: '{{modbusNetworkId}}'
+        bacnetUpdateDevice:
+          summary: Configure imported BACnet Device
+          description: The device ID uses the imported result resource.id; an explicit null is not treated as an omitted field.
+          method: POST
+          path: /resources/{id}
+          request:
+            headers: Common request headers
+            query: null
+            body:
+              properties:
+                enabled: true
+            path:
+              id: '{{bacnetDeviceId}}'
 
   /actions/{command}:
     post:
       tags: [Resource]
       summary: Execute Resource Command
-      description: |
-        Executes the command declared in the type definition of the resource. The request body only allows `id` and `input`: `id` must be a non-empty string, `input` must be an object, and extra fields will be rejected.
-        The specific input, output, and available commands are based on the runtime definition returned by GET /resource-types/{type}.
-        Common protocol resource commands:
-          - For `create`, the `id` is `protocol:{protocolId}`; do not provide parentId when creating a network; parentId is required for creating devices/points.
-          - For `discover`, the `id` is `protocol:{protocolId}`.
-          - For `import`, the `id` is the discovery job resource ID.
-          - For `delete`, the `id` is the resource ID to be deleted, and `input` must be an empty object.
+      description: |-
+        The request body allows only a non-empty `id` and an optional `input` object. Unknown fields are rejected. Available commands and configuration follow the current resource type definition and the instance `commands`.
+        `create` acts directly on the parent resource: a protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately.
+        `discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources.
+        `import` acts on a discovery Job. `input` must contain 1–200 `discoveryObjectIds` and exactly one of `networkId` (import devices) or `deviceId` (import points; Open device ID). `ownerId` and `pointConfigs` are not accepted. The server validates job ownership, target type, protocol, and permissions for the whole batch, then checks `results` item by item. Successful items contain only `resource.id`/`type`; failed items contain `errorCode`/`message`.
+        `delete` acts on an actual instance, with `input` as an empty object. Deletion permissions and status are checked again at execution time.
+        Device connection diagnostics use `deviceId` and remain compatible with `targetId`. Point diagnostics still use the Point `targetId`.
 
-        For `import`: The `ownerId` to import must point to the same running instance as the owner recorded by the server during discovery; other owners of the same protocol/type will still be rejected. Protocol, ownerKind, and targetKind must also match, and candidates must belong to the job. Old tasks missing complete server context cannot use client parameters for supplementation, and all checks are completed before batch creation. If inconsistent, returns PROTOCOL_CONFIG_INVALID (2103, HTTP 422); if the task with a located protocol lacks owner/target context, returns DISCOVERY_JOB_NOT_FOUND (2111, HTTP 400); if the task or protocol association cannot be located, returns RESOURCE_NOT_FOUND (2121, HTTP 404), and no objects are created.
-
-        For `sequence` resources:
-          - For `create`, the `id` is `sequence`. `input` allows `name`, `data`, `icon`, and `deviceId`, of which `name`, `data`, and `deviceId` are required.
-          - `deviceId` specifies the device the scene is created for. `create` only accepts `data.type=commands` and does not accept `unavailable`.
+        For a `sequence` resource `create`, `id` is `sequence`. `input` allows `name`, `data`, `icon`, and `deviceId`, of which `name`, `data`, and `deviceId` are required.
+        `deviceId` identifies the device that the scene is created for. `create` accepts only `data.type=commands` and does not accept `unavailable`.
       operationId: executeResourceAction
       x-idempotent: false
       x-retryable: false
       x-side-effects: command_execute
       parameters:
-        - name: command
-          in: path
-          required: true
-          description: Command name returned by the resource type definition.
-          schema:
-            type: string
+      - name: command
+        in: path
+        required: true
+        description: Command name returned by the resource type definition.
+        schema:
+          type: string
       requestBody:
         required: true
         content:
@@ -2447,7 +2610,7 @@ paths:
             examples:
               modbusNetwork:
                 summary: Create Modbus Network
-                description: Omit parentId. Store data.id as modbusNetworkResourceId; TCP address is part of device configuration, not the network's transport/host/port.
+                description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `modbusNetworkId`."
                 value:
                   id: protocol:modbus
                   input:
@@ -2459,12 +2622,13 @@ paths:
                       longByteOrder: orderABCD
               modbusDevice:
                 summary: Create Modbus TCP Device
-                description: Replace with a device address reachable by Studio. Store data.id as modbusDeviceResourceId; deviceAddress is a protocol address, not a resource ID.
+                description: |
+                  `create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately.
+
+                  Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `modbusDeviceId`.
                 value:
-                  id: protocol:modbus
+                  id: '{{modbusNetworkId}}'
                   input:
-                    entityKind: device
-                    parentId: '{{modbusNetworkResourceId}}'
                     name: PLC-1
                     config:
                       ipAddress: 192.0.2.10
@@ -2474,15 +2638,15 @@ paths:
                       enabled: true
               modbusPoint:
                 summary: Create Modbus Holding Register Point
-                description: Store data.id as modbusPointResourceId. Keys containing / are full field names; address is a string. This request creates a basic protocol point and does not represent completion of explicit business spec and mapping.
+                description: |
+                  `create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately.
+
+                  Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `modbusPointId`.
                 value:
-                  id: protocol:modbus
+                  id: '{{modbusDeviceId}}'
                   input:
-                    entityKind: point
-                    parentId: '{{modbusDeviceResourceId}}'
                     name: Register 40011
                     config:
-                      friendlyName: Register 40011
                       pollFrequency: normal
                       modbusDiscoverySpecInfo/registerType: holdingRegister
                       modbusDiscoverySpecInfo/readWriteType: readOnly
@@ -2493,15 +2657,14 @@ paths:
                 summary: Delete Protocol Instance
                 description: Only send to instances with `delete` in the latest readback commands; id can be replaced with the target network or device ID. The reason for rejection is shown in unavailableCommands of the current instance; permissions and status will be rechecked on execution.
                 value:
-                  id: '{{modbusPointResourceId}}'
+                  id: '{{modbusPointId}}'
                   input: {}
               bacnetNetwork:
                 summary: Create BACnet Network
-                description: Select a local instance number and UDP port that do not conflict on-site; store data.id as bacnetNetworkResourceId. Binding address and other extra fields follow the network config schema; reusing an existing network is also allowed.
+                description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `bacnetNetworkId`. BACnet Network is limited to a framework singleton; if an instance already exists, reuse the returned ID and do not create another one."
                 value:
                   id: protocol:bacnet
                   input:
-                    entityKind: network
                     name: BACnet Network
                     config:
                       localDevice/objectInstanceNumber: 123456
@@ -2509,28 +2672,25 @@ paths:
                       enabled: true
               bacnetDiscoverDevice:
                 summary: Discover BACnet Devices on Network
-                description: Requires deviceDiscovery=true. Store data.id as deviceJobId; options={} uses default parameters, do not assume other protocols support the same scan parameters.
+                description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources. Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost."
                 value:
-                  id: protocol:bacnet
+                  id: '{{bacnetNetworkId}}'
                   input:
-                    ownerKind: network
-                    ownerId: '{{bacnetNetworkResourceId}}'
-                    targetKind: device
                     options: {}
               bacnetImportDevice:
                 summary: Import Selected BACnet Devices
-                description: The device instance ID is obtained from data.results[].created.instanceId, store as bacnetDeviceResourceId. Up to 200 candidates in batch; check results one by one and keep the successful ones, do not reconstruct all objects due to a partial failure.
+                description: "`import` acts on a discovery Job. `input` must contain 1–200 `discoveryObjectIds` and exactly one of `networkId` (import devices) or `deviceId` (import points; Open device ID). `ownerId` and `pointConfigs` are not accepted. The server validates job ownership, target type, protocol, and permissions for the whole batch, then checks `results` item by item. Successful items contain only `resource.id`/`type`; failed items contain `errorCode`/`message`. Save `data.results[].resource.id` as `bacnetDeviceId`."
                 value:
                   id: '{{deviceJobId}}'
                   input:
-                    ownerId: '{{bacnetNetworkResourceId}}'
                     discoveryObjectIds:
                     - '{{deviceCandidateId}}'
+                    networkId: '{{bacnetNetworkId}}'
               bacnetDiscoverPoint:
                 summary: Discover BACnet Points on Device
-                description: Requires pointDiscovery=true. Store data.id as pointJobId, follow polling rules for the job; cannot directly import tasks still running.
+                description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources. Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost."
                 value:
-                  id: protocol:bacnet
+                  id: '{{bacnetDeviceId}}'
                   input:
                     ownerKind: device
                     ownerId: '{{bacnetDeviceResourceId}}'
@@ -2538,20 +2698,19 @@ paths:
                     options: {}
               bacnetImportPoint:
                 summary: Import Selected BACnet Points
-                description: Store bacnetPointResourceId from data.results[].created.instanceId. input only accepts ownerId/discoveryObjectIds; pointConfigs, targetProperty, or conversion are not accepted.
+                description: "`import` acts on a discovery Job. `input` must contain 1–200 `discoveryObjectIds` and exactly one of `networkId` (import devices) or `deviceId` (import points; Open device ID). `ownerId` and `pointConfigs` are not accepted. The server validates job ownership, target type, protocol, and permissions for the whole batch, then checks `results` item by item. Successful items contain only `resource.id`/`type`; failed items contain `errorCode`/`message`. Save `data.results[].resource.id` as `bacnetPointId`."
                 value:
                   id: '{{pointJobId}}'
                   input:
-                    ownerId: '{{bacnetDeviceResourceId}}'
                     discoveryObjectIds:
                     - '{{pointCandidateId}}'
+                    deviceId: '{{bacnetDeviceId}}'
               haNetwork:
                 summary: Create Home Assistant Network
-                description: Replace with a reachable address and long-lived Home Assistant access token; store data.id as haNetworkResourceId. Token is a sensitive write field and will not appear in properties readback.
+                description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `haNetworkId`."
                 value:
                   id: protocol:homeAssistantBridge
                   input:
-                    entityKind: network
                     name: Home Assistant
                     config:
                       ipAddress/ipAddress: 192.0.2.20
@@ -2559,33 +2718,27 @@ paths:
                       token: '{{haToken}}'
               haDiscoverDevice:
                 summary: Discover Home Assistant Devices
-                description: First verify the deviceDiscovery capability for the current directory; save the task ID and use the same flow as BACnet (job→discovery(kind=device)→import), with ownerId changed to haNetworkResourceId.
+                description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources. Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost."
                 value:
-                  id: protocol:homeAssistantBridge
+                  id: '{{haNetworkId}}'
                   input:
-                    ownerKind: network
-                    ownerId: '{{haNetworkResourceId}}'
-                    targetKind: device
                     options: {}
               knxNetwork:
                 summary: Create KNX Network
-                description: Use localIp=0.0.0.0 for automatic address; store data.id as knxNetworkResourceId. You can also provide the Studio's actual network card address.
+                description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `knxNetworkId`."
                 value:
                   id: protocol:knxClient
                   input:
-                    entityKind: network
                     name: KNX Network
                     config:
                       localIp: 0.0.0.0
                       enabled: true
               knxDevice:
                 summary: Manually Create KNX Tunnel Device
-                description: Use an available physical address and tunnel endpoint on-site; store data.id as knxDeviceResourceId. Manual addition requires manualDeviceAdd=true.
+                description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `knxDeviceId`."
                 value:
-                  id: protocol:knxClient
+                  id: '{{knxNetworkId}}'
                   input:
-                    entityKind: device
-                    parentId: '{{knxNetworkResourceId}}'
                     name: KNX IP Interface
                     config:
                       deviceAddress: 1.1.250
@@ -2596,13 +2749,10 @@ paths:
                       enabled: true
               knxDiscoverDevice:
                 summary: Discover KNX Interface Devices
-                description: Can be used as another path for manual addition, requires deviceDiscovery=true. Follow job→discovery(kind=device)→import flow, use knxNetworkResourceId as ownerId. Do not add the same device repeatedly.
+                description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources. Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost."
                 value:
-                  id: protocol:knxClient
+                  id: '{{knxNetworkId}}'
                   input:
-                    ownerKind: network
-                    ownerId: '{{knxNetworkResourceId}}'
-                    targetKind: device
                     options: {}
               createBackup:
                 summary: Create Local System Backup
@@ -2642,7 +2792,7 @@ paths:
                         transitionTime: 1.0
               sequenceAssign:
                 summary: Assign Scene to Device
-                description: Always binds the latest version, only accepts deviceId; requests with revision (including null) will be rejected. Then query with deviceId until assignment.syncState=SYNCED and syncedRevision=revision before starting.
+                description: "Always binds the latest version and only accepts `deviceId`; passing `revision` (including `null`) is rejected. Then query with `deviceId` and wait until `assignment.syncState=SYNCED` and `syncedRevision=revision` before starting."
                 value:
                   id: '{{sequenceId}}'
                   input:
@@ -2698,8 +2848,8 @@ paths:
                   id: '{{sequenceId}}'
                   input: {}
               importDifferentOwnerRejected:
-                summary: "Negative Example: Other Devices of the Same Protocol Cannot Receive Current Task Candidates"
-                description: pointJobId is discovered on bacnetDeviceResourceId; another owner, even of the same protocol and type, will still be rejected, and the whole batch will not be created.
+                summary: "Counterexample: Import Device Does Not Match Discovery Job"
+                description: This point discovery Job belongs to another device. Even if the target uses the same protocol, the request is rejected. Validation runs before the batch is created.
                 value:
                   id: '{{pointJobId}}'
                   input:
@@ -2723,6 +2873,79 @@ paths:
                         color: '#FF6600'
                         brightness: 80
                         transitionTime: 1.0
+              modbusDeletePoint:
+                summary: Delete Test Modbus Point
+                description: Delete only resources created by this test that are deletable. Follow Point → Device → Network order and do not operate on other resources.
+                value:
+                  id: '{{modbusPointId}}'
+                  input: {}
+              modbusDeleteDevice:
+                summary: Delete Test Modbus Device
+                description: Delete only resources created by this test that are deletable. Follow Point → Device → Network order and do not operate on other resources.
+                value:
+                  id: '{{modbusDeviceId}}'
+                  input: {}
+              modbusDeleteNetwork:
+                summary: Delete Test Modbus Network
+                description: Delete only resources created by this test that are deletable. Follow Point → Device → Network order and do not operate on other resources.
+                value:
+                  id: '{{modbusNetworkId}}'
+                  input: {}
+              connectionSnapshotDevice:
+                summary: Query Connection Snapshot by Open deviceId
+                description: Read-only; does not create a connection or probe. Exposed only on script-protocol Networks; inspect the actual `commands`.
+                value:
+                  id: '{{tcpNetworkId}}'
+                  input:
+                    deviceId: '{{tcpDeviceId}}'
+              connectionSnapshotLegacy:
+                summary: Connection Snapshot with Legacy targetId
+                description: New `deviceId` accepts only an Open device ID. Legacy `targetId` accepts a device node ID or Open ID; snapshots also accept a Point ID. When both fields are sent, they must resolve to the same device and must not mix point selection. Management permission, device authorization, and Network ownership are still validated.
+                value:
+                  id: '{{tcpNetworkId}}'
+                  input:
+                    deviceId: '{{tcpDeviceId}}'
+                    targetId: '{{legacyDeviceNodeId}}'
+              startDebugSession:
+                summary: Create Bounded Diagnostic Session
+                description: Call only on script Networks that expose this command in `commands`. TTL is at most 120000 ms. Check the returned `capabilities` first. Globally at most two active sessions, or four including terminal states. After stop, records are retained for 60 seconds; when the limit is reached, returns `BUSY`.
+                value:
+                  id: '{{tcpNetworkId}}'
+                  input:
+                    ttlMs: 60000
+              probeOnceDevice:
+                summary: Probe with Open deviceId
+                description: Only when `session.capabilities.probe=true`. Legacy `targetId` is accepted, but new requests should prefer `deviceId`. The result is an operation resource whose status must be read; accepting the request does not mean the device probe succeeded.
+                value:
+                  id: '{{debugSessionId}}'
+                  input:
+                    deviceId: '{{tcpDeviceId}}'
+                    timeoutMs: 3000
+              readOncePoint:
+                summary: Actually Read Specified Point
+                description: Point diagnostics keep `targetId` as the Point ID; do not substitute `deviceId`. Success requires a real packet send and application to the target point.
+                value:
+                  id: '{{debugSessionId}}'
+                  input:
+                    targetId: '{{tcpPointId}}'
+                    timeoutMs: 3000
+              writeAndWaitPoint:
+                summary: Write and Wait for Business ACK When Authorized
+                description: Call only with explicit control authorization and capability support. `clientOperationId` and `waitFor` are required. MQTT PUBACK is not a device business ACK. When `protocolAck` is unsupported, choose `send` or `stateUpdate` with `expectedValue` according to actual capabilities. A timeout must not be treated as not executed, and must not trigger blind retries.
+                value:
+                  id: '{{debugSessionId}}'
+                  input:
+                    targetId: '{{tcpPointId}}'
+                    clientOperationId: example-write-001
+                    waitFor: protocolAck
+                    value: 41
+                    timeoutMs: 3000
+              stopDebugSession:
+                summary: Stop This Diagnostic Session
+                description: After stop, no further packets may be sent. Device actions already sent cannot be rolled back; history is handled per retention policy.
+                value:
+                  id: '{{debugSessionId}}'
+                  input: {}
       responses:
         '200':
           description: Success
@@ -2731,56 +2954,54 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResourceOpenApiResponse'
               examples:
-                mappedPoint:
-                  summary: mappedPoint
+                createdNetwork:
+                  summary: Minimum reference to create a Network
                   value:
                     type: ResourceOpenApiResponse
                     version: v1
-                    msgId: identity-example
+                    msgId: protocol-example
                     code: 0
                     message: success
                     data:
-                      id: modbus-point-resource-1
-                      type: protocol.point
-                      protocolId: modbus
-                      deviceId: business-device-1
-                      properties:
-                        name: Switch
-                      controlReferenceStatus: available
-                      controlReference:
-                        deviceId: business-device-1
-                        endpointId: 0
-                        functionCode: OnOff
-                        traitCode: OnOff
-                unavailableControl:
-                  summary: unavailableControl
+                      id: '{{modbusNetworkId}}'
+                      type: protocol.network
+                createdDevice:
+                  summary: Device ID 为 Open deviceId
                   value:
                     type: ResourceOpenApiResponse
                     version: v1
-                    msgId: identity-example
+                    msgId: protocol-example
                     code: 0
                     message: success
                     data:
-                      id: modbus-point-resource-2
-                      type: protocol.point
-                      protocolId: modbus
-                      properties:
-                        name: Unavailable Point
-                      controlReferenceStatus: unavailable
-                readbackUnavailable:
-                  summary: readbackUnavailable
+                      id: '{{modbusDeviceId}}'
+                      type: protocol.device
+                createdPoint:
+                  summary: Read the details separately after creating a Point
                   value:
                     type: ResourceOpenApiResponse
                     version: v1
-                    msgId: identity-example
+                    msgId: protocol-example
                     code: 0
                     message: success
                     data:
-                      id: modbus-point-resource-3
+                      id: '{{modbusPointId}}'
                       type: protocol.point
-                      protocolId: modbus
-                      projectionStatus: unavailable
-                      message: Created successfully; read the returned id again, do not recreate
+                importedPoint:
+                  summary: Only the resource reference in the imported successful items
+                  value:
+                    type: ResourceOpenApiResponse
+                    version: v1
+                    msgId: protocol-example
+                    code: 0
+                    message: success
+                    data:
+                      results:
+                      - discoveryObjectId: '{{pointCandidateId}}'
+                        success: true
+                        resource:
+                          id: '{{bacnetPointId}}'
+                          type: protocol.point
         '400':
           $ref: '#/components/responses/BadRequestResponse'
         '401':
@@ -2792,7 +3013,7 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
         '422':
-          description: The protocol, owner, or target type for import does not match the job context (code=2103); other protocol configuration errors are returned with specific business codes.
+          description: Reject when protocol configuration or discovery task protocol/target ownership mismatch; code=2103. Return code=2127 for unsupported commands. The specific business code is based on the response.
           content:
             application/json:
               schema:
@@ -2806,7 +3027,7 @@ paths:
       x-request-examples:
         modbusNetwork:
           summary: Create Modbus Network
-          description: Omit parentId. Store data.id as modbusNetworkResourceId; TCP address is part of device configuration, not the network's transport/host/port.
+          description: create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。 保存 data.id 为 modbusNetworkId。
           method: POST
           path: /actions/create
           request:
@@ -2815,7 +3036,6 @@ paths:
             body:
               id: protocol:modbus
               input:
-                entityKind: network
                 name: Modbus TCP Network
                 config:
                   enabled: true
@@ -2823,17 +3043,15 @@ paths:
                   longByteOrder: orderABCD
         modbusDevice:
           summary: Create Modbus TCP Device
-          description: Replace with a device address reachable by Studio. Store data.id as modbusDeviceResourceId; deviceAddress is a protocol address, not a resource ID.
+          description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `modbusDeviceId`."
           method: POST
           path: /actions/create
           request:
             headers: Public request headers
             query: null
             body:
-              id: protocol:modbus
+              id: '{{modbusNetworkId}}'
               input:
-                entityKind: device
-                parentId: '{{modbusNetworkResourceId}}'
                 name: PLC-1
                 config:
                   ipAddress: 192.0.2.10
@@ -2843,20 +3061,17 @@ paths:
                   enabled: true
         modbusPoint:
           summary: Create Modbus Holding Register Point
-          description: Store data.id as modbusPointResourceId. Keys containing / are full field names; address is a string. This request creates a basic protocol point and does not represent completion of explicit business spec and mapping.
+          description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `modbusPointId`."
           method: POST
           path: /actions/create
           request:
             headers: Public request headers
             query: null
             body:
-              id: protocol:modbus
+              id: '{{modbusDeviceId}}'
               input:
-                entityKind: point
-                parentId: '{{modbusDeviceResourceId}}'
                 name: Register 40011
                 config:
-                  friendlyName: Register 40011
                   pollFrequency: normal
                   modbusDiscoverySpecInfo/registerType: holdingRegister
                   modbusDiscoverySpecInfo/readWriteType: readOnly
@@ -2872,11 +3087,11 @@ paths:
             headers: Public request headers
             query: null
             body:
-              id: '{{modbusPointResourceId}}'
+              id: '{{modbusPointId}}'
               input: {}
         bacnetNetwork:
           summary: Create BACnet Network
-          description: Select a local instance number and UDP port that do not conflict on-site; store data.id as bacnetNetworkResourceId. Binding address and other extra fields follow the network config schema; reusing an existing network is also allowed.
+          description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `bacnetNetworkId`. BACnet Network is limited to a framework singleton; if an instance already exists, reuse the returned ID and do not create another one."
           method: POST
           path: /actions/create
           request:
@@ -2885,7 +3100,6 @@ paths:
             body:
               id: protocol:bacnet
               input:
-                entityKind: network
                 name: BACnet Network
                 config:
                   localDevice/objectInstanceNumber: 123456
@@ -2893,22 +3107,19 @@ paths:
                   enabled: true
         bacnetDiscoverDevice:
           summary: Discover BACnet Devices on Network
-          description: Requires deviceDiscovery=true. Store data.id as deviceJobId; options={} uses default parameters, do not assume other protocols support the same scan parameters.
+          description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources. Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost."
           method: POST
           path: /actions/discover
           request:
             headers: Public request headers
             query: null
             body:
-              id: protocol:bacnet
+              id: '{{bacnetNetworkId}}'
               input:
-                ownerKind: network
-                ownerId: '{{bacnetNetworkResourceId}}'
-                targetKind: device
                 options: {}
         bacnetImportDevice:
           summary: Import Selected BACnet Devices
-          description: The device instance ID is obtained from data.results[].created.instanceId, store as bacnetDeviceResourceId. Up to 200 candidates in batch; check results one by one and keep the successful ones, do not reconstruct all objects due to a partial failure. For import, ownerId must point to the same running instance as the owner recorded by the server during discovery; other owners of the same protocol and type will be rejected. Protocol, ownerKind, and targetKind must also match, and candidates must belong to the job. Old tasks missing complete server context cannot use client parameters for supplementation, and all checks are completed before batch creation.
+          description: "`import` acts on a discovery Job. `input` must contain 1–200 `discoveryObjectIds` and exactly one of `networkId` (import devices) or `deviceId` (import points; Open device ID). `ownerId` and `pointConfigs` are not accepted. The server validates job ownership, target type, protocol, and permissions for the whole batch, then checks `results` item by item. Successful items contain only `resource.id`/`type`; failed items contain `errorCode`/`message`. Save `data.results[].resource.id` as `bacnetDeviceId`."
           method: POST
           path: /actions/import
           request:
@@ -2917,27 +3128,24 @@ paths:
             body:
               id: '{{deviceJobId}}'
               input:
-                ownerId: '{{bacnetNetworkResourceId}}'
                 discoveryObjectIds:
                 - '{{deviceCandidateId}}'
+                networkId: '{{bacnetNetworkId}}'
         bacnetDiscoverPoint:
           summary: Discover BACnet Points on Device
-          description: Requires pointDiscovery=true. Store data.id as pointJobId, follow polling rules for the job; cannot directly import tasks still running.
+          description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources. Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost."
           method: POST
           path: /actions/discover
           request:
             headers: Public request headers
             query: null
             body:
-              id: protocol:bacnet
+              id: '{{bacnetDeviceId}}'
               input:
-                ownerKind: device
-                ownerId: '{{bacnetDeviceResourceId}}'
-                targetKind: point
                 options: {}
         bacnetImportPoint:
           summary: Import Selected BACnet Points
-          description: Store bacnetPointResourceId from data.results[].created.instanceId. input only accepts ownerId/discoveryObjectIds; pointConfigs, targetProperty, or conversion are not accepted. For import, ownerId must point to the same running instance as the owner recorded by the server during discovery; other owners of the same protocol and type will be rejected. Protocol, ownerKind, and targetKind must also match, and candidates must belong to the job. Old tasks missing complete server context cannot use client parameters for supplementation, and all checks are completed before batch creation.
+          description: "`import` acts on a discovery Job. `input` must contain 1–200 `discoveryObjectIds` and exactly one of `networkId` (import devices) or `deviceId` (import points; Open device ID). `ownerId` and `pointConfigs` are not accepted. The server validates job ownership, target type, protocol, and permissions for the whole batch, then checks `results` item by item. Successful items contain only `resource.id`/`type`; failed items contain `errorCode`/`message`. Save `data.results[].resource.id` as `bacnetPointId`."
           method: POST
           path: /actions/import
           request:
@@ -2946,12 +3154,12 @@ paths:
             body:
               id: '{{pointJobId}}'
               input:
-                ownerId: '{{bacnetDeviceResourceId}}'
                 discoveryObjectIds:
                 - '{{pointCandidateId}}'
+                deviceId: '{{bacnetDeviceId}}'
         haNetwork:
           summary: Create Home Assistant Network
-          description: Replace with a reachable address and long-lived Home Assistant access token; store data.id as haNetworkResourceId. Token is a sensitive write field and will not appear in properties readback.
+          description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `haNetworkId`."
           method: POST
           path: /actions/create
           request:
@@ -2960,7 +3168,6 @@ paths:
             body:
               id: protocol:homeAssistantBridge
               input:
-                entityKind: network
                 name: Home Assistant
                 config:
                   ipAddress/ipAddress: 192.0.2.20
@@ -2968,22 +3175,19 @@ paths:
                   token: '{{haToken}}'
         haDiscoverDevice:
           summary: Discover Home Assistant Devices
-          description: First verify the deviceDiscovery capability for the current directory; save the task ID and use the same flow as BACnet (job→discovery(kind=device)→import), with ownerId changed to haNetworkResourceId.
+          description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources. Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost."
           method: POST
           path: /actions/discover
           request:
             headers: Public request headers
             query: null
             body:
-              id: protocol:homeAssistantBridge
+              id: '{{haNetworkId}}'
               input:
-                ownerKind: network
-                ownerId: '{{haNetworkResourceId}}'
-                targetKind: device
                 options: {}
         knxNetwork:
           summary: Create KNX Network
-          description: Use localIp=0.0.0.0 for automatic address; store data.id as knxNetworkResourceId. You can also provide the Studio's actual network card address.
+          description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `knxNetworkId`."
           method: POST
           path: /actions/create
           request:
@@ -2992,24 +3196,21 @@ paths:
             body:
               id: protocol:knxClient
               input:
-                entityKind: network
                 name: KNX Network
                 config:
                   localIp: 0.0.0.0
                   enabled: true
         knxDevice:
           summary: Manually Create KNX Tunnel Device
-          description: Use an available physical address and tunnel endpoint on-site; store data.id as knxDeviceResourceId. Manual addition requires manualDeviceAdd=true.
+          description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `knxDeviceId`."
           method: POST
           path: /actions/create
           request:
             headers: Public request headers
             query: null
             body:
-              id: protocol:knxClient
+              id: '{{knxNetworkId}}'
               input:
-                entityKind: device
-                parentId: '{{knxNetworkResourceId}}'
                 name: KNX IP Interface
                 config:
                   deviceAddress: 1.1.250
@@ -3020,18 +3221,15 @@ paths:
                   enabled: true
         knxDiscoverDevice:
           summary: Discover KNX Interface Devices
-          description: Can be used as another path for manual addition, requires deviceDiscovery=true. Follow job→discovery(kind=device)→import flow, use knxNetworkResourceId as ownerId. Do not add the same device repeatedly.
+          description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources. Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost."
           method: POST
           path: /actions/discover
           request:
             headers: Public request headers
             query: null
             body:
-              id: protocol:knxClient
+              id: '{{knxNetworkId}}'
               input:
-                ownerKind: network
-                ownerId: '{{knxNetworkResourceId}}'
-                targetKind: device
                 options: {}
         createBackup:
           summary: Create Local System Backup
@@ -3091,7 +3289,7 @@ paths:
                     transitionTime: 1.0
         sequenceAssign:
           summary: Assign Scene to Device
-          description: Always binds the latest version, only accepts deviceId; requests with revision (including null) will be rejected. Then query with deviceId until assignment.syncState=SYNCED and syncedRevision=revision before starting.
+          description: Always bind the latest version, only accept deviceId; reject revision (including null). Query with deviceId, wait for assignment.syncState=SYNCED and syncedRevision=revision before starting.
           method: POST
           path: /actions/assign
           request:
@@ -3181,6 +3379,129 @@ paths:
             body:
               id: '{{sequenceId}}'
               input: {}  
+        modbusDeletePoint:
+          summary: Delete Test Modbus Point
+          description: Delete only resources created by this test that are deletable. Follow Point → Device → Network order and do not operate on other resources.
+          method: POST
+          path: /actions/delete
+          request:
+            headers: Public request headers
+            query: null
+            body:
+              id: '{{modbusPointId}}'
+              input: {}
+        modbusDeleteDevice:
+          summary: Delete Test Modbus Device
+          description: Delete only resources created by this test that are deletable. Follow Point → Device → Network order and do not operate on other resources.
+          method: POST
+          path: /actions/delete
+          request:
+            headers: Public request headers
+            query: null
+            body:
+              id: '{{modbusDeviceId}}'
+              input: {}
+        modbusDeleteNetwork:
+          summary: Delete Test Modbus Network
+          description: Delete only resources created by this test that are deletable. Follow Point → Device → Network order and do not operate on other resources.
+          method: POST
+          path: /actions/delete
+          request:
+            headers: Public request headers
+            query: null
+            body:
+              id: '{{modbusNetworkId}}'
+              input: {}
+        connectionSnapshotDevice:
+          summary: Query Connection Snapshot by Open deviceId
+          description: Read-only; does not create a connection or probe. Exposed only on script-protocol Networks; inspect the actual `commands`.
+          method: POST
+          path: /actions/connectionSnapshot
+          request:
+            headers: Public request headers
+            query: null
+            body:
+              id: '{{tcpNetworkId}}'
+              input:
+                deviceId: '{{tcpDeviceId}}'
+        connectionSnapshotLegacy:
+          summary: Connection Snapshot with Legacy targetId
+          description: New `deviceId` accepts only an Open device ID. Legacy `targetId` accepts a device node ID or Open ID; snapshots also accept a Point ID. When both fields are sent, they must resolve to the same device and must not mix point selection. Management permission, device authorization, and Network ownership are still validated.
+          method: POST
+          path: /actions/connectionSnapshot
+          request:
+            headers: Public request headers
+            query: null
+            body:
+              id: '{{tcpNetworkId}}'
+              input:
+                deviceId: '{{tcpDeviceId}}'
+                targetId: '{{legacyDeviceNodeId}}'
+        startDebugSession:
+          summary: Create Bounded Diagnostic Session
+          description: Call only on script Networks that expose this command in `commands`. TTL is at most 120000 ms. Check the returned `capabilities` first. Globally at most two active sessions, or four including terminal states. After stop, records are retained for 60 seconds; when the limit is reached, returns `BUSY`.
+          method: POST
+          path: /actions/startDebugSession
+          request:
+            headers: Public request headers
+            query: null
+            body:
+              id: '{{tcpNetworkId}}'
+              input:
+                ttlMs: 60000
+        probeOnceDevice:
+          summary: Probe with Open deviceId
+          description: Only when `session.capabilities.probe=true`. Legacy `targetId` is accepted, but new requests should prefer `deviceId`. The result is an operation resource whose status must be read; accepting the request does not mean the device probe succeeded.
+          method: POST
+          path: /actions/probeOnce
+          request:
+            headers: Public request headers
+            query: null
+            body:
+              id: '{{debugSessionId}}'
+              input:
+                deviceId: '{{tcpDeviceId}}'
+                timeoutMs: 3000
+        readOncePoint:
+          summary: Actually Read Specified Point
+          description: Point diagnostics keep `targetId` as the Point ID; do not substitute `deviceId`. Success requires a real packet send and application to the target point.
+          method: POST
+          path: /actions/readOnce
+          request:
+            headers: Public request headers
+            query: null
+            body:
+              id: '{{debugSessionId}}'
+              input:
+                targetId: '{{tcpPointId}}'
+                timeoutMs: 3000
+        writeAndWaitPoint:
+          summary: Write and Wait for Business ACK When Authorized
+          description: Call only with explicit control authorization and capability support. `clientOperationId` and `waitFor` are required. MQTT PUBACK is not a device business ACK. When `protocolAck` is unsupported, choose `send` or `stateUpdate` with `expectedValue` according to actual capabilities. A timeout must not be treated as not executed, and must not trigger blind retries.
+          method: POST
+          path: /actions/writeAndWait
+          request:
+            headers: Public request headers
+            query: null
+            body:
+              id: '{{debugSessionId}}'
+              input:
+                targetId: '{{tcpPointId}}'
+                clientOperationId: example-write-001
+                waitFor: protocolAck
+                value: 41
+                timeoutMs: 3000
+        stopDebugSession:
+          summary: Stop This Diagnostic Session
+          description: After stop, no further packets may be sent. Device actions already sent cannot be rolled back; history is handled per retention policy.
+          method: POST
+          path: /actions/stop
+          request:
+            headers: Public request headers
+            query: null
+            body:
+              id: '{{debugSessionId}}'
+              input: {}
 
   # ────────────────────────────────────────────────────────────────
   # Query Gateway List
@@ -3535,6 +3856,31 @@ paths:
           $ref: '#/components/responses/TooManyRequestsResponse'
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
+      x-request-examples:
+        batchCommandCode:
+          summary: batchCommandCode
+          description: Query the actual device capabilities first, then replace the example identity. Command items prefer commandCode; if omitted, traitCode is compatible. Do not pass value.
+          method: POST
+          path: /automations
+          request:
+            headers: Public request headers
+            query: null
+            body:
+              name: Batch command example
+              config:
+                automations:
+                - starters:
+                  - type: time.schedule
+                    at: 08:00
+                  actions:
+                  - type: device.batch
+                    items:
+                    - deviceId: device-001
+                      endpointId: 0
+                      functionCode: Output
+                      command: true
+                      commandCode: Toggle
+                      args: []
     get:
       tags: [Automation]
       summary: List Automations
@@ -3581,7 +3927,7 @@ paths:
         - in: query
           name: spaceIds
           required: false
-          description: "Whether to query automations under the specified list of space IDs. Example: spaceIds=xx1,xx2 or spaceIds=xx1&spaceIds=xx2. If empty, automations will not be filtered by space."
+          description: "Whether to query automations under the specified list of space IDs. Support comma separation or repeated parameters; any associated space hit, multiple IDs take union, only return once for the same object. totalCount is calculated after deduplication and before pagination. If omitted or empty, do not filter by specified space. Example: spaceIds=xx1,xx2 or spaceIds=xx1&spaceIds=xx2. Do not filter by specified space if empty."
           schema:
             type: array
             items:
@@ -3819,6 +4165,7 @@ paths:
         - Automations not associated with any space will be newly associated.
         - Automations associated with other spaces will be reconnected to the target space.
         - Automations already associated with the target space will remain unchanged and be considered successful.
+        - If `spaceIds` is an empty array, clear the existing space association for the automation.
         Return successIds / failedItems item by item. Partial success still returns code=0; all failures return code=2023, REST HTTP 400.
       operationId: updateAutomationSpace
       x-skill-intent: automation.space.update
@@ -4667,6 +5014,7 @@ paths:
                           deviceName: "Living Room Temp-Humidity Sensor"
                           deviceId: "device-001"
                           devicePointName: "Temperature"
+                          devicePointId: alarm-point-001
                           alarmClass: Warning
                           alarmRuleName: "High Temperature Alarm"
                           alarmText: "Temperature exceeds threshold"
@@ -4677,6 +5025,7 @@ paths:
                           deviceName: "Bedroom Smoke Sensor"
                           deviceId: "device-002"
                           devicePointName: "Smoke Concentration"
+                          devicePointId: alarm-point-001    
                           alarmClass: Critical
                           alarmRuleName: "Smoke Alarm"
                           alarmText: "Smoke Detected"
@@ -5024,6 +5373,22 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
       description: You can create a scene by this API. A scene consists of actions and optional metadata; it has no starters, conditions, or enabled flag. The target ID for updates is in the body; success means the request was accepted. For batch operations, check the result of each item.
+      x-request-examples:
+        sceneConcurrency:
+          summary: sceneConcurrency
+          description: New executions in the same group interrupt old executions; the example only shows the configuration, the scene is not executed when created.
+          method: POST
+          path: /scenes
+          request:
+            headers: Public request headers
+            query: null
+            body:
+              name: Exclusive scene example
+              config:
+                concurrencyGroup: room-lighting
+                actions:
+                - type: delay
+                  for: 1sec
     get:
       tags: [Scene]
       summary: List Scenes
@@ -5043,7 +5408,7 @@ paths:
       - in: query
         name: spaceIds
         required: false
-        description: "List of space IDs. URL examples: spaceIds=xx1,xx2 or spaceIds=xx1&spaceIds=xx2. When empty, no filtering by specific spaces."
+        description: "Whether to query scenes under the specified list of space IDs. Support comma separation or repeated parameters; any associated space hit, multiple IDs take union, only return once for the same object. totalCount is calculated after deduplication and before pagination. If omitted or empty, do not filter by specified space. Example: spaceIds=xx1,xx2 or spaceIds=xx1&spaceIds=xx2. Do not filter by specified space if empty."
         schema:
           type: array
           items:
@@ -5189,7 +5554,7 @@ paths:
           $ref: '#/components/responses/TooManyRequestsResponse'
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
-      description: You can associate a scene with a space by this API. A scene consists of actions and optional metadata; it has no starters, conditions, or enabled flag. The target ID for updates is in the body; success means the request was accepted. For batch operations, check the result of each item.
+      description: Call this API to replace each scene's direct space associations as a whole. `spaceIds` supports multiple IDs; an empty array clears direct associations. The legacy single-space `spaceId` parameter remains compatible; only one non-null form may be provided. Batch operations return `successIds` / `failedItems` item by item. Partial success still returns code=0; all failures return code=2023, REST HTTP 400.
 
   /scenes/execute:
     post:
@@ -5484,22 +5849,22 @@ components:
         id:
           type: string
           minLength: 1
-          description: Complete handle of the target Resource; create/discover use the corresponding catalog or service ID; other commands use the specific resource or task ID according to commandTargets. This is not the business deviceId of the device API.
+          description: Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. The target of `create` is a catalog or the actual parent resource; `discover` uses a Network/Device; `import` uses a Job; diagnostic operations use a Network or a session.
         input:
           type: object
           additionalProperties: true
           default: {}
-          description: "Command input parameters; specific fields follow the command Schema returned by the resource type definition; the ownerId for import must match the server-side task context; rediscover when old tasks lack context."
+          description: Command-specific input. For protocol `create`/`discover`/`import`, see `ProtocolResourceCreateInput`, `ProtocolResourceDiscoverInput`, and `ProtocolDiscoveryImportInput` respectively; other commands follow the runtime type definition.
 
     ResourceOpenApiResponse:
+      description: Unified Resource response. `code=0` indicates success. `data` returns pagination, details, a job, a delete result, or a command result depending on the operation. Protocol create returns only `id`/`type`; successful import items contain only `resource.id`/`type`; check `errorCode`/`message` on failed items.
       allOf:
       - $ref: '#/components/schemas/BaseResponse'
       - type: object
         properties:
           data:
             nullable: true
-            description: Synchronous command result or job resource. For create, the resource ID is data.id; discover/backup create/restore return the job's data.id; discovery import returns
-              data.results[].created.instanceId item by item, not data.items[].id.
+            description: Returns details, pagination, a job, or a command result depending on the operation. Protocol create returns only `id`/`type`; discovery returns a Job; import returns `results[].resource.id`/`type` item by item, or `errorCode`/`message` on failure; delete returns `id`/`type`/`deleted`.
 
     ResourceHealth:
       type: object
@@ -5516,29 +5881,43 @@ components:
 
     ResourceItem:
       type: object
-      description: "Generic resource entry. Protocol catalogs/instances return top-level protocolId; devices and points return deviceId according to business visibility and authorization; points return a complete controlReference or explicitly unavailable based on the current device definition. Identity fields are read-only and are not part of properties.\n\nFor sequence resources, list and detail responses convert resolvable historical effects to properties.data.type=commands.\nWhen conversion is not possible, ID, name, revision, binding, and original format are retained, and\nproperties.data={\"type\":\"unavailable\",\"reason\":\"Effect data cannot be represented as commands\"} is returned;\nstep commands or raw protocol bytes are not returned, and storage is not modified. unavailable resources forbid property updates, assign, and retry.\nUser configuration can still unbind; deletion is allowed when unbound; start is allowed only when binding is SYNCED and syncedRevision=revision.\nTop-level resource commands are allowed operation names, distinct from properties.data.commands effect steps.\ncreate/preview accept only commands data, not unavailable.\nsequence create input must include deviceId, submitted together with name and data; icon is optional.\nsequence assign input accepts only deviceId and always assigns the latest version; passing revision (including null) is rejected.\nproperties.actionType is a read-only integer corresponding to LightingEffect ActionType: 0 static, 1 dynamic, 2 sequence, 3 segmented static, 4 segmented dynamic.\nproperties.labelTypeName is a read-only string. Built-in scenes (source=SYSTEM_PRESET) return category text localized by the Lang request header\n(e.g. Chinese 「日常」, English Daily); when not found in the dictionary, fall back to the InnerScene.labelType.* key. For user-defined scenes this field is an empty string.\nWhen querying with deviceId, entries already belonging to the current device include properties.assignment; pending-assignment entries omit this field."
+      description: |-
+        Generic resource detail/list entry. Device `id` is the Open `deviceId`; Network/Point use their respective node IDs. Protocol create/import returns only `ProtocolResourceReference` and does not read config, schema, or health. For Network/Device/Point details, the protocol type is in `properties.protocolId`.
+
+        For `sequence` resources, list and detail responses convert resolvable historical effects to `properties.data.type=commands`.
+        When conversion fails, the ID, name, revision, bindings, and original format are retained, and the response returns
+        `properties.data={"type":"unavailable","reason":"Effect data cannot be represented as commands"}`.
+        Step `commands` and raw protocol bytes are not returned, and storage is not modified. `unavailable` resources forbid property updates, `assign`, and `retry`.
+        User configurations can still be unbound and deleted when unbound; start is allowed only when the binding is `SYNCED` and `syncedRevision=revision`.
+        Top-level resource `commands` are allowed operation names and differ from `properties.data.commands` effect steps.
+        `create`/`preview` accept only `commands` data, not `unavailable`.
+        `sequence` `create` input must include `deviceId` together with `name` and `data`; `icon` is optional.
+        `sequence` `assign` input accepts only `deviceId` and always assigns the latest version; passing `revision` (including `null`) is rejected.
+        `properties.actionType` is a read-only integer corresponding to LightingEffect ActionType: 0 static, 1 dynamic, 2 sequence, 3 segmented static, 4 segmented dynamic.
+        `properties.labelTypeName` is a read-only string. Built-in scenes (`source=SYSTEM_PRESET`) return category text localized by the `Lang` request header
+        (for example, Chinese「日常」, English Daily). When the dictionary misses, it falls back to the `InnerScene.labelType.*` key. For user-defined scenes this field is an empty string.
+        When querying with `deviceId`, entries already belonging to the current device include `properties.assignment`; pending assignment entries omit this field.
       required: [id, type, properties]
       properties:
         id:
           type: string
-          description: Complete operation handle of the current Resource; protocol.network/device/point use runtime node identity and are not equal to the business deviceId.
+          description: Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias.
         type:
           type: string
         properties:
           type: object
           additionalProperties: true
-          description: |
-            External property value set; values use plain JSON scalars or business objects, without Studio internal path/type/value wrappers, and without sensitive configuration marked writeOnly in the dynamic Schema.    
-            Common sequence fields: name, format, actionType, data, icon, labelTypeName, source, revision, assignment.
+          description: Detail/list properties. The protocol type is the read-only `properties.protocolId`. Device responses do not repeat `properties.deviceId`. Values are plain JSON; sensitive fields are not read back. Create/import references have no `properties`. Sequence properties follow their type definition.
+
         commands:
           type: array
           items:
             type: string
-          description: "Command names executable on the current instance; re-read before execution, and the server still re-validates. sequence entries may include assign, unassign, start, retry, delete; use the values returned by the current instance."
+          description: Command names executable on the current instance. Read them back before execution; the server still revalidates. Sequence entries may include `assign`, `unassign`, `start`, `retry`, and `delete`; use the values returned for the current instance.
         schema:
           type: object
           additionalProperties: true
-          description: Dynamic configuration Schema returned when reading a protocol resource by ID; sensitive fields are marked sensitive=true, writeOnly=true, readable=false
+          description: Update schema returned when reading a protocol instance by ID. Create configuration follows the type definition `protocols[protocolId]`; sensitive fields have `writeOnly=true`.
         health:
           $ref: '#/components/schemas/ResourceHealth'
 
@@ -5562,52 +5941,6 @@ components:
                 - DETACHED
                 - NOT_PERMITTED
                 - STATE_REJECTED
-        protocolId:
-          type: string
-          readOnly: true
-          description: Protocol affiliation; returned for protocol / protocol.network / protocol.device / protocol.point list, read, create, and update; also returned for discovery jobs and candidates. Not a catalog handle or business device
-            ID.
-          example: modbus
-        deviceId:
-          type: string
-          readOnly: true
-          description: Associated business device ID; returned only for protocol devices/points that are associated, visible, and authorized for the device. Separate from the runtime id; not used for parentId/ownerId.
-        controlReferenceStatus:
-          type: string
-          readOnly: true
-          enum:
-          - available
-          - unavailable
-          description: Whether the business control reference of the protocol point is available. When unavailable, omit controlReference; do not return a partial reference.
-        controlReference:
-          $ref: '#/components/schemas/ResourceControlReference'
-        projectionStatus:
-          type: string
-          enum:
-          - unavailable
-          readOnly: true
-          description: Create succeeded, but detail re-read failed; code=0 and id/protocolId are retained. Re-read the original id; do not create again.
-        jobId:
-          type: string
-          readOnly: true
-          description: Job ID of the discovery candidate; not an owner or runtime instance ID.
-        ownerId:
-          type: string
-          readOnly: true
-          description: "Runtime owner ID of the network/device for the discovery job; retained for new Resource discovery jobs within the same job lifecycle. May be missing for old jobs. Import is not allowed without complete context; rediscover is required."
-     
-        ownerKind:
-          type: string
-          readOnly: true
-          enum:
-          - network
-          - device
-        targetKind:
-          type: string
-          readOnly: true
-          enum:
-          - device
-          - point
 
     ResourceTypeSummary:
       type: object
@@ -5983,7 +6316,7 @@ components:
           description: Full configuration category mask of the associated protocol instance type, using the same bit definitions as filter options and query parameters; not the device's real-time NetworkProtocolSupport Trait value. Omitted when there is no associated instance, the mask is not configured, or the configuration is invalid for supplemental-only responses; do not use 0 to mean unknown, and do not trim to only the bits that matched the query.
         deviceId:
           type: string
-          description: Business device DID / unique identifier from the device API's deviceId; not the protocol Resource's id, parentId, or the point tool's instanceId.
+          description: Business device ID, same as the `id` of the `protocol.device` Resource; not the Network, Point, Job ID, or the point tool's `instanceId`.
         gatewayId:
           type: string
           nullable: true
@@ -6033,7 +6366,7 @@ components:
       properties:
         deviceId:
           type: string
-          description: Device ID (DID) / unique identifier from the device API's deviceId; not the protocol Resource id, parentId, or the point tool's instanceId.
+          description: Business device ID, same as the `id` of the `protocol.device` Resource; not the Network, Point, Job ID, or the point tool's `instanceId`.
         gatewayId:
           type: string
           nullable: true
@@ -6166,6 +6499,186 @@ components:
                         pointName: Hub - Bridge Node List
                         displayTags: ["98"]
                     commands: []
+
+    BatchDeviceCapabilitiesRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - deviceIds
+      anyOf:
+      - required:
+        - functionCodes
+        properties:
+          functionCodes:
+            minItems: 1
+      - required:
+        - traitCodes
+        properties:
+          traitCodes:
+            minItems: 1
+      - required:
+        - commandCodes
+        properties:
+          commandCodes:
+            minItems: 1
+      properties:
+        deviceIds:
+          type: array
+          minItems: 1
+          maxItems: 20
+          items:
+            type: string
+            minLength: 1
+            pattern: \S
+          description: Required. Limited to 1–20 items by the original array length. Validate the count first, then trim and deduplicate in first-seen order. Duplicates count toward the limit; blank IDs are rejected. Each ID is an opaque string and is not split by commas.
+        deviceTypesList:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            pattern: \S
+          default: []
+          description: Restricts overall device types and endpoint types; cannot be used alone as a capability condition. Each item must be non-empty after trim; each array element is a complete code and is not split by commas.
+        deviceTypesMatchMode:
+          type: string
+          enum:
+          - or
+          - and
+          - OR
+          - AND
+          default: or
+          description: Match mode within the list; case-insensitive.
+        functionCodes:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            pattern: \S
+          default: []
+          description: Match function codes. Provide at least one non-empty list among `functionCodes`, `traitCodes`, and `commandCodes`. Each item must be non-empty after trim; each array element is a complete code and is not split by commas.
+        functionCodesMatchMode:
+          type: string
+          enum:
+          - or
+          - and
+          - OR
+          - AND
+          default: or
+          description: Match mode within the list; case-insensitive.
+        traitCodes:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            pattern: \S
+          default: []
+          description: Match trait codes and return definitions plus obtainable current values. Each item must be non-empty after trim; each array element is a complete code and is not split by commas.
+        traitCodesMatchMode:
+          type: string
+          enum:
+          - or
+          - and
+          - OR
+          - AND
+          default: or
+          description: Match mode within the list; case-insensitive. For trait/command, `and` requires all codes to be satisfied within the same function.
+        commandCodes:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            pattern: \S
+          default: []
+          description: Match command codes and return only command and field definitions, without current values. Each item must be non-empty after trim; each array element is a complete code and is not split by commas.
+        commandCodesMatchMode:
+          type: string
+          enum:
+          - or
+          - and
+          - OR
+          - AND
+          default: or
+          description: Match mode within the list; case-insensitive. For trait/command, `and` requires all codes to be satisfied within the same function.
+        displayTags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            pattern: \S
+          default: []
+          description: Filter display tags using the same rules as GET. Each item must be non-empty after trim; each array element is a complete code and is not split by commas.
+        displayTagsMatchMode:
+          type: string
+          enum:
+          - or
+          - and
+          - OR
+          - AND
+          default: or
+          description: Match mode within the list; case-insensitive.
+    BatchDeviceCapabilitiesResponse:
+      allOf:
+      - $ref: '#/components/schemas/BaseResponse'
+      - type: object
+        required:
+        - data
+        properties:
+          type:
+            type: string
+            enum:
+            - BatchDeviceCapabilitiesResponse
+          data:
+            type: array
+            maxItems: 20
+            items:
+              $ref: '#/components/schemas/DeviceDefinition'
+      example:
+        type: BatchDeviceCapabilitiesResponse
+        version: v1
+        msgId: batch-example
+        code: 0
+        message: success
+        data:
+        - deviceId: device-a
+          name: Sample Light A
+          deviceTypesList:
+          - light
+          endpoints:
+          - endpointId: 2
+            endpointName: Main Light
+            deviceType: light
+            functions:
+            - functionCode: OnOff
+              traits:
+              - traitCode: OnOff
+                parameter:
+                  type: Bool
+                  readable: true
+                  writable: true
+                  subscribable: true
+                value: false
+                displayTags: []
+              commands: []
+        - deviceId: device-b
+          name: Sample Light B
+          deviceTypesList:
+          - light
+          endpoints:
+          - endpointId: 2
+            endpointName: Main Light
+            deviceType: light
+            functions:
+            - functionCode: OnOff
+              traits:
+              - traitCode: OnOff
+                parameter:
+                  type: Bool
+                  readable: true
+                  writable: true
+                  subscribable: true
+                value: true
+                displayTags: []
+              commands: []
 
     GetMatchedDeviceCapabilitiesResponse:
       allOf:
@@ -6791,21 +7304,32 @@ components:
             writable:
               type: boolean
               description: Whether it is writable
-              default: true
+              default: false
             subscribable:
               type: boolean
               description: Whether it is subscribable
-              default: true
+              default: false
+            dynamicSchema:
+              type: object
+              nullable: true
+              additionalProperties: true
+              description: Optional dynamic candidate value discovery description, used to parse the current optional values; the candidate list is not the control value whitelist. Query according to dynamicSchema, do not construct candidates yourself.              
 
     CommandFieldParameter:
       allOf:
-        - $ref: '#/components/schemas/BaseParameter'
-        - type: object
-          required: [mandatory]
-          properties:
-            mandatory:
-              type: boolean
-              description: Whether it is mandatory
+      - $ref: '#/components/schemas/BaseParameter'
+      - type: object
+        required:
+        - mandatory
+        properties:
+          mandatory:
+            type: boolean
+            description: 是否必填
+          dynamicSchema:
+            type: object
+            nullable: true
+            additionalProperties: true
+            description: Optional dynamic candidate value discovery description, used to parse the current optional values; the candidate list is not the control value whitelist. Query according to dynamicSchema, do not construct candidates yourself.
 
     KeyValue:
       type: object
@@ -7611,7 +8135,12 @@ components:
     
     DevicePointHistoryItem:
       type: object
-      required: [deviceId, value, unit, time]
+      required:
+      - deviceId
+      - value
+      - unit
+      - time
+      - triggerPath
       properties:
         deviceId:
           type: string
@@ -7636,10 +8165,10 @@ components:
         value:
           description: Typed JSON scalar; number, boolean, enum index, or string. NaN and positive/negative Infinity return null.
           oneOf:
-            - type: number
-            - type: boolean
-            - type: string
-              nullable: true
+          - type: number
+          - type: boolean
+          - type: string
+            nullable: true
         valueName:
           type: string
           nullable: true
@@ -7659,6 +8188,10 @@ components:
           type: integer
           format: int64
           description: History record time, Unix millisecond timestamp.
+        triggerPath:
+          type: string
+          default: ''
+          description: Trigger path; empty if not available.
 
     DevicePointHistoryQueryData:
       type: object
@@ -7712,6 +8245,7 @@ components:
               pointName: "Switch"
               triggerName: "Automation"
               unit: ""
+              triggerPath: ''
               time: 1770639800000
           startTime: 1770114300000
           endTime: 1770639900000
@@ -7883,6 +8417,7 @@ components:
           data:
             - deviceId: "device-001"
               deviceName: "Bedroom light"
+              currentFirmwareVersion: 1.0.0
               state: true
               space:
                 parentSpaceId: "space-home-001"
@@ -7965,7 +8500,12 @@ components:
 
     UpgradableDeviceFirmwareItem:
       type: object
-      required: [deviceId, deviceName, state, upgradableFirmwares]
+      required:
+      - deviceId
+      - deviceName
+      - state
+      - upgradableFirmwares
+      - currentFirmwareVersion
       properties:
         deviceId:
           type: string
@@ -7984,6 +8524,9 @@ components:
           description: List of upgradable firmware for this device
           items:
             $ref: '#/components/schemas/UpgradableFirmwareInfo' 
+        currentFirmwareVersion:
+          type: string
+          description: Current firmware version of the device.
             
     UpgradableFirmwareSearchData:
       type: object
@@ -8017,6 +8560,7 @@ components:
       - enabled
       - definitionType
       - createTime
+      - spaces
       properties:
         automationId:
           type: string
@@ -8049,12 +8593,17 @@ components:
             nullable: true
             enum:
             - null
-          description: Current associated space; null if not associated.
+          description: Legacy single-space field, equal to the first item of `spaces`. Omitted when no resolvable association exists; clients may treat omission as `null`.
         metadata:
           type: object
           nullable: true
           additionalProperties: true
           description: The object metadata returned when includeMetadata=true; different from config.metadata.
+        spaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpaceNode'
+          description: All resolvable associated spaces, deduplicated by `spaceId`; `[]` when there is no association. When there is no valid direct association, falls back to the previous parent-space behavior.
    
 
     AutomationDetails:
@@ -8084,6 +8633,23 @@ components:
               nullable: true
               enum:
               - null
+          issues:
+            type: array
+            readOnly: true
+            description: Read-only automation diagnostics, sibling to `config`. `path` is relative to the automation `config` (for example, `automations[0].actions[0].value`). Healthy detail responses return `[]`; list responses omit this field. It is not written into `configText` and does not relax create/update validation. Historical read-only targets that include diagnostics must be fixed before write-back; when the structure cannot be projected, it still falls back to `FLOW_CANONICAL`.
+            items:
+              type: object
+              required:
+              - code
+              - path
+              - message
+              properties:
+                code:
+                  type: string
+                path:
+                  type: string
+                message:
+                  type: string
 
     JsonAutomationConfig:
       description: |
@@ -8300,6 +8866,14 @@ components:
           description: Legacy input compatibility field; new callers can omit.
         config:
           $ref: '#/components/schemas/JsonAutomationConfig'
+        spaceIds:
+          type: array
+          nullable: true
+          items:
+            type: string
+            minLength: 1
+            pattern: '\S'
+          description: Optional initial space associations. Pass multiple IDs; the server deduplicates. When omitted, `null`, or an empty array, no direct association is created.
 
     UpdateAutomationRequest:
       type: object
@@ -8328,19 +8902,60 @@ components:
           description: Replace the entire public configuration; allows replacing the CfgFlowLogic that can be exported or rolled back to the original graph; does not qualify for updates based on the SCRIPT_JSON classification.
         updateMask:
           type: array
-          description: Non-empty array. It supports name, enabled, config; selected fields must be valid; do not send non-null values for unselected fields.
+          description: Non-empty array. It supports name, enabled, config, and spaceIds; selected fields must be valid; do not send non-null values for unselected fields.
           items:
             type: string
             enum:
             - name
             - enabled
             - config
+            - spaceIds
           minItems: 1
           uniqueItems: true
         automationId:
           type: string
           minLength: 1
           description: Target automationId, placed in the request body.
+        spaceIds:
+          type: array
+          nullable: true
+          items:
+            type: string
+            minLength: 1
+            pattern: '\S'
+            description: Must provide a non-null array when `spaceIds` is selected in `updateMask`; replace as a whole, not append; an empty array clears direct associations. Omit this field and its mask when not updating spaces.
+      allOf:
+      - oneOf:
+        - properties:
+            updateMask:
+              type: array
+              items:
+                type: string
+                enum:
+                - name
+                - enabled
+                - config
+            spaceIds:
+              type: array
+              nullable: true
+              enum:
+              - null
+        - required:
+          - spaceIds
+          properties:
+            updateMask:
+              type: array
+              not:
+                items:
+                  not:
+                    enum:
+                    - spaceIds
+            spaceIds:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                pattern: \S
 
     UpdateAutomationStatusRequest:
       type: object
@@ -8358,21 +8973,61 @@ components:
 
     UpdateAutomationSpaceRequest:
       type: object
-      required: [spaceId, automationIds]
+      required:
+      - automationIds
       properties:
         spaceId:
           type: string
           minLength: 1
-          description: Target space ID. When an automation has an associated space, it will be replaced with this space.
+          description: Legacy single-space parameter. Equivalent to `spaceIds` containing only this ID; mutually exclusive with a non-null `spaceIds`.
         automationIds:
           type: array
           minItems: 1
           description: List of automation IDs to update the space association.
           items:
             type: string
+        spaceIds:
+          type: array
+          nullable: true
+          items:
+            type: string
+            minLength: 1
+            pattern: \S
+          description: Target space ID array. Replaces the whole set rather than appending; the server deduplicates. An empty array clears direct associations.
       example:
-        spaceId: "space-livingroom-001"
-        automationIds: ["auto_01HXYZABCDEF1234567890"]
+        spaceIds:
+        - space-livingroom-001
+        - space-bedroom-001
+        automationIds:
+        - auto_01HXYZABCDEF1234567890
+      description: Replace each object's full set of direct space associations. Exactly one non-null form of `spaceId` or `spaceIds` must be provided; `spaceIds=[]` clears direct associations.
+      oneOf:
+      - required:
+        - spaceId
+        properties:
+          spaceId:
+            type: string
+            minLength: 1
+            pattern: \S
+          spaceIds:
+            type: array
+            nullable: true
+            enum:
+            - null
+      - required:
+        - spaceIds
+        properties:
+          spaceIds:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              pattern: \S
+          spaceId:
+            type: string
+            nullable: true
+            enum:
+            - null
 
     DeleteAutomationsRequest:
       type: object
@@ -8991,47 +9646,48 @@ components:
     AlarmInfo:
       type: object
       required:
-        - uuid
-        - deviceName
-        - deviceId
-        - devicePointName
-        - alarmClass
-        - alarmRuleName
-        - alarmText
-        - alarmValue
-        - sourceState
-        - alarmTime
+      - uuid
+      - deviceName
+      - deviceId
+      - devicePointName
+      - alarmClass
+      - alarmRuleName
+      - alarmText
+      - alarmValue
+      - sourceState
+      - alarmTime
+      - devicePointId
       properties:
         uuid:
           type: string
           description: Unique identifier for the alarm record
-          example: "alarm-uuid-001"
+          example: alarm-uuid-001
         deviceName:
           type: string
           description: Name of the alarm source device
-          example: "Living Room Temperature & Humidity Sensor"
+          example: Living Room Temperature & Humidity Sensor
         deviceId:
           type: string
           description: Device ID
-          example: "device-001"
+          example: device-001
         devicePointName:
           type: string
           description: Data point name
-          example: "Temperature"
+          example: Temperature
         alarmClass:
           $ref: '#/components/schemas/AlarmClass'
         alarmRuleName:
           type: string
           description: Name of the alarm rule
-          example: "High Temperature Alarm"
+          example: High Temperature Alarm
         alarmText:
           type: string
           description: Alarm message text
-          example: "Temperature exceeds threshold"
+          example: Temperature exceeds threshold
         alarmValue:
           type: string
           description: Alarm value / value description
-          example: "32.5"
+          example: '32.5'
         sourceState:
           $ref: '#/components/schemas/AlarmSourceState'
         alarmTime:
@@ -9039,6 +9695,9 @@ components:
           format: int64
           description: Alarm time (UTC millisecond timestamp)
           example: 1704100000000
+        devicePointId:
+          type: string
+          description: Alarm source point node ID; used for point-based alarm confirmation; not the device deviceId.
 
     AlarmListData:
       type: object
@@ -9088,6 +9747,7 @@ components:
               deviceName: "Living Room Temperature & Humidity Sensor"
               deviceId: "device-001"
               devicePointName: "Temperature"
+              devicePointId: alarm-point-001
               alarmClass: Warning
               alarmRuleName: "High Temperature Alarm"
               alarmText: "Temperature exceeds threshold"
@@ -9098,6 +9758,7 @@ components:
               deviceName: "Bedroom Smoke Sensor"
               deviceId: "device-002"
               devicePointName: "Smoke Concentration"
+              devicePointId: alarm-point-001
               alarmClass: Critical
               alarmRuleName: "Smoke Alarm"
               alarmText: "Smoke detected"
@@ -9418,6 +10079,11 @@ components:
         traitCode:
           type: string
           description: Trait code (e.g., OnOff, CurrentLevel).
+        valuePath:
+          type: string
+          minLength: 1
+          default: $
+          description: Normalized single-value path for structure leaves; use $ for scalars and root values.
       additionalProperties: false
 
     AutomationDslFlowVariable:
@@ -9484,7 +10150,7 @@ components:
           - device.property
         name:
           type: string
-          description: Variable name (optional).
+          description: 兼容旧直接属性引用的可选标签，不参与设备定位，也不声明 scope 变量；规范回读可以省略。
         deviceId:
           type: string
           description: Device ID.
@@ -9497,6 +10163,11 @@ components:
         traitCode:
           type: string
           description: Trait code (e.g., OnOff, CurrentLevel).
+        valuePath:
+          type: string
+          minLength: 1
+          default: $
+          description: Normalized single-value path for structure leaves; use $ for scalars and root values.
       additionalProperties: false
 
     AutomationDslDataRef:
@@ -9524,7 +10195,6 @@ components:
       type: object
       description: Selection expression to specify the variable to reference.
       required:
-      - by
       - value
       properties:
         by:
@@ -9600,6 +10270,10 @@ components:
           minItems: 2
           items:
             $ref: '#/components/schemas/AutomationDslCondition'
+        name:
+          type: string
+          description: Legacy rule label, can be different from `metadata.name`; the automation display name is determined by `metadata.name` or the `name` in the create request.
+          nullable: true
       additionalProperties: false
       allOf:
       - not:
@@ -9941,6 +10615,7 @@ components:
       - $ref: '#/components/schemas/AutomationDslTimeRangeFixed'
       - $ref: '#/components/schemas/AutomationDslFlowState'
       - $ref: '#/components/schemas/AutomationDslCompare'
+      - $ref: '#/components/schemas/AutomationDslTriggerValueCondition'
 
     AutomationDslAndCondition:
       type: object
@@ -10158,7 +10833,124 @@ components:
           - $ref: '#/components/schemas/AutomationDslGeoLocation'
           description: Latitude and longitude for sunrise and sunset calculations.
       additionalProperties: false
-  
+
+    AutomationDslEventStateHold:
+      type: object
+      required:
+      - type
+      - target
+      - holdMs
+      properties:
+        type:
+          enum:
+          - action.event_state_hold
+          type: string
+        target:
+          allOf:
+          - $ref: '#/components/schemas/AutomationDslAssignmentTarget'
+          description: A flow or global boolean variable, or a writable boolean device property.
+        holdMs:
+          type: integer
+          minimum: 1
+          maximum: 9007199254740991
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: true
+      description: "Event state hold: each event sets the boolean variable to true and renews the hold; after `holdMs` milliseconds from the last event, it is set to false. After the input completes, proceed on `out` immediately; timeout only updates the variable. On start, clear to false; on stop, cancel and clear the active state."
+
+    AutomationDslTriggerValueSource:
+      type: object
+      description: Root device point and struct leaf address of the event trigger value.
+      required:
+      - deviceId
+      - resourceId
+      - valuePath
+      properties:
+        deviceId:
+          type: string
+          minLength: 1
+        resourceId:
+          type: string
+          minLength: 1
+        valuePath:
+          type: string
+          minLength: 1
+          description: Canonical single-value path; use `$` for the root value.
+      additionalProperties: true
+
+    AutomationDslTriggerValueExpression:
+      type: object
+      description: Read-only reference to the event snapshot value at this Flow execution entry.
+      required:
+      - type
+      - eventNodeId
+      - source
+      - valueType
+      properties:
+        type:
+          type: string
+          enum:
+          - variable.trigger
+        eventNodeId:
+          type: string
+          minLength: 1
+        source:
+          $ref: '#/components/schemas/AutomationDslTriggerValueSource'
+        unit:
+          type: string
+          description: Unit snapshot at configuration time, used for later unit migration.
+        unitId:
+          type: string
+          description: Studio unit unique ID at configuration time, used for stable unit identification.
+        valueType:
+          type: string
+          enum:
+          - boolean
+          - number
+          - string
+          - enum
+      additionalProperties: true
+
+    AutomationDslTriggerValueCondition:
+      type: object
+      description: Compares the event snapshot value at this execution entry; does not read the device's current state.
+      required:
+      - type
+      - source
+      - op
+      - value
+      properties:
+        type:
+          type: string
+          enum:
+          - condition.trigger_value
+        source:
+          $ref: '#/components/schemas/AutomationDslTriggerValueExpression'
+        op:
+          type: string
+          enum:
+          - eq
+          - neq
+          - gt
+          - gte
+          - lt
+          - lte
+        value:
+          $ref: '#/components/schemas/AutomationDslValueExpression'
+        id:
+          type: string
+          minLength: 1
+        linkFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutomationDslLinkFrom'
+      additionalProperties: true  
+
     AutomationDslAction:
       description: Action to be executed after the automation is triggered.
       oneOf:
@@ -10221,6 +11013,13 @@ components:
           description: Incoming side. If omitted, wiring is by action array order. An empty array means no upstream node.
           items:
             $ref: '#/components/schemas/AutomationDslLinkFrom'
+        executionMode:
+          type: string
+          enum:
+          - batch
+          - null
+          description: Compatibility flag for reading back the legacy batch toggle. Keep `batch` while editing; after save it remains a single batch node. When omitted, use the default device-action fan-out.
+          nullable: true
       additionalProperties: false
 
     AutomationDslEndpointInfo:
@@ -10597,6 +11396,7 @@ components:
       - $ref: '#/components/schemas/AutomationDslGlobalVariableRef'
       - $ref: '#/components/schemas/AutomationDslContextRef'
       - $ref: '#/components/schemas/AutomationDslNodeOutputRef'
+      - $ref: '#/components/schemas/AutomationDslTriggerValueExpression'
 
     AutomationDslGeoLocation:
       type: object
@@ -11213,7 +12013,6 @@ components:
       - deviceId
       - endpointId
       - functionCode
-      - traitCode
       properties:
         deviceId:
           type: string
@@ -11226,11 +12025,16 @@ components:
           description: Function code.
         traitCode:
           type: string
-          description: Property code. When command is true, this is command code.
+          description: Trait code; only the command code for legacy command items; use `commandCode` for new command items.
+          minLength: 1
         value:
           allOf:
           - $ref: '#/components/schemas/AutomationDslValueExpression'
           description: Value to write this time; can be literal or value expression. Required unless command is true. Not the initial value of variable declaration.
+          not:
+            enum:
+            - null
+            nullable: true
         command:
           type: boolean
           description: true to invoke command, false or omitted to write property. All items in one device.batch must be the same.
@@ -11238,34 +12042,42 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AutomationDslCommandArg'
-          description: Command arguments. Only applies if command is true.
+          description: Command parameters. For attribute items, only an empty array from historical exports is accepted for compatibility; omit this field on new attribute items.
+        commandCode:
+          type: string
+          minLength: 1
+          description: Command code, used only when `command` is true. Prefer `commandCode`; if `commandCode` is not provided, use `traitCode`.
       additionalProperties: false
-      description: One entry of the batch. If command is true, traitCode is command code; otherwise traitCode is property code.
-      allOf:
-      - allOf:
-        - anyOf:
-          - not:
-              properties:
-                command:
-                  enum:
-                  - true
-              required:
-              - command
-          - not:
-              required:
-              - value
-        - anyOf:
-          - properties:
-              command:
-                enum:
-                - true
-            required:
-            - command
-          - required:
-            - value
-            not:
-              required:
-              - args
+      description: One item in a batch. Attribute items use `traitCode` and `value`; command items use `command:true` and `commandCode`, with no `value`. Legacy command items use `traitCode` for compatibility.
+      oneOf:
+      - required:
+        - command
+        properties:
+          command:
+            enum:
+            - true
+            type: boolean
+        not:
+          required:
+          - value
+        anyOf:
+        - required:
+          - commandCode
+        - required:
+          - traitCode
+      - required:
+        - traitCode
+        - value
+        properties:
+          command:
+            enum:
+            - false
+            type: boolean
+          args:
+            maxItems: 0
+        not:
+          required:
+          - commandCode
 
     AutomationDslDeviceBatch:
       type: object
@@ -11314,6 +12126,11 @@ components:
           minItems: 1
           items:
             $ref: '#/components/schemas/AutomationDslAction'
+        concurrencyGroup:
+          type: string
+          maxLength: 128
+          description: "Scene concurrency group: same group interrupts previous execution; empty string, omitted, or null do not participate in group exclusivity. No leading or trailing whitespace or control characters; up to 128 UTF-8 bytes. Sub-scenes are also subject to parent scene cancellation constraints; automation does not participate."
+          nullable: true
       additionalProperties: false
 
     JsonSceneConfig:
@@ -11330,6 +12147,11 @@ components:
           minItems: 1
           items:
             $ref: '#/components/schemas/AutomationDslAction'
+        concurrencyGroup:
+          type: string
+          maxLength: 128
+          description: "Scene concurrency group: same group interrupts previous execution; empty string, omitted, or null do not participate in group exclusivity. No leading or trailing whitespace or control characters; up to 128 UTF-8 bytes. Sub-scenes are also subject to parent scene cancellation constraints; automation does not participate."
+          nullable: true
       additionalProperties: false
 
     SceneSummary:
@@ -11338,6 +12160,7 @@ components:
       - sceneId
       - name
       - createTime
+      - spaces
       properties:
         name:
           type: string
@@ -11353,7 +12176,7 @@ components:
             nullable: true
             enum:
             - null
-          description: Associated space; null if not associated.
+          description: "Legacy single-space field, equal to the first item of `spaces`. Omitted when no resolvable association exists; clients may treat omission as `null`."
         metadata:
           type: object
           nullable: true
@@ -11362,6 +12185,11 @@ components:
         sceneId:
           type: string
           description: Unique scene ID, use the auto_... value from create/query returns.
+        spaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpaceNode'
+          description: "All resolvable associated spaces, deduplicated by `spaceId`; `[]` when there is no association. When there is no valid direct association, falls back to the previous parent-space behavior."
 
     SceneDetails:
       allOf:
@@ -11383,8 +12211,25 @@ components:
               nullable: true
               enum:
               - null
-            description: Returns action configuration if can be exported losslessly, otherwise returns the full graph.
+            description: "When projectable, returns the action configuration. Read diagnostics in the sibling `issues` field; configs that include read-only diagnostics must not be used directly as update input. When the structure cannot be projected, returns the full graph."
             nullable: true
+          issues:
+            type: array
+            readOnly: true
+            description: "Read-only scene diagnostics, sibling to `config`, and not written into the saved configuration. `path` is relative to the scene `config`; actions use `actions[...]`, and metadata paths are preserved. Healthy detail responses return `[]`; list responses omit this field. Diagnostics do not relax create or update validation; when the structure is damaged, `FLOW_CANONICAL` fallback is still kept."
+            items:
+              type: object
+              required:
+              - code
+              - path
+              - message
+              properties:
+                code:
+                  type: string
+                path:
+                  type: string
+                message:
+                  type: string
 
     CreateSceneRequest:
       type: object
@@ -11395,13 +12240,21 @@ components:
         name:
           type: string
           minLength: 1
-          description: Must provide explicit, non-blank display name. Do not fall back to config.metadata.name.
+          description: "Must provide explicit, non-blank display name. Do not fall back to config.metadata.name."
         autoSuffixOnDuplicate:
           type: boolean
           default: true
-          description: Name duplicate handling. If omitted or true, auto-adds (1), (2), etc. suffix; if false, returns name duplicate error.
+          description: "Name duplicate handling. If omitted or true, auto-adds (1), (2), etc. suffix; if false, returns name duplicate error."
         config:
           $ref: '#/components/schemas/JsonSceneConfig'
+        spaceIds:
+          type: array
+          nullable: true
+          items:
+            type: string
+            minLength: 1
+            pattern: '\S'
+          description: "Optional initial space associations; pass multiple IDs; the server deduplicates. When omitted, `null`, or an empty array, no direct association is created."
 
     UpdateSceneRequest:
       type: object
@@ -11415,7 +12268,7 @@ components:
         autoSuffixOnDuplicate:
           type: boolean
           default: true
-          description: Name duplicate handling. If omitted or true, auto-adds (1), (2), etc. suffix; if false, returns name duplicate error. This field does not need to be included in updateMask.
+          description: "Name duplicate handling. If omitted or true, auto-adds (1), (2), etc. suffix; if false, returns name duplicate error. This field does not need to be included in updateMask."
         config:
           anyOf:
           - $ref: '#/components/schemas/JsonSceneConfig'
@@ -11423,41 +12276,118 @@ components:
             nullable: true
             enum:
             - null
-          description: Must provide complete non-null config if updating config.
+          description: "Must provide complete non-null config if updating config."
         updateMask:
           type: array
-          description: Only supports name and config. Scene does not have enabled. config.metadata.name does not implicitly rename.
+          description: "Only supports `name`, `config`, and `spaceIds`. Scenes do not have `enabled`. Must provide a non-null array when `spaceIds` is selected; do not send non-null values when not selected. `config.metadata.name` does not implicitly rename."
           items:
             type: string
             enum:
             - name
             - config
+            - spaceIds
           minItems: 1
           uniqueItems: true
         sceneId:
           type: string
           minLength: 1
+        spaceIds:
+          type: array
+          nullable: true
+          items:
+            type: string
+            minLength: 1
+            pattern: '\S'
+          description: Must provide a non-null array when `spaceIds` is selected in `updateMask`; replace as a whole, not append; an empty array clears direct associations. Omit this field and its mask when not updating spaces.
+      allOf:
+      - oneOf:
+        - properties:
+            updateMask:
+              type: array
+              items:
+                type: string
+                enum:
+                - name
+                - config
+            spaceIds:
+              type: array
+              nullable: true
+              enum:
+              - null
+        - required:
+          - spaceIds
+          properties:
+            updateMask:
+              type: array
+              not:
+                items:
+                  not:
+                    enum:
+                    - spaceIds
+            spaceIds:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                pattern: \S
 
     UpdateSceneSpaceRequest:
       type: object
       required:
-      - spaceId
       - sceneIds
       properties:
         spaceId:
           type: string
           minLength: 1
-          description: Target space ID. If already associated, replaces with this space.
+          description: Legacy single-space parameter. Equivalent to `spaceIds` containing only this ID; mutually exclusive with a non-null `spaceIds`.
         sceneIds:
           type: array
           minItems: 1
-          description: List of automation IDs to update space association.
+          description: List of scene IDs to update space association.
           items:
             type: string
+        spaceIds:
+          type: array
+          nullable: true
+          items:
+            type: string
+            minLength: 1
+            pattern: \S
+          description: Target space ID array. Replace as a whole, not append; the server deduplicates. An empty array clears direct associations.
       example:
-        spaceId: space-livingroom-001
+        spaceIds:
+        - space-livingroom-001
+        - space-bedroom-001
         sceneIds:
         - auto_01HXYZABCDEF1234567890
+      description: Replace each object's full set of direct space associations. Exactly one non-null form of `spaceId` or `spaceIds` must be provided; `spaceIds=[]` clears direct associations.
+      oneOf:
+      - required:
+        - spaceId
+        properties:
+          spaceId:
+            type: string
+            minLength: 1
+            pattern: \S
+          spaceIds:
+            type: array
+            nullable: true
+            enum:
+            - null
+      - required:
+        - spaceIds
+        properties:
+          spaceIds:
+            type: array
+            items:
+              type: string
+              minLength: 1
+              pattern: \S
+          spaceId:
+            type: string
+            nullable: true
+            enum:
+            - null
 
     DeleteScenesRequest:
       type: object
@@ -11620,41 +12550,6 @@ components:
             enum:
             - GetSceneListResponse
 
-    ResourceControlReference:
-      type: object
-      description: Complete business control reference; only returned when mapping, visibility, and current device API selector are all confirmed. Copy the whole group, do not guess fields. endpointId=0 is valid.
-      required:
-      - deviceId
-      - endpointId
-      - functionCode
-      additionalProperties: false
-      properties:
-        deviceId:
-          type: string
-          description: Device ID.
-          minLength: 1
-        endpointId:
-          type: integer
-          minimum: 0
-          description: Endpoint ID.
-        functionCode:
-          type: string
-          minLength: 1
-          description: Function code.
-        traitCode:
-          type: string
-          minLength: 1
-          description: Trait code.
-        commandCode:
-          type: string
-          minLength: 1
-          description: Command code.
-      oneOf:
-      - required:
-        - traitCode
-      - required:
-        - commandCode
-
     ResponseEnvelope:
       type: object
       x-business-success-condition: code == 0
@@ -11680,3 +12575,106 @@ components:
           type: string
           description: Message
       description: Unforced response envelope with optional type, used for error responses and direct JSON response from REST init/MCP config; normal business responses still use BaseResponse with required type.
+
+    ProtocolResourceReference:
+      type: object
+      required:
+      - id
+      - type
+      additionalProperties: false
+      description: Minimal reference returned by successful protocol create and import. For Device, `id` is the Open `deviceId`; for Network/Point, it is the node ID.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+          - protocol.network
+          - protocol.device
+          - protocol.point
+
+    ProtocolResourceCreateInput:
+      type: object
+      required:
+      - config
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          minLength: 1
+          pattern: \S
+          description: Unique outer display name; when omitted, points default to `Point`.
+        config:
+          type: object
+          additionalProperties: true
+          description: Follows the create schema of the target child resource type in `protocols[protocolId]`. Resource does not accept `config.name`/`config.friendlyName`.
+      description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately."
+
+    ProtocolResourceDiscoverInput:
+      type: object
+      additionalProperties: false
+      properties:
+        options:
+          type: object
+          additionalProperties:
+            oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+          description: Use the protocol catalog `discovery.device`/`point.optionsSchema`. Slash paths and non-null scalars only; do not override read-only fields or the flow-control field `autoCreate`; hidden writable fields may be overridden.
+      description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources."
+
+    ProtocolDiscoveryImportInput:
+      type: object
+      required:
+      - discoveryObjectIds
+      additionalProperties: false
+      properties:
+        networkId:
+          type: string
+          minLength: 1
+          pattern: \S
+          description: Network node ID when importing devices.
+        deviceId:
+          type: string
+          minLength: 1
+          pattern: \S
+          description: Aqara Open `deviceId` when importing points.
+        discoveryObjectIds:
+          type: array
+          minItems: 1
+          maxItems: 200
+          items:
+            type: string
+            minLength: 1
+      oneOf:
+      - required:
+        - networkId
+      - required:
+        - deviceId
+      description: "`import` acts on a discovery Job. `input` must contain 1–200 `discoveryObjectIds` and exactly one of `networkId` (import devices) or `deviceId` (import points; Open device ID). `ownerId` and `pointConfigs` are not accepted. The server validates job ownership, target type, protocol, and permissions for the whole batch, then checks `results` item by item. Successful items contain only `resource.id`/`type`; failed items contain `errorCode`/`message`."
+
+    ProtocolDiscoveryImportResult:
+      type: object
+      required:
+      - results
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+            required:
+            - discoveryObjectId
+            - success
+            properties:
+              discoveryObjectId:
+                type: string
+              success:
+                type: boolean
+              resource:
+                $ref: '#/components/schemas/ProtocolResourceReference'
+              errorCode:
+                type: string
+              message:
+                type: string
+            description: "Successful items include `resource`; failed items include `errorCode`/`message`. Successful items are retained on partial failure."
