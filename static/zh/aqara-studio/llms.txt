@@ -53,6 +53,8 @@
 - 触发: /zh/docs/aqara-studio/flow/trigger
 - 判断: /zh/docs/aqara-studio/flow/condition
 - 执行: /zh/docs/aqara-studio/flow/action
+- 场景: /zh/docs/aqara-studio/automation/scenes
+- 模板: /zh/docs/aqara-studio/automation/templates
 - 可视化大屏: /zh/docs/aqara-studio/graph/graph-introduction
 - 组件类型: /zh/docs/aqara-studio/graph/components
 - 组件类型: /zh/docs/aqara-studio/graph/component-categories

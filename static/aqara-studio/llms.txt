@@ -53,6 +53,8 @@ Resolve site-relative links against this index's origin. Copy llms.txt on the pa
 - Trigger: /docs/aqara-studio/flow/trigger
 - Condition: /docs/aqara-studio/flow/condition
 - Action: /docs/aqara-studio/flow/action
+- Scenes: /docs/aqara-studio/automation/scenes
+- Templates: /docs/aqara-studio/automation/templates
 - Graph Web: /docs/aqara-studio/graph/graph-introduction
 - Components: /docs/aqara-studio/graph/components
 - Component Categories: /docs/aqara-studio/graph/component-categories
