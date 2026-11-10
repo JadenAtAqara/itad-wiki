@@ -217,14 +217,15 @@ const aqaraLifeWebSocketSpecEn = {
           },
           "eventId": {
             "type": "string",
-            "format": "uuid",
             "minLength": 1,
-            "description": "This logical notification UUID remains unchanged across channels and HTTP retries; consecutive identical content notifications use different values."
+            "pattern": "\\S",
+            "description": "An opaque string for this logical notification. It must contain at least one non-whitespace character. Store and compare it as-is without relying on its format. It remains unchanged across channels and HTTP retries. Consecutive notifications with the same content use different values."
           },
           "studioId": {
             "type": "string",
             "minLength": 1,
-            "description": "The Studio official identity for publishing the notification, not the gateway identity or authentication credentials."
+            "pattern": "\\S",
+            "description": "The official Studio identity that publishes the notification. It must contain at least one non-whitespace character. It is not a gateway identity or an authentication credential."
           },
           "code": {
             "type": "integer",
@@ -1413,14 +1414,15 @@ const aqaraLifeWebSocketSpecEn = {
           },
           "eventId": {
             "type": "string",
-            "format": "uuid",
             "minLength": 1,
-            "description": "This logical notification UUID remains unchanged across channels and HTTP retries; consecutive identical content notifications use different values."
+            "pattern": "\\S",
+            "description": "An opaque string for this logical notification. It must contain at least one non-whitespace character. Store and compare it as-is without relying on its format. It remains unchanged across channels and HTTP retries. Consecutive notifications with the same content use different values."
           },
           "studioId": {
             "type": "string",
             "minLength": 1,
-            "description": "The Studio official identity for publishing the notification, not the gateway identity or authentication credentials."
+            "pattern": "\\S",
+            "description": "The official Studio identity that publishes the notification. It must contain at least one non-whitespace character. It is not a gateway identity or an authentication credential."
           },
           "code": {
             "type": "integer",
@@ -1938,14 +1940,15 @@ const aqaraLifeWebSocketSpecEn = {
           },
           "eventId": {
             "type": "string",
-            "format": "uuid",
             "minLength": 1,
-            "description": "This logical notification UUID remains unchanged across channels and HTTP retries; consecutive identical content notifications use different values."
+            "pattern": "\\S",
+            "description": "An opaque string for this logical notification. It must contain at least one non-whitespace character. Store and compare it as-is without relying on its format. It remains unchanged across channels and HTTP retries. Consecutive notifications with the same content use different values."
           },
           "studioId": {
             "type": "string",
             "minLength": 1,
-            "description": "The Studio official identity for publishing the notification, not the gateway identity or authentication credentials."
+            "pattern": "\\S",
+            "description": "The official Studio identity that publishes the notification. It must contain at least one non-whitespace character. It is not a gateway identity or an authentication credential."
           },
           "code": {
             "type": "integer",
@@ -1966,7 +1969,7 @@ const aqaraLifeWebSocketSpecEn = {
       "name": "objectEvent",
       "title": "Object event push",
       "summary": "Device add/remove events are pushed by default; changes to spaces, automations, standalone scenes, and space relationships are delivered according to precise object subscriptions. Current 19 object event types are provided with examples.",
-      "description": "DEVICE_ADDED and DEVICE_REMOVED are pushed by default after an authenticated connection is established.\n\nSPACE_*, AUTOMATION_*, and DEVICE_SPACE_UPDATED are delivered only to SubscribeObjectEventRequest sessions that match the eventType, objectId, and current permissions.\n\nDEVICE_ENDPOINT_* and DEVICE_TRAIT_PARAMETER_UPDATE continue to follow the existing device-data subscriptions.\n\nIndependent scenes are managed through `/scenes`, and change notifications use four `SCENE_*` event families, still using `AUTOMATION_*` for automation. Trustworthiness is determined by the server. No separate event is provided for count changes. Creating or deleting an automation sends only the corresponding lifecycle snapshot and does not additionally send a space-relationship event. For an existing object, `AUTOMATION_SPACE_UPDATED` is sent only when its space relationship changes. If both the content and the relationship change at the same time, both types of events may be received.\n\nIndependent scenes use `SCENE_ADDED/REMOVED/UPDATED/SPACE_UPDATED`, no longer sending `AUTOMATION_*`; the `sceneId` still uses the `auto_` prefix. Old automation manual entries still belong to automation. Scene definition comparison excludes space, and space and definition changes in the same batch generate two different `eventId` notifications.\n\nThe `manualTriggers` field in an automation snapshot contains `triggerNodeId` and `triggerName`. Adding, deleting, or renaming a manual trigger entry returns the full list through `AUTOMATION_UPDATED`. Replace the cache with the full list, and clear previous entries when the array is empty. No additional event subscription type is required.\n\nFor existing object-change events, `msgId` is used only for trace correlation. Callers should handle them idempotently based on object state, and should not deduplicate solely by `objectId`, `eventType`, and `time`.\n\nThe new `AUTOMATION_EXECUTION_RESULT` and `SCENE_EXECUTION_RESULT` events notify per effective action record, for automations and scenes respectively. They are not completion events for an entire execution. Both Studio and Gateway are covered. A native optimization is notified once per native call. An unconfirmed result is unknown and is not expanded into per-device successes.\n\nThe two new events are identified by the common-layer `studioId` and a UUID `eventId`. The same notification identity is kept across channels and HTTP retries. Treat them as idempotent by `studioId` + `eventId`. `executionId` only correlates an execution and is explicitly `null` when unavailable. A new subscription may receive records that the shared queue has not yet delivered. Historical replay is not provided.\n",
+      "description": "DEVICE_ADDED and DEVICE_REMOVED are pushed by default after an authenticated connection is established.\n\nDEVICE_SPACE_UPDATED, the three SPACE_* changes, the four AUTOMATION_* changes, the four SCENE_* changes, and AUTOMATION_EXECUTION_RESULT and SCENE_EXECUTION_RESULT are delivered only to SubscribeObjectEventRequest sessions that match the eventType, objectId, and current permissions.\n\nDEVICE_ENDPOINT_* and DEVICE_TRAIT_PARAMETER_UPDATE continue to follow the existing device-data subscriptions.\n\nIndependent scenes are managed through `/scenes`, and change notifications use four `SCENE_*` event families, still using `AUTOMATION_*` for automation. Trustworthiness is determined by the server. No separate event is provided for count changes. Creating or deleting an automation sends only the corresponding lifecycle snapshot and does not additionally send a space-relationship event. For an existing object, `AUTOMATION_SPACE_UPDATED` is sent only when its space relationship changes. If both the content and the relationship change at the same time, both types of events may be received.\n\nIndependent scenes use `SCENE_ADDED/REMOVED/UPDATED/SPACE_UPDATED`, no longer sending `AUTOMATION_*`; the `sceneId` still uses the `auto_` prefix. Old automation manual entries still belong to automation. Scene definition comparison excludes space, and space and definition changes in the same batch generate two different `eventId` notifications.\n\nThe `manualTriggers` field in an automation snapshot contains `triggerNodeId` and `triggerName`. Adding, deleting, or renaming a manual trigger entry returns the full list through `AUTOMATION_UPDATED`. Replace the cache with the full list, and clear previous entries when the array is empty. No additional event subscription type is required.\n\nmsgId is used only for trace correlation. New business notifications are idempotent by `studioId` + `eventId`; old object changes without a common identity are idempotently handled based on object state, and should not be deduplicated solely by `objectId`, `eventType`, or `time`.\n\n\nThe new `AUTOMATION_EXECUTION_RESULT` and `SCENE_EXECUTION_RESULT` events notify per effective action record, for automations and scenes respectively. They are not completion events for an entire execution. Both Studio and Gateway are covered. A native optimization is notified once per native call. An unconfirmed result is unknown and is not expanded into per-device successes.\n\nThe two new events and the four independent scene changes must carry the common-layer `studioId` and `eventId`. The same notification identity is kept across channels and HTTP retries. The action results can be trimmed according to the receiver's permissions. They are idempotent by `studioId` + `eventId`. `executionId` only correlates an execution and is explicitly `null` when unavailable. A new subscription may receive records that the shared queue has not yet delivered. Historical replay is not provided.\n",
       "examples": [
         {
           "name": "scene_added",
@@ -4055,14 +4058,15 @@ const aqaraLifeWebSocketSpecEn = {
           },
           "eventId": {
             "type": "string",
-            "format": "uuid",
             "minLength": 1,
-            "description": "This logical notification UUID remains unchanged across channels and HTTP retries; consecutive identical content notifications use different values."
+            "pattern": "\\S",
+            "description": "An opaque string for this logical notification. It must contain at least one non-whitespace character. Store and compare it as-is without relying on its format. It remains unchanged across channels and HTTP retries. Consecutive notifications with the same content use different values."
           },
           "studioId": {
             "type": "string",
             "minLength": 1,
-            "description": "The Studio official identity for publishing the notification, not the gateway identity or authentication credentials."
+            "pattern": "\\S",
+            "description": "The official Studio identity that publishes the notification. It must contain at least one non-whitespace character. It is not a gateway identity or an authentication credential."
           },
           "code": {
             "type": "integer",
