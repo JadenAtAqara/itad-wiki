@@ -215,14 +215,15 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "eventId": {
             "type": "string",
-            "format": "uuid",
             "minLength": 1,
-            "description": "本次逻辑通知 UUID，跨通道及 HTTP 重试保持不变；连续相同内容通知使用不同值。"
+            "pattern": "\\S",
+            "description": "本次逻辑通知的不透明字符串，至少包含一个非空白字符。原样保存和比较，不依赖格式。跨通道及 HTTP 重试保持不变；连续相同内容通知使用不同值。"
           },
           "studioId": {
             "type": "string",
             "minLength": 1,
-            "description": "发布通知的 Studio 正式身份，不是网关身份或认证凭据。"
+            "pattern": "\\S",
+            "description": "发布通知的 Studio 正式身份，至少包含一个非空白字符。不是网关身份或认证凭据。"
           },
           "code": {
             "type": "integer",
@@ -1411,14 +1412,15 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "eventId": {
             "type": "string",
-            "format": "uuid",
             "minLength": 1,
-            "description": "本次逻辑通知 UUID，跨通道及 HTTP 重试保持不变；连续相同内容通知使用不同值。"
+            "pattern": "\\S",
+            "description": "本次逻辑通知的不透明字符串，至少包含一个非空白字符。原样保存和比较，不依赖格式。跨通道及 HTTP 重试保持不变；连续相同内容通知使用不同值。"
           },
           "studioId": {
             "type": "string",
             "minLength": 1,
-            "description": "发布通知的 Studio 正式身份，不是网关身份或认证凭据。"
+            "pattern": "\\S",
+            "description": "发布通知的 Studio 正式身份，至少包含一个非空白字符。不是网关身份或认证凭据。"
           },
           "code": {
             "type": "integer",
@@ -1936,14 +1938,15 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "eventId": {
             "type": "string",
-            "format": "uuid",
             "minLength": 1,
-            "description": "本次逻辑通知 UUID，跨通道及 HTTP 重试保持不变；连续相同内容通知使用不同值。"
+            "pattern": "\\S",
+            "description": "本次逻辑通知的不透明字符串，至少包含一个非空白字符。原样保存和比较，不依赖格式。跨通道及 HTTP 重试保持不变；连续相同内容通知使用不同值。"
           },
           "studioId": {
             "type": "string",
             "minLength": 1,
-            "description": "发布通知的 Studio 正式身份，不是网关身份或认证凭据。"
+            "pattern": "\\S",
+            "description": "发布通知的 Studio 正式身份，至少包含一个非空白字符。不是网关身份或认证凭据。"
           },
           "code": {
             "type": "integer",
@@ -1964,7 +1967,7 @@ const aqaraLifeWebSocketSpecZh = {
       "name": "objectEvent",
       "title": "对象事件推送",
       "summary": "设备增删默认推送；空间、自动化、独立场景及空间关联变化按精确对象订阅投递。当前 19 类对象事件均提供示例。",
-      "description": "DEVICE_ADDED、DEVICE_REMOVED 在认证连接建立后默认推送。\n\nSPACE_*、AUTOMATION_*、DEVICE_SPACE_UPDATED 仅投递给命中 eventType、objectId 和当前权限的 SubscribeObjectEventRequest 会话。\n\nDEVICE_ENDPOINT_*、DEVICE_TRAIT_PARAMETER_UPDATE 继续跟随现有设备数据订阅。\n\n独立场景通过 /scenes 管理，变化通知使用四类 SCENE_* 事件，自动化仍使用 AUTOMATION_*；可信类别由服务端判断。数量变化不提供独立事件。新增、删除自动化只发送对应生命周期快照，不额外发送空间关系事件；已有对象仅空间关系变化时发送 AUTOMATION_SPACE_UPDATED，内容与关系同时变化时两类事件都可能收到。\n\n独立场景使用 SCENE_ADDED/REMOVED/UPDATED/SPACE_UPDATED，不再双发 AUTOMATION_*；sceneId 仍是 auto_ 前缀。旧自动化手动入口仍归自动化。场景定义比较排除空间，空间与定义同批变化产生两条不同 eventId 的通知。\n\n自动化快照的 manualTriggers 包含 triggerNodeId 和 triggerName；手动触发入口添加、删除或重命名通过 AUTOMATION_UPDATED 返回完整列表。按完整列表替换缓存，空数组清空旧入口；无需新增事件订阅类型。\n\n既有对象变化事件的 msgId 只用于链路追踪，调用端应按对象状态幂等处理，不应仅按 objectId、eventType、time 去重。\n\n新增 AUTOMATION_EXECUTION_RESULT 和 SCENE_EXECUTION_RESULT 按有效动作记录通知，分别表示自动化与场景；不是整次执行完成事件。Studio 与 Gateway 均覆盖，原生优化按一次原生调用通知，未确认结果为未知，不展开为逐设备成功。\n\n两类新事件由公共层 studioId 与 UUID eventId 标识，跨通道和 HTTP 重试保持同一通知身份。按 studioId + eventId 幂等；executionId 仅关联执行，不可用时显式为 null。新订阅可能收到公共队列尚未分发的记录，不提供历史回放。\n",
+      "description": "DEVICE_ADDED、DEVICE_REMOVED 在认证连接建立后默认推送。\n\nDEVICE_SPACE_UPDATED、三类空间变化、四类自动化变化、四类场景变化以及 AUTOMATION_EXECUTION_RESULT、SCENE_EXECUTION_RESULT，均只投递给命中 eventType、objectId 和当前权限的 SubscribeObjectEventRequest 会话。\n\nDEVICE_ENDPOINT_*、DEVICE_TRAIT_PARAMETER_UPDATE 继续跟随现有设备数据订阅。\n\n独立场景通过 /scenes 管理，变化通知使用四类 SCENE_* 事件，自动化仍使用 AUTOMATION_*；可信类别由服务端判断。数量变化不提供独立事件。新增、删除自动化只发送对应生命周期快照，不额外发送空间关系事件；已有对象仅空间关系变化时发送 AUTOMATION_SPACE_UPDATED，内容与关系同时变化时两类事件都可能收到。\n\n独立场景使用 SCENE_ADDED/REMOVED/UPDATED/SPACE_UPDATED，不再双发 AUTOMATION_*；sceneId 仍是 auto_ 前缀。旧自动化手动入口仍归自动化。场景定义比较排除空间，空间与定义同批变化产生两条不同 eventId 的通知。\n\n自动化快照的 manualTriggers 包含 triggerNodeId 和 triggerName；手动触发入口添加、删除或重命名通过 AUTOMATION_UPDATED 返回完整列表。按完整列表替换缓存，空数组清空旧入口；无需新增事件订阅类型。\n\nmsgId 只用于链路追踪。新版业务通知按 studioId + eventId 幂等；旧对象变化缺少公共身份时按对象状态幂等处理，不应仅按 objectId、eventType 或 time 去重。\n\n新增 AUTOMATION_EXECUTION_RESULT 和 SCENE_EXECUTION_RESULT 按有效动作记录通知，分别表示自动化与场景；不是整次执行完成事件。Studio 与 Gateway 均覆盖，原生优化按一次原生调用通知，未确认结果为未知，不展开为逐设备成功。\n\n两类动作结果及四类独立场景变化都必须携带公共层 studioId 和 eventId。同一逻辑通知跨通道和 HTTP 重试保留身份；动作结果可按接收者权限裁剪字段。按 studioId + eventId 幂等；executionId 仅关联执行，不可用时显式为 null。新订阅可能收到公共队列尚未分发的记录，不提供历史回放。\n",
       "examples": [
         {
           "name": "scene_added",
@@ -4053,14 +4056,15 @@ const aqaraLifeWebSocketSpecZh = {
           },
           "eventId": {
             "type": "string",
-            "format": "uuid",
             "minLength": 1,
-            "description": "本次逻辑通知 UUID，跨通道及 HTTP 重试保持不变；连续相同内容通知使用不同值。"
+            "pattern": "\\S",
+            "description": "本次逻辑通知的不透明字符串，至少包含一个非空白字符。原样保存和比较，不依赖格式。跨通道及 HTTP 重试保持不变；连续相同内容通知使用不同值。"
           },
           "studioId": {
             "type": "string",
             "minLength": 1,
-            "description": "发布通知的 Studio 正式身份，不是网关身份或认证凭据。"
+            "pattern": "\\S",
+            "description": "发布通知的 Studio 正式身份，至少包含一个非空白字符。不是网关身份或认证凭据。"
           },
           "code": {
             "type": "integer",
@@ -4099,11 +4103,6 @@ const aqaraLifeWebSocketSpecZh = {
             "studioId"
           ],
           "properties": {
-            "eventId": {
-              "type": "string",
-              "format": "uuid",
-              "description": "本次逻辑通知的 UUID；跨通道分发及 HTTP 重试保持不变。"
-            },
             "studioId": {
               "type": "string",
               "minLength": 1,
