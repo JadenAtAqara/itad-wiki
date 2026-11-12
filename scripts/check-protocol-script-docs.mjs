@@ -35,7 +35,7 @@ const plain = value => value === undefined ? undefined : JSON.parse(JSON.stringi
 const jsonBlocks = text => [...text.matchAll(/^```json[^\r\n]*\r?\n([\s\S]*?)^```\s*$/gm)]
   .map(match => JSON.parse(match[1]));
 
-const specConceptsLink = '../aqara-developer/aqara-data-model-specification/core-concepts.mdx';
+const specConceptsLink = '../aqara-developer/aqara-data-model-specification/aqara-data-model-tags.mdx';
 function checkSpecConceptLinks(text) {
   for (const field of ['`devType` / `functionCode` / `traitCode`', '`commandCode`']) {
     const row = text.split(/\r?\n/).find(line => line.startsWith(`| ${field} |`));
@@ -44,6 +44,13 @@ function checkSpecConceptLinks(text) {
       `Point definition must link to the relative data-model source: ${field}`);
   }
   return 4;
+}
+
+function checkPublishedSpecConcepts(text) {
+  // 草稿在开发预览中可见，但不会出现在正式构建中，引用必须指向可发布的页面。
+  const frontmatter = text.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? '';
+  assert.doesNotMatch(frontmatter, /^draft:\s*true\s*$/m, 'Spec reference must not be a draft');
+  return 1;
 }
 
 function checkFirstUploadPaths(text) {
@@ -250,6 +257,9 @@ for (const locale of Object.keys(locales)) {
     'Payload replay must distinguish its cursor from metadata capture');
   const specification = documents.get(`${locale}/unified-protocol-script`);
   checks += checkSpecConceptLinks(specification);
+  checks += checkPublishedSpecConcepts(await readFile(resolve(root, locales[locale], specConceptsLink), 'utf8'));
+  assert.throws(() => checkPublishedSpecConcepts('---\ndraft: true\n---\n'));
+  checks += 1;
   checks += checkFirstUploadPaths(reference);
   ok(specification.includes('./protocol-script-mcp-api.mdx#script-files'), 'First-upload storage reference missing');
   // 旧链接或缺少命名空间规则/任一协议示例必须失败，防止只检查关键词而漏掉具体入口。

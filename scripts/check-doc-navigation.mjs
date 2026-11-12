@@ -52,11 +52,17 @@ export async function checkDocNavigation(root) {
       'configure-network', 'discovery', 'read-and-probe', 'control', 'iterate', 'acceptance']) {
       ok(guide.includes(`id="${id}"`), `Old guide anchor missing: ${locale}/${id}`);
     }
-    const href = `${locale === 'zh' ? '/zh' : ''}/docs/aqara-studio/unified-protocol-script`;
     for (const [transport, {name, anchors}] of Object.entries(transports)) {
       const legacy = await readFile(resolve(root, directory, `javascript-for-${name}-integration.mdx`), 'utf8');
       ok(legacy.includes('unlisted: true'), 'Legacy redirect should stay out of search and indexes');
-      ok(legacy.includes(`transport="${transport}"`) && legacy.includes(`href="${href}"`), 'Wrong redirect locale or chapter');
+      const redirect = legacy.match(/<ProtocolScriptRedirect\s+transport="([^"]+)"\s+href="([^"]+)"/);
+      ok(redirect && redirect[1] === transport, 'Wrong redirect chapter');
+      // 中文既可能挂载在 /zh/，也可能作为单语言构建挂载在根路径；跳转必须保持当前挂载点。
+      for (const prefix of locale === 'zh' ? ['', '/zh'] : ['']) {
+        const page = `https://docs-preview.aqara.com${prefix}/docs/aqara-studio/javascript-for-${name}-integration`;
+        equal(new URL(`${redirect[2]}#${transport}`, page).href,
+          `https://docs-preview.aqara.com${prefix}/docs/aqara-studio/unified-protocol-script#${transport}`);
+      }
       ok(ids.includes(transport), `Missing transport chapter ${transport}`);
       for (const anchor of anchors) {
         const target = `${transport}-${anchor}`;
