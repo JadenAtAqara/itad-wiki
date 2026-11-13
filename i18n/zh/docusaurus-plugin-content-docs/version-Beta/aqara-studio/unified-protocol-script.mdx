@@ -54,6 +54,7 @@ TCP、UDP、HTTP、MQTT 共用同一套 JavaScript 业务契约。脚本负责�
 | `scriptVersion` | 可选脚本版本标记，例如 `"V1.0"` |
 | `protocol.msgIdMatch` | 可选布尔值，默认 `false`；TCP/UDP 请求 ID 匹配 |
 | `protocol.stateSyncMode` | `"push"`、`"query"`、`"mixed"`，默认 `"mixed"` |
+| `protocol.connection` | 可选 TCP 连接策略，需要配套 Studio 连接扩展；见 [连接生命周期](./unified-protocol-script.mdx#tcp-connection) |
 | `discovery` | TCP/UDP 发现目标；见 [发现配置](./unified-protocol-script.mdx#tcp-udp-discovery) |
 | `framing` | TCP/UDP 帧配置；见 [分帧限制](./unified-protocol-script.mdx#tcp-udp-framing) |
 | `configSchema` | Network/Device 普通现场参数定义，见下文 |
@@ -79,8 +80,9 @@ TCP、UDP、HTTP、MQTT 共用同一套 JavaScript 业务契约。脚本负责�
 
 | 字段 | 含义 |
 | --- | --- |
-| `operation` | `discoverDevices`、`discoverPoints`、`probe`、`read`、`write`、`report`、`ack`；正常 TCP/UDP 收帧时尚未知 |
+| `operation` | `discoverDevices`、`discoverPoints`、`probe`、`read`、`write`、`report`、`ack`；TCP 连接扩展还支持 `disconnect`；正常 TCP/UDP 收帧时尚未知 |
 | `deviceId` / `pointId` | 厂商业务标识，不是 Open Resource 实例 ID |
+| `connectionId` | 可选的不透明 TCP 连接标识；尚无连接上下文或发现期间不提供 |
 | `requestId` | 框架请求标识；正常 TCP/UDP 收帧前不会替脚本猜测 |
 | `value` | 写入业务值；布尔、数值、文本分别为 JS 原始类型，枚举为整数序号 |
 | `config` | 本次调用的隔离普通参数快照 |
@@ -101,6 +103,7 @@ TCP/UDP 上报 ACK 输入还包括 requestId/deviceId 和当时可用的 pointId
 | `discoverPoints` | `pointDefinitions: [...]` | 返回点定义，不是实时点值 |
 | `read` / `report` | `points: [{pointId, value}]`，可附 `enumRangeUpdates` | 通过校验后由对应 Proxy 应用 |
 | `write` / `probe` | 整数 `code`，可附 `errorMsg`、`pointId` | `0` 成功，非零失败；缺失 `code` 不算成功 |
+| `disconnect` | 整数 `code`，可附 `errorMsg` | 仅 TCP 连接扩展：`0` 确认退出，非零表示失败 |
 | `ignore` | 无 | 其余业务字段一并丢弃，不落点、不完成事务 |
 
 可附 `operation`、`deviceId`、`requestId`。输入已有操作上下文时可省略输出 `operation`，框架补齐；显式输出不匹配操作会被拒绝。TCP/UDP 正常收帧必须自行识别并返回 `operation`，不能只返回请求 ID。
@@ -254,13 +257,46 @@ TCP 插件可以使用 UDP 发现。`encode({operation:"discoverDevices", transp
 
 设备发现必须有当前传输支持的真实过程；不要假定 TCP/UDP 的 encode(null) 会自动导入静态设备。点发现可以静态：encode(discoverPoints) 返回 null，decode 收到 `bytes:null` 后返回 pointDefinitions。
 
+#### TCP 连接生命周期 {#tcp-connection}
+
+以下可选扩展需要 Studio 同时包含配套的 **ConnectorCore、Script、TCP** 更新。`contractVersion: 1` 不会协商这些能力。省略 `protocol.connection` 时保留原连接和健康策略；只有厂商协议需要时才启用相应字段。HTTP、UDP、MQTT 不会因为声明这些字段而获得 TCP 连接生命周期。
+
+| `describe().protocol.connection` 字段 | 默认值 | 规则 |
+| --- | --- | --- |
+| `initializeWithProbe` | `false` | 为 true 时，每条新 TCP 连接必须先完成脚本 `probe` 才能执行普通请求。用该操作编码厂商注册或认证，并校验实际响应。 |
+| `heartbeatIntervalMillis` | `0` | 整数毫秒：`0` 保留原周期，否则为 `1,000` 到 `86,400,000`。沿用现有健康探针，不创建脚本定时器。 |
+| `failureGraceMillis` | `0` | 整数毫秒：`0` 保留原健康策略，否则为 `1` 到 `3,600,000`。无成功回复时延后探针的离线判定，不会把失败请求变成成功。 |
+| `gracefulClose` | `false` | 为 true 时，正常停止尝试 `encode({operation:"disconnect", ...})` 并处理对应退出响应。总预算一秒；忙碌、取消、不支持或超时时仍释放连接。 |
+
+```json title="可选 TCP 连接与 LF 分帧描述片段"
+{
+  "protocol": {
+    "connection": {
+      "initializeWithProbe": true,
+      "heartbeatIntervalMillis": 30000,
+      "failureGraceMillis": 180000,
+      "gracefulClose": true
+    }
+  },
+  "framing": {"delimiterBytes": [10]}
+}
+```
+
+以上数值只是示例，不是所有设备的默认值。厂商注册、心跳、退出字节仍由 `encode` / `decode` 定义。只有收到有效回复才能返回探针成功。不需要退出报文时，`encode(disconnect)` 可返回 `null`。设备主动通知当前设备/连接退出时，可返回 `{operation:"disconnect", code:0}`；TCP 传输关闭该连接，后续仍由既有探针驱动恢复。厂商报文包含客户端身份时，接受退出前应核对身份。
+
+TCP 编解码调用可能包含 `connectionId`。它是不透明字符串，不能转成 JavaScript 数字。临时缓冲和在途任务按 `deviceId` 与连接身份隔离，身份变化时丢弃旧状态；不能沿用旧连接半帧，也不能让迟到响应覆盖新状态。连接建立前及发现期间可能没有该字段。
+
+**旧版 Studio 不会自动降级兼容。** 旧版可能忽略 `protocol.connection`，但包含 `framing.delimiterBytes` 的描述会被旧长度分帧校验拒绝（`framing.frameStartBytes is required`），`decode` 返回 `disconnect` 也属于旧契约不支持的操作（`decode() returned an unknown operation`）。因此，HOPE V1.3.0 这类脚本可能无法加载或通信，而不只是保留原来的偶发离线现象。应同批部署配套三个模块，或继续使用为旧版本准备并验证过的脚本。仅上传新 JS 包不会补齐后端能力。
+
 #### 分帧与重组 {#tcp-udp-framing}
 
 UDP 保留数据报边界，TCP 是字节流。TCP 半包和粘包不能按一次 socket read 等于一帧处理。
 
-`describe().framing` 支持：
+TCP 可选择分隔符模式，例如用 `{"delimiterBytes":[10]}` 表示 LF。`delimiterBytes` 为 1 到 16 个整数 `0` 到 `255`，同时受 `maxMessageBytes` 限制；与下方所有长度分帧字段互斥。交给脚本的完整帧**包含分隔符**，且不超过 `maxMessageBytes`；EOF 或取消会丢弃未完成帧。该模式用于 TCP 读取，UDP 数据报（包括 TCP 插件的 UDP 发现回复）仍走原有数据报接收路径。
 
-| 字段 | 规则 |
+TCP/UDP 仍支持长度分帧：
+
+| 字段 | 长度模式规则 |
 | --- | --- |
 | `frameStartBytes` | 必填、非空字节数组 |
 | `lengthKnownAfterBytes` | 必填整数，不小于帧头长度，且不超过 maxMessageBytes |
@@ -269,9 +305,9 @@ UDP 保留数据报边界，TCP 是字节流。TCP 半包和粘包不能按一�
 
 有 totalLength 时按固定长度处理；否则取帧内**第 lengthKnownAfterBytes 个字节（1 起算）**为无符号长度，`0` 表示 256，整帧长度为 `lengthKnownAfterBytes + 数据长度 + remainingBytes`。受 Parser 的 maxMessageBytes 限制。
 
-这不是任意长度公式解析器，不支持通过虚构 `delimiter`、`lengthFieldSize` 或多字节长度配置扩展规则。未配置 framing 的 TCP 使用既有按块回退；特殊 JSON/分隔符协议需在脚本中有界重组。缓冲必须按 deviceId 隔离，限制最大长度、条数和保留时间，不能跨设备共用一份 pending。某些任意多阶段协议仍可能需要传输层扩展。
+这不是任意长度公式解析器，不支持通过虚构 `delimiter`、`lengthFieldSize` 或多字节长度配置扩展规则；TCP 分隔符字段的实际名称为 `delimiterBytes`。未配置 framing 的 TCP 使用既有按块回退。脚本自行重组时应限制最大长度、条数和保留时间，并按上文的设备与连接身份隔离；不能跨设备或跨连接共用 pending。某些任意多阶段协议仍可能需要传输层扩展。
 
-TCP 回退每块最多 **128 字节**，既不保证是完整报文，也不保证凑齐 128 字节。UDP 不配置 framing 时交给脚本整份受限数据报；配置后只截取该数据报中的**第一份完整帧**，不保留尾部，也不跨数据报重组。厂商一包多帧时，不能忽略此限制而直接启用该分帧配置。
+TCP 回退每块最多 **128 字节**，既不保证是完整报文，也不保证凑齐 128 字节。UDP 不配置 framing 时交给脚本整份受限数据报；配置长度分帧后只截取该数据报中的**第一份完整帧**，不保留尾部，也不跨数据报重组。厂商一包多帧时，不能忽略此限制而直接启用长度分帧；UDP 插件不要配置 `delimiterBytes`。
 
 #### 五字节演示协议 {#tcp-udp-example}
 

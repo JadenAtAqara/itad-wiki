@@ -97,6 +97,37 @@ function checkMqttIdentityCompatibility(text, locale) {
   return 3 + rules.length;
 }
 
+function checkTcpConnectionDocs(text) {
+  const start = text.indexOf('{#tcp-connection}');
+  const end = text.indexOf('{#tcp-udp-framing}', start);
+  assert.ok(start >= 0 && end > start, 'Missing TCP connection lifecycle section');
+  const section = text.slice(start, end);
+  for (const [field, defaultValue] of [
+    ['initializeWithProbe', 'false'], ['heartbeatIntervalMillis', '0'],
+    ['failureGraceMillis', '0'], ['gracefulClose', 'false'],
+  ]) {
+    assert.ok(section.includes(`| \`${field}\` | \`${defaultValue}\` |`),
+      `Missing TCP connection field/default: ${field}`);
+  }
+  const fragments = jsonBlocks(section);
+  assert.deepEqual(fragments, [{protocol: {connection: {
+    initializeWithProbe: true, heartbeatIntervalMillis: 30000,
+    failureGraceMillis: 180000, gracefulClose: true,
+  }}, framing: {delimiterBytes: [10]}}]);
+  for (const term of ['ConnectorCore', 'Script', 'TCP', 'connectionId', '86,400,000', '3,600,000',
+    'framing.frameStartBytes is required', 'decode() returned an unknown operation', 'HOPE V1.3.0']) {
+    assert.ok(section.includes(term), `Missing connection or compatibility rule: ${term}`);
+  }
+  const operation = text.split(/\r?\n/).find(line => line.startsWith('| `operation` |'));
+  assert.ok(operation?.includes('`disconnect`'), 'Input operations omit TCP disconnect');
+  assert.ok(text.includes('| `connectionId` |') && text.includes('| `disconnect` |'),
+    'Unified inputs/results omit TCP connection extensions');
+  const framing = text.slice(end, text.indexOf('{#tcp-udp-example}', end));
+  assert.ok(framing.includes('delimiterBytes') && framing.includes('16'), 'Missing bounded TCP delimiter mode');
+  assert.doesNotMatch(framing, /There are no delimiter/, 'Framing section retains the obsolete delimiter denial');
+  return 19;
+}
+
 // 这里只检查文档示例，不替代 Studio 的 GraalJS 校验或实机通信。
 function call(context, entry, input) {
   context.__docInput = structuredClone(input);
@@ -134,6 +165,11 @@ for (const [locale, directory] of Object.entries(locales)) {
     examples.set(`${locale}/${name}`, scripts);
     if (name === 'unified-protocol-script') {
       equal(scripts.length, scriptKinds.length);
+      checks += checkTcpConnectionDocs(text);
+      for (const missing of ['initializeWithProbe', 'connectionId', 'framing.frameStartBytes is required']) {
+        assert.throws(() => checkTcpConnectionDocs(text.replaceAll(missing, 'removed-rule')));
+        checks += 1;
+      }
       checks += checkMqttIdentityCompatibility(text, locale);
       assert.throws(() => checkMqttIdentityCompatibility(text.replace(
         locale === 'zh' ? '空字符串或纯空白时回退到' : 'empty or whitespace-only ID falls back to',
@@ -203,6 +239,20 @@ for (const [locale, directory] of Object.entries(locales)) {
   }
 }
 for (const name of names) equal(examples.get(`en/${name}`), examples.get(`zh/${name}`));
+
+// 补齐旧版订阅入口的英文页；无侧栏归属的页面不能使用 useCurrentSidebarCategory。
+for (const directory of Object.values(locales)) {
+  const path = resolve(root, directory, '../aqara-developer/subscription.tag.mdx');
+  const text = await readFile(path, 'utf8');
+  await compile({value: text, path});
+  checks += 1;
+  ok(/^id: subscription\s*$/m.test(text), 'Subscription entry must preserve its public document ID');
+  ok(!text.includes('useCurrentSidebarCategory'), 'Subscription entry has no sidebar category');
+  for (const link of ['../aqara-studio/data-export-by-mqtt.mdx', './data-export-api/mqtt-api/mqtt-api.mdx']) {
+    ok(text.includes(`](${link})`), `Subscription entry is missing its API/setup link: ${link}`);
+    await access(resolve(dirname(path), link));
+  }
+}
 
 // 用文档自身的 MQTT 示例检查采集/重放衔接；这里只模拟已核对的输入形状，不模拟真实采集器。
 for (const locale of Object.keys(locales)) {
@@ -350,7 +400,9 @@ if (process.env.STUDIO_SOURCE_ROOT) {
     ok(!readKeys.includes(key), `readScript now returns ${key}; recheck docs`);
   }
   const fileStore = await source('AIOT_studio_script', 'src/main/kotlin/com/lumi/framework/script/ScriptFileStore.kt');
-  ok(fileStore.includes('beanId.trim().replace(Regex("[^A-Za-z0-9._-]"), "_").trim(\'_\')'),
+  const protectedFiles = await source('AIOT_studio_common', 'server-common/src/commonMain/kotlin/com/lumi/framework/file/ProtectedScriptFiles.kt');
+  ok(fileStore.includes('ProtectedScriptFiles.networkNamespace(beanId)') &&
+    protectedFiles.includes('beanId.trim().replace(Regex("[^A-Za-z0-9._-]"), "_").trim(\'_\')'),
     'Script namespace normalization changed; recheck first-upload examples');
   ok(scripts.includes('put("networkBeanId", beanId)') && scripts.includes('putJsonArray("scripts")'),
     'listScripts must return the beanId even when the file list is empty');
@@ -371,8 +423,18 @@ if (process.env.STUDIO_SOURCE_ROOT) {
   ok(payloadService.includes('setOf("operation", "deviceId", "pointId", "requestId", "topic", "path", "config")'),
     'Replay context allowlist changed');
   const tcp = await source('AIOT_studio_tcp', 'src/main/kotlin/com/lumi/framework/tcp/comm/TcpRxConn.kt');
-  ok(tcp.includes('PARSE_RECEIVED_READ_SIZE = 128') && tcp.includes('channel.readAvailable(data, 0, data.size)'),
+  const tcpFrames = await source('AIOT_studio_tcp', 'src/main/kotlin/com/lumi/framework/tcp/comm/TcpFrameReader.kt');
+  ok(tcp.includes('TcpFrameReader.read(') && tcpFrames.includes('PARSE_RECEIVED_READ_SIZE = 128') &&
+    tcpFrames.includes('channel.readAvailable(data, 0, data.size)'),
     'TCP fallback no longer matches the documented chunk behavior');
+  const connection = await source('AIOT_studio_script', 'src/main/kotlin/com/lumi/framework/script/ScriptConnectionConfig.kt');
+  ok(connection.includes('1_000, 86_400_000') && connection.includes('1, 3_600_000'),
+    'TCP connection time ranges changed; recheck both translations');
+  const frames = await source('AIOT_studio_script', 'src/main/kotlin/com/lumi/framework/script/ScriptFrameConfig.kt');
+  ok(frames.includes('getMember("delimiterBytes")') && frames.includes('minOf(16, limit)') &&
+    frames.includes('Delimiter framing cannot include length framing'), 'TCP delimiter constraints changed');
+  const protocol = await source('AIOT_studio_script', 'src/main/kotlin/com/lumi/framework/script/ScriptProtocol.kt');
+  ok(protocol.includes('const val DISCONNECT = "disconnect"'), 'TCP disconnect operation is unavailable');
   const udp = await source('AIOT_studio_udp', 'src/main/kotlin/com/lumi/framework/udp/UdpMessageParser.kt');
   ok(udp.includes('val socket = DatagramSocket()'), 'UDP discovery bind behavior changed');
   ok(!udp.includes('getMember("responsePort")') && !udp.includes('getMember("responseIp")'),
@@ -408,7 +470,10 @@ if (process.env.STUDIO_SOURCE_ROOT) {
     'HTTP ordinary probing changed; recheck docs');
   const resource = await source(open, `${base}server/service/OpenResourceService.kt`);
   ok(resource.includes('put("schema", it.withResourceNameSchema())'), 'Protocol instance schema wrapper changed');
-  ok(resource.includes('put(protocolId, it.withResourceNameSchema())'), 'Protocol type schema wrapper changed');
+  const resourceContract = await source(open, `${base}server/service/ProtocolResourceContract.kt`);
+  ok(resource.includes('put(protocolId, ProtocolResourceContract.creationConfigSchema(it))') &&
+    resource.includes('ProtocolResourceContract.schemaDescription(protocols)') &&
+    resourceContract.includes('put("protocols", protocols)'), 'Protocol type schema wrapper changed');
   ok(resource.includes('put("hasMore", hasMore)'), 'Resource pagination changed');
   const paging = await source(open, `${base}server/service/OpenResourceDefinitionRegistry.kt`);
   ok(paging.includes('OPEN_RESOURCE_DEFAULT_PAGE_SIZE = 20') && paging.includes('OPEN_RESOURCE_MAX_PAGE_SIZE = 100'),
