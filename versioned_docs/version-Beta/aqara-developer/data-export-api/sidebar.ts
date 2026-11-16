@@ -197,53 +197,6 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "Resource",
-      link: {
-        type: "doc",
-        id: "version-Beta/aqara-developer/data-export-api/resource",
-      },
-      collapsed: false,
-      items: [
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/list-resource-types",
-          label: "Query Open Resource Type Directory",
-          className: "api-method get",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/describe-resource-type",
-          label: "Query Resource Type Definition",
-          className: "api-method get",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/query-resources",
-          label: "Paginated Query Resource",
-          className: "api-method get",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/get-resource",
-          label: "Read Known Resource",
-          className: "api-method get",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/update-resource",
-          label: "Modify Known Resource Properties",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/execute-resource-action",
-          label: "Execute Resource Command",
-          className: "api-method post",
-        },
-      ],
-    },
-    {
-      type: "category",
       label: "Automation",
       link: {
         type: "doc",
@@ -431,53 +384,6 @@ const sidebar: SidebarsConfig = {
           id: "version-Beta/aqara-developer/data-export-api/report-external-event",
           label: "Report External System Event",
           className: "api-method post",
-        },
-      ],
-    },
-    {
-      type: "category",
-      label: "Alarm",
-      link: {
-        type: "doc",
-        id: "version-Beta/aqara-developer/data-export-api/alarm",
-      },
-      collapsed: false,
-      items: [
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/get-alarms",
-          label: "List Alarms",
-          className: "api-method get",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/delete-alarm",
-          label: "Delete An Alarm",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/clear-alarms",
-          label: "Clear All Alarms",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/ack-alarms",
-          label: "Batch Acknowledge Alarms by UUIDs",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/ack-alarms-by-point-id",
-          label: "Batch Acknowledge Alarms by Point ids",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/get-alarm-rules",
-          label: "List Alarm Rules",
-          className: "api-method get",
         },
       ],
     },

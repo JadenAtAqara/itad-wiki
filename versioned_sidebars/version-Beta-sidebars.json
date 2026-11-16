@@ -479,47 +479,6 @@
                 },
                 {
                   "type": "category",
-                  "label": "Resource",
-                  "link": {
-                    "type": "doc",
-                    "id": "aqara-developer/data-export-api/resource"
-                  },
-                  "collapsed": false,
-                  "items": [
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/data-export-api/list-resource-types",
-                      "className": "api-method get"
-                    },
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/data-export-api/describe-resource-type",
-                      "className": "api-method get"
-                    },
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/data-export-api/query-resources",
-                      "className": "api-method get"
-                    },
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/data-export-api/get-resource",
-                      "className": "api-method get"
-                    },
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/data-export-api/update-resource",
-                      "className": "api-method post"
-                    },
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/data-export-api/execute-resource-action",
-                      "className": "api-method post"
-                    }
-                  ]
-                },
-                {
-                  "type": "category",
                   "label": "Automation",
                   "link": {
                     "type": "doc",
@@ -732,47 +691,6 @@
                       "type": "doc",
                       "id": "aqara-developer/data-export-api/get-ems-summary-devices",
                       "className": "api-method post"
-                    }
-                  ]
-                },
-                {
-                  "type": "category",
-                  "label": "Alarm",
-                  "link": {
-                    "type": "doc",
-                    "id": "aqara-developer/data-export-api/alarm"
-                  },
-                  "collapsed": false,
-                  "items": [
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/data-export-api/get-alarms",
-                      "className": "api-method get"
-                    },
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/data-export-api/delete-alarm",
-                      "className": "api-method post"
-                    },
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/data-export-api/clear-alarms",
-                      "className": "api-method post"
-                    },
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/data-export-api/ack-alarms",
-                      "className": "api-method post"
-                    },
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/data-export-api/ack-alarms-by-point-id",
-                      "className": "api-method post"
-                    },
-                    {
-                      "type": "doc",
-                      "id": "aqara-developer/data-export-api/get-alarm-rules",
-                      "className": "api-method get"
                     }
                   ]
                 }

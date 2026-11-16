@@ -110,6 +110,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - name: parentSpaceId
           in: query
           description: Parent space ID. If empty, the response will return all top-level spaces (spaces without a parent, i.e., root nodes of the space tree).
@@ -165,7 +166,8 @@ paths:
       x-idempotent: false
       x-retryable: false
       x-side-effects: create
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -208,7 +210,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: update
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -249,7 +252,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: delete
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -292,7 +296,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       responses:
         '200':
           description: Request succeeded
@@ -331,6 +336,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - name: fields
           required: false
           style: form
@@ -431,6 +437,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - name: protocolIds
           required: false
           style: form
@@ -647,6 +654,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - name: deviceIds
           in: query
           required: true
@@ -739,7 +747,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -858,6 +867,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - name: deviceId
           in: query
           required: true
@@ -1021,7 +1031,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: device_state_change
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1089,7 +1100,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1154,7 +1166,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: device_state_change
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1240,7 +1253,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: device_state_change
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1309,7 +1323,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1353,7 +1368,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: update
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1394,7 +1410,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: update
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1441,7 +1458,8 @@ paths:
       x-idempotent: true
       x-retryable: conditional
       x-side-effects: device_object_delete
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1499,7 +1517,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: device_create
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1559,7 +1578,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: device_point_bind
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1619,7 +1639,8 @@ paths:
       x-idempotent: true
       x-retryable: conditional
       x-side-effects: device_point_unbind
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1679,7 +1700,8 @@ paths:
       x-idempotent: true
       x-retryable: conditional
       x-side-effects: device_binding_change
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1720,1790 +1742,6 @@ paths:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
-  # General ANode Resources
-  # ────────────────────────────────────────────────────────────────
-  /resource-types:
-    get:
-      tags: [Resource]
-      summary: Query Open Resource Type Directory
-      description: Query the open resource type directory.
-      operationId: listResourceTypes
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: none
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResourceTypesResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-      x-request-examples:
-        listTypes:
-          summary: Query All Public Resource Types
-          description: Currently, there are nine built-in types; the actual directory returned by data.items.
-          method: GET
-          path: /resource-types
-          request:
-            headers: Public Request Headers
-            query: null
-            body: null
-
-  /resource-types/{type}:
-    get:
-      tags: [Resource]
-      summary: Query Resource Type Definition
-      description: "Returns the field schema, `query.filters` / `query.parentId` / `query.sortable`, and available operations. Configuration fields may use full key names that contain `/`. Sensitive fields are marked with `sensitive=true`, `writeOnly=true`, and `readable=false`.\n\nFor the `sequence` type, `query.filters` includes `name`, `deviceId`, and `includeAssignable` (default: `false`). The `create` input must include `deviceId`. The `assign` input accepts only `deviceId` and always assigns the latest version."
-      operationId: describeResourceType
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: none
-      parameters:
-        - $ref: '#/components/parameters/ResourceType'
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResourceTypeResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-      x-request-examples:
-        describeProtocol:
-          summary: Read the protocol type definition
-          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: Common request headers
-            path:
-              type: protocol
-            query: null
-            body: null
-        describeProtocolnetwork:
-          summary: Read the protocol.network type definition
-          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: Common request headers
-            path:
-              type: protocol.network
-            query: null
-            body: null
-        describeProtocoldevice:
-          summary: Read the protocol.device type definition
-          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: Common request headers
-            path:
-              type: protocol.device
-            query: null
-            body: null
-        describeProtocolpoint:
-          summary: Read the protocol.point type definition
-          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: Common request headers
-            path:
-              type: protocol.point
-            query: null
-            body: null
-        describeSystem:
-          summary: Read the system type definition
-          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: Common request headers
-            path:
-              type: system
-            query: null
-            body: null
-        describeJob:
-          summary: Read the job type definition
-          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: Common request headers
-            path:
-              type: job
-            query: null
-            body: null
-        describeDiscovery:
-          summary: Read the discovery type definition
-          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: Common request headers
-            path:
-              type: discovery
-            query: null
-            body: null
-        describeBackup:
-          summary: Read the backup type definition
-          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: Common request headers
-            path:
-              type: backup
-            query: null
-            body: null
-        describeSequence:
-          summary: Read the sequence type definition
-          description: First confirm the operations, query options, writable fields, and command inputs. The `commands` in a type definition list all possible commands; only the `commands` on a specific instance are currently available.
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: Common request headers
-            path:
-              type: sequence
-            query: null
-            body: null
-
-  /resource-types/{type}/resources:
-    get:
-      tags: [Resource]
-      summary: Paginated Query Resource
-      description: |
-        Filter by the `query.filters` defined for the type. `parentId` is the root of a Resource subtree. Use the Open `deviceId` for Device nodes, and the exact node ID for other nodes. `page` defaults to `1`. `pageSize` defaults to `20` and has a maximum of `100`. `sort` uses declared fields with `:asc`/`:desc`. The response does not include `total`; use `hasMore` instead. Network/Device/Point entries return the protocol type in `properties.protocolId`. Device IDs are not duplicated in `properties`. References returned by create or import must be read again for details. Undeclared filter parameters return `400`. `parentId` applies only to types that declare it. `sort` defaults to `id:asc`.
-
-        When querying `type=sequence`:
-        - If `deviceId` is omitted, the user-defined sequence library is returned.
-        - If `deviceId` is provided, only scenes already owned by that device are returned by default, including bound user configurations, device presets, and system built-ins. Entries that already belong to the current device include `properties.assignment`.
-        - If `includeAssignable=true`, the response also includes unbound, capability-matched user scenes that are available for selection and do not have `properties.assignment`. If the parameter is omitted or set to `false`, assignable scenes are not returned. If `deviceId` is omitted, this parameter is ignored.
-        - For built-in scenes, `properties.name` and `properties.labelTypeName` return localized text based on the `Lang` request header.
-        - When `deviceId` is provided, the response `data` echoes `deviceId` and the device `spec` as `data.deviceId`/`data.spec`.
-      operationId: queryResources
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: none
-      parameters:
-      - $ref: '#/components/parameters/ResourceType'
-      - name: parentId
-        in: query
-        required: false
-        description: parentId is only applicable to hierarchical resources that declare this filter.
-        schema:
-          type: string
-      - name: protocolId
-        in: query
-        required: false
-        schema:
-          type: string
-        description: Optional Resource subtree root; protocol devices use Open deviceId, other nodes use exact node IDs, including all descendants.
-      - name: page
-        in: query
-        required: false
-        description: Page number, defaults to 1.
-        schema:
-          type: integer
-          minimum: 1
-          default: 1
-          maximum: 1000000
-      - name: pageSize
-        in: query
-        required: false
-        description: Number of items per page, defaults to 20, maximum is 100.
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 100
-          default: 20
-      - name: sort
-        in: query
-        required: false
-        description: sort must be in the format `field:asc` or `field:desc`, and the field must be in query.sortable. If not provided, use resource type defaultSort.
-        schema:
-          type: string
-          default: id:asc
-      - name: name
-        in: query
-        required: false
-        description: Only for types whose query.filters include name; matches exactly by resource name. The sequence type declares this filter.
-        schema:
-          type: string
-      - name: jobId
-        in: query
-        required: false
-        description: "Required for discovery: Discovery job resource ID."
-        schema:
-          type: string
-      - name: kind
-        in: query
-        required: false
-        description: "Required for discovery: device or point."
-        schema:
-          type: string
-          enum:
-          - device
-          - point
-      - name: deviceId
-        in: query
-        required: false
-        description: Used in sequence queries for business device DID (from device API); different from parentId in protocol resource query. No deviceId returns the user's custom sequence library; providing deviceId returns only scenarios owned by the device.
-        schema:
-          type: string
-      - name: includeAssignable
-        in: query
-        required: false
-        description: Used with deviceId in sequence queries; true additionally returns assignable user scenarios, defaults to false. Only takes effect for sequence types and with deviceId. If true, also returns assignable user scenarios; omitted or `false` returns only assigned scenarios.
-        schema:
-          type: boolean
-          default: false
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResourceQueryResponse'
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-      x-request-examples:
-        listProtocols:
-          summary: Query installed public protocols
-          description: Save protocol id and properties.capabilities; currently open bacnet, homeAssistantBridge, knxClient, modbus, whether installed and whether to support manual addition or discovery is determined by the response. The directory response returns an independent protocolId; create or discover using the returned directory id and save protocolId.
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: Public request headers
-            path:
-              type: protocol
-            query:
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        modbusQueryNetwork:
-          summary: Query Modbus network instances
-          description: parentId specifies the subtree and includes descendants; store items[].id. If hasMore=true, increase page until false. Each item returns protocolId and should store the parent resource ID for this query.
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: Public request headers
-            path:
-              type: protocol.network
-            query:
-              protocolId: modbus
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        modbusQueryDevice:
-          summary: Query Modbus device instances
-          description: parentId specifies the subtree and includes descendants; store items[].id. If hasMore=true, increase page until false. Each item returns protocolId and should store the parent resource ID for this query.
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: Public request headers
-            path:
-              type: protocol.device
-            query:
-              protocolId: modbus
-              parentId: '{{modbusNetworkId}}'
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        modbusQueryPoint:
-          summary: Query Modbus point instances
-          description: parentId specifies the subtree and includes descendants; store items[].id. If hasMore=true, increase page until false. Each item returns protocolId and should store the parent resource ID for this query.
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: Public request headers
-            path:
-              type: protocol.point
-            query:
-              protocolId: modbus
-              parentId: '{{modbusDeviceId}}'
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        bacnetDeviceCandidates:
-          summary: Paginated query for discovery device candidates
-          description: jobId and kind are required; kind=device or point. Save items[].id for selected candidates that haven't been imported as deviceCandidateId. Candidates only support queries, not read or modify.
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: Public request headers
-            path:
-              type: discovery
-            query:
-              jobId: '{{deviceJobId}}'
-              kind: device
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        bacnetPointCandidates:
-          summary: Query point candidates
-          description: Store items[].id of manually selected candidates (not yet imported) as pointCandidateId. Do not automatically import the first entry.
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: Public request headers
-            path:
-              type: discovery
-            query:
-              jobId: '{{pointJobId}}'
-              kind: point
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        listBackups:
-          summary: Query local backup records
-          description: Store selected items[].id as backupId. Identify new backups through the list, do not compose file names yourself. The name filter works by type definition; sort only uses fields in query.sortable.
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: Public request headers
-            path:
-              type: backup
-            query:
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        sequenceUserList:
-          summary: Query user-created scenarios
-          description: If deviceId is not provided, returns user config. Continue paging until hasMore=false.
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: Public request headers
-            path:
-              type: sequence
-            query:
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        sequenceDeviceList:
-          summary: Query existing scenarios and capabilities for a device
-          description: deviceId is obtained from the device interface. Returns data.spec and scenarios already owned by the device; assignments are in properties.assignment. Steps must conform to the device spec.
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: Public request headers
-            path:
-              type: sequence
-            query:
-              deviceId: '{{businessDeviceId}}'
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        sequenceAssignableList:
-          summary: Query assignable scenarios for a device
-          description: With includeAssignable=true, additionally includes matched (but unassigned) user scenarios. Not provided or false returns only assigned scenarios for the device.
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: Public request headers
-            path:
-              type: sequence
-            query:
-              deviceId: '{{businessDeviceId}}'
-              includeAssignable: 'true'
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-
-  /resources/{id}:
-    get:
-      tags: [Resource]
-      summary: Read Known Resource
-      description: |
-        Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools.
-        Network, Point, and Job resources use their respective node IDs.
-
-        Do not pass a protocol address, candidate ID, or a self-constructed device alias.
-
-        Network/Device/Point details include `properties.protocolId` (read-only protocol type), `schema`, `health`, `commands`, and `unavailableCommands`. They do not return a top-level `protocolId`, a duplicated `deviceId`, or `controlReference`. A health snapshot does not mean an active probe succeeded. Sensitive configuration is not returned.
-
-        Business control selectors should be obtained from the device definition or capability APIs.
-      operationId: getResource
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: none
-      parameters:
-      - $ref: '#/components/parameters/ResourceId'
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResourceResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-      x-request-examples:
-        readProtocol:
-          summary: Read Modbus protocol capabilities
-          description: Check manualNetworkAdd, manualDeviceAdd, manualPointAdd, deviceDiscovery, pointDiscovery; Modbus point discovery is currently not supported. The response returns an independent protocolId, which is used for subsequent queries or tools.
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: protocol:modbus
-            query: null
-            body: null
-        readSystem:
-          summary: Read system settings
-          description: The system resource is a singleton with a fixed id=station; there is no list query or resource command.
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: station
-            query: null
-            body: null
-        modbusReadPoint:
-          summary: Read point configuration and health status
-          description: Read instance schema before making modifications. The config field in type description is used for creation; instance updates use actual fields such as proxyExt. The health field is read-only and reflects runtime status; code=0 does not necessarily indicate successful communication.
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: '{{modbusPointId}}'
-            query: null
-            body: null
-        pollDiscoveryJob:
-          summary: Poll device discovery task
-          description: Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost.
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: '{{deviceJobId}}'
-            query: null
-            body: null
-        bacnetReadDevice:
-          summary: Read imported device
-          description: Confirm instance configuration and health, then decide whether to discover points. Do not mix discovery task ID, candidate ID, and instance ID.
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: '{{bacnetDeviceId}}'
-            query: null
-            body: null
-        pollPointJob:
-          summary: Poll point discovery task
-          description: Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost.
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: '{{pointJobId}}'
-            query: null
-            body: null
-        bacnetReadPoint:
-          summary: Read BACnet point
-          description: Obtain update fields and writable flags from the instance schema.
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: '{{bacnetPointId}}'
-            query: null
-            body: null
-        haReadNetwork:
-          summary: Read Home Assistant network
-          description: Verify address, port, and health. The token is only marked as sensitive/writeOnly in the schema and is not returned.
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: '{{haNetworkId}}'
-            query: null
-            body: null
-        knxReadDevice:
-          summary: Read KNX device configuration
-          description: Verify instance schema and health. The fields needed for point creation/mapping are determined by the current protocol.point definition and business Spec; do not guess internal Spec identifiers based only on the address.
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: '{{knxDeviceId}}'
-            query: null
-            body: null
-        readBackupService:
-          summary: Read backup service entry
-          description: The service has a fixed id=backup. The service has only the create command; only backup records have restore/delete.
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: backup
-            query: null
-            body: null
-        pollBackupJob:
-          summary: Poll backup or restore task
-          description: Follows the job's 1000ms/120000ms rule. For backup tasks, commands=[], and import or general cancel is not supported; after success, query backup records again. The restore task should also use the returned job ID for reading.
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: '{{backupJobId}}'
-            query: null
-            body: null
-        readBackup:
-          summary: Read specific backup
-          description: Confirm the record and the current commands. Do not use the backup service ID to initiate restore/delete.
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: '{{backupId}}'
-            query: null
-            body: null
-        sequenceRead:
-          summary: Read user scenario and device bindings
-          description: The details in properties.assignments indicate accessible binding lists. Revision and other version fields are for observing state only, not for assign input.
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: '{{sequenceId}}'
-            query: null
-            body: null
-        modbusReadNetwork:
-          summary: Read Modbus Network configuration
-          description: Create returns a reference only. Read the resource again to obtain `properties`, `schema`, `health`, and the current `commands`.
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: Common request headers
-            query: null
-            body: null
-            path:
-              id: '{{modbusNetworkId}}'
-        modbusReadDevice:
-          summary: Read Modbus Device configuration
-          description: Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias.
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: Common request headers
-            query: null
-            body: null
-            path:
-              id: '{{modbusDeviceId}}'
-    post:
-      tags: [Resource]
-      summary: Modify Known Resource Properties
-      description: The request body uses only a `properties` wrapper. Copy the target ID from the corresponding Resource. Write only fields marked as writable in the detail schema. `properties.protocolId` and Device identity fields are read-only. Update `name` separately from protocol configuration. An explicit `null` is rejected when the schema does not allow it, and is not treated as an omitted field. The response returns the complete instance details. Only fields declared as writable in both the resource definition and the runtime schema may be modified. Writing starts only after all fields pass validation, and the service attempts a rollback on failure. Sensitive fields may be written according to the dynamic schema, but a successful response does not echo the request values or historical values.
-      operationId: updateResource
-      x-idempotent: true
-      x-retryable: conditional
-      x-side-effects: config_update
-      parameters:
-        - $ref: '#/components/parameters/ResourceId'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ResourceUpdateRequest'
-            examples:
-              updateSystem:
-                summary: Modify time zone and unit system
-                description: Only fields with runtime declared writable=true can be written; unitSystem can be metric, ussystem, or uksystem. Confirm by reading station after success.
-                value:
-                  properties:
-                    timezone: Asia/Shanghai
-                    unitSystem: metric
-              modbusUpdatePoint:
-                summary: Adjust point poll frequency
-                description: Only sent if the key is declared writable=true in the instance schema. Confirm after update by reading back.
-                value:
-                  properties:
-                    proxyExt/pollFrequency: fast
-              modbusUpdateDevice:
-                summary: Enable strict device response validation
-                description: Determine writability from the device instance schema.
-                value:
-                  properties:
-                    enableStrictResponseValidation: true
-              modbusRename:
-                summary: Modify protocol device name
-                description: Name is updated separately, not combined with protocol config fields.
-                value:
-                  properties:
-                    name: 配电柜 PLC
-              bacnetUpdatePoint:
-                summary: Enable BACnet point proxy
-                description: Only sent if declared writable in the instance schema; confirm health after success.
-                value:
-                  properties:
-                    proxyExt/enabled: true
-              haRotateToken:
-                summary: Update Home Assistant token
-                description: Use new HA credentials. Successful responses will not echo the new or old value.
-                value:
-                  properties:
-                    token: '{{newHaToken}}'
-              sequenceUpdate:
-                summary: Edit scenario and synchronize specific devices
-                description: Only modifies user configuration. deviceIds and syncAllDevices are write options; after successful update, the sync status for each device still needs to be queried separately. syncAllDevices=true synchronizes all currently bound devices; this cannot be used to assign to unbound devices.
-                value:
-                  properties:
-                    name: Sunset Glow
-                    data:
-                      type: commands
-                      loopCount: 1
-                      completionAction: HOLD
-                      commands:
-                      - command: setColor
-                        color: '#FF6600'
-                        brightness: 80
-                        transitionTime: 1.0
-                    deviceIds:
-                    - '{{businessDeviceId}}'
-                    syncAllDevices: false
-              modbusUpdateNetwork:
-                summary: Configure Modbus Network byte order
-                description: Only submit writable configuration in the detail schema.
-                value:
-                  properties:
-                    longByteOrder: orderABCD
-              bacnetUpdateDevice:
-                summary: Configure imported BACnet Device
-                description: The device ID uses the imported result resource.id; an explicit null is not treated as an omitted field.
-                value:
-                  properties:
-                    enabled: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResourceResponse'
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-      x-request-examples:
-        updateSystem:
-          summary: Modify time zone and unit system
-          description: Only fields with runtime declared writable=true can be written; unitSystem can be metric, ussystem, or uksystem. Confirm by reading station after success.
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: station
-            query: null
-            body:
-              properties:
-                timezone: Asia/Shanghai
-                unitSystem: metric
-        modbusUpdatePoint:
-          summary: Adjust point poll frequency
-          description: Only sent if the key is declared writable=true in the instance schema. Confirm after update by reading back.
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: '{{modbusPointId}}'
-            query: null
-            body:
-              properties:
-                proxyExt/pollFrequency: fast
-        modbusUpdateDevice:
-          summary: Enable strict device response validation
-          description: Determine writability from the device instance schema.
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: '{{modbusDeviceId}}'
-            query: null
-            body:
-              properties:
-                enableStrictResponseValidation: true
-        modbusRename:
-          summary: Modify protocol device name
-          description: Name is updated separately, not combined with protocol config fields.
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: '{{modbusDeviceId}}'
-            query: null
-            body:
-              properties:
-                name: 配电柜 PLC
-        bacnetUpdatePoint:
-          summary: Enable BACnet point proxy
-          description: Only sent if declared writable in the instance schema; confirm health after success.
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: '{{bacnetPointId}}'
-            query: null
-            body:
-              properties:
-                proxyExt/enabled: true
-        haRotateToken:
-          summary: Update Home Assistant token
-          description: Use new HA credentials. Successful responses will not echo the new or old value.
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: '{{haNetworkId}}'
-            query: null
-            body:
-              properties:
-                token: '{{newHaToken}}'
-        sequenceUpdate:
-          summary: Edit scenario and synchronize specific devices
-          description: Only modifies user configuration. deviceIds and syncAllDevices are write options; after successful update, the sync status for each device still needs to be queried separately. syncAllDevices=true synchronizes all currently bound devices; this cannot be used to assign to unbound devices.
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: Public request headers
-            path:
-              id: '{{sequenceId}}'
-            query: null
-            body:
-              properties:
-                name: Sunset Glow
-                data:
-                  type: commands
-                  loopCount: 1
-                  completionAction: HOLD
-                  commands:
-                  - command: setColor
-                    color: '#FF6600'
-                    brightness: 80
-                    transitionTime: 1.0
-                deviceIds:
-                - '{{businessDeviceId}}'
-                syncAllDevices: false
-        modbusUpdateNetwork:
-          summary: Configure Modbus Network byte order
-          description: Only submit writable configuration in the detail schema.
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: Common request headers
-            query: null
-            body:
-              properties:
-                longByteOrder: orderABCD
-            path:
-              id: '{{modbusNetworkId}}'
-        bacnetUpdateDevice:
-          summary: Configure imported BACnet Device
-          description: The device ID uses the imported result resource.id; an explicit null is not treated as an omitted field.
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: Common request headers
-            query: null
-            body:
-              properties:
-                enabled: true
-            path:
-              id: '{{bacnetDeviceId}}'
-
-  /actions/{command}:
-    post:
-      tags: [Resource]
-      summary: Execute Resource Command
-      description: |-
-        The request body allows only a non-empty `id` and an optional `input` object. Unknown fields are rejected. Available commands and configuration follow the current resource type definition and the instance `commands`.
-        `create` acts directly on the parent resource: a protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately.
-        `discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources.
-        `import` acts on a discovery Job. `input` must contain 1–200 `discoveryObjectIds` and exactly one of `networkId` (import devices) or `deviceId` (import points; Open device ID). `ownerId` and `pointConfigs` are not accepted. The server validates job ownership, target type, protocol, and permissions for the whole batch, then checks `results` item by item. Successful items contain only `resource.id`/`type`; failed items contain `errorCode`/`message`.
-        `delete` acts on an actual instance, with `input` as an empty object. Deletion permissions and status are checked again at execution time.
-        Device connection diagnostics use `deviceId` and remain compatible with `targetId`. Point diagnostics still use the Point `targetId`.
-
-        For a `sequence` resource `create`, `id` is `sequence`. `input` allows `name`, `data`, `icon`, and `deviceId`, of which `name`, `data`, and `deviceId` are required.
-        `deviceId` identifies the device that the scene is created for. `create` accepts only `data.type=commands` and does not accept `unavailable`.
-      operationId: executeResourceAction
-      x-idempotent: false
-      x-retryable: false
-      x-side-effects: command_execute
-      parameters:
-      - name: command
-        in: path
-        required: true
-        description: Command name returned by the resource type definition.
-        schema:
-          type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ResourceActionRequest'
-            examples:
-              modbusNetwork:
-                summary: Create Modbus Network
-                description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `modbusNetworkId`."
-                value:
-                  id: protocol:modbus
-                  input:
-                    entityKind: network
-                    name: Modbus TCP Network
-                    config:
-                      enabled: true
-                      floatByteOrder: orderABCD
-                      longByteOrder: orderABCD
-              modbusDevice:
-                summary: Create Modbus TCP Device
-                description: |
-                  `create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately.
-
-                  Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `modbusDeviceId`.
-                value:
-                  id: '{{modbusNetworkId}}'
-                  input:
-                    name: PLC-1
-                    config:
-                      ipAddress: 192.0.2.10
-                      port: 502
-                      deviceAddress: 1
-                      frameMode: modbusTcp
-                      enabled: true
-              modbusPoint:
-                summary: Create Modbus Holding Register Point
-                description: |
-                  `create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately.
-
-                  Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `modbusPointId`.
-                value:
-                  id: '{{modbusDeviceId}}'
-                  input:
-                    name: Register 40011
-                    config:
-                      pollFrequency: normal
-                      modbusDiscoverySpecInfo/registerType: holdingRegister
-                      modbusDiscoverySpecInfo/readWriteType: readOnly
-                      modbusDiscoverySpecInfo/addressFormat: modbus
-                      modbusDiscoverySpecInfo/address: '40011'
-                      modbusDiscoverySpecInfo/dataType: integerType
-              deleteProtocolEntity:
-                summary: Delete Protocol Instance
-                description: Only send to instances with `delete` in the latest readback commands; id can be replaced with the target network or device ID. The reason for rejection is shown in unavailableCommands of the current instance; permissions and status will be rechecked on execution.
-                value:
-                  id: '{{modbusPointId}}'
-                  input: {}
-              bacnetNetwork:
-                summary: Create BACnet Network
-                description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `bacnetNetworkId`. BACnet Network is limited to a framework singleton; if an instance already exists, reuse the returned ID and do not create another one."
-                value:
-                  id: protocol:bacnet
-                  input:
-                    name: BACnet Network
-                    config:
-                      localDevice/objectInstanceNumber: 123456
-                      bacnetComm/network/ipPort/link/udpPort: 47808
-                      enabled: true
-              bacnetDiscoverDevice:
-                summary: Discover BACnet Devices on Network
-                description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources. Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost."
-                value:
-                  id: '{{bacnetNetworkId}}'
-                  input:
-                    options: {}
-              bacnetImportDevice:
-                summary: Import Selected BACnet Devices
-                description: "`import` acts on a discovery Job. `input` must contain 1–200 `discoveryObjectIds` and exactly one of `networkId` (import devices) or `deviceId` (import points; Open device ID). `ownerId` and `pointConfigs` are not accepted. The server validates job ownership, target type, protocol, and permissions for the whole batch, then checks `results` item by item. Successful items contain only `resource.id`/`type`; failed items contain `errorCode`/`message`. Save `data.results[].resource.id` as `bacnetDeviceId`."
-                value:
-                  id: '{{deviceJobId}}'
-                  input:
-                    discoveryObjectIds:
-                    - '{{deviceCandidateId}}'
-                    networkId: '{{bacnetNetworkId}}'
-              bacnetDiscoverPoint:
-                summary: Discover BACnet Points on Device
-                description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources. Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost."
-                value:
-                  id: '{{bacnetDeviceId}}'
-                  input:
-                    ownerKind: device
-                    ownerId: '{{bacnetDeviceResourceId}}'
-                    targetKind: point
-                    options: {}
-              bacnetImportPoint:
-                summary: Import Selected BACnet Points
-                description: "`import` acts on a discovery Job. `input` must contain 1–200 `discoveryObjectIds` and exactly one of `networkId` (import devices) or `deviceId` (import points; Open device ID). `ownerId` and `pointConfigs` are not accepted. The server validates job ownership, target type, protocol, and permissions for the whole batch, then checks `results` item by item. Successful items contain only `resource.id`/`type`; failed items contain `errorCode`/`message`. Save `data.results[].resource.id` as `bacnetPointId`."
-                value:
-                  id: '{{pointJobId}}'
-                  input:
-                    discoveryObjectIds:
-                    - '{{pointCandidateId}}'
-                    deviceId: '{{bacnetDeviceId}}'
-              haNetwork:
-                summary: Create Home Assistant Network
-                description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `haNetworkId`."
-                value:
-                  id: protocol:homeAssistantBridge
-                  input:
-                    name: Home Assistant
-                    config:
-                      ipAddress/ipAddress: 192.0.2.20
-                      ipAddress/port: 8123
-                      token: '{{haToken}}'
-              haDiscoverDevice:
-                summary: Discover Home Assistant Devices
-                description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources. Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost."
-                value:
-                  id: '{{haNetworkId}}'
-                  input:
-                    options: {}
-              knxNetwork:
-                summary: Create KNX Network
-                description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `knxNetworkId`."
-                value:
-                  id: protocol:knxClient
-                  input:
-                    name: KNX Network
-                    config:
-                      localIp: 0.0.0.0
-                      enabled: true
-              knxDevice:
-                summary: Manually Create KNX Tunnel Device
-                description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `knxDeviceId`."
-                value:
-                  id: '{{knxNetworkId}}'
-                  input:
-                    name: KNX IP Interface
-                    config:
-                      deviceAddress: 1.1.250
-                      localIp: 0.0.0.0
-                      connectType: tunnel
-                      tunnelKnxIp: 192.0.2.30
-                      tunnelKnxPort: 3671
-                      enabled: true
-              knxDiscoverDevice:
-                summary: Discover KNX Interface Devices
-                description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources. Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost."
-                value:
-                  id: '{{knxNetworkId}}'
-                  input:
-                    options: {}
-              createBackup:
-                summary: Create Local System Backup
-                description: "`remark` is limited to 20 characters; store data.id as backupJobId, the response is an asynchronous job and not a backup record ID."
-                value:
-                  id: backup
-                  input:
-                    remark: Maintenance backup
-              restoreBackup:
-                summary: Restore Selected System Backup
-                description: This request will restore system data and should only be performed as a standalone operation when needed, not as a fixed next step after backup creation. Save the returned job ID and poll; input must be an empty object.
-                value:
-                  id: '{{backupId}}'
-                  input: {}
-              deleteBackup:
-                summary: Delete Selected Backup File
-                description: This request deletes the specified local backup and should be performed only when cleanup is required; input must be an empty object.
-                value:
-                  id: '{{backupId}}'
-                  input: {}
-              sequenceCreate:
-                summary: Create "Sunset Glow" Scene
-                description: deviceId must be provided for create, which is used for device name validation; creation does not mean device assignment. Save data.id as sequenceId, then assign. The color command example requires device spec support.
-                value:
-                  id: sequence
-                  input:
-                    name: Sunset Glow
-                    deviceId: '{{businessDeviceId}}'
-                    data:
-                      type: commands
-                      loopCount: 1
-                      completionAction: HOLD
-                      commands:
-                      - command: setColor
-                        color: '#FF6600'
-                        brightness: 80
-                        transitionTime: 1.0
-              sequenceAssign:
-                summary: Assign Scene to Device
-                description: "Always binds the latest version and only accepts `deviceId`; passing `revision` (including `null`) is rejected. Then query with `deviceId` and wait until `assignment.syncState=SYNCED` and `syncedRevision=revision` before starting."
-                value:
-                  id: '{{sequenceId}}'
-                  input:
-                    deviceId: '{{businessDeviceId}}'
-              sequenceStart:
-                summary: Start Synchronized Scene
-                description: Uses the bound device ID. The system preset directly uses the device query returned ID plus the same deviceId to start, but does not guarantee it can be read separately from the device.
-                value:
-                  id: '{{sequenceId}}'
-                  input:
-                    deviceId: '{{businessDeviceId}}'
-              sequenceStop:
-                summary: Stop Current Scene on Device
-                description: Target id=sequence is fixed, do not use a specific sequenceId.
-                value:
-                  id: sequence
-                  input:
-                    deviceId: '{{businessDeviceId}}'
-              sequencePreview:
-                summary: Temporarily Preview Scene on Device
-                description: Target id=sequence is fixed; data is built using the target device spec, without creating a persistent scene or assignment.
-                value:
-                  id: sequence
-                  input:
-                    deviceId: '{{businessDeviceId}}'
-                    data:
-                      type: commands
-                      loopCount: 1
-                      completionAction: HOLD
-                      commands:
-                      - command: setColor
-                        color: '#FF6600'
-                        brightness: 80
-                        transitionTime: 1.0
-              sequenceRetry:
-                summary: Re-queue Failed Synchronization Task
-                description: Only used for real bindings with syncState=FAILED; success indicates re-entering the queue, not that synchronization is complete, continue to query via device.
-                value:
-                  id: '{{sequenceId}}'
-                  input:
-                    deviceId: '{{businessDeviceId}}'
-              sequenceUnassign:
-                summary: Request to Remove Device Assignment
-                description: Asynchronously remove; query via device until Relation disappears. After the last binding is deleted, the service may automatically delete the user's scene; do not call delete serially by default.
-                value:
-                  id: '{{sequenceId}}'
-                  input:
-                    deviceId: '{{businessDeviceId}}'
-              sequenceDelete:
-                summary: Delete Unbound User Scene
-                description: Only for user configurations that currently have no Relation, and based on the latest readback commands; system presets cannot be deleted.
-                value:
-                  id: '{{sequenceId}}'
-                  input: {}
-              importDifferentOwnerRejected:
-                summary: "Counterexample: Import Device Does Not Match Discovery Job"
-                description: This point discovery Job belongs to another device. Even if the target uses the same protocol, the request is rejected. Validation runs before the batch is created.
-                value:
-                  id: '{{pointJobId}}'
-                  input:
-                    ownerId: '{{anotherBacnetDeviceResourceId}}'
-                    discoveryObjectIds:
-                    - '{{pointCandidateId}}'
-              createSequence:
-                summary: POST /actions/create to Create Scene
-                value:
-                  id: sequence
-                  input:
-                    name: Sunset Glow
-                    deviceId: '{{businessDeviceId}}'
-                    icon: ''
-                    data:
-                      type: commands
-                      loopCount: 1
-                      completionAction: HOLD
-                      commands:
-                      - command: setColor
-                        color: '#FF6600'
-                        brightness: 80
-                        transitionTime: 1.0
-              modbusDeletePoint:
-                summary: Delete Test Modbus Point
-                description: Delete only resources created by this test that are deletable. Follow Point → Device → Network order and do not operate on other resources.
-                value:
-                  id: '{{modbusPointId}}'
-                  input: {}
-              modbusDeleteDevice:
-                summary: Delete Test Modbus Device
-                description: Delete only resources created by this test that are deletable. Follow Point → Device → Network order and do not operate on other resources.
-                value:
-                  id: '{{modbusDeviceId}}'
-                  input: {}
-              modbusDeleteNetwork:
-                summary: Delete Test Modbus Network
-                description: Delete only resources created by this test that are deletable. Follow Point → Device → Network order and do not operate on other resources.
-                value:
-                  id: '{{modbusNetworkId}}'
-                  input: {}
-              connectionSnapshotDevice:
-                summary: Query Connection Snapshot by Open deviceId
-                description: Read-only; does not create a connection or probe. Exposed only on script-protocol Networks; inspect the actual `commands`.
-                value:
-                  id: '{{tcpNetworkId}}'
-                  input:
-                    deviceId: '{{tcpDeviceId}}'
-              connectionSnapshotLegacy:
-                summary: Connection Snapshot with Legacy targetId
-                description: New `deviceId` accepts only an Open device ID. Legacy `targetId` accepts a device node ID or Open ID; snapshots also accept a Point ID. When both fields are sent, they must resolve to the same device and must not mix point selection. Management permission, device authorization, and Network ownership are still validated.
-                value:
-                  id: '{{tcpNetworkId}}'
-                  input:
-                    deviceId: '{{tcpDeviceId}}'
-                    targetId: '{{legacyDeviceNodeId}}'
-              startDebugSession:
-                summary: Create Bounded Diagnostic Session
-                description: Call only on script Networks that expose this command in `commands`. TTL is at most 120000 ms. Check the returned `capabilities` first. Globally at most two active sessions, or four including terminal states. After stop, records are retained for 60 seconds; when the limit is reached, returns `BUSY`.
-                value:
-                  id: '{{tcpNetworkId}}'
-                  input:
-                    ttlMs: 60000
-              probeOnceDevice:
-                summary: Probe with Open deviceId
-                description: Only when `session.capabilities.probe=true`. Legacy `targetId` is accepted, but new requests should prefer `deviceId`. The result is an operation resource whose status must be read; accepting the request does not mean the device probe succeeded.
-                value:
-                  id: '{{debugSessionId}}'
-                  input:
-                    deviceId: '{{tcpDeviceId}}'
-                    timeoutMs: 3000
-              readOncePoint:
-                summary: Actually Read Specified Point
-                description: Point diagnostics keep `targetId` as the Point ID; do not substitute `deviceId`. Success requires a real packet send and application to the target point.
-                value:
-                  id: '{{debugSessionId}}'
-                  input:
-                    targetId: '{{tcpPointId}}'
-                    timeoutMs: 3000
-              writeAndWaitPoint:
-                summary: Write and Wait for Business ACK When Authorized
-                description: Call only with explicit control authorization and capability support. `clientOperationId` and `waitFor` are required. MQTT PUBACK is not a device business ACK. When `protocolAck` is unsupported, choose `send` or `stateUpdate` with `expectedValue` according to actual capabilities. A timeout must not be treated as not executed, and must not trigger blind retries.
-                value:
-                  id: '{{debugSessionId}}'
-                  input:
-                    targetId: '{{tcpPointId}}'
-                    clientOperationId: example-write-001
-                    waitFor: protocolAck
-                    value: 41
-                    timeoutMs: 3000
-              stopDebugSession:
-                summary: Stop This Diagnostic Session
-                description: After stop, no further packets may be sent. Device actions already sent cannot be rolled back; history is handled per retention policy.
-                value:
-                  id: '{{debugSessionId}}'
-                  input: {}
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResourceOpenApiResponse'
-              examples:
-                createdNetwork:
-                  summary: Minimum reference to create a Network
-                  value:
-                    type: ResourceOpenApiResponse
-                    version: v1
-                    msgId: protocol-example
-                    code: 0
-                    message: success
-                    data:
-                      id: '{{modbusNetworkId}}'
-                      type: protocol.network
-                createdDevice:
-                  summary: Device ID 为 Open deviceId
-                  value:
-                    type: ResourceOpenApiResponse
-                    version: v1
-                    msgId: protocol-example
-                    code: 0
-                    message: success
-                    data:
-                      id: '{{modbusDeviceId}}'
-                      type: protocol.device
-                createdPoint:
-                  summary: Read the details separately after creating a Point
-                  value:
-                    type: ResourceOpenApiResponse
-                    version: v1
-                    msgId: protocol-example
-                    code: 0
-                    message: success
-                    data:
-                      id: '{{modbusPointId}}'
-                      type: protocol.point
-                importedPoint:
-                  summary: Only the resource reference in the imported successful items
-                  value:
-                    type: ResourceOpenApiResponse
-                    version: v1
-                    msgId: protocol-example
-                    code: 0
-                    message: success
-                    data:
-                      results:
-                      - discoveryObjectId: '{{pointCandidateId}}'
-                        success: true
-                        resource:
-                          id: '{{bacnetPointId}}'
-                          type: protocol.point
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-        '422':
-          description: Reject when protocol configuration or discovery task protocol/target ownership mismatch; code=2103. Return code=2127 for unsupported commands. The specific business code is based on the response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                type: ResourceOpenApiResponse
-                version: v1
-                msgId: import-owner-mismatch
-                code: 2103
-                message: Discovery import must use the job's protocol, owner and target kind.
-      x-request-examples:
-        modbusNetwork:
-          summary: Create Modbus Network
-          description: create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。 保存 data.id 为 modbusNetworkId。
-          method: POST
-          path: /actions/create
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: protocol:modbus
-              input:
-                name: Modbus TCP Network
-                config:
-                  enabled: true
-                  floatByteOrder: orderABCD
-                  longByteOrder: orderABCD
-        modbusDevice:
-          summary: Create Modbus TCP Device
-          description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `modbusDeviceId`."
-          method: POST
-          path: /actions/create
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{modbusNetworkId}}'
-              input:
-                name: PLC-1
-                config:
-                  ipAddress: 192.0.2.10
-                  port: 502
-                  deviceAddress: 1
-                  frameMode: modbusTcp
-                  enabled: true
-        modbusPoint:
-          summary: Create Modbus Holding Register Point
-          description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `modbusPointId`."
-          method: POST
-          path: /actions/create
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{modbusDeviceId}}'
-              input:
-                name: Register 40011
-                config:
-                  pollFrequency: normal
-                  modbusDiscoverySpecInfo/registerType: holdingRegister
-                  modbusDiscoverySpecInfo/readWriteType: readOnly
-                  modbusDiscoverySpecInfo/addressFormat: modbus
-                  modbusDiscoverySpecInfo/address: '40011'
-                  modbusDiscoverySpecInfo/dataType: integerType
-        deleteProtocolEntity:
-          summary: Delete Protocol Instance
-          description: Only send to instances with `delete` in the latest readback commands; id can be replaced with the target network or device ID. The reason for rejection is shown in unavailableCommands of the current instance; permissions and status will be rechecked on execution.
-          method: POST
-          path: /actions/delete
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{modbusPointId}}'
-              input: {}
-        bacnetNetwork:
-          summary: Create BACnet Network
-          description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `bacnetNetworkId`. BACnet Network is limited to a framework singleton; if an instance already exists, reuse the returned ID and do not create another one."
-          method: POST
-          path: /actions/create
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: protocol:bacnet
-              input:
-                name: BACnet Network
-                config:
-                  localDevice/objectInstanceNumber: 123456
-                  bacnetComm/network/ipPort/link/udpPort: 47808
-                  enabled: true
-        bacnetDiscoverDevice:
-          summary: Discover BACnet Devices on Network
-          description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources. Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost."
-          method: POST
-          path: /actions/discover
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{bacnetNetworkId}}'
-              input:
-                options: {}
-        bacnetImportDevice:
-          summary: Import Selected BACnet Devices
-          description: "`import` acts on a discovery Job. `input` must contain 1–200 `discoveryObjectIds` and exactly one of `networkId` (import devices) or `deviceId` (import points; Open device ID). `ownerId` and `pointConfigs` are not accepted. The server validates job ownership, target type, protocol, and permissions for the whole batch, then checks `results` item by item. Successful items contain only `resource.id`/`type`; failed items contain `errorCode`/`message`. Save `data.results[].resource.id` as `bacnetDeviceId`."
-          method: POST
-          path: /actions/import
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{deviceJobId}}'
-              input:
-                discoveryObjectIds:
-                - '{{deviceCandidateId}}'
-                networkId: '{{bacnetNetworkId}}'
-        bacnetDiscoverPoint:
-          summary: Discover BACnet Points on Device
-          description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources. Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost."
-          method: POST
-          path: /actions/discover
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{bacnetDeviceId}}'
-              input:
-                options: {}
-        bacnetImportPoint:
-          summary: Import Selected BACnet Points
-          description: "`import` acts on a discovery Job. `input` must contain 1–200 `discoveryObjectIds` and exactly one of `networkId` (import devices) or `deviceId` (import points; Open device ID). `ownerId` and `pointConfigs` are not accepted. The server validates job ownership, target type, protocol, and permissions for the whole batch, then checks `results` item by item. Successful items contain only `resource.id`/`type`; failed items contain `errorCode`/`message`. Save `data.results[].resource.id` as `bacnetPointId`."
-          method: POST
-          path: /actions/import
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{pointJobId}}'
-              input:
-                discoveryObjectIds:
-                - '{{pointCandidateId}}'
-                deviceId: '{{bacnetDeviceId}}'
-        haNetwork:
-          summary: Create Home Assistant Network
-          description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `haNetworkId`."
-          method: POST
-          path: /actions/create
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: protocol:homeAssistantBridge
-              input:
-                name: Home Assistant
-                config:
-                  ipAddress/ipAddress: 192.0.2.20
-                  ipAddress/port: 8123
-                  token: '{{haToken}}'
-        haDiscoverDevice:
-          summary: Discover Home Assistant Devices
-          description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources. Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost."
-          method: POST
-          path: /actions/discover
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{haNetworkId}}'
-              input:
-                options: {}
-        knxNetwork:
-          summary: Create KNX Network
-          description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `knxNetworkId`."
-          method: POST
-          path: /actions/create
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: protocol:knxClient
-              input:
-                name: KNX Network
-                config:
-                  localIp: 0.0.0.0
-                  enabled: true
-        knxDevice:
-          summary: Manually Create KNX Tunnel Device
-          description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately. Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. Save `data.id` as `knxDeviceId`."
-          method: POST
-          path: /actions/create
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{knxNetworkId}}'
-              input:
-                name: KNX IP Interface
-                config:
-                  deviceAddress: 1.1.250
-                  localIp: 0.0.0.0
-                  connectType: tunnel
-                  tunnelKnxIp: 192.0.2.30
-                  tunnelKnxPort: 3671
-                  enabled: true
-        knxDiscoverDevice:
-          summary: Discover KNX Interface Devices
-          description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources. Poll the same Job every 1000 ms for up to 120000 ms in a single round. After the Job succeeds and its `commands` include `import`, query the Job for candidates. Stop and report on `failed`/`cancelled`/`unknown`. On timeout, keep the Job ID and do not restart discovery. The task context is retained by the server and cannot be reconstructed from client-side fields after it is lost."
-          method: POST
-          path: /actions/discover
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{knxNetworkId}}'
-              input:
-                options: {}
-        createBackup:
-          summary: Create Local System Backup
-          description: "`remark` is limited to 20 characters; store data.id as backupJobId, the response is an asynchronous job and not a backup record ID."
-          method: POST
-          path: /actions/create
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: backup
-              input:
-                remark: Maintenance backup
-        restoreBackup:
-          summary: Restore Selected System Backup
-          description: This request will restore system data and should only be performed as a standalone operation when needed, not as a fixed next step after backup creation. Save the returned job ID and poll; input must be an empty object.
-          method: POST
-          path: /actions/restore
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{backupId}}'
-              input: {}
-        deleteBackup:
-          summary: Delete Selected Backup File
-          description: This request deletes the specified local backup and should be performed only when cleanup is required; input must be an empty object.
-          method: POST
-          path: /actions/delete
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{backupId}}'
-              input: {}
-        sequenceCreate:
-          summary: Create "Sunset Glow" Scene
-          description: deviceId must be provided for create, which is used for device name validation; creation does not mean device assignment. Save data.id as sequenceId, then assign. The color command example requires device spec support.
-          method: POST
-          path: /actions/create
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: sequence
-              input:
-                name: Sunset Glow
-                deviceId: '{{businessDeviceId}}'
-                data:
-                  type: commands
-                  loopCount: 1
-                  completionAction: HOLD
-                  commands:
-                  - command: setColor
-                    color: '#FF6600'
-                    brightness: 80
-                    transitionTime: 1.0
-        sequenceAssign:
-          summary: Assign Scene to Device
-          description: Always bind the latest version, only accept deviceId; reject revision (including null). Query with deviceId, wait for assignment.syncState=SYNCED and syncedRevision=revision before starting.
-          method: POST
-          path: /actions/assign
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{sequenceId}}'
-              input:
-                deviceId: '{{businessDeviceId}}'
-        sequenceStart:
-          summary: Start Synchronized Scene
-          description: Uses the bound device ID. The system preset directly uses the device query returned ID plus the same deviceId to start, but does not guarantee it can be read separately from the device.
-          method: POST
-          path: /actions/start
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{sequenceId}}'
-              input:
-                deviceId: '{{businessDeviceId}}'
-        sequenceStop:
-          summary: Stop Current Scene on Device
-          description: Target id=sequence is fixed, do not use a specific sequenceId.
-          method: POST
-          path: /actions/stop
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: sequence
-              input:
-                deviceId: '{{businessDeviceId}}'
-        sequencePreview:
-          summary: Temporarily Preview Scene on Device
-          description: Target id=sequence is fixed; data is built using the target device spec, without creating a persistent scene or assignment.
-          method: POST
-          path: /actions/preview
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: sequence
-              input:
-                deviceId: '{{businessDeviceId}}'
-                data:
-                  type: commands
-                  loopCount: 1
-                  completionAction: HOLD
-                  commands:
-                  - command: setColor
-                    color: '#FF6600'
-                    brightness: 80
-                    transitionTime: 1.0
-        sequenceRetry:
-          summary: Re-queue Failed Synchronization Task
-          description: Only used for real bindings with syncState=FAILED; success indicates re-entering the queue, not that synchronization is complete, continue to query via device.
-          method: POST
-          path: /actions/retry
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{sequenceId}}'
-              input:
-                deviceId: '{{businessDeviceId}}'
-        sequenceUnassign:
-          summary: Request to Remove Device Assignment
-          description: Asynchronously remove; query via device until Relation disappears. After the last binding is deleted, the service may automatically delete the user's scene; do not call delete serially by default.
-          method: POST
-          path: /actions/unassign
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{sequenceId}}'
-              input:
-                deviceId: '{{businessDeviceId}}'
-        sequenceDelete:
-          summary: Delete Unbound User Scene
-          description: Only for user configurations that currently have no Relation, and based on the latest readback commands; system presets cannot be deleted.
-          method: POST
-          path: /actions/delete
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{sequenceId}}'
-              input: {}  
-        modbusDeletePoint:
-          summary: Delete Test Modbus Point
-          description: Delete only resources created by this test that are deletable. Follow Point → Device → Network order and do not operate on other resources.
-          method: POST
-          path: /actions/delete
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{modbusPointId}}'
-              input: {}
-        modbusDeleteDevice:
-          summary: Delete Test Modbus Device
-          description: Delete only resources created by this test that are deletable. Follow Point → Device → Network order and do not operate on other resources.
-          method: POST
-          path: /actions/delete
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{modbusDeviceId}}'
-              input: {}
-        modbusDeleteNetwork:
-          summary: Delete Test Modbus Network
-          description: Delete only resources created by this test that are deletable. Follow Point → Device → Network order and do not operate on other resources.
-          method: POST
-          path: /actions/delete
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{modbusNetworkId}}'
-              input: {}
-        connectionSnapshotDevice:
-          summary: Query Connection Snapshot by Open deviceId
-          description: Read-only; does not create a connection or probe. Exposed only on script-protocol Networks; inspect the actual `commands`.
-          method: POST
-          path: /actions/connectionSnapshot
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{tcpNetworkId}}'
-              input:
-                deviceId: '{{tcpDeviceId}}'
-        connectionSnapshotLegacy:
-          summary: Connection Snapshot with Legacy targetId
-          description: New `deviceId` accepts only an Open device ID. Legacy `targetId` accepts a device node ID or Open ID; snapshots also accept a Point ID. When both fields are sent, they must resolve to the same device and must not mix point selection. Management permission, device authorization, and Network ownership are still validated.
-          method: POST
-          path: /actions/connectionSnapshot
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{tcpNetworkId}}'
-              input:
-                deviceId: '{{tcpDeviceId}}'
-                targetId: '{{legacyDeviceNodeId}}'
-        startDebugSession:
-          summary: Create Bounded Diagnostic Session
-          description: Call only on script Networks that expose this command in `commands`. TTL is at most 120000 ms. Check the returned `capabilities` first. Globally at most two active sessions, or four including terminal states. After stop, records are retained for 60 seconds; when the limit is reached, returns `BUSY`.
-          method: POST
-          path: /actions/startDebugSession
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{tcpNetworkId}}'
-              input:
-                ttlMs: 60000
-        probeOnceDevice:
-          summary: Probe with Open deviceId
-          description: Only when `session.capabilities.probe=true`. Legacy `targetId` is accepted, but new requests should prefer `deviceId`. The result is an operation resource whose status must be read; accepting the request does not mean the device probe succeeded.
-          method: POST
-          path: /actions/probeOnce
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{debugSessionId}}'
-              input:
-                deviceId: '{{tcpDeviceId}}'
-                timeoutMs: 3000
-        readOncePoint:
-          summary: Actually Read Specified Point
-          description: Point diagnostics keep `targetId` as the Point ID; do not substitute `deviceId`. Success requires a real packet send and application to the target point.
-          method: POST
-          path: /actions/readOnce
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{debugSessionId}}'
-              input:
-                targetId: '{{tcpPointId}}'
-                timeoutMs: 3000
-        writeAndWaitPoint:
-          summary: Write and Wait for Business ACK When Authorized
-          description: Call only with explicit control authorization and capability support. `clientOperationId` and `waitFor` are required. MQTT PUBACK is not a device business ACK. When `protocolAck` is unsupported, choose `send` or `stateUpdate` with `expectedValue` according to actual capabilities. A timeout must not be treated as not executed, and must not trigger blind retries.
-          method: POST
-          path: /actions/writeAndWait
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{debugSessionId}}'
-              input:
-                targetId: '{{tcpPointId}}'
-                clientOperationId: example-write-001
-                waitFor: protocolAck
-                value: 41
-                timeoutMs: 3000
-        stopDebugSession:
-          summary: Stop This Diagnostic Session
-          description: After stop, no further packets may be sent. Device actions already sent cannot be rolled back; history is handled per retention policy.
-          method: POST
-          path: /actions/stop
-          request:
-            headers: Public request headers
-            query: null
-            body:
-              id: '{{debugSessionId}}'
-              input: {}
-
-  # ────────────────────────────────────────────────────────────────
   # Query Gateway List
   # ────────────────────────────────────────────────────────────────
   /gateways:
@@ -3523,6 +1761,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - name: state
           in: query
           description: Gateway online status.
@@ -3580,7 +1819,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: device_state_change
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -3641,7 +1881,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: device_state_change
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -3694,7 +1935,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -3769,6 +2011,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+      - $ref: '#/components/parameters/Lang'
       - in: query
         name: definitionType
         required: false
@@ -3830,7 +2073,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: automation_create
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -3891,6 +2135,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - in: query
           name: definitionTypes
           required: false
@@ -4044,6 +2289,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+      - $ref: '#/components/parameters/Lang'
       - in: path
         name: automationId
         required: true
@@ -4129,7 +2375,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: automation_update
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4172,7 +2419,8 @@ paths:
       x-idempotent: true
       x-retryable: conditional
       x-side-effects: automation_update
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4209,7 +2457,8 @@ paths:
       x-idempotent: true
       x-retryable: conditional
       x-side-effects: automation_delete
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4251,7 +2500,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4301,7 +2551,8 @@ paths:
       x-idempotent: false
       x-retryable: false
       x-side-effects: command
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4353,7 +2604,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4395,7 +2647,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: command
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4447,7 +2700,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4510,6 +2764,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - name: dimensions
           in: query
           description: "List of statistics dimensions. Supported values are deviceCount (number of devices), linkageCount (number of automation nodes, including independent scenes), spaceCount (number of spaces), and sceneCount (number of independent scenes; query /scenes). URL examples: dimensions=deviceCount,linkageCount,spaceCount,sceneCount or dimensions=deviceCount&dimensions=linkageCount"
@@ -4561,7 +2816,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4631,7 +2887,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4701,7 +2958,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4765,7 +3023,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4824,7 +3083,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4886,7 +3146,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4937,405 +3198,6 @@ paths:
         '503':
           $ref: '#/components/responses/ServiceUnavailableResponse'
 
-  # ────────────────────────────────────────────────────────────────
-  # Query Alarm List
-  # ────────────────────────────────────────────────────────────────
-  /alarms:
-    get:
-      tags: [Alarm]
-      summary: List Alarms
-      description: |
-        Retrieve a paginated list of alarms within a specified time range.
-      operationId: getAlarms
-      x-skill-intent: alarm.list
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: none
-      parameters:
-        - name: startTime
-          in: query
-          description: Query start time (UTC milliseconds timestamp, inclusive)
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1704067200000
-        - name: endTime
-          in: query
-          description: Query end time (UTC milliseconds timestamp, inclusive)
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1704153600000
-        - name: pageNum
-          in: query
-          description: |
-            Page number.
-            When making subsequent paginated requests, you must keep all other parameters consistent with the initial request.
-          required: false
-          schema:
-            type: integer
-          example: 1
-        - name: pageSize
-          in: query
-          description: "Number of items per page (default: 200)."
-          required: false
-          schema:
-            type: integer
-          example: 200
-        - name: alarmClass
-          in: query
-          required: false
-          schema:
-            type: string
-            description: Alarm class name. If the value is blank, this paramter will not used for filtering.
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AlarmsResponse'
-              examples:
-                alarmsPage:
-                  value:
-                    type: GetAlarmListResponse
-                    version: v1
-                    msgId: "1751609244328"
-                    code: 0
-                    message: success
-                    data:
-                      totalCount: 2
-                      pageNum: 1
-                      pageSize: 200
-                      data:
-                        - uuid: "alarm-uuid-001"
-                          deviceName: "Living Room Temp-Humidity Sensor"
-                          deviceId: "device-001"
-                          devicePointName: "Temperature"
-                          devicePointId: alarm-point-001
-                          alarmClass: Warning
-                          alarmRuleName: "High Temperature Alarm"
-                          alarmText: "Temperature exceeds threshold"
-                          alarmValue: "32.5"
-                          sourceState: OFF_NORMAL
-                          alarmTime: 1704100000000
-                        - uuid: "alarm-uuid-002"
-                          deviceName: "Bedroom Smoke Sensor"
-                          deviceId: "device-002"
-                          devicePointName: "Smoke Concentration"
-                          devicePointId: alarm-point-001    
-                          alarmClass: Critical
-                          alarmRuleName: "Smoke Alarm"
-                          alarmText: "Smoke Detected"
-                          alarmValue: "1"
-                          sourceState: OFF_NORMAL
-                          alarmTime: 1704110000000
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
-  # ────────────────────────────────────────────────────────────────
-  # Delete Single Alarm
-  # ────────────────────────────────────────────────────────────────
-  /alarms/delete:
-    post:
-      tags: [Alarm]
-      summary: Delete An Alarm
-      description: Delete a specified alarm record by its unique identifier (uuid).
-      operationId: deleteAlarm
-      x-skill-intent: alarm.delete
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: delete
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DeleteAlarmRequest'
-            example:
-              uuid: "alarm-uuid-001"
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeleteAlarmResponse'
-              examples:
-                deleteAlarm:
-                  value:
-                    type: DeleteAlarmResponse
-                    version: v1
-                    msgId: "1751609244329"
-                    code: 0
-                    message: success
-                    data: true
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
-  # ────────────────────────────────────────────────────────────────
-  # Clear All Alarms
-  # ────────────────────────────────────────────────────────────────
-  /alarms/clear:
-    post:
-      tags: [Alarm]
-      summary: Clear All Alarms
-      description: Clear all Alarms, no request body required.
-      operationId: clearAlarms
-      x-skill-intent: alarm.clear
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: delete
-      parameters: []
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ClearAlarmsResponse'
-              examples:
-                clearAlarms:
-                  value:
-                    type: ClearAlarmsResponse
-                    version: v1
-                    msgId: "1751609244330"
-                    code: 0
-                    message: success
-                    data: true
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
-  # ────────────────────────────────────────────────────────────────
-  # Batch Acknowledge Alarms by UUID
-  # ────────────────────────────────────────────────────────────────
-  /alarms/ack:
-    post:
-      tags: [Alarm]
-      summary: Batch Acknowledge Alarms by UUIDs
-      description: |
-        Batch acknowledge alarms based on a list of unique identifiers (UUIDs) for the alarms.
-      operationId: ackAlarms
-      x-skill-intent: alarm.ack
-      x-idempotent: false
-      x-retryable: true
-      x-side-effects: update
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AckAlarmsRequest'
-            example:
-              uuids: ["alarm-uuid-001", "alarm-uuid-002"]
-              notes: "Acknowledged on site"
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AckAlarmsResponse'
-              examples:
-                ackAlarms:
-                  value:
-                    type: AckAlarmsResponse
-                    version: v1
-                    msgId: "1751609244331"
-                    code: 0
-                    message: success
-                    data: true
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
-  # ────────────────────────────────────────────────────────────────
-  # Batch Acknowledge Alarms by Point ID
-  # ────────────────────────────────────────────────────────────────
-  /alarms/ack-by-pointId:
-    post:
-      tags: [Alarm]
-      summary: Batch Acknowledge Alarms by Point ids
-      description: |
-        Batch acknowledge unacknowledged alarms for a measurement point based on `devicePointId`.
-      operationId: ackAlarmsByPointId
-      x-skill-intent: alarm.ack.by-point
-      x-idempotent: false
-      x-retryable: true
-      x-side-effects: update
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AckAlarmsByPointIdRequest'
-            example:
-              devicePointId: "point-001"
-              notes: "Acknowledged on site"
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AckAlarmsByPointIdResponse'
-              examples:
-                ackAlarmsByPointId:
-                  value:
-                    type: AckAlarmsByPointIdResponse
-                    version: v1
-                    msgId: "1751609244332"
-                    code: 0
-                    message: success
-                    data: true
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
-  # ────────────────────────────────────────────────────────────────
-  # Query Alarm Rule List
-  # ────────────────────────────────────────────────────────────────
-  /alarm-rules:
-    get:
-      tags: [Alarm]
-      summary: List Alarm Rules
-      description: |
-        Query the alarm rule list with pagination (template rules are excluded).
-        Optionally filter by case-insensitive substring match on `ruleName`.
-      operationId: getAlarmRules
-      x-skill-intent: alarm.rule.list
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: none
-      parameters: 
-        - name: ruleName
-          in: query
-          description: Fuzzy match keyword for the rule name (no filtering when omitted)
-          required: false
-          schema:
-            type: string
-          example: Temperature
-        - name: pageNum
-          in: query
-          description: Page number
-          required: false
-          schema:
-            type: integer
-          example: 1
-        - name: pageSize
-          in: query
-          description: "Number of items per page (default: 200)."
-          required: false
-          schema:
-            type: integer
-          example: 200
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AlarmRulesResponse'
-              examples:
-                alarmRulesPage:
-                  value:
-                    type: GetAlarmRuleListResponse
-                    version: v1
-                    msgId: '1751609244333'
-                    code: 0
-                    message: success
-                    data:
-                      totalCount: 2
-                      pageNum: 1
-                      pageSize: 200
-                      data:
-                      - ruleId: rule-001
-                        ruleName: High Temperature Alarm
-                        alarmClass: Warning
-                        delayToAlarmMs: 5000
-                        delayToNormalMs: 10000
-                        enabled: true
-                        updatedBy: admin
-                        updatedTime: 1704100000000
-                        toOffNormalText: Temperature exceeds threshold
-                        toNormalText: Temperature returns to normal
-                        alarmTraitName: Temperature
-                      - ruleId: rule-002
-                        ruleName: Smoke Alarm
-                        alarmClass: Critical
-                        delayToAlarmMs: 0
-                        delayToNormalMs: 0
-                        enabled: true
-                        updatedBy: admin
-                        updatedTime: 1704110000000
-                        toOffNormalText: Smoke detected
-                        toNormalText: Smoke returns to normal
-                        alarmTraitName: Smoke Concentration
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
 
   /scenes:
     post:
@@ -5346,7 +3208,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: scene_create
-      parameters: []
+      parameters: 
+      - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -5398,6 +3261,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+      - $ref: '#/components/parameters/Lang'
       - in: query
         name: sceneName
         required: false
@@ -5491,7 +3355,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: scene_update
-      parameters: []
+      parameters:
+      - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -5528,7 +3393,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: scene_space_update
-      parameters: []
+      parameters:
+      - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -5565,7 +3431,8 @@ paths:
       x-idempotent: false
       x-retryable: false
       x-side-effects: scene_execute
-      parameters: []
+      parameters:
+      - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -5602,7 +3469,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: scene_delete
-      parameters: []
+      parameters:
+      - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -5640,6 +3508,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+      - $ref: '#/components/parameters/Lang'
       - in: query
         name: includeMetadata
         required: false
@@ -5679,6 +3548,16 @@ paths:
 # Components
 # ══════════════════════════════════════════════════════════════════
 components:
+
+  parameters:
+    Lang:
+      name: Lang
+      in: header
+      required: false
+      schema:
+        type: string
+        example: "{{Lang}}"
+      description: Language. Use `en-US` for English, and `zh-CN` for Chinese.
 
   responses:
     BadRequestResponse:
@@ -5788,23 +3667,6 @@ components:
       scheme: bearer
       description: "Authorization: Bearer <Token>"
 
-  # Common request header parameters
-  parameters:
-    ResourceType:
-      name: type
-      in: path
-      required: true
-      description: "Stable external resource type, for example: system, protocol.network, protocol.device, protocol.point"
-      schema:
-        type: string
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      description: "Complete Resource operation handle returned by the API; protocol instances typically use the running node ID, while catalogs, services, and backups each have independent handles. Do not fill in a business deviceId directly, and do not concatenate or parse prefixes yourself."
-      schema:
-        type: string
-
   schemas:
 
     # ── Base Request / Response ───────────────────────────────────
@@ -5829,206 +3691,6 @@ components:
           type: string
           description: Message
 
-    # ── Common ANode Resource ──────────────────────────────────────────
-    ResourceUpdateRequest:
-      type: object
-      required: [properties]
-      properties:
-        properties:
-          type: object
-          minProperties: 1
-          additionalProperties: true
-          description: Whitelist fields to be modified, using plain JSON values; for sequence, data is an object and deviceIds is an array. Only write fields that are writable=true in the runtime schema.
-      additionalProperties: false
-      
-    ResourceActionRequest:
-      type: object
-      required: [id]
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          minLength: 1
-          description: Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias. The target of `create` is a catalog or the actual parent resource; `discover` uses a Network/Device; `import` uses a Job; diagnostic operations use a Network or a session.
-        input:
-          type: object
-          additionalProperties: true
-          default: {}
-          description: Command-specific input. For protocol `create`/`discover`/`import`, see `ProtocolResourceCreateInput`, `ProtocolResourceDiscoverInput`, and `ProtocolDiscoveryImportInput` respectively; other commands follow the runtime type definition.
-
-    ResourceOpenApiResponse:
-      description: Unified Resource response. `code=0` indicates success. `data` returns pagination, details, a job, a delete result, or a command result depending on the operation. Protocol create returns only `id`/`type`; successful import items contain only `resource.id`/`type`; check `errorCode`/`message` on failed items.
-      allOf:
-      - $ref: '#/components/schemas/BaseResponse'
-      - type: object
-        properties:
-          data:
-            nullable: true
-            description: Returns details, pagination, a job, or a command result depending on the operation. Protocol create returns only `id`/`type`; discovery returns a Job; import returns `results[].resource.id`/`type` item by item, or `errorCode`/`message` on failure; delete returns `id`/`type`/`deleted`.
-
-    ResourceHealth:
-      type: object
-      required: [status]
-      properties:
-        status:
-          type: string
-          enum: [healthy, disabled, fault, down, stale, "null", alarm, overridden, unackedAlarm, unknown]
-          description: Read-only status normalized based on current Studio enabled, status, and faultCause; does not actively probe devices
-        enabled:
-          type: boolean
-        faultCause:
-          type: string
-
-    ResourceItem:
-      type: object
-      description: |-
-        Generic resource detail/list entry. Device `id` is the Open `deviceId`; Network/Point use their respective node IDs. Protocol create/import returns only `ProtocolResourceReference` and does not read config, schema, or health. For Network/Device/Point details, the protocol type is in `properties.protocolId`.
-
-        For `sequence` resources, list and detail responses convert resolvable historical effects to `properties.data.type=commands`.
-        When conversion fails, the ID, name, revision, bindings, and original format are retained, and the response returns
-        `properties.data={"type":"unavailable","reason":"Effect data cannot be represented as commands"}`.
-        Step `commands` and raw protocol bytes are not returned, and storage is not modified. `unavailable` resources forbid property updates, `assign`, and `retry`.
-        User configurations can still be unbound and deleted when unbound; start is allowed only when the binding is `SYNCED` and `syncedRevision=revision`.
-        Top-level resource `commands` are allowed operation names and differ from `properties.data.commands` effect steps.
-        `create`/`preview` accept only `commands` data, not `unavailable`.
-        `sequence` `create` input must include `deviceId` together with `name` and `data`; `icon` is optional.
-        `sequence` `assign` input accepts only `deviceId` and always assigns the latest version; passing `revision` (including `null`) is rejected.
-        `properties.actionType` is a read-only integer corresponding to LightingEffect ActionType: 0 static, 1 dynamic, 2 sequence, 3 segmented static, 4 segmented dynamic.
-        `properties.labelTypeName` is a read-only string. Built-in scenes (`source=SYSTEM_PRESET`) return category text localized by the `Lang` request header
-        (for example, Chinese「日常」, English Daily). When the dictionary misses, it falls back to the `InnerScene.labelType.*` key. For user-defined scenes this field is an empty string.
-        When querying with `deviceId`, entries already belonging to the current device include `properties.assignment`; pending assignment entries omit this field.
-      required: [id, type, properties]
-      properties:
-        id:
-          type: string
-          description: Copy the complete Resource ID returned by the server. For `protocol.device`, the ID is the Aqara Open `deviceId` and can be used as the device parameter for device APIs and point tools. Network, Point, and Job resources use their respective node IDs. Do not pass a protocol address, candidate ID, or a self-constructed device alias.
-        type:
-          type: string
-        properties:
-          type: object
-          additionalProperties: true
-          description: Detail/list properties. The protocol type is the read-only `properties.protocolId`. Device responses do not repeat `properties.deviceId`. Values are plain JSON; sensitive fields are not read back. Create/import references have no `properties`. Sequence properties follow their type definition.
-
-        commands:
-          type: array
-          items:
-            type: string
-          description: Command names executable on the current instance. Read them back before execution; the server still revalidates. Sequence entries may include `assign`, `unassign`, `start`, `retry`, and `delete`; use the values returned for the current instance.
-        schema:
-          type: object
-          additionalProperties: true
-          description: Update schema returned when reading a protocol instance by ID. Create configuration follows the type definition `protocols[protocolId]`; sensitive fields have `writeOnly=true`.
-        health:
-          $ref: '#/components/schemas/ResourceHealth'
-
-        unavailableCommands:
-          type: array
-          description: Currently unavailable commands for the protocol instance and their reasons.
-          items:
-            type: object
-            required:
-            - name
-            - reason
-            properties:
-              name:
-                type: string
-              reason:
-                type: string
-                enum:
-                - NOT_ACCESSIBLE
-                - NO_PARENT
-                - NOT_DYNAMIC
-                - DETACHED
-                - NOT_PERMITTED
-                - STATE_REJECTED
-
-    ResourceTypeSummary:
-      type: object
-      required: [type, operations, commands]
-      properties:
-        type:
-          type: string
-          description: Resource type.
-        operations:
-          type: array
-          description: List of operations supported by this type.
-          items:
-            type: string
-            enum: [query, get, update]
-        commands:
-          type: array
-          description: List of commands supported by this type.
-          items:
-            type: string
-
-    ResourceTypesResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          required: [data]
-          properties:
-            data:
-              type: object
-              description: Resource type definition list.
-              required: [items]
-              properties:
-                items:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/ResourceTypeSummary'
-
-    ResourceTypeResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          required: [data]
-          properties:
-            data:
-              type: object
-              additionalProperties: true
-              description: External resource type definition; protocol resources contain the dynamic configuration schema for each protocolId and a read-only health schema
-
-    ResourceQueryResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          required: [data]
-          properties:
-            data:
-              type: object
-              required: [type, items, page, pageSize, hasMore]
-              properties:
-                type:
-                  type: string
-                items:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/ResourceItem'
-                page:
-                  type: integer
-                  minimum: 1
-                pageSize:
-                  type: integer
-                  minimum: 1
-                hasMore:
-                  type: boolean
-                deviceId:
-                  type: string
-                  description: Target device ID echoed when querying sequence with deviceId
-                spec:
-                  type: object
-                  additionalProperties: true
-                  description: Device capability spec returned when querying sequence with deviceId; the caller uses this to generate data.commands
-
-    ResourceResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          required: [data]
-          properties:
-            data:
-              $ref: '#/components/schemas/ResourceItem'
-        
     ApiResponseEnvelope:
       type: object
       required: [version, msgId, code, message]
@@ -8527,31 +6189,8 @@ components:
         currentFirmwareVersion:
           type: string
           description: Current firmware version of the device.
-            
-    UpgradableFirmwareSearchData:
-      type: object
-      description: "Response rule: When `hasMore=true` you MUST return `nextCursor`. When `hasMore=false`, `nextCursor` should be empty or omitted."
-      required: [hasMore, data]
-      properties:
-        hasMore:
-          type: boolean
-          description: Whether there is another page of data
-        nextCursor:
-          type: string
-          nullable: true
-          description: Cursor for the next page. Must be returned when hasMore=true; should be empty or omitted when hasMore=false.
-        data:
-          type: array
-          description: Results of upgradable firmware for devices in the current page
-          items:
-            $ref: '#/components/schemas/UpgradableDeviceFirmwareItem'
-    
-    # ── Automation ────────────────────────────────────────────────
-    AutomationDefinitionType:
-      type: string
-      enum: [SCRIPT_JSON]
-      description: Automation definition type for creation and capability queries. Currently, only SCRIPT_JSON is supported; do not include this field for updates. See AutomationSummary for list classification.
 
+    # ── Automation ────────────────────────────────────────────────
     AutomationSummary:
       type: object
       required:
@@ -9630,402 +7269,7 @@ components:
           week: 5.222
           month: 9.221
           year: 230.229
-
-
-    # ── Alarm ─────────────────────────────────────────────────────
-    AlarmClass:
-      type: string
-      enum: [Info, Warning, Critical]
-      description: Alarm severity level
-
-    AlarmSourceState:
-      type: string
-      enum: [NORMAL, OFF_NORMAL, FAULT, ALERT]
-      description: Alarm status
-
-    AlarmInfo:
-      type: object
-      required:
-      - uuid
-      - deviceName
-      - deviceId
-      - devicePointName
-      - alarmClass
-      - alarmRuleName
-      - alarmText
-      - alarmValue
-      - sourceState
-      - alarmTime
-      - devicePointId
-      properties:
-        uuid:
-          type: string
-          description: Unique identifier for the alarm record
-          example: alarm-uuid-001
-        deviceName:
-          type: string
-          description: Name of the alarm source device
-          example: Living Room Temperature & Humidity Sensor
-        deviceId:
-          type: string
-          description: Device ID
-          example: device-001
-        devicePointName:
-          type: string
-          description: Data point name
-          example: Temperature
-        alarmClass:
-          $ref: '#/components/schemas/AlarmClass'
-        alarmRuleName:
-          type: string
-          description: Name of the alarm rule
-          example: High Temperature Alarm
-        alarmText:
-          type: string
-          description: Alarm message text
-          example: Temperature exceeds threshold
-        alarmValue:
-          type: string
-          description: Alarm value / value description
-          example: '32.5'
-        sourceState:
-          $ref: '#/components/schemas/AlarmSourceState'
-        alarmTime:
-          type: integer
-          format: int64
-          description: Alarm time (UTC millisecond timestamp)
-          example: 1704100000000
-        devicePointId:
-          type: string
-          description: Alarm source point node ID; used for point-based alarm confirmation; not the device deviceId.
-
-    AlarmListData:
-      type: object
-      required: [totalCount, pageNum, pageSize, data]
-      properties:
-        totalCount:
-          type: integer
-          description: Total number of alarms matching the criteria
-          example: 2
-        pageNum:
-          type: integer
-          description: Current page number
-          example: 1
-        pageSize:
-          type: integer
-          description: Current page size
-          example: 200
-        data:
-          type: array
-          description: List of alarms on the current page
-          items:
-            $ref: '#/components/schemas/AlarmInfo'
-
-    AlarmsResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              $ref: '#/components/schemas/AlarmListData'
-            type:
-              type: string
-              enum:
-              - GetAlarmListResponse
-      example:
-        type: GetAlarmListResponse
-        version: v1
-        msgId: "1751609244328"
-        code: 0
-        message: success
-        data:
-          totalCount: 2
-          pageNum: 1
-          pageSize: 200
-          data:
-            - uuid: "alarm-uuid-001"
-              deviceName: "Living Room Temperature & Humidity Sensor"
-              deviceId: "device-001"
-              devicePointName: "Temperature"
-              devicePointId: alarm-point-001
-              alarmClass: Warning
-              alarmRuleName: "High Temperature Alarm"
-              alarmText: "Temperature exceeds threshold"
-              alarmValue: "32.5"
-              sourceState: OFF_NORMAL
-              alarmTime: 1704100000000
-            - uuid: "alarm-uuid-002"
-              deviceName: "Bedroom Smoke Sensor"
-              deviceId: "device-002"
-              devicePointName: "Smoke Concentration"
-              devicePointId: alarm-point-001
-              alarmClass: Critical
-              alarmRuleName: "Smoke Alarm"
-              alarmText: "Smoke detected"
-              alarmValue: "1"
-              sourceState: OFF_NORMAL
-              alarmTime: 1704110000000
-
-    DeleteAlarmRequest:
-      type: object
-      required: [uuid]
-      properties:
-        uuid:
-          type: string
-          description: Unique identifier for the alarm record
-          example: "alarm-uuid-001"
-      example:
-        uuid: "alarm-uuid-001"
-
-    DeleteAlarmResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              type: boolean
-              description: Whether the deletion was successful
-              example: true
-            type:
-              type: string
-              enum:
-              - DeleteAlarmResponse
-      example:
-        type: DeleteAlarmResponse
-        version: v1
-        msgId: "1751609244329"
-        code: 0
-        message: success
-        data: true
-
-    AckAlarmsRequest:
-      type: object
-      required: [uuids]
-      properties:
-        uuids:
-          type: array
-          description: List of alarm unique identifiers (UUIDs)
-          minItems: 1
-          items:
-            type: string
-          example: ["alarm-uuid-001", "alarm-uuid-002"]
-        notes:
-          type: string
-          nullable: true
-          description: Acknowledgment notes (optional)
-          example: "Confirmed onsite"
-      example:
-        uuids: ["alarm-uuid-001", "alarm-uuid-002"]
-        notes: "Confirmed onsite"
-
-    AckAlarmsResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              type: boolean
-              description: Whether the acknowledgment was successful
-              example: true
-            type:
-              type: string
-              enum:
-              - AckAlarmsResponse
-      example:
-        type: AckAlarmsResponse
-        version: v1
-        msgId: "1751609244331"
-        code: 0
-        message: success
-        data: true
-
-    AckAlarmsByPointIdRequest:
-      type: object
-      required: [devicePointId]
-      properties:
-        devicePointId:
-          type: string
-          description: Device data point ID
-          example: "point-001"
-        notes:
-          type: string
-          nullable: true
-          description: Acknowledgment notes (optional)
-          example: "Confirmed onsite"
-      example:
-        devicePointId: "point-001"
-        notes: "Confirmed onsite"
-
-    AckAlarmsByPointIdResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              type: boolean
-              description: Whether the acknowledgment was successful
-              example: true
-            type:
-              type: string
-              enum:
-              - AckAlarmsByPointIdResponse
-      example:
-        type: AckAlarmsByPointIdResponse
-        version: v1
-        msgId: "1751609244332"
-        code: 0
-        message: success
-        data: true
-
-    AlarmRuleInfo:
-      type: object
-      required:
-      - ruleId
-      - ruleName
-      - alarmClass
-      - toOffNormalText
-      - toNormalText
-      - alarmTraitName
-      - delayToAlarmMs
-      - delayToNormalMs
-      - enabled
-      - updatedBy
-      - updatedTime
-      properties:
-        ruleId:
-          type: string
-          description: Alarm rule ID.
-          example: rule-001
-        ruleName:
-          type: string
-          description: Alarm rule name.
-          example: High temperature alarm
-        alarmClass:
-          $ref: '#/components/schemas/AlarmClass'
-        toOffNormalText:
-          type: string
-          description: Message when entering the alarm state.
-          example: Temperature exceeds threshold
-        toNormalText:
-          type: string
-          description: Message when returning to normal state.
-          example: Temperature returns to normal
-        alarmTraitName:
-          type: string
-          description: Display name of the alarm trait.
-          example: Temperature
-        delayToAlarmMs:
-          type: integer
-          format: int64
-          description: Alarm trigger delay (ms)
-          example: 5000
-        delayToNormalMs:
-          type: integer
-          format: int64
-          description: Recovery to normal delay (ms)
-          example: 10000
-        enabled:
-          type: boolean
-          description: Whether the rule is enabled
-          example: true
-        updatedBy:
-          type: string
-          description: Last updater
-          example: admin
-        updatedTime:
-          type: integer
-          format: int64
-          description: Last update time (UTC millisecond timestamp)
-          example: 1704100000000
-
-    AlarmRuleListData:
-      type: object
-      required: [totalCount, pageNum, pageSize, data]
-      properties:
-        totalCount:
-          type: integer
-          description: Total number of alarm rules matching the criteria
-          example: 2
-        pageNum:
-          type: integer
-          description: Current page number
-          example: 1
-        pageSize:
-          type: integer
-          description: Current page size
-          example: 200
-        data:
-          type: array
-          description: List of alarm rules on the current page
-          items:
-            $ref: '#/components/schemas/AlarmRuleInfo'
-
-    AlarmRulesResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              $ref: '#/components/schemas/AlarmRuleListData'
-            type:
-              type: string
-              enum:
-              - GetAlarmRuleListResponse
-      example:
-        type: GetAlarmRuleListResponse
-        version: v1
-        msgId: '1751609244333'
-        code: 0
-        message: success
-        data:
-          totalCount: 2
-          pageNum: 1
-          pageSize: 200
-          data:
-          - ruleId: rule-001
-            ruleName: High Temperature Alarm
-            alarmClass: Warning
-            delayToAlarmMs: 5000
-            delayToNormalMs: 10000
-            enabled: true
-            updatedBy: admin
-            updatedTime: 1704100000000
-            toOffNormalText: Temperature exceeds threshold
-            toNormalText: Temperature returns to normal
-            alarmTraitName: Temperature
-          - ruleId: rule-002
-            ruleName: Smoke Alarm
-            alarmClass: Critical
-            delayToAlarmMs: 0
-            delayToNormalMs: 0
-            enabled: true
-            updatedBy: admin
-            updatedTime: 1704110000000
-            toOffNormalText: Smoke detected
-            toNormalText: Smoke returns to normal
-            alarmTraitName: Smoke concentration       
-
-    ClearAlarmsResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              type: boolean
-              description: Whether clearing all alarms was successful
-              example: true
-            type:
-              type: string
-              enum:
-              - ClearAlarmsResponse
-      example:
-        type: ClearAlarmsResponse
-        version: v1
-        msgId: "1751609244330"
-        code: 0
-        message: success
-        data: true
-
+ 
     AutomationDslMetadata:
       type: object
       description: Metadata structure for defining basic information and variables of an automation.
@@ -10971,6 +8215,8 @@ components:
       - $ref: '#/components/schemas/AutomationDslVariableToggle'
       - $ref: '#/components/schemas/AutomationDslMessagePush'
       - $ref: '#/components/schemas/AutomationDslDeviceBatch'
+      - $ref: '#/components/schemas/AutomationDslEventStateHold'
+
     AutomationDslTraitWrite:
       type: object
       description: Write a device property. Value can only be boolean, number, or string. The string "toggle" will invert the boolean property. For other types, "toggle" will be interpreted as a normal string.
@@ -12575,106 +9821,3 @@ components:
           type: string
           description: Message
       description: Unforced response envelope with optional type, used for error responses and direct JSON response from REST init/MCP config; normal business responses still use BaseResponse with required type.
-
-    ProtocolResourceReference:
-      type: object
-      required:
-      - id
-      - type
-      additionalProperties: false
-      description: Minimal reference returned by successful protocol create and import. For Device, `id` is the Open `deviceId`; for Network/Point, it is the node ID.
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-          enum:
-          - protocol.network
-          - protocol.device
-          - protocol.point
-
-    ProtocolResourceCreateInput:
-      type: object
-      required:
-      - config
-      additionalProperties: false
-      properties:
-        name:
-          type: string
-          minLength: 1
-          pattern: \S
-          description: Unique outer display name; when omitted, points default to `Point`.
-        config:
-          type: object
-          additionalProperties: true
-          description: Follows the create schema of the target child resource type in `protocols[protocolId]`. Resource does not accept `config.name`/`config.friendlyName`.
-      description: "`create` acts directly on the parent resource. A protocol catalog creates only a Network, a Network creates a Device, and a Device creates a Point. `input` accepts only the required `config` and an optional `name`. Pass the display name only as the outer `name`; `config.name`/`config.friendlyName` are rejected. A successful response returns only `id`/`type`; read the details separately."
-
-    ProtocolResourceDiscoverInput:
-      type: object
-      additionalProperties: false
-      properties:
-        options:
-          type: object
-          additionalProperties:
-            oneOf:
-            - type: string
-            - type: number
-            - type: boolean
-          description: Use the protocol catalog `discovery.device`/`point.optionsSchema`. Slash paths and non-null scalars only; do not override read-only fields or the flow-control field `autoCreate`; hidden writable fields may be overridden.
-      description: "`discover` acts directly on a Network (discover devices) or a Device (discover points). Catalogs do not provide `discover`. `input` contains only optional `options` and may be omitted. `options` accepts only slash-path keys from `optionsSchema` with non-null scalar values. Read-only fields and the flow-control field `autoCreate` cannot be overridden; hidden writable fields may be overridden. Discovery does not automatically add resources."
-
-    ProtocolDiscoveryImportInput:
-      type: object
-      required:
-      - discoveryObjectIds
-      additionalProperties: false
-      properties:
-        networkId:
-          type: string
-          minLength: 1
-          pattern: \S
-          description: Network node ID when importing devices.
-        deviceId:
-          type: string
-          minLength: 1
-          pattern: \S
-          description: Aqara Open `deviceId` when importing points.
-        discoveryObjectIds:
-          type: array
-          minItems: 1
-          maxItems: 200
-          items:
-            type: string
-            minLength: 1
-      oneOf:
-      - required:
-        - networkId
-      - required:
-        - deviceId
-      description: "`import` acts on a discovery Job. `input` must contain 1–200 `discoveryObjectIds` and exactly one of `networkId` (import devices) or `deviceId` (import points; Open device ID). `ownerId` and `pointConfigs` are not accepted. The server validates job ownership, target type, protocol, and permissions for the whole batch, then checks `results` item by item. Successful items contain only `resource.id`/`type`; failed items contain `errorCode`/`message`."
-
-    ProtocolDiscoveryImportResult:
-      type: object
-      required:
-      - results
-      properties:
-        results:
-          type: array
-          items:
-            type: object
-            required:
-            - discoveryObjectId
-            - success
-            properties:
-              discoveryObjectId:
-                type: string
-              success:
-                type: boolean
-              resource:
-                $ref: '#/components/schemas/ProtocolResourceReference'
-              errorCode:
-                type: string
-              message:
-                type: string
-            description: "Successful items include `resource`; failed items include `errorCode`/`message`. Successful items are retained on partial failure."
