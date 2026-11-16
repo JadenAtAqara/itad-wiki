@@ -197,53 +197,6 @@ const sidebar: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "Resource",
-      link: {
-        type: "doc",
-        id: "version-Beta/aqara-developer/data-export-api/resource",
-      },
-      collapsed: false,
-      items: [
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/list-resource-types",
-          label: "查询开放资源类型目录",
-          className: "api-method get",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/describe-resource-type",
-          label: "查询资源类型定义",
-          className: "api-method get",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/query-resources",
-          label: "分页查询资源",
-          className: "api-method get",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/get-resource",
-          label: "读取已知资源",
-          className: "api-method get",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/update-resource",
-          label: "修改已知资源属性",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/execute-resource-action",
-          label: "执行资源命令",
-          className: "api-method post",
-        },
-      ],
-    },
-    {
-      type: "category",
       label: "Automation",
       link: {
         type: "doc",
@@ -431,53 +384,6 @@ const sidebar: SidebarsConfig = {
           id: "version-Beta/aqara-developer/data-export-api/report-external-event",
           label: "上报外部系统事件",
           className: "api-method post",
-        },
-      ],
-    },
-    {
-      type: "category",
-      label: "Alarm",
-      link: {
-        type: "doc",
-        id: "version-Beta/aqara-developer/data-export-api/alarm",
-      },
-      collapsed: false,
-      items: [
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/get-alarms",
-          label: "查询告警列表",
-          className: "api-method get",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/delete-alarm",
-          label: "删除单条告警",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/clear-alarms",
-          label: "全量删除告警",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/ack-alarms",
-          label: "按 uuid 批量确认告警",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/ack-alarms-by-point-id",
-          label: "按测点批量确认告警",
-          className: "api-method post",
-        },
-        {
-          type: "doc",
-          id: "version-Beta/aqara-developer/data-export-api/get-alarm-rules",
-          label: "查询告警规则列表",
-          className: "api-method get",
         },
       ],
     },

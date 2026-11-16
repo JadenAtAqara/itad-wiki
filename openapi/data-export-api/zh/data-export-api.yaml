@@ -36,8 +36,6 @@ tags:
     description: 设备查询、属性读写与命令执行接口
   - name: Gateway
     description: 网关查询接口
-  - name: Resource
-    description: Studio ANode 白名单资源目录、查询、读取和安全修改接口。
   - name: Automation
     description: 自动化创建、编辑、查询、删除与能力查询接口
   - name: Firmware
@@ -50,8 +48,6 @@ tags:
     description: 能源管理接口（能耗趋势查询、能耗总量查询、能耗摘要查询）
   - name: Event
     description: 外部系统事件上报接口
-  - name: Alarm
-    description: 告警列表、确认与告警规则查询接口
   - name: Scene
     description: 独立场景创建、编辑、查询、空间关联、执行与删除接口
 
@@ -110,6 +106,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - name: parentSpaceId
           in: query
           description: 父空间 ID。为空时返回所有顶级空间（即没有父空间的空间，属于空间树的根节点）。
@@ -165,7 +162,8 @@ paths:
       x-idempotent: false
       x-retryable: false
       x-side-effects: create
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -208,7 +206,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: update
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -249,7 +248,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: delete
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -292,7 +292,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       responses:
         '200':
           description: 请求发起成功
@@ -331,6 +332,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - name: fields
           required: false
           style: form
@@ -429,6 +431,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - name: protocolIds
           required: false
           style: form
@@ -644,6 +647,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - name: deviceIds
           in: query
           required: true
@@ -736,7 +740,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -855,6 +860,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - name: deviceId
           in: query
           required: true
@@ -1018,7 +1024,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: device_state_change
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1086,7 +1093,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1151,7 +1159,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: device_state_change
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1237,7 +1246,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: device_state_change
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1306,7 +1316,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1350,7 +1361,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: update
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1391,7 +1403,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: update
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1437,7 +1450,8 @@ paths:
       x-idempotent: true
       x-retryable: conditional
       x-side-effects: device_object_delete
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1495,7 +1509,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: device_create
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1559,7 +1574,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: device_point_bind
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1619,7 +1635,8 @@ paths:
       x-idempotent: true
       x-retryable: conditional
       x-side-effects: device_point_unbind
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1678,7 +1695,8 @@ paths:
       x-idempotent: true
       x-retryable: conditional
       x-side-effects: device_binding_change
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -1719,1792 +1737,6 @@ paths:
           $ref: '#/components/responses/InternalServerErrorResponse'
 
   # ────────────────────────────────────────────────────────────────
-  # 通用 ANode 资源
-  # ────────────────────────────────────────────────────────────────
-  /resource-types:
-    get:
-      tags: [Resource]
-      summary: 查询开放资源类型目录
-      description: 查询开放资源类型目录。
-      operationId: listResourceTypes
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: none
-      responses:
-        '200':
-          description: 成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResourceTypesResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-      x-request-examples:
-        listTypes:
-          summary: 查询全部公开资源类型
-          description: 当前内置九种类型；以 data.items 返回的实际目录为准。
-          method: GET
-          path: /resource-types
-          request:
-            headers: 公共请求头
-            query: null
-            body: null
-            
-  /resource-types/{type}:
-    get:
-      tags: [Resource]
-      summary: 查询资源类型定义
-      description: "返回字段 Schema、query.filters / query.parentId / query.sortable 和操作能力。配置字段可能使用带 / 的完整键名。敏感字段标记 sensitive=true、writeOnly=true、readable=false。\n\nsequence 类型的 query.filters 包含 `name`、`deviceId`、`includeAssignable`（默认 false）；`create` 输入需包含 `deviceId`；`assign` 输入仅接受 `deviceId`，始终分配最新版本。"
-      operationId: describeResourceType
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: none
-      parameters:
-        - $ref: '#/components/parameters/ResourceType'
-      responses:
-        '200':
-          description: 成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResourceTypeResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-      x-request-examples:
-        describeProtocol:
-          summary: 读取 protocol 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: 公共请求头
-            path:
-              type: protocol
-            query: null
-            body: null
-        describeProtocolnetwork:
-          summary: 读取 protocol.network 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: 公共请求头
-            path:
-              type: protocol.network
-            query: null
-            body: null
-        describeProtocoldevice:
-          summary: 读取 protocol.device 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: 公共请求头
-            path:
-              type: protocol.device
-            query: null
-            body: null
-        describeProtocolpoint:
-          summary: 读取 protocol.point 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: 公共请求头
-            path:
-              type: protocol.point
-            query: null
-            body: null
-        describeSystem:
-          summary: 读取 system 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: 公共请求头
-            path:
-              type: system
-            query: null
-            body: null
-        describeJob:
-          summary: 读取 job 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: 公共请求头
-            path:
-              type: job
-            query: null
-            body: null
-        describeDiscovery:
-          summary: 读取 discovery 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: 公共请求头
-            path:
-              type: discovery
-            query: null
-            body: null
-        describeBackup:
-          summary: 读取 backup 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: 公共请求头
-            path:
-              type: backup
-            query: null
-            body: null
-        describeSequence:
-          summary: 读取 sequence 类型定义
-          description: 先确认 operations、query、可写字段和命令输入；类型定义中的 commands 是所有可能命令，具体实例的 commands 才是当前可用命令。
-          method: GET
-          path: /resource-types/{type}
-          request:
-            headers: 公共请求头
-            path:
-              type: sequence
-            query: null
-            body: null
-
-  /resource-types/{type}/resources:
-    get:
-      tags: [Resource]
-      summary: 分页查询资源
-      description: |
-        按类型定义 query.filters 筛选；parentId 是 Resource 子树根，Device 使用 Open deviceId，其他节点使用准确节点 ID。page 默认 1，pageSize 默认 20、最大 100；sort 使用声明的字段及 :asc/:desc。不返回 total，使用 hasMore。Network/Device/Point 条目在 properties.protocolId 返回协议类型；Device id 不重复放入 properties。创建或导入得到的引用需另行读取详情。 未声明的筛选参数返回 400；parentId 仅适用于声明该条件的类型，sort 默认 id:asc。
-
-        查询 `type=sequence` 时：
-        - 不传 `deviceId` 返回用户自定义序列库。
-        - 传 `deviceId` 默认只返回该设备已拥有的情景（已绑定用户配置、设备预设、系统内置）；已属于当前设备的条目带 `properties.assignment`。
-        - `includeAssignable=true` 时额外返回尚未绑定、能力匹配、可供选择的用户情景（无 `properties.assignment`）。省略或 `false` 不返回待分配情景。不传 `deviceId` 时忽略该参数。
-        - 内置情景的 `properties.name`、`properties.labelTypeName` 按请求头 `Lang` 返回本地化文案。
-        - 带 `deviceId` 时查询响应 data 中回显 `deviceId` 和该设备 `spec`（data.deviceId/data.spec）。
-      operationId: queryResources
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: none
-      parameters:
-      - $ref: '#/components/parameters/ResourceType'
-      - name: parentId
-        in: query
-        required: false
-        description: parentId 只适用于声明了该筛选条件的层级资源。
-        schema:
-          type: string
-      - name: protocolId
-        in: query
-        required: false
-        schema:
-          type: string
-        description: 可选 Resource 子树根；协议设备使用 Open deviceId，其余节点使用准确节点 ID，包含全部后代。
-      - name: page
-        in: query
-        required: false
-        description: 页码，默认为 1。
-        schema:
-          type: integer
-          minimum: 1
-          default: 1
-          maximum: 1000000
-      - name: pageSize
-        in: query
-        required: false
-        description: 每页条数，默认为 20，最大为 100。
-        schema:
-          type: integer
-          minimum: 1
-          maximum: 100
-          default: 20
-      - name: sort
-        in: query
-        required: false
-        description: sort 格式为 `字段:asc` 或 `字段:desc`，字段必须出现在 query.sortable 中；未传时使用资源类型定义的 defaultSort。
-        schema:
-          type: string
-          default: id:asc
-      - name: name
-        in: query
-        required: false
-        description: 仅用于 query.filters 包含 name 的类型，精确匹配。 按资源名称精确筛选。sequence 类型已声明该条件。
-        schema:
-          type: string
-      - name: jobId
-        in: query
-        required: false
-        description: discovery 必填：发现任务资源 ID。
-        schema:
-          type: string
-      - name: kind
-        in: query
-        required: false
-        description: discovery 必填：device 或 point。
-        schema:
-          type: string
-          enum:
-          - device
-          - point
-      - name: deviceId
-        in: query
-        required: false
-        description: sequence 查询使用的业务设备 DID，来自设备 API；与协议资源 query 的 parentId 不同。 sequence 按设备查询。不传返回用户自定义序列库；传入时默认只返回该设备已拥有的情景。
-        schema:
-          type: string
-      - name: includeAssignable
-        in: query
-        required: false
-        description: sequence 配合 deviceId 使用；true 额外返回可供分配的用户情景，默认 false。 仅 sequence 且同时传 deviceId 时生效。true 额外返回待分配用户情景；省略或 `false` 只返回该设备已拥有的情景。
-        schema:
-          type: boolean
-          default: false
-      responses:
-        '200':
-          description: 成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResourceQueryResponse'
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-      x-request-examples:
-        listProtocols:
-          summary: 查询已安装的公开协议
-          description: 保存协议 id 和 properties.capabilities；当前开放 bacnet、homeAssistantBridge、knxClient、modbus，是否已安装及支持手动添加或发现以响应为准。目录响应返回独立 protocolId；创建或发现使用返回的目录 id，并保存 protocolId。
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: 公共请求头
-            path:
-              type: protocol
-            query:
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        modbusQueryNetwork:
-          summary: 查询 Modbus network 实例
-          description: parentId 为子树范围，包含后代；保存 items[].id。hasMore=true 时增加 page，直到 false。列表项返回 protocolId；同时保存本次查询的父级运行资源 ID。
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: 公共请求头
-            path:
-              type: protocol.network
-            query:
-              protocolId: modbus
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        modbusQueryDevice:
-          summary: 查询 Modbus device 实例
-          description: parentId 为子树范围，包含后代；保存 items[].id。hasMore=true 时增加 page，直到 false。列表项返回 protocolId；同时保存本次查询的父级运行资源 ID。
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: 公共请求头
-            path:
-              type: protocol.device
-            query:
-              protocolId: modbus
-              parentId: '{{modbusNetworkId}}'
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        modbusQueryPoint:
-          summary: 查询 Modbus point 实例
-          description: parentId 为子树范围，包含后代；保存 items[].id。hasMore=true 时增加 page，直到 false。列表项返回 protocolId；同时保存本次查询的父级运行资源ID。
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: 公共请求头
-            path:
-              type: protocol.point
-            query:
-              protocolId: modbus
-              parentId: '{{modbusDeviceId}}'
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        bacnetDeviceCandidates:
-          summary: 分页查询发现设备候选
-          description: jobId、kind 必填，kind=device 或 point。保存选中且未导入的 items[].id 为 deviceCandidateId；候选只有 query，不支持读取或修改。
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: 公共请求头
-            path:
-              type: discovery
-            query:
-              jobId: '{{deviceJobId}}'
-              kind: device
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        bacnetPointCandidates:
-          summary: 查询点候选
-          description: 保存人工选择的未导入 items[].id 为 pointCandidateId；勿自动导入第一条。
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: 公共请求头
-            path:
-              type: discovery
-            query:
-              jobId: '{{pointJobId}}'
-              kind: point
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        listBackups:
-          summary: 查询本地备份记录
-          description: 保存选中 items[].id 为 backupId；由列表识别新备份，不自行拼文件名。name 可按类型定义筛选，排序只用 query.sortable 中字段。
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: 公共请求头
-            path:
-              type: backup
-            query:
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        sequenceUserList:
-          summary: 查询用户创建的情景
-          description: 不传 deviceId 时返回用户配置；分页直到 hasMore=false。
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: 公共请求头
-            path:
-              type: sequence
-            query:
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        sequenceDeviceList:
-          summary: 查询设备已有情景和能力
-          description: deviceId 从设备接口取得。返回 data.spec 和设备已有情景；已有绑定在 properties.assignment 中。步骤必须符合该设备 spec。
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: 公共请求头
-            path:
-              type: sequence
-            query:
-              deviceId: '{{businessDeviceId}}'
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-        sequenceAssignableList:
-          summary: 查询可供设备分配的情景
-          description: includeAssignable=true 额外包含匹配但尚未绑定的用户情景；不传或 false 只返回设备已有情景。
-          method: GET
-          path: /resource-types/{type}/resources
-          request:
-            headers: 公共请求头
-            path:
-              type: sequence
-            query:
-              deviceId: '{{businessDeviceId}}'
-              includeAssignable: 'true'
-              page: 1
-              pageSize: 20
-              sort: id:asc
-            body: null
-
-  /resources/{id}:
-    get:
-      tags: [Resource]
-      summary: 读取已知资源
-      description: |
-        复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；
-        Network、Point、Job 使用各自节点 ID。
-        
-        不得传协议地址、候选 ID 或自行构造设备别名。
-        
-         Network/Device/Point 详情包含 properties.protocolId（只读协议类型）、schema、health、commands 及 unavailableCommands；不返回顶层 protocolId、重复 deviceId 或 controlReference。健康快照不代表主动探测成功；敏感配置不回读。
-         
-         业务控制选择器从设备定义/能力接口取得。
-      operationId: getResource
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: none
-      parameters:
-      - $ref: '#/components/parameters/ResourceId'
-      responses:
-        '200':
-          description: 成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResourceResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-      x-request-examples:
-        readProtocol:
-          summary: 读取 Modbus 协议能力
-          description: 检查 manualNetworkAdd、manualDeviceAdd、manualPointAdd、deviceDiscovery、pointDiscovery；Modbus 点发现当前不支持。响应返回独立 protocolId，后续查询或专用点工具使用该值。
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: protocol:modbus
-            query: null
-            body: null
-        readSystem:
-          summary: 读取系统设置
-          description: system 是单例，固定 id=station；没有列表查询或资源命令。
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: station
-            query: null
-            body: null
-        modbusReadPoint:
-          summary: 回读点配置和健康状态
-          description: 读取实例 schema 再修改。类型描述的点 config 是创建字段，实例更新使用 proxyExt 等实际字段。health 是只读运行状态，code=0 不代表通信已经成功。
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: '{{modbusPointId}}'
-            query: null
-            body: null
-        pollDiscoveryJob:
-          summary: 轮询设备发现任务
-          description: 每 1000ms 读取同一 Job，单轮最多 120000ms；成功且 commands 包含 import 后查询该 Job 的候选。failed/cancelled/unknown 停止并报告。超时保留 Job ID，不重新发起发现；任务上下文由服务端保存，不能用客户端字段补足已丢失的上下文。
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: '{{deviceJobId}}'
-            query: null
-            body: null
-        bacnetReadDevice:
-          summary: 回读导入设备
-          description: 确认实例配置和 health，再决定是否发现点；发现任务 ID、候选 ID、实例 ID 不能混用。
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: '{{bacnetDeviceId}}'
-            query: null
-            body: null
-        pollPointJob:
-          summary: 轮询点发现任务
-          description: 每 1000ms 读取同一 Job，单轮最多 120000ms；成功且 commands 包含 import 后查询该 Job 的候选。failed/cancelled/unknown 停止并报告。超时保留 Job ID，不重新发起发现；任务上下文由服务端保存，不能用客户端字段补足已丢失的上下文。
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: '{{pointJobId}}'
-            query: null
-            body: null
-        bacnetReadPoint:
-          summary: 回读 BACnet 点
-          description: 从实例 schema 取得更新字段和可写标记。
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: '{{bacnetPointId}}'
-            query: null
-            body: null
-        haReadNetwork:
-          summary: 回读 Home Assistant 网络
-          description: 核对地址、端口和 health；token 仅以 sensitive/writeOnly schema 标记，不返回值。
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: '{{haNetworkId}}'
-            query: null
-            body: null
-        knxReadDevice:
-          summary: 回读 KNX 设备配置
-          description: 核对实例 schema 和 health；点创建/映射所需字段由当前 protocol.point 定义和业务 Spec 决定，不可凭地址猜内部 Spec 标识。
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: '{{knxDeviceId}}'
-            query: null
-            body: null
-        readBackupService:
-          summary: 读取备份服务入口
-          description: 固定服务 id=backup；服务 commands 只有 create，具体备份记录才有 restore/delete。
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: backup
-            query: null
-            body: null
-        pollBackupJob:
-          summary: 轮询备份或恢复任务
-          description: 沿用 job 的 1000ms/120000ms 规则。备份任务 commands=[]，不支持 import 或通用取消；成功后重新查询备份记录。恢复任务也用返回的 job ID 读取。
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: '{{backupJobId}}'
-            query: null
-            body: null
-        readBackup:
-          summary: 读取具体备份
-          description: 确认记录和当前 commands；不要用 backup 服务 ID 发起 restore/delete。
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: '{{backupId}}'
-            query: null
-            body: null
-        sequenceRead:
-          summary: 读取用户情景和各设备绑定
-          description: 详情 properties.assignments 为可访问绑定列表；revision 等版本字段用于观察状态，不作为 assign 输入。
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: '{{sequenceId}}'
-            query: null
-            body: null
-        modbusReadNetwork:
-          summary: 读取 Modbus Network 配置
-          description: 创建返回的是引用；回读取得 properties、schema、health 和当前 commands。
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            query: null
-            body: null
-            path:
-              id: '{{modbusNetworkId}}'
-        modbusReadDevice:
-          summary: 读取 Modbus Device 配置
-          description: 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。
-          method: GET
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            query: null
-            body: null
-            path:
-              id: '{{modbusDeviceId}}'
-    post:
-      tags: [Resource]
-      summary: 修改已知资源属性
-      description: 请求只使用 properties 包装，目标 id 复制对应 Resource。只写详情 schema 标记 writable 的字段；properties.protocolId 及 Device 的身份只读。name 与协议配置分开更新；显式 null 在 schema 不允许时拒绝，不会按省略处理。返回完整实例详情。 仅允许修改资源定义和运行时 Schema 同时声明为可写的字段；全部字段校验通过后才开始写入，失败时尝试回滚。敏感字段可以按动态 Schema 写入，但成功响应不会回显请求值或历史值。
-      operationId: updateResource
-      x-idempotent: true
-      x-retryable: conditional
-      x-side-effects: config_update
-      parameters:
-      - $ref: '#/components/parameters/ResourceId'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ResourceUpdateRequest'
-            examples:
-              updateSystem:
-                summary: 修改时区和单位制
-                description: 只写运行时声明 writable=true 的字段；unitSystem 为 metric、ussystem 或 uksystem。成功后读取 station 确认。
-                value:
-                  properties:
-                    timezone: Asia/Shanghai
-                    unitSystem: metric
-              modbusUpdatePoint:
-                summary: 调整点轮询频率
-                description: 仅当实例 schema 声明该键 writable=true 时发送；更新后回读确认。
-                value:
-                  properties:
-                    proxyExt/pollFrequency: fast
-              modbusUpdateDevice:
-                summary: 开启设备响应严格校验
-                description: 从设备实例 schema 确认该字段可写。
-                value:
-                  properties:
-                    enableStrictResponseValidation: true
-              modbusRename:
-                summary: 修改协议设备名称
-                description: 名称单独更新，不与协议配置字段混写。
-                value:
-                  properties:
-                    name: 配电柜 PLC
-              bacnetUpdatePoint:
-                summary: 启用 BACnet 点代理
-                description: 仅在实例 schema 声明可写时发送；成功后回读 health。
-                value:
-                  properties:
-                    proxyExt/enabled: true
-              haRotateToken:
-                summary: 更新 Home Assistant 令牌
-                description: 使用新的 HA 凭据，成功响应不回显新值或旧值。
-                value:
-                  properties:
-                    token: '{{newHaToken}}'
-              sequenceUpdate:
-                summary: 编辑情景并同步指定设备
-                description: 只修改用户配置；deviceIds 和 syncAllDevices 是写入选项，成功后仍需按设备查询同步状态。syncAllDevices=true 同步所有已有绑定；不能借此给未绑定设备分配。
-                value:
-                  properties:
-                    name: 晚霞柔光
-                    data:
-                      type: commands
-                      loopCount: 1
-                      completionAction: HOLD
-                      commands:
-                      - command: setColor
-                        color: '#FF6600'
-                        brightness: 80
-                        transitionTime: 1.0
-                    deviceIds:
-                    - '{{businessDeviceId}}'
-                    syncAllDevices: false
-              modbusUpdateNetwork:
-                summary: 配置 Modbus Network 字节序
-                description: 仅提交详情 schema 中 writable 的配置。
-                value:
-                  properties:
-                    longByteOrder: orderABCD
-              bacnetUpdateDevice:
-                summary: 配置已导入 BACnet Device
-                description: 设备 ID 使用导入结果 resource.id；显式 null 不会被当作省略。
-                value:
-                  properties:
-                    enabled: true
-      responses:
-        '200':
-          description: 成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResourceResponse'
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-      x-request-examples:
-        updateSystem:
-          summary: 修改时区和单位制
-          description: 只写运行时声明 writable=true 的字段；unitSystem 为 metric、ussystem 或 uksystem。成功后读取 station 确认。
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: station
-            query: null
-            body:
-              properties:
-                timezone: Asia/Shanghai
-                unitSystem: metric
-        modbusUpdatePoint:
-          summary: 调整点轮询频率
-          description: 仅当实例 schema 声明该键 writable=true 时发送；更新后回读确认。
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: '{{modbusPointId}}'
-            query: null
-            body:
-              properties:
-                proxyExt/pollFrequency: fast
-        modbusUpdateDevice:
-          summary: 开启设备响应严格校验
-          description: 从设备实例 schema 确认该字段可写。
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: '{{modbusDeviceId}}'
-            query: null
-            body:
-              properties:
-                enableStrictResponseValidation: true
-        modbusRename:
-          summary: 修改协议设备名称
-          description: 名称单独更新，不与协议配置字段混写。
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: '{{modbusDeviceId}}'
-            query: null
-            body:
-              properties:
-                name: 配电柜 PLC
-        bacnetUpdatePoint:
-          summary: 启用 BACnet 点代理
-          description: 仅在实例 schema 声明可写时发送；成功后回读 health。
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: '{{bacnetPointId}}'
-            query: null
-            body:
-              properties:
-                proxyExt/enabled: true
-        haRotateToken:
-          summary: 更新 Home Assistant 令牌
-          description: 使用新的 HA 凭据，成功响应不回显新值或旧值。
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: '{{haNetworkId}}'
-            query: null
-            body:
-              properties:
-                token: '{{newHaToken}}'
-        sequenceUpdate:
-          summary: 编辑情景并同步指定设备
-          description: 只修改用户配置；deviceIds 和 syncAllDevices 是写入选项，成功后仍需按设备查询同步状态。syncAllDevices=true 同步所有已有绑定；不能借此给未绑定设备分配。
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            path:
-              id: '{{sequenceId}}'
-            query: null
-            body:
-              properties:
-                name: 晚霞柔光
-                data:
-                  type: commands
-                  loopCount: 1
-                  completionAction: HOLD
-                  commands:
-                  - command: setColor
-                    color: '#FF6600'
-                    brightness: 80
-                    transitionTime: 1.0
-                deviceIds:
-                - '{{businessDeviceId}}'
-                syncAllDevices: false
-        modbusUpdateNetwork:
-          summary: 配置 Modbus Network 字节序
-          description: 仅提交详情 schema 中 writable 的配置。
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              properties:
-                longByteOrder: orderABCD
-            path:
-              id: '{{modbusNetworkId}}'
-        bacnetUpdateDevice:
-          summary: 配置已导入 BACnet Device
-          description: 设备 ID 使用导入结果 resource.id；显式 null 不会被当作省略。
-          method: POST
-          path: /resources/{id}
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              properties:
-                enabled: true
-            path:
-              id: '{{bacnetDeviceId}}'
-
-  /actions/{command}:
-    post:
-      tags: [Resource]
-      summary: 执行资源命令
-      description: |-
-        请求体只允许非空 id 和可选对象 input；未知字段被拒绝。具体命令和配置以当前资源类型定义及实例 commands 为准。
-        create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。
-
-        discover 直接作用于 Network（发现设备）或 Device（发现点）；目录不提供 discover。input 仅含可选 options，可省略 input。options 只接受 optionsSchema 中的斜杠路径键及非 null 标量值；只读字段和流程控制的 autoCreate 不可覆盖；hidden 可写字段允许覆盖。发现不自动添加资源。
-        import 作用于发现 Job，input 必须包含 1–200 个 discoveryObjectIds，并且恰好提供 networkId（导入设备）或 deviceId（导入点，Open 设备 ID）。不接受 ownerId 或 pointConfigs。服务端整批检查任务归属、目标类型、协议及权限；逐项检查 results，成功项只含 resource.id/type，失败项含 errorCode/message。
-        delete 作用于实际实例，input 为空对象；执行时重新检查删除权限和状态。
-        设备连接诊断使用 deviceId，兼容 targetId；点位诊断仍使用 Point 的 targetId。
-
-        sequence 资源 create 的 id 为 `sequence`；input 允许 `name`、`data`、`icon`、`deviceId`，其中 `name`、`data`、`deviceId` 必填。
-        `deviceId` 标识该情景创建所针对的设备。create 只接受 `data.type=commands`，不接受 unavailable。
-      operationId: executeResourceAction
-      x-idempotent: false
-      x-retryable: false
-      x-side-effects: command_execute
-      parameters:
-      - name: command
-        in: path
-        required: true
-        description: 资源类型定义返回的命令名称。
-        schema:
-          type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ResourceActionRequest'
-            examples:
-              modbusNetwork:
-                summary: 创建 Modbus 网络
-                description: create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。保存 data.id 为 modbusNetworkId。
-                value:
-                  id: protocol:modbus
-                  input:
-                    name: Modbus TCP 网络
-                    config:
-                      enabled: true
-                      floatByteOrder: orderABCD
-                      longByteOrder: orderABCD
-              modbusDevice:
-                summary: 创建 Modbus TCP 设备
-                description: |
-                  create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。 
-
-                  复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。 保存 data.id 为 modbusDeviceId。
-                value:
-                  id: '{{modbusNetworkId}}'
-                  input:
-                    name: PLC-1
-                    config:
-                      ipAddress: 192.0.2.10
-                      port: 502
-                      deviceAddress: 1
-                      frameMode: modbusTcp
-                      enabled: true
-              modbusPoint:
-                summary: 创建 Modbus 保持寄存器点
-                description: |
-                  create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。 
-
-                  复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。 保存 data.id 为 modbusPointId。
-                value:
-                  id: '{{modbusDeviceId}}'
-                  input:
-                    name: 寄存器 40011
-                    config:
-                      pollFrequency: normal
-                      modbusDiscoverySpecInfo/registerType: holdingRegister
-                      modbusDiscoverySpecInfo/readWriteType: readOnly
-                      modbusDiscoverySpecInfo/addressFormat: modbus
-                      modbusDiscoverySpecInfo/address: '40011'
-                      modbusDiscoverySpecInfo/dataType: integerType
-              deleteProtocolEntity:
-                summary: 删除协议实例
-                description: 仅对最新回读中 commands 含 delete 的实例发送；可将 id 替换为目标网络或设备 ID。当前实例 unavailableCommands 说明被拒原因，执行时仍会重新校验权限和状态。
-                value:
-                  id: '{{modbusPointId}}'
-                  input: {}
-              bacnetNetwork:
-                summary: 创建 BACnet 网络
-                description: create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。 保存 data.id 为 bacnetNetworkId。 BACnet Network 受框架单例限制；已有实例时复用其返回 ID，不重复创建。
-                value:
-                  id: protocol:bacnet
-                  input:
-                    name: BACnet 网络
-                    config:
-                      localDevice/objectInstanceNumber: 123456
-                      bacnetComm/network/ipPort/link/udpPort: 47808
-                      enabled: true
-              bacnetDiscoverDevice:
-                summary: 在网络发现 BACnet 设备
-                description: discover 直接作用于 Network（发现设备）或 Device（发现点）；目录不提供 discover。input 仅含可选 options，可省略 input。options 只接受 optionsSchema 中的斜杠路径键及非 null 标量值；只读字段和流程控制的 autoCreate 不可覆盖；hidden 可写字段允许覆盖。发现不自动添加资源。 每 1000ms 读取同一 Job，单轮最多 120000ms；成功且 commands 包含 import 后查询该 Job 的候选。failed/cancelled/unknown 停止并报告。超时保留 Job ID，不重新发起发现；任务上下文由服务端保存，不能用客户端字段补足已丢失的上下文。
-                value:
-                  id: '{{bacnetNetworkId}}'
-                  input:
-                    options: {}
-              bacnetImportDevice:
-                summary: 导入选中的 BACnet 设备
-                description: import 作用于发现 Job，input 必须包含 1–200 个 discoveryObjectIds，并且恰好提供 networkId（导入设备）或 deviceId（导入点，Open 设备 ID）。不接受 ownerId 或 pointConfigs。服务端整批检查任务归属、目标类型、协议及权限；逐项检查 results，成功项只含 resource.id/type，失败项含 errorCode/message。 保存 data.results[].resource.id 为 bacnetDeviceId。
-                value:
-                  id: '{{deviceJobId}}'
-                  input:
-                    discoveryObjectIds:
-                    - '{{deviceCandidateId}}'
-                    networkId: '{{bacnetNetworkId}}'
-              bacnetDiscoverPoint:
-                summary: 在设备发现 BACnet 点
-                description: discover 直接作用于 Network（发现设备）或 Device（发现点）；目录不提供 discover。input 仅含可选 options，可省略 input。options 只接受 optionsSchema 中的斜杠路径键及非 null 标量值；只读字段和流程控制的 autoCreate 不可覆盖；hidden 可写字段允许覆盖。发现不自动添加资源。 每 1000ms 读取同一 Job，单轮最多 120000ms；成功且 commands 包含 import 后查询该 Job 的候选。failed/cancelled/unknown 停止并报告。超时保留 Job ID，不重新发起发现；任务上下文由服务端保存，不能用客户端字段补足已丢失的上下文。
-                value:
-                  id: '{{bacnetDeviceId}}'
-                  input:
-                    options: {}
-              bacnetImportPoint:
-                summary: 导入选中的 BACnet 点
-                description: import 作用于发现 Job，input 必须包含 1–200 个 discoveryObjectIds，并且恰好提供 networkId（导入设备）或 deviceId（导入点，Open 设备 ID）。不接受 ownerId 或 pointConfigs。服务端整批检查任务归属、目标类型、协议及权限；逐项检查 results，成功项只含 resource.id/type，失败项含 errorCode/message。 保存 data.results[].resource.id 为 bacnetPointId。
-                value:
-                  id: '{{pointJobId}}'
-                  input:
-                    discoveryObjectIds:
-                    - '{{pointCandidateId}}'
-                    deviceId: '{{bacnetDeviceId}}'
-              haNetwork:
-                summary: 创建 Home Assistant 网络
-                description: create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。 保存 data.id 为 haNetworkId。
-                value:
-                  id: protocol:homeAssistantBridge
-                  input:
-                    name: Home Assistant
-                    config:
-                      ipAddress/ipAddress: 192.0.2.20
-                      ipAddress/port: 8123
-                      token: '{{haToken}}'
-              haDiscoverDevice:
-                summary: 发现 Home Assistant 设备
-                description: discover 直接作用于 Network（发现设备）或 Device（发现点）；目录不提供 discover。input 仅含可选 options，可省略 input。options 只接受 optionsSchema 中的斜杠路径键及非 null 标量值；只读字段和流程控制的 autoCreate 不可覆盖；hidden 可写字段允许覆盖。发现不自动添加资源。 每 1000ms 读取同一 Job，单轮最多 120000ms；成功且 commands 包含 import 后查询该 Job 的候选。failed/cancelled/unknown 停止并报告。超时保留 Job ID，不重新发起发现；任务上下文由服务端保存，不能用客户端字段补足已丢失的上下文。
-                value:
-                  id: '{{haNetworkId}}'
-                  input:
-                    options: {}
-              knxNetwork:
-                summary: 创建 KNX 网络
-                description: create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。 保存 data.id 为 knxNetworkId。
-                value:
-                  id: protocol:knxClient
-                  input:
-                    name: KNX 网络
-                    config:
-                      localIp: 0.0.0.0
-                      enabled: true
-              knxDevice:
-                summary: 手动创建 KNX 隧道设备
-                description: create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。 保存 data.id 为 knxDeviceId。
-                value:
-                  id: '{{knxNetworkId}}'
-                  input:
-                    name: KNX IP 接口
-                    config:
-                      deviceAddress: 1.1.250
-                      localIp: 0.0.0.0
-                      connectType: tunnel
-                      tunnelKnxIp: 192.0.2.30
-                      tunnelKnxPort: 3671
-                      enabled: true
-              knxDiscoverDevice:
-                summary: 发现 KNX 接口设备
-                description: discover 直接作用于 Network（发现设备）或 Device（发现点）；目录不提供 discover。input 仅含可选 options，可省略 input。options 只接受 optionsSchema 中的斜杠路径键及非 null 标量值；只读字段和流程控制的 autoCreate 不可覆盖；hidden 可写字段允许覆盖。发现不自动添加资源。 每 1000ms 读取同一 Job，单轮最多  120000ms；成功且 commands 包含 import 后查询该 Job 的候选。failed/cancelled/unknown 停止并报告。超时保留 Job ID，不重新发起发现；任务上下文由服务端保存，不能用客户端字段补足已丢失的上下文。
-                value:
-                  id: '{{knxNetworkId}}'
-                  input:
-                    options: {}
-              createBackup:
-                summary: 创建本地系统备份
-                description: remark 最长 20 字符；保存 data.id 为 backupJobId，响应是异步 job，不是备份记录 ID。
-                value:
-                  id: backup
-                  input:
-                    remark: 维护前备份
-              restoreBackup:
-                summary: 恢复选中的系统备份
-                description: 此请求会恢复系统数据，只在需要恢复时单独执行，不属于创建备份后的固定下一步。保存返回的 job ID 并轮询；input 必须为空对象。
-                value:
-                  id: '{{backupId}}'
-                  input: {}
-              deleteBackup:
-                summary: 删除选中的备份文件
-                description: 此请求删除指定本地备份，只在需要清理时执行；input 必须为空对象。
-                value:
-                  id: '{{backupId}}'
-                  input: {}
-              sequenceCreate:
-                summary: 创建晚霞情景
-                description: 当前 create 必须传 deviceId，用于设备名称约束校验；创建不等于设备绑定。保存 data.id 为 sequenceId，随后 assign。色彩命令示例要求设备 spec 支持。
-                value:
-                  id: sequence
-                  input:
-                    name: 晚霞
-                    deviceId: '{{businessDeviceId}}'
-                    data:
-                      type: commands
-                      loopCount: 1
-                      completionAction: HOLD
-                      commands:
-                      - command: setColor
-                        color: '#FF6600'
-                        brightness: 80
-                        transitionTime: 1.0
-              sequenceAssign:
-                summary: 将情景分配到设备
-                description: 始终绑定最新版本，只接受 deviceId；传 revision（包括 null）会被拒绝。随后带 deviceId 查询，等待 assignment.syncState=SYNCED 且 syncedRevision=revision 后再启动。
-                value:
-                  id: '{{sequenceId}}'
-                  input:
-                    deviceId: '{{businessDeviceId}}'
-              sequenceStart:
-                summary: 启动已同步情景
-                description: 沿用绑定设备 ID。系统预设直接使用设备查询返回的 ID 加同一 deviceId 启动，不保证能脱离设备单独读取。
-                value:
-                  id: '{{sequenceId}}'
-                  input:
-                    deviceId: '{{businessDeviceId}}'
-              sequenceStop:
-                summary: 停止设备当前情景
-                description: 固定目标 id=sequence，不使用具体 sequenceId。
-                value:
-                  id: sequence
-                  input:
-                    deviceId: '{{businessDeviceId}}'
-              sequencePreview:
-                summary: 在设备临时预览情景
-                description: 固定目标 id=sequence；data 按目标设备 spec 构造，不创建持久情景或绑定。
-                value:
-                  id: sequence
-                  input:
-                    deviceId: '{{businessDeviceId}}'
-                    data:
-                      type: commands
-                      loopCount: 1
-                      completionAction: HOLD
-                      commands:
-                      - command: setColor
-                        color: '#FF6600'
-                        brightness: 80
-                        transitionTime: 1.0
-              sequenceRetry:
-                summary: 重新排队失败的同步任务
-                description: 仅用于真实绑定 syncState=FAILED；成功表示重新进入队列，不表示同步已完成，继续按设备查询。
-                value:
-                  id: '{{sequenceId}}'
-                  input:
-                    deviceId: '{{businessDeviceId}}'
-              sequenceUnassign:
-                summary: 请求解除设备绑定
-                description: 异步解除，按设备查询直到 Relation 消失。最后一个绑定删除后，服务可能自动删除用户情景；不要固定串行调用 delete。
-                value:
-                  id: '{{sequenceId}}'
-                  input:
-                    deviceId: '{{businessDeviceId}}'
-              sequenceDelete:
-                summary: 删除没有绑定的用户情景
-                description: 只用于当前没有任何 Relation 的用户配置，并以最新回读 commands 为准；系统预设不可删除。
-                value:
-                  id: '{{sequenceId}}'
-                  input: {}
-              importDifferentOwnerRejected:
-                summary: 反例：导入设备与发现任务不一致
-                description: 该点发现 Job 属于另一个设备；目标即使同协议仍被拒绝，整批创建前检查。
-                value:
-                  id: '{{pointJobId}}'
-                  input:
-                    deviceId: '{{anotherBacnetDeviceId}}'
-                    discoveryObjectIds:
-                    - '{{pointCandidateId}}'
-              createSequence:
-                summary: POST /actions/create 创建情景
-                value:
-                  id: sequence
-                  input:
-                    name: 晚霞
-                    deviceId: '{{businessDeviceId}}'
-                    icon: ''
-                    data:
-                      type: commands
-                      loopCount: 1
-                      completionAction: HOLD
-                      commands:
-                      - command: setColor
-                        color: '#FF6600'
-                        brightness: 80
-                        transitionTime: 1.0
-              modbusDeletePoint:
-                summary: 删除测试 Modbus Point
-                description: 仅删除本次测试创建且可删除的资源；按 Point→Device→Network 顺序，不操作其他资源。
-                value:
-                  id: '{{modbusPointId}}'
-                  input: {}
-              modbusDeleteDevice:
-                summary: 删除测试 Modbus Device
-                description: 仅删除本次测试创建且可删除的资源；按 Point→Device→Network 顺序，不操作其他资源。
-                value:
-                  id: '{{modbusDeviceId}}'
-                  input: {}
-              modbusDeleteNetwork:
-                summary: 删除测试 Modbus Network
-                description: 仅删除本次测试创建且可删除的资源；按 Point→Device→Network 顺序，不操作其他资源。
-                value:
-                  id: '{{modbusNetworkId}}'
-                  input: {}
-              connectionSnapshotDevice:
-                summary: 按 Open deviceId 查询连接快照
-                description: 只读，不建连接、不探测。仅脚本协议 Network 暴露；查询实际 commands。
-                value:
-                  id: '{{tcpNetworkId}}'
-                  input:
-                    deviceId: '{{tcpDeviceId}}'
-              connectionSnapshotLegacy:
-                summary: 连接快照兼容旧 targetId
-                description: 新 deviceId 只接受 Open 设备 ID；旧 targetId 兼容设备节点 ID 或 Open ID，快照还兼容 Point ID。两字段同传必须解析到同一个设备，不能混用点位选择；仍校验管理权限、设备授权及
-                  Network 归属。
-                value:
-                  id: '{{tcpNetworkId}}'
-                  input:
-                    deviceId: '{{tcpDeviceId}}'
-                    targetId: '{{legacyDeviceNodeId}}'
-              startDebugSession:
-                summary: 创建有界诊断会话
-                description: 仅对 commands 暴露该命令的脚本 Network 调用。TTL 最长 120000ms；先检查返回的 capabilities；全局两条活动会话、含终态最多四条，停止后记录保留  60 秒，满额返回 BUSY。
-                value:
-                  id: '{{tcpNetworkId}}'
-                  input:
-                    ttlMs: 60000
-              probeOnceDevice:
-                summary: 使用 Open deviceId 实际探测
-                description: 仅当 session.capabilities.probe=true；兼容 targetId 但新请求优先 deviceId。结果是操作资源，需要读取其状态；收到请求不等于设备探测成功。
-                value:
-                  id: '{{debugSessionId}}'
-                  input:
-                    deviceId: '{{tcpDeviceId}}'
-                    timeoutMs: 3000
-              readOncePoint:
-                summary: 实际读取指定 Point
-                description: 点位诊断保持 targetId=Point ID；不能用 deviceId 代替。真实发包并应用目标点后才成功。
-                value:
-                  id: '{{debugSessionId}}'
-                  input:
-                    targetId: '{{tcpPointId}}'
-                    timeoutMs: 3000
-              writeAndWaitPoint:
-                summary: 有授权时写入并等待业务应答
-                description: 仅在明确控制授权且能力支持时调用；clientOperationId/waitFor 必填。MQTT PUBACK 不等于设备业务 ACK。不支持 protocolAck 时按实际能力选择 send 或带 expectedValue 的 stateUpdate；超时不能推断未执行，不能盲目重发。
-                value:
-                  id: '{{debugSessionId}}'
-                  input:
-                    targetId: '{{tcpPointId}}'
-                    clientOperationId: example-write-001
-                    waitFor: protocolAck
-                    value: 41
-                    timeoutMs: 3000
-              stopDebugSession:
-                summary: 停止本次诊断会话
-                description: 停止后不能再次发包；已发送的设备动作不能撤回，历史记录按保留策略处理。
-                value:
-                  id: '{{debugSessionId}}'
-                  input: {}
-      responses:
-        '200':
-          description: 成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ResourceOpenApiResponse'
-              examples:
-                createdNetwork:
-                  summary: 创建 Network 的最小引用
-                  value:
-                    type: ResourceOpenApiResponse
-                    version: v1
-                    msgId: protocol-example
-                    code: 0
-                    message: success
-                    data:
-                      id: '{{modbusNetworkId}}'
-                      type: protocol.network
-                createdDevice:
-                  summary: Device ID 为 Open deviceId
-                  value:
-                    type: ResourceOpenApiResponse
-                    version: v1
-                    msgId: protocol-example
-                    code: 0
-                    message: success
-                    data:
-                      id: '{{modbusDeviceId}}'
-                      type: protocol.device
-                createdPoint:
-                  summary: 创建 Point 后另行读取详情
-                  value:
-                    type: ResourceOpenApiResponse
-                    version: v1
-                    msgId: protocol-example
-                    code: 0
-                    message: success
-                    data:
-                      id: '{{modbusPointId}}'
-                      type: protocol.point
-                importedPoint:
-                  summary: 导入成功项只含 resource 引用
-                  value:
-                    type: ResourceOpenApiResponse
-                    version: v1
-                    msgId: protocol-example
-                    code: 0
-                    message: success
-                    data:
-                      results:
-                      - discoveryObjectId: '{{pointCandidateId}}'
-                        success: true
-                        resource:
-                          id: '{{bacnetPointId}}'
-                          type: protocol.point
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-        '422':
-          description: 协议配置或发现任务的协议/目标归属不匹配时拒绝；code=2103。对不支持的命令返回 code=2127。具体业务码以响应为准。
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                type: ResourceOpenApiResponse
-                version: v1
-                msgId: import-owner-mismatch
-                code: 2103
-                message: Discovery import must use the job's protocol, owner and target kind.
-      x-request-examples:
-        modbusNetwork:
-          summary: 创建 Modbus 网络
-          description: create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。 保存 data.id 为 modbusNetworkId。
-          method: POST
-          path: /actions/create
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: protocol:modbus
-              input:
-                name: Modbus TCP 网络
-                config:
-                  enabled: true
-                  floatByteOrder: orderABCD
-                  longByteOrder: orderABCD
-        modbusDevice:
-          summary: 创建 Modbus TCP 设备
-          description: create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。 保存
-            data.id 为 modbusDeviceId。
-          method: POST
-          path: /actions/create
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{modbusNetworkId}}'
-              input:
-                name: PLC-1
-                config:
-                  ipAddress: 192.0.2.10
-                  port: 502
-                  deviceAddress: 1
-                  frameMode: modbusTcp
-                  enabled: true
-        modbusPoint:
-          summary: 创建 Modbus 保持寄存器点
-          description: create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。 保存 data.id 为 modbusPointId。   
-          method: POST
-          path: /actions/create
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{modbusDeviceId}}'
-              input:
-                name: 寄存器 40011
-                config:
-                  pollFrequency: normal
-                  modbusDiscoverySpecInfo/registerType: holdingRegister
-                  modbusDiscoverySpecInfo/readWriteType: readOnly
-                  modbusDiscoverySpecInfo/addressFormat: modbus
-                  modbusDiscoverySpecInfo/address: '40011'
-                  modbusDiscoverySpecInfo/dataType: integerType
-        deleteProtocolEntity:
-          summary: 删除协议实例
-          description: 仅对最新回读中 commands 含 delete 的实例发送；可将 id 替换为目标网络或设备 ID。当前实例 unavailableCommands 说明被拒原因，执行时仍会重新校验权限和状态。
-          method: POST
-          path: /actions/delete
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{modbusPointId}}'
-              input: {}
-        bacnetNetwork:
-          summary: 创建 BACnet 网络
-          description: create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。 保存 data.id 为 bacnetNetworkId。 BACnet Network 受框架单例限制；已有实例时复用其返回 ID，不重复创建。
-          method: POST
-          path: /actions/create
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: protocol:bacnet
-              input:
-                name: BACnet 网络
-                config:
-                  localDevice/objectInstanceNumber: 123456
-                  bacnetComm/network/ipPort/link/udpPort: 47808
-                  enabled: true
-        bacnetDiscoverDevice:
-          summary: 在网络发现 BACnet 设备
-          description: discover 直接作用于 Network（发现设备）或 Device（发现点）；目录不提供 discover。input 仅含可选 options，可省略 input。options 只接受 optionsSchema 中的斜杠路径键及非 null 标量值；只读字段和流程控制的 autoCreate 不可覆盖；hidden 可写字段允许覆盖。发现不自动添加资源。 每 1000ms 读取同一 Job，单轮最多 120000ms；成功且 commands 包含 import 后查询该 Job 的候选。failed/cancelled/unknown 停止并报告。超时保留 Job ID，不重新发起发现；任务上下文由服务端保存，不能用客户端字段补足已丢失的上下文。
-          method: POST
-          path: /actions/discover
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{bacnetNetworkId}}'
-              input:
-                options: {}
-        bacnetImportDevice:
-          summary: 导入选中的 BACnet 设备
-          description: import 作用于发现 Job，input 必须包含 1–200 个 discoveryObjectIds，并且恰好提供 networkId（导入设备）或 deviceId（导入点，Open 设备 ID）。不接受 ownerId 或 pointConfigs。服务端整批检查任务归属、目标类型、协议及权限；逐项检查 results，成功项只含 resource.id/type，失败项含 errorCode/message。保存 data.results[].resource.id 为 bacnetDeviceId。
-          method: POST
-          path: /actions/import
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{deviceJobId}}'
-              input:
-                discoveryObjectIds:
-                - '{{deviceCandidateId}}'
-                networkId: '{{bacnetNetworkId}}'
-        bacnetDiscoverPoint:
-          summary: 在设备发现 BACnet 点
-          description: discover 直接作用于 Network（发现设备）或 Device（发现点）；目录不提供 discover。input 仅含可选 options，可省略 input。options 只接受 optionsSchema 中的斜杠路径键及非 null 标量值；只读字段和流程控制的 autoCreate 不可覆盖；hidden 可写字段允许覆盖。发现不自动添加资源。 每 1000ms 读取同一 Job，单轮最多 120000ms；成功且 commands 包含 import 后查询该 Job 的候选。failed/cancelled/unknown 停止并报告。超时保留 Job ID，不重新发起发现；任务上下文由服务端保存，不能用客户端字段补足已丢失的上下文。
-          method: POST
-          path: /actions/discover
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{bacnetDeviceId}}'
-              input:
-                options: {}
-        bacnetImportPoint:
-          summary: 导入选中的 BACnet 点
-          description: import 作用于发现 Job，input 必须包含 1–200 个 discoveryObjectIds，并且恰好提供 networkId（导入设备）或 deviceId（导入点，Open 设备 ID）。不接受 ownerId 或 pointConfigs。服务端整批检查任务归属、目标类型、协议及权限；逐项检查 results，成功项只含 resource.id/type，失败项含 errorCode/message。 保存 data.results[].resource.id 为 bacnetPointId。
-          method: POST
-          path: /actions/import
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{pointJobId}}'
-              input:
-                discoveryObjectIds:
-                - '{{pointCandidateId}}'
-                deviceId: '{{bacnetDeviceId}}'
-        haNetwork:
-          summary: 创建 Home Assistant 网络
-          description: create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。 保存 data.id 为 haNetworkId。
-          method: POST
-          path: /actions/create
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: protocol:homeAssistantBridge
-              input:
-                name: Home Assistant
-                config:
-                  ipAddress/ipAddress: 192.0.2.20
-                  ipAddress/port: 8123
-                  token: '{{haToken}}'
-        haDiscoverDevice:
-          summary: 发现 Home Assistant 设备
-          description: discover 直接作用于 Network（发现设备）或 Device（发现点）；目录不提供 discover。input 仅含可选 options，可省略 input。options 只接受 optionsSchema 中的斜杠路径键及非 null 标量值；只读字段和流程控制的 autoCreate 不可覆盖；hidden 可写字段允许覆盖。发现不自动添加资源。 每 1000ms 读取同一 Job，单轮最多 120000ms；成功且 commands 包含 import 后查询该 Job 的候选。failed/cancelled/unknown 停止并报告。超时保留 Job ID，不重新发起发现；任务上下文由服务端保存，不能用客户端字段补足已丢失的上下文。
-          method: POST
-          path: /actions/discover
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{haNetworkId}}'
-              input:
-                options: {}
-        knxNetwork:
-          summary: 创建 KNX 网络
-          description: create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。 保存 data.id 为 knxNetworkId。
-          method: POST
-          path: /actions/create
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: protocol:knxClient
-              input:
-                name: KNX 网络
-                config:
-                  localIp: 0.0.0.0
-                  enabled: true
-        knxDevice:
-          summary: 手动创建 KNX 隧道设备
-          description: create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层 name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。 保存 data.id 为 knxDeviceId。
-          method: POST
-          path: /actions/create
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{knxNetworkId}}'
-              input:
-                name: KNX IP 接口
-                config:
-                  deviceAddress: 1.1.250
-                  localIp: 0.0.0.0
-                  connectType: tunnel
-                  tunnelKnxIp: 192.0.2.30
-                  tunnelKnxPort: 3671
-                  enabled: true
-        knxDiscoverDevice:
-          summary: 发现 KNX 接口设备
-          description: discover 直接作用于 Network（发现设备）或 Device（发现点）；目录不提供 discover。input 仅含可选 options，可省略 input。options 只接受 optionsSchema 中的斜杠路径键及非 null 标量值；只读字段和流程控制的 autoCreate 不可覆盖；hidden 可写字段允许覆盖。发现不自动添加资源。 每 1000ms 读取同一 Job，单轮最多 120000ms；成功且 commands 包含 import 后查询该 Job 的候选。failed/cancelled/unknown 停止并报告。超时保留 Job ID，不重新发起发现；任务上下文由服务端保存，不能用客户端字段补足已丢失的上下文。
-          method: POST
-          path: /actions/discover
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{knxNetworkId}}'
-              input:
-                options: {}
-        createBackup:
-          summary: 创建本地系统备份
-          description: remark 最长 20 字符；保存 data.id 为 backupJobId，响应是异步 job，不是备份记录 ID。
-          method: POST
-          path: /actions/create
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: backup
-              input:
-                remark: 维护前备份
-        restoreBackup:
-          summary: 恢复选中的系统备份
-          description: 此请求会恢复系统数据，只在需要恢复时单独执行，不属于创建备份后的固定下一步。保存返回的 job ID 并轮询；input 必须为空对象。
-          method: POST
-          path: /actions/restore
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{backupId}}'
-              input: {}
-        deleteBackup:
-          summary: 删除选中的备份文件
-          description: 此请求删除指定本地备份，只在需要清理时执行；input 必须为空对象。
-          method: POST
-          path: /actions/delete
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{backupId}}'
-              input: {}
-        sequenceCreate:
-          summary: 创建晚霞情景
-          description: 当前 create 必须传 deviceId，用于设备名称约束校验；创建不等于设备绑定。保存 data.id 为 sequenceId，随后 assign。色彩命令示例要求设备 spec 支持。
-          method: POST
-          path: /actions/create
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: sequence
-              input:
-                name: 晚霞
-                deviceId: '{{businessDeviceId}}'
-                data:
-                  type: commands
-                  loopCount: 1
-                  completionAction: HOLD
-                  commands:
-                  - command: setColor
-                    color: '#FF6600'
-                    brightness: 80
-                    transitionTime: 1.0
-        sequenceAssign:
-          summary: 将情景分配到设备
-          description: 始终绑定最新版本，只接受 deviceId；传 revision（包括 null）会被拒绝。随后带 deviceId 查询，等待 assignment.syncState=SYNCED 且 syncedRevision=revision 后再启动。
-          method: POST
-          path: /actions/assign
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{sequenceId}}'
-              input:
-                deviceId: '{{businessDeviceId}}'
-        sequenceStart:
-          summary: 启动已同步情景
-          description: 沿用绑定设备 ID。系统预设直接使用设备查询返回的 ID 加同一 deviceId 启动，不保证能脱离设备单独读取。
-          method: POST
-          path: /actions/start
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{sequenceId}}'
-              input:
-                deviceId: '{{businessDeviceId}}'
-        sequenceStop:
-          summary: 停止设备当前情景
-          description: 固定目标 id=sequence，不使用具体 sequenceId。
-          method: POST
-          path: /actions/stop
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: sequence
-              input:
-                deviceId: '{{businessDeviceId}}'
-        sequencePreview:
-          summary: 在设备临时预览情景
-          description: 固定目标 id=sequence；data 按目标设备 spec 构造，不创建持久情景或绑定。
-          method: POST
-          path: /actions/preview
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: sequence
-              input:
-                deviceId: '{{businessDeviceId}}'
-                data:
-                  type: commands
-                  loopCount: 1
-                  completionAction: HOLD
-                  commands:
-                  - command: setColor
-                    color: '#FF6600'
-                    brightness: 80
-                    transitionTime: 1.0
-        sequenceRetry:
-          summary: 重新排队失败的同步任务
-          description: 仅用于真实绑定 syncState=FAILED；成功表示重新进入队列，不表示同步已完成，继续按设备查询。
-          method: POST
-          path: /actions/retry
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{sequenceId}}'
-              input:
-                deviceId: '{{businessDeviceId}}'
-        sequenceUnassign:
-          summary: 请求解除设备绑定
-          description: 异步解除，按设备查询直到 Relation 消失。最后一个绑定删除后，服务可能自动删除用户情景；不要固定串行调用 delete。
-          method: POST
-          path: /actions/unassign
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{sequenceId}}'
-              input:
-                deviceId: '{{businessDeviceId}}'
-        sequenceDelete:
-          summary: 删除没有绑定的用户情景
-          description: 只用于当前没有任何 Relation 的用户配置，并以最新回读 commands 为准；系统预设不可删除。
-          method: POST
-          path: /actions/delete
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{sequenceId}}'
-              input: {}
-        modbusDeletePoint:
-          summary: 删除测试 Modbus Point
-          description: 仅删除本次测试创建且可删除的资源；按 Point→Device→Network 顺序，不操作其他资源。
-          method: POST
-          path: /actions/delete
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{modbusPointId}}'
-              input: {}
-        modbusDeleteDevice:
-          summary: 删除测试 Modbus Device
-          description: 仅删除本次测试创建且可删除的资源；按 Point→Device→Network 顺序，不操作其他资源。
-          method: POST
-          path: /actions/delete
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{modbusDeviceId}}'
-              input: {}
-        modbusDeleteNetwork:
-          summary: 删除测试 Modbus Network
-          description: 仅删除本次测试创建且可删除的资源；按 Point→Device→Network 顺序，不操作其他资源。
-          method: POST
-          path: /actions/delete
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{modbusNetworkId}}'
-              input: {}
-        connectionSnapshotDevice:
-          summary: 按 Open deviceId 查询连接快照
-          description: 只读，不建连接、不探测。仅脚本协议 Network 暴露；查询实际 commands。
-          method: POST
-          path: /actions/connectionSnapshot
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{tcpNetworkId}}'
-              input:
-                deviceId: '{{tcpDeviceId}}'
-        connectionSnapshotLegacy:
-          summary: 连接快照兼容旧 targetId
-          description: 新 deviceId 只接受 Open 设备 ID；旧 targetId 兼容设备节点 ID 或 Open ID，快照还兼容 Point ID。两字段同传必须解析到同一个设备，不能混用点位选择；仍校验管理权限、设备授权及
-            Network 归属。
-          method: POST
-          path: /actions/connectionSnapshot
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{tcpNetworkId}}'
-              input:
-                deviceId: '{{tcpDeviceId}}'
-                targetId: '{{legacyDeviceNodeId}}'
-        startDebugSession:
-          summary: 创建有界诊断会话
-          description: 仅对 commands 暴露该命令的脚本 Network 调用。TTL 最长 120000ms；先检查返回的 capabilities；全局两条活动会话、含终态最多四条，停止后记录保留
-            60 秒，满额返回 BUSY。
-          method: POST
-          path: /actions/startDebugSession
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{tcpNetworkId}}'
-              input:
-                ttlMs: 60000
-        probeOnceDevice:
-          summary: 使用 Open deviceId 实际探测
-          description: 仅当 session.capabilities.probe=true；兼容 targetId 但新请求优先 deviceId。结果是操作资源，需要读取其状态；收到请求不等于设备探测成功。
-          method: POST
-          path: /actions/probeOnce
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{debugSessionId}}'
-              input:
-                deviceId: '{{tcpDeviceId}}'
-                timeoutMs: 3000
-        readOncePoint:
-          summary: 实际读取指定 Point
-          description: 点位诊断保持 targetId=Point ID；不能用 deviceId 代替。真实发包并应用目标点后才成功。
-          method: POST
-          path: /actions/readOnce
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{debugSessionId}}'
-              input:
-                targetId: '{{tcpPointId}}'
-                timeoutMs: 3000
-        writeAndWaitPoint:
-          summary: 有授权时写入并等待业务应答
-          description: 仅在明确控制授权且能力支持时调用；clientOperationId/waitFor 必填。MQTT PUBACK 不等于设备业务 ACK。不支持 protocolAck 时按实际能力选择
-            send 或带 expectedValue 的 stateUpdate；超时不能推断未执行，不能盲目重发。
-          method: POST
-          path: /actions/writeAndWait
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{debugSessionId}}'
-              input:
-                targetId: '{{tcpPointId}}'
-                clientOperationId: example-write-001
-                waitFor: protocolAck
-                value: 41
-                timeoutMs: 3000
-        stopDebugSession:
-          summary: 停止本次诊断会话
-          description: 停止后不能再次发包；已发送的设备动作不能撤回，历史记录按保留策略处理。
-          method: POST
-          path: /actions/stop
-          request:
-            headers: 公共请求头
-            query: null
-            body:
-              id: '{{debugSessionId}}'
-              input: {}
-
-  # ────────────────────────────────────────────────────────────────
   # 查询网关列表
   # ────────────────────────────────────────────────────────────────
   /gateways:
@@ -3524,6 +1756,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - name: state
           in: query
           description: 网关在线状态。
@@ -3581,7 +1814,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: device_state_change
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -3642,7 +1876,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: device_state_change
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -3695,7 +1930,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -3770,6 +2006,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+      - $ref: '#/components/parameters/Lang'
       - in: query
         name: definitionType
         required: false
@@ -3828,7 +2065,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: automation_create
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -3889,6 +2127,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - in: query
           name: definitionTypes
           required: false
@@ -4038,6 +2277,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+      - $ref: '#/components/parameters/Lang'
       - in: path
         name: automationId
         required: true
@@ -4122,7 +2362,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: automation_update
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4165,7 +2406,8 @@ paths:
       x-idempotent: true
       x-retryable: conditional
       x-side-effects: automation_update
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4202,7 +2444,8 @@ paths:
       x-idempotent: true
       x-retryable: conditional
       x-side-effects: automation_delete
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4243,7 +2486,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4293,7 +2537,8 @@ paths:
       x-idempotent: false
       x-retryable: false
       x-side-effects: command
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4345,7 +2590,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4387,7 +2633,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: command
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4438,7 +2685,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4500,6 +2748,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+        - $ref: '#/components/parameters/Lang'
         - name: dimensions
           in: query
           description: 统计维度列表。支持 deviceCount（设备数量）、linkageCount（自动化节点数量，含独立场景）、spaceCount（空间数量）、sceneCount（独立场景数量查询 /scenes）。URL 示例：dimensions=deviceCount,linkageCount,spaceCount,sceneCount 或 dimensions=deviceCount&dimensions=linkageCount
@@ -4551,7 +2800,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4621,7 +2871,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4691,7 +2942,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4755,7 +3007,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters:   
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4814,7 +3067,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4876,7 +3130,8 @@ paths:
       x-idempotent: true
       x-retryable: true
       x-side-effects: none
-      parameters: []
+      parameters: 
+        - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -4927,406 +3182,6 @@ paths:
         '503':
           $ref: '#/components/responses/ServiceUnavailableResponse'
 
-  # ────────────────────────────────────────────────────────────────
-  # 查询告警列表
-  # ────────────────────────────────────────────────────────────────
-  /alarms:
-    get:
-      tags: [Alarm]
-      summary: 查询告警列表
-      description: |
-        按告警时间范围分页查询告警列表。
-      operationId: getAlarms
-      x-skill-intent: alarm.list
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: none
-      parameters:
-        - name: startTime
-          in: query
-          description: 查询起始时间（UTC 毫秒时间戳，包含该时刻）。
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1704067200000
-        - name: endTime
-          in: query
-          description: 查询结束时间（UTC 毫秒时间戳，包含该时刻）。
-          required: true
-          schema:
-            type: integer
-            format: int64
-          example: 1704153600000
-        - name: pageNum
-          in: query
-          description: |
-            页码。
-            分页请求时，必须保证其他参数与首次请求一致。
-          required: false
-          schema:
-            type: integer
-          example: 1
-        - name: pageSize
-          in: query
-          description: 每页数量。默认为 200。
-          required: false
-          schema:
-            type: integer
-          example: 200
-        - name: alarmClass
-          in: query
-          required: false
-          schema:
-            type: string
-            description: 告警分类名称；空白不参与过滤。
-      responses:
-        '200':
-          description: 成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AlarmsResponse'
-              examples:
-                alarmsPage:
-                  value:
-                    type: GetAlarmListResponse
-                    version: v1
-                    msgId: "1751609244328"
-                    code: 0
-                    message: success
-                    data:
-                      totalCount: 2
-                      pageNum: 1
-                      pageSize: 200
-                      data:
-                        - uuid: "alarm-uuid-001"
-                          deviceName: "客厅温湿度传感器"
-                          deviceId: "device-001"
-                          devicePointName: "温度"
-                          devicePointId: alarm-point-001
-                          alarmClass: Warning
-                          alarmRuleName: "温度过高告警"
-                          alarmText: "温度超过阈值"
-                          alarmValue: "32.5"
-                          sourceState: OFF_NORMAL
-                          alarmTime: 1704100000000
-                        - uuid: "alarm-uuid-002"
-                          deviceName: "卧室烟雾传感器"
-                          deviceId: "device-002"
-                          devicePointName: "烟雾浓度"
-                          devicePointId: alarm-point-001
-                          alarmClass: Critical
-                          alarmRuleName: "烟雾告警"
-                          alarmText: "检测到烟雾"
-                          alarmValue: "1"
-                          sourceState: OFF_NORMAL
-                          alarmTime: 1704110000000
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
-  # ────────────────────────────────────────────────────────────────
-  # 删除单条告警
-  # ────────────────────────────────────────────────────────────────
-  /alarms/delete:
-    post:
-      tags: [Alarm]
-      summary: 删除单条告警
-      description: 通过告警的唯一标识（uuid）精确删除指定告警记录。
-      operationId: deleteAlarm
-      x-skill-intent: alarm.delete
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: delete
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DeleteAlarmRequest'
-            example:
-              uuid: "alarm-uuid-001"
-      responses:
-        '200':
-          description: 成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeleteAlarmResponse'
-              examples:
-                deleteAlarm:
-                  value:
-                    type: DeleteAlarmResponse
-                    version: v1
-                    msgId: "1751609244329"
-                    code: 0
-                    message: success
-                    data: true
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
-  # ────────────────────────────────────────────────────────────────
-  # 全量删除告警
-  # ────────────────────────────────────────────────────────────────
-  /alarms/clear:
-    post:
-      tags: [Alarm]
-      summary: 全量删除告警
-      description: 清空全部告警，无需请求体。
-      operationId: clearAlarms
-      x-skill-intent: alarm.clear
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: delete
-      parameters: []
-      responses:
-        '200':
-          description: 成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ClearAlarmsResponse'
-              examples:
-                clearAlarms:
-                  value:
-                    type: ClearAlarmsResponse
-                    version: v1
-                    msgId: "1751609244330"
-                    code: 0
-                    message: success
-                    data: true
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
-  # ────────────────────────────────────────────────────────────────
-  # 按 uuid 批量确认告警
-  # ────────────────────────────────────────────────────────────────
-  /alarms/ack:
-    post:
-      tags: [Alarm]
-      summary: 按 uuid 批量确认告警
-      description: |
-        根据告警的唯一标识（uuid）列表批量确认告警。
-      operationId: ackAlarms
-      x-skill-intent: alarm.ack
-      x-idempotent: false
-      x-retryable: true
-      x-side-effects: update
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AckAlarmsRequest'
-            example:
-              uuids: ["alarm-uuid-001", "alarm-uuid-002"]
-              notes: "已现场确认"
-      responses:
-        '200':
-          description: 成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AckAlarmsResponse'
-              examples:
-                ackAlarms:
-                  value:
-                    type: AckAlarmsResponse
-                    version: v1
-                    msgId: "1751609244331"
-                    code: 0
-                    message: success
-                    data: true
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
-  # ────────────────────────────────────────────────────────────────
-  # 按测点批量确认告警
-  # ────────────────────────────────────────────────────────────────
-  /alarms/ack-by-pointId:
-    post:
-      tags: [Alarm]
-      summary: 按测点批量确认告警
-      description: |
-        根据 `devicePointId` 批量确认该测点下未确认告警。
-      operationId: ackAlarmsByPointId
-      x-skill-intent: alarm.ack.by-point
-      x-idempotent: false
-      x-retryable: true
-      x-side-effects: update
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AckAlarmsByPointIdRequest'
-            example:
-              devicePointId: "point-001"
-              notes: "已现场确认"
-      responses:
-        '200':
-          description: 成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AckAlarmsByPointIdResponse'
-              examples:
-                ackAlarmsByPointId:
-                  value:
-                    type: AckAlarmsByPointIdResponse
-                    version: v1
-                    msgId: "1751609244332"
-                    code: 0
-                    message: success
-                    data: true
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
-  # ────────────────────────────────────────────────────────────────
-  # 查询告警规则列表
-  # ────────────────────────────────────────────────────────────────
-  /alarm-rules:
-    get:
-      tags: [Alarm]
-      summary: 查询告警规则列表
-      description: |
-        分页查询告警规则列表（排除模板规则）。
-        可选按 `ruleName` 做不区分大小写的包含匹配过滤。
-      operationId: getAlarmRules
-      x-skill-intent: alarm.rule.list
-      x-idempotent: true
-      x-retryable: true
-      x-side-effects: none
-      parameters:
-        - name: ruleName
-          in: query
-          description: 规则名称模糊匹配关键字（缺省时不做过滤）
-          required: false
-          schema:
-            type: string
-          example: 温度
-        - name: pageNum
-          in: query
-          description: 页码
-          required: false
-          schema:
-            type: integer
-          example: 1
-        - name: pageSize
-          in: query
-          description: 每页数量。默认为 200。
-          required: false
-          schema:
-            type: integer
-          example: 200
-      responses:
-        '200':
-          description: 成功
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AlarmRulesResponse'
-              examples:
-                alarmRulesPage:
-                  value:
-                    type: GetAlarmRuleListResponse
-                    version: v1
-                    msgId: '1751609244333'
-                    code: 0
-                    message: success
-                    data:
-                      totalCount: 2
-                      pageNum: 1
-                      pageSize: 200
-                      data:
-                      - ruleId: rule-001
-                        ruleName: 温度过高告警
-                        alarmClass: Warning
-                        delayToAlarmMs: 5000
-                        delayToNormalMs: 10000
-                        enabled: true
-                        updatedBy: admin
-                        updatedTime: 1704100000000
-                        toOffNormalText: 温度超过阈值
-                        toNormalText: 温度恢复正常
-                        alarmTraitName: 温度
-                      - ruleId: rule-002
-                        ruleName: 烟雾告警
-                        alarmClass: Critical
-                        delayToAlarmMs: 0
-                        delayToNormalMs: 0
-                        enabled: true
-                        updatedBy: admin
-                        updatedTime: 1704110000000
-                        toOffNormalText: 检测到烟雾
-                        toNormalText: 烟雾恢复正常
-                        alarmTraitName: 烟雾浓度
-        '400':
-          $ref: '#/components/responses/BadRequestResponse'
-        '401':
-          $ref: '#/components/responses/UnauthorizedResponse'
-        '403':
-          $ref: '#/components/responses/ForbiddenResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-        '429':
-          $ref: '#/components/responses/TooManyRequestsResponse'
-        '500':
-          $ref: '#/components/responses/InternalServerErrorResponse'
-
   /scenes:
     post:
       tags: [Scene]
@@ -5336,7 +3191,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: scene_create
-      parameters: []
+      parameters:
+      - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -5388,6 +3244,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+      - $ref: '#/components/parameters/Lang'
       - in: query
         name: sceneName
         required: false
@@ -5481,7 +3338,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: scene_update
-      parameters: []
+      parameters:
+      - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -5518,7 +3376,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: scene_space_update
-      parameters: []
+      parameters:
+      - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -5555,7 +3414,8 @@ paths:
       x-idempotent: false
       x-retryable: false
       x-side-effects: scene_execute
-      parameters: []
+      parameters:
+      - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -5592,7 +3452,8 @@ paths:
       x-idempotent: false
       x-retryable: conditional
       x-side-effects: scene_delete
-      parameters: []
+      parameters:
+      - $ref: '#/components/parameters/Lang'
       requestBody:
         required: true
         content:
@@ -5630,6 +3491,7 @@ paths:
       x-retryable: true
       x-side-effects: none
       parameters:
+      - $ref: '#/components/parameters/Lang'
       - in: query
         name: includeMetadata
         required: false
@@ -5779,20 +3641,14 @@ components:
 
   # 公共请求头参数（所有接口均需携带，由客户端统一附加）
   parameters:
-    ResourceType:
-      name: type
-      in: path
-      required: true
-      description: 稳定的对外资源类型，例如 system、protocol.network、protocol.device、protocol.point
+    Lang:
+      name: Lang
+      in: header
+      required: false
       schema:
         type: string
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      description: '复制接口返回的完整 Resource id。protocol.device 使用 Open deviceId；Network/Point/Job 使用各自节点 ID；目录、服务和备份使用其返回的句柄。不自行构造 id:/device: 设备别名。'
-      schema:
-        type: string
+        example: "{{Lang}}"
+      description: 语言。使用 `zh-CN` 表示中文，使用 `en-US` 表示英文。
 
   schemas:
 
@@ -5818,211 +3674,6 @@ components:
         message:
           type: string
           description: 提示信息
-
-    # ── 通用 ANode 资源 ──────────────────────────────────────────
-    ResourceUpdateRequest:
-      type: object
-      required: [properties]
-      properties:
-        properties:
-          type: object
-          minProperties: 1
-          additionalProperties: true
-          description: 待修改的白名单字段，使用普通 JSON 值；sequence 的 data 为对象，deviceIds 为数组。仅写运行时 schema 中 writable=true 的字段。
-      additionalProperties: false
-    ResourceActionRequest:
-      type: object
-      required:
-      - id
-      additionalProperties: false
-      properties:
-        id:
-          type: string
-          minLength: 1
-          description: 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。 create 的目标是目录或实际父资源；discover 是 Network/Device；import 是 Job；诊断操作使用 Network 或会话。
-        input:
-          type: object
-          additionalProperties: true
-          default: {}
-          description: 命令专用输入。协议 create/discover/import 分别见 ProtocolResourceCreateInput、ProtocolResourceDiscoverInput、ProtocolDiscoveryImportInput；其它命令按运行时类型定义。
-
-    ResourceOpenApiResponse:
-      description: 统一 Resource 响应。code=0 表示成功；data 按操作返回分页、详情、任务、删除结果或命令结果。协议创建仅 id/type，导入成功项仅 resource.id/type；失败项检查 errorCode/message。
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              nullable: true
-              description: 按操作返回详情、分页、任务或命令结果。协议创建仅 id/type；发现返回 Job；导入逐项返回 results[].resource.id/type 或失败 errorCode/message；删除返回 id/type/deleted。
-
-    ResourceHealth:
-      type: object
-      required: [status]
-      properties:
-        status:
-          type: string
-          enum: [healthy, disabled, fault, down, stale, "null", alarm, overridden, unackedAlarm, unknown]
-          description: 根据 Studio 当前 enabled、status、faultCause 归一化的只读状态；不主动探测设备
-        enabled:
-          type: boolean
-        faultCause:
-          type: string
-
-    ResourceItem:
-      type: object
-      description: |-
-        通用资源详情/列表条目。Device id 为 Open deviceId；Network/Point 使用各自节点 ID。协议创建/导入仅返回 ProtocolResourceReference，不读取配置、schema 或 health。Network/Device/Point 详情的协议类型位于 properties.protocolId。
-
-        sequence 资源在列表和详情中将可解析的历史效果转换为 properties.data.type=commands。
-        无法解析时保留 ID、名称、revision、绑定及原始 format，返回
-        properties.data={"type":"unavailable","reason":"Effect data cannot be represented as commands"}，
-        不返回步骤 commands 或原始协议字节，不修改存储。unavailable 资源禁止属性更新、assign 和 retry。
-        用户配置仍可解绑，无绑定时可删除；仅绑定为 SYNCED 且 syncedRevision=revision 时可启动。
-        资源顶层 commands 是允许的操作名称，与 properties.data.commands 效果步骤不同。
-        create/preview 只接受 commands 数据，不接受 unavailable。
-        sequence 的 create 输入需包含 deviceId，与 name、data 一并提交；icon 可选。
-        sequence 的 assign 输入仅接受 deviceId，始终分配最新版本；传入 revision（包括 null）会被拒绝。
-        properties.actionType 为只读整数，对应 LightingEffect ActionType：0 静态、1 动态、2 序列、3 分段静态、4 分段动态。
-        properties.labelTypeName 为只读字符串。内置情景（source=SYSTEM_PRESET）返回按请求头 Lang 本地化后的分类文案
-        （如中文「日常」、英文 Daily）；词典未命中时回退为 InnerScene.labelType.* 键。用户自定义情景该字段为空字符串。
-        带 deviceId 查询时，已属于当前设备的条目含 properties.assignment；待分配条目无该字段。    
-      required: [id, type, properties]
-      properties:
-        id:
-          type: string
-          description: 复制服务端返回的完整 Resource id。protocol.device 的 id 就是 Aqara Open deviceId，可用于设备 API 和点工具的设备参数；Network、Point、Job 使用各自节点 ID。不得传协议地址、候选 ID 或自行构造设备别名。
-        type:
-          type: string
-        properties:
-          type: object
-          additionalProperties: true
-          description: 详情/列表属性，协议类型为只读 properties.protocolId，Device 不重复返回 properties.deviceId。值为普通 JSON；敏感字段不回读。创建/导入引用没有 properties。sequence 属性沿用其类型定义。
-        commands:
-          type: array
-          items:
-            type: string
-          description: 当前实例可执行的命令名称；执行前回读，服务端仍会重新校验。 sequence 条目可能包含 assign、unassign、start、retry、delete；以当前实例返回值为准。
-        schema:
-          type: object
-          additionalProperties: true
-          description: 按 ID 读取协议实例时返回的更新 Schema；创建配置以类型定义 protocols[protocolId] 为准，敏感字段 writeOnly=true。
-        health:
-          $ref: '#/components/schemas/ResourceHealth'
-
-        unavailableCommands:
-          type: array
-          description: 协议实例当前不可用命令及原因。
-          items:
-            type: object
-            required:
-            - name
-            - reason
-            properties:
-              name:
-                type: string
-              reason:
-                type: string
-                enum:
-                - NOT_ACCESSIBLE
-                - NO_PARENT
-                - NOT_DYNAMIC
-                - DETACHED
-                - NOT_PERMITTED
-                - STATE_REJECTED
-
-    ResourceTypeSummary:
-      type: object
-      required: [type, operations, commands]
-      properties:
-        type:
-          type: string
-          description: 资源类型。
-        operations:
-          type: array
-          description: 此类型支持的操作列表。
-          items:
-            type: string
-            enum: [query, get, update]
-        commands:
-          type: array
-          description: 此类型支持的命令列表。
-          items:
-            type: string
-
-    ResourceTypesResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          required: [data]
-          properties:
-            data:
-              type: object
-              description: 对外资源类型定义列表。
-              required: [items]
-              properties:
-                items:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/ResourceTypeSummary'
-
-    ResourceTypeResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          required: [data]
-          properties:
-            data:
-              type: object
-              additionalProperties: true
-              description: 对外资源类型定义；协议资源包含各 protocolId 的动态配置 Schema 和只读 health Schema。
-
-    ResourceQueryResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          required: [data]
-          properties:
-            data:
-              type: object
-              required: [type, items, page, pageSize, hasMore]
-              description: 分页结果不计算 total，以 hasMore 表示是否还有下一页。
-              properties:
-                type:
-                  type: string
-                  description: 资源类型。
-                items:
-                  type: array
-                  description: 资源列表。
-                  items:
-                    $ref: '#/components/schemas/ResourceItem'
-                page:
-                  type: integer
-                  description: 当前页码。
-                  minimum: 1
-                pageSize:
-                  type: integer
-                  description: 每页条数。
-                  minimum: 1
-                hasMore:
-                  type: boolean
-                  description: 是否还有下一页。
-                deviceId:
-                  type: string
-                  description: sequence 带 deviceId 查询时回显目标设备 ID
-                spec:
-                  type: object
-                  additionalProperties: true
-                  description: sequence 带 deviceId 查询时返回该设备能力 spec，调用方据此生成 data.commands
-
-    ResourceResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          required: [data]
-          properties:
-            data:
-              $ref: '#/components/schemas/ResourceItem'
 
     ApiResponseEnvelope:
       type: object
@@ -8526,30 +6177,7 @@ components:
           type: string
           description: 设备当前固件版本。
 
-    UpgradableFirmwareSearchData:
-      type: object
-      description: 响应规则：`hasMore=true` 时必须返回 `nextCursor`，`hasMore=false` 时 `nextCursor` 为空或不返回。
-      required: [hasMore, data]
-      properties:
-        hasMore:
-          type: boolean
-          description: 是否还有下一页数据
-        nextCursor:
-          type: string
-          nullable: true
-          description: 下一页游标。hasMore=true 时必须返回；hasMore=false 时为空或不返回
-        data:
-          type: array
-          description: 当前页设备可升级固件结果
-          items:
-            $ref: '#/components/schemas/UpgradableDeviceFirmwareItem'
-
     # ── Automation ────────────────────────────────────────────────
-    AutomationDefinitionType:
-      type: string
-      enum: [SCRIPT_JSON]
-      description: 创建与能力查询的自动化定义类型，当前仅支持 SCRIPT_JSON；更新不传此字段，列表分类见 AutomationSummary。
-
     AutomationSummary:
       type: object
       required:
@@ -9611,400 +7239,6 @@ components:
           week: 5.222
           month: 9.221
           year: 230.229
-
-    # ── Alarm ─────────────────────────────────────────────────────
-    AlarmClass:
-      type: string
-      enum: [Info, Warning, Critical]
-      description: 告警等级。
-
-    AlarmSourceState:
-      type: string
-      enum: [NORMAL, OFF_NORMAL, FAULT, ALERT]
-      description: 告警状态。
-
-    AlarmInfo:
-      type: object
-      required:
-      - uuid
-      - deviceName
-      - deviceId
-      - devicePointName
-      - alarmClass
-      - alarmRuleName
-      - alarmText
-      - alarmValue
-      - sourceState
-      - alarmTime
-      - devicePointId
-      properties:
-        uuid:
-          type: string
-          description: 告警记录唯一标识。
-          example: alarm-uuid-001
-        deviceName:
-          type: string
-          description: 告警源设备名称。
-          example: 客厅温湿度传感器
-        deviceId:
-          type: string
-          description: 设备 ID。
-          example: device-001
-        devicePointName:
-          type: string
-          description: 测点名称。
-          example: 温度
-        alarmClass:
-          $ref: '#/components/schemas/AlarmClass'
-        alarmRuleName:
-          type: string
-          description: 告警规则名称。
-          example: 温度过高告警
-        alarmText:
-          type: string
-          description: 告警文案。
-          example: 温度超过阈值
-        alarmValue:
-          type: string
-          description: 告警数值/值文案。
-          example: '32.5'
-        sourceState:
-          $ref: '#/components/schemas/AlarmSourceState'
-        alarmTime:
-          type: integer
-          format: int64
-          description: 告警时间（UTC 毫秒时间戳）。
-          example: 1704100000000
-        devicePointId:
-          type: string
-          description: 告警源点位节点 ID；按点确认告警时使用，不是设备 deviceId。
-
-    AlarmListData:
-      type: object
-      required: [totalCount, pageNum, pageSize, data]
-      properties:
-        totalCount:
-          type: integer
-          description: 满足条件的告警总数。
-          example: 2
-        pageNum:
-          type: integer
-          description: 当前页码。
-          example: 1
-        pageSize:
-          type: integer
-          description: 当前页大小。
-          example: 200
-        data:
-          type: array
-          description: 当前页告警列表。
-          items:
-            $ref: '#/components/schemas/AlarmInfo'
-
-    AlarmsResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              $ref: '#/components/schemas/AlarmListData'
-            type:
-              type: string
-              enum:
-              - GetAlarmListResponse
-      example:
-        type: GetAlarmListResponse
-        version: v1
-        msgId: "1751609244328"
-        code: 0
-        message: success
-        data:
-          totalCount: 2
-          pageNum: 1
-          pageSize: 200
-          data:
-            - uuid: "alarm-uuid-001"
-              deviceName: "客厅温湿度传感器"
-              deviceId: "device-001"
-              devicePointName: "温度"
-              devicePointId: alarm-point-001
-              alarmClass: Warning
-              alarmRuleName: "温度过高告警"
-              alarmText: "温度超过阈值"
-              alarmValue: "32.5"
-              sourceState: OFF_NORMAL
-              alarmTime: 1704100000000
-            - uuid: "alarm-uuid-002"
-              deviceName: "卧室烟雾传感器"
-              deviceId: "device-002"
-              devicePointName: "烟雾浓度"
-              devicePointId: alarm-point-001
-              alarmClass: Critical
-              alarmRuleName: "烟雾告警"
-              alarmText: "检测到烟雾"
-              alarmValue: "1"
-              sourceState: OFF_NORMAL
-              alarmTime: 1704110000000
-
-    DeleteAlarmRequest:
-      type: object
-      required: [uuid]
-      properties:
-        uuid:
-          type: string
-          description: 告警记录唯一标识
-          example: "alarm-uuid-001"
-      example:
-        uuid: "alarm-uuid-001"
-
-    DeleteAlarmResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              type: boolean
-              description: 删除是否成功
-              example: true
-            type:
-              type: string
-              enum:
-              - DeleteAlarmResponse
-      example:
-        type: DeleteAlarmResponse
-        version: v1
-        msgId: "1751609244329"
-        code: 0
-        message: success
-        data: true
-
-    AckAlarmsRequest:
-      type: object
-      required: [uuids]
-      properties:
-        uuids:
-          type: array
-          description: 告警的唯一标识（uuid）列表。
-          minItems: 1
-          items:
-            type: string
-          example: ["alarm-uuid-001", "alarm-uuid-002"]
-        notes:
-          type: string
-          nullable: true
-          description: 确认备注（可选）。
-          example: "已现场确认"
-      example:
-        uuids: ["alarm-uuid-001", "alarm-uuid-002"]
-        notes: "已现场确认"
-
-    AckAlarmsResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              type: boolean
-              description: 确认是否成功。
-              example: true
-            type:
-              type: string
-              enum:
-              - AckAlarmsResponse
-      example:
-        type: AckAlarmsResponse
-        version: v1
-        msgId: "1751609244331"
-        code: 0
-        message: success
-        data: true
-
-    AckAlarmsByPointIdRequest:
-      type: object
-      required: [devicePointId]
-      properties:
-        devicePointId:
-          type: string
-          description: 设备测点 ID。
-          example: "point-001"
-        notes:
-          type: string
-          nullable: true
-          description: 确认备注（可选）。
-          example: "已现场确认"
-      example:
-        devicePointId: "point-001"
-        notes: "已现场确认"
-
-    AckAlarmsByPointIdResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              type: boolean
-              description: 确认是否成功。
-              example: true
-            type:
-              type: string
-              enum:
-              - AckAlarmsByPointIdResponse
-      example:
-        type: AckAlarmsByPointIdResponse
-        version: v1
-        msgId: "1751609244332"
-        code: 0
-        message: success
-        data: true
-
-    AlarmRuleInfo:
-      type: object
-      required:
-      - ruleId
-      - ruleName
-      - alarmClass
-      - toOffNormalText
-      - toNormalText
-      - alarmTraitName
-      - delayToAlarmMs
-      - delayToNormalMs
-      - enabled
-      - updatedBy
-      - updatedTime
-      properties:
-        ruleId:
-          type: string
-          description: 告警规则 ID。
-          example: rule-001
-        ruleName:
-          type: string
-          description: 告警规则名称。
-          example: 温度过高告警
-        alarmClass:
-          $ref: '#/components/schemas/AlarmClass'
-        toOffNormalText:
-          type: string
-          description: 进入告警状态时的文案。
-          example: 温度超过阈值
-        toNormalText:
-          type: string
-          description: 恢复正常状态时的文案。
-          example: 温度恢复正常
-        alarmTraitName:
-          type: string
-          description: 告警 Trait 的显示名称。
-          example: 温度
-        delayToAlarmMs:
-          type: integer
-          format: int64
-          description: 触发告警延时（毫秒）。
-          example: 5000
-        delayToNormalMs:
-          type: integer
-          format: int64
-          description: 恢复正常延时（毫秒）。
-          example: 10000
-        enabled:
-          type: boolean
-          description: 规则是否启用。
-          example: true
-        updatedBy:
-          type: string
-          description: 最近更新人。
-          example: admin
-        updatedTime:
-          type: integer
-          format: int64
-          description: 最近更新时间（UTC 毫秒时间戳）。
-          example: 1704100000000
-
-    AlarmRuleListData:
-      type: object
-      required: [totalCount, pageNum, pageSize, data]
-      properties:
-        totalCount:
-          type: integer
-          description: 满足条件的告警规则总数。
-          example: 2
-        pageNum:
-          type: integer
-          description: 当前页码。
-          example: 1
-        pageSize:
-          type: integer
-          description: 当前页大小。
-          example: 200
-        data:
-          type: array
-          description: 当前页告警规则列表。
-          items:
-            $ref: '#/components/schemas/AlarmRuleInfo'
-
-    AlarmRulesResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              $ref: '#/components/schemas/AlarmRuleListData'
-            type:
-              type: string
-              enum:
-              - GetAlarmRuleListResponse
-      example:
-        type: GetAlarmRuleListResponse
-        version: v1
-        msgId: '1751609244333'
-        code: 0
-        message: success
-        data:
-          totalCount: 2
-          pageNum: 1
-          pageSize: 200
-          data:
-          - ruleId: rule-001
-            ruleName: 温度过高告警
-            alarmClass: Warning
-            delayToAlarmMs: 5000
-            delayToNormalMs: 10000
-            enabled: true
-            updatedBy: admin
-            updatedTime: 1704100000000
-            toOffNormalText: 温度超过阈值
-            toNormalText: 温度恢复正常
-            alarmTraitName: 温度
-          - ruleId: rule-002
-            ruleName: 烟雾告警
-            alarmClass: Critical
-            delayToAlarmMs: 0
-            delayToNormalMs: 0
-            enabled: true
-            updatedBy: admin
-            updatedTime: 1704110000000
-            toOffNormalText: 检测到烟雾
-            toNormalText: 烟雾恢复正常
-            alarmTraitName: 烟雾浓度
-
-    ClearAlarmsResponse:
-      allOf:
-        - $ref: '#/components/schemas/BaseResponse'
-        - type: object
-          properties:
-            data:
-              type: boolean
-              description: 全量删除是否成功。
-              example: true
-            type:
-              type: string
-              enum:
-              - ClearAlarmsResponse
-      example:
-        type: ClearAlarmsResponse
-        version: v1
-        msgId: "1751609244330"
-        code: 0
-        message: success
-        data: true
 
     AutomationDslMetadata:
       type: object
@@ -12561,108 +9795,3 @@ components:
           description: 提示信息
       description: 不强制 type 的响应信封，用于错误响应及 REST 初始化/MCP 配置的直接 JSON 响应；正常消息业务响应仍使用 BaseResponse，要求 type。
 
-    ProtocolResourceReference:
-      type: object
-      required:
-      - id
-      - type
-      additionalProperties: false
-      description: 协议创建及导入成功的最小引用。Device 的 id 是 Open deviceId；Network/Point 是节点 ID。
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-          enum:
-          - protocol.network
-          - protocol.device
-          - protocol.point
-
-    ProtocolResourceCreateInput:
-      type: object
-      required:
-      - config
-      additionalProperties: false
-      properties:
-        name:
-          type: string
-          minLength: 1
-          pattern: \S
-          description: 唯一的外层显示名称；省略时点默认名为 Point。
-        config:
-          type: object
-          additionalProperties: true
-          description: 以目标子资源类型的 protocols[protocolId] 创建 schema 为准；Resource 不接受 config.name/config.friendlyName。
-      description: create 直接作用于父资源：协议目录只创建 Network，Network 创建 Device，Device 创建 Point。input 只接受必填 config 和可选 name；显示名称只传外层
-        name，config.name/config.friendlyName 被拒绝。成功仅返回 id/type；详情另行读取。
-
-    ProtocolResourceDiscoverInput:
-      type: object
-      additionalProperties: false
-      properties:
-        options:
-          type: object
-          additionalProperties:
-            oneOf:
-            - type: string
-            - type: number
-            - type: boolean
-          description: 使用协议目录 discovery.device/point.optionsSchema；斜杠路径、非 null 标量，不得覆盖只读项或流程控制的 autoCreate；hidden 可写字段允许覆盖。
-      description: discover 直接作用于 Network（发现设备）或 Device（发现点）；目录不提供 discover。input 仅含可选 options，可省略 input。options 只接受
-        optionsSchema 中的斜杠路径键及非 null 标量值；只读字段和流程控制的 autoCreate 不可覆盖；hidden 可写字段允许覆盖。发现不自动添加资源。
-
-    ProtocolDiscoveryImportInput:
-      type: object
-      required:
-      - discoveryObjectIds
-      additionalProperties: false
-      properties:
-        networkId:
-          type: string
-          minLength: 1
-          pattern: \S
-          description: 导入设备的 Network 节点 ID。
-        deviceId:
-          type: string
-          minLength: 1
-          pattern: \S
-          description: 导入点的 Aqara Open deviceId。
-        discoveryObjectIds:
-          type: array
-          minItems: 1
-          maxItems: 200
-          items:
-            type: string
-            minLength: 1
-      oneOf:
-      - required:
-        - networkId
-      - required:
-        - deviceId
-      description: import 作用于发现 Job，input 必须包含 1–200 个 discoveryObjectIds，并且恰好提供 networkId（导入设备）或 deviceId（导入点，Open
-        设备 ID）。不接受 ownerId 或 pointConfigs。服务端整批检查任务归属、目标类型、协议及权限；逐项检查 results，成功项只含 resource.id/type，失败项含 errorCode/message。
-
-    ProtocolDiscoveryImportResult:
-      type: object
-      required:
-      - results
-      properties:
-        results:
-          type: array
-          items:
-            type: object
-            required:
-            - discoveryObjectId
-            - success
-            properties:
-              discoveryObjectId:
-                type: string
-              success:
-                type: boolean
-              resource:
-                $ref: '#/components/schemas/ProtocolResourceReference'
-              errorCode:
-                type: string
-              message:
-                type: string
-            description: 成功项有 resource，失败项有 errorCode/message；部分失败时保留成功项。
