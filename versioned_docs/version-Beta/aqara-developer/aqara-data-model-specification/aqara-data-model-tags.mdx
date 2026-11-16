@@ -98252,27 +98252,9 @@ Manages screen-side user interface configuration, including page layout, cards, 
   </thead>
   <tbody>
     <tr>
-      <td>0x4EBC</td>
-      <td><a href="#ref_ScreenHeight">ScreenHeight</a></td>
-      <td>Screen height</td>
-      <td>M</td>
-    </tr>
-    <tr>
-      <td>0x4EBB</td>
-      <td><a href="#ref_ScreenWidth">ScreenWidth</a></td>
-      <td>Screen width</td>
-      <td>M</td>
-    </tr>
-    <tr>
-      <td>0x4EBA</td>
-      <td><a href="#ref_MaxPageNum">MaxPageNum</a></td>
-      <td>Maximum page count</td>
-      <td>M</td>
-    </tr>
-    <tr>
-      <td>0x4EB9</td>
-      <td><a href="#ref_DataVersion">DataVersion</a></td>
-      <td>Data version</td>
+      <td>0x4E77</td>
+      <td><a href="#ref_ThemeVersion">ThemeVersion</a></td>
+      <td>Theme version</td>
       <td>M</td>
     </tr>
     <tr>
@@ -98282,9 +98264,93 @@ Manages screen-side user interface configuration, including page layout, cards, 
       <td>M</td>
     </tr>
     <tr>
-      <td>0x4E77</td>
-      <td><a href="#ref_ThemeVersion">ThemeVersion</a></td>
-      <td>Theme version</td>
+      <td>0x4EB9</td>
+      <td><a href="#ref_DataVersion">DataVersion</a></td>
+      <td>Data version</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4EBA</td>
+      <td><a href="#ref_MaxPageNum">MaxPageNum</a></td>
+      <td>Maximum page count</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4EBB</td>
+      <td><a href="#ref_ScreenWidth">ScreenWidth</a></td>
+      <td>Screen width</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4EBC</td>
+      <td><a href="#ref_ScreenHeight">ScreenHeight</a></td>
+      <td>Screen height</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4EBD</td>
+      <td><a href="#ref_AllPages">AllPages</a></td>
+      <td>All pages</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ECE</td>
+      <td><a href="#ref_HomePageIndex">HomePageIndex</a></td>
+      <td>Home page index</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ECF</td>
+      <td><a href="#ref_AssociatedDeviceNameSize">AssociatedDeviceNameSize</a></td>
+      <td>Associated device name size</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ED0</td>
+      <td><a href="#ref_AssociatedDeviceIconSize">AssociatedDeviceIconSize</a></td>
+      <td>Associated device icon size</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ED1</td>
+      <td><a href="#ref_PageNameSize">PageNameSize</a></td>
+      <td>Page name size</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ED2</td>
+      <td><a href="#ref_UserDataSize">UserDataSize</a></td>
+      <td>User data size</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ED3</td>
+      <td><a href="#ref_MaxWidgetNum">MaxWidgetNum</a></td>
+      <td>Maximum card count</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ED4</td>
+      <td><a href="#ref_PageLayoutSize">PageLayoutSize</a></td>
+      <td>Page layout size</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ED5</td>
+      <td><a href="#ref_SupportedDeviceTypes">SupportedDeviceTypes</a></td>
+      <td>Supported device types</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ED6</td>
+      <td><a href="#ref_SupportedPageLayouts">SupportedPageLayouts</a></td>
+      <td>Supported page layouts</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4F0E</td>
+      <td><a href="#ref_StandbyStyles">StandbyStyles</a></td>
+      <td>Standby styles</td>
       <td>M</td>
     </tr>
   </tbody>
@@ -98292,11 +98358,405 @@ Manages screen-side user interface configuration, including page layout, cards, 
 
 ### Command
 
-This Function does not contain Commands.
+<table>
+  <thead>
+    <tr>
+      <th>Command ID</th>
+      <th>Code</th>
+      <th>Name</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x9C70</td>
+      <td><a href="#ref_SetAllPages">SetAllPages</a></td>
+      <td>Configure all pages</td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x9C6D</td>
+      <td><a href="#ref_RemovePage">RemovePage</a></td>
+      <td>Remove pages</td>
+      <td>M</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Data Types
 
-This Function has no custom data types.
+##### WidgetPositionStructure Type {#ref_ScreenUserInterfaceWidgetPositionStructure}
+
+This structure defines the WidgetPosition field layout of a Widget.
+
+<table>
+  <thead>
+    <tr>
+      <th>Struct Member No.</th>
+      <th>Field Name</th>
+      <th>Type</th>
+      <th>Mandatory</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>x</td>
+      <td>uint16</td>
+      <td>M</td>
+      <td>X coordinate of the widget.</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>y</td>
+      <td>uint16</td>
+      <td>M</td>
+      <td>Y coordinate of the widget.</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>width</td>
+      <td>uint16</td>
+      <td>M</td>
+      <td>Width of the widget.</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>height</td>
+      <td>uint16</td>
+      <td>M</td>
+      <td>Height of the widget.</td>
+    </tr>
+  </tbody>
+</table>
+
+##### AssociatedDeviceInfoStructure Type {#ref_ScreenUserInterfaceAssociatedDeviceInfoStructure}
+
+This structure defines the AssociatedDeviceInfo field layout of a Widget.
+
+<table>
+  <thead>
+    <tr>
+      <th>Struct Member No.</th>
+      <th>Field Name</th>
+      <th>Type</th>
+      <th>Mandatory</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>DeviceName</td>
+      <td>characterString</td>
+      <td>M</td>
+      <td>Name of the associated device.</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>DeviceTypeID</td>
+      <td>uint16</td>
+      <td>M</td>
+      <td>Aqara Device Type ID.</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>DeviceIcon</td>
+      <td>characterString</td>
+      <td>M</td>
+      <td>Device icon.</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>DeviceID</td>
+      <td>characterString</td>
+      <td>M</td>
+      <td>Device ID of the target device.</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>EndPointID</td>
+      <td>uint16</td>
+      <td>M</td>
+      <td>Endpoint ID of the target device.</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>ParentID</td>
+      <td>characterString</td>
+      <td>O</td>
+      <td>Device ID of the parent device; may be omitted if it is under the same Matter controller.</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>ModelValue</td>
+      <td>characterString</td>
+      <td>O</td>
+      <td>Model value for non-Matter devices; not required for scenes.</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>FunctionID</td>
+      <td>uint16</td>
+      <td>M</td>
+      <td>Function ID of the target device.</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>TraitID</td>
+      <td>uint16</td>
+      <td>O</td>
+      <td>Trait ID of the target device.</td>
+    </tr>
+  </tbody>
+</table>
+
+##### WidgetModeEnum8 Type {#ref_ScreenUserInterfaceWidgetModeEnum8}
+
+This enumeration defines the valid values of the WidgetMode of a Widget.
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x00</td>
+      <td>Basic</td>
+      <td>Basic mode</td>
+    </tr>
+    <tr>
+      <td>0x01</td>
+      <td>Lighting-ColorTempControl</td>
+      <td>Lighting color temperature control</td>
+    </tr>
+    <tr>
+      <td>0x02</td>
+      <td>Lighting-BrightnessControl</td>
+      <td>Lighting brightness control</td>
+    </tr>
+    <tr>
+      <td>0x03</td>
+      <td>Lighting-ColorControl</td>
+      <td>Lighting color control</td>
+    </tr>
+    <tr>
+      <td>0x04</td>
+      <td>AirCondition-TemperatureControl</td>
+      <td>Air conditioner temperature control</td>
+    </tr>
+    <tr>
+      <td>0x05</td>
+      <td>AirCondition-FanSpeed</td>
+      <td>Air conditioner fan speed control</td>
+    </tr>
+    <tr>
+      <td>0x06</td>
+      <td>WindowCovering-Operation</td>
+      <td>Window covering operation</td>
+    </tr>
+    <tr>
+      <td>0x07</td>
+      <td>DoorLock-Operation</td>
+      <td>Door lock operation</td>
+    </tr>
+  </tbody>
+</table>
+
+##### AllPagesWidgetStructure Type {#ref_ScreenUserInterfaceAllPagesWidgetStructure}
+
+This structure defines the field layout of an element in the Widgets list of an AllPages page.
+
+<table>
+  <thead>
+    <tr>
+      <th>Struct Member No.</th>
+      <th>Field Name</th>
+      <th>Type</th>
+      <th>Mandatory</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>WidgetPosition</td>
+      <td><a href="#ref_ScreenUserInterfaceWidgetPositionStructure">WidgetPositionStructure</a></td>
+      <td>M</td>
+      <td>Position and size of the widget.</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>WidgetID</td>
+      <td>uint16</td>
+      <td>M</td>
+      <td>Widget ID.</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>WidgetMode</td>
+      <td><a href="#ref_ScreenUserInterfaceWidgetModeEnum8">WidgetModeEnum8</a></td>
+      <td>M</td>
+      <td>Widget mode.</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>AssociatedDeviceInfo</td>
+      <td><a href="#ref_ScreenUserInterfaceAssociatedDeviceInfoStructure">AssociatedDeviceInfoStructure</a></td>
+      <td>M</td>
+      <td>Information about the associated device.</td>
+    </tr>
+  </tbody>
+</table>
+
+##### AllPagesTraitPresentValueStructure Type {#ref_ScreenUserInterfaceAllPagesTraitPresentValueStructure}
+
+This structure defines the field layout of an element (PageInfo) in the Present Value list of the AllPages Trait.
+
+<table>
+  <thead>
+    <tr>
+      <th>Struct Member No.</th>
+      <th>Field Name</th>
+      <th>Type</th>
+      <th>Mandatory</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>PageID</td>
+      <td>uint16</td>
+      <td>M</td>
+      <td>Page ID.</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>PageName</td>
+      <td>characterString</td>
+      <td>M</td>
+      <td>Page name.</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>PageLayout</td>
+      <td>uint16</td>
+      <td>M</td>
+      <td>Page layout ID.</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>PageIndex</td>
+      <td>uint16</td>
+      <td>M</td>
+      <td>Page index.</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Widgets</td>
+      <td><a href="#ref_ScreenUserInterfaceAllPagesWidgetStructure">list[AllPagesWidgetStructure]</a></td>
+      <td>M</td>
+      <td>List of widgets on the page.</td>
+    </tr>
+  </tbody>
+</table>
+
+##### SetAllPages Command Structure Type {#ref_ScreenUserInterfaceSetAllPagesCommandStructure}
+
+Parameter structure of the SetAllPages Command. For the element layout of the list, see [AllPagesTraitPresentValueStructure](#ref_ScreenUserInterfaceAllPagesTraitPresentValueStructure).
+
+<table>
+  <thead>
+    <tr>
+      <th>Struct Member No.</th>
+      <th>Field Name</th>
+      <th>Type</th>
+      <th>Mandatory</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>AllPagesInfo</td>
+      <td><a href="#ref_ScreenUserInterfaceAllPagesTraitPresentValueStructure">list[AllPagesInfo]</a></td>
+      <td>M</td>
+      <td>Information about all pages.</td>
+    </tr>
+  </tbody>
+</table>
+
+##### RemovePage Command Structure Type {#ref_ScreenUserInterfaceRemovePageCommandStructure}
+
+Parameter structure of the RemovePage Command.
+
+<table>
+  <thead>
+    <tr>
+      <th>Struct Member No.</th>
+      <th>Field Name</th>
+      <th>Type</th>
+      <th>Mandatory</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>PageList</td>
+      <td>list[uint16]</td>
+      <td>M</td>
+      <td>List of page IDs to be removed.</td>
+    </tr>
+  </tbody>
+</table>
+
+##### StandbyStyleIDEnum8 Type {#ref_ScreenUserInterfaceStandbyStyleIDEnum8}
+
+This enumeration defines the valid values of the Present Value / Supported Value of the StandbyStyles Trait.
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x00</td>
+      <td>GeneralWallpaper</td>
+      <td>General wallpaper</td>
+    </tr>
+    <tr>
+      <td>0x01</td>
+      <td>DigitalClock</td>
+      <td>Digital clock</td>
+    </tr>
+    <tr>
+      <td>0x02</td>
+      <td>AnalogClock</td>
+      <td>Analog clock</td>
+    </tr>
+    <tr>
+      <td>0x03</td>
+      <td>Weather</td>
+      <td>Weather</td>
+    </tr>
+    <tr>
+      <td>0x04</td>
+      <td>IndoorEnvironment</td>
+      <td>Indoor environment</td>
+    </tr>
+  </tbody>
+</table>
 
 ### Trait Definitions
 
@@ -98310,23 +98770,8 @@ This Function has no custom data types.
   </thead>
   <tbody>
     <tr>
-      <td>0x4EBC</td>
-      <td><a href="#ref_ScreenHeight">ScreenHeight</a></td>
-      <td>M</td>
-    </tr>
-    <tr>
-      <td>0x4EBB</td>
-      <td><a href="#ref_ScreenWidth">ScreenWidth</a></td>
-      <td>M</td>
-    </tr>
-    <tr>
-      <td>0x4EBA</td>
-      <td><a href="#ref_MaxPageNum">MaxPageNum</a></td>
-      <td>M</td>
-    </tr>
-    <tr>
-      <td>0x4EB9</td>
-      <td><a href="#ref_DataVersion">DataVersion</a></td>
+      <td>0x4E77</td>
+      <td><a href="#ref_ThemeVersion">ThemeVersion</a></td>
       <td>M</td>
     </tr>
     <tr>
@@ -98335,8 +98780,308 @@ This Function has no custom data types.
       <td>M</td>
     </tr>
     <tr>
+      <td>0x4EB9</td>
+      <td><a href="#ref_DataVersion">DataVersion</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4EBA</td>
+      <td><a href="#ref_MaxPageNum">MaxPageNum</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4EBB</td>
+      <td><a href="#ref_ScreenWidth">ScreenWidth</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4EBC</td>
+      <td><a href="#ref_ScreenHeight">ScreenHeight</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4EBD</td>
+      <td><a href="#ref_AllPages">AllPages</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ECE</td>
+      <td><a href="#ref_HomePageIndex">HomePageIndex</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ECF</td>
+      <td><a href="#ref_AssociatedDeviceNameSize">AssociatedDeviceNameSize</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ED0</td>
+      <td><a href="#ref_AssociatedDeviceIconSize">AssociatedDeviceIconSize</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ED1</td>
+      <td><a href="#ref_PageNameSize">PageNameSize</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ED2</td>
+      <td><a href="#ref_UserDataSize">UserDataSize</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ED3</td>
+      <td><a href="#ref_MaxWidgetNum">MaxWidgetNum</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ED4</td>
+      <td><a href="#ref_PageLayoutSize">PageLayoutSize</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ED5</td>
+      <td><a href="#ref_SupportedDeviceTypes">SupportedDeviceTypes</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4ED6</td>
+      <td><a href="#ref_SupportedPageLayouts">SupportedPageLayouts</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x4F0E</td>
+      <td><a href="#ref_StandbyStyles">StandbyStyles</a></td>
+      <td>M</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ThemeVersion Trait {#ref_ThemeVersion}
+
+Theme version.
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
       <td>0x4E77</td>
-      <td><a href="#ref_ThemeVersion">ThemeVersion</a></td>
+      <td>ThemeVersion</td>
+    </tr>
+  </tbody>
+</table>
+
+##### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint16</td>
+      <td></td>
+      <td>1</td>
+      <td>RV</td>
+      <td>M</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ThemeID Trait {#ref_ThemeID}
+
+This Trait is used for access to and reporting of "theme ID" data.
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x4E78</td>
+      <td>ThemeID</td>
+    </tr>
+  </tbody>
+</table>
+
+##### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint16</td>
+      <td></td>
+      <td>1</td>
+      <td>RV</td>
+      <td>M</td>
+    </tr>
+  </tbody>
+</table>
+
+#### DataVersion Trait {#ref_DataVersion}
+
+This Trait is used for access to and reporting of "data version" data.
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x4EB9</td>
+      <td>DataVersion</td>
+    </tr>
+  </tbody>
+</table>
+
+##### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint64</td>
+      <td></td>
+      <td>0</td>
+      <td>RV</td>
+      <td>M</td>
+    </tr>
+  </tbody>
+</table>
+
+#### MaxPageNum Trait {#ref_MaxPageNum}
+
+This Trait is used for access to and reporting of "maximum page count" data.
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x4EBA</td>
+      <td>MaxPageNum</td>
+    </tr>
+  </tbody>
+</table>
+
+##### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint16</td>
+      <td></td>
+      <td>1</td>
+      <td>RV</td>
+      <td>M</td>
+    </tr>
+  </tbody>
+</table>
+
+#### ScreenWidth Trait {#ref_ScreenWidth}
+
+This Trait is used for access to and reporting of "screen width" data.
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x4EBB</td>
+      <td>ScreenWidth</td>
+    </tr>
+  </tbody>
+</table>
+
+##### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint16</td>
+      <td></td>
+      <td>240</td>
+      <td>RV</td>
       <td>M</td>
     </tr>
   </tbody>
@@ -98380,44 +99125,17 @@ This Trait is used for access to and reporting of "screen height" data.
       <td>0x0001</td>
       <td>Present Value</td>
       <td>uint16</td>
-      <td>O</td>
+      <td></td>
       <td>240</td>
       <td>RV</td>
       <td>M</td>
     </tr>
-    <tr>
-      <td>0x0002</td>
-      <td>Maximum Value</td>
-      <td>uint16</td>
-      <td></td>
-      <td>65535</td>
-      <td>R</td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>0x0003</td>
-      <td>Minimum Value</td>
-      <td>uint16</td>
-      <td></td>
-      <td>0</td>
-      <td>R</td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>0x0007</td>
-      <td>Default Value</td>
-      <td>uint16</td>
-      <td>O</td>
-      <td>240</td>
-      <td>RW</td>
-      <td>O</td>
-    </tr>
   </tbody>
 </table>
 
-#### ScreenWidth Trait {#ref_ScreenWidth}
+#### AllPages Trait {#ref_AllPages}
 
-This Trait is used for access to and reporting of "screen width" data.
+This Trait provides information about all configured pages and their widgets. The Present Value is a list of PageInfo.
 
 <table>
   <thead>
@@ -98428,8 +99146,54 @@ This Trait is used for access to and reporting of "screen width" data.
   </thead>
   <tbody>
     <tr>
-      <td>0x4EBB</td>
-      <td>ScreenWidth</td>
+      <td>0x4EBD</td>
+      <td>AllPages</td>
+    </tr>
+  </tbody>
+</table>
+
+##### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td><a href="#ref_ScreenUserInterfaceAllPagesTraitPresentValueStructure">list[AllPagesTraitPresentValueStructure]</a></td>
+      <td></td>
+      <td></td>
+      <td>RVW</td>
+      <td>M</td>
+    </tr>
+  </tbody>
+</table>
+
+#### HomePageIndex Trait {#ref_HomePageIndex}
+
+This Trait is used for access to and reporting of "home page index" data.
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x4ECE</td>
+      <td>HomePageIndex</td>
     </tr>
   </tbody>
 </table>
@@ -98453,44 +99217,26 @@ This Trait is used for access to and reporting of "screen width" data.
       <td>0x0001</td>
       <td>Present Value</td>
       <td>uint16</td>
-      <td>O</td>
-      <td>240</td>
-      <td>RV</td>
+      <td></td>
+      <td></td>
+      <td>RVW</td>
       <td>M</td>
     </tr>
     <tr>
-      <td>0x0002</td>
-      <td>Maximum Value</td>
-      <td>uint16</td>
+      <td>0x000D</td>
+      <td>Is Null</td>
+      <td>boolean</td>
       <td></td>
-      <td>65535</td>
-      <td>R</td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>0x0003</td>
-      <td>Minimum Value</td>
-      <td>uint16</td>
-      <td></td>
-      <td>0</td>
-      <td>R</td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>0x0007</td>
-      <td>Default Value</td>
-      <td>uint16</td>
-      <td>O</td>
-      <td>240</td>
-      <td>RW</td>
+      <td>False</td>
+      <td>RV</td>
       <td>O</td>
     </tr>
   </tbody>
 </table>
 
-#### MaxPageNum Trait {#ref_MaxPageNum}
+#### AssociatedDeviceNameSize Trait {#ref_AssociatedDeviceNameSize}
 
-This Trait is used for access to and reporting of "maximum page count" data.
+This Trait is used for access to and reporting of "associated device name size" data.
 
 <table>
   <thead>
@@ -98501,8 +99247,8 @@ This Trait is used for access to and reporting of "maximum page count" data.
   </thead>
   <tbody>
     <tr>
-      <td>0x4EBA</td>
-      <td>MaxPageNum</td>
+      <td>0x4ECF</td>
+      <td>AssociatedDeviceNameSize</td>
     </tr>
   </tbody>
 </table>
@@ -98526,44 +99272,17 @@ This Trait is used for access to and reporting of "maximum page count" data.
       <td>0x0001</td>
       <td>Present Value</td>
       <td>uint16</td>
-      <td>O</td>
-      <td>1</td>
-      <td>RV</td>
+      <td></td>
+      <td>32</td>
+      <td>RVW</td>
       <td>M</td>
-    </tr>
-    <tr>
-      <td>0x0002</td>
-      <td>Maximum Value</td>
-      <td>uint16</td>
-      <td></td>
-      <td>65535</td>
-      <td>R</td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>0x0003</td>
-      <td>Minimum Value</td>
-      <td>uint16</td>
-      <td></td>
-      <td>0</td>
-      <td>R</td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>0x0007</td>
-      <td>Default Value</td>
-      <td>uint16</td>
-      <td>O</td>
-      <td>1</td>
-      <td>RW</td>
-      <td>O</td>
     </tr>
   </tbody>
 </table>
 
-#### DataVersion Trait {#ref_DataVersion}
+#### AssociatedDeviceIconSize Trait {#ref_AssociatedDeviceIconSize}
 
-This Trait is used for access to and reporting of "data version" data.
+This Trait is used for access to and reporting of "associated device icon size" data.
 
 <table>
   <thead>
@@ -98574,81 +99293,8 @@ This Trait is used for access to and reporting of "data version" data.
   </thead>
   <tbody>
     <tr>
-      <td>0x4EB9</td>
-      <td>DataVersion</td>
-    </tr>
-  </tbody>
-</table>
-
-##### Parameters
-
-<table>
-  <thead>
-    <tr>
-      <th>Parameter ID</th>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Constraint</th>
-      <th>Default</th>
-      <th>Access</th>
-      <th>Conformance</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>0x0001</td>
-      <td>Present Value</td>
-      <td>uint64</td>
-      <td>O</td>
-      <td>0</td>
-      <td>RV</td>
-      <td>M</td>
-    </tr>
-    <tr>
-      <td>0x0002</td>
-      <td>Maximum Value</td>
-      <td>uint64</td>
-      <td></td>
-      <td>18446744073709551615</td>
-      <td>R</td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>0x0003</td>
-      <td>Minimum Value</td>
-      <td>uint64</td>
-      <td></td>
-      <td>0</td>
-      <td>R</td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>0x0007</td>
-      <td>Default Value</td>
-      <td>uint64</td>
-      <td>O</td>
-      <td>0</td>
-      <td>RW</td>
-      <td>O</td>
-    </tr>
-  </tbody>
-</table>
-
-#### ThemeID Trait {#ref_ThemeID}
-
-This Trait is used for access to and reporting of "theme ID" data.
-
-<table>
-  <thead>
-    <tr>
-      <th>Trait ID</th>
-      <th>Code</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>0x4E78</td>
-      <td>ThemeID</td>
+      <td>0x4ED0</td>
+      <td>AssociatedDeviceIconSize</td>
     </tr>
   </tbody>
 </table>
@@ -98672,44 +99318,17 @@ This Trait is used for access to and reporting of "theme ID" data.
       <td>0x0001</td>
       <td>Present Value</td>
       <td>uint16</td>
-      <td>O</td>
-      <td>1</td>
-      <td>RV</td>
+      <td></td>
+      <td>32</td>
+      <td>RVW</td>
       <td>M</td>
-    </tr>
-    <tr>
-      <td>0x0002</td>
-      <td>Maximum Value</td>
-      <td>uint16</td>
-      <td></td>
-      <td>65535</td>
-      <td>R</td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>0x0003</td>
-      <td>Minimum Value</td>
-      <td>uint16</td>
-      <td></td>
-      <td>1</td>
-      <td>R</td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>0x0007</td>
-      <td>Default Value</td>
-      <td>uint16</td>
-      <td>O</td>
-      <td>1</td>
-      <td>RW</td>
-      <td>O</td>
     </tr>
   </tbody>
 </table>
 
-#### ThemeVersion Trait {#ref_ThemeVersion}
+#### PageNameSize Trait {#ref_PageNameSize}
 
-Theme version.
+This Trait is used for access to and reporting of "page name size" data.
 
 <table>
   <thead>
@@ -98720,8 +99339,8 @@ Theme version.
   </thead>
   <tbody>
     <tr>
-      <td>0x4E77</td>
-      <td>ThemeVersion</td>
+      <td>0x4ED1</td>
+      <td>PageNameSize</td>
     </tr>
   </tbody>
 </table>
@@ -98745,53 +99364,368 @@ Theme version.
       <td>0x0001</td>
       <td>Present Value</td>
       <td>uint16</td>
-      <td>O</td>
-      <td>1</td>
-      <td>RV</td>
+      <td></td>
+      <td>32</td>
+      <td>RVW</td>
+      <td>M</td>
+    </tr>
+  </tbody>
+</table>
+
+#### UserDataSize Trait {#ref_UserDataSize}
+
+This Trait is used for access to and reporting of "user data size" data.
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x4ED2</td>
+      <td>UserDataSize</td>
+    </tr>
+  </tbody>
+</table>
+
+##### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint16</td>
+      <td></td>
+      <td>128</td>
+      <td>RVW</td>
+      <td>M</td>
+    </tr>
+  </tbody>
+</table>
+
+#### MaxWidgetNum Trait {#ref_MaxWidgetNum}
+
+This Trait is used for access to and reporting of "maximum card count" data.
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x4ED3</td>
+      <td>MaxWidgetNum</td>
+    </tr>
+  </tbody>
+</table>
+
+##### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint16</td>
+      <td></td>
+      <td></td>
+      <td>RVW</td>
+      <td>M</td>
+    </tr>
+  </tbody>
+</table>
+
+#### PageLayoutSize Trait {#ref_PageLayoutSize}
+
+This Trait is used for access to and reporting of "page layout size" data.
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x4ED4</td>
+      <td>PageLayoutSize</td>
+    </tr>
+  </tbody>
+</table>
+
+##### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>uint16</td>
+      <td></td>
+      <td></td>
+      <td>RVW</td>
+      <td>M</td>
+    </tr>
+  </tbody>
+</table>
+
+#### SupportedDeviceTypes Trait {#ref_SupportedDeviceTypes}
+
+This Trait is used to report and configure the list of device types supported by the screen. Typical supported values include: Lock (0x000A), Button (0x000F), Air Quality Sensor (0x002C), Fan (0x002B), OnOff Light (0x0100), Dimmable Light (0x0101), Color Temperature Light (0x010C), Extended Color Light (0x010D), Contact Sensor (0x0015), Occupancy Sensor (0x0107), Mounted On/Off Control (0x010F), Socket (0x010A), Thermostat (0x0301), Temperature Sensor (0x0302), Humidity Sensor (0x0307), Scene (0xFFF1).
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x4ED5</td>
+      <td>SupportedDeviceTypes</td>
+    </tr>
+  </tbody>
+</table>
+
+##### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>list[uint16]</td>
+      <td></td>
+      <td></td>
+      <td>R</td>
+      <td>M</td>
+    </tr>
+  </tbody>
+</table>
+
+#### SupportedPageLayouts Trait {#ref_SupportedPageLayouts}
+
+This Trait is used for access to and reporting of "supported page layouts" data.
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x4ED6</td>
+      <td>SupportedPageLayouts</td>
+    </tr>
+  </tbody>
+</table>
+
+##### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td>list[uint16]</td>
+      <td></td>
+      <td></td>
+      <td>R</td>
+      <td>M</td>
+    </tr>
+  </tbody>
+</table>
+
+#### StandbyStyles Trait {#ref_StandbyStyles}
+
+This Trait is used to configure the current standby style and report the set of standby styles supported by the device.
+
+<table>
+  <thead>
+    <tr>
+      <th>Trait ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x4F0E</td>
+      <td>StandbyStyles</td>
+    </tr>
+  </tbody>
+</table>
+
+##### Parameters
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Constraint</th>
+      <th>Default</th>
+      <th>Access</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x0001</td>
+      <td>Present Value</td>
+      <td><a href="#ref_ScreenUserInterfaceStandbyStyleIDEnum8">StandbyStyleIDEnum8</a></td>
+      <td></td>
+      <td></td>
+      <td>RVW</td>
       <td>M</td>
     </tr>
     <tr>
-      <td>0x0002</td>
-      <td>Maximum Value</td>
-      <td>uint16</td>
+      <td>0x0006</td>
+      <td>Supported Value</td>
+      <td>list[<a href="#ref_ScreenUserInterfaceStandbyStyleIDEnum8">StandbyStyleIDEnum8</a>]</td>
       <td></td>
-      <td>65535</td>
-      <td>R</td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>0x0003</td>
-      <td>Minimum Value</td>
-      <td>uint16</td>
       <td></td>
-      <td>1</td>
       <td>R</td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>0x0005</td>
-      <td>Step Value</td>
-      <td>uint32</td>
-      <td></td>
-      <td>1</td>
-      <td>R</td>
-      <td>O</td>
-    </tr>
-    <tr>
-      <td>0x0007</td>
-      <td>Default Value</td>
-      <td>uint16</td>
-      <td>O</td>
-      <td>1</td>
-      <td>RW</td>
-      <td>O</td>
+      <td>M</td>
     </tr>
   </tbody>
 </table>
 
 ### Command Definitions
 
-This Function does not contain Commands.
+<table>
+  <thead>
+    <tr>
+      <th>Command ID</th>
+      <th>Name</th>
+      <th>Conformance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x9C70</td>
+      <td><a href="#ref_SetAllPages">SetAllPages</a></td>
+      <td>M</td>
+    </tr>
+    <tr>
+      <td>0x9C6D</td>
+      <td><a href="#ref_RemovePage">RemovePage</a></td>
+      <td>M</td>
+    </tr>
+  </tbody>
+</table>
+
+#### SetAllPages Command {#ref_SetAllPages}
+
+This Command is used to configure all pages and their widgets.
+
+<table>
+  <thead>
+    <tr>
+      <th>Command ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x9C70</td>
+      <td>SetAllPages</td>
+    </tr>
+  </tbody>
+</table>
+
+##### Parameters
+
+[SetAllPages Command Structure](#ref_ScreenUserInterfaceSetAllPagesCommandStructure)
+
+#### RemovePage Command {#ref_RemovePage}
+
+This Command is used to remove pages by a list of page IDs.
+
+<table>
+  <thead>
+    <tr>
+      <th>Command ID</th>
+      <th>Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0x9C6D</td>
+      <td>RemovePage</td>
+    </tr>
+  </tbody>
+</table>
+
+##### Parameters
+
+[RemovePage Command Structure](#ref_ScreenUserInterfaceRemovePageCommandStructure)
 
 ## DeviceAnomalyMonitoring {#ref_Aqara_Spec_DeviceAnomalyMonitoring}
 
@@ -103448,8 +104382,8 @@ Acquires facial features and compares them with the local library, reporting fac
       <td>O</td>
     </tr>
   </tbody>
-
 </table>
+
 ### Data Types
 
 ##### TimePeriodSettingTraitPresentValueStructure Type {#ref_TimePeriodSettingTraitPresentValueStructure}
