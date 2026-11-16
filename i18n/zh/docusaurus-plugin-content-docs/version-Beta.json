@@ -167,6 +167,10 @@
     "message": "历史",
     "description": "The label for category 'History' in sidebar 'aqaraDeveloperSidebar'"
   },
+  "sidebar.aqaraDeveloperSidebar.category.Scene": {
+    "message": "场景",
+    "description": "The label for category 'Scene' in sidebar 'aqaraDeveloperSidebar'"
+  },
   "sidebar.aqaraDeveloperSidebar.category.EMS": {
     "message": "能耗",
     "description": "The label for category 'EMS' in sidebar 'aqaraDeveloperSidebar'"
