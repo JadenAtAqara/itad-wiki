@@ -58,6 +58,8 @@ channels:
         $ref: '#/components/messages/SubscribeTraitValueRequest'
       SubscribeTraitValueResponse:
         $ref: '#/components/messages/SubscribeTraitValueResponse'
+      TraitValueUpdate:
+        $ref: '#/components/messages/TraitValueUpdate'
       UnsubscribeTraitValueRequest:
         $ref: '#/components/messages/UnsubscribeTraitValueRequest'
       UnsubscribeTraitValueResponse:
@@ -66,26 +68,24 @@ channels:
         $ref: '#/components/messages/SubscribeEventRequest'
       SubscribeEventResponse:
         $ref: '#/components/messages/SubscribeEventResponse'
+      AlarmEvent:
+        $ref: '#/components/messages/AlarmEvent'
       UnsubscribeEventRequest:
         $ref: '#/components/messages/UnsubscribeEventRequest'
       UnsubscribeEventResponse:
         $ref: '#/components/messages/UnsubscribeEventResponse'
-      AlarmEvent:
-        $ref: '#/components/messages/AlarmEvent'
       SubscribeObjectEventRequest:
         $ref: '#/components/messages/SubscribeObjectEventRequest'
       SubscribeObjectEventResponse:
         $ref: '#/components/messages/SubscribeObjectEventResponse'
+      ObjectEvent:
+        $ref: '#/components/messages/ObjectEvent'
       UnsubscribeObjectEventRequest:
         $ref: '#/components/messages/UnsubscribeObjectEventRequest'
       UnsubscribeObjectEventResponse:
         $ref: '#/components/messages/UnsubscribeObjectEventResponse'
-      TraitValueUpdate:
-        $ref: '#/components/messages/TraitValueUpdate'
       CommandReport:
         $ref: '#/components/messages/CommandReport'
-      ObjectEvent:
-        $ref: '#/components/messages/ObjectEvent'
       ErrorMessage:
         $ref: '#/components/messages/ErrorMessage'
 
@@ -160,31 +160,6 @@ operations:
 
 components:
   messages:
-    CommandReport:
-      name: CommandReport
-      title: 网关命令执行结果
-      summary: 随 v1 设备级或全量设备订阅发送，保留原网关结果，不表示设备物理动作已完成。
-      payload:
-        $ref: '#/components/schemas/PushCommandReportMessageV1'
-      examples:
-        - name: command_report
-          payload:
-            type: CommandReport
-            version: v1
-            msgId: report-example
-            studioId: studio-example
-            eventId: 449fd6f6-c52c-4488-a3a2-828db5f9ab6e
-            code: 0
-            message: success
-            data:
-              deviceId: device-1
-              sequence: 1
-              timestamp: 1793577600000
-              did: gateway-device-example
-              reportTime: null
-              source: null
-              data: { '2.148.33050.0': '0' }
-              content: { '0': 0, '2': 2 }
     AuthRequest:
       name: AuthRequest
       title: WebSocket 鉴权请求
@@ -200,7 +175,6 @@ components:
             data:
               authType: token
               token: '<accessToken>'
-              deviceUniqueId: '<deviceUniqueId>'
               clientId: '<clientId>'
     AuthResponse:
       name: AuthResponse
@@ -317,6 +291,60 @@ components:
         location: $message.payload#/msgId
       payload:
         $ref: '#/components/schemas/SubscribeTraitValueResponseMessage'
+    TraitValueUpdate:
+      name: TraitValueUpdate
+      title: Trait 功能值变化推送
+      payload:
+        $ref: '#/components/schemas/PushTraitValueUpdateMessageV1'
+      examples:
+        - name: 设备在线状态变化
+          payload:
+            type: TraitValueUpdate
+            eventId: 449fd6f6-c52c-4488-a3a2-000000000001
+            studioId: studio-example
+            version: v1
+            msgId: '10810'
+            data:
+              - deviceId: '57190441014857'
+                endpointId: 0
+                functionCode: BasicInformation
+                traitCode: Reachable
+                value: true
+                time: 1794637886352
+            code: 0
+            message: ''
+        - name: 目标播放状态变化
+          payload:
+            type: TraitValueUpdate
+            eventId: 449fd6f6-c52c-4488-a3a2-000000000002
+            studioId: studio-example
+            version: v1
+            msgId: '10811'
+            data:
+              - deviceId: '57190441014857'
+                endpointId: 3
+                functionCode: MediaPlayback
+                traitCode: TargetPlaybackState
+                value: '0'
+                time: 1754469720110
+            code: 0
+            message: ''
+        - name: 设备名称更新
+          payload:
+            type: TraitValueUpdate
+            eventId: 449fd6f6-c52c-4488-a3a2-000000000003
+            studioId: studio-example
+            version: v1
+            msgId: '10812'
+            data:
+              - deviceId: device-1
+                endpointId: 0
+                functionCode: EndpointLabel
+                traitCode: EndpointName
+                value: 客厅灯
+                time: 1789113600000
+            code: 0
+            message: ''    
     UnsubscribeTraitValueRequest:
       name: UnsubscribeTraitValueRequest
       title: 取消订阅指定 Trait 功能值
@@ -359,36 +387,6 @@ components:
           data: ''
           code: 0
           message: success
-    UnsubscribeEventRequest:
-      name: UnsubscribeEventRequest
-      title: 取消订阅告警请求
-      payload:
-        $ref: '#/components/schemas/UnsubscribeEventRequestMessage'
-      description: 鉴权后发送，data 必须是非空事件类型数组，普通客户端使用 ALARM。订阅以当前会话为单位，重复操作幂等；不影响设备、Trait 和对象事件订阅。
-      examples:
-      - name: unsubscribeAlarmRequest
-        payload:
-          type: UnsubscribeEventRequest
-          version: v1
-          msgId: alarm-unsubscribe-1
-          data:
-          - ALARM
-    UnsubscribeEventResponse:
-      name: UnsubscribeEventResponse
-      title: 取消订阅告警响应
-      payload:
-        $ref: '#/components/schemas/UnsubscribeEventResponseMessage'
-      correlationId:
-        location: $message.payload#/msgId
-      examples:
-      - name: unsubscribeAlarmResponse
-        payload:
-          type: UnsubscribeEventResponse
-          version: v1
-          msgId: alarm-unsubscribe-1
-          data: ''
-          code: 0
-          message: success
     AlarmEvent:
       name: AlarmEvent
       title: 原始告警推送
@@ -425,6 +423,36 @@ components:
                 alarmValue: 'On'
                 sourceStateText: Triggered
           code: 0
+          message: success    
+    UnsubscribeEventRequest:
+      name: UnsubscribeEventRequest
+      title: 取消订阅告警请求
+      payload:
+        $ref: '#/components/schemas/UnsubscribeEventRequestMessage'
+      description: 鉴权后发送，data 必须是非空事件类型数组，普通客户端使用 ALARM。订阅以当前会话为单位，重复操作幂等；不影响设备、Trait 和对象事件订阅。
+      examples:
+      - name: unsubscribeAlarmRequest
+        payload:
+          type: UnsubscribeEventRequest
+          version: v1
+          msgId: alarm-unsubscribe-1
+          data:
+          - ALARM
+    UnsubscribeEventResponse:
+      name: UnsubscribeEventResponse
+      title: 取消订阅告警响应
+      payload:
+        $ref: '#/components/schemas/UnsubscribeEventResponseMessage'
+      correlationId:
+        location: $message.payload#/msgId
+      examples:
+      - name: unsubscribeAlarmResponse
+        payload:
+          type: UnsubscribeEventResponse
+          version: v1
+          msgId: alarm-unsubscribe-1
+          data: ''
+          code: 0
           message: success
     SubscribeObjectEventRequest:
       name: SubscribeObjectEventRequest
@@ -437,7 +465,7 @@ components:
       payload:
         $ref: '#/components/schemas/SubscribeObjectEventRequestMessage'
       examples:
-        - name: subscribeAllPreciseObjectEvents
+        - name: 订阅全部精确对象事件
           payload:
             type: SubscribeObjectEventRequest
             version: v1
@@ -453,7 +481,7 @@ components:
                   - AUTOMATION_SPACE_UPDATED
                   - DEVICE_SPACE_UPDATED
                 objectIds: []
-        - name: subscribeSelectedObjects
+        - name: 订阅指定对象
           payload:
             type: SubscribeObjectEventRequest
             version: v1
@@ -477,80 +505,6 @@ components:
         location: $message.payload#/msgId
       payload:
         $ref: '#/components/schemas/SubscribeObjectEventResponseMessage'
-    UnsubscribeObjectEventRequest:
-      name: UnsubscribeObjectEventRequest
-      title: 取消空间、设备空间关系和自动化对象事件订阅
-      summary: 按当前 WebSocket 会话移除指定对象规则或清空指定事件类型。
-      description: |
-        objectIds 非空时只移除指定对象；不传、为 null 或空数组时清空对应 eventTypes 的全部对象规则。
-        全量订阅不支持排除部分对象；要从全量切换为指定对象，应先清空事件类型，再发送新的指定对象订阅。
-      payload:
-        $ref: '#/components/schemas/UnsubscribeObjectEventRequestMessage'
-      examples:
-        - name: unsubscribeSelectedObject
-          payload:
-            type: UnsubscribeObjectEventRequest
-            version: v1
-            msgId: object-unsubscribe-1
-            data:
-              - eventTypes:
-                  - AUTOMATION_UPDATED
-                objectIds:
-                  - automation-1
-        - name: clearEventType
-          payload:
-            type: UnsubscribeObjectEventRequest
-            version: v1
-            msgId: object-unsubscribe-2
-            data:
-              - eventTypes:
-                  - AUTOMATION_UPDATED
-                objectIds: []
-    UnsubscribeObjectEventResponse:
-      name: UnsubscribeObjectEventResponse
-      title: 取消对象事件订阅响应
-      correlationId:
-        location: $message.payload#/msgId
-      payload:
-        $ref: '#/components/schemas/UnsubscribeObjectEventResponseMessage'
-    TraitValueUpdate:
-      name: TraitValueUpdate
-      title: Trait 功能值变化推送
-      payload:
-        $ref: '#/components/schemas/PushTraitValueUpdateMessageV1'
-      examples:
-        - name: traitValueUpdate
-          payload:
-            type: TraitValueUpdate
-            eventId: 449fd6f6-c52c-4488-a3a2-000000000002
-            studioId: studio-example
-            version: v1
-            msgId: '1754469720110'
-            data:
-              - deviceId: '57190441014857'
-                endpointId: 3
-                functionCode: MediaPlayback
-                traitCode: TargetPlaybackState
-                value: '0'
-                time: 1754469720110
-            code: 0
-            message: ''
-        - name: deviceNameUpdated
-          payload:
-            type: TraitValueUpdate
-            eventId: 449fd6f6-c52c-4488-a3a2-000000000003
-            studioId: studio-example
-            version: v1
-            msgId: '1789113600000'
-            data:
-              - deviceId: device-1
-                endpointId: 0
-                functionCode: EndpointLabel
-                traitCode: EndpointName
-                value: 客厅灯
-                time: 1789113600000
-            code: 0
-            message: ''
     ObjectEvent:
       name: objectEvent
       title: 对象事件推送
@@ -576,7 +530,7 @@ components:
       payload:
         $ref: '#/components/schemas/PushObjectEventMessageV1'
       examples:
-        - name: scene_added
+        - name: 场景新增
           payload:
             type: "objectEvent"
             version: "v1"
@@ -594,7 +548,7 @@ components:
                 name: "电影场景"
                 createTime: 1793836800000
                 spaces: []
-        - name: scene_removed
+        - name: 场景移除
           payload:
             type: "objectEvent"
             version: "v1"
@@ -612,7 +566,7 @@ components:
                 name: "电影场景"
                 createTime: 1793836800000
                 spaces: []
-        - name: scene_updated
+        - name: 场景更新
           payload:
             type: "objectEvent"
             version: "v1"
@@ -630,7 +584,7 @@ components:
                 name: "电影场景"
                 createTime: 1793836800000
                 spaces: []
-        - name: scene_space_updated
+        - name: 场景所属空间更新
           payload:
             type: "objectEvent"
             version: "v1"
@@ -647,7 +601,7 @@ components:
                 objectId: "auto_scene001"
                 oldSpaceIds: ["space-old"]
                 spaces: [{"spaceId": "space-new", "name": "会议室", "parentSpaceId": null}]
-        - name: deviceAdded
+        - name: 设备新增
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000004
@@ -670,7 +624,7 @@ components:
                 time: 1754469720110
             code: 0
             message: success
-        - name: deviceSpaceUpdated
+        - name: 设备所属空间更新
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000005
@@ -691,7 +645,7 @@ components:
                   parentSpaceId: home-1
             code: 0
             message: success
-        - name: automationUpdated
+        - name: 自动化更新
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000006
@@ -713,7 +667,7 @@ components:
                     triggerName: 手动回家
             code: 0
             message: success
-        - name: automationSpaceUnassigned
+        - name: 自动化所属空间更新
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000007
@@ -731,7 +685,7 @@ components:
                 spaces: []
             code: 0
             message: success
-        - name: device_removed
+        - name: 设备移除
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000008
@@ -753,7 +707,7 @@ components:
                 time: 1793577600000
             code: 0
             message: success
-        - name: device_endpoint_added
+        - name: 设备端点新增
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000009
@@ -776,7 +730,7 @@ components:
                 time: 1793577600000
             code: 0
             message: success
-        - name: device_endpoint_removed
+        - name: 设备端点移除
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-00000000000a
@@ -798,7 +752,7 @@ components:
                 time: 1793577600000
             code: 0
             message: success
-        - name: device_trait_parameter_update
+        - name: 设备 Trait 参数更新
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-00000000000b
@@ -832,7 +786,7 @@ components:
                   unit: '%'
             code: 0
             message: success
-        - name: space_added
+        - name: 空间新增
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-00000000000c
@@ -850,7 +804,7 @@ components:
                 parentSpaceId: home-1
             code: 0
             message: success
-        - name: space_removed
+        - name: 空间移除
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-00000000000d
@@ -868,7 +822,7 @@ components:
                 parentSpaceId: home-1
             code: 0
             message: success
-        - name: space_updated
+        - name: 空间更新
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-00000000000e
@@ -886,7 +840,7 @@ components:
                 parentSpaceId: home-1
             code: 0
             message: success
-        - name: automation_added
+        - name: 自动化新增
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-00000000000f
@@ -906,7 +860,7 @@ components:
                 manualTriggers: []
             code: 0
             message: success
-        - name: automation_removed
+        - name: 自动化移除
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000010
@@ -926,7 +880,7 @@ components:
                 manualTriggers: []
             code: 0
             message: success
-        - name: automationSpaceAssigned
+        - name: 自动化所属空间更新
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000011
@@ -953,7 +907,7 @@ components:
                     parentSpaceId: home-1
             code: 0
             message: success
-        - name: deviceSpaceUnassigned
+        - name: 设备所属空间清除
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000012
@@ -970,7 +924,7 @@ components:
                 space: null
             code: 0
             message: success
-        - name: sceneActionResult
+        - name: 场景动作执行结果
           payload:
             type: objectEvent
             version: v1
@@ -1008,7 +962,7 @@ components:
                 - spaceId: space-example
                   name: 客厅
                   parentSpaceId: null
-        - name: automationNativeInvocationUnknown
+        - name: 自动化原生调用结果未知
           payload:
             type: objectEvent
             version: v1
@@ -1037,7 +991,68 @@ components:
                   triggerSubjectName: null
                   triggerResourceId: null
                   triggerResourceName: null
-                spaces: []
+                spaces: []    
+    UnsubscribeObjectEventRequest:
+      name: UnsubscribeObjectEventRequest
+      title: 取消空间、设备空间关系和自动化对象事件订阅
+      summary: 按当前 WebSocket 会话移除指定对象规则或清空指定事件类型。
+      description: |
+        objectIds 非空时只移除指定对象；不传、为 null 或空数组时清空对应 eventTypes 的全部对象规则。
+        全量订阅不支持排除部分对象；要从全量切换为指定对象，应先清空事件类型，再发送新的指定对象订阅。
+      payload:
+        $ref: '#/components/schemas/UnsubscribeObjectEventRequestMessage'
+      examples:
+        - name: unsubscribeSelectedObject
+          payload:
+            type: UnsubscribeObjectEventRequest
+            version: v1
+            msgId: object-unsubscribe-1
+            data:
+              - eventTypes:
+                  - AUTOMATION_UPDATED
+                objectIds:
+                  - automation-1
+        - name: clearEventType
+          payload:
+            type: UnsubscribeObjectEventRequest
+            version: v1
+            msgId: object-unsubscribe-2
+            data:
+              - eventTypes:
+                  - AUTOMATION_UPDATED
+                objectIds: []
+    UnsubscribeObjectEventResponse:
+      name: UnsubscribeObjectEventResponse
+      title: 取消对象事件订阅响应
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/UnsubscribeObjectEventResponseMessage'
+    CommandReport:
+      name: CommandReport
+      title: 网关命令执行结果
+      summary: 随 v1 设备级或全量设备订阅发送，保留原网关结果，不表示设备物理动作已完成。
+      payload:
+        $ref: '#/components/schemas/PushCommandReportMessageV1'
+      examples:
+        - name: command_report
+          payload:
+            type: CommandReport
+            version: v1
+            msgId: report-example
+            studioId: studio-example
+            eventId: 449fd6f6-c52c-4488-a3a2-828db5f9ab6e
+            code: 0
+            message: success
+            data:
+              deviceId: device-1
+              sequence: 1
+              timestamp: 1793577600000
+              did: gateway-device-example
+              reportTime: null
+              source: null
+              data: { '2.148.33050.0': '0' }
+              content: { '0': 0, '2': 2 }
 
     ErrorMessage:
       name: ErrorMessage
@@ -1071,6 +1086,7 @@ components:
         - UnsubscribeAllResponse
         - SubscribeTraitValueRequest
         - SubscribeTraitValueResponse
+        - TraitValueUpdate
         - UnsubscribeTraitValueRequest
         - UnsubscribeTraitValueResponse
         - SubscribeEventRequest
@@ -1081,7 +1097,6 @@ components:
         - SubscribeObjectEventResponse
         - UnsubscribeObjectEventRequest
         - UnsubscribeObjectEventResponse
-        - TraitValueUpdate
         - CommandReport
         - objectEvent
         - AlarmEvent
@@ -1557,6 +1572,21 @@ components:
         - SCENE_REMOVED
         - SCENE_UPDATED
         - SCENE_SPACE_UPDATED
+      x-enum-descriptions:
+        DEVICE_SPACE_UPDATED: 设备所属空间发生变化。
+        SPACE_ADDED: 空间新增。
+        SPACE_REMOVED: 空间删除。
+        SPACE_UPDATED: 空间更新。
+        AUTOMATION_ADDED: 自动化新增。
+        AUTOMATION_REMOVED: 自动化删除。
+        AUTOMATION_UPDATED: 自动化更新。
+        AUTOMATION_SPACE_UPDATED: 自动化所属空间变化。
+        AUTOMATION_EXECUTION_RESULT: 自动化执行结果。
+        SCENE_EXECUTION_RESULT: 场景执行结果。
+        SCENE_ADDED: 场景新增。
+        SCENE_REMOVED: 场景删除。
+        SCENE_UPDATED: 场景更新。
+        SCENE_SPACE_UPDATED: 场景所属空间变化。
     ObjectEventSubscriptionItem:
       type: object
       required:
@@ -1578,11 +1608,16 @@ components:
             type: string
             minLength: 1
           description: |
+            对象 ID 列表。按事件类型填写设备、空间、自动化或场景 ID。 
+
             订阅时，不传、null 或空数组表示当前权限范围内全部对象；非空时只匹配指定对象。
+
             取消订阅时，不传、null 或空数组表示清空对应 eventTypes，非空时只移除指定对象。
+
             同一 WebSocket 会话在每个 eventType 下最多累计订阅 1000 个不同 objectId。
+            
             objectIds 非空时，同一项的 eventTypes 必须属于同一公开 ID 家族（设备、空间、自动化/场景）；SPACE_ADDED、AUTOMATION_ADDED、SCENE_ADDED 只支持全部对象语义。
-            协议不使用 scope 字段；全部对象语义统一由 objectIds 表示。
+
     SubscribeObjectEventRequestMessage:
       allOf:
         - $ref: '#/components/schemas/BaseRequest'

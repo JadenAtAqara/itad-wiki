@@ -58,6 +58,8 @@ channels:
         $ref: '#/components/messages/SubscribeTraitValueRequest'
       SubscribeTraitValueResponse:
         $ref: '#/components/messages/SubscribeTraitValueResponse'
+      TraitValueUpdate:
+        $ref: '#/components/messages/TraitValueUpdate'
       UnsubscribeTraitValueRequest:
         $ref: '#/components/messages/UnsubscribeTraitValueRequest'
       UnsubscribeTraitValueResponse:
@@ -66,29 +68,27 @@ channels:
         $ref: '#/components/messages/SubscribeEventRequest'
       SubscribeEventResponse:
         $ref: '#/components/messages/SubscribeEventResponse'
+      AlarmEvent:
+        $ref: '#/components/messages/AlarmEvent'
       UnsubscribeEventRequest:
         $ref: '#/components/messages/UnsubscribeEventRequest'
       UnsubscribeEventResponse:
         $ref: '#/components/messages/UnsubscribeEventResponse'
-      AlarmEvent:
-        $ref: '#/components/messages/AlarmEvent'
       SubscribeObjectEventRequest:
         $ref: '#/components/messages/SubscribeObjectEventRequest'
       SubscribeObjectEventResponse:
         $ref: '#/components/messages/SubscribeObjectEventResponse'
+      ObjectEvent:
+        $ref: '#/components/messages/ObjectEvent'
       UnsubscribeObjectEventRequest:
         $ref: '#/components/messages/UnsubscribeObjectEventRequest'
       UnsubscribeObjectEventResponse:
         $ref: '#/components/messages/UnsubscribeObjectEventResponse'
-      TraitValueUpdate:
-        $ref: '#/components/messages/TraitValueUpdate'
       CommandReport:
         $ref: '#/components/messages/CommandReport'
-      ObjectEvent:
-        $ref: '#/components/messages/ObjectEvent'
       ErrorMessage:
         $ref: '#/components/messages/ErrorMessage'
-
+        
 operations:
   sendAuthRequest:
     action: send
@@ -160,31 +160,6 @@ operations:
 
 components:
   messages:
-    CommandReport:
-      name: CommandReport
-      title: Gateway command execution result
-      summary: Sent with v1 device-level or full-device subscriptions, preserving the original gateway result without indicating that the device physical action has been completed.
-      payload:
-        $ref: '#/components/schemas/PushCommandReportMessageV1'
-      examples:
-        - name: command_report
-          payload:
-            type: CommandReport
-            version: v1
-            msgId: report-example
-            studioId: studio-example
-            eventId: 449fd6f6-c52c-4488-a3a2-828db5f9ab6e
-            code: 0
-            message: success
-            data:
-              deviceId: device-1
-              sequence: 1
-              timestamp: 1793577600000
-              did: gateway-device-example
-              reportTime: null
-              source: null
-              data: { '2.148.33050.0': '0' }
-              content: { '0': 0, '2': 2 }
     AuthRequest:
       name: AuthRequest
       title: WebSocket authentication request
@@ -200,7 +175,6 @@ components:
             data:
               authType: token
               token: '<accessToken>'
-              deviceUniqueId: '<deviceUniqueId>'
               clientId: '<clientId>'
     AuthResponse:
       name: AuthResponse
@@ -317,6 +291,60 @@ components:
         location: $message.payload#/msgId
       payload:
         $ref: '#/components/schemas/SubscribeTraitValueResponseMessage'
+    TraitValueUpdate:
+      name: TraitValueUpdate
+      title: Trait Value Update
+      payload:
+        $ref: '#/components/schemas/PushTraitValueUpdateMessageV1'
+      examples:
+        - name: Device Online Status Changed
+          payload:
+            type: TraitValueUpdate
+            eventId: 449fd6f6-c52c-4488-a3a2-000000000001
+            studioId: studio-example
+            version: v1
+            msgId: '10810'
+            data:
+              - deviceId: '57190441014857'
+                endpointId: 0
+                functionCode: BasicInformation
+                traitCode: Reachable
+                value: true
+                time: 1794637886352
+            code: 0
+            message: ''
+        - name: Playback State Changed
+          payload:
+            type: TraitValueUpdate
+            eventId: 449fd6f6-c52c-4488-a3a2-000000000002
+            studioId: studio-example
+            version: v1
+            msgId: '10811'
+            data:
+              - deviceId: '57190441014857'
+                endpointId: 3
+                functionCode: MediaPlayback
+                traitCode: TargetPlaybackState
+                value: '0'
+                time: 1754469720110
+            code: 0
+            message: ''
+        - name: Device Name Updated
+          payload:
+            type: TraitValueUpdate
+            eventId: 449fd6f6-c52c-4488-a3a2-000000000003
+            studioId: studio-example
+            version: v1
+            msgId: '10812'
+            data:
+              - deviceId: device-1
+                endpointId: 0
+                functionCode: EndpointLabel
+                traitCode: EndpointName
+                value: Living Room Light
+                time: 1789113600000
+            code: 0
+            message: ''    
     UnsubscribeTraitValueRequest:
       name: UnsubscribeTraitValueRequest
       title: Unsubscribe from specified Trait values request
@@ -359,36 +387,6 @@ components:
           data: ''
           code: 0
           message: success
-    UnsubscribeEventRequest:
-      name: UnsubscribeEventRequest
-      title: Unsubscribe Alarm Request
-      payload:
-        $ref: '#/components/schemas/UnsubscribeEventRequestMessage'
-      description: Send after authentication. `data` must be a non-empty array of event types. Ordinary clients use `ALARM`. The subscription applies to the current session only, and repeated requests are idempotent. This does not affect device, Trait, or object event subscriptions.
-      examples:
-      - name: unsubscribeAlarmRequest
-        payload:
-          type: UnsubscribeEventRequest
-          version: v1
-          msgId: alarm-unsubscribe-1
-          data:
-          - ALARM
-    UnsubscribeEventResponse:
-      name: UnsubscribeEventResponse
-      title: Unsubscribe Alarm Response
-      payload:
-        $ref: '#/components/schemas/UnsubscribeEventResponseMessage'
-      correlationId:
-        location: $message.payload#/msgId
-      examples:
-      - name: unsubscribeAlarmResponse
-        payload:
-          type: UnsubscribeEventResponse
-          version: v1
-          msgId: alarm-unsubscribe-1
-          data: ''
-          code: 0
-          message: success
     AlarmEvent:
       name: AlarmEvent
       title: Raw Alarm Push
@@ -423,6 +421,36 @@ components:
                 alarmText: Smoke detected
                 alarmValue: 'On'
                 sourceStateText: Triggered
+          code: 0
+          message: success    
+    UnsubscribeEventRequest:
+      name: UnsubscribeEventRequest
+      title: Unsubscribe Alarm Request
+      payload:
+        $ref: '#/components/schemas/UnsubscribeEventRequestMessage'
+      description: Send after authentication. `data` must be a non-empty array of event types. Ordinary clients use `ALARM`. The subscription applies to the current session only, and repeated requests are idempotent. This does not affect device, Trait, or object event subscriptions.
+      examples:
+      - name: unsubscribeAlarmRequest
+        payload:
+          type: UnsubscribeEventRequest
+          version: v1
+          msgId: alarm-unsubscribe-1
+          data:
+          - ALARM
+    UnsubscribeEventResponse:
+      name: UnsubscribeEventResponse
+      title: Unsubscribe Alarm Response
+      payload:
+        $ref: '#/components/schemas/UnsubscribeEventResponseMessage'
+      correlationId:
+        location: $message.payload#/msgId
+      examples:
+      - name: unsubscribeAlarmResponse
+        payload:
+          type: UnsubscribeEventResponse
+          version: v1
+          msgId: alarm-unsubscribe-1
+          data: ''
           code: 0
           message: success
     SubscribeObjectEventRequest:
@@ -476,80 +504,6 @@ components:
         location: $message.payload#/msgId
       payload:
         $ref: '#/components/schemas/SubscribeObjectEventResponseMessage'
-    UnsubscribeObjectEventRequest:
-      name: UnsubscribeObjectEventRequest
-      title: Unsubscribe from space, device-space relationship, and automation object events
-      summary: Removes specified object rules or clears specified event types for the current WebSocket session.
-      description: |
-        When `objectIds` is non-empty, only the specified objects are removed; when omitted, null, or an empty array, all object rules for the corresponding `eventTypes` are cleared.
-        All-object subscriptions do not support excluding selected objects. To switch from all objects to specified objects, first clear the event type and then send a new specified-object subscription.
-      payload:
-        $ref: '#/components/schemas/UnsubscribeObjectEventRequestMessage'
-      examples:
-        - name: unsubscribeSelectedObject
-          payload:
-            type: UnsubscribeObjectEventRequest
-            version: v1
-            msgId: object-unsubscribe-1
-            data:
-              - eventTypes:
-                  - AUTOMATION_UPDATED
-                objectIds:
-                  - automation-1
-        - name: clearEventType
-          payload:
-            type: UnsubscribeObjectEventRequest
-            version: v1
-            msgId: object-unsubscribe-2
-            data:
-              - eventTypes:
-                  - AUTOMATION_UPDATED
-                objectIds: []
-    UnsubscribeObjectEventResponse:
-      name: UnsubscribeObjectEventResponse
-      title: Object-event unsubscription response
-      correlationId:
-        location: $message.payload#/msgId
-      payload:
-        $ref: '#/components/schemas/UnsubscribeObjectEventResponseMessage'
-    TraitValueUpdate:
-      name: TraitValueUpdate
-      title: Trait value change push
-      payload:
-        $ref: '#/components/schemas/PushTraitValueUpdateMessageV1'
-      examples:
-        - name: traitValueUpdate
-          payload:
-            type: TraitValueUpdate
-            eventId: 449fd6f6-c52c-4488-a3a2-000000000002
-            studioId: studio-example
-            version: v1
-            msgId: '1754469720110'
-            data:
-              - deviceId: '57190441014857'
-                endpointId: 3
-                functionCode: MediaPlayback
-                traitCode: TargetPlaybackState
-                value: '0'
-                time: 1754469720110
-            code: 0
-            message: ''
-        - name: deviceNameUpdated
-          payload:
-            type: TraitValueUpdate
-            eventId: 449fd6f6-c52c-4488-a3a2-000000000003
-            studioId: studio-example
-            version: v1
-            msgId: '1789113600000'
-            data:
-              - deviceId: device-1
-                endpointId: 0
-                functionCode: EndpointLabel
-                traitCode: EndpointName
-                value: Living Room Light
-                time: 1789113600000
-            code: 0
-            message: ''
     ObjectEvent:
       name: objectEvent
       title: Object event push
@@ -576,7 +530,7 @@ components:
       payload:
         $ref: '#/components/schemas/PushObjectEventMessageV1'
       examples:
-        - name: scene_added
+        - name: Scene Added
           payload:
             type: "objectEvent"
             version: "v1"
@@ -594,7 +548,7 @@ components:
                 name: "Movie scene"
                 createTime: 1793836800000
                 spaces: []
-        - name: scene_removed
+        - name: Scene Removed
           payload:
             type: "objectEvent"
             version: "v1"
@@ -612,7 +566,7 @@ components:
                 name: "Movie scene"
                 createTime: 1793836800000
                 spaces: []
-        - name: scene_updated
+        - name: Scene Updated
           payload:
             type: "objectEvent"
             version: "v1"
@@ -630,7 +584,7 @@ components:
                 name: "Movie scene"
                 createTime: 1793836800000
                 spaces: []
-        - name: scene_space_updated
+        - name: Scene's Space Updated
           payload:
             type: "objectEvent"
             version: "v1"
@@ -647,7 +601,7 @@ components:
                 objectId: "auto_scene001"
                 oldSpaceIds: ["space-old"]
                 spaces: [{"spaceId": "space-new", "name": "会议室", "parentSpaceId": null}]
-        - name: deviceAdded
+        - name: Device Added
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000004
@@ -670,7 +624,7 @@ components:
                 time: 1754469720110
             code: 0
             message: success
-        - name: deviceSpaceUpdated
+        - name: Device's Space Updated
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000005
@@ -691,7 +645,7 @@ components:
                   parentSpaceId: home-1
             code: 0
             message: success
-        - name: automationUpdated
+        - name: Automation Updated
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000006
@@ -713,7 +667,7 @@ components:
                     triggerName: Enable home mode
             code: 0
             message: success
-        - name: automationSpaceUnassigned
+        - name: Automation's Space Unassigned
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000007
@@ -731,7 +685,7 @@ components:
                 spaces: []
             code: 0
             message: success
-        - name: device_removed
+        - name: Device Removed
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000008
@@ -753,7 +707,7 @@ components:
                 time: 1793577600000
             code: 0
             message: success
-        - name: device_endpoint_added
+        - name: Device Endpoint Added
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000009
@@ -776,7 +730,7 @@ components:
                 time: 1793577600000
             code: 0
             message: success
-        - name: device_endpoint_removed
+        - name: Device Endpoint Removed
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-00000000000a
@@ -798,7 +752,7 @@ components:
                 time: 1793577600000
             code: 0
             message: success
-        - name: device_trait_parameter_update
+        - name: Device Trait Parameter Update
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-00000000000b
@@ -832,7 +786,7 @@ components:
                   unit: '%'
             code: 0
             message: success
-        - name: space_added
+        - name: Space Added
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-00000000000c
@@ -850,7 +804,7 @@ components:
                 parentSpaceId: home-1
             code: 0
             message: success
-        - name: space_removed
+        - name: Space Removed
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-00000000000d
@@ -868,7 +822,7 @@ components:
                 parentSpaceId: home-1
             code: 0
             message: success
-        - name: space_updated
+        - name: Space Updated
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-00000000000e
@@ -886,7 +840,7 @@ components:
                 parentSpaceId: home-1
             code: 0
             message: success
-        - name: automation_added
+        - name: Automation Added
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-00000000000f
@@ -906,7 +860,7 @@ components:
                 manualTriggers: []
             code: 0
             message: success
-        - name: automation_removed
+        - name: Automation Removed
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000010
@@ -926,7 +880,7 @@ components:
                 manualTriggers: []
             code: 0
             message: success
-        - name: automationSpaceAssigned
+        - name: Automation Space Assigned
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000011
@@ -953,7 +907,7 @@ components:
                     parentSpaceId: home-1
             code: 0
             message: success
-        - name: deviceSpaceUnassigned
+        - name: Device Space Unassigned
           payload:
             type: objectEvent
             eventId: 449fd6f6-c52c-4488-a3a2-000000000012
@@ -970,7 +924,7 @@ components:
                 space: null
             code: 0
             message: success
-        - name: sceneActionResult
+        - name: Scene Action Result
           payload:
             type: objectEvent
             version: v1
@@ -1008,7 +962,7 @@ components:
                 - spaceId: space-example
                   name: Living room
                   parentSpaceId: null
-        - name: automationNativeInvocationUnknown
+        - name: Automation Native Invocation Unknown
           payload:
             type: objectEvent
             version: v1
@@ -1037,7 +991,68 @@ components:
                   triggerSubjectName: null
                   triggerResourceId: null
                   triggerResourceName: null
-                spaces: []
+                spaces: []    
+    UnsubscribeObjectEventRequest:
+      name: UnsubscribeObjectEventRequest
+      title: Unsubscribe from space, device-space relationship, and automation object events
+      summary: Removes specified object rules or clears specified event types for the current WebSocket session.
+      description: |
+        When `objectIds` is non-empty, only the specified objects are removed; when omitted, null, or an empty array, all object rules for the corresponding `eventTypes` are cleared.
+        All-object subscriptions do not support excluding selected objects. To switch from all objects to specified objects, first clear the event type and then send a new specified-object subscription.
+      payload:
+        $ref: '#/components/schemas/UnsubscribeObjectEventRequestMessage'
+      examples:
+        - name: unsubscribeSelectedObject
+          payload:
+            type: UnsubscribeObjectEventRequest
+            version: v1
+            msgId: object-unsubscribe-1
+            data:
+              - eventTypes:
+                  - AUTOMATION_UPDATED
+                objectIds:
+                  - automation-1
+        - name: clearEventType
+          payload:
+            type: UnsubscribeObjectEventRequest
+            version: v1
+            msgId: object-unsubscribe-2
+            data:
+              - eventTypes:
+                  - AUTOMATION_UPDATED
+                objectIds: []
+    UnsubscribeObjectEventResponse:
+      name: UnsubscribeObjectEventResponse
+      title: Object-event unsubscription response
+      correlationId:
+        location: $message.payload#/msgId
+      payload:
+        $ref: '#/components/schemas/UnsubscribeObjectEventResponseMessage'
+    CommandReport:
+      name: CommandReport
+      title: Gateway command execution result
+      summary: Sent with v1 device-level or full-device subscriptions, preserving the original gateway result without indicating that the device physical action has been completed.
+      payload:
+        $ref: '#/components/schemas/PushCommandReportMessageV1'
+      examples:
+        - name: command_report
+          payload:
+            type: CommandReport
+            version: v1
+            msgId: report-example
+            studioId: studio-example
+            eventId: 449fd6f6-c52c-4488-a3a2-828db5f9ab6e
+            code: 0
+            message: success
+            data:
+              deviceId: device-1
+              sequence: 1
+              timestamp: 1793577600000
+              did: gateway-device-example
+              reportTime: null
+              source: null
+              data: { '2.148.33050.0': '0' }
+              content: { '0': 0, '2': 2 }
 
     ErrorMessage:
       name: ErrorMessage
@@ -1557,6 +1572,21 @@ components:
         - SCENE_REMOVED
         - SCENE_UPDATED
         - SCENE_SPACE_UPDATED
+      x-enum-descriptions:
+        DEVICE_SPACE_UPDATED: The device's space changed.
+        SPACE_ADDED: Space added.
+        SPACE_REMOVED: Space removed.
+        SPACE_UPDATED: Space updated.
+        AUTOMATION_ADDED: Automation added.
+        AUTOMATION_REMOVED: Automation removed.
+        AUTOMATION_UPDATED: Automation updated.
+        AUTOMATION_SPACE_UPDATED: The automation's space changed.
+        AUTOMATION_EXECUTION_RESULT: Automation execution result.
+        SCENE_EXECUTION_RESULT: Scene execution result.
+        SCENE_ADDED: Scene added.
+        SCENE_REMOVED: Scene removed.
+        SCENE_UPDATED: Scene updated.
+        SCENE_SPACE_UPDATED: The scene's space changed.
     ObjectEventSubscriptionItem:
       type: object
       required:
@@ -1578,11 +1608,16 @@ components:
             type: string
             minLength: 1
           description: |
+            List of object IDs. Fill in device, space, automation, or scene IDs according to the event types.
+
             When subscribing, omitted, null, or empty objectIds means all objects within the current permission scope; when non-empty, only the specified objects are matched.
+
             When unsubscribing, omitted, null, or empty objectIds means clearing all rules for the corresponding eventTypes; when non-empty, only the specified objects are removed.
+
             Within the same WebSocket session, at most 1000 distinct objectIds may be cumulatively subscribed under each eventType.
+
             When objectIds is non-empty, the eventTypes in the same item must belong to the same public ID family (device, space, automation/scene); SPACE_ADDED, AUTOMATION_ADDED, and SCENE_ADDED support only the all-objects semantic.
-            The protocol does not use a scope field; the all-objects semantic is represented uniformly through objectIds.
+
     SubscribeObjectEventRequestMessage:
       allOf:
         - $ref: '#/components/schemas/BaseRequest'

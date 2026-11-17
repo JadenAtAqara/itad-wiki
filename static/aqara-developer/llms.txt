@@ -79,6 +79,7 @@ Resolve site-relative links against this index's origin. Copy llms.txt on the pa
 - Query Space Energy Consumption Summary: /docs/aqara-developer/data-export-api/get-ems-summary-space
 - Query Multi-Device Energy Consumption Summary: /docs/aqara-developer/data-export-api/get-ems-summary-devices
 - WebSocket API Playground: /docs/aqara-developer/data-export-api/websocket-api/websocket-api
+- Message Structure: /docs/aqara-developer/data-export-api/websocket-api/message-structure
 - MQTT: /docs/aqara-developer/data-export-api/mqtt-api/mqtt-api
 - Integrate the Infrared Remote Control SDK with UI: /docs/aqara-developer/local-studio-development/sdk/infrared/integration
 - Infrared Device Integration: /docs/aqara-developer/local-studio-development/features/infrared-device-integration
