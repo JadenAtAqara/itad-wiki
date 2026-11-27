@@ -1,0 +1,70 @@
+---
+title: "Creating App Dashboards and Application Interfaces"
+description: "Covers creating a project App dashboard, generating, revising and previewing interfaces, standalone application creation with visual editing, and deploying apps to Studio members."
+keywords: ["Aqara Docs", "Aqara Builder", "App dashboard", "application interface", "visual editing", "interface deployment"]
+---
+
+# Creating App Dashboards and Application Interfaces
+
+Goal: Build an interface for customers to view and control their system, review it, then deliver it to the intended members.
+
+
+## Create a Project App Dashboard
+
+1. Open **App Dashboard** in the project.
+2. Choose **Start from Scratch** in an empty list, enter a name and create.
+3. Open the dashboard. **No Dashboard Available** may initially appear; continue generation with Agent.
+4. Search/open existing dashboards and use available card controls to rename or delete them.
+
+## Generate, Modify and Preview
+
+### Specify interface requirements
+
+Tell Agent the rooms, devices, scenes, controls and style. For example, show the living room and entryway with light switches and a Homecoming button. Inspect the mobile preview after generation.
+
+### Review the actual interface
+
+| Check | What to inspect |
+| --- | --- |
+| Name and rooms | Match the project |
+| Controls and scenes | Required buttons, states and actions |
+| Simulated / real data | Simulated label and actual data connection |
+| Layout and wording | Legibility and usability at mobile size |
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/27-dashboard-agent.png" alt="Agent-generated mobile dashboard" style={{ width: '70%' }} />
+
+*Agent's response differed from the actual preview in testing. Use the preview as the review basis.*
+
+### Modify through conversation and download
+
+**Cannot find a download?** Check the browser download list, completed status, dashboard name and file time before opening it. Preview success and download success are separate checks.
+
+Keep the target detail open and specify the exact region and change. Inspect the modified result. Download from the preview, then check the file opens and corresponds to the current dashboard. 
+
+## Standalone Application Creation and Visual Editing
+
+The standalone application workspace and project App Dashboard have different entry points.
+
+### Applications, pages and assets
+
+Create/open an application and select a page. Add pages and resources and configure page navigation. Preview every page, save and reopen to check.
+
+### Visual editing and data-point binding
+
+Select elements to edit layout, styling and assets. For state/control components, select the intended Studio point and configure supported display/action bindings. Verify live updates through subscriptions; control actions require on-site validation.
+
+### Reuse applications and pages
+
+Preview, obtain or reuse available application/page resources from the workspace market. Recheck bindings, images, navigation and target devices after reuse.
+
+ Legacy Application UI menus do not map directly to project dashboards.
+
+## Deploy to Studio Members
+
+1. Confirm the intended members have joined the target Studio.
+2. Use the available dashboard or Studio resource deployment entry, such as **Deploy App dashboard**.
+3. Select Studio and members, check the interface and recipients, then submit.
+4. Inspect assignment results and ask recipients to open the interface.
+5. For incorrect assignment, change or cancel it in Studio resource member-interface management; see [Managing Studio, Project Members and Deployed Resources](managing-studio-and-members.mdx).
+
+Interface deployment targets members. Space-plan deployment requires matching planned devices to physical ones. Check results for each resource type separately.

@@ -1,0 +1,151 @@
+---
+title: "Space App 操作指南"
+description: "说明如何在 Aqara Space App 中连接 Studio、完成设备入网、部署方案、进行安装自检并发起客户验收。"
+keywords: ["Aqara 文档", "Aqara Space", "操作指南", "Studio", "设备入网"]
+---
+#  Space APP 操作指南
+
+本文说明了 Aqara Studio 实施人员（installer）如何在 Aqara Space App 中 [连接 Aqara Studio](#连接-aqara-studo)、[完成设备入网](#设备入网)、[部署方案](#方案部署)、[进行安装自检](#安装自检)并[发起客户验收](#客户验收)。
+
+## 连接 Aqara Studio
+
+### 前提条件
+
+在开始之前，请确保：
+- 已安装 Aqara Studio 官方标准主机（如 [M300](./../aqara-studio/product-knowledge/gateways/edge-hub-m300.mdx)、GX300M、[GX500M](./../aqara-studio/product-knowledge/gateways/edge-box-gx500m.mdx)）且设备上电。
+- 确保手机与该设备处于同一局域网。   
+    :::tip
+    如果搭载于该设备上的 Aqara Studio（以下简称为 **Studio**）未完成初始化，未通过无线方式连接网络，则需要使用网线将该设备连接到路由器。
+    :::
+
+### 操作步骤
+
+1. 打开 **Aqara Space App**，进入对应项目。
+2. 点击 **连接 Studio** 按钮，进入 **发现 Studio** 页面，使用以下任意方式连接 Studio：
+    - Aqara Space App 会自动发现当前网络内可连接的 Studio。选择目标 Studio 后：
+        - 尚未初始化：设置登录账号和密码，完成首次登录。
+        - 已经初始化：输入已有的账号和密码，完成登录。
+
+        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/find-studios.png" alt="自动发现 Studio" style={{width: '30%'}} />
+
+        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/set-password.png" alt="设置 Studio 登录账号" style={{width: '30%'}} />
+
+    - 若已在浏览器中打开并初始化过 Studio，可扫描 Web 页面上的二维码登录，无需再输入账号和密码。
+
+        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/scan-studio-qrcode-1.png" alt="扫码登录 Studio 1" style={{width: '30%'}} />
+        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/scan-studio-qrcode-2.png" alt="扫码登录 Studio 1" style={{width: '30%'}} />
+
+    - 如果同一个局域网内存在太多的 Studio，自动发现结果太多不利于您找到想要连接的 Studio。您也可以直接输入目标 Studio 的 IP 地址，确定需要连接的 Studio 后：
+        - 尚未初始化：设置登录账号和密码，完成首次登录。
+        - 已经初始化：输入已有的账号和密码，完成登录。
+
+        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/find-by-id-1.png" alt="输入 Studio IP 地址 1" style={{width: '30%'}} />
+        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/find-by-id-2.png" alt="输入 Studio IP 地址 1" style={{width: '30%'}} />
+        <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/find-by-id-3.png" alt="输入 Studio IP 地址 1" style={{width: '30%'}} />
+
+3. 连接 Studio 后，可设置 Studio 名称，方便后续交付给业主使用。
+
+
+### （可选）云端连接
+
+如果您希望之后可以通过互联网远程访问 Studio，您需要将此 Studio 连接至 Aqara Cloud。
+
+:::tip
+云端连接时，Studio 云端绑定的账号为当前 Space App 登录的账号，Studio 加入的项目是 Space App当前所在的项目。
+:::
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/cloud-connection-1.png" alt="输入 Studio IP 地址 1" style={{width: '30%'}} />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/cloud-connection-2.png" alt="输入 Studio IP 地址 1" style={{width: '30%'}} />
+
+## 设备入网
+
+您可在 Aqara Space App 中将 WiFi、Zigbee、Matter、BLE 等多种协议的设备接入至 Studio。
+
+### 前提条件
+
+开始前，请在手机上打开蓝牙和 Wi-Fi，并允许 Aqara Space App 使用本地网络。
+
+### 操作步骤
+
+1. 在 Aqara Space App 上一个 Studio 选择 **添加设备** 按钮，进入 **设备发现** 页面。
+2. 该页面会显示已发现的设备，选择一个或多个设备。
+3. 对于需要配对码的设备，需扫码或者手动输入配对码。
+4. 完成 Wi-Fi 配置、Zigbee 网关设置和 Matter 控制器的设置，即可开始批量入网。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/start-plan-deployment.png" alt="添加设备入口" style={{width: '24%'}} />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/device-discovery.png" alt="设备发现" style={{width: '24%'}} />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/input-pairing-code.png" alt="输入配对码" style={{width: '24%'}} />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/network-settings.png" alt="网络设置" style={{width: '24%'}} />
+
+### （可选）切换协议
+
+如果待入网的设备是双协议设备，您希望将该设备切换到另一种设备，流程如下：
+1. 在 **设备发现**页面，选择**切换设备通讯协议**。
+2. 在 **发现双协议设备**页面中，您可以分别切换到 **Zigbee 协议**和 **Matter 协议**，分别列出了正在使用该协议的所有设备，
+3. 选择需要切换协议的设备，即可开始切换到另一种协议。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/enter-protocol-switch-page.png" alt="进入设备协议切换页面" style={{width: '30%'}} />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/dual-protocol-device-list.png" alt="双协议设备列表" style={{width: '30%'}} />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/switch-protocols.png" alt="切换设备协议" style={{width: '30%'}} />
+
+## 方案部署
+
+完成 [连接 Studio](#连接-studo) 和 [设备入网](#设备入网) 后，即可将在 [Aqara Builder](./../aqara-builder/overview.mdx) 上设计的空间方案、自动化和场景部署到 Studio 中，流程如下：
+1. 在项目详情页，点击**方案部署**。
+2. 选择需要部署的方案。
+3. 选择方案部署给哪台 Studio，进入部署流程。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/start-plan-deployment.png" alt="进入方案部署" style={{ width: '30%' }} />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/select-a-plan.png" alt="选择部署方案" style={{ width: '30%' }} />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/select-target-studio.png" style={{ width: '30%' }} />
+
+部署时，需要将空间方案中的虚拟设备和 Studio 中的真实设备进行关联，这样才能让空间图谱和业主真实的家能够映射对照。
+
+如下图所示，系统会先将方案设备能唯一对应 studio 某台真实设备自动关联起来，完成关联的设备在户型图中呈现为绿色，未完成关联的设备在户型图中呈现为橙色，需要实施人员手动关联。可点击户型图上的设备或者点击左下角的统计数据进行手动关联。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/device-connection-1.png" alt="关联方案设备与真实设备 1" style={{ width: '30%' }} />
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-space/zh/device-connection-2.png" alt="关联方案设备与真实设备 2" style={{ width: '30%' }} />
+
+在部署过程中，支持 **设备查找** 和 **设备反向查找**。
+- **设备查找**：点击App上某个设备的查找图标，该设备将进行响应。
+- **设备反向查找**：单击设备按键（各设备按键方式可能不同，详见设备说明书），App 的户型图页面以及关联设备列表页面对应设备将高亮闪烁。
+
+只有当方案中所有设备都关联了studio的真实设备，才可完成部署，部署时，会将方案中的空间图谱和设计的场景与自动化写入到studio中。
+
+## 安装自检
+
+完成所有设备的安装、入网以及studio部署后，可对项目做一次结构化自检，保障项目实施的质量，提高客户验收的通过率。
+
+本项目下所有的安装工单都完结后才允许发起安装自检，将检查以下几项内容：
+- 网络质量检测：   
+    系统自动检测，分为两块内容：   
+    - 网络拓扑质量：包括设备在离线状态、拓扑链路质量。  
+    - 端到端时延：studio→网关→子设备的时延。    
+    系统自动检测后，将得到评分，并列出异常项和调优建议，实施人员可根据自检结果进行整改和调优。
+- 设备检查：   
+    人工现场确认设备实际所在的位置是否与空间图谱中设计的位置一致、设备的命名是否与空间图谱中的设备名称一致。   
+    支持按照空间进行核对，可确认整个空间都正常后一键确认。   
+
+以上两项检查完成后，将得到本次的自检结果，综合评分=网络质量检测分\*50%+设备检查分\*50%。
+
+可选择将自检结果上传到系统进行留存，支持发起多次自检，[Aqara Builder](./../aqara-builder/overview.mdx) 和 ASNP 平台只保留最新的一份。**上传自检报告**是发起 [客户验收](#客户验收) 的前置条件。
+
+## 客户验收
+
+当现场具备验收条件后，按以下顺序完成验收：
+
+1. **服务商**在 **Aqara Space App** 发起验收，填写业主的 **Aqara 登录账号**（手机号或邮箱）。发起后，该账号被邀请加入待验收的 Studio，成为成员。
+2. **业主** 使用同一账号登录 **Aqara Life App**。
+3. **业主**在 Studio 列表中看到这台待验收的 Studio，点击 **进入**，即接受邀请并加入该 Studio。
+4. **业主**在首页看到待验收卡片。完成验收前，可以先正常使用 **Aqara Life App** 试用，再进行验收。   
+    验收内容如下：
+    - **设备确认**：按空间列出设备清单与在线状态，下方附安装实拍图集；
+    - **场景确认**：列出 Studio 内的场景，可执行查看效果；
+5. **业主**对本次验收进行评分（1-5颗星），并选择 **验收通过** 或 **验收不通过**，选不通过时必须填写整改说明。
+6. 验收结果将回传给 Aqara Space App 和 Aqara Builder。
+    - 若验收不通过，**服务商** 可重新在 **Aqara Space App** 发起验收。
+
+:::tip
+- 不管验收通过与否，业主都可继续使用 **Aqara Life App**。
+- 即使验收通过，此时 Studio 尚不归属与业主。业主只是作为成员使用这台 Studio，Aqara Life App 首页将提示业主等待安装方进行收尾。
+:::

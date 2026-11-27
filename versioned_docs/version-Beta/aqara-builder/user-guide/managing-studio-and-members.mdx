@@ -1,0 +1,75 @@
+---
+title: "Managing Studio, Project Members and Deployed Resources"
+description: "Covers project information and collaboration permissions, viewing Studio and entering its console, managing members, reviewing resources and deployment history, and moving, transferring or unbinding Studio."
+keywords: ["Aqara Docs", "Aqara Builder", "Studio management", "project members", "deployment history", "member interfaces"]
+---
+
+# Managing Studio, Project Members and Deployed Resources
+
+Goal: Confirm access, inspect deployed resources and manage the interfaces used by members.
+
+
+## Project Information and Collaboration
+
+### Edit project information
+
+Edit name and description in **Settings**, select **Save**, and check the list. The test project returned **Project saved**.
+
+### Project members
+
+In team projects, use **Members** to inspect people, roles and permissions and perform allowed invitations, changes or removals. If a personal project displays **Member management is available for team projects**, use an eligible team project.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/06-production-members.png" alt="Personal-project member management restriction" style={{ width: '70%' }} />
+
+### Delete a project
+
+If deletion is available, first resolve contained Studios and other blocking objects, then review confirmation. Legacy Default/nonempty projects had restrictions; follow current project rules.
+
+## View Studio and Open Console
+
+1. Open project **Studio** and check names, connectivity and accessible targets.
+2. Open the target and verify its project.
+3. Use **Console** to access available device, spatial and automation management.
+4. Check the Studio and permissions before running operations.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/08-production-studio-detail.png" alt="Production Studio details and resources" style={{ width: '70%' }} />
+
+## Manage Studio Members
+
+### Invite and accept
+
+Open **Studio Members → Invite**, enter the account and select an offered role. Check Studio before sending. Confirm membership status; use the available withdrawal option for pending invitations.
+
+### Roles and removal
+
+Confirm identity and role before allowed role changes or removal. Project permissions and direct Studio access are separate checks. Use currently displayed role names rather than assuming legacy Admin/Operator labels.
+
+## Resources and Deployment History
+
+### Deployed resources
+
+Open **Resources → Deployed Resources** and inspect spatial/interface resource names and available information. Deployment entries may separately deploy space plans and dashboards.
+
+### History records
+
+Open **Deployment History** and check resource, source, operation and time; inspect details where available.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/09-production-history.png" alt="Existing production dashboard deployment history" style={{ width: '70%' }} />
+
+*Existing records were reviewed read-only; no new production-household deployment was performed.*
+
+## Manage Members' Interfaces
+
+Use the member-interface management entry in Studio resources to inspect assignments and current usage. Select an interface for a member and save; reselect to change it or remove the assignment to cancel it. Ask the member to reopen and confirm.
+
+Legacy Studio-resource UI management remains a task reference; check the current entry and the deployment prerequisites in [Creating App Dashboards and Application Interfaces](creating-app-dashboards.mdx).
+
+## Move, Transfer and Unbind from Cloud
+
+| Operation | Procedure | Check afterward |
+| --- | --- | --- |
+| Move Studio | Open Move in details/settings, select destination project, review and confirm | Same Studio appears in destination |
+| Change team/ownership | Use an authorized transfer entry, choose the recipient and review impact | New ownership, access and resource visibility |
+| Cloud unbinding | Open unbind, verify Studio and impact, then confirm | Cloud association and subsequent access |
+
+These have implementation or legacy-operation foundations; no submission was performed during this review. Follow current permissions and impact messages.

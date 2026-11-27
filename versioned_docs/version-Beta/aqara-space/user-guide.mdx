@@ -1,0 +1,124 @@
+---
+title: "Space App User Guide"
+description: "How installers connect Studio, onboard devices, deploy solutions, run installation self-checks, and complete customer acceptance in the Aqara Space App."
+keywords: ["Aqara Docs", "Aqara Space", "User Guide", "Studio", "Device Onboarding"]
+---
+# Space App User Guide
+
+This document explains how an Aqara Studio installer uses the Aqara Space App to [connect Aqara Studio](#connect-aqara-studio), [onboard devices](#device-onboarding), [deploy a solution](#solution-deployment), [run an installation self-check](#installation-self-check), and [initiate customer acceptance](#customer-acceptance).
+
+## Connect Aqara Studio
+
+### Prerequisites
+
+Before you start, make sure that:
+
+- An official Aqara Studio hub is installed and powered on, such as the [M300](./../aqara-studio/product-knowledge/gateways/edge-hub-m300.mdx), GX300M, or [GX500M](./../aqara-studio/product-knowledge/gateways/edge-box-gx500m.mdx).
+- The phone and the hub are on the same local network.
+
+    :::tip
+    If Aqara Studio on the hub (referred to as **Studio** below) has not been initialized and is not connected to the network wirelessly, connect the hub to the router with an Ethernet cable.
+    :::
+
+### Steps
+
+1. Open the **Aqara Space App** and enter the corresponding project.
+2. Tap **Connect Studio** to open the **Discover Studio** page, then connect Studio in one of the following ways:
+    - The Aqara Space App automatically discovers connectable Studios on the current network. After you select the target Studio:
+        - Not initialized: set the sign-in account and password to complete the first sign-in.
+        - Already initialized: enter the existing account and password to sign in.
+    - If you have already opened and initialized Studio in a browser, scan the QR code on the web page to sign in without entering the account and password.
+    - If too many Studios are on the same local network and the discovery list is hard to use, enter the IP address of the target Studio. After you confirm the Studio to connect:
+        - Not initialized: set the sign-in account and password to complete the first sign-in.
+        - Already initialized: enter the existing account and password to sign in.
+
+3. After the Studio is connected, you can set the Studio name so it is easier to hand over to the homeowner later.
+
+### (Optional) Cloud connection
+
+To access Studio remotely over the internet later, connect this Studio to Aqara Cloud.
+
+:::tip
+During cloud connection, the account bound to the Studio in the cloud is the account currently signed in to the Space App, and the project the Studio joins is the project currently open in the Space App.
+:::
+
+## Device Onboarding
+
+In the Aqara Space App, you can onboard devices that use WiFi, Zigbee, Matter, BLE, and other protocols to Studio.
+
+### Prerequisites
+
+Before you start, turn on Bluetooth and Wi-Fi on the phone, and allow the Aqara Space App to use the local network.
+
+### Steps
+
+1. On a Studio in the Aqara Space App, tap **Add Device** to open the **Device Discovery** page.
+2. The page lists discovered devices. Select one or more devices.
+3. For a device that requires a pairing code, scan the code or enter it manually.
+4. Complete the Wi-Fi configuration, the Zigbee gateway setup, and the Matter controller setup, and then start batch onboarding.
+
+### (Optional) Switch protocol
+
+If a device to onboard supports two protocols and you want to switch it to the other protocol:
+
+1. On the **Device Discovery** page, select **Switch device communication protocol**.
+2. On the **Discover dual-protocol devices** page, switch between **Zigbee** and **Matter** to list the devices currently using each protocol.
+3. Select the device whose protocol you want to switch, and start the switch.
+
+## Solution Deployment
+
+After you [connect Studio](#connect-aqara-studio) and [onboard devices](#device-onboarding), you can deploy the spatial solution, automations, and scenes designed on [Aqara Builder](./../aqara-builder/overview.mdx) to Studio:
+
+1. On the project details page, tap **Deploy Solution**.
+2. Select the solution to deploy.
+3. Select which Studio to deploy it to, and enter the deployment flow.
+
+During deployment, the virtual devices in the spatial solution need to be associated with the real devices in the Studio, so that the spatial graph and the homeowner's real home can be mapped to each other.
+
+As shown below, the system first automatically associates solution devices that can be uniquely matched to a real device in the Studio. Associated devices appear in green on the floor plan, while unassociated devices appear in orange and require manual association by the installer. You can tap a device on the floor plan or tap the statistics in the lower-left corner to associate devices manually.
+
+During deployment, device finding and reverse device finding are supported.
+
+- **Device finding**: tap the find icon of a device in the App, and the device will respond.
+- **Reverse device finding**: press the device's button once (the button may vary by device; see the device manual for details), and the corresponding device will blink and highlight on the App's floor plan page and in the associated device list.
+
+Deployment can only be completed when all devices in the solution are associated with real devices in the Studio. Upon deployment, the spatial graph and the designed scenes and automations in the solution are written into the Studio.
+
+## Installation Self-Check
+
+After all devices are installed and onboarded and the Studio deployment is complete, a structured self-check can be performed on the project to ensure implementation quality and improve the acceptance pass rate.
+
+Installation self-check can only be initiated after all installation work orders under this project are completed. The following items will be checked:
+
+- Network quality test:
+    The system performs this test automatically. It covers two parts:
+    - Network topology quality: device online/offline status and topology link quality.
+    - End-to-end latency: latency from Studio → gateway → sub-device.
+    After the automatic test, a score is generated, with abnormal items and optimization suggestions listed. Installers can make corrections and optimizations based on the self-check results.
+- Device check:
+    On site, confirm that each device's actual location matches its designed position in the spatial graph, and that the device name matches the name in the spatial graph.
+    Checking by space is supported. Once an entire space is confirmed to be normal, it can be confirmed with one tap.
+
+After both checks are completed, the self-check result is produced. Overall score = network quality test score × 50% + device check score × 50%.
+
+You can upload the self-check result to the system for record. Multiple self-checks are supported. [Aqara Builder](./../aqara-builder/overview.mdx) and the ASNP platform keep only the latest one. **Uploading the self-check report** is a prerequisite for initiating [customer acceptance](#customer-acceptance).
+
+## Customer Acceptance
+
+When the site is ready for acceptance, complete acceptance in the following order:
+
+1. The **service provider** initiates acceptance in the **Aqara Space App** and fills in the homeowner's **Aqara login account** (phone number or email). Once initiated, that account is invited to join the Studio awaiting acceptance as a member.
+2. The **homeowner** signs in to the **Aqara Life App** with the same account.
+3. The **homeowner** sees this Studio awaiting acceptance in the Studio list. Tapping **Enter** accepts the invitation and joins the Studio as a member.
+4. The **homeowner** sees a card awaiting acceptance on the home page. Before completing acceptance, the homeowner can use the **Aqara Life App** normally and try it out first.
+    Acceptance covers:
+    - **Device confirmation**: a device list grouped by space with online status, accompanied by on-site installation photos.
+    - **Scene confirmation**: scenes in the Studio are listed and can be executed to view the effects.
+5. The **homeowner** rates the acceptance (1–5 stars) and selects **Accepted** or **Rejected**. If rejected, a rectification description must be filled in.
+6. The acceptance result is sent back to the Aqara Space App and Aqara Builder.
+    - If the acceptance is rejected, the **service provider** can initiate acceptance again in the **Aqara Space App**.
+
+:::tip
+- Whether the acceptance is accepted or rejected, the homeowner can continue using the **Aqara Life App**.
+- Even if the acceptance is accepted, the Studio does not belong to the homeowner yet. The homeowner only uses the Studio as a member, and the Aqara Life App home page reminds the homeowner to wait for the installer to finish the final handover.
+:::
