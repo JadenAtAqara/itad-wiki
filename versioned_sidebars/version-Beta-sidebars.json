@@ -247,9 +247,14 @@
         "tab": "product-knowledge"
       },
       "items": [
+        "aqara-studio/product-knowledge/sensors/door-and-window-sensor-t1",
+        "aqara-studio/product-knowledge/sensors/presence-multi-sensor-fp300",
         "aqara-studio/product-knowledge/sensors/presence-sensor-pr330p",
+        "aqara-studio/product-knowledge/sensors/smoke-alarm-pr170p",
         "aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400",
-        "aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400-pro"
+        "aqara-studio/product-knowledge/sensors/spatial-multi-sensor-fp400-pro",
+        "aqara-studio/product-knowledge/sensors/temperature-and-humidity-sensor-t1",
+        "aqara-studio/product-knowledge/sensors/water-leak-sensor-t1"
       ]
     },
     {
@@ -259,7 +264,9 @@
         "tab": "product-knowledge"
       },
       "items": [
-        "aqara-studio/product-knowledge/controllers/din-rail-module-4-channels-aw110k"
+        "aqara-studio/product-knowledge/controllers/din-rail-module-4-channels-aw110k",
+        "aqara-studio/product-knowledge/controllers/valve-controller-t1",
+        "aqara-studio/product-knowledge/controllers/wireless-mini-switch-t1"
       ]
     },
     {
@@ -828,71 +835,18 @@
     "aqara-builder/overview",
     {
       "type": "category",
-      "label": "Builder Lab",
-      "link": {
-        "type": "generated-index",
-        "keywords": ["builder-lab"]
-      },
+      "label": "User Guide",
       "items": [
-        {
-          "type": "category",
-          "label": "Space Plan",
-          "link": {
-            "type": "generated-index",
-            "keywords": ["space-plan"]
-          },
-          "items": [
-            "aqara-builder/builder-lab/space-plan/create-a-space-plan",
-            {
-              "type": "category",
-              "label": "Layout and Device Placement",
-              "link": {
-                "type": "generated-index",
-                "keywords": ["layout-and-device-placement"]
-              },
-              "items": [
-                "aqara-builder/builder-lab/space-plan/draw-the-floor-plan-and-rooms",
-                "aqara-builder/builder-lab/space-plan/add-furniture-and-smart-devices",
-                "aqara-builder/builder-lab/space-plan/add-light-strips",
-                "aqara-builder/builder-lab/space-plan/add-switches"
-              ]
-            },
-            "aqara-builder/builder-lab/space-plan/design-scenes-and-automations",
-            "aqara-builder/builder-lab/space-plan/deploy-a-space-plan"
-          ]
-        },
-        {
-          "type": "category",
-          "label": "Application UI",
-          "link": {
-            "type": "generated-index",
-            "keywords": ["application-ui"]
-          },
-          "items": [
-            "aqara-builder/builder-lab/application-ui/create-and-edit-an-application-ui",
-            "aqara-builder/builder-lab/application-ui/deploy-an-application-ui"
-          ]
-        },
-        "aqara-builder/builder-lab/builder-lab-faq"
+        "aqara-builder/user-guide/getting-started-with-builder",
+        "aqara-builder/user-guide/creating-space-plans",
+        "aqara-builder/user-guide/placing-smart-devices-and-spatial-graph",
+        "aqara-builder/user-guide/designing-scenes-and-automations",
+        "aqara-builder/user-guide/creating-app-dashboards",
+        "aqara-builder/user-guide/linking-studio-matching-devices-and-deploying",
+        "aqara-builder/user-guide/managing-studio-and-members",
+        "aqara-builder/user-guide/plugins-assets-and-templates"
       ]
-    },
-    {
-      "type": "category",
-      "label": "Studio Manager",
-      "link": {
-        "type": "generated-index",
-        "keywords": ["studio-manager"]
-      },
-      "items": [
-        "aqara-builder/studio-manager/manage-projects",
-        "aqara-builder/studio-manager/move-studio",
-        "aqara-builder/studio-manager/manage-studio-members",
-        "aqara-builder/studio-manager/view-deployed-studio-resources",
-        "aqara-builder/studio-manager/manage-the-ui-used-by-members",
-        "aqara-builder/studio-manager/disconnect-a-studio-from-the-cloud",
-        "aqara-builder/studio-manager/studio-manager-faq"
-      ]
-    },
+    },        
     {
       "type": "category",
       "label": "Builder Agent",
@@ -906,6 +860,10 @@
         "aqara-builder/builder-agent/from-request-to-solution-end-to-end-workflow"
       ]
     }
+  ],
+  "aqaraSpaceSidebar": [
+    "aqara-space/overview",
+    "aqara-space/user-guide"
   ],
   "aqaraLifeSidebar": [
     "aqara-life/overview",
