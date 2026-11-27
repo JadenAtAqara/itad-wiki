@@ -1,0 +1,99 @@
+---
+title: "开始使用 Builder：项目与 Agent"
+description: "说明如何登录 Aqara Builder，创建、搜索和切换项目，认识项目工作台，并用 Aqara Agent 发起需求、上传附件、核对生成结果和处理失败。"
+keywords: ["Aqara 文档", "Aqara Builder", "项目创建", "Agent 对话", "登录与地区", "项目工作台"]
+---
+
+# 开始使用 Builder：项目与 Agent
+
+本文档说明如何登录 Aqara Builder，创建、搜索和切换项目，认识项目工作台，并用 Aqara Agent 发起需求、上传附件、核对生成结果和处理失败。
+
+## 登录与选择项目
+
+### 登录 Aqara Builder
+
+1. 访问 [Aqara Builder](https://builder.aqara.com)。选择地区，通过密码或验证码方式登录 Aqara 账号。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/visit-aqara-builder-and-login.png" alt="登录 Aqara Builder" style={{ width: '80%' }} />
+
+2. 登录后进入 **Home（首页）**。先核对账号、地区；不同环境中的项目和资源需要分别确认。
+
+### 创建、搜索与切换项目
+
+从左侧边栏进入 **项目** 页面，在这个页面，您可以 [创建新的项目](#创建项目) 或者 [搜索已有的项目](#搜索项目)。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/enter-project.png" alt="进入项目页面" style={{ width: '80%' }} />
+
+#### 创建项目
+
+如果您希望创建一个新的项目：
+1. 点击 **新建项目** 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/new-project.png" alt="新建项目" style={{ width: '80%' }} />
+
+2. 填写名称、描述及地区，点击 **创建** 按钮。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/new-project-info.png" alt="新建项目信息" style={{ width: '80%' }} />
+
+3. 创建后从项目列表进入此项目。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/enter
+    -new-project.png" alt="进入新建项目" style={{ width: '80%' }} />
+
+    核对页面左上方项目名称。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/check-project-name.png" alt="核实项目名称" style={{ width: '80%' }} />
+
+#### 搜索项目
+
+如果您希望搜索已有的项目，在 **项目** 页面中找到搜索栏，输入项目名称，点击搜索按钮。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/search-project.png" alt="搜索项目" style={{ width: '80%' }} />
+
+#### 切换项目
+
+如需处理其他项目时，您可以展开左侧边栏在 **最近**  项目列表中进行切换，或者返回项目列表选择其他项目。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/switch-projects.png" alt="切换项目" style={{ width: '80%' }} />
+
+
+## 认识项目工作台
+
+选择一个项目后，您将看到属于这个项目的工作台，以下是这个工作台的区域介绍：
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/workspace.png" alt="项目工作台" style={{ width: '80%' }} />
+
+|序号| 区域                    | 用途                    |
+| --- | --------------------- | --------------------- |
+| 1 | Aqara Agent           | 描述需求、提供参考资料、查看生成过程与结果。 |
+| 2 | 空间方案     | 创建户型、家具、设备点位与空间方案。    |
+| 3 | App 看板 | 创建并预览项目的手机控制界面。        |
+| 4 | Studio                | 查看项目中的现场 Studio 及资源。   |
+| 5 | 项目成员 | 管理项目协作与项目资料           |
+
+
+## 用 Agent 开始和延续工作
+
+### 从首页或业务页面发起需求
+
+您可以从 **首页** 或者指定项目的 **工作台** 上向 Aqara Agent 发起需求。
+
+以下是一些注意事项：
+- 当您在首页向 Aqara Agent 发送需求时，请核对将要使用的项目名称。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/ask-from-home.png" alt="项目工作台" style={{ width: '80%' }} />
+
+- 针对已有方案或看板工作时，先打开目标对象，再发送要求。
+- 如果需求涉及房间、设备、希望的行为和限制，请将这些信息写具体。例如：“为当前住宅的客厅与玄关设计手机看板，展示灯光状态和回家场景。”
+- 如果需要提供户型或参考图片，请点击输入区的 **+ 附件** 按钮，选择文件后确认上传完成，再发送需求。
+
+    <img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/attach-files.png" alt="上传附件" style={{ width: '80%' }} />
+
+### 核对生成结果，处理失败
+
+1. 查看 Aqara Agent 展示的进度、工具结果和失败提示。
+2. 生成后打开对应业务页面，逐项核对实际产物。
+3. 继续修改时，说明对象名称、保留内容和修改内容。
+4. 失败时先检查当前项目、对象、附件与服务提示，再按页面开放的停止或重试入口处理。
+
+同一项目内切换模块可以延续对话；切换项目后应重新核对上下文。Agent 的回复、实际产物和保存结果都应检查。

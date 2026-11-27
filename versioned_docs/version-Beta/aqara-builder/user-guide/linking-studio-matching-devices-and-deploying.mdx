@@ -1,0 +1,80 @@
+---
+title: "Linking Studio, Matching Devices and Deploying On Site"
+description: "Covers connecting the target Studio, checking plan points against actual devices, reviewing and dispatching deployments with failure handling, and troubleshooting common on-site issues."
+keywords: ["Aqara Docs", "Aqara Builder", "Studio linking", "device matching", "space deployment", "on-site troubleshooting"]
+---
+
+# Linking Studio, Matching Devices and Deploying On Site
+
+Goal: Map saved spatial and automation designs to on-site devices and confirm actual deployment results.
+
+
+## Connect the Target Studio
+
+### Cloud connection
+
+1. Open a saved plan and select **Link Studio**, or link from an empty **Device Matching** page.
+2. Choose **Cloud connection** in **Connect Studio**.
+3. Verify account, region, project and Studio.
+4. Confirm devices, models and capabilities load after connection.
+
+### Local connection
+
+Select **Local connection** and provide the requested address and credentials. Initialize Studio and ensure the computer can reach it on the LAN. Recheck the target after connecting.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/14-studio-selector.png" alt="Cloud and local Studio connection options" style={{ width: '70%' }} />
+
+*The test project displayed “No Studio is available in this project.” Check project, region and permissions first.*
+
+### Read existing spatial data
+
+Use the available Studio spatial-data entry to import existing layout information. Inspect rooms, points and plan contents before saving. Connection success alone does not prove synchronization.
+
+## Check Plan Points Against Physical Devices
+
+### Inspect automatic matching
+
+Check each assigned Studio device's name, model, room and physical identity. Existing mappings or rules may initialize matches, but require on-site confirmation.
+
+### Match manually, unlink and identify
+
+**Do not infer identity from list order.** For similar names or multiple identical models, use identification feedback with on-site staff. After selecting, compare both the plan-point and physical-device names.
+
+1. Locate unmatched/incorrect points and select the correct physical device.
+2. Remove wrong mappings first and check unintended reuse of the same device.
+3. Use supported identification feedback to confirm the physical unit.
+4. Recheck mappings and capabilities after changing Studio.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/13-device-matching.png" alt="Device Matching" style={{ width: '70%' }} />
+
+*The test confirmed the prompt to link Studio first. Matching and physical identification still need hardware validation. A match alone does not prove capability compatibility.*
+
+## Preflight, Deployment and Failure Handling
+
+### Pre-deployment checks
+
+| Check | Required condition |
+| --- | --- |
+| Plan and destination | Correct saved version and Studio |
+| Spatial data | Rooms, points and graph usable for this deployment |
+| Device references | Required references valid and mappings correct |
+| Capabilities | Devices support the required actions |
+| Connection and permission | Studio reachable and deployment authorized |
+
+### Deploy space and automations
+
+Open **Deploy**, review import method, scope and impact, then submit. Observe step progress, results and receipts. Inspect Studio resources/history and test key devices and logic on site.
+
+### Correct failures and retry
+
+Retain the failing step and message. Check connection, rights, references and matching. Correct the cause, use the available retry control, and distinguish completed steps from those needing rerun. Confirm through resources and actual feedback.
+
+## On-Site Troubleshooting
+
+| Problem | Check first |
+| --- | --- |
+| Cloud Studio missing | Account, region, project and access |
+| Local Studio missing | Initialization, address, LAN reachability and credentials |
+| Deployment blocked | Studio link, spatial data, references and matching |
+| Matched device acts incorrectly | Model capability, endpoint, control relationship and physical identity |
+| Deployment succeeds but experience differs | Applied configuration and item-by-item on-site verification |

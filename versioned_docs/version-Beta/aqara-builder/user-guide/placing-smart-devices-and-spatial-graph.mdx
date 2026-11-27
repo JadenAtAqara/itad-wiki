@@ -1,0 +1,112 @@
+---
+title: "Placing Smart Devices and Building the Spatial Graph"
+description: "Covers finding and placing smart devices in a plan, naming and adjusting their position, configuring lighting and switch relationships, and using the spatial graph to help AI understand spatial relationships."
+keywords: ["Aqara Docs", "Aqara Builder", "device placement", "spatial graph", "lighting configuration", "switch relationships"]
+---
+
+# Placing Smart Devices and Building the Spatial Graph
+
+Goal: Place devices correctly and define clear room assignment, power and control relationships.
+
+
+## Find Devices and Use Existing Devices
+
+### Select models from the library
+
+1. Open **Devices** and browse categories or search.
+2. Verify model, name and available information; distinguish variants.
+3. When inspecting capabilities, check properties, commands, events and endpoints. Supported actions depend on the model's capability results.
+
+### AI device recommendations
+
+Open the target plan, explain room use, desired experience and existing devices to Agent, then check recommended models, capabilities and quantities. Verify actual points and saved results after applying recommendations.
+
+### Import devices from Studio
+
+Connect Studio through the available import/link control, load and select devices, check model and room assignment, then place or associate plan points. The former “Create from My Devices” entry has moved; look under the target plan's Studio linking and device controls.
+
+## Place, Name and Adjust Devices
+
+**Select before moving.** Click the highlighted candidate to confirm selection; use the [Creating Space Plans](creating-space-plans.mdx) Tab workflow for overlapping objects. Verify the name in properties before changing position or parameters.
+
+1. Add the intended device to the canvas.
+2. Set its room, mounting surface, position, direction, height and available attributes.
+3. Name by room and purpose/location, such as “Living Room — Floor Lamp Right of Sofa.”
+4. Cross-check 2D and 3D location, orientation and room assignment, then save.
+
+| Resource | Key checks |
+| --- | --- |
+| Wall switch | Wall position, height, button count and controlled targets |
+| Ceiling / track light | Correct ceiling or track, orientation, count and spacing |
+| Sensor / camera | Direction, obstructions, mounting and available coverage indication |
+| Door/window device | Correct opening and mounting direction |
+| Freestanding device | Actual furniture/floor position and room assignment |
+
+### Move, rotate and adjust groups
+
+| Situation | Operation | Check |
+| --- | --- | --- |
+| Move one object | Use movement controls; eligible single-selected 3D objects support Cmd/Ctrl+left-drag | Room, position and mounting surface |
+| Rotate precisely | Use rotation controls; eligible 3D objects support Cmd/Ctrl+right-drag left/right | Default angle snapping; add Shift for free rotation during that drag |
+| Turn quickly | R / T rotate eligible furniture/devices in opposite steps | Doors/windows have special handing or wall-side behavior |
+| Move several objects | Multi-select, drag the selection/dashed box; or click to pick up and click again to place | Entire group moves with expected relative layout |
+| Rotate a group | R / T in a supported multi-selection | Group rotates about its center; inspect position |
+
+### If a device will not fit or appears on the wrong side
+
+1. Check whether it requires a wall, floor, ceiling, opening or track host.
+2. Confirm the current floor and cross-check 2D/3D height and mounting.
+3. For an opposite-wall-side device, finish placement, select it alone and use the supported Tab flip; inspect orientation afterward.
+4. Check whether you are still carrying the object and confirm placement before selecting another.
+5. If obscured, select through the tree or change the view. For similar names, verify room and model first.
+
+## Configure Lighting and Switch Relationships
+
+### Tracks and track lights
+
+Draw the track, inspect its path, add compatible fixtures, and adjust count, position and orientation. Verify track attachment and conflicts with ceilings or structures.
+
+### Light strips and drivers
+
+1. Choose a strip and draw its installation path.
+2. Adjust path and length; check walls, ceilings and furniture.
+3. Choose a suitable driver through the configuration control, check the length/driver setup and save.
+
+Driver resources were unavailable in one test. Check model and service messages if resources fail to load; complete driver configuration before validating effects.
+
+### Switches and controlled devices
+
+1. Place the switch and check button count.
+2. Select it and open its controlled-device configuration.
+3. Select each button and its controlled devices.
+4. Check device type, targets and power relationships; save and reopen to verify.
+
+Use the current panel's actual restrictions for mixing device types or repeated targets, rather than assuming legacy rules. For ordinary loads powered by a smart switch, identify the switch that actually executes the command.
+
+### Coverage assistance
+
+Enable the appropriate sensor, camera, lighting or Wi-Fi coverage display. Adjust against room geometry, furniture and direction. These are design aids; verify actual coverage with hardware on site.
+
+## The Spatial Graph: Relationships AI Can Understand
+
+### Information captured
+
+| Relationship | Example | Value |
+| --- | --- | --- |
+| Space to space | Living room contains seating and dining zones | Understand activity areas |
+| Device to space | Floor lamp is in the living-room seating zone | Select the right device and avoid cross-room errors |
+| Device to device | Smart switch powers the floor lamp | Identify the real control target |
+| Relationships plus capabilities | Switch supports power control; light has applicable dimming | Generate actions using available capabilities |
+
+### Prepare information for the graph
+
+1. Complete room names, uses and zones.
+2. Verify points, room assignment and models.
+3. Configure switch/load relationships.
+4. Save before Agent scene creation or deployment that depends on the graph.
+
+Saving attempts to generate the graph. **A successful floor-plan save can still retain the previous successful graph version.** If Agent reads old rooms/devices, save again and inspect graph messages and actual read results.
+
+### Example
+
+“Turn off the living-room floor lamp when I leave.” AI locates the room and lamp, identifies the supplying switch, queries that switch's actions and prepares an action for review. Define automation triggers and conditions explicitly.

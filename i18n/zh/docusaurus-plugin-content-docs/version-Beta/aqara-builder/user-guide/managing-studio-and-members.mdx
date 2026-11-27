@@ -1,0 +1,75 @@
+---
+title: "管理 Studio、项目成员与已部署资源"
+description: "介绍项目资料与协作权限设置、查看 Studio 并进入控制台、管理成员、查看资源与部署历史，以及 Studio 移动、移交与云端解绑。"
+keywords: ["Aqara 文档", "Aqara Builder", "Studio 管理", "项目成员", "部署历史", "成员界面"]
+---
+
+# 管理 Studio、项目成员与已部署资源
+
+本篇目标：确认谁能访问项目和 Studio，查看部署结果，并管理成员使用的界面。
+
+
+## 项目资料与协作权限
+
+### 修改项目资料
+
+在项目 **Settings** 修改名称和描述，点 **Save**，返回列表核对。测试项目曾返回 **Project saved**。
+
+### 项目成员
+
+团队项目在 **Members** 查看成员、角色及权限；按当前权限使用邀请、角色调整和移除。个人项目显示 **Member management is available for team projects** 时，需要在适用的团队项目中管理成员。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/06-production-members.png" alt="个人项目的成员管理提示" style={{ width: '70%' }} />
+
+### 项目删除
+
+若当前版本开放删除入口，先处理项目内 Studio 和其他阻止删除的对象，再核对删除提示。旧版 Default 项目及非空项目有删除限制；当前以项目页面实际规则为准。
+
+## 查看 Studio 与进入控制台
+
+1. 打开项目 **Studio**，查看名称、在线状态及可访问对象。
+2. 打开目标详情，核对所属项目。
+3. 使用 **Console（控制台）** 进入已开放的运行管理，查看设备、空间和自动化。
+4. 运行操作前确认当前 Studio 与权限。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/08-production-studio-detail.png" alt="正式站 Studio 详情与资源入口" style={{ width: '70%' }} />
+
+## 管理 Studio 成员
+
+### 邀请与接受
+
+进入 **Studio Members**，选择 **Invite**，填写目标账号并按页面选择角色，核对 Studio 后发出邀请。邀请生效情况以成员状态为准；对未生效邀请按当前提供的撤销入口处理。
+
+### 角色与移除
+
+选中成员核对身份与角色，再使用权限允许的角色修改或移除操作。项目成员权限与 Studio 访问权限要分别确认。旧版 Admin / Operator 等角色名称以当前页面实际展示为准。
+
+## 查看资源与部署历史
+
+### 已部署资源
+
+打开 **Resources → Deployed Resources**，检查空间或界面资源名称及当前可见信息。部署入口可分别发起空间方案和 App 看板下发。
+
+### 历史记录
+
+切换 **Deployment History**，核对资源、来源、操作类型与时间；有详情入口时继续查看结果。
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/09-production-history.png" alt="正式站既有看板部署历史" style={{ width: '70%' }} />
+
+*本轮只读查看既有历史，没有在正式家庭执行新的部署。*
+
+## 管理成员使用的界面
+
+在 Studio 资源的界面成员管理入口，查看各界面分配对象和成员当前使用情况。为成员选择界面后保存，更换时重新选择；取消分配时按页面操作移除对应关系。操作后让该成员重新打开确认实际界面。
+
+旧版从 Studio 资源管理成员 UI 的方式仍可作为任务参考；当前入口需结合目标版本核对，详见[创建 App 看板与应用界面](creating-app-dashboards.mdx)的部署前提。
+
+## 移动、移交与云端解绑
+
+| 操作 | 操作步骤 | 完成后核对 |
+| --- | --- | --- |
+| 移动 Studio | 在详情或设置打开 Move，选择目标项目，核对后确认 | 在目标项目找到相同 Studio |
+| 所属团队 / 归属调整 | 使用当前权限允许的移交入口，选择对象并核对影响 | 新归属、访问权限和资源可见范围 |
+| 云端解绑 | 打开解绑入口，核对 Studio，阅读页面影响后确认 | 云端关联状态及后续访问情况 |
+
+这些管理操作已有相应实现或旧版操作基础，本轮未提交；请按当前页面的权限和影响说明操作。

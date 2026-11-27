@@ -1,0 +1,183 @@
+---
+title: "Creating Space Plans: Floor Plans, Structures, Saving and Export"
+description: "Covers creating and managing space plans, importing floor plan materials and calibrating scale, drawing floor plans and building structures, editing furniture and appliances, and saving, versioning and exporting plans."
+keywords: ["Aqara Docs", "Aqara Builder", "space plans", "floor plan drawing", "scale calibration", "plan export"]
+---
+
+# Creating Space Plans: Floor Plans, Structures, Saving and Export
+
+Goal: Build a floor plan ready for device placement, and save it as a space plan that can be reopened.
+
+
+## Before You Start: Selecting Objects, Navigating and Ending Operations
+
+These details were checked against the editor implementation; the additional shortcuts have not all been tested individually in production. Behavior depends on the active tool, selection and input focus. **Cmd / Ctrl** means Command on Mac and Ctrl on Windows.
+
+### How do I select an overlapping object?
+
+1. Switch to the **2D floor plan**, finish any placement, movement or drawing operation, and use Select.
+2. If a door, window or wall-mounted device is already selected, click empty space to clear the selection.
+3. Keep the pointer over the overlapping location and observe the preselection highlight.
+4. **Press Tab to cycle candidates, or Shift+Tab to cycle backward, without moving the pointer.**
+5. When the intended object is highlighted, click to select it. Check its name in the properties panel or spatial tree before editing.
+
+The hover highlight previews a candidate; clicking makes it the actual selection. Moving the pointer changes the candidate set. This cycling behavior applies to floor-plan picking, not every 3D view.
+
+If Tab moves focus between buttons or fields, leave the field, menu or dialog and return the pointer to the canvas. Cycling requires multiple candidates. You can also select the object by name in the spatial tree.
+
+**Tab has another contextual function:** With a single door, window or eligible wall-mounted device selected, Tab may flip its mounting side. Clear the selection before cycling overlapping objects; explicitly select the target when changing its wall side.
+
+### How do I move the view without moving a device?
+
+| Task | Operation | Expected feedback |
+| --- | --- | --- |
+| Pan | Middle-button drag, or hold Space and left-drag | View moves; object coordinates stay unchanged |
+| Keep panning | Press H for Hand, then drag | Subsequent drags navigate the view |
+| Return to selection | Press V or choose Select | Objects can be selected and edited |
+| Zoom | Wheel over the canvas, or use zoom controls | Visible area changes, not actual object dimensions |
+| Orbit | Right-drag in a supported 3D orbit mode | Viewing angle changes; objects do not rotate |
+| Recover an off-screen model | Use Fit / Overview | The whole space returns to view |
+
+Right-drag view rotation differs from Cmd/Ctrl+right-drag object rotation. Release modifiers before navigating. Free-roam mode uses its own controls.
+
+### How do I select multiple objects?
+
+- In Select mode, Cmd/Ctrl-click toggles objects in the selection. Shift-click also toggles objects on the canvas.
+- In 2D Select mode, left-drag from empty space to draw a selection box, then check the selected scope.
+- In the spatial tree, click a starting item and Shift-click an ending item to select the visible list range. This differs from canvas Shift-click.
+- Click empty space to clear selection; finish any active tool operation first.
+
+Check highlights and the tree before modifying or deleting multiple objects.
+
+### Why does Esc sometimes require two presses?
+
+| Context | Behavior |
+| --- | --- |
+| Drawing the next 2D wall, fence or track segment | First Esc cancels the uncommitted segment and retains completed segments, usually keeping the tool active. With no draft in progress, another Esc returns to Select |
+| At least three valid vertices placed for a 2D slab, ceiling or zone | Esc may finish the outline using placed vertices; Enter can also commit a valid outline. Esc does not always discard it |
+| Only one or two vertices in that polygon | Esc clears the incomplete draft and leaves the tool available |
+| Menu, dialog or property field open | That interface handles Esc first, such as closing a menu or canceling field editing |
+| No operation in progress | Use Select or V, and check the active tool before continuing |
+
+Invalid or conflicting outlines may be rejected. Read the message and fix vertices. If an unwanted outline was committed, inspect it and undo instead of repeatedly pressing Esc.
+
+### How do I confirm numeric edits and correct mistakes?
+
+1. Check the selected object's name, click the relevant value and enter dimensions or position in the displayed units.
+2. Common property fields use **Enter** to commit and **Esc** to cancel uncommitted input; specialized panels may differ.
+3. Finish field editing before returning to the canvas. Letters and deletion keys usually edit text while focus remains in a field or Agent.
+4. For precision, enter numbers instead of dragging. Some controls allow dragging the label; some support Shift for coarse and Alt for fine adjustment.
+5. Use **Cmd/Ctrl+Z** to undo and **Cmd/Ctrl+Shift+Z** to redo. During a drag or drawing operation, the first undo may cancel that operation; inspect the result before repeating.
+6. Save at milestones using **Save** or the supported **Cmd/Ctrl+S** shortcut. Wait for feedback rather than submitting repeatedly.
+
+### Frequently Used Operations
+
+| Task | Shortcut | Condition |
+| --- | --- | --- |
+| Cycle overlapping preselection | Tab / Shift+Tab | Multiple floor-plan candidates; not typing, placing or moving; beware wall-side flipping |
+| Select / Hand / Measure | V / H / M | Canvas context; Measure must be available in the current stage |
+| Delete objects | Delete / Backspace | Confirm selection; focus must not be in text input |
+| Copy / paste objects | Cmd/Ctrl+C / Cmd/Ctrl+V | Editable plan with objects selected; selected text takes copy priority. Check floor, position and references after pasting |
+| Undo / redo | Cmd/Ctrl+Z / Cmd/Ctrl+Shift+Z | May first cancel an active operation |
+| Save | Cmd/Ctrl+S | Save available; wait for completion |
+| Change floor in active building | Cmd/Ctrl+Up / Down | A corresponding floor must exist |
+
+See **Keyboard Shortcuts** in editor settings for more contextual commands. Remember: **target → active tool → feedback → save after confirmation**.
+
+## Create, Open and Manage Plans
+
+### Start from blank or an example
+
+1. Open **Space Plans** in the project.
+2. Choose **Start from Scratch**, **Start with Example**, or **New Space Plan** where offered.
+3. Enter a name and summary, create the plan and open the editor.
+
+### Search, duplicate, rename and delete
+
+Search the plan list and open the target. **More actions** may offer **Edit info**, **Duplicate**, **Scene Builder**, **Deploy** and **Delete**.
+
+Check the copy's name and contents before editing; confirm the project and plan before deletion. Some management operations were checked only at their entry points; submission results need environment verification.
+
+## Import Floor Plan Materials
+
+### Reference images and scale calibration
+
+1. Open the reference-image or import control and select a supported image format.
+2. Identify a known length and enter its real dimension to calibrate scale.
+3. Trace the main structure using wall and room tools, then check overall dimensions.
+4. If using AI image enhancement or recognition, inspect walls, openings, rooms and scale before placing devices.
+
+### External data and existing plan files
+
+Implementation includes conversion for DXF, RoomPlan and other spatial data. Check the available upload entry, supported format and conversion messages. Inspect floors, units, boundaries and positions after import. 
+
+### Start from a template
+
+Preview and apply an available template, then inspect its rooms, devices and scenes. Name saved templates clearly and check their source and scope before reuse.
+
+## Draw Floor Plans and Building Structures
+
+### Understand the editing areas
+
+Edit on the canvas; locate objects through the spatial tree; draw with structural tools; place resources from furniture, appliances and devices. Select an object to inspect editable properties.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/07-floorplan.png" alt="2D editor, spatial tree and resource categories" style={{ width: '70%' }} />
+
+### Draw walls and rectangular walls
+
+A rectangular wall uses two opposite corners. Continuous walls establish segment endpoints and may keep waiting for the next segment. After finishing a room, check the active tool; use Esc to end the current segment and then exit if needed.
+
+1. Switch to **2D** and open **Structure tools**.
+2. For walls, set start and end points; for rectangular walls, set opposite corners.
+3. Select walls and inspect position, length and connections; edit the available properties.
+4. Before moving or deleting a wall, inspect attached doors, windows, switches and other objects.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/44-rectangle-wall.png" alt="Rooms, walls and slab after rectangular-wall drawing" style={{ width: '70%' }} />
+
+### Add doors, windows, rooms and zones
+
+| Object | Method | Check afterward |
+| --- | --- | --- |
+| Door / window / opening | Choose the tool or resource, place on the intended wall, adjust position and dimensions | Correct host wall and suitable opening |
+| Room | Inspect the room generated by enclosed walls, or use an available drawing entry | Name, use and boundary |
+| Functional zone | Define and name an activity area inside a room | Distinguishable areas such as seating and dining |
+| Slab / ceiling | Inspect generated content and edit supported properties | Correct room and floor extent |
+| Stairs / columns | Place structural resources, then edit position and dimensions | Consistent with adjacent floors and walls |
+
+### Manage buildings and floors
+
+Create, name and switch levels using building/floor controls. Check structure and device assignment floor by floor; confirm the active editing floor before placing devices.
+
+## Furniture, Appliances, Materials and Object Editing
+
+1. Select resources from **Furniture / Appliances** and add them to rooms.
+2. Adjust position, orientation and supported dimensions.
+3. Use supported wall, floor or ceiling mounting; check openings, collisions and scale.
+4. Choose and apply materials to supported surfaces, then inspect the result.
+5. Select, locate, copy or delete objects through the spatial tree. Undo/redo mistakes and save after checking.
+
+
+
+## Saving, Versions and Export
+
+### Save and reopen
+
+1. Select **Save** and wait for a result.
+2. Reopen from the list and inspect structure, rooms, furniture and points.
+3. Open **Version History**. Saving the example plan produced `Version 1` in testing.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/10-version-history.png" alt="Version History" style={{ width: '70%' }} />
+
+### View and restore history
+
+Select a record and verify time and preview before restoring. Recheck the restored plan and save record before deployment.
+
+### Export drawings, lists and models
+
+| Output | Purpose | Check |
+| --- | --- | --- |
+| Floor plan / device-point and installation PDF | Communicate layout and installation | Scope, device labels, dimensions and legibility |
+| Device list | Check required models and quantities | Model, quantity, room and point |
+| Scene JSON / 3D model | Save or exchange design data | Supported format and completeness |
+
+Check exported file formats and contents. Saving generates some related outputs; separate download availability depends on the current page.

@@ -1,0 +1,89 @@
+---
+title: "Designing Scenes and Automations and Validating 3D Effects"
+description: "Covers entering scene editing, creating scenes and automations with Agent, reviewing lists and workflows, and validating results through simulation and real device states."
+keywords: ["Aqara Docs", "Aqara Builder", "scenes and automations", "workflow", "3D simulation", "device states"]
+---
+
+# Designing Scenes and Automations and Validating 3D Effects
+
+Goal: Make devices respond as intended and distinguish simulation from real on-site feedback.
+
+
+## Open Scene Builder
+
+Use **More actions → Scene Builder** for the target plan. Check its name and the mode at the top right. Scenes and automations use the current space plan and devices.
+
+| Type | Define |
+| --- | --- |
+| Scene | Device actions and intended target states |
+| Automation | Trigger, required conditions and subsequent actions |
+
+## Create Scenes and Automations with Agent
+
+### Describe requirements
+
+1. Open the correct plan and ensure device information is saved.
+2. Specify room, trigger, conditions, actions and constraints; for example, turn on the entry light when activity is detected and ambient light is low.
+3. Supply requested details and check device selection and capabilities.
+4. Inspect the generated name, description and content in the list; reopen to check persistence.
+
+### Adapt standard scenes
+
+Existing implementation includes Cinema and Homecoming, selecting actions for this plan's rooms, devices and capabilities. Check returned presets and devices; inspect fallback behavior when curtains, media or dimming are unavailable. Production verification is still required.
+
+## Lists, Workflow and References
+
+### View and manage
+
+Inspect names, descriptions and referenced devices. Open a target to check actions. Before deleting, check usage and current reference warnings.
+
+### View Workflow
+
+Inspect triggers, conditions, actions and connections. Use Workflow to understand and check the relationships between triggers, conditions and actions.
+
+### Import and check device references
+
+Import supported existing definitions through the available control. Check format, object names and referenced devices. Fix missing/deleted/invalid references before simulation or deployment; external device identities are not automatically the current household's devices.
+
+## Simulation and 3D Preview
+
+### Run automations and inspect states
+
+**Check outcomes as well as playback status.** Starting execution or seeing “running” does not establish that every action completed.
+
+1. Confirm **Simulation mode**.
+2. Expand **Automations**, choose an automation and select **Play**.
+3. Inspect execution, **Device States**, lighting, curtains and other supported effects.
+4. For time-dependent rules, use available simulation-time controls and inspect unsupported actions, missing references and diagnostics.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/38-simulation-trigger.png" alt="Example automation playback in simulation" style={{ width: '70%' }} />
+
+*The test loaded three example automations and started playback of the first. All final device-state changes have not been rechecked.*
+
+### Simple models, detailed models and viewpoints
+
+| Control | Purpose |
+| --- | --- |
+| 2D / 3D | Inspect the same layout in plan and perspective |
+| Simple 3D | Quickly inspect space, points and scenes |
+| Detailed 3D | Inspect finer furniture and material detail when resources are available |
+| Top view / Overview / Free roam | Overhead, overall or immersive views |
+| Floors, clipping and environment | Inspect floors, occlusion and supported lighting environments |
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/简模.png" alt="Simple-model space and scene preview" style={{ width: '70%' }} />
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/精模.png" alt="Detailed-model space and viewpoint controls" style={{ width: '70%' }} />
+
+*User-provided product screenshots. Detailed models/effects depend on available resources and controls.*
+
+## Real Device States and Debugging
+
+1. Link and verify the on-site Studio, mappings and access rights.
+2. Open **Studio Live** or the available live entry and confirm **Live mode**.
+3. Expand device states and compare changes with the site.
+4. With appropriate permission, control devices or run logic and check actual feedback.
+5. If states do not update, check Studio connection, device connectivity, mappings and rule references.
+
+<img src="https://itad-aqara-docs-1300889962.aqara.com/dev/img/aqara-builder/zh/实时灯光.png" alt="Live mode device and lighting states" style={{ width: '70%' }} />
+
+*User-provided live-state screenshot; real household devices were not operated during this review. An unlinked test page still showed Simulation mode: check the mode before judging effects.*
